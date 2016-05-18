@@ -64,7 +64,8 @@ class ReportRepository extends EntityRepository
 
     /**
      * add empty Transaction to Report.
-     *
+     * Called from doctrine listener
+     * 
      * @param Report $report
      * 
      * @return int changed records
