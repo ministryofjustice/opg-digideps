@@ -41,6 +41,8 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         $availableMigrations = $configuration->getAvailableVersions();
         $executedUnavailableMigrations = array_diff($executedMigrations, $availableMigrations);
         
+        // not really useful for now.
+        // if re-enabled, enable check comparing the highest numbers and see if the db is ahead of the code
         $output->writeln('Status check: skipped');
         return;
         
