@@ -14,7 +14,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class TransactionType
 {
-
+    /**
+     * @JMS\Exclude
+     */
     public static $fixtures = [
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],

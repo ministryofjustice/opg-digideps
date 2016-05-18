@@ -20,6 +20,9 @@ class Role implements RoleInterface
     const ADMIN = 'ROLE_ADMIN';
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
 
+    /**
+     * @JMS\Exclude
+     */
     public static $fixtures = [
         self::ROLE_ADMIN => ['OPG Administrator', self::ADMIN],
         self::ROLE_LAY_DEPUTY => ['Lay Deputy', self::LAY_DEPUTY],

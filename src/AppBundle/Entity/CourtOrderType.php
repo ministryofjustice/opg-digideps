@@ -14,7 +14,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class CourtOrderType
 {
-
+    /**
+     * @JMS\Exclude
+     */
     public static $fixtures = [
         1 => 'Personal Welfare',
         2 => 'Property and Affairs'
