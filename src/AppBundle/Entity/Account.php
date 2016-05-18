@@ -133,16 +133,6 @@ class Account
     private $closingDate;
 
     /**
-     * @deprecated since accounts_mk2
-     *
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_date_explanation", type="text", nullable=true)
-     */
-    private $closingDateExplanation;
-
-    /**
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="accounts")
@@ -449,24 +439,6 @@ class Account
     public function getClosingDate()
     {
         return $this->closingDate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClosingDateExplanation()
-    {
-        return $this->closingDateExplanation;
-    }
-
-    /**
-     * @param string $closingDateExplanation
-     */
-    public function setClosingDateExplanation($closingDateExplanation)
-    {
-        $this->closingDateExplanation = $closingDateExplanation;
-
-        return $this;
     }
 
     /**
