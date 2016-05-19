@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use AppBundle\Service\StringUtils;
 
 class IndexController extends AbstractController
 {
@@ -92,18 +93,17 @@ class IndexController extends AbstractController
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
-        } elseif ($session->get('loggedOutFrom') === 'timeout') {
+        } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
-        } elseif ($request->query->get('from') === 'api') {
-            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
-            $this->get('logger')->notice('Session timeout from API server.');
+            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
+                '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
+            ], 'login');
         }
 
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
 
+    
     /**
      * @Route("login_check", name="login_check")
      */

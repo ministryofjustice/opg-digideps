@@ -11,7 +11,7 @@ login:
     label: Log in
     invalidMessage: You've entered an invalid email or password. Please try again.
 forgottenPassword: Forgotten your password?
-sessionTimeoutOutWarning: Sorry, your session has timed due to inactivity. Please log in again.
+sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been logged out because you've not used the service for more than %time%.
 bruteForceLocked: You’ve tried to log in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
 manualLogout:
   pageTitle: You are now logged out
