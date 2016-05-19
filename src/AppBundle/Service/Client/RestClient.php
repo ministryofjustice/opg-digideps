@@ -217,6 +217,7 @@ class RestClient
      */
     public function put($endpoint, $mixed, array $options = [])
     {
+        echo $this->toJson($mixed, $options);die;
         $response = $this->rawSafeCall('put', $endpoint, [
             'body' => $this->toJson($mixed, $options),
             'addAuthToken' => true,

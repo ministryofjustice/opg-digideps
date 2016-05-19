@@ -129,6 +129,13 @@ class Report
      * @var \AppBundle\Entity\Action
      */
     private $action;
+    
+    /**
+     * @JMS\Type("AppBundle\Entity\MentalCapacity")
+     *
+     * @var MentalCapacity
+     */
+    private $mentalCapacity;
 
     /**
      * @JMS\Type("string")
@@ -700,7 +707,25 @@ class Report
 
         return $this;
     }
+    
+    /**
+     * @return MentalCapacity
+     */
+    public function getMentalCapacity()
+    {
+        return $this->mentalCapacity;
+    }
 
+    /**
+     * @param MentalCapacity $mentalCapacity
+     */
+    public function setMentalCapacity(MentalCapacity $mentalCapacity)
+    {
+        $this->mentalCapacity = $mentalCapacity;
+        return $this;
+    }
+
+    
     /**
      * @return bool $noAssetToAdd
      */

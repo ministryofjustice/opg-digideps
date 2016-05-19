@@ -290,6 +290,11 @@ action:
         notBlank: Choose Yes or No
     doYouHaveConcernsDetails:
         notBlank: Tell us about any concerns you have
+mentalCapacity:
+    hasCapacityChanged:
+        notBlank: Select one option
+    hasCapacityChangedDetails:
+        notBlank: Enter details how about the capacity changed
         
 feedbackAfterReport:
     satisfactionLevel:
