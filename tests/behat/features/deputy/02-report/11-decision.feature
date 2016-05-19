@@ -5,7 +5,7 @@ Feature:deputy / report / edit decision
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016"
-        And I follow "edit-decisions"
+        And I click on "edit-decisions, decisions"
         And the URL should match "/report/\d+/decisions"
         And I save the page as "editremdec-start"
         And I click on "decision-2-beds"
@@ -43,7 +43,7 @@ Feature:deputy / report / edit decision
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I click on "reports, report-2016"
       # delete current decision
-      And I follow "edit-decisions"
+      And I click on "edit-decisions, decisions"
       And I click on "decision-3-beds"
       And I click on "delete-button"
       And I save the page as "report-no-decision-empty"

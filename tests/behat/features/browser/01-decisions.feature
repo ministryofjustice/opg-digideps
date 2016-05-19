@@ -3,7 +3,7 @@ Feature: Browser - manage decisions
     @browser
     Scenario: Add and delete reason for no decisions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-decisions"
+        And I click on "edit-decisions, decisions"
         When I fill in the following:
             | reason_for_no_decision_reasonForNoDecisions | small budget |
         And I save the page as "decision-reason"
@@ -20,7 +20,7 @@ Feature: Browser - manage decisions
     @browser
     Scenario: Add two decisions then delete one
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-decisions"
+        And I click on "edit-decisions, decisions"
         When I follow "add-decisions-button"
         Then I save the page as "decision-add"
         And I add the following decisions:
