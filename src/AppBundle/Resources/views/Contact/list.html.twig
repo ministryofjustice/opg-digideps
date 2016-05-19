@@ -45,11 +45,6 @@
     {% endblock %}
 
     {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("decisions" , {'reportId': report.id }),
-        'previousLabel': 'Decisions',
-        'nextLink': path("safeguarding" , {'reportId': report.id }),
-        'nextLabel': 'Visits and care'
-        } %}
+       {% include 'AppBundle:Contact:_nextprevious.html.twig' %}
     {% endblock %}
 {% endembed %}

@@ -1,0 +1,6 @@
+{% include 'AppBundle:Components:nextprevious.html.twig' with {
+'previousLink': path("decisions" , {'reportId': report.id }),
+'previousLabel': 'Decisions',
+'nextLink': path("safeguarding" , {'reportId': report.id }),
+'nextLabel': 'Visits and care'
+} %}
