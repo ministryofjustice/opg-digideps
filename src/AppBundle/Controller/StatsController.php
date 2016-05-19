@@ -41,11 +41,13 @@ class StatsController extends RestController
             $row = [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
-                'fullname' => $user->getFirstname() . ' '.$user->getLastname(),
+                'name' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
                 'registration_date' => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
                 'last_logged_in' => $user->getLastLoggedIn() ?  $user->getLastLoggedIn()->format('Y-m-d') : '-',
                 'is_active' => $user->getActive() ? 'true' : 'false',
-                'client_fullname' => 'n.a.',
+                'client_name' => 'n.a.',
+                'client_lastname' => 'n.a.',
                 'client_casenumber' => 'n.a.',
                 'has_details' => $user->getAddress1() ? 'true' : 'false',
                 'total_reports' => 0,
@@ -56,7 +58,8 @@ class StatsController extends RestController
             ];
 
             foreach ($user->getClients() as $client) {
-                $row['client_fullname'] = $client->getFirstname() . ' ' . $client->getLastname();
+                $row['client_name'] = $client->getFirstname();
+                $row['client_lastname'] = $client->getLastname();
                 $row['client_casenumber'] = $client->getCaseNumber();
                 foreach ($client->getReports() as $report) {
                     ++$row['total_reports'];
