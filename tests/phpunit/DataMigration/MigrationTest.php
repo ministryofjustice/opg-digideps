@@ -21,7 +21,7 @@ class MigrationTest extends WebTestCase
 
     public function testMigrateToLastOne()
     {
-//        $this->importDb('v055.test.sql');
+        //        $this->importDb('v055.test.sql');
 //        $this->migrate('065');
 //
 //        $rows = $this->em->getConnection()->query('SELECT * from transaction WHERE amount IS NULL LIMIT 1')->fetchAll();
@@ -36,7 +36,7 @@ class MigrationTest extends WebTestCase
 
     public function testMigrateDown()
     {
-//        $this->importDb('v055.test.sql');
+        //        $this->importDb('v055.test.sql');
 //
 //        $this->migrate('065');
 //        $this->migrate('061');
@@ -47,7 +47,7 @@ class MigrationTest extends WebTestCase
 
     private function migrate($to)
     {
-//        ob_start();
+        //        ob_start();
 //        exec("php app/console doctrine:migrations:migrate --no-interaction --env=test $to  -vvv", $out, $returnVar);
 //        if ($returnVar != 0) {
 //            echo ob_get_clean();

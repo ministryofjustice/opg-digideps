@@ -34,7 +34,7 @@ abstract class AbstractTestController extends WebTestCase
         $em = self::$frameworkBundleClient->getContainer()->get('em');
 
         $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
-        
+
         self::$fixtures = new Fixtures($em);
         $em->clear();
     }

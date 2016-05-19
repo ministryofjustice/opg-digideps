@@ -15,7 +15,6 @@ use AppBundle\Entity\TransactionTypeOut;
  */
 class FixturesCommand extends AddSingleUserCommand
 {
-
     protected function configure()
     {
         $this
@@ -31,7 +30,7 @@ class FixturesCommand extends AddSingleUserCommand
 
         // court order type
         $this->cot($output);
-        
+
         // transaction types
         $this->transactionTypes($output);
 
@@ -51,14 +50,14 @@ class FixturesCommand extends AddSingleUserCommand
         foreach (CourtOrderType::$fixtures as $id => $name) {
             $output->write("COT $id ($name): ");
             if ($cotRepo->find($id)) {
-                $output->writeln("skip");
+                $output->writeln('skip');
             } else {
                 $cot = new CourtOrderType();
                 $cot
                         ->setId($id)
                         ->setName($name);
                 $em->persist($cot);
-                $output->writeln("added");
+                $output->writeln('added');
             }
         }
         $em->flush();
@@ -72,7 +71,7 @@ class FixturesCommand extends AddSingleUserCommand
             list($nameString, $roleString) = $nr;
             $output->write("Role $id ($nameString, $roleString): ");
             if ($roleRepo->find($id)) {
-                $output->writeln("skip");
+                $output->writeln('skip');
             } else {
                 $role = new Role();
                 $role
@@ -80,7 +79,7 @@ class FixturesCommand extends AddSingleUserCommand
                         ->setRole($roleString)
                         ->setName($nameString);
                 $em->persist($role);
-                $output->writeln("added");
+                $output->writeln('added');
             }
         }
         $em->flush();
@@ -95,7 +94,7 @@ class FixturesCommand extends AddSingleUserCommand
             list($id, $hasMoreDetails, $displayOrder, $category, $type) = $row;
             $output->write("Transaction Type $id: ");
             if ($tt->find($id)) {
-                $output->writeln("skip");
+                $output->writeln('skip');
             } else {
                 $t = ($type == 'in') ? new TransactionTypeIn() : new TransactionTypeOut();
                 $t
@@ -104,10 +103,9 @@ class FixturesCommand extends AddSingleUserCommand
                     ->setDisplayOrder(intval($displayOrder))
                     ->setCategory($category);
                 $em->persist($t);
-                $output->writeln("added");
+                $output->writeln('added');
             }
         }
         $em->flush();
     }
-
 }

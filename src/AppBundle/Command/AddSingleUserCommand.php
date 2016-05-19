@@ -56,9 +56,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $email = $data['email'];
 
         $output->write("User $email: ");
-        
+
         if ($userRepo->findBy(['email' => $email])) {
-            $output->writeln("skip.");
+            $output->writeln('skip.');
 
             return;
         }
@@ -66,7 +66,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $role = $roleRepo->find($data['roleId']);
         if (!$role) {
             $output->writeln("role {$data['roleId']} not found");
-            
+
             return;
         }
         $user = (new User())
@@ -92,7 +92,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             $em->flush($user);
         }
 
-        $output->writeln("created.");
+        $output->writeln('created.');
     }
 
     /**

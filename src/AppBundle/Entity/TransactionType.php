@@ -15,7 +15,8 @@ use JMS\Serializer\Annotation as JMS;
 abstract class TransactionType
 {
     /**
-     * Added via digideps:fixtures command
+     * Added via digideps:fixtures command.
+     *
      * @JMS\Exclude
      */
     public static $fixtures = [
@@ -193,8 +194,7 @@ abstract class TransactionType
     public function setCategory($category)
     {
         $this->category = $category;
-        
+
         return $this;
     }
-
 }

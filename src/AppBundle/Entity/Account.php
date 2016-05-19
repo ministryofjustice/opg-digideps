@@ -336,7 +336,6 @@ class Account
         return $this->openingBalance;
     }
 
-
     /**
      * Set closingBalance.
      *
@@ -372,7 +371,6 @@ class Account
 
         return $this;
     }
-
 
     /**
      * Set report.

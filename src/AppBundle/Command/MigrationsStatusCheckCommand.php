@@ -40,12 +40,13 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         $executedMigrations = $configuration->getMigratedVersions();
         $availableMigrations = $configuration->getAvailableVersions();
         $executedUnavailableMigrations = array_diff($executedMigrations, $availableMigrations);
-        
+
         // not really useful for now.
         // if re-enabled, enable check comparing the highest numbers and see if the db is ahead of the code
         $output->writeln('Status check: skipped');
+
         return;
-        
+
         if (!empty($executedUnavailableMigrations)) {
             throw new \RuntimeException(
             '<error>Status check: ERROR. You have '.count($executedUnavailableMigrations).' previously executed migrations'

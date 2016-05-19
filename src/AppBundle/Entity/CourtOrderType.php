@@ -15,13 +15,13 @@ use JMS\Serializer\Annotation as JMS;
 class CourtOrderType
 {
     /**
-     * Added via digideps:fixtures command
+     * Added via digideps:fixtures command.
      * 
      * @JMS\Exclude
      */
     public static $fixtures = [
         1 => 'Personal Welfare',
-        2 => 'Property and Affairs'
+        2 => 'Property and Affairs',
     ];
 
     /**
@@ -47,6 +47,7 @@ class CourtOrderType
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -83,5 +84,4 @@ class CourtOrderType
     {
         return $this->name;
     }
-
 }
