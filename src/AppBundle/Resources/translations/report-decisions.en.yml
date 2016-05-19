@@ -8,6 +8,7 @@ page:
     subSectionTitleEdit: Edit this decision
 nav:
     decisions: Decisions
+    mentalCapacity: Mental Capacity
 no_decision:
     subSectionDescription: "If you did not make any significant decisions, please tell us why here."
     fields:

@@ -183,4 +183,21 @@ class DecisionController extends AbstractController
             'report' => $report,
         ];
     }
+    
+    /**
+     * @Route("/report/{reportId}/mental-capacity", name="mental_capacity")
+     * @Template("AppBundle:Decision:mental_capacity.html.twig")
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function mentalCapacityAction($reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+
+        return [
+            'report' => $report,
+        ];
+    }
 }
