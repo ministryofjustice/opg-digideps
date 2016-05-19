@@ -208,6 +208,7 @@ class AdminController extends AbstractController
     {
         $data = $this->getRestClient()->get('stats/users', 'array');
 
+        // if format is specified, create a CSV with the data instead of returning it to the view
         if ($request->query->get('format') == 'csv') {
             $response = new Response();
             $response->headers->set('Cache-Control', 'private');
