@@ -103,7 +103,6 @@ class IndexController extends AbstractController
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
 
-    
     /**
      * @Route("login_check", name="login_check")
      */

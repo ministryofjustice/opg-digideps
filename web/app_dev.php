@@ -1,6 +1,7 @@
 <?php
-ini_set("display_errors", "on");
-ini_set("date.timezone", "Europe/London");
+
+ini_set('display_errors', 'on');
+ini_set('date.timezone', 'Europe/London');
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;

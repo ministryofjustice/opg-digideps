@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Twig;
 
 // todo remove assetic from config and use it's 

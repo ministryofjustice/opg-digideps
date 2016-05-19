@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AppBundle\Service;
 
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;

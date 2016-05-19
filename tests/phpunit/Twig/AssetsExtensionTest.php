@@ -2,8 +2,6 @@
 
 namespace AppBundle\Twig;
 
-
-
 class AssetsExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  AssetsExtension */

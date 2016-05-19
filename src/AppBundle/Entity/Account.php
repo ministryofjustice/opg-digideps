@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Account
 {
@@ -272,7 +271,6 @@ class Account
     {
         return $this->createdAt;
     }
-
 
     /**
      * @param \DateTime $createdAt
