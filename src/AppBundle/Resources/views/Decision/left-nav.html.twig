@@ -1,9 +1,0 @@
-{% set translationDomain = "report-decisions" %}
-{% trans_default_domain translationDomain %}
-
-{% set route = app.request.attributes.get('_route') %}
-
-<nav id="account-sub-nav">
-    <a href="{{ path('decisions', {'reportId': report.id}) }}" class="{{ (route =='decisions') ? 'active':'' }} behat-link-decisions">{{ 'nav.decisions' | trans({}, translationDomain) }}</a>
-    <a href="{{ path('mental_capacity', {'reportId': report.id}) }}" class="{{ (route =='mental_capacity') ? 'active':'' }} behat-link-mental-capacity">{{ 'nav.mentalCapacity' | trans({}, translationDomain) }}</a>
-</nav>

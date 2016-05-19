@@ -1,17 +1,7 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}decisions js-report-decisions-input{% endblock %}
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
-
-{% block leftcontent %}
-    {% include 'AppBundle:Decision:left-nav.html.twig'%}
-{% endblock %}
+{% extends 'AppBundle:Decision:layout.html.twig'  %}
 
 {% block maincontent %}
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
@@ -43,14 +33,4 @@
         {% endif %}
     {% endif %}
 
-
 {% endblock %}
-
-{% block pageBodyFooterNav %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'nextLink': path("mental_capacity" , {'reportId': report.id }),
-        'nextLabel': 'Mental capacity'
-        } %}
-{% endblock %}
-
-{% endembed %}

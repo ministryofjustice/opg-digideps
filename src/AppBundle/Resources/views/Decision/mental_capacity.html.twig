@@ -1,33 +1,22 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
-{% set translationDomain = "report-client-capacity" %}
+{% set translationDomain = "report-mental-capacity" %}
 {% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Decision:layout.html.twig'  %}
+
 {% block bodyClasses %}decisions client-capacity{% endblock %}
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-
-{% block backLinktop %}{% endblock %}
-
-{% block leftcontent %}
-    {% include 'AppBundle:Decision:left-nav.html.twig'%}
-{% endblock %}
 
 {% block maincontent %}
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
-
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({}, translationDomain) }}</p>
 xxx
 
-
 {% endblock %}
+
 
 {% block pageBodyFooterNav %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+     {% include 'AppBundle:Components:nextprevious.html.twig' with {
         'previousLink': path("decisions" , {'reportId': report.id }),
-        'previousLabel': 'Decisions',
+        'previousLabel': 'Decisions'
         'nextLink': path("contacts" , {'reportId': report.id }),
-        'nextLabel': 'Contacts',
+        'nextLabel': 'Contacts'
         } %}
 {% endblock %}
-
-{% endembed %}
