@@ -95,6 +95,13 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Action",  mappedBy="report", cascade={"persist"})
      **/
     private $action;
+    
+    /**
+     * @JMS\Groups({"basic", "mental-capacity"})
+     * @JMS\Type("AppBundle\Entity\MentalCapacity")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MentalCapacity",  mappedBy="report", cascade={"persist"})
+     **/
+    private $mentalCapacity;
 
     /**
      * @JMS\Groups({ "basic"})
@@ -789,6 +796,23 @@ class Report
         return $this;
     }
 
+    /**
+     * @return MentalCapacity
+     */
+    public function getMentalCapacity()
+    {
+        return $this->mentalCapacity;
+    }
+
+    /**
+     * @param MentalCapacity $mentalCapacity
+     */
+    public function setMentalCapacity(MentalCapacity $mentalCapacity)
+    {
+        $this->mentalCapacity = $mentalCapacity;
+        return $this;
+    }
+        
     /**
      * Set reasonForNoContact.
      *
