@@ -17,7 +17,7 @@ no_decision:
         value: "Edit this reason"
     controls:
       reason:
-        label: "Reason for no decisions"
+        label: ""
 form:
   controls:
     addButton:
