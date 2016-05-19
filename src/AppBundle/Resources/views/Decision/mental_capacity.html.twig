@@ -15,7 +15,7 @@ xxx
 {% block pageBodyFooterNav %}
      {% include 'AppBundle:Components:nextprevious.html.twig' with {
         'previousLink': path("decisions" , {'reportId': report.id }),
-        'previousLabel': 'Decisions'
+        'previousLabel': 'Decisions',
         'nextLink': path("contacts" , {'reportId': report.id }),
         'nextLabel': 'Contacts'
         } %}
