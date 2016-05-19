@@ -129,7 +129,7 @@ class Report
      * @var \AppBundle\Entity\Action
      */
     private $action;
-    
+
     /**
      * @JMS\Type("AppBundle\Entity\MentalCapacity")
      *
@@ -707,7 +707,7 @@ class Report
 
         return $this;
     }
-    
+
     /**
      * @return MentalCapacity
      */
@@ -722,10 +722,10 @@ class Report
     public function setMentalCapacity(MentalCapacity $mentalCapacity)
     {
         $this->mentalCapacity = $mentalCapacity;
+
         return $this;
     }
 
-    
     /**
      * @return bool $noAssetToAdd
      */

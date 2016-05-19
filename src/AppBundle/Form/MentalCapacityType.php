@@ -32,7 +32,7 @@ class MentalCapacityType extends AbstractType
                 if ($data->getHasCapacityChanged() == 'changed') {
                     $validationGroups[] = 'has-capacity-changed-yes';
                 }
-                
+
                 return $validationGroups;
             },
         ]);

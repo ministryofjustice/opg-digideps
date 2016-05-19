@@ -10,7 +10,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class MentalCapacity
 {
-
     use Traits\HasReportTrait;
 
     /**
@@ -54,13 +53,14 @@ class MentalCapacity
     public function setHasCapacityChanged($hasCapacityChanged)
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
+
         return $this;
     }
 
     public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
+
         return $this;
     }
-
 }

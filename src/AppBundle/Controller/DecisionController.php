@@ -183,5 +183,4 @@ class DecisionController extends AbstractController
             'report' => $report,
         ];
     }
-    
 }

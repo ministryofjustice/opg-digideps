@@ -6,8 +6,6 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class MentalCapacityController extends AbstractController
 {
@@ -38,12 +36,12 @@ class MentalCapacityController extends AbstractController
             $data->setReport($report);
 
             $this->get('restClient')->put('report/'.$reportId.'/mental-capacity', $data, [
-                'deserialise_group' => 'MentalCapacity'
+                'deserialise_group' => 'MentalCapacity',
             ]);
 
             return $this->redirect($this->generateUrl('mental_capacity', ['reportId' => $reportId]).'#pageBody');
         }
-        
+
         return [
             'report' => $report,
             'form' => $form->createView(),
