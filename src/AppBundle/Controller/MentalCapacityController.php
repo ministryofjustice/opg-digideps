@@ -62,11 +62,10 @@ class MentalCapacityController extends RestController
         }
         
         if (array_key_exists('has_capacity_changed_details', $data)) {
-            if ($data['has_capacity_changed'] != 'changed') {
-                $data['has_capacity_changed_details'] = null;
-            }
             $mc->setHasCapacityChangedDetails($data['has_capacity_changed_details']);
         }
+        
+        $mc->cleanUpUnusedData();
 
         return $mc;
     }

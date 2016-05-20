@@ -12,6 +12,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class MentalCapacity
 {
+    const CAPACITY_CHANGED = 'changed';
+    const CAPACITY_STAYED_SAME = 'stayedSame';
+    
     /**
      * @var int
      *
@@ -113,6 +116,11 @@ class MentalCapacity
         return $this;
     }
 
-
+    public function cleanUpUnusedData()
+    {
+        if ($this->hasCapacityChanged == self::CAPACITY_STAYED_SAME) {
+            $this->hasCapacityChangedDetails = null;
+        }
+    }
     
 }
