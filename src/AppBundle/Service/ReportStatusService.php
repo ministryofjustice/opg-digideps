@@ -31,28 +31,50 @@ class ReportStatusService
         $this->translator = $translator;
     }
 
+    
+    
+    /** @return string */
+    public function getDecisionsState()
+    {
+        // no decisions, no tick, no mental capacity => grey
+        if (empty($this->report->getDecisions())
+            && empty($this->report->getReasonForNoDecisions())
+            && empty($this->report->getMentalCapacity())) {
+            return self::STATUS_GREY;
+        }
+        
+        if ($this->missingDecisions()) {
+            return self::STATUS_AMBER;
+        } else {
+            return self::STATUS_GREEN;
+        }
+    }
+    
     /** @return string */
     public function getDecisionsStatus()
     {
-        $decisions = $this->report->getDecisions();
-
-        if (isset($decisions)) {
-            $count = count($decisions);
-
-            if ($count == 1) {
-                return '1 '.$this->trans('decision');
-            } elseif ($count > 1) {
-                return "${count} ".$this->trans('decisions');
-            }
-        }
-
-        if (empty($this->report->getReasonForNoDecisions())) {
-            return $this->trans('notstarted');
-        } else {
-            return $this->trans('nodecisions');
+        switch ($this->getDecisionsState()) {
+            case self::STATUS_GREY:
+                return $this->translator->trans('notstarted', [], 'status');
+            case self::STATUS_GREEN:
+                return $this->translator->trans('finished', [], 'status');
+           default:
+                return $this->translator->trans('notFinished', [], 'status');
         }
     }
+    
 
+    
+    /** @return string */
+    public function getContactsState()
+    {
+        if ($this->missingContacts()) {
+            return self::NOTSTARTED;
+        } else {
+            return self::DONE;
+        }
+    }
+    
     /** @return string */
     public function getContactsStatus()
     {
@@ -75,7 +97,7 @@ class ReportStatusService
             return $this->trans('nocontacts');
         }
     }
-
+    
     /** @return string */
     public function getSafeguardingStatus()
     {
@@ -107,11 +129,11 @@ class ReportStatusService
             return $this->trans('notstarted');
         }
     }
-
+    
     /** @return string */
-    public function getDecisionsState()
+    public function getAssetsState()
     {
-        if ($this->missingDecisions()) {
+        if ($this->missingAssets()) {
             return self::NOTSTARTED;
         } else {
             return self::DONE;
@@ -134,15 +156,6 @@ class ReportStatusService
         return $this->missingActions() ? self::NOTSTARTED : self::DONE;
     }
 
-    /** @return string */
-    public function getContactsState()
-    {
-        if ($this->missingContacts()) {
-            return self::NOTSTARTED;
-        } else {
-            return self::DONE;
-        }
-    }
 
     /** @return string */
     public function getSafeguardingState()
@@ -191,15 +204,6 @@ class ReportStatusService
         }
     }
 
-    /** @return string */
-    public function getAssetsState()
-    {
-        if ($this->missingAssets()) {
-            return self::NOTSTARTED;
-        } else {
-            return self::DONE;
-        }
-    }
 
     /** @return bool */
     public function isReadyToSubmit()
@@ -262,7 +266,15 @@ class ReportStatusService
     /** @return bool */
     public function missingDecisions()
     {
-        return empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions());
+        if (empty($this->report->getDecisions()) && !$this->report->getReasonForNoDecisions()) {
+            return true;
+        }
+        
+        if (empty($this->report->getMentalCapacity())) {
+            return true;
+        }
+        
+        return false;
     }
 
     /** @return bool */

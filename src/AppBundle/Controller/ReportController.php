@@ -18,6 +18,7 @@ class ReportController extends AbstractController
         'basic',  'accounts', 'client',
         'transactions', 'transactionsIn', 'transactionsOut',
         'asset', 'contacts', 'decisions', 'action', 'transfers',
+        'MentalCapacity' //update other groups to this format
     ];
 
     /**
