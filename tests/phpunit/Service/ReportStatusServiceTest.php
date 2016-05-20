@@ -79,4 +79,24 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
     
         
+    public function contactsProvider()
+    {
+        $contact = m::mock(\AppBundle\Entity\Contact::class);
+        
+        return [
+            [[], Rss::STATE_NOT_STARTED],
+            // incomplete
+            [['getContacts' => [$contact]], Rss::STATE_DONE],
+            [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE],
+        ];
+    }
+    
+    /**
+     * @dataProvider contactsProvider
+     */
+    public function testContacts($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getContactsState());
+    }
 }
