@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use AppBundle\Entity\MentalCapacity;
 
 class MentalCapacityType extends AbstractType
 {
@@ -13,7 +14,10 @@ class MentalCapacityType extends AbstractType
     {
         $builder->add('hasCapacityChanged', 'choice', array(
                     // keep in sync with API model constants
-                    'choices' => ['changed' => 'Changed', 'stayedSame' => 'Stayed the same'],
+                    'choices' => [
+                        MentalCapacity::CAPACITY_CHANGED => 'Changed', 
+                        MentalCapacity::CAPACITY_STAYED_SAME => 'Stayed the same'
+                    ],
                     'expanded' => true,
                 ))
                 ->add('hasCapacityChangedDetails', 'textarea')

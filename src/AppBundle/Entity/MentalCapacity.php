@@ -10,6 +10,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class MentalCapacity
 {
+    const CAPACITY_CHANGED = 'changed';
+    const CAPACITY_STAYED_SAME = 'stayedSame';
+    
     use Traits\HasReportTrait;
 
     /**
