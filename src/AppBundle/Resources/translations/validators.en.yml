@@ -158,7 +158,6 @@ account:
         notBlank: You must enter a closing balance
         type: Enter a valid closing balance
         outOfRange: Enter a valid closing balance
-        mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
     isJointAccount:
         notBlank: Choose Yes or No
     moneyInOut:
@@ -294,7 +293,7 @@ mentalCapacity:
     hasCapacityChanged:
         notBlank: Select one option
     hasCapacityChangedDetails:
-        notBlank: Enter details how about the capacity changed
+        notBlank: You must tell us how the client's mental capacity has changed
         
 feedbackAfterReport:
     satisfactionLevel:
