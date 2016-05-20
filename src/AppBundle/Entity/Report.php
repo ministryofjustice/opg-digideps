@@ -887,6 +887,7 @@ class Report
      * @JMS\VirtualProperty
      * @JMS\Type("integer")
      * @JMS\SerializedName("court_order_type_id")
+     * @JMS\Groups({"basic"})
      * 
      * @return int
      */
