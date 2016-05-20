@@ -178,36 +178,23 @@ class ReportStatusService
      */
     public function getRemainingSections()
     {
-        $ret = [];
-
-        $isPropAndAff = $this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS;
+        $states = [
+            'decisions' => $this->getDecisionsState(),
+            'contacts' => $this->getContactsState(),
+            'safeguarding' => $this->getSafeguardingState(),
+            'actions' => $this->getActionsState(),
+        ];
         
-        if ($this->missingDecisions()) {
-            $ret[] = 'decisions';
-        }
-        
-        if ($this->missingContacts()) {
-            $ret[] = 'contacts';
-        }
-        
-        if ($this->missingSafeguarding()) {
-            $ret[] = 'safeguarding';
+        if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
+            $states += [
+                'accounts' => $this->getAccountsState(),
+                'assets' => $this->getAssetsState(),
+            ];
         }
         
-        if ($isPropAndAff && ($this->hasOutstandingAccounts() || $this->missingAccounts() 
-                || $this->missingTransfers() || $this->missingBalance())) {
-            $ret[] = 'account';
-        }
-
-        if ($isPropAndAff && $this->missingAssets()) {
-            $ret[] = 'assets';
-        }
-
-        if ($this->missingActions()) {
-            $ret[] = 'actions';
-        }
-
-        return $ret;
+        return array_filter($states, function($e) {
+            return $e != self::STATE_DONE;
+        });
     }
 
     /** @return bool */
@@ -221,9 +208,7 @@ class ReportStatusService
      */
     public function getStatus()
     {
-        $readyToSubmit = $this->isReadyToSubmit();
-
-        if ($readyToSubmit && $this->report->isDue()) {
+        if ($this->isReadyToSubmit() && $this->report->isDue()) {
             return 'readyToSubmit';
         } else {
             return 'notFinished';

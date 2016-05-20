@@ -35,20 +35,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return new Rss($report);
     }
     
-    /**
-     * @test
-     */
-    public function nothingFilled()
-    {
-        $object = $this->getObjectWithReportMocks([]);
-        $expected = ['decisions', 'contacts', 'safeguarding', 'account', 'assets', 'actions'];
-        $this->assertEquals($expected, $object->getRemainingSections());
-        
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getSafeguardingState());
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getAccountsState());
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getAssetsState());
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getActionsState());
-    }
    
     public function decisionsProvider()
     {
@@ -56,14 +42,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
         
         return [
-            [[], Rss::STATE_NOT_STARTED],
+            [[], Rss::STATE_NOT_STARTED, false],
             // incomplete
-            [['getDecisions' => [$decision]], Rss::STATE_INCOMPLETE],
-            [['getReasonForNoDecisions' => 'x'], Rss::STATE_INCOMPLETE],
-            [['getMentalCapacity' => $mc], Rss::STATE_INCOMPLETE],
+            [['getDecisions' => [$decision]], Rss::STATE_INCOMPLETE, false],
+            [['getReasonForNoDecisions' => 'x'], Rss::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mc], Rss::STATE_INCOMPLETE, false],
             // done
-            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], Rss::STATE_DONE],
-            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], Rss::STATE_DONE],
+            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], Rss::STATE_DONE, true],
+            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], Rss::STATE_DONE, true],
         ];
     }
     
@@ -71,7 +57,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider decisionsProvider
      */
-    public function cecisions($mocks, $state)
+    public function decisions($mocks, $state)
     {
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getDecisionsState());
@@ -83,10 +69,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $contact = m::mock(\AppBundle\Entity\Contact::class);
         
         return [
-            [[], Rss::STATE_NOT_STARTED],
+            [[], Rss::STATE_NOT_STARTED, false],
             // done
-            [['getContacts' => [$contact]], Rss::STATE_DONE],
-            [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE],
+            [['getContacts' => [$contact]], Rss::STATE_DONE, true],
+            [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE, true],
         ];
     }
     
@@ -100,7 +86,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getContactsState());
     }
     
-    public function safegProvider()
+    public function safeguardingProvider()
     {
         $safegOk = m::mock(\AppBundle\Entity\Safeguarding::class, [
             'missingSafeguardingInfo' => false
@@ -121,9 +107,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @test
-     * @dataProvider safegProvider
+     * @dataProvider safeguardingProvider
      */
-    public function safeg($mocks, $state)
+    public function safeguarding($mocks, $state)
     {
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getSafeguardingState());
@@ -232,5 +218,66 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getActionsState());
     }
     
+    
+     /**
+     * @test
+     */
+    public function getRemainingSectionsEmpty()
+    {
+        $object = $this->getObjectWithReportMocks([]);
+        $expected = [
+            'decisions' => 'not-started',
+            'contacts' => 'not-started',
+            'safeguarding' => 'not-started',
+            'actions' => 'not-started',
+            'accounts' => 'not-started',
+            'assets' => 'not-started',
+        ];
+        $this->assertEquals($expected, $object->getRemainingSections());
+        
+        $this->assertFalse($object->isReadyToSubmit());
+    }
+    
+    public function getRemainingSectionsPartialProvider()
+    {
+        return [
+             [array_pop($this->decisionsProvider())[0], 'decisions'],
+             [array_pop($this->contactsProvider())[0], 'contacts'],
+             [array_pop($this->safeguardingProvider())[0], 'safeguarding'],
+             [array_pop($this->accountProvider())[0], 'accounts'],
+             [array_pop($this->assetsProvider())[0], 'assets'],
+             [array_pop($this->actionsProvider())[0], 'actions'],
+        ];
+    }
+    
+     /**
+     * @test
+      * @dataProvider getRemainingSectionsPartialProvider
+     */
+    public function getRemainingSectionsPartial($provider, $keyRemoved)
+    {
+        $object = $this->getObjectWithReportMocks($provider);
+        $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
+        $this->assertFalse($object->isReadyToSubmit());
+    }
+    
+     /**
+     * @test
+     */
+    public function getRemainingSectionsNone()
+    {
+        $object = $this->getObjectWithReportMocks(
+             array_pop($this->decisionsProvider())[0]
+             + array_pop($this->contactsProvider())[0]
+             + array_pop($this->safeguardingProvider())[0]
+             + array_pop($this->accountProvider())[0]
+             + array_pop($this->assetsProvider())[0]
+             + array_pop($this->actionsProvider())[0]
+        );
+        
+        $this->assertEquals([], $object->getRemainingSections());
+        $this->assertTrue($object->isReadyToSubmit());
+    }
+   
     
 }
