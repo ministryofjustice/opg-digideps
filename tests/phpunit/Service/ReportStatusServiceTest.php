@@ -40,41 +40,43 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $expected = ['decisions', 'contacts', 'safeguarding', 'account', 'assets', 'actions'];
         $this->assertEquals($expected, $this->object->getRemainingSections());
         
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getContactsState());
+        
         $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getSafeguardingState());
         $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getAccountsState());
         $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getAssetsState());
         $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getActionsState());
     }
 
+    private function assertIncomplete($state, $section)
+    {
+        $this->assertEquals(Rss::STATE_INCOMPLETE, $state);
+        $this->assertContains($section, $this->object->getRemainingSections());
+    }
+    
     public function testDecisions()
     {
         $this->assertEquals(Rss::STATE_NOT_STARTED, $this->object->getDecisionsState());
         
-        $d = m::mock(\AppBundle\Entity\Decision::class);
+        $decision = m::mock(\AppBundle\Entity\Decision::class);
         $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
         
-        $this->report->shouldReceive('getDecisions')->andReturn([$d]);
-        $this->assertEquals(Rss::STATE_INCOMPLETE, $this->object->getDecisionsState());
+        // incomplete 
+        $this->report->shouldReceive('getDecisions')->andReturn([$decision]);
+        $this->assertIncomplete($this->object->getDecisionsState(), 'decisions');
+        
+        // incomplete
+        $this->setUp();
+        $this->report->shouldReceive('getMentalCapacity')->andReturn($mc);
+        $this->assertIncomplete($this->object->getDecisionsState(), 'decisions');
+        
+        // done
+        $this->setUp();
+        $this->report->shouldReceive('getDecisions')->andReturn([$decision]);
         $this->report->shouldReceive('getMentalCapacity')->andReturn($mc);
         $this->assertEquals(Rss::STATE_DONE, $this->object->getDecisionsState());
-        
         $this->assertNotContains('decisions', $this->object->getRemainingSections());
     }
     
-    public function testContacts()
-    {
-        $c = m::mock(\AppBundle\Entity\Contact::class);
-        
-        $this->report->shouldReceive('getContacts')->andReturn([$c]);
-        $this->assertNotContains('contacts', $this->object->getRemainingSections());
-    }
-    
-    public function testContactsReason()
-    {
-        $this->report->shouldReceive('getReasonForNoContacts')->andReturn('r');
-        $this->assertNotContains('contacts', $this->object->getRemainingSections());
-    }
-       
+    //FOLLOW EXAMPLE ...
         
 }
