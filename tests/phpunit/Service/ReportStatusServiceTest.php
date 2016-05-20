@@ -127,4 +127,63 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getSafeguardingState());
     }
+    
+    public function accountProvider()
+    {
+        $accountOk = m::mock(\AppBundle\Entity\Account::class, [
+            'hasClosingBalance' => true,
+            'hasMissingInformation' => false
+        ]);
+        
+        $accountClosingMissing = m::mock(\AppBundle\Entity\Account::class, [
+            'hasClosingBalance' => false,
+            'hasMissingInformation' => false
+        ]);
+        
+        $accountMissingInfo = m::mock(\AppBundle\Entity\Account::class, [
+            'hasClosingBalance' => true,
+            'hasMissingInformation' => true
+        ]);
+        
+        $transfer = m::mock(\AppBundle\Entity\MoneyTransfer::class);
+        
+        $partial1 = [
+                'getAccounts'=>[$accountOk, $accountOk], 
+                'hasMoneyIn'=>true, 
+                'hasMoneyOut'=>true,
+                'getBalanceMismatchExplanation' => null,
+                'isTotalsMatch' => false,
+                'getNoTransfersToAdd' => null,
+                'getMoneyTransfers' => [],
+        ];
+        
+        return [
+            // not started
+            [[], Rss::STATE_NOT_STARTED],
+            [['getAccounts'=>[$accountOk]], Rss::STATE_INCOMPLETE],
+            [['getAccounts'=>[$accountClosingMissing]], Rss::STATE_INCOMPLETE],
+            [['getAccounts'=>[$accountMissingInfo]], Rss::STATE_INCOMPLETE],
+            [['getAccounts'=>[$accountOk]], Rss::STATE_INCOMPLETE],
+            [['getAccounts'=>[$accountOk], 'hasMoneyIn'=>true], Rss::STATE_INCOMPLETE],
+            [['getAccounts'=>[$accountOk], 'hasMoneyOut'=>true], Rss::STATE_INCOMPLETE],
+            [['getMoneyTransfers'=>[$transfer]] + $partial1, Rss::STATE_INCOMPLETE],
+            [['getNoTransfersToAdd'=>'x'] + $partial1, Rss::STATE_INCOMPLETE],
+            [['isTotalsMatch'=>true] + $partial1, Rss::STATE_INCOMPLETE],
+            [['getBalanceMismatchExplanation'=>'x'] + $partial1, Rss::STATE_INCOMPLETE],
+            //done
+            [['getNoTransfersToAdd'=>'x', 'isTotalsMatch'=>true] + $partial1, Rss::STATE_DONE],
+            [['getMoneyTransfers'=>[$transfer], 'isTotalsMatch'=>true] + $partial1, Rss::STATE_DONE],
+            [['getMoneyTransfers'=>[$transfer], 'getBalanceMismatchExplanation'=>'x'] + $partial1, Rss::STATE_DONE],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider accountProvider
+     */
+    public function account($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getAccountsState());
+    }
 }
