@@ -12,6 +12,7 @@ class MentalCapacityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('hasCapacityChanged', 'choice', array(
+                    // keep in sync with API model constants
                     'choices' => ['changed' => 'Changed', 'stayedSame' => 'Stayed the same'],
                     'expanded' => true,
                 ))
