@@ -508,59 +508,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($reportStatusService->isReadyToSubmit());
     }
 
-    /** @test */
-    public function indicateSingleDecision()
-    {
-        $decisions = array(1);
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn($decisions)
-            ->shouldReceive('getReasonForNoDecisions')->andReturn('')
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getDecisionsStatus();
-
-        $this->assertEquals('1 Decision', $answer);
-    }
-
-    /** @test */
-    public function indicateMultipleDecisions()
-    {
-        $decisions = array(1, 2);
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn($decisions)
-            ->shouldReceive('getReasonForNoDecisions')->andReturn('')
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getDecisionsStatus();
-
-        $this->assertEquals('2 Decisions', $answer);
-    }
-
-    /** @test */
-    public function indicateNoDecisionsMade()
-    {
-        $decisions = array();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn($decisions)
-            ->shouldReceive('getReasonForNoDecisions')->andReturn('There was nothing to decide')
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getDecisionsStatus();
-
-        $this->assertEquals('No decisions', $answer);
-    }
 
     /** @test */
     public function indicateDecisionsNotStarted()
@@ -568,9 +515,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $decisions = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getDecisions')->andReturn($decisions)
             ->shouldReceive('getReasonForNoDecisions')->andReturn('')
+            ->shouldReceive('getMentalCapacity')->andReturn(null)
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -870,9 +817,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $decisions = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getDecisions')->andReturn($decisions)
             ->shouldReceive('getReasonForNoDecisions')->andReturn('')
+            ->shouldReceive('getMentalCapacity')->andReturn(null)
             ->getMock();
 
         /** @var ReportStatusService $reportStatusService */
@@ -888,29 +835,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $decisions = array(1);
 
+        $mc = m::mock('AppBundle\Entity\MentalCapacity');
+        
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getDecisions')->andReturn($decisions)
             ->shouldReceive('getReasonForNoDecisions')->andReturn('')
-            ->getMock();
-
-        /** @var ReportStatusService $reportStatusService */
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getDecisionsState();
-
-        $this->assertEquals(ReportStatusService::DONE, $answer);
-    }
-
-    /** @test */
-    public function indicateDecisionsStateDoneWhenIndicatedNone()
-    {
-        $decisions = array();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn($decisions)
-            ->shouldReceive('getReasonForNoDecisions')->andReturn('stuff')
+            ->shouldReceive('getMentalCapacity')->andReturn($mc)
             ->getMock();
 
         /** @var ReportStatusService $reportStatusService */
@@ -927,7 +857,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $contacts = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getContacts')->andReturn($contacts)
             ->shouldReceive('getReasonForNoContacts')->andReturn('')
             ->getMock();
