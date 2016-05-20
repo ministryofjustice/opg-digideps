@@ -74,8 +74,8 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
-    courtOrderType:
-        notBlank: You must select either Property and Affairs or Personal Welfare
+#    courtOrderType:
+#        notBlank: You must select either Property and Affairs or Personal Welfare
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted

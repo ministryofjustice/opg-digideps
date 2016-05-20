@@ -13,21 +13,17 @@ class ReportStatusService
     const INCOMPLETE = 'incomplete'; //orange
     const NOTFINISHED = 'notFinished';
     const READYTOSUBMIT = 'readyToSubmit';
-    // for status
-    const STATUS_GREY = 'not-started';
-    const STATUS_AMBER = 'incomplete';
-    const STATUS_GREEN = 'done';
+    
+    const CLASS_NOT_STARTED = 'not-started';
+    const CLASS_INCOMPLETE = 'incomplete';
+    const CLASS_DONE = 'done';
 
     /** @var Report */
     private $report;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
-    public function __construct(Report $report, TranslatorInterface $translator)
+    public function __construct(Report $report)
     {
         $this->report = $report;
-        $this->translator = $translator;
     }
 
     /** @return string */
@@ -35,13 +31,13 @@ class ReportStatusService
     {
         // no decisions, no tick, no mental capacity => grey
         if (empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions()) && empty($this->report->getMentalCapacity())) {
-            return self::STATUS_GREY;
+            return self::CLASS_NOT_STARTED;
         }
 
         if ($this->missingDecisions()) {
-            return self::STATUS_AMBER;
+            return self::CLASS_INCOMPLETE;
         } else {
-            return self::STATUS_GREEN;
+            return self::CLASS_DONE;
         }
     }
 
@@ -49,12 +45,12 @@ class ReportStatusService
     public function getDecisionsStatus()
     {
         switch ($this->getDecisionsState()) {
-            case self::STATUS_GREY:
-                return $this->translator->trans('notstarted', [], 'status');
-            case self::STATUS_GREEN:
-                return $this->translator->trans('finished', [], 'status');
+            case self::CLASS_NOT_STARTED:
+                return 'notstarted';
+            case self::CLASS_DONE:
+                return 'finished';
             default:
-                return $this->translator->trans('notFinished', [], 'status');
+                return 'notFinished';
         }
     }
 
@@ -76,18 +72,17 @@ class ReportStatusService
         if (isset($contacts)) {
             $count = count($contacts);
 
-            // TODO use transcount
             if ($count == 1) {
-                return '1 ' . $this->trans('contact');
+                return '1 Contact';
             } elseif ($count > 1) {
-                return "${count} " . $this->trans('contacts');
+                return "$count Contacts";
             }
         }
 
         if (empty($this->report->getReasonForNoContacts())) {
-            return $this->trans('notstarted');
+            return 'notstarted';
         } else {
-            return $this->trans('nocontacts');
+            return 'nocontacts';
         }
     }
 
@@ -95,9 +90,9 @@ class ReportStatusService
     public function getSafeguardingStatus()
     {
         if ($this->missingSafeguarding()) {
-            return $this->trans('notstarted');
+            return 'notstarted';
         } else {
-            return $this->trans('finished');
+            return 'finished';
         }
     }
 
@@ -110,16 +105,16 @@ class ReportStatusService
             $count = count($assets);
 
             if ($count == 1) {
-                return '1 ' . $this->trans('asset');
+                return '1 Asset';
             } elseif ($count > 1) {
-                return "${count} " . $this->trans('assets');
+                return "$count Assets";
             }
         }
 
         if ($this->report->getNoAssetToAdd() == true) {
-            return $this->trans('noassets');
+            return 'noassets';
         } else {
-            return $this->trans('notstarted');
+            return 'notstarted';
         }
     }
 
@@ -137,9 +132,9 @@ class ReportStatusService
     public function getActionsStatus()
     {
         if ($this->missingActions()) {
-            return $this->trans('notstarted');
+            return 'notstarted';
         } else {
-            return $this->trans('finished');
+            return 'finished';
         }
     }
 
@@ -164,7 +159,7 @@ class ReportStatusService
     {
         // not started
         if ($this->missingAccounts() && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
-            return self::STATUS_GREY;
+            return self::CLASS_NOT_STARTED;
         }
 
         // all done
@@ -173,40 +168,40 @@ class ReportStatusService
         }
 
         // amber in all the other cases
-        return self::STATUS_AMBER;
+        return self::CLASS_INCOMPLETE;
     }
 
     /** @return string */
     public function getAccountsStatus()
     {
         switch ($this->getAccountsState()) {
-            case self::STATUS_GREY:
-                return $this->translator->trans('notstarted', [], 'status');
-            case self::STATUS_GREEN:
-                return $this->translator->trans('finished', [], 'status');
+            case self::CLASS_NOT_STARTED:
+                return 'notstarted';
+            case self::CLASS_DONE:
+                return 'finished';
             default:
-                return $this->translator->trans('notFinished', [], 'status');
+                return 'notFinished';
         }
     }
 
     /** @return bool */
-    public function missingAssets()
+    private function missingAssets()
     {
         return empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd());
     }
 
     /** @return bool */
-    public function missingSafeguarding()
+    private function missingSafeguarding()
     {
         $safeguarding = $this->report->getSafeguarding();
-
+        
         return !$safeguarding || $safeguarding->missingSafeguardingInfo() == true;
     }
 
     /** @return bool */
-    public function missingActions()
+    private function missingActions()
     {
-        return !$this->report->getAction() || !$this->report->getAction()->isComplete();
+        return !$this->report->getAction();
     }
 
     /** @return bool */
@@ -222,13 +217,13 @@ class ReportStatusService
     }
 
     /** @return bool */
-    public function missingContacts()
+    private function missingContacts()
     {
         return empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts());
     }
 
     /** @return bool */
-    public function missingDecisions()
+    private function missingDecisions()
     {
         if (empty($this->report->getDecisions()) && !$this->report->getReasonForNoDecisions()) {
             return true;
@@ -242,7 +237,7 @@ class ReportStatusService
     }
 
     /** @return bool */
-    public function missingAccounts()
+    private function missingAccounts()
     {
         return empty($this->report->getAccounts());
     }
@@ -252,7 +247,7 @@ class ReportStatusService
      *
      * @return bool
      */
-    public function missingTransfers()
+    private function missingTransfers()
     {
         if (count($this->report->getAccounts()) <= 1) {
             return false;
@@ -265,13 +260,14 @@ class ReportStatusService
     }
 
     /** @return bool */
-    public function missingBalance()
+    private function missingBalance()
     {
         $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
 
         return !$balanceValid;
     }
 
+    
     /**
      * @return array
      */
@@ -279,27 +275,27 @@ class ReportStatusService
     {
         $ret = [];
 
-        if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
-            if ($this->hasOutstandingAccounts() || $this->missingAccounts() 
-                    || $this->missingTransfers() || $this->missingBalance()) {
-                $ret[] = 'account';
-            }
-
-            if ($this->missingAssets()) {
-                $ret[] = 'assets';
-            }
-        }
-
-        if ($this->missingContacts()) {
-            $ret[] = 'contacts';
-        }
-
+        $isPropAndAff = $this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS;
+        
         if ($this->missingDecisions()) {
             $ret[] = 'decisions';
         }
-
+        
+        if ($this->getContactsStatus() == 'not-started') {
+            $ret[] = 'contacts';
+        }
+        
         if ($this->missingSafeguarding()) {
-            $ret[] = 'safeg';
+            $ret[] = 'safeguarding';
+        }
+        
+        if ($isPropAndAff && ($this->hasOutstandingAccounts() || $this->missingAccounts() 
+                || $this->missingTransfers() || $this->missingBalance())) {
+            $ret[] = 'account';
+        }
+
+        if ($isPropAndAff && $this->missingAssets()) {
+            $ret[] = 'assets';
         }
 
         if ($this->missingActions()) {
@@ -323,20 +319,9 @@ class ReportStatusService
         $readyToSubmit = $this->isReadyToSubmit();
 
         if ($readyToSubmit && $this->report->isDue()) {
-            return self::READYTOSUBMIT;
+            return 'readyToSubmit';
         } else {
             return self::NOTFINISHED;
         }
     }
-
-    /**
-     * @param string $key
-     *
-     * @return string
-     */
-    private function trans($key)
-    {
-        return $this->translator->trans($key, [], 'status');
-    }
-
 }

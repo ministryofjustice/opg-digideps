@@ -45,14 +45,14 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function sectionCountForProperty()
     {
-        $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
+        $this->report->setCourtOrderTypeId(REPORT::PROPERTY_AND_AFFAIRS);
         $this->AssertEquals(5, $this->report->getSectionCount());
     }
 
     /** @test */
     public function sectionCountForOther()
     {
-        $this->report->setCourtOrderType(1);
+        $this->report->setCourtOrderTypeId(1);
         $this->AssertEquals(3, $this->report->getSectionCount());
     }
 

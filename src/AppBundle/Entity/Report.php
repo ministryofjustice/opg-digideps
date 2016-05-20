@@ -68,11 +68,10 @@ class Report
 
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank( message="report.courtOrderType.notBlank" )
      *
      * @var int
      */
-    private $courtOrderType;
+    private $courtOrderTypeId;
 
     /**
      * @JMS\Exclude
@@ -458,9 +457,9 @@ class Report
     /**
      * @return int $courtOrderType
      */
-    public function getCourtOrderType()
+    public function getCourtOrderTypeId()
     {
-        return $this->courtOrderType;
+        return $this->courtOrderTypeId;
     }
 
     /**
@@ -468,9 +467,9 @@ class Report
      *
      * @return \AppBundle\Entity\Report
      */
-    public function setCourtOrderType($courtOrderType)
+    public function setCourtOrderTypeId($courtOrderType)
     {
-        $this->courtOrderType = $courtOrderType;
+        $this->courtOrderTypeId = $courtOrderType;
 
         return $this;
     }
@@ -832,15 +831,6 @@ class Report
     public function getReportSeen()
     {
         return $this->reportSeen;
-    }
-
-    public function getSectionCount()
-    {
-        if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {
-            return 5;
-        } else {
-            return 3;
-        }
     }
 
     /**

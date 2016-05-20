@@ -39,7 +39,7 @@
         } %}
     </li>
 
-    {% if report.courtOrderType == constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') %}
+    {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.finances' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {

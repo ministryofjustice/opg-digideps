@@ -50,7 +50,7 @@ class SafeguardController extends AbstractController
             return $this->redirect($this->generateUrl('safeguarding', ['reportId' => $reportId]).'#pageBody');
         }
 
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        $reportStatusService = new ReportStatusService($report);
 
         return['report' => $report,
                 'reportStatus' => $reportStatusService,

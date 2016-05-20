@@ -36,7 +36,7 @@ class ReportController extends AbstractController
 
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
         $reports = array_filter($reports, function ($r) use ($cot) {
-            return $r->getCourtOrderType() == $cot;
+            return $r->getCourtOrderTypeId() == $cot;
         });
         arsort($reports);
 
@@ -55,7 +55,7 @@ class ReportController extends AbstractController
                      'deserialise_group' => 'startEndDates',
                 ]);
 
-                return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderType()]));
+                return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
             }
         }
 
@@ -116,9 +116,9 @@ class ReportController extends AbstractController
             //if client has property & affairs and health & welfare then give them property & affairs
             //else give them health and welfare
             if (count($allowedCourtOrderTypes) > 1) {
-                $report->setCourtOrderType(EntityDir\Report::PROPERTY_AND_AFFAIRS);
+                $report->setCourtOrderTypeId(EntityDir\Report::PROPERTY_AND_AFFAIRS);
             } else {
-                $report->setCourtOrderType($allowedCourtOrderTypes[0]);
+                $report->setCourtOrderTypeId($allowedCourtOrderTypes[0]);
             }
         }
         $report->setClient($client);
@@ -144,11 +144,11 @@ class ReportController extends AbstractController
     {
         // get all the groups (needed by ReportStatusService
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
-
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
         }
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        $reportStatusService = new ReportStatusService($report);
 
         return [
             'report' => $report,
@@ -173,7 +173,7 @@ class ReportController extends AbstractController
         $translator = $this->get('translator');
 
         // check status
-        $reportStatusService = new ReportStatusService($report, $translator);
+        $reportStatusService = new ReportStatusService($report);
         if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
@@ -223,7 +223,7 @@ class ReportController extends AbstractController
         $translator = $this->get('translator');
 
         // check status
-        $reportStatusService = new ReportStatusService($report, $translator);
+        $reportStatusService = new ReportStatusService($report);
         if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
@@ -324,11 +324,8 @@ class ReportController extends AbstractController
         /** @var \AppBundle\Entity\Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
-        $translator = $this->get('translator');
-
         // check status
-        $reportStatusService = new ReportStatusService($report, $translator);
+        $reportStatusService = new ReportStatusService($report);
 
         $body = $restClient->get('report/'.$reportId.'/formatted/0', 'raw');
 
