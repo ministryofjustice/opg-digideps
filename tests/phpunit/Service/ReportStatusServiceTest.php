@@ -26,6 +26,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'getReasonForNoDecisions' => null,
             'getSafeguarding' => null,
             'getAction' => null,
+            'getAction' => null,
             'getMentalCapacity' => null,
             'hasMoneyIn' => false,
             'hasMoneyOut' => false,
@@ -208,5 +209,28 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getAssetsState());
     }
+    
+    
+    public function actionsProvider()
+    {
+        $action = m::mock(\AppBundle\Entity\Action::class);
+        
+        return [
+            [[], Rss::STATE_NOT_STARTED],
+            // done
+            [['getAction' => $action], Rss::STATE_DONE],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider actionsProvider
+     */
+    public function actions($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getActionsState());
+    }
+    
     
 }
