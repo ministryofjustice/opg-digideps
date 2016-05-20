@@ -134,242 +134,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $reportStatusService->missingTransfers());
     }
 
-    /** @test */
-    public function isReadyToSubmitIsFalseMissingContacts()
-    {
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(true)
-            ->getMock();
-
-        $y = [];
-        $z = count($y);
-        $e = empty($y);
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getReasonForNoContacts')->andReturn('')
-            ->shouldReceive('getContacts')->andReturn([])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseMissingDecisions()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(true)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([])
-            ->shouldReceive('getReasonForNoDecisions')->andReturn('')
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->isReadyToSubmit();
-        $this->assertFalse($answer);
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseMissingAssets()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(true)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([])
-            ->shouldReceive('getNoAssetToAdd')->andReturn(false)
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseMissingSafeguarding()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(true)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(true)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseNoAccounts()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseAccountIncomplete()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(false)
-            ->shouldReceive('hasMissingInformation')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
-
-    /** @test */
-    public function isReadyToSubmitIsFalseMissingActions()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(true)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(null)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertFalse($reportStatusService->isReadyToSubmit());
-    }
 
     /** @test */
     public function isReadyToSubmitIsTrue()
@@ -875,7 +639,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $contacts = array(1);
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getContacts')->andReturn($contacts)
             ->shouldReceive('getReasonForNoContacts')->andReturn('')
             ->getMock();
@@ -894,7 +657,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $contacts = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getContacts')->andReturn($contacts)
             ->shouldReceive('getReasonForNoContacts')->andReturn('stuff')
             ->getMock();
@@ -911,12 +673,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function indicateThatSafeguardingStateHasNotBeenStarted()
     {
         $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('missingSafeguardingInfo')->andReturn(true)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
             ->getMock();
 
@@ -930,12 +690,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function indicateThatSafeguardingStateIsComplete()
     {
         $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
             ->getMock();
 
@@ -952,7 +710,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $assets = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getAssets')->andReturn($assets)
             ->shouldReceive('getNoAssetToAdd')->andReturn(false)
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
@@ -971,7 +728,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $assets = array(1);
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getAssets')->andReturn($assets)
             ->shouldReceive('getNoAssetToAdd')->andReturn(false)
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
@@ -990,7 +746,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $assets = array();
 
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getAssets')->andReturn($assets)
             ->shouldReceive('getNoAssetToAdd')->andReturn(true)
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
@@ -1004,116 +759,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function statusSectionsCompleteNotDue()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-        $asset = m::mock('AppBundle\Entity\Asset');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([$asset])
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->shouldReceive('isDue')->andReturn(false)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getStatus();
-        $expected = 'notFinished';
-        $this->assertEquals($expected, $answer);
-    }
-
-    /** @test */
-    public function statusSectionsNotCompleteNotDue()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([])
-            ->shouldReceive('getNoAssetToAdd')->andReturn(false)
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('isDue')->andReturn(false)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getStatus();
-        $expected = 'notFinished';
-        $this->assertEquals($expected, $answer);
-    }
-
-    /** @test */
-    public function statusSectionsNotCompleteIsDue()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([])
-            ->shouldReceive('getNoAssetToAdd')->andReturn(false)
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->shouldReceive('isDue')->andReturn(true)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getStatus();
-        $expected = 'notFinished';
-        $this->assertEquals($expected, $answer);
-    }
-
-    /** @test */
     public function statusSectionsCompleteIsDue()
     {
         $contact = m::mock('AppBundle\Entity\Contact');
@@ -1121,20 +766,22 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $asset = m::mock('AppBundle\Entity\Asset');
 
         $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
             ->getMock();
 
         $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
             ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
+        $mc = m::mock('AppBundle\Entity\MentalCapacity');
+        
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isTotalsMatch')->andReturn(null)
+            ->shouldReceive('getBalanceMismatchExplanation')->andReturn(null)
             ->shouldReceive('getDecisions')->andReturn([$decision])
             ->shouldReceive('getContacts')->andReturn([$contact])
+            ->shouldReceive('getMentalCapacity')->andReturn($mc)
             ->shouldReceive('getAssets')->andReturn([$asset])
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
@@ -1148,40 +795,5 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $answer = $reportStatusService->getStatus();
         $expected = 'readyToSubmit';
         $this->assertEquals($expected, $answer);
-    }
-
-    /** @test */
-    public function calculateStatusRemainingCount()
-    {
-        $contact = m::mock('AppBundle\Entity\Contact');
-        $decision = m::mock('AppBundle\Entity\Decision');
-
-        $safeguarding = m::mock('AppBundle\Entity\Safeguarding')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('missingSafeguardingInfo')->andReturn(false)
-            ->getMock();
-
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->shouldReceive('hasMissingInformation')->andReturn(false)
-            ->getMock();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getDecisions')->andReturn([$decision])
-            ->shouldReceive('getContacts')->andReturn([$contact])
-            ->shouldReceive('getAssets')->andReturn([])
-            ->shouldReceive('getNoAssetToAdd')->andReturn(false)
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete' => true]))
-            ->shouldReceive('isDue')->andReturn(true)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $this->assertEquals(1, $reportStatusService->getRemainingSectionCount());
     }
 }
