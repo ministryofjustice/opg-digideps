@@ -72,6 +72,8 @@ class ActionController extends RestController
         if (array_key_exists('do_you_have_concerns_details', $data)) {
             $action->setDoYouHaveConcernsDetails($data['do_you_have_concerns_details']);
         }
+        
+        $action->cleanUpUnusedData();
 
         return $action;
     }

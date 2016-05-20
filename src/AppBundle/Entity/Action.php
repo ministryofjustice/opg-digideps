@@ -12,6 +12,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Action
 {
+    const YES = 'yes';
+    const NO = 'no';
+    
     /**
      * @var int
      *
@@ -154,5 +157,17 @@ class Action
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 
         return $this;
+    }
+    
+    public function cleanUpUnusedData()
+    {
+        if ($this->doYouExpectFinancialDecisions == self::NO) {
+            $this->doYouExpectFinancialDecisionsDetails = null;
+        }
+        
+        if ($this->doYouHaveConcerns == self::NO) {
+            $this->doYouHaveConcernsDetails = null;
+        }
+        
     }
 }
