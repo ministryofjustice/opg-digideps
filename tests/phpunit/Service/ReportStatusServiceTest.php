@@ -759,7 +759,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function statusSectionsCompleteIsDue()
+    public function testgetRemainingSections()
     {
         $contact = m::mock('AppBundle\Entity\Contact');
         $decision = m::mock('AppBundle\Entity\Decision');
@@ -777,8 +777,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $mc = m::mock('AppBundle\Entity\MentalCapacity');
         
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldReceive('isTotalsMatch')->andReturn(null)
-            ->shouldReceive('getBalanceMismatchExplanation')->andReturn(null)
+            ->shouldReceive('isTotalsMatch')->andReturn(true)
             ->shouldReceive('getDecisions')->andReturn([$decision])
             ->shouldReceive('getContacts')->andReturn([$contact])
             ->shouldReceive('getMentalCapacity')->andReturn($mc)
@@ -792,8 +791,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
-        $answer = $reportStatusService->getStatus();
-        $expected = 'readyToSubmit';
-        $this->assertEquals($expected, $answer);
+        $ret = $reportStatusService->getRemainingSections();
+        $this->assertEquals([], $ret);
     }
 }
