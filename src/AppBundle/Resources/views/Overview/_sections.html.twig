@@ -11,7 +11,6 @@
             report: report,
             description: true,
             state: reportStatus.decisionsState,
-            status: reportStatus.decisionsStatus,
             list: true
         } %}
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
@@ -22,7 +21,6 @@
             list: true,
             info: true,
             state: reportStatus.contactsState,
-            status: reportStatus.contactsStatus
         } %}
     </li>
 
@@ -35,7 +33,6 @@
             info: true,
             description: true,
             state: reportStatus.safeguardingState,
-            status: reportStatus.safeguardingStatus
         } %}
     </li>
 
@@ -47,7 +44,6 @@
                 subSection: 'accounts',
                 report: report,
                 state: reportStatus.accountsState,
-                status: reportStatus.accountsStatus,
                 warning: true,
                 description: true
             } %}
@@ -56,7 +52,6 @@
                 subSection: 'assets',
                 report: report,
                 state: reportStatus.assetsState,
-                status: reportStatus.assetsStatus,
                 list: true,
                 description: true
             } %}
@@ -72,7 +67,6 @@
             report: report,
             description: true,
             state: reportStatus.actionsState,
-            status: reportStatus.actionsStatus,
             list: true
         } %}
 

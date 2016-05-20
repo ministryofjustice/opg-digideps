@@ -12,3 +12,8 @@ nocontacts: "No Contacts"
 notstarted: "Not started"
 finished: "Finished"
 notFinished: "Not finished"
+#new 
+labels:
+    not-started: "Not started"
+    incomplete: "Not finished"
+    done: "Finished"

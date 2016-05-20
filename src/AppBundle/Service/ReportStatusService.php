@@ -7,16 +7,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportStatusService
 {
-
-    const NOTSTARTED = 'not-started'; //grey
-    const DONE = 'done'; //green
-    const INCOMPLETE = 'incomplete'; //orange
-    const NOTFINISHED = 'notFinished';
-    const READYTOSUBMIT = 'readyToSubmit';
-    
-    const CLASS_NOT_STARTED = 'not-started';
-    const CLASS_INCOMPLETE = 'incomplete';
-    const CLASS_DONE = 'done';
+    const STATE_NOT_STARTED = 'not-started';
+    const STATE_INCOMPLETE = 'incomplete';
+    const STATE_DONE = 'done';
 
     /** @var Report */
     private $report;
@@ -31,26 +24,13 @@ class ReportStatusService
     {
         // no decisions, no tick, no mental capacity => grey
         if (empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions()) && empty($this->report->getMentalCapacity())) {
-            return self::CLASS_NOT_STARTED;
+            return self::STATE_NOT_STARTED;
         }
 
         if ($this->missingDecisions()) {
-            return self::CLASS_INCOMPLETE;
+            return self::STATE_INCOMPLETE;
         } else {
-            return self::CLASS_DONE;
-        }
-    }
-
-    /** @return string */
-    public function getDecisionsStatus()
-    {
-        switch ($this->getDecisionsState()) {
-            case self::CLASS_NOT_STARTED:
-                return 'notstarted';
-            case self::CLASS_DONE:
-                return 'finished';
-            default:
-                return 'notFinished';
+            return self::STATE_DONE;
         }
     }
 
@@ -58,131 +38,56 @@ class ReportStatusService
     public function getContactsState()
     {
         if ($this->missingContacts()) {
-            return self::NOTSTARTED;
+            return self::STATE_NOT_STARTED;
         } else {
-            return self::DONE;
+            return self::STATE_DONE;
         }
-    }
-
-    /** @return string */
-    public function getContactsStatus()
-    {
-        $contacts = $this->report->getContacts();
-
-        if (isset($contacts)) {
-            $count = count($contacts);
-
-            if ($count == 1) {
-                return '1 Contact';
-            } elseif ($count > 1) {
-                return "$count Contacts";
-            }
-        }
-
-        if (empty($this->report->getReasonForNoContacts())) {
-            return 'notstarted';
-        } else {
-            return 'nocontacts';
-        }
-    }
-
-    /** @return string */
-    public function getSafeguardingStatus()
-    {
-        if ($this->missingSafeguarding()) {
-            return 'notstarted';
-        } else {
-            return 'finished';
-        }
-    }
-
-    /** @return string */
-    public function getAssetsStatus()
-    {
-        $assets = $this->report->getAssets();
-
-        if (isset($assets)) {
-            $count = count($assets);
-
-            if ($count == 1) {
-                return '1 Asset';
-            } elseif ($count > 1) {
-                return "$count Assets";
-            }
-        }
-
-        if ($this->report->getNoAssetToAdd() == true) {
-            return 'noassets';
-        } else {
-            return 'notstarted';
-        }
-    }
-
-    /** @return string */
-    public function getAssetsState()
-    {
-        if ($this->missingAssets()) {
-            return self::NOTSTARTED;
-        } else {
-            return self::DONE;
-        }
-    }
-
-    /** @return string */
-    public function getActionsStatus()
-    {
-        if ($this->missingActions()) {
-            return 'notstarted';
-        } else {
-            return 'finished';
-        }
-    }
-
-    /** @return string */
-    public function getActionsState()
-    {
-        return $this->missingActions() ? self::NOTSTARTED : self::DONE;
     }
 
     /** @return string */
     public function getSafeguardingState()
     {
         if ($this->missingSafeguarding()) {
-            return self::NOTSTARTED;
+            return self::STATE_NOT_STARTED;
         } else {
-            return self::DONE;
+            return self::STATE_DONE;
         }
     }
-
+    
     /** @return string */
     public function getAccountsState()
     {
         // not started
         if ($this->missingAccounts() && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
-            return self::CLASS_NOT_STARTED;
+            return self::STATE_NOT_STARTED;
         }
 
         // all done
         if (!$this->missingAccounts() && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
-            return self::DONE;
+            return self::STATE_DONE;
         }
 
         // amber in all the other cases
-        return self::CLASS_INCOMPLETE;
+        return self::STATE_INCOMPLETE;
     }
-
+    
+    
     /** @return string */
-    public function getAccountsStatus()
+    public function getAssetsState()
     {
-        switch ($this->getAccountsState()) {
-            case self::CLASS_NOT_STARTED:
-                return 'notstarted';
-            case self::CLASS_DONE:
-                return 'finished';
-            default:
-                return 'notFinished';
+        if ($this->missingAssets()) {
+            return self::STATE_NOT_STARTED;
+        } else {
+            return self::STATE_DONE;
         }
     }
+    
+    /** @return string */
+    public function getActionsState()
+    {
+        return $this->missingActions() ? self::STATE_NOT_STARTED : self::STATE_DONE;
+    }
+
 
     /** @return bool */
     private function missingAssets()
@@ -321,7 +226,7 @@ class ReportStatusService
         if ($readyToSubmit && $this->report->isDue()) {
             return 'readyToSubmit';
         } else {
-            return self::NOTFINISHED;
+            return 'notFinished';
         }
     }
 }
