@@ -104,9 +104,7 @@ class Report
     private $mentalCapacity;
 
     /**
-     * @JMS\Groups({ "basic"})
-     * @JMS\Accessor(getter="getCourtOrderTypeId")
-     * @JMS\Type("integer")
+     * @JMS\EXclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */
@@ -885,9 +883,16 @@ class Report
         return $this->courtOrderType;
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("court_order_type_id")
+     * 
+     * @return int
+     */
     public function getCourtOrderTypeId()
     {
-        return $this->courtOrderType->getId();
+        return $this->getCourtOrderType()->getId();
     }
 
     /**
