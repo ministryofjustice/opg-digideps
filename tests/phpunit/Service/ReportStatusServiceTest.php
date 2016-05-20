@@ -52,34 +52,31 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getActionsState());
     }
    
-    public function testDecisions()
+    public function decisionsProvider()
     {
-        $object = $this->getObjectWithReportMocks([]);
-        $this->assertEquals(Rss::STATE_NOT_STARTED, $object->getDecisionsState());
+        $decision = m::mock(\AppBundle\Entity\Decision::class);
+        $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
         
-        // incomplete 
-        $object = $this->getObjectWithReportMocks([
-            'getDecisions' => $this->decision
-        ]);
-        $this->assertEquals(Rss::STATE_INCOMPLETE, $object->getDecisionsState());
-        $this->assertContains('decisions', $object->getRemainingSections());
-        
-        // incomplete
-        $object = $this->getObjectWithReportMocks([
-            'getMentalCapacity' => $this->mc
-        ]);
-        $this->assertEquals(Rss::STATE_INCOMPLETE, $object->getDecisionsState());
-        $this->assertContains('decisions', $object->getRemainingSections());
-        
-        // done
-        $object = $this->getObjectWithReportMocks([
-            'getMentalCapacity' => $this->mc,
-            'getDecisions' => $this->decision
-        ]);
-        $this->assertEquals(Rss::STATE_DONE, $object->getDecisionsState());
-        $this->assertNotContains('decisions', $object->getRemainingSections());
+        return [
+            [[], Rss::STATE_NOT_STARTED],
+            // incomplete
+            [['getDecisions' => [$decision]], Rss::STATE_INCOMPLETE],
+            [['getReasonForNoDecisions' => 'x'], Rss::STATE_INCOMPLETE],
+            [['getMentalCapacity' => $mc], Rss::STATE_INCOMPLETE],
+            // done
+            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], Rss::STATE_DONE],
+            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], Rss::STATE_DONE],
+        ];
     }
     
-    //FOLLOW EXAMPLE ...
+    /**
+     * @dataProvider decisionsProvider
+     */
+    public function testDecisions($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getDecisionsState());
+    }
+    
         
 }
