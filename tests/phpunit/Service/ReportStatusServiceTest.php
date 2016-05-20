@@ -186,4 +186,27 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getAccountsState());
     }
+    
+    public function assetsProvider()
+    {
+        $asset = m::mock(\AppBundle\Entity\Asset::class);
+        
+        return [
+            [[], Rss::STATE_NOT_STARTED],
+            // done
+            [['getAssets' => [$asset]], Rss::STATE_DONE],
+            [['getNoAssetToAdd' => true], Rss::STATE_DONE],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider assetsProvider
+     */
+    public function assets($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getAssetsState());
+    }
+    
 }
