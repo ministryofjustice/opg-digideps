@@ -8,12 +8,6 @@ use AppBundle\Service\ReportStatusService as Rss;
 
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->decision = m::mock(\AppBundle\Entity\Decision::class);
-        $this->mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
-    }
-    
     /**
      * @param array $reportMethods
      * 
@@ -40,7 +34,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return new Rss($report);
     }
     
-    public function testNothingFilled()
+    /**
+     * @test
+     */
+    public function nothingFilled()
     {
         $object = $this->getObjectWithReportMocks([]);
         $expected = ['decisions', 'contacts', 'safeguarding', 'account', 'assets', 'actions'];
@@ -70,9 +67,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @test
      * @dataProvider decisionsProvider
      */
-    public function testDecisions($mocks, $state)
+    public function cecisions($mocks, $state)
     {
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getDecisionsState());
@@ -85,18 +83,48 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         
         return [
             [[], Rss::STATE_NOT_STARTED],
-            // incomplete
+            // done
             [['getContacts' => [$contact]], Rss::STATE_DONE],
             [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE],
         ];
     }
     
     /**
+     * @test
      * @dataProvider contactsProvider
      */
-    public function testContacts($mocks, $state)
+    public function contacts($mocks, $state)
     {
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getContactsState());
+    }
+    
+    public function safegProvider()
+    {
+        $safegOk = m::mock(\AppBundle\Entity\Safeguarding::class, [
+            'missingSafeguardingInfo' => false
+        ]);
+        
+        $safegErr = m::mock(\AppBundle\Entity\Safeguarding::class, [
+            'missingSafeguardingInfo' => true
+        ]);
+        
+        return [
+            // not started
+            [[], Rss::STATE_NOT_STARTED],
+            [['getSafeguarding' => $safegErr], Rss::STATE_NOT_STARTED],
+            // done
+            [['getSafeguarding' => $safegOk], Rss::STATE_DONE],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider safegProvider
+     */
+    public function safeg($mocks, $state)
+    {
+        $object = $this->getObjectWithReportMocks($mocks);
+        $this->assertEquals($state, $object->getSafeguardingState());
     }
 }
