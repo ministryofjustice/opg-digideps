@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportStatusService
 {
@@ -37,7 +36,7 @@ class ReportStatusService
     /** @return string */
     public function getContactsState()
     {
-        if ($this->missingContacts()) {
+        if (empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts())) {
             return self::STATE_NOT_STARTED;
         } else {
             return self::STATE_DONE;
@@ -47,66 +46,46 @@ class ReportStatusService
     /** @return string */
     public function getSafeguardingState()
     {
-        if ($this->missingSafeguarding()) {
+        if (!$this->report->getSafeguarding() || $this->report->getSafeguarding()->missingSafeguardingInfo()) {
             return self::STATE_NOT_STARTED;
         } else {
             return self::STATE_DONE;
         }
     }
-    
+
     /** @return string */
     public function getAccountsState()
     {
+        $missingAccounts = empty($this->report->getAccounts());
+
         // not started
-        if ($this->missingAccounts() && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
+        if ($missingAccounts && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
             return self::STATE_NOT_STARTED;
         }
 
         // all done
-        if (!$this->missingAccounts() && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
+        if (!$missingAccounts && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
             return self::STATE_DONE;
         }
 
         // amber in all the other cases
         return self::STATE_INCOMPLETE;
     }
-    
-    
+
     /** @return string */
     public function getAssetsState()
     {
-        if ($this->missingAssets()) {
+        if (empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd())) {
             return self::STATE_NOT_STARTED;
         } else {
             return self::STATE_DONE;
         }
     }
-    
+
     /** @return string */
     public function getActionsState()
     {
-        return $this->missingActions() ? self::STATE_NOT_STARTED : self::STATE_DONE;
-    }
-
-
-    /** @return bool */
-    private function missingAssets()
-    {
-        return empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd());
-    }
-
-    /** @return bool */
-    private function missingSafeguarding()
-    {
-        $safeguarding = $this->report->getSafeguarding();
-        
-        return !$safeguarding || $safeguarding->missingSafeguardingInfo() == true;
-    }
-
-    /** @return bool */
-    private function missingActions()
-    {
-        return !$this->report->getAction();
+        return $this->report->getAction() ? self::STATE_DONE : self::STATE_NOT_STARTED;
     }
 
     /** @return bool */
@@ -119,12 +98,6 @@ class ReportStatusService
         }
 
         return false;
-    }
-
-    /** @return bool */
-    private function missingContacts()
-    {
-        return empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts());
     }
 
     /** @return bool */
@@ -141,15 +114,7 @@ class ReportStatusService
         return false;
     }
 
-    /** @return bool */
-    private function missingAccounts()
-    {
-        return empty($this->report->getAccounts());
-    }
-
     /**
-     * If.
-     *
      * @return bool
      */
     private function missingTransfers()
@@ -172,7 +137,6 @@ class ReportStatusService
         return !$balanceValid;
     }
 
-    
     /**
      * @return array
      */
@@ -184,15 +148,15 @@ class ReportStatusService
             'safeguarding' => $this->getSafeguardingState(),
             'actions' => $this->getActionsState(),
         ];
-        
+
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
                 'accounts' => $this->getAccountsState(),
                 'assets' => $this->getAssetsState(),
             ];
         }
-        
-        return array_filter($states, function($e) {
+
+        return array_filter($states, function ($e) {
             return $e != self::STATE_DONE;
         });
     }

@@ -31,16 +31,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'hasMoneyIn' => false,
             'hasMoneyOut' => false,
         ]);
-        
+
         return new Rss($report);
     }
-    
-   
+
     public function decisionsProvider()
     {
         $decision = m::mock(\AppBundle\Entity\Decision::class);
         $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
-        
+
         return [
             [[], Rss::STATE_NOT_STARTED, false],
             // incomplete
@@ -52,7 +51,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], Rss::STATE_DONE, true],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider decisionsProvider
@@ -62,12 +61,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getDecisionsState());
     }
-    
-        
+
     public function contactsProvider()
     {
         $contact = m::mock(\AppBundle\Entity\Contact::class);
-        
+
         return [
             [[], Rss::STATE_NOT_STARTED, false],
             // done
@@ -75,7 +73,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE, true],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider contactsProvider
@@ -85,17 +83,17 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getContactsState());
     }
-    
+
     public function safeguardingProvider()
     {
         $safegOk = m::mock(\AppBundle\Entity\Safeguarding::class, [
-            'missingSafeguardingInfo' => false
+            'missingSafeguardingInfo' => false,
         ]);
-        
+
         $safegErr = m::mock(\AppBundle\Entity\Safeguarding::class, [
-            'missingSafeguardingInfo' => true
+            'missingSafeguardingInfo' => true,
         ]);
-        
+
         return [
             // not started
             [[], Rss::STATE_NOT_STARTED],
@@ -104,7 +102,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getSafeguarding' => $safegOk], Rss::STATE_DONE],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider safeguardingProvider
@@ -114,56 +112,57 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getSafeguardingState());
     }
-    
+
     public function accountProvider()
     {
         $accountOk = m::mock(\AppBundle\Entity\Account::class, [
             'hasClosingBalance' => true,
-            'hasMissingInformation' => false
+            'hasMissingInformation' => false,
         ]);
-        
+
         $accountClosingMissing = m::mock(\AppBundle\Entity\Account::class, [
             'hasClosingBalance' => false,
-            'hasMissingInformation' => false
+            'hasMissingInformation' => false,
         ]);
-        
+
         $accountMissingInfo = m::mock(\AppBundle\Entity\Account::class, [
             'hasClosingBalance' => true,
-            'hasMissingInformation' => true
+            'hasMissingInformation' => true,
         ]);
-        
+
         $transfer = m::mock(\AppBundle\Entity\MoneyTransfer::class);
-        
+
         $partial1 = [
-                'getAccounts'=>[$accountOk, $accountOk], 
-                'hasMoneyIn'=>true, 
-                'hasMoneyOut'=>true,
+                'getAccounts' => [$accountOk, $accountOk],
+                'hasMoneyIn' => true,
+                'hasMoneyOut' => true,
                 'getBalanceMismatchExplanation' => null,
                 'isTotalsMatch' => false,
                 'getNoTransfersToAdd' => null,
                 'getMoneyTransfers' => [],
         ];
-        
+
         return [
             // not started
             [[], Rss::STATE_NOT_STARTED],
-            [['getAccounts'=>[$accountOk]], Rss::STATE_INCOMPLETE],
-            [['getAccounts'=>[$accountClosingMissing]], Rss::STATE_INCOMPLETE],
-            [['getAccounts'=>[$accountMissingInfo]], Rss::STATE_INCOMPLETE],
-            [['getAccounts'=>[$accountOk]], Rss::STATE_INCOMPLETE],
-            [['getAccounts'=>[$accountOk], 'hasMoneyIn'=>true], Rss::STATE_INCOMPLETE],
-            [['getAccounts'=>[$accountOk], 'hasMoneyOut'=>true], Rss::STATE_INCOMPLETE],
-            [['getMoneyTransfers'=>[$transfer]] + $partial1, Rss::STATE_INCOMPLETE],
-            [['getNoTransfersToAdd'=>'x'] + $partial1, Rss::STATE_INCOMPLETE],
-            [['isTotalsMatch'=>true] + $partial1, Rss::STATE_INCOMPLETE],
-            [['getBalanceMismatchExplanation'=>'x'] + $partial1, Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk]], Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountClosingMissing]], Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountMissingInfo]], Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk]], Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk], 'hasMoneyIn' => true], Rss::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk], 'hasMoneyOut' => true], Rss::STATE_INCOMPLETE],
+            [['getMoneyTransfers' => [$transfer]] + $partial1, Rss::STATE_INCOMPLETE],
+            [['getNoTransfersToAdd' => 'x'] + $partial1, Rss::STATE_INCOMPLETE],
+            [['isTotalsMatch' => true] + $partial1, Rss::STATE_INCOMPLETE],
+            [['getBalanceMismatchExplanation' => 'x'] + $partial1, Rss::STATE_INCOMPLETE],
             //done
-            [['getNoTransfersToAdd'=>'x', 'isTotalsMatch'=>true] + $partial1, Rss::STATE_DONE],
-            [['getMoneyTransfers'=>[$transfer], 'isTotalsMatch'=>true] + $partial1, Rss::STATE_DONE],
-            [['getMoneyTransfers'=>[$transfer], 'getBalanceMismatchExplanation'=>'x'] + $partial1, Rss::STATE_DONE],
+            [['getNoTransfersToAdd' => 'x', 'isTotalsMatch' => true] + $partial1, Rss::STATE_DONE],
+            [['getMoneyTransfers' => [$transfer], 'isTotalsMatch' => true] + $partial1, Rss::STATE_DONE],
+            // one account does not require trnasfers or transfer explanation
+            [['getAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, Rss::STATE_DONE],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider accountProvider
@@ -173,11 +172,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getAccountsState());
     }
-    
+
     public function assetsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
-        
+
         return [
             [[], Rss::STATE_NOT_STARTED],
             // done
@@ -185,7 +184,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getNoAssetToAdd' => true], Rss::STATE_DONE],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider assetsProvider
@@ -195,19 +194,18 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getAssetsState());
     }
-    
-    
+
     public function actionsProvider()
     {
         $action = m::mock(\AppBundle\Entity\Action::class);
-        
+
         return [
             [[], Rss::STATE_NOT_STARTED],
             // done
             [['getAction' => $action], Rss::STATE_DONE],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider actionsProvider
@@ -217,9 +215,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getObjectWithReportMocks($mocks);
         $this->assertEquals($state, $object->getActionsState());
     }
-    
-    
-     /**
+
+    /**
      * @test
      */
     public function getRemainingSectionsEmpty()
@@ -234,10 +231,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'assets' => 'not-started',
         ];
         $this->assertEquals($expected, $object->getRemainingSections());
-        
+
         $this->assertFalse($object->isReadyToSubmit());
     }
-    
+
     public function getRemainingSectionsPartialProvider()
     {
         return [
@@ -249,10 +246,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
              [array_pop($this->actionsProvider())[0], 'actions'],
         ];
     }
-    
-     /**
+
+    /**
      * @test
-      * @dataProvider getRemainingSectionsPartialProvider
+     * @dataProvider getRemainingSectionsPartialProvider
      */
     public function getRemainingSectionsPartial($provider, $keyRemoved)
     {
@@ -260,8 +257,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());
     }
-    
-     /**
+
+    /**
      * @test
      */
     public function getRemainingSectionsNone()
@@ -274,10 +271,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
              + array_pop($this->assetsProvider())[0]
              + array_pop($this->actionsProvider())[0]
         );
-        
+
         $this->assertEquals([], $object->getRemainingSections());
         $this->assertTrue($object->isReadyToSubmit());
     }
-   
-    
 }
