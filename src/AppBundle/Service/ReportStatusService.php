@@ -281,7 +281,7 @@ class ReportStatusService
             $ret[] = 'decisions';
         }
         
-        if ($this->getContactsStatus() == 'not-started') {
+        if ($this->missingContacts()) {
             $ret[] = 'contacts';
         }
         

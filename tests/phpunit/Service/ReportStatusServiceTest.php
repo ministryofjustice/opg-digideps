@@ -36,8 +36,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $expected = ['decisions', 'contacts', 'safeguarding', 'account', 'assets', 'actions'];
         $this->assertEquals($expected, $this->object->getRemainingSections());
-        
-        $this->assertStatus('not-started', $this->object->getContactsStatus('contacts'));
     }
 
 //    public function testDecisions()
