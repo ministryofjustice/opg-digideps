@@ -6,13 +6,10 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * clean up old migrations.
  */
 class Version074 extends AbstractMigration
 {
-    /**
-     * clean up old migrations.
-     */
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs

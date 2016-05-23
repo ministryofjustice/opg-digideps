@@ -97,9 +97,14 @@ class Report
     private $action;
 
     /**
-     * @JMS\Groups({ "basic"})
-     * @JMS\Accessor(getter="getCourtOrderTypeId")
-     * @JMS\Type("integer")
+     * @JMS\Groups({"basic", "MentalCapacity"})
+     * @JMS\Type("AppBundle\Entity\MentalCapacity")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MentalCapacity",  mappedBy="report", cascade={"persist"})
+     **/
+    private $mentalCapacity;
+
+    /**
+     * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */
@@ -790,6 +795,24 @@ class Report
     }
 
     /**
+     * @return MentalCapacity
+     */
+    public function getMentalCapacity()
+    {
+        return $this->mentalCapacity;
+    }
+
+    /**
+     * @param MentalCapacity $mentalCapacity
+     */
+    public function setMentalCapacity(MentalCapacity $mentalCapacity)
+    {
+        $this->mentalCapacity = $mentalCapacity;
+
+        return $this;
+    }
+
+    /**
      * Set reasonForNoContact.
      *
      * @param string $reasonForNoContacts
@@ -861,9 +884,17 @@ class Report
         return $this->courtOrderType;
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("court_order_type_id")
+     * @JMS\Groups({"basic"})
+     * 
+     * @return int
+     */
     public function getCourtOrderTypeId()
     {
-        return $this->courtOrderType->getId();
+        return $this->getCourtOrderType()->getId();
     }
 
     /**
