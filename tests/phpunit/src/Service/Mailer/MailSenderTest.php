@@ -101,7 +101,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     public function testSendFilWriter()
     {
-        $filename = '/tmp/dd_unittest_email.json';
+        $filename = '/tmp/dd_unittest_email.'.time().'.json';
         file_put_contents($filename, '');
 
         $transportMock = new Transport\TransportMock();
