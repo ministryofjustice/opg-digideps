@@ -45,7 +45,7 @@ startDate:
 endDate:
     legend: End date
     hint: (DD/MM/YYYY)
-courtOrderType:
+courtOrderTypeId:
     label: Report Type
 form:
   newReportForm:

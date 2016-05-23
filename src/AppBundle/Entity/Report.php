@@ -455,7 +455,7 @@ class Report
     }
 
     /**
-     * @return int $courtOrderType
+     * @return int
      */
     public function getCourtOrderTypeId()
     {
@@ -463,13 +463,13 @@ class Report
     }
 
     /**
-     * @param int $courtOrderType
+     * @param int $courtOrderTypeId
      *
      * @return \AppBundle\Entity\Report
      */
-    public function setCourtOrderTypeId($courtOrderType)
+    public function setCourtOrderTypeId($courtOrderTypeId)
     {
-        $this->courtOrderTypeId = $courtOrderType;
+        $this->courtOrderTypeId = $courtOrderTypeId;
 
         return $this;
     }
