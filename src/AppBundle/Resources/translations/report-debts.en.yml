@@ -1,0 +1,9 @@
+page:
+  htmlTitle: "Deputy report - debts | GOV.UK"
+  pageSectionTitle: "%client%'s debts"
+  pageSectionDescription: ""
+  pageSectionEditInfo: ""
+  pageSectionWarning: ""
+form:
+
+navLink: Debts
