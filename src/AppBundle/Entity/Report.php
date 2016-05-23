@@ -104,7 +104,7 @@ class Report
     private $mentalCapacity;
 
     /**
-     * @JMS\EXclude
+     * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */

@@ -31,7 +31,7 @@ class ReportController extends RestController
         $report->setClient($client);
 
         // add court order type
-        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
+        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type_id']);
         $report->setCourtOrderType($courtOrderType);
 
         $this->validateArray($reportData, [
