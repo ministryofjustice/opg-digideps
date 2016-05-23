@@ -15,8 +15,8 @@ class MentalCapacityType extends AbstractType
         $builder->add('hasCapacityChanged', 'choice', array(
                     // keep in sync with API model constants
                     'choices' => [
-                        MentalCapacity::CAPACITY_CHANGED => 'Changed', 
-                        MentalCapacity::CAPACITY_STAYED_SAME => 'Stayed the same'
+                        MentalCapacity::CAPACITY_CHANGED => 'Changed',
+                        MentalCapacity::CAPACITY_STAYED_SAME => 'Stayed the same',
                     ],
                     'expanded' => true,
                 ))
