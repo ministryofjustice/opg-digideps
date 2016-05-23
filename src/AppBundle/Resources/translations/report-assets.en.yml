@@ -50,7 +50,8 @@ form:
       hint: (MM/YYYY)
     rentIncomeMonth:
       label: What is the rental income each month?
-           
+
+navLink: Assets
            
 title:
     label: What sort of asset is it?
