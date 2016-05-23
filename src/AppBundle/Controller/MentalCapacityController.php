@@ -50,7 +50,7 @@ class MentalCapacityController extends RestController
     }
 
     /**
-     * @param array            $data
+     * @param array                    $data
      * @param EntityDir\MentalCapacity $mc
      * 
      * @return \AppBundle\Entity\Report $report
@@ -60,11 +60,11 @@ class MentalCapacityController extends RestController
         if (array_key_exists('has_capacity_changed', $data)) {
             $mc->setHasCapacityChanged($data['has_capacity_changed']);
         }
-        
+
         if (array_key_exists('has_capacity_changed_details', $data)) {
             $mc->setHasCapacityChangedDetails($data['has_capacity_changed_details']);
         }
-        
+
         $mc->cleanUpUnusedData();
 
         return $mc;

@@ -14,7 +14,7 @@ class MentalCapacity
 {
     const CAPACITY_CHANGED = 'changed';
     const CAPACITY_STAYED_SAME = 'stayedSame';
-    
+
     /**
      * @var int
      *
@@ -49,7 +49,6 @@ class MentalCapacity
      * @ORM\Column(name="has_capacity_changed_details", type="text", nullable=true)
      */
     private $hasCapacityChangedDetails;
-    
 
     /**
      * @param Report $report
@@ -93,7 +92,7 @@ class MentalCapacity
     {
         return $this->report;
     }
-    
+
     public function getHasCapacityChanged()
     {
         return $this->hasCapacityChanged;
@@ -107,12 +106,14 @@ class MentalCapacity
     public function setHasCapacityChanged($hasCapacityChanged)
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
+
         return $this;
     }
 
     public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
+
         return $this;
     }
 
@@ -122,5 +123,4 @@ class MentalCapacity
             $this->hasCapacityChangedDetails = null;
         }
     }
-    
 }

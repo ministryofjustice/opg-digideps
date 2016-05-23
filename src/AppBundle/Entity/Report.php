@@ -95,7 +95,7 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Action",  mappedBy="report", cascade={"persist"})
      **/
     private $action;
-    
+
     /**
      * @JMS\Groups({"basic", "MentalCapacity"})
      * @JMS\Type("AppBundle\Entity\MentalCapacity")
@@ -808,9 +808,10 @@ class Report
     public function setMentalCapacity(MentalCapacity $mentalCapacity)
     {
         $this->mentalCapacity = $mentalCapacity;
+
         return $this;
     }
-        
+
     /**
      * Set reasonForNoContact.
      *
