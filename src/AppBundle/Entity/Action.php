@@ -98,15 +98,4 @@ class Action
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
     }
-
-    public function isComplete()
-    {
-        $financialComplete = $this->getDoYouExpectFinancialDecisions() == 'no'
-            || ($this->getDoYouExpectFinancialDecisions() == 'yes' && $this->getDoYouExpectFinancialDecisionsDetails());
-
-        $actionComplete = $this->getDoYouHaveConcerns() == 'no'
-            || ($this->getDoYouHaveConcerns() == 'yes' && $this->getDoYouHaveConcernsDetails());
-
-        return $financialComplete && $actionComplete;
-    }
 }

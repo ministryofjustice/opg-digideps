@@ -74,8 +74,8 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
-    courtOrderType:
-        notBlank: You must select either Property and Affairs or Personal Welfare
+#    courtOrderTypeId:
+#        notBlank: You must select either Property and Affairs or Personal Welfare
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
@@ -158,7 +158,6 @@ account:
         notBlank: You must enter a closing balance
         type: Enter a valid closing balance
         outOfRange: Enter a valid closing balance
-        mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
     isJointAccount:
         notBlank: Choose Yes or No
     moneyInOut:
@@ -290,6 +289,11 @@ action:
         notBlank: Choose Yes or No
     doYouHaveConcernsDetails:
         notBlank: Tell us about any concerns you have
+mentalCapacity:
+    hasCapacityChanged:
+        notBlank: Select one option
+    hasCapacityChangedDetails:
+        notBlank: You must tell us how the client's mental capacity has changed
         
 feedbackAfterReport:
     satisfactionLevel:

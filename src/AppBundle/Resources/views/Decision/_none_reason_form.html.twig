@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 
 <div class="report-list-separator"> </div>
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form in-page-form', id:'no-decision-reason-form' } }) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form', id:'no-decision-reason-form' } }) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,

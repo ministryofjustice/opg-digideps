@@ -1,69 +1,9 @@
-Feature: deputy / report / add contact, decision, assets
-
-    @deputy
-    Scenario: add contact
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-contacts"
-        And I save the page as "report-contact-empty"
-        # wrong form
-        When I follow "add-contacts-button"
-        And I press "contact_save"
-        And I save the page as "report-contact-add-error"
-        Then the following fields should have an error:
-            | contact_contactName |
-            | contact_relationship |
-            | contact_explanation |
-            | contact_address |
-            | contact_postcode |
-        # right values
-        Then the "contact_explanation" field is expandable
-        And I add the following contacts:
-            | contactName | relationship | explanation     | address       | address2 | county | postcode | country |
-            | Andy White  |  GP          | I owe him money | 45 Noth Road | Islington | London | N2 5JF   | GB      |
-        And I save the page as "report-contact-list"
-        #Then the response status code should be 200
-        And the form should be valid
-        And the URL should match "/report/\d+/contacts"
-        And I should see "Andy White" in the "list-contacts" region
-
-
-    @deputy
-    Scenario: add decision
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-decisions"
-        And I save the page as "report-decision-empty"
-        # form errors
-        When I follow "add-decisions-button"
-        When I press "decision_save"
-        And I save the page as "report-decision-add-error"
-        Then the following fields should have an error:
-            | decision_description |
-            | decision_clientInvolvedDetails |
-            | decision_clientInvolvedBoolean_0 |
-            | decision_clientInvolvedBoolean_1 |
-        # missing involvement details
-        And I fill in the following:
-            | decision_description | 2 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails |  |
-        And I press "decision_save"
-        And the form should be invalid
-        # add decision
-        Then the "decision_description" field is expandable
-        And the "decision_clientInvolvedDetails" field is expandable
-        And I add the following decisions:
-            | description | clientInvolved | clientInvolvedDetails |
-            | 2 beds | yes | the client was able to decide at 90% |
-            | 3 beds | yes | the client was able to decide at 85% |
-       And I should see "2 beds" in the "list-decisions" region
-       And I should see "3 beds" in the "list-decisions" region
-       And I save the page as "report-decision-list"
-
+Feature: deputy / report / asset with variations
 
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-assets"
+        And I click on "reports,report-2016-open, edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form
         When I follow "add-assets-button"
@@ -167,45 +107,3 @@ Feature: deputy / report / add contact, decision, assets
         And I should see "12 gold house" in the "list-assets" region
         And I save the page as "report-assets-property-list"    
 
-
-    @deputy
-    Scenario: provide safeguarding info
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-safeguarding"
-        Then I fill in the following:
-            | safeguarding_doYouLiveWithClient_0 | yes |
-            | safeguarding_doesClientReceivePaidCare_1 | no |
-            | safeguarding_doesClientHaveACarePlan_1 | no |
-            | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        And the form should be valid
-    
-    @deputy
-    Scenario: provide next year report info
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-actions"
-        # submit empty form
-        And I press "action_save"
-        Then the following fields should have an error:
-            | action_doYouExpectFinancialDecisions_0 |
-            | action_doYouExpectFinancialDecisions_1 |
-            | action_doYouHaveConcerns_0 |
-            | action_doYouHaveConcerns_1 |
-        # no details
-        When I fill in the following:
-            | action_doYouExpectFinancialDecisions_0 | yes |
-            | action_doYouExpectFinancialDecisionsDetails |  |
-            | action_doYouHaveConcerns_0 | yes |
-            | action_doYouHaveConcernsDetails |  |
-        And I press "action_save"
-        Then the following fields should have an error:
-            | action_doYouExpectFinancialDecisionsDetails |
-            | action_doYouHaveConcernsDetails |
-        # form corrects
-        Then I fill in the following:
-            | action_doYouExpectFinancialDecisions_1 | no |
-            | action_doYouExpectFinancialDecisionsDetails | no |
-            | action_doYouHaveConcerns_1 | no |
-            | action_doYouHaveConcernsDetails | no |
-        And I press "action_save"
-        And the form should be valid

@@ -36,10 +36,10 @@ class ReportType extends AbstractType
                                             'invalid_message' => 'report.endDate.invalidMessage',
                                           ])
 
-                /*->add('courtOrderType', 'choice',[ 'choices' => $choices, 
+                /*->add('courtOrderTypeId', 'choice',[ 'choices' => $choices, 
                                                  'empty_data' => null ,
                                                  'empty_value' => 'Please select ..'] )*/
-                ->add('courtOrderType', 'hidden')
+                ->add('courtOrderTypeId', 'hidden')
 //                ->add('client', 'hidden')
                 ->add('save', 'submit');
     }

@@ -3,8 +3,7 @@ Feature: deputy / report / account transactions
     @deputy
     Scenario: money in 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open"
-        And I follow "edit-accounts"
+        And I click on "reports,report-2016-open, edit-accounts"
         And I follow "account-moneyin"
         # check no data was previously saved 
         Then the following fields should have the corresponding values:

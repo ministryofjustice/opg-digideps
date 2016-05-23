@@ -6,6 +6,7 @@ page:
     addDecisionButton: Add a decision
     subSectionTitleAdd: Add a decision
     subSectionTitleEdit: Edit this decision
+navLink: Decisions
 no_decision:
     subSectionDescription: "If you did not make any significant decisions, please tell us why here."
     fields:

@@ -194,7 +194,7 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
-            $this->clickLink('edit-decisions');
+            $this->clickOnBehatLink('edit-decisions, decisions');
 
             if (1 === count($this->getSession()->getPage()->findAll('css', '#add-decisions-button'))) {
                 $this->clickLink('add-decisions-button');
@@ -499,7 +499,7 @@ trait ReportTrait
     public function noDecisionsMade($text)
     {
         $this->gotoOverview();
-        $this->clickLink('edit-decisions');
+        $this->clickOnBehatLink('edit-decisions, decisions');
         $this->fillField('reason_for_no_decision_reason', $text);
         $this->pressButton('reason_for_no_decision_saveReason');
         $this->theFormShouldBeValid();

@@ -68,11 +68,10 @@ class Report
 
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank( message="report.courtOrderType.notBlank" )
      *
      * @var int
      */
-    private $courtOrderType;
+    private $courtOrderTypeId;
 
     /**
      * @JMS\Exclude
@@ -129,6 +128,13 @@ class Report
      * @var \AppBundle\Entity\Action
      */
     private $action;
+
+    /**
+     * @JMS\Type("AppBundle\Entity\MentalCapacity")
+     *
+     * @var MentalCapacity
+     */
+    private $mentalCapacity;
 
     /**
      * @JMS\Type("string")
@@ -449,21 +455,21 @@ class Report
     }
 
     /**
-     * @return int $courtOrderType
+     * @return int
      */
-    public function getCourtOrderType()
+    public function getCourtOrderTypeId()
     {
-        return $this->courtOrderType;
+        return $this->courtOrderTypeId;
     }
 
     /**
-     * @param int $courtOrderType
+     * @param int $courtOrderTypeId
      *
      * @return \AppBundle\Entity\Report
      */
-    public function setCourtOrderType($courtOrderType)
+    public function setCourtOrderTypeId($courtOrderTypeId)
     {
-        $this->courtOrderType = $courtOrderType;
+        $this->courtOrderTypeId = $courtOrderTypeId;
 
         return $this;
     }
@@ -702,6 +708,24 @@ class Report
     }
 
     /**
+     * @return MentalCapacity
+     */
+    public function getMentalCapacity()
+    {
+        return $this->mentalCapacity;
+    }
+
+    /**
+     * @param MentalCapacity $mentalCapacity
+     */
+    public function setMentalCapacity(MentalCapacity $mentalCapacity)
+    {
+        $this->mentalCapacity = $mentalCapacity;
+
+        return $this;
+    }
+
+    /**
      * @return bool $noAssetToAdd
      */
     public function getNoAssetToAdd()
@@ -807,15 +831,6 @@ class Report
     public function getReportSeen()
     {
         return $this->reportSeen;
-    }
-
-    public function getSectionCount()
-    {
-        if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {
-            return 5;
-        } else {
-            return 3;
-        }
     }
 
     /**

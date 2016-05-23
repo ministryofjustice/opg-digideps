@@ -42,20 +42,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /** @test */
-    public function sectionCountForProperty()
-    {
-        $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
-        $this->AssertEquals(5, $this->report->getSectionCount());
-    }
-
-    /** @test */
-    public function sectionCountForOther()
-    {
-        $this->report->setCourtOrderType(1);
-        $this->AssertEquals(3, $this->report->getSectionCount());
-    }
-
     /**
      * @dataProvider getCountValidTotalsProvider
      * @test
