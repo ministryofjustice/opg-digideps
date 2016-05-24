@@ -26,14 +26,12 @@
 
         <ul class="behat-region-list-assets report-list report-list--assets overview-sections">
             {% for assetTitle, assets in report.assetsGroupedByTitle %}
-                <li class="overview-section">
+                <li class="report-list__item">
                 <h2 class="heading">{{ assetTitle }}</h2>
                 {% for asset in assets %}
-                    {#<li id="asset-edit-{{ asset.id }}" class="report-list__item">#}
-                        {% include 'AppBundle:Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
-                        'asset': asset,
-                        } %}
-                    {#</li>#}
+                    {% include 'AppBundle:Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
+                    'asset': asset,
+                    } %}
                 {% endfor %}
                 </li>
             {% endfor %}

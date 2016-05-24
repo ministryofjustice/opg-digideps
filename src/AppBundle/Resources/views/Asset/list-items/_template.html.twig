@@ -2,16 +2,16 @@
 {% trans_default_domain translationDomain %}
 
 <div class="descriptive-list-item">
-    <div style="width: 30%; float: left; margin: 5px">
+    <div class="column first">
         {% block firstColumn %}
         {% endblock %}
     </div>
-    <div style="width: 40%; float: left; margin: 5px; font-weight: bold">
+    <div class="column second">
         {% block secondColumn %}
         {% endblock %}
     </div>
-    <div style="margin: 5px; float: left">
-        <span href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " style="float: none; margin: 5px" >Remove</span>
+    <div lass="column third" >
+        <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " style="float: none; margin: 5px" >Remove</a>
         <span href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="open-button button" >Edit</span>
     </div>
 </div>

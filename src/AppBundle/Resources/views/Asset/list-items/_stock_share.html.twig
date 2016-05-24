@@ -5,5 +5,5 @@
 {% endblock %}
 
 {% block secondColumn %}
-    {{  asset.description }} &nbsp; | &nbsp; £ {{  asset.value | money_format }}
+    {{  asset.description }} &nbsp; | &nbsp; £{{ asset.value | money_format }}
 {% endblock %}

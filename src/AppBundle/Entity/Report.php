@@ -588,10 +588,15 @@ class Report
     }
 
     /**
+     * Used in the list view
+     * AssetProperty is considered having title "Property"
+     * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery"
+     *
      * @return array $assets e.g. [Property => [asset1, asset2], Bonds=>[]...]
      */
     public function getAssetsGroupedByTitle()
     {
+        // those needs to be grouped together
         $titleToGroupOverride = [
             'Artwork' => 'Artwork, antiques and jewellery',
             'Antiques' => 'Artwork, antiques and jewellery',
