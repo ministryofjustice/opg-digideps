@@ -74,4 +74,19 @@ class AssetOther extends Asset
     {
         return 'other';
     }
+
+    /**
+     * @return mixed|string
+     */
+    public function getListTemplateName()
+    {
+        $titleToTemplateMap = [
+            'Stocks and shares' => 'stock_share',
+            'Premium bonds' => 'premium_bond',
+            'Vehicles' => 'vehicle',
+        ];
+
+        return isset($titleToTemplateMap[$this->getTitle()])
+            ? $titleToTemplateMap[$this->getTitle()] : 'default';
+    }
 }

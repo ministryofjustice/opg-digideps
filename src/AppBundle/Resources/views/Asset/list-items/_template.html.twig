@@ -1,0 +1,17 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+<div class="descriptive-list-item">
+    <div style="width: 30%; float: left; margin: 5px">
+        {% block firstColumn %}
+        {% endblock %}
+    </div>
+    <div style="width: 40%; float: left; margin: 5px; font-weight: bold">
+        {% block secondColumn %}
+        {% endblock %}
+    </div>
+    <div style="margin: 5px; float: left">
+        <span href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " style="float: none; margin: 5px" >Remove</span>
+        <span href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="open-button button" >Edit</span>
+    </div>
+</div>

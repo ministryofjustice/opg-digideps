@@ -1,7 +1,7 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Asset:layout-assets.html.twig'  %}
+{% extends 'AppBundle:Asset:layout-assets.html.twig' %}
 
 {% block maincontent %}
 
@@ -9,24 +9,35 @@
 
     {% if report.assets is not empty %}
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionDescription: 'page.pageSectionEditInfo'
-            } %}
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionEditInfo'
+        } %}
     {% endif %}
 
 
     {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
-            'report': report,
-            'section': 'assets',
-            'transDomain': translationDomain,
-            'data': report.assets
-        } %}
+    'report': report,
+    'section': 'assets',
+    'transDomain': translationDomain,
+    'data': report.assets
+    } %}
 
     {% if assets is not empty %}
-        {% include 'AppBundle:Asset:_asset_list.html.twig' with {
-                'report': report,
-                'assets': assets, 
-            } %}
+
+        <ul class="behat-region-list-assets report-list report-list--assets overview-sections">
+            {% for assetTitle, assets in report.assetsGroupedByTitle %}
+                <li class="overview-section">
+                <h2 class="heading">{{ assetTitle }}</h2>
+                {% for asset in assets %}
+                    {#<li id="asset-edit-{{ asset.id }}" class="report-list__item">#}
+                        {% include 'AppBundle:Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
+                        'asset': asset,
+                        } %}
+                    {#</li>#}
+                {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
     {% else %}
         {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
     {% endif %}

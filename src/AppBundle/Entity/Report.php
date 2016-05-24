@@ -588,6 +588,33 @@ class Report
     }
 
     /**
+     * @return array $assets e.g. [Property => [asset1, asset2], Bonds=>[]...]
+     */
+    public function getAssetsGroupedByTitle()
+    {
+        $titleToGroupOverride = [
+            'Artwork' => 'Artwork, antiques and jewellery',
+            'Antiques' => 'Artwork, antiques and jewellery',
+            'Jewellery' => 'Artwork, antiques and jewellery',
+        ];
+
+        $ret = [];
+        foreach($this->assets as $asset) {
+            if ($asset instanceof AssetProperty) {
+                $ret['Property'][] = $asset;
+            } else {
+                $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
+                    $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
+                $ret[$title][] = $asset;
+            }
+        }
+
+        ksort($ret);
+
+        return $ret;
+    }
+
+    /**
      * @param ExecutionContextInterface $context
      */
     public function isValidEndDate(ExecutionContextInterface $context)

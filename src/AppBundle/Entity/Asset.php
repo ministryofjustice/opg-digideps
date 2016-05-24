@@ -126,4 +126,6 @@ abstract class Asset
     {
         return $this->valuationDate;
     }
+
+    abstract public function getListTemplateName();
 }
