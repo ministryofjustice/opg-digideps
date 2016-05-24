@@ -4,8 +4,9 @@ page:
   pageSectionDescription: "Add details of any property, valuables or investments that %client% owns."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
-  subSectionTitleAdd: 
-    other: Add an asset
+  subSectionTitleSelect: Add an asset
+  subSectionAssetComplete:
+    other: "Add an asset: %title%"
     property: Add a property
   subSectionTitleEdit: 
     other: "Edit this asset"
