@@ -141,6 +141,7 @@
         .column {
             float: left;
             margin: 5px;
+            padding-top: 10px;
 
             &.first {
                 width: 30%;
@@ -152,7 +153,10 @@
             }
 
             &.third {
-                padding-top: 5px;
+                .edit-link {
+                    float: none;
+                    margin-right: 10px;
+                }
             }
         }
 

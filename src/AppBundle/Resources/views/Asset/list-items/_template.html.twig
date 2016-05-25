@@ -6,12 +6,12 @@
         {% block firstColumn %}
         {% endblock %}
     </div>
-    <div class="column second">{{ asset.getOrderIndex }}
+    <div class="column second">
         {% block secondColumn %}
         {% endblock %}
     </div>
     <div class="column third" >
-        <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " style="float: none; margin: 5px" >Remove</a>
+        <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " >Remove</a>
         <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="open-button button" >Edit</a>
     </div>
 </div>
