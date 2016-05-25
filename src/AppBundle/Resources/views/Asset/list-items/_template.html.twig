@@ -10,7 +10,7 @@
         {% block secondColumn %}
         {% endblock %}
     </div>
-    <div lass="column third" >
+    <div class="column third" >
         <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class="edit-link " style="float: none; margin: 5px" >Remove</a>
         <span href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="open-button button" >Edit</span>
     </div>
