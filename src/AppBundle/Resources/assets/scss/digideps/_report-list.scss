@@ -126,10 +126,6 @@
             margin-top: 0;
         }
 
-        .descriptive-list-item {
-            //border: none;
-        }
-
         > .heading {
             @include core-19();
             color: $text-colour;
@@ -140,7 +136,6 @@
             @include media(mobile) {
                 font-size: 16px;
             }
-
         }
 
         .column {
@@ -164,11 +159,8 @@
                 }
             }
         }
-
     }
-
 }
-
 
 .report-list-separator {
     border-top: 1px solid $grey-3;

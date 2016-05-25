@@ -7,14 +7,6 @@
 
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
-    {% if report.assets is not empty %}
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionEditInfo'
-        } %}
-    {% endif %}
-
-
     {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
     'report': report,
     'section': 'assets',

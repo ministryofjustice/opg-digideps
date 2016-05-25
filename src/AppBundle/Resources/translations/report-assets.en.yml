@@ -2,7 +2,6 @@ page:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageSectionTitle: "%client%'s assets"
   pageSectionDescription: "Add details of any property, valuables or investments that %client% owns."
-  pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
   subSectionTitleSelect: Add an asset
   subSectionAssetComplete:
