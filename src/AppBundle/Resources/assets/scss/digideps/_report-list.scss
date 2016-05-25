@@ -114,16 +114,21 @@
 
     color: $text-colour;
     list-style: inherit;
+    padding: 30px 0px;
 
     .report-list__item {
-
         margin-top: 5px;
         display: block;
+        border-bottom: none;
+        padding: 5px;
 
         @include media(mobile) {
             margin-top: 0;
         }
 
+        .descriptive-list-item {
+            //border: none;
+        }
 
         > .heading {
             @include core-19();
@@ -148,7 +153,7 @@
             }
 
             &.second {
-                width: 43%;
+                width: 50%;
                 font-weight: bold;
             }
 
