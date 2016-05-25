@@ -371,4 +371,9 @@ class AssetProperty extends Asset
     {
         return 'property';
     }
+
+    public function getOrderIndex()
+    {
+        return strtolower($this->getAddress() . '' .$this->getAddress2());
+    }
 }
