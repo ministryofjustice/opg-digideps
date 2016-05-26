@@ -195,6 +195,21 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+
+        if (isset($data['debts'])) {
+            foreach($data['debts'] as $row) {
+                $debt = $report->getDebtByTypeId($row['debt_type_id']);
+                if (!$debt instanceof EntityDir\Debt) {
+                    continue; //not clear when that might happen. kept similar to transaction below
+                }
+                $debt->setAmount($row['amount']);
+                $debt->setMoreDetails($row['more_details']);
+                $this->getEntityManager()->flush($debt);
+                $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            }
+
+        }
+
         foreach (['transactions_in', 'transactions_out'] as $tk) {
             if (!isset($data[$tk])) {
                 continue;
@@ -210,7 +225,7 @@ class ReportController extends RestController
                 }
                 $this->getEntityManager()->flush($t);
             }
-            $this->setJmsSerialiserGroups(['transactions']);
+            $this->setJmsSerialiserGroups(['transactions']); //returns saved data (AJAX operations)
         }
 
         if (array_key_exists('cot_id', $data)) {

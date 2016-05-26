@@ -1064,6 +1064,18 @@ class Report
         return $this->debts;
     }
 
+    /**
+     * @param string $typeId
+     *
+     * @return Debt
+     */
+    public function getDebtByTypeId($typeId)
+    {
+        return $this->getDebts()->filter(function (Debt $debt) use ($typeId) {
+            return $debt->getDebtTypeId() == $typeId;
+        })->first();
+    }
+
 
     /**
      * @param Debt $debt
