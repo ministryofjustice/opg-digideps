@@ -2,6 +2,10 @@
 
     margin-top: 60px;
 
+    &.no-margin-top {
+        margin-top: 0px;
+    }
+
     .sections {
 
         .section {
@@ -9,6 +13,10 @@
             padding-bottom: 30px;
             margin-bottom: 30px;
             border-bottom: 1px solid $grey-2;
+
+            &.no-border-bottom {
+                border-bottom: none;
+            }
 
             .summary {
                 @extend %contain-floats;
