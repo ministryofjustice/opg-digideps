@@ -91,6 +91,34 @@ class ReportRepository extends EntityRepository
     }
 
     /**
+     * add empty Debts to Report.
+     * Called from doctrine listener.
+     *
+     * @param Report $report
+     *
+     * @return int changed records
+     */
+    public function addDebtsToReportIfMissing(Report $report)
+    {
+        $ret = 0;
+
+        if (count($report->getDebts()) > 0) {
+            return $ret;
+        }
+
+        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\TransactionType')
+            ->findBy([], ['displayOrder' => 'ASC']);
+
+        foreach (Debt::$debtTypeIds as $row) {
+            $debt = new Debt($report, $row[0], $row[1], null);
+            $this->_em->persist($debt);
+            ++$ret;
+        }
+
+        return $ret;
+    }
+
+    /**
      *  preload transaction type. Doctrine otherwise fetching every single one.
      */
     public function warmUpArrayCacheTransactionTypes()
