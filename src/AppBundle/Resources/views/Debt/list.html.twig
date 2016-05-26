@@ -36,7 +36,7 @@
                 {% endfor %}
                 <div class="sub-total">
                     Total debts
-                    :£<span class="value">{{ 1 | money_format }}</span>
+                    :£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>
                 </div>
             </div>
         </div>
