@@ -69,6 +69,13 @@ class Report
     private $transactions;
 
     /**
+     * @JMS\Groups({"debts"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Debt", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $debts;
+
+    /**
      * @JMS\Groups({"decisions"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -277,6 +284,7 @@ class Report
         $this->accounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->debts = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
@@ -1046,6 +1054,46 @@ class Report
         }
 
         return $this;
+    }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebts()
+    {
+        return $this->debts;
+    }
+
+
+    /**
+     * @param Debt $debt
+     */
+    public function addDebt(Debt $debt)
+    {
+        if (!$this->debts->contains($debt)) {
+            $this->debts->add($debt);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get assets total value.
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\SerializedName("debts_total_amount")
+     * @JMS\Groups({"debts"})
+     *
+     * @return float
+     */
+    public function getDebtsTotalAmount()
+    {
+        $ret = 0;
+        foreach ($this->getDebts() as $debt) {
+            $ret += $debt->getAmount();
+        }
+
+        return $ret;
     }
 
     /**
