@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * debts
+ * debts fix existing reports
  */
 class Version077 extends AbstractMigration implements ContainerAwareInterface
 {
@@ -34,8 +34,11 @@ class Version077 extends AbstractMigration implements ContainerAwareInterface
         $reports = $reportRepo->findAll();
 
         foreach($reports as $report) {
-            $reportRepo->addDebtsToReportIfMissing($report);
-            $em->flush();
+            if ($reportRepo->addDebtsToReportIfMissing($report)) {
+                $em->flush();
+                echo "Added debts to report {$report->getId()}\n";
+            }
+
         }
     }
 

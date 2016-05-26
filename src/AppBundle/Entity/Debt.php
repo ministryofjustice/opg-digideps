@@ -46,7 +46,7 @@ class Debt
      * @var string
      * @JMS\Groups({"debts"})
      *
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
     private $debtTypeId;
 
@@ -61,20 +61,22 @@ class Debt
     private $amount;
 
     /**
+     * @var bool
+     * @JMS\Groups({"debts"})
+     * @JMS\Type("boolean")
+     *
+     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
+     */
+    private $hasMoreDetails;
+
+
+    /**
      * @var string
      * @JMS\Groups({"debts"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
     private $moreDetails;
-
-    /**
-     * @var bool
-     * @JMS\Groups({"debts"})
-     *
-     * @JMS\Type("boolean")
-     */
-    private $hasMoreDetails;
 
     /**
      * Debt constructor.
@@ -90,7 +92,7 @@ class Debt
         $report->addDebt($this);
 
         $this->debtTypeId = $debtTypeId;
-                $this->hasMoreDetails = $hasMoreDetails;
+        $this->hasMoreDetails = $hasMoreDetails;
         $this->amount = $amount;
     }
 
