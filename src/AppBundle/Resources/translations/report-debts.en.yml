@@ -1,9 +1,21 @@
 page:
   htmlTitle: "Deputy report - debts | GOV.UK"
-  pageSectionTitle: "%client%'s debts"
-  pageSectionDescription: ""
-  pageSectionEditInfo: ""
-  pageSectionWarning: ""
-form:
+  pageSectionTitle: "Debts"
+  pageSectionDescription: "Don't tell us about amounts left to pay on a mortgage. Go to assets to give us this information."
+  heading: Debts owned by %client%
 
+form:
+  entries:
+    care-fees:
+      label: Care fees (not charged to property)
+    credit-cards:
+      label: Credit cards
+    loans:
+      label: Loans
+    other:
+      label: Other
+      moreInformations: Give us more information about this debt
+save:
+  label: Save
 navLink: Debts
+

@@ -1,12 +1,54 @@
 {% set translationDomain = "report-debts" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Debt:layout-debts.html.twig'  %}
+{% extends 'AppBundle:Debt:layout-debts.html.twig' %}
+
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block maincontent %}
 
+    <h3 class="heading-medium-large">{{ 'page.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
-    [DEBTS]
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal no-margin-top' }}) }}
+    <div class="sections">
+        <div class="section no-border-bottom">
+            <div class="detail transactions detail-view">
+                {% for debt in form.debts %}
+                    <div class="transaction">
+                        {{ form_row(debt.debtTypeId) }}
+                        {{ form_input(debt.amount, '', {
+                            'inputPrefix' : '£',
+                            'inputClass' : 'form-control__number transaction-value',
+                            'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                            'formGroupClass': ' form-group-value'
+                        }) }}
+
+                        {% if debt.moreDetails is defined %}
+                            {{ form_input(debt.moreDetails, '', {
+                                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                                'formGroupClass': 'form-group-combo-description',
+                                'inputClass': 'expanding transaction-more-details'
+                            }) }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="sub-total">
+                    Total debts
+                    :£<span class="value">{{ 1 | money_format }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+    transDomain: translationDomain,
+    showDelete: false,
+    showCancel: false,
+    section: 'account',
+    } %}
+
+    {{ form_end(form) }}
 
 {% endblock %}
