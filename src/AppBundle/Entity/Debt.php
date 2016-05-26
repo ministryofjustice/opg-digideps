@@ -9,18 +9,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Debt
 {
     /**
-     * Hold debts type
-     * 1st value = id, 2nd value = hasMoreInformation
-     * @var array
-     */
-    public static $debtTypeIds = [
-        ['care-fees', false],
-        ['credit-cards', false],
-        ['loans', false],
-        ['other', true],
-    ];
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */

@@ -304,6 +304,15 @@ class Report
      */
     private $debts;
 
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @var decimal
+     */
+    private $debtsTotalAmount;
+
     /**
      * @return int $id
      */
@@ -1164,12 +1173,6 @@ class Report
      */
     public function getDebts()
     {
-        $ret = new ArrayCollection();
-        foreach (Debt::$debtTypeIds as $row) {
-            $ret->add(new Debt($row[0], rand(11,104) , $row[1], null));
-        }
-        return $ret;
-
         return $this->debts;
     }
 
@@ -1180,5 +1183,22 @@ class Report
     {
         $this->debts = $debts;
     }
+
+    /**
+     * @return decimal
+     */
+    public function getDebtsTotalAmount()
+    {
+        return $this->debtsTotalAmount;
+    }
+
+    /**
+     * @param decimal $debtsTotalAmount
+     */
+    public function setDebtsTotalAmount($debtsTotalAmount)
+    {
+        $this->debtsTotalAmount = $debtsTotalAmount;
+    }
+       
 
 }
