@@ -30,9 +30,9 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-//            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
-//                'deserialise_group' => 'transactionsIn',
-//            ]);
+            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
+                'deserialise_group' => 'debts',
+            ]);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
         }
