@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -294,6 +295,14 @@ class Report
      * @var string
      */
     private $balanceMismatchExplanation;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Debt>")
+     * @JMS\Groups({"debts"})
+     *
+     * @var ArrayCollection
+     */
+    private $debts;
 
     /**
      * @return int $id
@@ -917,6 +926,8 @@ class Report
         $this->transactionsOut = $transactionsOut;
     }
 
+
+
     /**
      * @param Transaction[] $transactions
      *
@@ -1147,4 +1158,27 @@ class Report
 
         return false;
     }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebts()
+    {
+        $ret = new ArrayCollection();
+        foreach (Debt::$debtTypeIds as $row) {
+            $ret->add(new Debt($row[0], rand(11,104) , $row[1], null));
+        }
+        return $ret;
+
+        return $this->debts;
+    }
+
+    /**
+     * @param Debt[] $debts
+     */
+    public function setDebts($debts)
+    {
+        $this->debts = $debts;
+    }
+
 }

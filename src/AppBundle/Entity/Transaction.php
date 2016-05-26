@@ -29,7 +29,7 @@ class Transaction
 
     /**
      * @var decimal
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
