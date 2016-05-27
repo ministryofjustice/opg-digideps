@@ -9,9 +9,10 @@
 
     <h3 class="heading-medium-large">{{ 'page.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
 
     {{ form_checkbox_group(form.clientHasDebts, 'clientHasDebts', {
+        'formGroupClass': 'margin-bottom-reduced',
         'fieldSetClass' : 'inline client-has-debts',
         'legendClass' : 'form-label',
         'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': report.client.firstname}, translationDomain),
@@ -20,9 +21,9 @@
         {'labelClass': 'block-label', 'elementClass': '' }
         ]
     }) }}
+
     <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
         <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
-
         <div class="section no-border-bottom form-horizontal">
             <div class="detail transactions detail-view">
                 {% for debt in form.debts %}
@@ -44,7 +45,7 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                <div class="sub-total">
+                <div class="sub-total hidden">
                     Total debts
                     :£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>
                 </div>
@@ -54,6 +55,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            // client has debt radio box hide/show debts list
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
             new opg.RadioHide({
                 radio: '.client-has-debts input[type=radio]',
@@ -61,8 +63,26 @@
                 hideOnYes: false
             });
 
+            // auto save (disable as it removes submit button, needed to save radio choice
+            {#new GOVUK.AutoSave({#}
+                {#form: $('form.debts-form'),#}
+                {#statusElement: $('#save-status'),#}
+                {#url: '{{ path('debts_save_json', {'reportId': report.id}) }}'#}
+            {#});#}
+
+            // auto format currencies
+            $('input.transaction-value').on('blur', function (event) {
+                GOVUK.formatCurrency(event.target);
+            });
+
         });
     </script>
+
+    <div id="save-debts" class="save-section no-margin">
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+        </div>
+    </div>
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
     transDomain: translationDomain,

@@ -7,7 +7,8 @@ use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Debug\Debug;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -30,7 +31,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => 'debts',
             ]);
 
@@ -42,5 +43,34 @@ class DebtController extends AbstractController
 //            'jsonEndpoint' => 'debts',
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/debts", name="debts_save_json")
+     * @Method("PUT")
+     */
+    public function debtSaveJsonAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId, ['debts', 'basic']);
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException('Report already submitted and not editable.');
+        }
+
+        $form = $this->createForm(new FormDir\DebtsType, $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
+                'deserialise_group' => 'debts',
+            ]);
+
+            return JsonResponse(['success' => true]);
+        }
+
+        return JsonResponse([
+            'false' => true,
+            'message' => (String)$form->getErrors()
+        ]);
+
     }
 }
