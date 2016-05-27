@@ -18,7 +18,8 @@ class DebtSingleType extends AbstractType
                  ->add('amount', 'number', [
                      'precision' => 2,
                      'grouping' => true,
-                     'invalid_message' => 'xxx',
+                     'error_bubbling' => true,
+                     'invalid_message' => 'debt.amount.notNumeric',
                  ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

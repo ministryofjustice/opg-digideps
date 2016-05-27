@@ -1177,6 +1177,33 @@ class Report
     }
 
     /**
+     * @param $value string yes/no
+     */
+    public function setHasDebts($value)
+    {
+        if ($value == 'no') {
+            foreach ($this->debts as $debt) {
+                $debt->setAmount(null);
+                $debt->setMoreDetails(null);
+            }
+        }
+    }
+
+    /**
+     * @return string yes/no
+     */
+    public function getHasDebts()
+    {
+        foreach($this->debts as $debt) {
+            if ($debt->getAmount()) {
+                return 'yes';
+            }
+        }
+
+        return 'no';
+    }
+
+    /**
      * @param Debt[] $debts
      */
     public function setDebts($debts)

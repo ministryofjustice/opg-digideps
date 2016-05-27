@@ -239,7 +239,14 @@ asset:
             type: Enter a valid amount for this property
             outOfRange: The value of the property must be less than £100,000,000,000
             
-            
+debt:
+    amount:
+      notNumeric: Enter a valid value (e.g. 1,040.55)
+    moreDetails:
+      notEmpty: Please enter a value
+
+
+
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:
