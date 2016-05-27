@@ -13,6 +13,11 @@ class DebtsType extends AbstractType
     {
         $builder
                  ->add('id', 'hidden')
+                 ->add('clientHasDebts', 'choice', array(
+                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'mapped' => false,
+                    'expanded' => true,
+                 ))
                  ->add('debts',  'collection', ['type' => new DebtSingleType()])
                  ->add('save', 'submit')
                 ;

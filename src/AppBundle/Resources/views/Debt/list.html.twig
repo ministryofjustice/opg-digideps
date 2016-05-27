@@ -9,11 +9,21 @@
 
     <h3 class="heading-medium-large">{{ 'page.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal no-margin-top' }}) }}
-    <div class="sections">
-        <div class="section no-border-bottom">
+    {{ form_checkbox_group(form.clientHasDebts, 'clientHasDebts', {
+        'fieldSetClass' : 'inline client-has-debts',
+        'legendClass' : 'form-label',
+        'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': report.client.firstname}, translationDomain),
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+
+        <div class="section no-border-bottom form-horizontal">
             <div class="detail transactions detail-view">
                 {% for debt in form.debts %}
                     <div class="transaction">
@@ -41,6 +51,18 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio: '.client-has-debts input[type=radio]',
+                content: '#debts-sections-list',
+                hideOnYes: false
+            });
+
+        });
+    </script>
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
     transDomain: translationDomain,
