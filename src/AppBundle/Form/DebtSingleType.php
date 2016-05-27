@@ -31,7 +31,9 @@ class DebtSingleType extends AbstractType
 
             if ($debt->getHasMoreDetails()) {
                 $form->add('moreDetails', 'textarea', [
-                    'required' => true
+                    'required' => true,
+                    'error_bubbling' => true,
+                    'mapped'=>true,
                 ]);
             }
         });
@@ -45,7 +47,7 @@ class DebtSingleType extends AbstractType
 
                 $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Debt */
-                $validationGroups = ['debts'];
+                $validationGroups = ['debt'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {
                     $validationGroups[] = 'debt-more-details';
