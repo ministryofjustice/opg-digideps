@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
+use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -40,7 +41,6 @@ class DebtController extends AbstractController
 
         return [
             'report' => $report,
-//            'jsonEndpoint' => 'debts',
             'form' => $form->createView(),
         ];
     }

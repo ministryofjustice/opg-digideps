@@ -20,7 +20,7 @@ class Debt
      * @JMS\Type("string")
      * @JMS\Groups({"debts"})
      * @Assert\Type(type="numeric", message="debts.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=10000000000, minMessage = "debts.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
      */
     private $amount;
 
@@ -37,7 +37,7 @@ class Debt
      * @JMS\Groups({"debts"})
      * @JMS\Type("string")
      *
-     * @Assert\Type(type="notEmpty", message="debts.moreDetails.notEmpty", groups={"debts-details"})
+     * @Assert\Type(type="notEmpty", message="debt.moreDetails.notEmpty", groups={"debt"})
      */
     private $moreDetails;
 
