@@ -304,6 +304,13 @@ class Report
      */
     private $debts;
 
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @var string
+     */
+    private $hasDebts;
 
     /**
      * @JMS\Type("string")
@@ -1176,32 +1183,6 @@ class Report
         return $this->debts;
     }
 
-    /**
-     * @param $value string yes/no
-     */
-    public function setHasDebts($value)
-    {
-        if ($value == 'no') {
-            foreach ($this->debts as $debt) {
-                $debt->setAmount(null);
-                $debt->setMoreDetails(null);
-            }
-        }
-    }
-
-    /**
-     * @return string yes/no
-     */
-    public function getHasDebts()
-    {
-        foreach($this->debts as $debt) {
-            if ($debt->getAmount()) {
-                return 'yes';
-            }
-        }
-
-        return 'no';
-    }
 
     /**
      * @param Debt[] $debts
@@ -1226,6 +1207,21 @@ class Report
     {
         $this->debtsTotalAmount = $debtsTotalAmount;
     }
-       
+
+    /**
+     * @return string
+     */
+    public function getHasDebts()
+    {
+        return $this->hasDebts;
+    }
+
+    /**
+     * @param string $hasDebts
+     */
+    public function setHasDebts($hasDebts)
+    {
+        $this->hasDebts = $hasDebts;
+    }
 
 }
