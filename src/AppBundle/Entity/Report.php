@@ -142,6 +142,7 @@ class Report
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"reasonForNoContacts"})
      *
      * @var string
      */
@@ -149,6 +150,7 @@ class Report
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"reasonForNoDecisions"})
      *
      * @var string
      */
@@ -156,6 +158,7 @@ class Report
 
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"noAssetsToAdd"})
      *
      * @var bool
      */
