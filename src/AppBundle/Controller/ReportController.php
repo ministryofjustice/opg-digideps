@@ -17,7 +17,7 @@ class ReportController extends AbstractController
     private static $reportGroupsForValidation = [
         'basic',  'accounts', 'client',
         'transactions', 'transactionsIn', 'transactionsOut',
-        'asset', 'contacts', 'decisions', 'action', 'transfers',
+        'asset', 'contacts', 'decisions', 'action', 'transfers', 'debts',
         'MentalCapacity', //update other groups to this format
     ];
 

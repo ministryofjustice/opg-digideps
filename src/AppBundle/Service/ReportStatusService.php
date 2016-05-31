@@ -75,11 +75,22 @@ class ReportStatusService
     /** @return string */
     public function getAssetsState()
     {
-        if (empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd())) {
+        $hasAtLeastOneAsset = count($this->report->getAssets()) > 0;
+        $noAssetsToAdd = $this->report->getNoAssetToAdd();
+        $hasDebts = $this->report->getHasDebts();
+
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
             return self::STATE_NOT_STARTED;
-        } else {
+        }
+
+        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+
+        if ($assetsSubSectionComplete && $debtsSectionComplete) {
             return self::STATE_DONE;
         }
+
+        return self::STATE_INCOMPLETE;
     }
 
     /** @return string */
