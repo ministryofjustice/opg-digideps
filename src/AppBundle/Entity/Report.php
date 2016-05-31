@@ -1067,6 +1067,15 @@ class Report
     }
 
     /**
+     * @param mixed $debts
+     */
+    public function setDebts($debts)
+    {
+        $this->debts = $debts;
+    }
+
+    
+    /**
      * @return Debt[]
      */
     public function getDebts()

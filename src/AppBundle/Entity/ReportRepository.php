@@ -102,17 +102,15 @@ class ReportRepository extends EntityRepository
     {
         $ret = 0;
 
+        // skips if already added
         if (count($report->getDebts()) > 0) {
             return $ret;
         }
 
-        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\TransactionType')
-            ->findBy([], ['displayOrder' => 'ASC']);
-
         foreach (Debt::$debtTypeIds as $row) {
             $debt = new Debt($report, $row[0], $row[1], null);
             $this->_em->persist($debt);
-            ++$ret;
+            $ret++;
         }
 
         return $ret;
