@@ -6,6 +6,9 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"debts"})
+ */
 class Debt
 {
     /**
@@ -19,7 +22,7 @@ class Debt
      *
      * @JMS\Type("string")
      * @JMS\Groups({"debts"})
-     * @Assert\Type(type="numeric", message="debts.amount.notNumeric", groups={"debt"})
+     * @Assert\Type(type="numeric", message="debts.amount.notNumeric", groups={"debts"})
      * @Assert\Range(min=0, max=100000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
      */
     private $amount;
@@ -37,7 +40,7 @@ class Debt
      * @JMS\Groups({"debts"})
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debt-more-details"})
+     * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debts-more-details"})
      */
     private $moreDetails;
 
@@ -134,6 +137,25 @@ class Debt
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
+    }
+
+    /**
+     * flag moreDetails invalid if amount is given and moreDetails is empty
+     * flag amount invalid if moreDetails is given and amount is empty.
+     *
+     * @param ExecutionContextInterface $context
+     */
+    public function moreDetailsValidate(ExecutionContextInterface $context)
+    {
+        // if the transaction required no moreDetails, no validation is needed
+        if (!$this->getHasMoreDetails()) {
+            return;
+        }
+
+        $moreDetailsCleaned = trim($this->getMoreDetails(), " \n");
+        if ($this->getAmount() && empty($moreDetailsCleaned)) {
+            $context->addViolationAt('moreDetails', 'add details !');
+        }
     }
 
 

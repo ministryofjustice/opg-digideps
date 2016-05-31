@@ -29,7 +29,7 @@
                 {% for debt in form.debts %}
                     <div class="transaction">
                         {{ form_row(debt.debtTypeId) }}
-                        {{ form_input(debt.amount, '', {
+                        {{ form_input(debt.amount, 'amount', {
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
@@ -37,10 +37,10 @@
                         }) }}
 
                         {% if debt.moreDetails is defined %}
-                            {{ form_input(debt.moreDetails, '', {
+                            {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'formGroupClass': 'form-group-combo-description',
-                                'inputClass': 'expanding transaction-more-details'
+                                'inputClass': ' transaction-more-details'
                             }) }}
                         {% endif %}
                     </div>

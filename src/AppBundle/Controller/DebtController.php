@@ -37,6 +37,8 @@ class DebtController extends AbstractController
             ]);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
+        } else if ($form->isSubmitted()) {
+            //echo $form->getErrorsAsString();
         }
 
         return [

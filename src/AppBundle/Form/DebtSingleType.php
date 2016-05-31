@@ -47,10 +47,10 @@ class DebtSingleType extends AbstractType
 
                 $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Debt */
-                $validationGroups = ['debt'];
+                $validationGroups = ['debts'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {
-                    $validationGroups[] = 'debt-more-details';
+                    $validationGroups[] = 'debts-more-details';
                 }
 
                 return $validationGroups;
