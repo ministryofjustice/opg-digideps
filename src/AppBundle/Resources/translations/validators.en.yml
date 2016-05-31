@@ -91,6 +91,7 @@ report:
         notBlank: You must explain why you are not signing on everyone's behalf
     hasDebts:
         notBlank: You must select one option
+        mustHaveAtLeastOneDebt: You must enter at least one debt
 
 report-declaration:
     agree:

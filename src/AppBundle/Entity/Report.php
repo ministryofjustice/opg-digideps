@@ -11,9 +11,12 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @JMS\XmlRoot("report")
  * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
+ * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
 class Report
 {
+
+
     /**
      * 
      */
@@ -1224,6 +1227,29 @@ class Report
     public function setHasDebts($hasDebts)
     {
         $this->hasDebts = $hasDebts;
+    }
+
+    public function hasAtLeastOneDebtsWithValidAmount()
+    {
+        foreach($this->debts as $debt) {
+            if ($debt->getAmount()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function debtsValid(ExecutionContextInterface $context)
+    {
+        if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
+            $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
+        }
+
+
     }
 
 }
