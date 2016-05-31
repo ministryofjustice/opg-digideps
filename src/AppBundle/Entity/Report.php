@@ -308,6 +308,8 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"debts"})
      *
+     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
+     *
      * @var string
      */
     private $hasDebts;

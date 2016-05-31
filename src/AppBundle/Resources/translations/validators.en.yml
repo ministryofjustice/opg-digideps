@@ -89,6 +89,8 @@ report:
         notBlank: You must select one option
     agreedBehalfDeputyExplanation:  
         notBlank: You must explain why you are not signing on everyone's behalf
+    hasDebts:
+        notBlank: You must select one option
 
 report-declaration:
     agree:
