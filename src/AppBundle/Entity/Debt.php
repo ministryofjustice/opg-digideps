@@ -151,10 +151,9 @@ class Debt
         if (!$this->getHasMoreDetails()) {
             return;
         }
-
         $moreDetailsCleaned = trim($this->getMoreDetails(), " \n");
         if ($this->getAmount() && empty($moreDetailsCleaned)) {
-            $context->addViolationAt('moreDetails', 'add details !');
+            $context->addViolationAt('moreDetails', 'debt.moreDetails.notEmpty');
         }
     }
 

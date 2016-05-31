@@ -32,7 +32,6 @@ class DebtSingleType extends AbstractType
             if ($debt->getHasMoreDetails()) {
                 $form->add('moreDetails', 'textarea', [
                     'required' => true,
-                    'error_bubbling' => true,
                     'mapped'=>true,
                 ]);
             }
