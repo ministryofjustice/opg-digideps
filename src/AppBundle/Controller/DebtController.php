@@ -36,11 +36,6 @@ class DebtController extends AbstractController
                 'deserialise_group' => 'debts',
             ]);
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Debts saved.'
-            );
-
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
         }
 

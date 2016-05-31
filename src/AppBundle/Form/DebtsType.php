@@ -16,11 +16,9 @@ class DebtsType extends AbstractType
             ->add('hasDebts', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'required' => true
             ))
             ->add('debts', 'collection', [
                 'type' => new DebtSingleType(),
-                'error_bubbling' => false,
                 'cascade_validation' => true
             ])
             ->add('save', 'submit');

@@ -19,7 +19,7 @@ class DebtSingleType extends AbstractType
             ->add('amount', 'number', [
                 'precision' => 2,
                 'grouping' => true,
-                'error_bubbling' => false,
+                'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'debt.amount.notNumeric',
             ]);
 
@@ -31,8 +31,6 @@ class DebtSingleType extends AbstractType
 
             if ($debt->getHasMoreDetails()) {
                 $form->add('moreDetails', 'textarea', [
-                    'required' => true,
-                    'mapped'=>true,
                 ]);
             }
         });
