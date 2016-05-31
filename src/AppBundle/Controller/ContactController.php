@@ -122,7 +122,9 @@ class ContactController extends AbstractController
 
         if (!empty($report)) {
             $report->setReasonForNoContacts(null);
-            $this->get('restClient')->put('report/'.$report->getId(), $report);
+            $this->get('restClient')->put('report/'.$report->getId(), $report, [
+                'deserialise_group' => 'reasonForNoContacts'
+            ]);
         }
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $report->getId()]));
@@ -141,7 +143,9 @@ class ContactController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->get('restClient')->put('report/'.$reportId, $data);
+            $this->get('restClient')->put('report/'.$reportId, $data, [
+                'deserialise_group' => 'reasonForNoContacts'
+            ]);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
@@ -165,8 +169,9 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $data = $form->getData();
-            $this->get('restClient')->put('report/'.$reportId, $data);
+            $this->get('restClient')->put('report/'.$reportId, $form->getData(), [
+                'deserialise_group' => 'reasonForNoContacts'
+            ]);
         }
 
         return [
