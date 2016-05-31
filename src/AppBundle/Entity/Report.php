@@ -76,6 +76,16 @@ class Report
     private $debts;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
+     *
+     * @var string
+     */
+    private $hasDebts;
+
+    /**
      * @JMS\Groups({"decisions"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -1106,6 +1116,22 @@ class Report
         }
 
         return $ret;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHasDebts()
+    {
+        return $this->hasDebts;
+    }
+
+    /**
+     * @param mixed $hasDebts
+     */
+    public function setHasDebts($hasDebts)
+    {
+        $this->hasDebts = $hasDebts;
     }
 
     /**
