@@ -200,7 +200,7 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        if (array_key_exists('has_debts', $data) && !empty($data['debts'])) {
+        if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $report->setHasDebts($data['has_debts']);
             foreach ($data['debts'] as $row) {
                 $debt = $report->getDebtByTypeId($row['debt_type_id']);
