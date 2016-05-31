@@ -6,9 +6,6 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"debts"})
- */
 class Debt
 {
     /**
@@ -138,24 +135,5 @@ class Debt
     {
         $this->moreDetails = $moreDetails;
     }
-
-    /**
-     * flag moreDetails invalid if amount is given and moreDetails is empty
-     * flag amount invalid if moreDetails is given and amount is empty.
-     *
-     * @param ExecutionContextInterface $context
-     */
-    public function moreDetailsValidate(ExecutionContextInterface $context)
-    {
-        // if the transaction required no moreDetails, no validation is needed
-        if (!$this->getHasMoreDetails()) {
-            return;
-        }
-        $moreDetailsCleaned = trim($this->getMoreDetails(), " \n");
-        if ($this->getAmount() && empty($moreDetailsCleaned)) {
-            $context->addViolationAt('moreDetails', 'debt.moreDetails.notEmpty');
-        }
-    }
-
 
 }

@@ -18,7 +18,11 @@ class DebtsType extends AbstractType
                 'expanded' => true,
                 'required' => true
             ))
-            ->add('debts', 'collection', ['type' => new DebtSingleType()])
+            ->add('debts', 'collection', [
+                'type' => new DebtSingleType(),
+                'error_bubbling' => false,
+                'cascade_validation' => true
+            ])
             ->add('save', 'submit');
     }
 
