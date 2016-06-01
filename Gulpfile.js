@@ -27,7 +27,6 @@ var config = {
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
     imgSrc: 'src/AppBundle/Resources/assets/images',
     sassSrc: 'src/AppBundle/Resources/assets/scss',
-    reactSrc: 'src/AppBundle/Resources/assets/react',
     webAssets: 'web/assets/' + now
 };
 
@@ -164,43 +163,12 @@ gulp.task('lint.js', function () {
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
-
-// Compile React related code for Money Transfers in debug mode.
-// Allows for easy debugging in Chrome with the react developer plugin
-gulp.task('react-debug', () => {
-    browserify({
-        entries: config.reactSrc + '/transfers.jsx',
-        extensions: ['.jsx'],
-        debug: true
-    })
-    .transform(babelify)
-    .bundle()
-    .pipe(source('transfers.js'))
-    .pipe(gulp.dest(config.webAssets + '/javascripts'));
-});
-
-// Compile React related code for Money Transfers in production mode, minified
-gulp.task('react', () => {
-    browserify({
-        entries: config.reactSrc + '/transfers.jsx',
-        extensions: ['.jsx'],
-        debug: false
-    })
-    .transform(babelify)
-    .bundle()
-    .pipe(source('transfers.js'))
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(gulp.dest(config.webAssets + '/javascripts'));
-});
-
 // Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor', 'react-debug'], () => {
+gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
     gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
-    gulp.watch(config.reactSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
 });
 
 // Build all assets in production ready mode.
-gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor', 'react']);
+gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor']);

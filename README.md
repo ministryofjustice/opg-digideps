@@ -3,8 +3,6 @@
 ## Gulp
 The frontend components rely on Gulp to be built and assembled. The main tasks involved in this part of the build copy image assets, compile SASS to CSS and concatinate JS into a single file and then running uglify to minify it.
 
-React JS and Redux are used for the Money Transfers section and this requires transpiling from ES6/JSX into ES5 Javascript. Note that IE8 does not fully support ES5 so money transfers uses a none Javascript version for IE 8 and none Javascript browsers.  More info can be found [this blog post](https://www.scropt.com/2016/03/16/writing-money-transfers-in-react-part-1/).
-
 The Gulp buid file has many targets, but the 2 that are of most interest are **default** and **watch**.
 
 If you use Docker whilst developing the frontend, the best way to work with these assets is to connect to the docker frontend container:
