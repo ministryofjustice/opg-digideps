@@ -113,7 +113,7 @@ class ReportController extends RestController
         // send report if submitted
         $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
 
-        $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
+        $reportEmail = $this->getMailFactory()->createReportEmail($user, $currentReport, $reportContent);
         $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
 
         //lets create subsequent year's report

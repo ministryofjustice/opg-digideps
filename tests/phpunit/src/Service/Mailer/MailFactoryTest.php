@@ -52,7 +52,10 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $client = m::mock('AppBundle\Entity\Client', [
             'getCaseNumber'=>'1234567t',
         ]);
-        $email = $this->object->createReportEmail($user, $client, '[REPORT-CONTENT-PDF]');
+        $report = m::mock('AppBundle\Entity\Report', [
+            'getClient'=>$client,
+        ]);
+        $email = $this->object->createReportEmail($user, $report, '[REPORT-CONTENT-PDF]');
         
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('to@email', $email->getToEmail());

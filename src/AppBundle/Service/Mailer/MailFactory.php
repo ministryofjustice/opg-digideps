@@ -172,7 +172,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Client $client, $reportContent)
+    public function createReportEmail(EntityDir\User $user, EntityDir\Report $report, $reportContent)
     {
         $email = new ModelDir\Email();
 
@@ -182,6 +182,7 @@ class MailFactory
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
         
+        $client = $report->getClient();
         $attachmentName = 'report-'.$client->getCaseNumber().'.pdf';
 //        $attachmentName = 'DigiRep-2016_2016-05-24_'.$client->getCaseNumber().'.pdf';
         
