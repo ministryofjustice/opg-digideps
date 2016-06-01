@@ -181,7 +181,10 @@ class MailFactory
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
-
+        
+        $attachmentName = 'report-'.$client->getCaseNumber().'.pdf';
+//        $attachmentName = 'DigiRep-2016_2016-05-24_'.$client->getCaseNumber().'.pdf';
+        
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
@@ -189,7 +192,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment('report-'.$client->getCaseNumber().'.pdf', 'application/pdf', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $reportContent)]);
 
         return $email;
     }
