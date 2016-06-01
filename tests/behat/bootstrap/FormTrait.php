@@ -12,7 +12,8 @@ trait FormTrait
     public function theFormShouldBeInvalid()
     {
         //$this->assertResponseStatus(200);
-        if (!$this->getSession()->getPage()->has('css', '.form-group.error')) {
+        if (!$this->getSession()->getPage()->has('css', '.form-group.error') 
+            && !$this->getSession()->getPage()->has('css', '#error-summary-heading') ) {
             throw new \RuntimeException('No errors found');
         }
     }
