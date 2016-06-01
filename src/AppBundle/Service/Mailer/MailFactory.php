@@ -183,9 +183,12 @@ class MailFactory
         ];
         
         $client = $report->getClient();
-        $attachmentName = 'report-'.$client->getCaseNumber().'.pdf';
-//        $attachmentName = 'DigiRep-2016_2016-05-24_'.$client->getCaseNumber().'.pdf';
-        
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $client->getCaseNumber()
+        );
+            
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))

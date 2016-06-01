@@ -54,12 +54,14 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         ]);
         $report = m::mock('AppBundle\Entity\Report', [
             'getClient'=>$client,
+            'getEndDate'=>new \DateTime('2016-12-31'),
+            'getSubmitDate'=>new \DateTime('2017-01-01'),
         ]);
         $email = $this->object->createReportEmail($user, $report, '[REPORT-CONTENT-PDF]');
         
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('to@email', $email->getToEmail());
-        $this->assertEquals('report-1234567t.pdf', $email->getAttachments()[0]->getFilename());
+        $this->assertEquals('DigiRep-2016_2017-01-01_1234567t.pdf', $email->getAttachments()[0]->getFilename());
         $this->assertEquals('[REPORT-CONTENT-PDF]', $email->getAttachments()[0]->getContent());
         $this->assertEquals('application/pdf', $email->getAttachments()[0]->getContentType());
     }
