@@ -202,6 +202,13 @@ class ReportController extends RestController
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $report->setHasDebts($data['has_debts']);
+            // null debts
+            foreach($report->getDebts() as $debt) {
+                $debt->setAmount(null);
+                $debt->setMoreDetails(null);
+                $this->getEntityManager()->flush($debt);
+            }
+            // set debts as per "debts" key
             foreach ($data['debts'] as $row) {
                 $debt = $report->getDebtByTypeId($row['debt_type_id']);
                 if (!$debt instanceof EntityDir\Debt) {

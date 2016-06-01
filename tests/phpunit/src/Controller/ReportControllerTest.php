@@ -364,8 +364,10 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-
-        $this->assertEquals([], $data['debts']);
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('care-fees', $debt['debt_type_id']);
+        $this->assertEquals(0, $debt['amount']);
+        $this->assertEquals('', $debt['more_details']);
         $this->assertEquals(0, $data['debts_total_amount']);
         $this->assertEquals('no', $data['has_debts']);
     }
