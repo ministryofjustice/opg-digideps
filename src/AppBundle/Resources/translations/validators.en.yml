@@ -248,7 +248,7 @@ debt:
       minMessage: The amount must be positive
       maxMessage: The amount must be less than £100,000,000,000
     moreDetails:
-      notEmpty: Please enter a value
+      notEmpty: You must give us more information about this amount
 
 
 
