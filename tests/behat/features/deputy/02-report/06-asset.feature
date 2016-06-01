@@ -3,7 +3,7 @@ Feature: deputy / report / asset with variations
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-assets"
+        And I click on "reports,report-2016-open, edit-assets, assets-tab"
         And I save the page as "report-assets-empty"
         # wrong form
         When I follow "add-assets-button"
@@ -48,7 +48,7 @@ Feature: deputy / report / asset with variations
     @deputy
     Scenario: add asset property
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-assets"
+        And I click on "reports,report-2016-open, edit-assets, assets-tab"
         And I save the page as "report-assets-empty"
         # wrong form
         When I follow "add-assets-button"
