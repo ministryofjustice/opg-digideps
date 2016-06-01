@@ -172,7 +172,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Client $client, $reportContent)
+    public function createReportEmail(EntityDir\User $user, EntityDir\Report $report, $reportContent)
     {
         $email = new ModelDir\Email();
 
@@ -181,7 +181,14 @@ class MailFactory
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
-
+        
+        $client = $report->getClient();
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $client->getCaseNumber()
+        );
+            
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
@@ -189,7 +196,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment('report-'.$client->getCaseNumber().'.pdf', 'application/pdf', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $reportContent)]);
 
         return $email;
     }
