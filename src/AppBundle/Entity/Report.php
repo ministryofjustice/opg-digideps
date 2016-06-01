@@ -226,22 +226,6 @@ class Report
     private $reportSeen;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
-     * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
-     */
-    private $allAgreed;
-
-    /** @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
-     * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
-     */
-    private $reasonNotAllAgreed;
-
-    /**
      * @var string
      * @JMS\Groups({"balance", "basic"})
      * @JMS\Type("string")
