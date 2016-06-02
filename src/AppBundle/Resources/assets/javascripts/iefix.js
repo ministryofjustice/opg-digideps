@@ -20,5 +20,3 @@ if ('ab'.substr(-1) != 'b') {
         };
     }(String.prototype.substr);
 }
-
-alert("5000".substr(-3));
