@@ -39,6 +39,9 @@
         var temparray = [];
 
         while( integer.length > 3 ) {
+            // substr with negative indexes does not work on IE.
+            // substr is overridden in iefix.js (in case it's wrongly implemented)
+            // tested in FF and IE
             temparray.unshift(integer.substr(-3));
             integer = integer.substr(0,integer.length-3);
         }
