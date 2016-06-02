@@ -52,14 +52,14 @@ if (typeof GOVUK === 'undefined') {
     AutoSave.prototype.blurHandler = function (event) {
         event.preventDefault();
         if (this.saved === false) {
-            this.save();
+            this.save(event);
         }
         return true;
     };
     AutoSave.prototype.submitHandler = function (event) {
         event.preventDefault();
         if (this.saved === false) {
-            this.save();
+            this.save(event);
         }
         // redirect to desired location
         return false;
@@ -96,7 +96,7 @@ if (typeof GOVUK === 'undefined') {
        this.startSaveTimer();
     };
 
-    AutoSave.prototype.save = function () {
+    AutoSave.prototype.save = function (event) {
         this.displayStatus(SAVING);
         this.clearSaveTimer();
 
@@ -104,7 +104,11 @@ if (typeof GOVUK === 'undefined') {
             this.preprocessor(this.form);
         }
 
-        var data = this.form.serialize();
+        var data = (typeof event === "undefined") ? this.form.serialize() :
+                        $(event.target).parents('div.transaction').find('input,textarea')
+                        .add('#transactions__token')
+                        .add('#transactions_id')
+                        .serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
 
