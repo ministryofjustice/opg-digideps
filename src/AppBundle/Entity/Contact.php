@@ -31,7 +31,6 @@ class Contact
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="contact.address.notBlank")
      * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $address;
@@ -50,7 +49,6 @@ class Contact
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="contact.postcode.notBlank")
      * @Assert\Length( max=10, maxMessage="contact.postcode.maxMessage")
      */
     private $postcode;

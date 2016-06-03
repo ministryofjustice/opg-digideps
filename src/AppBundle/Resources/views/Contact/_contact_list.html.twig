@@ -17,27 +17,30 @@
                     <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'view_contact.reason' | trans }}</dt>
                     <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ contact.explanation }}</dd>
                 </div>
+                {# display address row only if either address or postcode is set #}
+                {%  if contact.address or contact.postcode %}
                 <div class="report-list__item-fields-row">
                     <dt class="report-list__item-fields-term">{{ 'view_contact.address' | trans }}</dt>
                     <dd class="report-list__item-fields-description" itemprop="address" itemscope
                         itemtype="http://schema.org/PostalAddress">
-                        {% if contact.address is not empty %}
+                        {% if contact.address %}
                             <div itemprop="streetAddress">{{ contact.address }}</div>
                         {% endif %}
-                        {% if contact.address2 is not empty %}
+                        {% if contact.address2 %}
                             <div itemprop="addressLocality">{{ contact.address2 }}</div>
                         {% endif %}
-                        {% if contact.county is not empty %}
+                        {% if contact.county %}
                             <div itemprop="addressRegion">{{ contact.county }}</div>
                         {% endif %}
-                        {% if contact.postcode is not empty %}
+                        {% if contact.postcode %}
                             <div itemprop="postalCode">{{ contact.postcode }}</div>
                         {% endif %}
-                        {% if contact.country is not empty %}
+                        {% if contact.country %}
                             <div itemprop="addressCountry">{{ contact.country | country_name }}</div>
                         {% endif %}
                     </dd>
                 </div>
+                {% endif %}
             </dl>
 
         </li>

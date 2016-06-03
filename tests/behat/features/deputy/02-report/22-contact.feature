@@ -29,8 +29,6 @@ Feature: deputy / report / edit user contact
             | contact_contactName |
             | contact_relationship |
             | contact_explanation |
-            | contact_address |
-            | contact_postcode |
         # edit contact
         When I fill in the following:
             | contact_contactName | Andy Brown |
