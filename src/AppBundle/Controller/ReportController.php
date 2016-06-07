@@ -118,56 +118,8 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/formatted/{addLayout}")
-     * @Method({"GET"})
-     */
-    public function formattedAction($reportId, $addLayout)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+    
 
-        $report = $this->getRepository('Report')->find($reportId); /* @var $report EntityDir\Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $template = $addLayout
-                  ? 'AppBundle:Report:formatted.html.twig'
-                  : 'AppBundle:Report:formatted_body.html.twig';
-
-        return $this->render($template, [
-                'report' => $report,
-                'client' => $report->getClient(),
-                'assets' => $report->getAssets(),
-                'groupAssets' => $report->getAssetsGroupedByType(),
-                'contacts' => $report->getContacts(),
-                'decisions' => $report->getDecisions(),
-                'isEmailAttachment' => true,
-                'deputy' => $report->getClient()->getUsers()->first(),
-                'transfers' => $report->getMoneyTransfers(),
-        ]);
-    }
-
-    /**
-     * @Route("/report/{reportId}/pdf")
-     * @Method({"GET"})
-     */
-    public function pdfAction($reportId)
-    {
-        try {
-            $html = $this->forward('AppBundle:Report:formatted', array(
-                'reportId' => $reportId,
-                'addLayout' => true,
-            ))->getContent();
-
-            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-
-            $response = new Response($pdf);
-            $response->headers->set('Content-Type', 'application/pdf');
-
-            return $response;
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
 
     /**
      * @Route("/report/{id}")

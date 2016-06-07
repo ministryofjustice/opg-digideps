@@ -292,31 +292,4 @@ class ReportControllerTest extends AbstractTestController
         $t = array_shift(array_filter($data['transactions_out'], function ($e) { return $e['id'] === 'anything-else-paid-out'; }));
         $this->assertEquals([],  $t['amounts']);
     }
-
-    public function testFormattedAuth()
-    {
-        $url = '/report/'.self::$report1->getId().'/formatted/0';
-        $this->assertEndpointNeedsAuth('GET', $url);
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testFormattedAcl()
-    {
-        $url2 = '/report/'.self::$report2->getId().'/formatted/0';
-
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
-    public function testFormatted()
-    {
-        $url = '/report/'.self::$report1->getId().'/formatted/0';
-
-        $this->getClient()->request(
-            'GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenDeputy]
-        );
-
-        $responseContent = $this->getClient()->getResponse()->getContent();
-        $this->assertContains('I confirm I have had regard', $responseContent);
-    }
 }
