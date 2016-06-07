@@ -3,65 +3,48 @@
 namespace AppBundle\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use JMS\Serializer\Annotation as JMS;
 
 class Email
 {
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("toEmail")
      * @Assert\NotBlank(message="sendEmail.toEmail.notBlank", groups={"html","text"})
      * @Assert\Email(message="sendEmail.toEmail.invalid", groups={"html","text"})
      */
     private $toEmail;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("toName")
      * @Assert\NotBlank(message="sendEmail.toName.notBlank", groups={"html","text"})
      * @Assert\Type(type="string", message="sendEmail.toName.invalid", groups={"html","text"})
      */
     private $toName;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("fromEmail")
      * @Assert\NotBlank(message="sendEmail.fromEmail.notBlank", groups={"html","text"})
      * @Assert\Email(message="sendEmail.fromEmail.invalid", groups={"html","text"})
      */
     private $fromEmail;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("fromName")
      * @Assert\NotBlank(message="sendEmail.fromName.notBlank", groups={"html","text"})
      * @Assert\Type(type="string", message="sendEmail.fromName.invalid", groups={"html","text"})
      */
     private $fromName;
 
     /**
-     * @JMS\Type("string")
      * @Assert\NotBlank(message="sendEmail.subject.notBlank", groups={"html","text"})
      */
     private $subject;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("bodyText")
      * @Assert\NotBlank(message="sendEmail.bodyText.notBlank", groups={"text"})
      */
     private $bodyText;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\SerializedName("bodyHtml")
      * @Assert\NotBlank(message="sendEmail.bodyHtml.notBlank", groups={"html"})
      */
     private $bodyHtml;
 
-    /**
-     * @JMS\Type("array<AppBundle\Model\EmailAttachment>") 
-     */
     private $attachments = [];
 
     /**
