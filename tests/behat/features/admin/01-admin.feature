@@ -1,7 +1,8 @@
 Feature: admin / admin
 
     Scenario: login and add admin user, check audit log
-        Given I reset the email log
+        Given I check email sent from "admin" area
+        And I reset the email log
         And I am on admin page "/"
         Then I should be on "/login"
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -28,7 +29,8 @@ Feature: admin / admin
 
 
     Scenario: login and add user (admin)
-        Given I am not logged into admin
+        Given I check email sent from "admin" area
+        And I am not logged into admin
         # assert email link doesn't work on admin area
         When I open the "/user/activate/" link from the email on the "deputy" area
         Then the response status code should be 500
