@@ -29,3 +29,5 @@ npm-debug.log
 .config
 tests/behat/behat.yml
 web/assets
+components/*
+
