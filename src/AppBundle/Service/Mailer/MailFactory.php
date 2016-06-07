@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Routing\Router;
 
 class MailFactory
 {
@@ -21,34 +22,30 @@ class MailFactory
      * @var Container
      */
     protected $container;
+    
+    /**
+     * @var Router
+     */
+    protected $router;
 
     /**
      * @var array
      */
     protected $roleToArea;
 
-    /**
-     * @var array
-     */
-    private static $allowedAreas = [self::AREA_FRONTEND, self::AREA_ADMIN];
 
     public function __construct(Container $container, array $roleToArea)
     {
         // validate args
         $this->roleToArea = $roleToArea;
-        foreach ($roleToArea as $area) {
-            if (!in_array($area, self::$allowedAreas)) {
-                throw new \InvalidArgumentException("Area $area not valid");
-            }
-        }
-
         $this->container = $container;
         $this->translator = $container->get('translator');
         $this->templating = $container->get('templating');
+        $this->router = $container->get('router');
     }
 
     /**
-     * @param string $area      frontend|admin
+     * @param string $area      deputy|admin
      * @param string $routeName must be in YML config under email.routes
      * @param array  $params
      * 
@@ -56,22 +53,12 @@ class MailFactory
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
     {
-        if (!in_array($area, self::$allowedAreas)) {
-            throw new \InvalidArgumentException(__METHOD__.": area must be frontend or admin, $area given");
-        }
-        $baseUrl = trim($this->container->getParameter('email')['base_url'][$area]);
+        $deputyBaseUrl = $this->container->getParameter('non_admin_host');
+        $adminBaseUrl = $this->container->getParameter('admin_host');
 
-        $route = $this->container->getParameter('email')['routes'][$routeName];
-
-        // prepare str_replace args to build route
-        $search = [];
-        $replace = [];
-        foreach ($params as $k => $v) {
-            $search[] = '{'.$k.'}';
-            $replace[] = $v;
-        }
-
-        return $baseUrl.str_replace($search, $replace, $route);
+        $baseUrl = ($area == 'deputy') ? $deputyBaseUrl : $adminBaseUrl;
+        
+        return $baseUrl . $this->router->generate($routeName, $params);
     }
 
     private function getAreaFromUserRole(EntityDir\User $user)
@@ -86,12 +73,8 @@ class MailFactory
 
     public function createActivationEmail(EntityDir\User $user)
     {
-        /*
-         * Email is sent from admin site. If this email is sent to a deputy, then
-         * host url should for deputy site else for admin site
-         **/
-        $area = $this->getAreaFromUserRole($user);
-
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
+        
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->generateAbsoluteLink($area, 'homepage', []),

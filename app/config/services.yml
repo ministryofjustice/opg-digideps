@@ -131,5 +131,5 @@ services:
             - [ writeToFileEmailMatching, ["%email_mock_address%", "%email_mock_path%"] ]
     mailFactory:
         class: AppBundle\Service\Mailer\MailFactory
-        arguments: [ @service_container, {"ROLE_ADMIN": "admin", "ROLE_AD": "admin", "ROLE_LAY_DEPUTY": "frontend"} ]
+        arguments: [ @service_container ]
     
