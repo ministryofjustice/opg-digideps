@@ -25,3 +25,11 @@ security:
         dev:
             pattern:  ^/
             security: false
+services:
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSenderMock
+        arguments: [ @service_container ]
+    mailer.transport.smtp.default:
+        class: AppBundle\Service\Mailer\Transport\TransportMock
+    mailer.transport.smtp.secure:
+        class: AppBundle\Service\Mailer\Transport\TransportMock
