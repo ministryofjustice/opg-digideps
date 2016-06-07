@@ -37,11 +37,30 @@ class BehatController extends AbstractController
     public function getLastEmailAction()
     {
         $this->securityChecks();
-        $content = $this->get('restClient')->get('behat/email', 'array');
+        
+        $mailPath = $this->getBehatMailFilePath();
 
-        return new Response($content);
+        if (!file_exists($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath not existing.");
+        }
+
+        if (!is_readable($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath unreadable.");
+        }
+
+        echo file_get_contents($mailPath);die;
+        
+        return new Response(file_get_contents($mailPath));
     }
 
+    
+    private function getBehatMailFilePath()
+    {
+        $this->securityChecks();
+
+        return $this->container->getParameter('email_mock_path');
+    }
+    
     /**
      * @Route("/{secret}/email-reset")
      * @Method({"GET"})
@@ -49,10 +68,16 @@ class BehatController extends AbstractController
     public function resetAction()
     {
         $this->securityChecks();
-        $content = $this->get('restClient')->delete('behat/email');
+      
+        
+        $mailPath = $this->getBehatMailFilePath();
 
-        return new Response($content);
+        file_put_contents($mailPath, '');
+        
+
+        return new Response('Email reset successfully');
     }
+    
 
     /**
      * @Route("/{secret}/report/{reportId}/change-report-cot/{cotId}")
