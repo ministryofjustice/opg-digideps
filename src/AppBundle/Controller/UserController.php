@@ -76,7 +76,6 @@ class UserController extends AbstractController
             $restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
-                'send_email' => false, //not sent on this "landing" pages
             ]));
 
             // log in user into CLIENT
@@ -101,6 +100,10 @@ class UserController extends AbstractController
             return $this->redirect($redirectUrl);
         }
 
+        
+//             $email = $this->getMailFactory()->createChangePasswordEmail($user);
+//            $this->getMailSender()->send($email, ['html']);
+        
         return $this->render($template, [
             'token' => $token,
             'form' => $form->createView(),
@@ -123,6 +126,9 @@ class UserController extends AbstractController
         // the endpoint will also send the activation email
         $restClient->userRecreateToken($user, 'activate');
 
+        $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+        $this->getMailSender()->send($activationEmail, ['text', 'html']);
+        
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
 
@@ -201,7 +207,6 @@ class UserController extends AbstractController
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
             $restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
-                'send_email' => false,
             ]));
 
             return $this->redirect($this->generateUrl('user_password_edit_done'));
@@ -310,6 +315,10 @@ class UserController extends AbstractController
                 $restClient = $this->get('restClient');
                 /* @var $user EntityDir\User */
                 $restClient->userRecreateToken($user, 'pass-reset');
+                
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                
             } catch (\Exception $e) {
                 $this->get('logger')->debug($e->getMessage());
             }

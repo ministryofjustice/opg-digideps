@@ -45,8 +45,8 @@ class ManageController extends AbstractController
      */
     public function healthCheckXmlAction()
     {
-        list($healthy, $errors, $services, $time) = $this->servicesHealth();
-
+        list($healthy, $errors, $time) = $this->servicesHealth();
+        
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERROR: '.$errors,
             'time' => $time * 1000,
@@ -78,7 +78,56 @@ class ManageController extends AbstractController
                 $errors[] = $service->getErrors();
             }
         }
+        
+        //TODO move to service above
+        list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
+        list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
+        
+        ;
+        
+        if (!$smtpDefaultHealthy) {
+            $healthy = false;
+            $errors[] = 'SMTP: '.$smtpDefaultError;
+        }
+        
+        if (!$smtpSecureHealthy) {
+            $healthy = false;
+            $errors[] = 'SMTP SECURE: '.$smtpSecureError;
+        }
 
-        return [$healthy, implode('. ', $errors), $services, microtime(true) - $start];
+        return [$healthy, implode('. ', $errors), microtime(true) - $start];
+    }
+    
+    
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function smtpDefaultInfo()
+    {
+        try {
+            $transport = $this->container->get('mailer.transport.smtp.default'); /* @var $transport \Swift_SmtpTransport */
+            $transport->start();
+            $transport->stop();
+
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'SMTP default Error: '.$e->getMessage()];
+        }
+    }
+
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function smtpSecureInfo()
+    {
+        try {
+            $transport = $this->container->get('mailer.transport.smtp.secure'); /* @var $transport \Swift_SmtpTransport */
+            $transport->start();
+            $transport->stop();
+
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'SMTP Secure Error: '.$e->getMessage()];
+        }
     }
 }

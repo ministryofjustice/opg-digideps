@@ -144,19 +144,6 @@ class RestClient
     }
 
     /**
-     * Call /feedback.
-     */
-    public function sendHomepageFeedback($data)
-    {
-        $response = $this->rawSafeCall('post', '/feedback/homepage', [
-            'body' => $this->toJson($data),
-            'addClientSecret' => true,
-        ]);
-
-        return $this->extractDataArray($response);
-    }
-
-    /**
      * Finds user by email.
      * 
      * @param string $token

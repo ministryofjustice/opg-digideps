@@ -8,6 +8,7 @@ use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -239,9 +240,21 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('restClient')->put('report/'.$report->getId().'/submit', $report, [
+            $newReportId = $this->get('restClient')->put('report/'.$report->getId().'/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
+            
+             // send report if submitted
+            $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $report->getId()])->getContent();
+
+            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $reportContent);
+            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+    
+            $newReport = $this->get('restClient')->get('report/' . $newReportId);
+            
+            //send confirmation email
+            $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+            $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
@@ -277,9 +290,9 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-            $restClient->post('feedback/report', $form->getData());
-
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
+            $this->get('mailSender')->send($feedbackEmail, ['html']);
+            
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
 
@@ -340,7 +353,7 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      */
-    public function pdfAction($reportId)
+    public function pdfViewAction($reportId)
     {
         $restClient = $this->get('restClient');
 
@@ -380,4 +393,57 @@ class ReportController extends AbstractController
 
         return $assetGroups;
     }
+    
+     /**
+     * @Route("/report/{reportId}/pdf")
+     * @Method({"GET"})
+     */
+    public function pdfDownloadAction($reportId)
+    {
+        try {
+            $html = $this->forward('AppBundle:Report:formatted', array(
+                'reportId' => $reportId,
+                'addLayout' => true,
+            ))->getContent();
+
+            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+
+            $response = new Response($pdf);
+            $response->headers->set('Content-Type', 'application/pdf');
+
+            return $response;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    
+    
+    /**
+     * @Route("/report/{reportId}/formatted/{addLayout}")
+     * @Method({"GET"})
+     */
+    public function formattedAction($reportId, $addLayout)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->getRepository('Report')->find($reportId); /* @var $report EntityDir\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $template = $addLayout
+                  ? 'AppBundle:Report:formatted.html.twig'
+                  : 'AppBundle:Report:formatted_body.html.twig';
+
+        return $this->render($template, [
+                'report' => $report,
+                'client' => $report->getClient(),
+                'assets' => $report->getAssets(),
+                'groupAssets' => $report->getAssetsGroupedByType(),
+                'contacts' => $report->getContacts(),
+                'decisions' => $report->getDecisions(),
+                'isEmailAttachment' => true,
+                'deputy' => $report->getClient()->getUsers()->first(),
+                'transfers' => $report->getMoneyTransfers(),
+        ]);
+    }
+    
 }

@@ -92,4 +92,20 @@ class AbstractController extends Controller
 
         return $report;
     }
+    
+    /**
+     * @return \AppBundle\Service\Mailer\MailFactory
+     */
+    protected function getMailFactory()
+    {
+        return $this->get('mailFactory');
+    }
+
+    /**
+     * @return \AppBundle\Service\Mailer\MailSender
+     */
+    protected function getMailSender()
+    {
+        return $this->get('mailSender');
+    }
 }
