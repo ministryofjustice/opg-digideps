@@ -1,0 +1,40 @@
+<style type="text/css" media="screen, print">
+    {% include 'AppBundle:Css:formatted-report.html.twig' %}
+</style>
+
+<div id="wrapper">
+    <div id="content" class="formatted-report content">
+        <div id="report-header">Office of the Public Guardian</div>
+        <h1>Deputy report for property and financial decisions</h1>
+
+        {% include 'AppBundle:Report:Formatted/_client_information.html.twig' %}
+        {% include 'AppBundle:Report:Formatted/_decisions.html.twig' %}
+        {% if report.mentalCapacity is not null %}
+            {% include 'AppBundle:Report:Formatted/_mental-capacity.html.twig' with {
+                'mentalCapacity': report.mentalCapacity
+            } %}
+        {% endif %}
+        {% include 'AppBundle:Report:Formatted/_contacts.html.twig' %}
+        {% if report.safeguarding is not null %}
+            {% include 'AppBundle:Report:Formatted/_safeguarding.html.twig' with {
+                'safeguarding': report.safeguarding
+            } %}
+        {% endif %}
+
+        {% include 'AppBundle:Report:Formatted/_assets.html.twig' %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_accounts.html.twig' %}
+
+        {% if report.action is not null %}
+            {% include 'AppBundle:Report:Formatted/_action.html.twig' with {
+                'action': report.action
+            } %}
+        {% endif %}
+
+        {% if report.furtherInformation %}
+            {% include 'AppBundle:Report:Formatted/_further_information.html.twig' %}
+        {% endif %}
+        <div class="section" id="declaration">
+            {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
+        </div>
+    </div>
+</div>

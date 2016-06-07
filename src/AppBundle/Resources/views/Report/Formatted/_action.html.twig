@@ -1,0 +1,50 @@
+<div class="section" id="action-section">
+    <h2 class="section-heading">Next reporting period</h2>
+
+    <div class="dont-break" id="action-section-decisions">
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Do you expect to make any significant financial decisions on behalf of the client in the next 12 months?</div>
+    
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if action.doYouExpectFinancialDecisions == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if action.doYouExpectFinancialDecisions == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+                        
+            {% if action.doYouExpectFinancialDecisions == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="value textarea">{{ action.doYouExpectFinancialDecisionsDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+                
+   <div class="dont-break" id="action-section-concerns">
+        <div class="box" >
+            <div class="checkboxes horizontal">
+                <div class="question">Do you have any concerns about your deputyship?</div>
+    
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if action.doYouHaveConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if action.doYouHaveConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+                        
+            {% if action.doYouHaveConcerns == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="value textarea">{{ action.doYouHaveConcernsDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>             
+
+</div>
