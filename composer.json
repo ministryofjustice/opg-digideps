@@ -32,7 +32,8 @@
         "phpunit/phpunit": "4.*",
         "commerceguys/guzzle-oauth2-plugin": "~2.0",
         "snc/redis-bundle": "1.1.*",
-        "predis/predis": "1.0.*"
+        "predis/predis": "1.0.*",
+        "alphagov/govuk_frontend_toolkit": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
@@ -63,5 +64,11 @@
         "branch-alias": {
             "dev-master": "2.3-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://govuk-frontend-toolkit.appspot.com"
+        }
+    ]
 }
