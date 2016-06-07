@@ -1,0 +1,38 @@
+{% if response.difficulty is defined %}
+    Did you have any difficulty with this service ? <br/>
+    <br/>
+    {{ response.difficulty }}
+    <br/>
+    <br/>
+{% endif %}
+
+{% if response.ideas is defined %}
+    Do you have any ideas for how it could be improved ?<br/>
+    <br/>
+    {{ response.ideas }}
+    <br/>
+    <br/>
+{% endif %}
+
+Overall, how did you feel about the service you received today ?<br/>
+<br/>
+{{ response.satisfactionLevel }}<br/>
+<br/>
+
+
+{% if response.help is defined %}
+    Did you have any help filling in this form?<br/>
+    <br/>
+    {{ response.help }}
+    <br/>
+    <br/>
+{% endif %}
+
+
+{% if response.email is defined %}
+    Sender: {{ response.email }}
+    <br/>
+{% endif %}
+
+<br/>
+<br/>
