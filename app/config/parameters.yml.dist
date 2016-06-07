@@ -9,12 +9,6 @@ parameters:
     locale: en
     secret: setme
     behat_controller_enabled: true
-    smtp_default_hostname: localhost
-    smtp_default_port: 25
-    smtp_default_user: setme
-    smtp_default_password: setme
-    smtp_secure_hostname: localhost
-    smtp_secure_port: 25
     # the following two paramters can be set to null on production
     email_mock_address: "/^behat-/i"
     email_mock_path:  "/tmp/dd_behat_last_sent_email.json"

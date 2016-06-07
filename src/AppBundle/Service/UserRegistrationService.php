@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\CasRec;
 
@@ -14,12 +12,6 @@ class UserRegistrationService
 {
     /** @var EntityManager */
     private $em;
-
-    /** @var  MailFactory */
-    private $mailFactory;
-
-    /** @var  MailSender */
-    private $mailSender;
 
     /** @var \Doctrine\ORM\EntityRepository*/
     private $userRepository;
@@ -30,11 +22,9 @@ class UserRegistrationService
     /** @var \Doctrine\ORM\EntityRepository  */
     private $casRecRepo;
 
-    public function __construct($em, $mailFactory, $mailSender)
+    public function __construct($em)
     {
         $this->em = $em;
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
         $this->userRepository = $this->em->getRepository('AppBundle\Entity\User');
         $this->roleRepository = $this->em->getRepository('AppBundle\Entity\Role');
         $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
@@ -59,9 +49,6 @@ class UserRegistrationService
         $user->setDeputyNo($casRec->getDeputyNo());
 
         $this->saveUserAndClient($user, $client);
-
-        $mail = $this->mailFactory->createActivationEmail($user);
-        $this->mailSender->send($mail);
 
         return $user;
     }

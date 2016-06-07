@@ -45,8 +45,7 @@ class UserController extends RestController
 
         // send activation email
         $user->recreateRegistrationToken();
-        $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
-        $this->getMailSender()->send($activationEmail, ['text', 'html']);
+        
 
         $this->persistAndFlush($user);
 
@@ -129,17 +128,6 @@ class UserController extends RestController
 
         if (array_key_exists('set_active', $data)) {
             $user->setActive($data['set_active']);
-        }
-
-        // send change password email
-        if (empty($data['send_email'])) {
-            // no emails
-        } elseif ($data['send_email'] == 'activate') {
-            $email = $this->getMailFactory()->createChangePasswordEmail($user);
-            $this->getMailSender()->send($email, ['html']);
-        } elseif ($data['send_email'] == 'password-reset') {
-            $email = $this->getMailFactory()->createChangePasswordEmail($user);
-            $this->getMailSender()->send($email, ['html']);
         }
 
         $this->getEntityManager()->flush();
@@ -238,20 +226,6 @@ class UserController extends RestController
         $user->recreateRegistrationToken();
 
         $this->getEntityManager()->flush($user);
-
-        switch ($type) {
-            case 'activate':
-                // send acivation email to user
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
-                break;
-
-            case 'pass-reset':
-                // send reset password email
-                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-                $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-                break;
-        }
 
         return $user->getId();
     }

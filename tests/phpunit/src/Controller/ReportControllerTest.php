@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\Mailer\MailSenderMock;
-
 class ReportControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -176,7 +174,6 @@ class ReportControllerTest extends AbstractTestController
 
     public function testSubmitNotAllAgree()
     {
-        MailSenderMock::resetessagesSent();
         $this->assertEquals(false, self::$report1->getSubmitted());
 
         $reportId = self::$report1->getId();
@@ -202,7 +199,6 @@ class ReportControllerTest extends AbstractTestController
 
     public function testSubmit()
     {
-        MailSenderMock::resetessagesSent();
         $this->assertEquals(false, self::$report1->getSubmitted());
 
         $reportId = self::$report1->getId();

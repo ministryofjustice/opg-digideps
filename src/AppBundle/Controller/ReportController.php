@@ -110,19 +110,8 @@ class ReportController extends RestController
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
-        // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
-
-        $reportEmail = $this->getMailFactory()->createReportEmail($user, $currentReport, $reportContent);
-        $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
-
         //lets create subsequent year's report
         $nextYearReport = $this->getRepository('Report')->createNextYearReport($currentReport);
-
-        //send confirmation email
-        $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($user, $currentReport, $nextYearReport);
-        $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
-
         $this->getEntityManager()->flush($currentReport);
 
         //response to pass back

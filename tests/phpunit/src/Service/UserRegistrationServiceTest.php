@@ -47,15 +47,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
     }
 
     public function tearDown()
@@ -145,15 +137,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -188,15 +172,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -232,15 +208,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -265,15 +233,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $result = $this->userRegistrationService->userIsUnique($user);
 
@@ -295,15 +255,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $user2 = new User();
         $user2->setFirstname('zac');
@@ -378,22 +330,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();
 
-        $mockEmail = m::mock('\AppBundle\Model\Email')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('setToEmail')
-            ->getMock();
-
-        $mailFactory = m::mock('\AppBundle\Services\MailFactory')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('createActivationEmail')->withAnyArgs()->once()->andReturn($mockEmail)
-            ->getMock();
-
-        $mailSender = m::mock('\AppBundle\Services\MailSender')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('send')->with($mockEmail)->once()
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
+        $this->userRegistrationService = new UserRegistrationService($em);
 
         $this->userRegistrationService->selfRegisterUser($data);
     }
