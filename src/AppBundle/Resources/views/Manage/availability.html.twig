@@ -9,5 +9,8 @@
         <span style="color: #FF0000">{{ service.errors | nl2br }}</span>
       {% endif %}
     </li>
-  {% endfor %}   
+  {% endfor %} 
+  {% for error in errors %}  
+     <span style="color: #FF0000">{{ error | nl2br }}</span>
+  {% endfor %} 
 </ul>

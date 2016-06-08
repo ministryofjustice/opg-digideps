@@ -18,10 +18,12 @@ class ManageController extends AbstractController
      */
     public function availabilityAction()
     {
-        list($healthy, $errors, $services) = $this->servicesHealth();
+        list($healthy, $services, $errors) = $this->servicesHealth();
 
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
+            'errors' => $errors,
+            
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
@@ -82,8 +84,7 @@ class ManageController extends AbstractController
         //TODO move to service above
         list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
         list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
-        
-        ;
+        list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
         
         if (!$smtpDefaultHealthy) {
             $healthy = false;
@@ -94,8 +95,13 @@ class ManageController extends AbstractController
             $healthy = false;
             $errors[] = 'SMTP SECURE: '.$smtpSecureError;
         }
-
-        return [$healthy, implode('. ', $errors), microtime(true) - $start];
+        
+        if (!$wkHtmlToPdfInfoHealthy) {
+            $healthy = false;
+            $errors[] = 'wkHtmlToPd: '.$wkHtmlToPdfInfoError;
+        }
+        
+        return [$healthy, $services, implode('. ', $errors), microtime(true) - $start];
     }
     
     
@@ -128,6 +134,25 @@ class ManageController extends AbstractController
             return [true, ''];
         } catch (\Exception $e) {
             return [false, 'SMTP Secure Error: '.$e->getMessage()];
+        }
+    }
+    
+    
+    
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function wkHtmlToPdfInfo()
+    {
+        try {
+            $ret = $this->container->get('wkhtmltopdf')->isAlive();
+            if (!$ret) {
+                throw new \RuntimeException('service down or created an invalid PDF');
+            }
+
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'wkhtmltopdf HTTP Error: '.$e->getMessage()];
         }
     }
 }
