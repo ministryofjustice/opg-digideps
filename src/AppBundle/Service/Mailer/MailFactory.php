@@ -55,11 +55,10 @@ class MailFactory
         return $baseUrl . $this->router->generate($routeName, $params);
     }
 
-    private function getAreaFromUserRole(EntityDir\User $user)
-    {
-        
-    }
-
+    /**
+     * @param \AppBundle\Entity\User $user
+     * @return \AppBundle\Model\Email
+     */
     public function createActivationEmail(EntityDir\User $user)
     {
         $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
@@ -91,7 +90,7 @@ class MailFactory
 
     public function createResetPasswordEmail(EntityDir\User $user)
     {
-        $area = $this->getAreaFromUserRole($user);
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
 
         $viewParams = [
             'name' => $user->getFullName(),
@@ -126,7 +125,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $this->getAreaFromUserRole($user);
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -152,7 +151,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $this->getAreaFromUserRole($user);
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
