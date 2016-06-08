@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
+
+
     /**
      * @Route("/availability")
      * @Method({"GET"})
@@ -23,13 +25,13 @@ class ManageController extends AbstractController
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
             'errors' => $errors,
-            
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
 
         return $response;
     }
+
 
     /**
      * @Route("/elb", name="manage-elb")
@@ -41,6 +43,7 @@ class ManageController extends AbstractController
         return ['status' => 'OK'];
     }
 
+
     /**
      * @Route("/availability/pingdom")
      * @Method({"GET"})
@@ -48,9 +51,9 @@ class ManageController extends AbstractController
     public function healthCheckXmlAction()
     {
         list($healthy, $errors, $time) = $this->servicesHealth();
-        
+
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $healthy ? 'OK' : 'ERROR: '.$errors,
+            'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
             'time' => $time * 1000,
         ]);
         $response->setStatusCode($healthy ? 200 : 500);
@@ -58,6 +61,7 @@ class ManageController extends AbstractController
 
         return $response;
     }
+
 
     /**
      * @return array [boolean isHealty, string errors, array services, time in secs]
@@ -80,31 +84,34 @@ class ManageController extends AbstractController
                 $errors[] = $service->getErrors();
             }
         }
-        
+
         //TODO move to service above
         list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
         list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
-        list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
-        
+
+
         if (!$smtpDefaultHealthy) {
             $healthy = false;
-            $errors[] = 'SMTP: '.$smtpDefaultError;
+            $errors[] = 'SMTP: ' . $smtpDefaultError;
         }
-        
+
         if (!$smtpSecureHealthy) {
             $healthy = false;
-            $errors[] = 'SMTP SECURE: '.$smtpSecureError;
+            $errors[] = 'SMTP SECURE: ' . $smtpSecureError;
         }
-        
-        if (!$wkHtmlToPdfInfoHealthy) {
-            $healthy = false;
-            $errors[] = 'wkHtmlToPd: '.$wkHtmlToPdfInfoError;
+
+        if ($this->container->getParameter('env') == 'prod') {
+            list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
+            if (!$wkHtmlToPdfInfoHealthy) {
+                $healthy = false;
+                $errors[] = 'wkHtmlToPd: ' . $wkHtmlToPdfInfoError;
+            }
         }
-        
-        return [$healthy, $services, implode('. ', $errors), microtime(true) - $start];
+
+        return [$healthy, $services, $errors, microtime(true) - $start];
     }
-    
-    
+
+
     /**
      * @return array [boolean healthy, error string]
      */
@@ -117,9 +124,10 @@ class ManageController extends AbstractController
 
             return [true, ''];
         } catch (\Exception $e) {
-            return [false, 'SMTP default Error: '.$e->getMessage()];
+            return [false, 'SMTP default Error: ' . $e->getMessage()];
         }
     }
+
 
     /**
      * @return array [boolean healthy, error string]
@@ -133,12 +141,11 @@ class ManageController extends AbstractController
 
             return [true, ''];
         } catch (\Exception $e) {
-            return [false, 'SMTP Secure Error: '.$e->getMessage()];
+            return [false, 'SMTP Secure Error: ' . $e->getMessage()];
         }
     }
-    
-    
-    
+
+
     /**
      * @return array [boolean healthy, error string]
      */
@@ -152,7 +159,8 @@ class ManageController extends AbstractController
 
             return [true, ''];
         } catch (\Exception $e) {
-            return [false, 'wkhtmltopdf HTTP Error: '.$e->getMessage()];
+            return [false, 'wkhtmltopdf HTTP Error: ' . $e->getMessage()];
         }
     }
+
 }
