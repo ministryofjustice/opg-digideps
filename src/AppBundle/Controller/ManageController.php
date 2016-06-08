@@ -17,12 +17,10 @@ class ManageController extends RestController
     public function availabilityAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
-        
-        list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
 
         $data = [
-            'healthy' => $dbHealthy && $wkHtmlToPdfInfoHealthy,
-            'errors' => implode("\n", array_filter([$dbError, $wkHtmlToPdfInfoError])),
+            'healthy' => $dbHealthy,
+            'errors' => implode("\n", array_filter([$dbError])),
         ];
 
         return $data;
@@ -63,23 +61,4 @@ class ManageController extends RestController
         }
     }
 
-
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function wkHtmlToPdfInfo()
-    {
-        $this->container->get('wkhtmltopdf')->isAlive();
-
-        try {
-            $ret = $this->container->get('wkhtmltopdf')->isAlive();
-            if (!$ret) {
-                throw new \RuntimeException('service down or created an invalid PDF');
-            }
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'wkhtmltopdf HTTP Error: '.$e->getMessage()];
-        }
-    }
 }
