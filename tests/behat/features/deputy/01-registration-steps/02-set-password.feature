@@ -4,7 +4,7 @@ Feature: deputy / user / set password
     Scenario: login and add user (deputy)
         Given I am on "/logout"
         # assert email link doesn't work on admin area
-        When I open the "/user/activate/" link from the email on the "admin" area
+        When I open the "/user/activate/" link from the email on the "deputy" area
         Then the response status code should be 500
         # follow link as it is
         When I save the application status into "activation-link-before-opening"

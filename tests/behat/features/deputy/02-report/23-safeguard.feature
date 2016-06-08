@@ -22,7 +22,6 @@ Feature: Safeguarding Data entry
       And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
-      And I reset the email log
       Then I save the application status into "safeentryuser"
 
     @deputy

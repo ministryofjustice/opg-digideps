@@ -18,7 +18,8 @@ Feature: admin / acl
 
     Scenario: An admin cannot reset password from the deputy area
         # check admin can recover password from admin site
-        Given I reset the email log
+        Given I check email sent from "admin" area
+        And I reset the email log
         And I am on admin login page
         When I click on "forgotten-password"
         Then I should be on "/password-managing/forgotten"

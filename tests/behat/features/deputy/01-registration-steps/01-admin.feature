@@ -2,7 +2,8 @@ Feature: deputy / user / add user
 
     @deputy
     Scenario: login and add deputy user
-        Given I reset the email log
+        Given I check email sent from "deputy" area
+        And I reset the email log
         Given I am on admin login page
         And I save the page as "admin-login"
         #Then the response status code should be 200

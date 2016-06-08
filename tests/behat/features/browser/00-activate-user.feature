@@ -2,7 +2,8 @@ Feature: Browser - add and activate user
 
     @browser
     Scenario: login and add deputy user
-        Given I reset the email log
+        Given I check email sent from "deputy" area
+        And I reset the email log
         Given I am on admin login page
         When I fill in the following:
             | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |

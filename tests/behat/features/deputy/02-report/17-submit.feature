@@ -15,7 +15,8 @@ Feature: deputy / report / submit
         
     @deputy
     Scenario: report submission
-        Given I reset the email log
+        Given I check email sent from "deputy" area
+        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         # assert after login I'm redirected to report page
@@ -72,7 +73,8 @@ Feature: deputy / report / submit
 
     @deputy
     Scenario: submit feedback after report
-        Given I reset the email log
+        Given I check email sent from "deputy" area
+        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/1/submitted"
         And I press "feedback_report_save"
