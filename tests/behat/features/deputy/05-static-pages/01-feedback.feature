@@ -9,7 +9,7 @@ Feature:  provide feedback
     @deputy
     Scenario: I give feedback on all fields and it is emailed to OPG
         Given I am not logged in
-        Given I check email sent from "deputy" area
+        Given emails are sent from "deputy" area
         And I reset the email log
         And I am on "/feedback"
         And I fill in the following:
@@ -29,7 +29,7 @@ Feature:  provide feedback
     @deputy
     Scenario: I give feedback on all fields including email and it is emailed to OPG
         Given I am not logged in
-        And I check email sent from "deputy" area
+        And emails are sent from "deputy" area
         And I reset the email log
         # wrong email
         When I am on "/feedback"
@@ -73,7 +73,7 @@ Feature:  provide feedback
     @deputy
     Scenario: When I give feedback I dont have to fill all the fields in
         Given I am not logged in
-        And I check email sent from "deputy" area
+        And emails are sent from "deputy" area
         And I reset the email log
         And I am on "/feedback"
         And I fill in the following:

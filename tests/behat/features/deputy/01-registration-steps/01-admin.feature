@@ -29,7 +29,7 @@ Feature: deputy / user / add user
 
     @deputy    
     Scenario: add deputy user
-        Given I check email sent from "admin" area
+        Given emails are sent from "admin" area
         And I reset the email log
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # invalid email

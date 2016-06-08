@@ -2,7 +2,7 @@ Feature: Browser - add and activate user
 
     @browser
     Scenario: browser - login and add deputy user
-        Given I check email sent from "deputy" area
+        Given emails are sent from "deputy" area
         And I reset the email log
         Given I am on admin login page
         When I fill in the following:

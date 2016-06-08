@@ -18,9 +18,9 @@ trait EmailTrait
     }
     
     /**
-     * @Given I check email sent from ":area" area
+     * @Given emails are sent from ":area" area
      */
-    public function ICheckEmailSentFrom($area)
+    public function givenEmaislAreSentFrom($area)
     {
         $this->visitBehatLink('email-reset');
         
@@ -43,7 +43,7 @@ trait EmailTrait
                 $this->visitBehatLink('email-get-last');
                 break;
             default:
-                throw new \Exception('Specify area the email is sent from with [I check email sent from ":area" area]');
+                throw new \Exception('Specify area the email is sent from with [emails are sent from ":area" area]');
         }
 
         $emailsJson = $this->getSession()->getPage()->getContent();

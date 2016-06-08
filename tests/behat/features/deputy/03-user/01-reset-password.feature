@@ -4,7 +4,7 @@ Feature: deputy / password reset
     Scenario: Password reset
       Given I load the application status from "report-submit-pre" 
       And I save the application status into "reset-password-start"
-      And I check email sent from "deputy" area
+      And emails are sent from "deputy" area
       And I reset the email log
       And I go to "/logout"
       And I go to "/login"

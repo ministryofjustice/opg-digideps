@@ -7,6 +7,8 @@ Feature: deputy / acl / security on pages
     @deputy 
     Scenario: create another user with client and report with data
       # restore status of first report before submitting
+      Given emails are sent from "admin" area
+      And I reset the email log
       Given I load the application status from "report-submit-pre"
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       When I create a new "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk"

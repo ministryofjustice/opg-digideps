@@ -20,7 +20,7 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
     @deputy
     Scenario: A deputy cannot reset password from the admin area
         # check deputy can recover password from deputy site
-        Given I check email sent from "deputy" area
+        Given emails are sent from "deputy" area
         And I reset the email log
         And I go to "/login"
         When I click on "forgotten-password"
