@@ -133,3 +133,9 @@ services:
         class: AppBundle\Service\Mailer\MailFactory
         arguments: [ @service_container ]
     
+    wkhtmltopdf:
+        class: AppBundle\Service\WkHtmlToPdfGenerator
+        arguments:  
+           url: "http://wkhtmltopdf:80"
+           timeoutSeconds: 30
+    
