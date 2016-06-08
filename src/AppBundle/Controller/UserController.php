@@ -227,7 +227,7 @@ class UserController extends RestController
 
         $this->getEntityManager()->flush($user);
 
-        return $user->getId();
+        return $user;
     }
 
     /**
