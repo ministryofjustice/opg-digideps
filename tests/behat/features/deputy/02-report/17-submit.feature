@@ -65,7 +65,7 @@ Feature: deputy / report / submit
         When I go to "/report/1/review"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        And the last email containing a link matching "/client/show" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/reports/2" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
         And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-post"
