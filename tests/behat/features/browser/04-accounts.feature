@@ -1,7 +1,7 @@
 Feature: browser - accounts
     
     @browser
-    Scenario: add account
+    Scenario: browser - add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #Add a bank account
         And I add the following bank account:

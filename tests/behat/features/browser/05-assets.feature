@@ -1,7 +1,7 @@
 Feature: browser - assets
     
     @browser
-    Scenario: Add an asset
+    Scenario: browser - Add an asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "edit-assets"
         And I save the page as "assets-none"
