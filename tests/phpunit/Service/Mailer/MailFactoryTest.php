@@ -15,6 +15,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->router = m::mock('Symfony\Component\Routing\Router');
         $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
         $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine');
         $this->translator->shouldReceive('trans')->andReturnUsing(function($input){
@@ -24,9 +25,9 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
         $this->container->shouldReceive('get')->with('translator')->andReturn($this->translator);
         $this->container->shouldReceive('get')->with('templating')->andReturn($this->templating);
+        $this->container->shouldReceive('get')->with('router')->andReturn($this->router);
 
-        $roleToArea = ["ROLE_ADMIN" => "admin", "ROLE_AD" => "admin", "ROLE_LAY_DEPUTY" => "frontend"];
-        $this->object = new MailFactory($this->container, $roleToArea);
+        $this->object = new MailFactory($this->container);
     }
 
 
