@@ -123,14 +123,10 @@ class RestClient
      */
     public function login(array $credentials)
     {
-        $response = $this->rawSafeCall('post', '/auth/login', [
-            'body' => $this->toJson($credentials),
-            'addClientSecret' => true,
-        ]);
-
+        $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-
-        // store 
+        
+        // store auth token
         $this->tokenStorage->set($user->getId(), $response->getHeader(self::HEADER_AUTH_TOKEN));
 
         return $user;
@@ -141,14 +137,12 @@ class RestClient
      */
     public function logout()
     {
-        $response = $this->rawSafeCall('post', '/auth/logout', [
-            'addAuthToken' => true,
-        ]);
+        $responseArray = $this->apiCall('post', '/auth/logout', null, 'array');
 
         // remove AuthToken
         $this->tokenStorage->remove($this->getLoggedUserId());
 
-        return $this->extractDataArray($response);
+        return $responseArray;
     }
 
     /**
@@ -162,9 +156,7 @@ class RestClient
      */
     public function loadUserByToken($token)
     {
-        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [
-            'addClientSecret' => true,
-        ]);
+        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [], false);
     }
 
     /**
@@ -175,9 +167,7 @@ class RestClient
      */
     public function userRecreateToken($email, $type)
     {
-        return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [
-            'addClientSecret' => true,
-        ]);
+        return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [], false);
     }
     
 
@@ -214,10 +204,7 @@ class RestClient
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
-        return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [
-            'addClientSecret' => true, 
-            'addAuthToken' => false // not logged when registering
-        ]);
+        return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [], false);
     }
     
     /**
@@ -230,20 +217,25 @@ class RestClient
      * @return type
      * @throws \InvalidArgumentException
      */
-    public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [])
+    public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
         
         $response = $this->rawSafeCall($method, $endpoint, $options + [
-            'addAuthToken' => true,
+            'addClientSecret' => !$authenticated,
+            'addAuthToken' => $authenticated,
         ]);
 
         if ($expectedResponseType == 'raw') {
             return  $response->getBody();
         }
 
+        if ($expectedResponseType == 'response') {
+            return $response;
+        } 
+        
         $responseArray = $this->extractDataArray($response);
         if ($expectedResponseType == 'array') {
             return $responseArray;
