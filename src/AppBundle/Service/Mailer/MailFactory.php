@@ -67,7 +67,10 @@ class MailFactory
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->generateAbsoluteLink($area, 'homepage', []),
-            'link' => $this->generateAbsoluteLink($area, 'user_activate', ['token' => $user->getRegistrationToken()]),
+            'link' => $this->generateAbsoluteLink($area, 'user_activate', [
+                'action' => 'activate',
+                'token' => $user->getRegistrationToken()
+             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
@@ -93,7 +96,7 @@ class MailFactory
         $viewParams = [
             'name' => $user->getFullName(),
             'link' => $this->generateAbsoluteLink($area, 'user_activate', [
-                'action' => 'activate',
+                'action' => 'password-reset',
                 'token' => $user->getRegistrationToken(),
             ]),
             'domain' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -209,7 +212,9 @@ class MailFactory
         $viewParams = [
             'submittedReport' => $submittedReport,
             'newReport' => $newReport,
-            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'client_home'),
+            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'reports', [
+                'cot' => EntityDir\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
+            ]),
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage'),
         ];
 
