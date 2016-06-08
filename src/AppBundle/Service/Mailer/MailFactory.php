@@ -147,7 +147,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Report $report, $reportContent)
+    public function createReportEmail(EntityDir\User $user, EntityDir\Report $report, $pdfBinaryContent)
     {
         $email = new ModelDir\Email();
 
@@ -171,7 +171,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
     }
