@@ -244,13 +244,11 @@ class ReportController extends AbstractController
                 'deserialise_group' => 'submit',
             ]);
             
-             // send report if submitted
-            $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $report->getId()])->getContent();
-
-            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $reportContent);
+            $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
+            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
     
-            $newReport = $this->get('restClient')->get('report/' . $newReportId);
+            $newReport = $this->get('restClient')->get('report/' . $newReportId['newReportId'], 'Report');
             
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
@@ -265,6 +263,7 @@ class ReportController extends AbstractController
             'form' => $form->createView(),
         ];
     }
+   
 
     /**
      * Page displaying the report has been submitted.
@@ -332,15 +331,16 @@ class ReportController extends AbstractController
      */
     public function reviewAction($reportId)
     {
-        $restClient = $this->get('restClient');
-
         /** @var \AppBundle\Entity\Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         // check status
         $reportStatusService = new ReportStatusService($report);
 
-        $body = $restClient->get('report/'.$reportId.'/formatted/0', 'raw');
+        $body = $this->forward('AppBundle:Report:formatted', array(
+                'reportId' => $reportId,
+                'addLayout' => true,
+            ))->getContent();
 
         return [
             'report' => $report,
@@ -355,67 +355,56 @@ class ReportController extends AbstractController
      */
     public function pdfViewAction($reportId)
     {
-        $restClient = $this->get('restClient');
-
         $report = $this->getReport($reportId, ['basic']);
-        $pdf = $restClient->get('report/'.$reportId.'/pdf', 'raw');
+        $pdfBinary = $this->getPdfBinaryContent($reportId);
 
-        $response = new Response($pdf);
+        $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
         $name = 'OPG102-'.$report->getClient()->getCaseNumber().'-'.date_format($report->getEndDate(), 'Y').'.pdf';
 
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($name).'"');
-        $response->headers->set('Content-length', $pdf->getSize());
+//        $response->headers->set('Content-length', strlen($->getSize());
 
         // Send headers before outputting anything
         $response->sendHeaders();
 
         return $response;
     }
-
-    private function groupAssets($assets)
+    
+     
+    private function getPdfBinaryContent($reportId)
     {
-        $assetGroups = array();
-
-        foreach ($assets as $asset) {
-            $type = $asset->getTitle();
-
-            if (isset($assetGroups[$type])) {
-                $assetGroups[$type][] = $asset;
-            } else {
-                $assetGroups[$type] = array($asset);
-            }
-        }
-
-        // sort the assets by their type now.
-        ksort($assetGroups);
-
-        return $assetGroups;
+        $html = $this->forward('AppBundle:Report:formatted', array(
+                'reportId' => $reportId,
+                'addLayout' => false,
+            ))->getContent();
+        
+        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
     
      /**
      * @Route("/report/{reportId}/pdf")
      * @Method({"GET"})
      */
-    public function pdfDownloadAction($reportId)
-    {
-        try {
-            $html = $this->forward('AppBundle:Report:formatted', array(
-                'reportId' => $reportId,
-                'addLayout' => true,
-            ))->getContent();
-
-            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-
-            $response = new Response($pdf);
-            $response->headers->set('Content-Type', 'application/pdf');
-
-            return $response;
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
+//    public function pdfDownloadAction($reportId)
+//    {
+//        try {
+//            $html = $this->forward('AppBundle:Report:formatted', array(
+//                'reportId' => $reportId,
+//                'addLayout' => true,
+//            ))->getContent();
+//
+//            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+//
+//            $response = new Response($pdf);
+//            $response->headers->set('Content-Type', 'application/pdf');
+//
+//            return $response;
+//        } catch (\Exception $e) {
+//            throw $e;
+//        }
+//    }
     
     
     /**
@@ -424,10 +413,7 @@ class ReportController extends AbstractController
      */
     public function formattedAction($reportId, $addLayout)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $report = $this->getRepository('Report')->find($reportId); /* @var $report EntityDir\Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         $template = $addLayout
                   ? 'AppBundle:Report:formatted.html.twig'
@@ -441,7 +427,7 @@ class ReportController extends AbstractController
                 'contacts' => $report->getContacts(),
                 'decisions' => $report->getDecisions(),
                 'isEmailAttachment' => true,
-                'deputy' => $report->getClient()->getUsers()->first(),
+                'deputy' => $this->getUser(),
                 'transfers' => $report->getMoneyTransfers(),
         ]);
     }
