@@ -180,22 +180,7 @@ class RestClient
         return $user;
     }
 
-    /**
-     * Call POST /selfregister passing client secret.
-     * 
-     * @param SelfRegisterData $selfRegData
-     * 
-     * @return array
-     */
-    public function registerUser(SelfRegisterData $selfRegData)
-    {
-        $response = $this->rawSafeCall('post', 'selfregister', [
-            'addClientSecret' => true,
-            'body' => $this->toJson($selfRegData),
-        ]);
-        
-        return $this->extractDataArray($response);
-    }
+    
 
     /**
      * @param string              $endpoint e.g. /user
@@ -231,6 +216,26 @@ class RestClient
         ]);
 
         return $this->extractDataArray($response);
+    }
+    
+    /**
+     * Call POST /selfregister passing client secret.
+     * 
+     * @param SelfRegisterData $selfRegData
+     * 
+     * @return \AppBundle\Entity\User
+     */
+    public function registerUser(SelfRegisterData $selfRegData)
+    {
+        $response = $this->rawSafeCall('post', 'selfregister', [
+            'addClientSecret' => true,
+            'body' => $this->toJson($selfRegData),
+        ]);
+        
+        $responseArray = $this->extractDataArray($response);
+        $user = $this->arrayToEntity('AppBundle\Entity\User', $responseArray);
+        
+        return $user;
     }
 
     /**
