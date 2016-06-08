@@ -33,12 +33,9 @@ class RegistrationController extends AbstractController
             $data = $form->getData();
 
             try {
-                $response = $this->get('restClient')->registerUser($data);
-                
-                $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
-                $activationEmail = $this->mailFactory->createActivationEmail($user);
-                $this->mailSender->send($activationEmail);
-                
+                $user = $this->getRestClient()->registerUser($data);
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail);
                 
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();

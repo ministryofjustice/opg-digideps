@@ -52,7 +52,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->get('restClient')->post('report/decision', $data, [
+            $this->getRestClient()->post('report/decision', $data, [
                 'deserialise_group' => 'Default',
             ]);
 
@@ -71,11 +71,9 @@ class DecisionController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id)
     {
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $decision = $restClient->get('report/decision/'.$id, 'Decision');
+        $decision = $this->getRestClient()->get('report/decision/'.$id, 'Decision');
 
         $form = $this->createForm(new FormDir\DecisionType(), $decision);
         $form->handleRequest($request);
@@ -84,7 +82,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $restClient->put('report/decision', $data, [
+            $this->getRestClient()->put('report/decision', $data, [
                  'deserialise_group' => 'Default',
             ]);
 
@@ -108,11 +106,10 @@ class DecisionController extends AbstractController
     {
         //just do some checks to make sure user is allowed to delete this contact
         $report = $this->getReport($reportId, ['basic', 'decisions']);
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         foreach ($report->getDecisions() as $decision) {
             if ($decision->getId() == $id) {
-                $restClient->delete("/report/decision/{$id}");
+                $this->getRestClient()->delete("/report/decision/{$id}");
             }
         }
 
@@ -126,11 +123,10 @@ class DecisionController extends AbstractController
     {
         //just do some checks to make sure user is allowed to update this report
         $report = $this->getReport($reportId, ['basic', 'transactions']);
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         if (!empty($report)) {
             $report->setReasonForNoDecisions(null);
-            $restClient->put('report/'.$report->getId(), $report);
+            $this->getRestClient()->put('report/'.$report->getId(), $report);
         }
 
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $report->getId()]));
@@ -143,14 +139,12 @@ class DecisionController extends AbstractController
     public function noneReasonAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $restClient->put('report/'.$reportId, $data);
+            $this->getRestClient()->put('report/'.$reportId, $data);
 
             return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
         }

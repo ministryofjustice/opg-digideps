@@ -28,8 +28,6 @@ class ReportController extends AbstractController
      */
     public function indexAction($cot, $reportId = null)
     {
-        $restClient = $this->get('restClient');
-
         $clients = $this->getUser()->getClients();
         $request = $this->getRequest();
 
@@ -52,7 +50,7 @@ class ReportController extends AbstractController
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $restClient->put('report/'.$reportId, $report, [
+                $this->getRestClient()->put('report/'.$reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
 
@@ -66,10 +64,9 @@ class ReportController extends AbstractController
                 $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
 
                 $reportObj = $this->getReport($report->getId(), ['transactions', 'basic']);
-              //update report to say message has been seen
-              $reportObj->setReportSeen(true);
-
-                $restClient->put('report/'.$report->getId(), $reportObj);
+                //update report to say message has been seen
+                $reportObj->setReportSeen(true);
+                $this->getRestClient()->put('report/'.$report->getId(), $reportObj);
             }
         }
 
@@ -100,7 +97,6 @@ class ReportController extends AbstractController
     public function createAction($clientId, $action = false)
     {
         $request = $this->getRequest();
-        $restClient = $this->get('restClient');
 
         $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['basic']]]);
 
@@ -129,7 +125,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $response = $restClient->post('report', $form->getData());
+            $response = $this->getRestClient()->post('report', $form->getData());
 
             return $this->redirect($this->generateUrl('report_overview', ['reportId' => $response['report']]));
         }
@@ -189,7 +185,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->get('restClient')->put('report/'.$report->getId(), $report, [
+            $this->getRestClient()->put('report/'.$report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
 
@@ -240,7 +236,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $newReportId = $this->get('restClient')->put('report/'.$report->getId().'/submit', $report, [
+            $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
             
@@ -248,7 +244,7 @@ class ReportController extends AbstractController
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
     
-            $newReport = $this->get('restClient')->get('report/' . $newReportId['newReportId'], 'Report');
+            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report');
             
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
@@ -290,7 +286,7 @@ class ReportController extends AbstractController
 
         if ($form->isValid()) {
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
-            $this->get('mailSender')->send($feedbackEmail, ['html']);
+            $this->getMailSender()->send($feedbackEmail, ['html']);
             
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }

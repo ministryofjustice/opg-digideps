@@ -35,7 +35,7 @@ class MentalCapacityController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->get('restClient')->put('report/'.$reportId.'/mental-capacity', $data, [
+            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, [
                 'deserialise_group' => 'MentalCapacity',
             ]);
 

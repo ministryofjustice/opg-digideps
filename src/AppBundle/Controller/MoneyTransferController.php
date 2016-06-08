@@ -40,7 +40,7 @@ class MoneyTransferController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->get('restClient')->post('report/'.$report->getId().'/money-transfers', $form->getData());
+            $this->getRestClient()->post('report/'.$report->getId().'/money-transfers', $form->getData());
 
             return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
         }
@@ -58,7 +58,7 @@ class MoneyTransferController extends AbstractController
      */
     public function delete($reportId, $transferId)
     {
-        $this->get('restClient')->delete('report/'.$reportId.'/money-transfers/'.$transferId);
+        $this->getRestClient()->delete('report/'.$reportId.'/money-transfers/'.$transferId);
 
         return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
     }
@@ -111,11 +111,11 @@ class MoneyTransferController extends AbstractController
 
             if ($request->getMethod() == 'PUT') {
                 $id = $request->get('id');
-                $this->get('restClient')->put("report/{$reportId}/money-transfers/{$id}", $data);
+                $this->getRestClient()->put("report/{$reportId}/money-transfers/{$id}", $data);
 
                 return new JsonResponse(['success' => true]);
             } else { //POST
-                $createdTransferId = $this->get('restClient')->post("report/{$reportId}/money-transfers", $data);
+                $createdTransferId = $this->getRestClient()->post("report/{$reportId}/money-transfers", $data);
 
                 return new JsonResponse(['success' => true, 'transferId' => $createdTransferId]);
             }
@@ -136,7 +136,7 @@ class MoneyTransferController extends AbstractController
     public function deleteJson(Request $request, $reportId)
     {
         try {
-            $this->get('restClient')->delete('report/'.$reportId.'/money-transfers/'.$request->get('id'));
+            $this->getRestClient()->delete('report/'.$reportId.'/money-transfers/'.$request->get('id'));
 
             return new JsonResponse(['success' => true]);
         } catch (\Exception $e) {

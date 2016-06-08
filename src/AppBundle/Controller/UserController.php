@@ -26,12 +26,11 @@ class UserController extends AbstractController
      */
     public function activateUserAction(Request $request, $action, $token)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $translator = $this->get('translator');
 
         // check $token is correct
         try {
-            $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
+            $user = $this->getRestClient()->loadUserByToken($token); /* @var $user EntityDir\User*/
         } catch (\Exception $e) {
             throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
@@ -73,7 +72,7 @@ class UserController extends AbstractController
             $this->get('deputyprovider')->login(['token' => $token]);
 
             // set password for user
-            $restClient->put('user/'.$user->getId().'/set-password', json_encode([
+            $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
             ]));
@@ -117,14 +116,12 @@ class UserController extends AbstractController
      */
     public function activateLinkSendAction(Request $request, $token)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-
         // check $token is correct
-        $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->loadUserByToken($token); /* @var $user EntityDir\User*/
 
         // recreate token
         // the endpoint will also send the activation email
-        $restClient->userRecreateToken($user, 'activate');
+        $this->getRestClient()->userRecreateToken($user->getEmail(), 'activate');
 
         $activationEmail = $this->getMailFactory()->createActivationEmail($user);
         $this->getMailSender()->send($activationEmail, ['text', 'html']);
@@ -152,9 +149,8 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $restClient->get('user/'.$userId, 'User'); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->get('user/'.$userId, 'User'); /* @var $user EntityDir\User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
         $notification = $request->query->has('notification') ? $request->query->get('notification') : null;
 
@@ -166,7 +162,7 @@ class UserController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $restClient->put('user/'.$user->getId(), $form->getData(), [
+                $this->getRestClient()->put('user/'.$user->getId(), $form->getData(), [
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full',
                 ]);
 
@@ -201,11 +197,10 @@ class UserController extends AbstractController
 
         $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
         $form->handleRequest($request);
-        $restClient = $this->get('restClient');
 
         if ($form->isValid()) {
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $restClient->put('user/'.$user->getId().'/set-password', json_encode([
+            $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
 
@@ -275,7 +270,6 @@ class UserController extends AbstractController
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
-        $restClient = $this->get('restClient');
 
         if ($form->isValid()) {
             $formData = $form->getData();
@@ -283,7 +277,7 @@ class UserController extends AbstractController
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            $restClient->put('user/'.$user->getId(), $formData, [
+            $this->getRestClient()->put('user/'.$user->getId(), $formData, [
                 'deserialise_group' => 'user_details_full',
             ]);
 
@@ -312,9 +306,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
-                $restClient = $this->get('restClient');
                 /* @var $user EntityDir\User */
-                $user = $restClient->userRecreateToken($user->getEmail(), 'pass-reset');
+                $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
                 $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
