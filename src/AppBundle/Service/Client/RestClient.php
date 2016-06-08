@@ -24,6 +24,14 @@ class RestClient
     const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
 
     /**
+     * Keep here a list of options for the methods
+     * Needed on the rawSafeCall
+     * 
+     * @var array 
+     */
+    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group'];
+    
+    /**
      * @var ClientInterface
      */
     private $client;
@@ -154,13 +162,9 @@ class RestClient
      */
     public function loadUserByToken($token)
     {
-        $response = $this->rawSafeCall('get', 'user/get-by-token/'.$token, [
+        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [
             'addClientSecret' => true,
         ]);
-
-        $responseArray = $this->extractDataArray($response);
-
-        return $this->arrayToEntity('User', $responseArray);
     }
 
     /**
@@ -171,15 +175,10 @@ class RestClient
      */
     public function userRecreateToken($email, $type)
     {
-        $response = $this->rawSafeCall('put', 'user/recreate-token/'.$email.'/'.$type, [
+        return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [
             'addClientSecret' => true,
         ]);
-        $responseArray = $this->extractDataArray($response);
-        $user = $this->arrayToEntity('AppBundle\Entity\User', $responseArray);
-        
-        return $user;
     }
-
     
 
     /**
@@ -189,14 +188,9 @@ class RestClient
      * 
      * @return string response body
      */
-    public function put($endpoint, $mixed, array $options = [])
+    public function put($endpoint, $mixed, array $options = [], $expectedResponseType = 'array')
     {
-        $response = $this->rawSafeCall('put', $endpoint, [
-            'body' => $this->toJson($mixed, $options),
-            'addAuthToken' => true,
-        ]);
-
-        return $this->extractDataArray($response);
+        return $this->apiCall('put', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
     /**
@@ -206,16 +200,9 @@ class RestClient
      * 
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $options = [])
+    public function post($endpoint, $mixed, array $options = [], $expectedResponseType = 'array')
     {
-        $body = $this->toJson($mixed, $options);
-
-        $response = $this->rawSafeCall('post', $endpoint, [
-            'body' => $body,
-            'addAuthToken' => true,
-        ]);
-
-        return $this->extractDataArray($response);
+        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
     
     /**
@@ -227,28 +214,29 @@ class RestClient
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
-        $response = $this->rawSafeCall('post', 'selfregister', [
-            'addClientSecret' => true,
-            'body' => $this->toJson($selfRegData),
+        return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [
+            'addClientSecret' => true, 
+            'addAuthToken' => false // not logged when registering
         ]);
-        
-        $responseArray = $this->extractDataArray($response);
-        $user = $this->arrayToEntity('AppBundle\Entity\User', $responseArray);
-        
-        return $user;
     }
-
+    
     /**
-     * @param string $endpoint             e.g. /user
-     * @param string $expectedResponseType Entity class to deserialise response into 
-     *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed) 
-     *                                     or "Account[]" to deseialise into an array of entities
-     *
-     * @return mixed $expectedResponseType type
+     * 
+     * @param type $method
+     * @param type $endpoint
+     * @param type $data
+     * @param type $expectedResponseType
+     * @param type $options
+     * @return type
+     * @throws \InvalidArgumentException
      */
-    public function get($endpoint, $expectedResponseType, $options = [])
+    public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [])
     {
-        $response = $this->rawSafeCall('get', $endpoint, $options + [
+        if ($data) {
+            $options['body'] = $this->toJson($data, $options);
+        }
+        
+        $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addAuthToken' => true,
         ]);
 
@@ -266,10 +254,26 @@ class RestClient
         } else {
             throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
+    }
+    
 
-        return $responseArray;
+    /**
+     * @param string $endpoint             e.g. /user
+     * @param string $expectedResponseType Entity class to deserialise response into 
+     *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed) 
+     *                                     or "Account[]" to deseialise into an array of entities
+     *
+     * @return mixed $expectedResponseType type
+     */
+    public function get($endpoint, $expectedResponseType, $options = [])
+    {
+        return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
+            'addAuthToken' => true
+            ] + $options);
     }
 
+    
+    
     /**
      * @param string $endpoint e.g. /user
      * 
@@ -277,13 +281,12 @@ class RestClient
      */
     public function delete($endpoint)
     {
-        $response = $this->rawSafeCall('delete', $endpoint, [
-           'addAuthToken' => true,
+        return $this->apiCall('delete', $endpoint, null, 'array', [
+            'addAuthToken' => true
         ]);
-
-        return $this->extractDataArray($response);
     }
 
+    
     /**
      * Performs HTTP client call
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
@@ -300,12 +303,16 @@ class RestClient
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
         }
-        unset($options['addAuthToken']);
-
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
         }
-        unset($options['addClientSecret']);
+        
+        // remove internal options, not recognised by guzzle
+        foreach(self::$availableOptions as $ao) {
+            unset($options[$ao]);
+            unset($options[$ao]);
+            unset($options[$ao]);
+        }
 
         // forward X-Request-Id to the API calls
         if (($request = $this->container->get('request')) && $request->headers->has('x-request-id')) {
