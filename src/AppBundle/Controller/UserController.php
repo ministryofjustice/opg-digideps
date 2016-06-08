@@ -314,9 +314,9 @@ class UserController extends AbstractController
             try {
                 $restClient = $this->get('restClient');
                 /* @var $user EntityDir\User */
-                $restClient->userRecreateToken($user, 'pass-reset');
-                
+                $user = $restClient->userRecreateToken($user->getEmail(), 'pass-reset');
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+
                 $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
                 
             } catch (\Exception $e) {

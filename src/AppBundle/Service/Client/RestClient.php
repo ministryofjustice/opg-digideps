@@ -164,18 +164,20 @@ class RestClient
     }
 
     /**
-     * @param User   $user
+     * @param string   $email
      * @param string $type
      * 
-     * @return array
+     * @return \AppBundle\Entity\User
      */
-    public function userRecreateToken(User $user, $type)
+    public function userRecreateToken($email, $type)
     {
-        $response = $this->rawSafeCall('put', 'user/recreate-token/'.$user->getEmail().'/'.$type, [
+        $response = $this->rawSafeCall('put', 'user/recreate-token/'.$email.'/'.$type, [
             'addClientSecret' => true,
         ]);
-
-        return $this->extractDataArray($response);
+        $responseArray = $this->extractDataArray($response);
+        $user = $this->arrayToEntity('AppBundle\Entity\User', $responseArray);
+        
+        return $user;
     }
 
     /**
@@ -191,7 +193,7 @@ class RestClient
             'addClientSecret' => true,
             'body' => $this->toJson($selfRegData),
         ]);
-
+        
         return $this->extractDataArray($response);
     }
 
