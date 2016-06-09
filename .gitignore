@@ -10,6 +10,7 @@ composer.phar
 .sass-cache/*
 node_modules/*
 app/config/parameters.yml
+app/config/.parameters.yml*
 bower_downloads/*
 web/bundles/*
 web/images
@@ -21,7 +22,6 @@ web/elb_healthcheck.html
 behat.yml
 misc/tmp/*
 app/bootstrap.php.cache
-src/AppBundle/Resources/views/Email/css
 npm-debug.log
 *~
 .cache
@@ -30,4 +30,3 @@ npm-debug.log
 tests/behat/behat.yml
 web/assets
 components/*
-
