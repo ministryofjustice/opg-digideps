@@ -425,6 +425,7 @@ class ReportController extends AbstractController
                 'isEmailAttachment' => true,
                 'deputy' => $this->getUser(),
                 'transfers' => $report->getMoneyTransfers(),
+                'mentalCapacity'=> $report->getMentalCapacity(),
         ]);
     }
     
