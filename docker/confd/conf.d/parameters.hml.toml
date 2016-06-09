@@ -9,6 +9,7 @@ keys = [
     "/frontend/secret",
     "/frontend/api",
     "/frontend/fixtures",
+    "/frontend/admin",
     "/frontend/nonadmin",
     "/frontend/behat",
     "/frontend/email",
