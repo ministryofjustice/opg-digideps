@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Router;
 
 class MailFactory
 {
-    const AREA_FRONTEND = 'frontend';
+    const AREA_DEPUTY = 'deputy';
     const AREA_ADMIN = 'admin';
 
     /**
@@ -47,12 +47,14 @@ class MailFactory
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
     {
-        $deputyBaseUrl = $this->container->getParameter('non_admin_host');
-        $adminBaseUrl = $this->container->getParameter('admin_host');
-
-        $baseUrl = ($area == 'deputy') ? $deputyBaseUrl : $adminBaseUrl;
-        
-        return $baseUrl . $this->router->generate($routeName, $params);
+        switch ($area) {
+            case self::AREA_DEPUTY:
+                return $this->container->getParameter('non_admin_host') . $this->router->generate($routeName, $params);
+            case self::AREA_ADMIN:
+                return $this->container->getParameter('admin_host') . $this->router->generate($routeName, $params);
+            default:
+                throw new \Exception("area $area not found");
+        }
     }
 
     /**
@@ -61,7 +63,7 @@ class MailFactory
      */
     public function createActivationEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
         
         $viewParams = [
             'name' => $user->getFullName(),
@@ -90,7 +92,7 @@ class MailFactory
 
     public function createResetPasswordEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'name' => $user->getFullName(),
@@ -125,7 +127,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -151,7 +153,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? 'admin' : 'deputy';
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -211,10 +213,10 @@ class MailFactory
         $viewParams = [
             'submittedReport' => $submittedReport,
             'newReport' => $newReport,
-            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'reports', [
+            'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'cot' => EntityDir\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
             ]),
-            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage'),
+            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
         ];
 
         $email
