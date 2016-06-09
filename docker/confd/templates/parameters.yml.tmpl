@@ -5,7 +5,7 @@ parameters:
     api_base_url: {{ getv "/frontend/api/url" }}
     api_client_secret: {{ getv "/frontend/api/client/secret" }}
     non_admin_host: {{ getv "/frontend/nonadmin/host" }}
-    admin_host: http://digideps-admin.local
+    admin_host: {{ getv "/frontend/admin/host" }}
     env: {{ getv "/frontend/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -31,11 +31,6 @@ parameters:
         from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
         to_email: {{ getv "/frontend/email/feedback/to" }}
     # check if used after the refactor
-    #email:
-    #  base_url:
-    #    frontend: {{ getv "/frontend/url/frontend" }}
-    #    admin: {{ getv "/frontend/url/admin" }}
-    # SMTP
     smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" }}
     smtp_default_port: {{ getv "/frontend/smtp/default/port" }}
     smtp_default_user: {{ getv "/frontend/smtp/default/user" }}
