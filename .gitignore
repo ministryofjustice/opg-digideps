@@ -30,3 +30,5 @@ npm-debug.log
 tests/behat/behat.yml
 web/assets
 components/*
+app/SymfonyRequirements.php
+app/bootstrap.php.cache
