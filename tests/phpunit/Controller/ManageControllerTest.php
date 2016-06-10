@@ -60,7 +60,7 @@ class ManageControllerTest extends AbstractControllerTestCase
 
         // dispatch /manage/availability and status code and check response
         $response = $this->httpRequest('GET', '/manage/availability');
-        $this->assertEquals($statusCode, $response->getStatusCode());
+        $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
         foreach ($mustContain as $m) {
             $this->assertContains($m, $response->getContent());
         }
