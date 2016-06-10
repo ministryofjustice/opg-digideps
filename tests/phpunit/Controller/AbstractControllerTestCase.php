@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractControllerTestCase extends WebTestCase
 {
@@ -36,9 +37,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
             ->getMock();
 
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])->andReturn($this->report)
-
             ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 
@@ -57,6 +56,22 @@ abstract class AbstractControllerTestCase extends WebTestCase
     protected function ajaxRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
     {
         $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With' => 'XMLHttpRequest'] + $server);
+
+        return $this->frameworkBundleClient->getResponse();
+    }
+
+    /**
+     * @param string $method
+     * @param string $uri
+     * @param array  $parameters
+     * @param array  $files
+     * @param array  $server
+     *
+     * @return Response
+     */
+    protected function httpRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    {
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
 
         return $this->frameworkBundleClient->getResponse();
     }
