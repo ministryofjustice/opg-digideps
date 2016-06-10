@@ -97,7 +97,7 @@ class Report
     private $action;
 
     /**
-     * @JMS\Groups({"basic", "MentalCapacity"})
+     * @JMS\Groups({"basic", "mental-capacity"})
      * @JMS\Type("AppBundle\Entity\MentalCapacity")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\MentalCapacity",  mappedBy="report", cascade={"persist"})
      **/
