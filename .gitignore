@@ -9,6 +9,7 @@
 .vagrant
 app/SymfonyRequirements.php
 app/bootstrap.php.cache
+app/check.php
 app/cache/*
 app/config/.parameters.yml*
 app/config/parameters.yml
