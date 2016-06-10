@@ -6,6 +6,11 @@ input[type=text]::-ms-clear {
     display: none;
 }
 
+// TODO had to override after having added alphagovk repo. change for all block-labels ?
+.inline .block-label {
+    margin-bottom: 10px;
+}
+
 form {
     padding: 0 3px 0 3px;
     overflow: hidden;
