@@ -7,6 +7,8 @@
 *.dist text eol=lf
 *.txt text eol=lf
 *.scss text eol=lf
+*.yml text eol=lf
+composer.lock text eol=lf
 
 *.png binary
 *.jpg binary

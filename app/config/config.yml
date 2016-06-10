@@ -14,8 +14,7 @@ framework:
     csrf_protection: ~
     validation:      { enable_annotations: true }
     templating:
-        engines: ['twig']
-        #assets_version: SomeVersionScheme
+      engines: ['php']
     default_locale:  "%locale%"
     trusted_proxies: ~
     session:         ~
@@ -55,10 +54,6 @@ snc_redis:
             alias: default
             dsn: %redis_dsn%
             
-parameters:
-    # fixes the JMS bundle v.1.0 using Twig_Function_Method
-    jms_serializer.twig_extension.class: AppBundle\Twig\SerializerExtensionDisabled
-
 services:
     logstash_formatter:
         class: Monolog\Formatter\LogstashFormatter

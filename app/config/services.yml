@@ -12,12 +12,6 @@ services:
         class: AppBundle\EventListener\DoctrineListener
         tags:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
-    componentsExtension:
-        class: AppBundle\Twig\ComponentsExtension
-        public: false
-        arguments: [  @translator ]
-        tags:
-            - { name: twig.extension }
     user.selfRegistration:
         class: AppBundle\Service\UserRegistrationService
         arguments: [@doctrine.orm.entity_manager]
