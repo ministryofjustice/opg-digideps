@@ -1,6 +1,6 @@
 $is-ie: false !default;
 $mobile-ie6: false !default;
-$path: "/images";
+$path: "/images/";
 $xlarge: 22;
 $large: 18;
 $medium: 14;
@@ -21,12 +21,12 @@ $small: 12;
 
 @import "gds/fonts";
 @import "digideps/helpers";
-@import "digideps/safeguarding";
+@import "digideps/formatted_report/safeguarding";
 @import "digideps/box";
-@import "digideps/label-value";
-@import "digideps/grid";
+@import "digideps/formatted_report/label-value";
+@import "digideps/formatted_report/grid";
 @import "digideps/assets";
-@import "digideps/tables";
+@import "digideps/formatted_report/tables";
 
 
 .formatted-report {
