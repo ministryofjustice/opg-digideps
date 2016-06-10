@@ -11,6 +11,7 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 RUN  gem install sass
 
 # build app dependencies
+RUN  composer self-update
 COPY composer.json /app/
 COPY composer.lock /app/
 WORKDIR /app
