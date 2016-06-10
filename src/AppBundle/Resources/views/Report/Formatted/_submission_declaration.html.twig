@@ -16,17 +16,17 @@
 
     <div class="item">
         <dl class="labelvalue">
-            <dt class="label">{{ 'declaration' | trans() }}</dt>
+            <dt class="label">Declaration</dt>
             <dd class="value" id="declarationString">
                 {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans() }}
             </dd>
             {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
-                <dt class="label">{{ 'agreedBehalfDeputyExplanation' | trans() }}</dt>
+                <dt class="label">Reason</dt>
                 <dd class="value">{{ report.agreedBehalfDeputyExplanation | nl2br }}</dd>
             {% endif %}
-            <dt class="label">{{ 'declarationTime' | trans() }}</dt>
+            <dt class="label">Declaration time</dt>
             <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
-            <dt class="label">{{ 'deputyName' | trans() }}</dt>
+            <dt class="label">Deputy name</dt>
             <dd class="value" id="statusDeputyName">{{ deputy.fullname }}</dd>
         </dl>
     </div>
