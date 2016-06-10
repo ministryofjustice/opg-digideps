@@ -64,7 +64,7 @@ class ManageController extends AbstractController
 
 
     /**
-     * @return array [boolean isHealty, string errors, array services, time in secs]
+     * @return array [true if healthy, services array, string with errors, time in secs]
      */
     private function servicesHealth()
     {
@@ -73,7 +73,12 @@ class ManageController extends AbstractController
         $services = [
             new \AppBundle\Service\Availability\RedisAvailability($this->container),
             new \AppBundle\Service\Availability\ApiAvailability($this->container),
+            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.default'),
+            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.secure'),
         ];
+        if ($this->container->getParameter('env') !== 'admin') {
+            $services[] = new \AppBundle\Service\Availability\WkHtmlToPdfAvailability($this->container);
+        }
 
         $healthy = true;
         $errors = [];
@@ -85,82 +90,9 @@ class ManageController extends AbstractController
             }
         }
 
-        //TODO move to service above
-        list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
-        list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
-
-
-        if (!$smtpDefaultHealthy) {
-            $healthy = false;
-            $errors[] = 'SMTP: ' . $smtpDefaultError;
-        }
-
-        if (!$smtpSecureHealthy) {
-            $healthy = false;
-            $errors[] = 'SMTP SECURE: ' . $smtpSecureError;
-        }
-
-        if ($this->container->getParameter('env') == 'prod') {
-            list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
-            if (!$wkHtmlToPdfInfoHealthy) {
-                $healthy = false;
-                $errors[] = 'wkHtmlToPd: ' . $wkHtmlToPdfInfoError;
-            }
-        }
-
         return [$healthy, $services, $errors, microtime(true) - $start];
     }
 
 
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function smtpDefaultInfo()
-    {
-        try {
-            $transport = $this->container->get('mailer.transport.smtp.default'); /* @var $transport \Swift_SmtpTransport */
-            $transport->start();
-            $transport->stop();
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'SMTP default Error: ' . $e->getMessage()];
-        }
-    }
-
-
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function smtpSecureInfo()
-    {
-        try {
-            $transport = $this->container->get('mailer.transport.smtp.secure'); /* @var $transport \Swift_SmtpTransport */
-            $transport->start();
-            $transport->stop();
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'SMTP Secure Error: ' . $e->getMessage()];
-        }
-    }
-
-
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function wkHtmlToPdfInfo()
-    {
-        try {
-            $ret = $this->container->get('wkhtmltopdf')->isAlive();
-            if (!$ret) {
-                throw new \RuntimeException('service down or created an invalid PDF');
-            }
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'wkhtmltopdf HTTP Error: ' . $e->getMessage()];
-        }
-    }
 
 }

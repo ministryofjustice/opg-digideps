@@ -9,13 +9,13 @@ class ManageControllerTest extends AbstractControllerTestCase
     public static function availabilityProvider()
     {
         return [
-            [true, '', true, true, true, 200, ['OK']], //all good
-            [false, 'db offline', true, true, true, 500, ['db offline']],
-            [true, '', false, true, true, 500, ['smtpDefault offline']],
-            [true, '', true, false, true, 500, ['smtpSecure offline']],
-            [true, '', true, true, false, 500, ['wkhtmltopdf']],
+            [true,  true,  true,  true,  200, ['OK']], //all good
+            [false, true,  true,  true,  500, ['api_errors']],
+            [true,  false, true,  true,  500, ['sd-error']],
+            [true,  true,  false, true,  500, ['ss-error']],
+            [true,  true,  true,  false, 500, ['wkhtmltopdf.isAlive']],
                 // all down
-            [false, 'db offline', false, false, false, 500, ['db offline', 'smtpDefault offline', 'smtpSecure offline', 'wkhtmltopdf']],
+            [false, false, false, false, 500, ['api_errors', 'sd-error', 'ss-error', 'wkhtmltopdf.isAlive']],
         ];
     }
 
@@ -23,16 +23,15 @@ class ManageControllerTest extends AbstractControllerTestCase
      * @dataProvider availabilityProvider
      */
     public function testAvailability(
-        $apiHealthy, $apiErrors, $smtpDefault, $smtpSecure, $wkhtmltopdf,
+        $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError,
         $statusCode, array $mustContain)
     {
         $container = $this->frameworkBundleClient->getContainer();
 
-
         // api mock
         $this->restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
             'healthy' => $apiHealthy,
-            'errors' => $apiErrors,
+            'errors' => $apiHealthy ? '' : 'api_errors',
         ]);
 
         // smtp mock
@@ -40,7 +39,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         if ($smtpDefault) {
             $smtpMock->shouldReceive('start')->times(1)->shouldReceive('stop')->times(1);
         } else {
-            $smtpMock->shouldReceive('start')->andThrow(new \RuntimeException('smtpDefault offline'));
+            $smtpMock->shouldReceive('start')->andThrow(new \RuntimeException('sd-error'));
         }
         $container->set('mailer.transport.smtp.default', $smtpMock);
 
@@ -49,15 +48,15 @@ class ManageControllerTest extends AbstractControllerTestCase
         if ($smtpSecure) {
             $secureSmtpMock->shouldReceive('start')->times(1)->shouldReceive('stop')->times(1);
         } else {
-            $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('smtpSecure offline'));
+            $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('ss-error'));
         }
         $container->set('mailer.transport.smtp.secure', $secureSmtpMock);
 
         // pdf mock
-        $wkhtmltopdfMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
-            ->shouldReceive('isAlive')->andReturn($wkhtmltopdf)
+        $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')
+            ->shouldReceive('isAlive')->andReturn($wkhtmltopdfError)
         ->getMock();
-        $container->set('wkhtmltopdf', $wkhtmltopdfMock);
+        $container->set('wkhtmltopdf', $wkhtmltopdfErrorMock);
 
         // dispatch /manage/availability and status code and check response
         $response = $this->httpRequest('GET', '/manage/availability');
