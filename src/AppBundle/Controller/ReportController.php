@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
+use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,7 +20,7 @@ class ReportController extends AbstractController
         'basic',  'accounts', 'client',
         'transactions', 'transactionsIn', 'transactionsOut',
         'asset', 'contacts', 'decisions', 'action', 'transfers',
-        'MentalCapacity', //update other groups to this format
+        'mental-capacity', //update other groups to this format
     ];
 
     /**
@@ -333,15 +334,9 @@ class ReportController extends AbstractController
         // check status
         $reportStatusService = new ReportStatusService($report);
 
-        $body = $this->forward('AppBundle:Report:formatted', array(
-                'reportId' => $reportId,
-                'addLayout' => true,
-            ))->getContent();
-
         return [
             'report' => $report,
             'deputy' => $this->getUser(),
-            'body' => $body,
             'reportStatus' => $reportStatusService,
         ];
     }
@@ -359,8 +354,14 @@ class ReportController extends AbstractController
 
         $name = 'OPG102-'.$report->getClient()->getCaseNumber().'-'.date_format($report->getEndDate(), 'Y').'.pdf';
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($name).'"');
-//        $response->headers->set('Content-length', strlen($->getSize());
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -371,62 +372,13 @@ class ReportController extends AbstractController
      
     private function getPdfBinaryContent($reportId)
     {
-        $html = $this->forward('AppBundle:Report:formatted', array(
-                'reportId' => $reportId,
-                'addLayout' => false,
-            ))->getContent();
-        
-        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-    }
-    
-     /**
-     * @Route("/report/{reportId}/pdf")
-     * @Method({"GET"})
-     */
-//    public function pdfDownloadAction($reportId)
-//    {
-//        try {
-//            $html = $this->forward('AppBundle:Report:formatted', array(
-//                'reportId' => $reportId,
-//                'addLayout' => true,
-//            ))->getContent();
-//
-//            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-//
-//            $response = new Response($pdf);
-//            $response->headers->set('Content-Type', 'application/pdf');
-//
-//            return $response;
-//        } catch (\Exception $e) {
-//            throw $e;
-//        }
-//    }
-    
-    
-    /**
-     * @Route("/report/{reportId}/formatted/{addLayout}")
-     * @Method({"GET"})
-     */
-    public function formattedAction($reportId, $addLayout)
-    {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        $template = $addLayout
-                  ? 'AppBundle:Report:formatted.html.twig'
-                  : 'AppBundle:Report:formatted_body.html.twig';
-
-        return $this->render($template, [
+        $html = $this->render('AppBundle:Report:formatted_body.html.twig', array(
                 'report' => $report,
-                'client' => $report->getClient(),
-                'assets' => $report->getAssets(),
-                'groupAssets' => $report->getAssetsGroupedByType(),
-                'contacts' => $report->getContacts(),
-                'decisions' => $report->getDecisions(),
-                'isEmailAttachment' => true,
-                'deputy' => $this->getUser(),
-                'transfers' => $report->getMoneyTransfers(),
-                'mentalCapacity'=> $report->getMentalCapacity(),
-        ]);
+            ))->getContent();
+
+        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
-    
+
 }

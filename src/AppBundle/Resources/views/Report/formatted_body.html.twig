@@ -1,3 +1,13 @@
+{% set client = report.client %}
+{% set assets = report.assets %}
+{% set groupAssets = report.getAssetsGroupedByType %}
+{% set contacts = report.getContacts %}
+{% set decisions = report.getDecisions %}
+{% set isEmailAttachment = true %}
+{% set deputy = app.user %}
+{% set transfers = report.getMoneyTransfers %}
+{% set mentalCapacity = report.getMentalCapacity %}
+
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}
 </style>
