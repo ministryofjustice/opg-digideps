@@ -2,17 +2,28 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
+    /**
+     * @var array ID => name
+     */
     private $allowedCot;
 
-    public function __construct(array $allowedCot)
+    public function __construct(RestClient $restClient = null)
     {
-        $this->allowedCot = $allowedCot;
+        $this->allowedCot = [];
+
+        $responseArray = $restClient->get('court-order-type', 'array');
+        foreach ($responseArray['court_order_types'] as $value) {
+            $this->allowedCot[$value['id']] = $value['name'];
+        }
+
+        arsort($this->allowedCot);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
