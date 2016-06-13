@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Service\Mailer\MailSenderMock;
-
 class UserControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -70,8 +68,6 @@ class UserControllerTest extends AbstractTestController
 
     public function testAdd()
     {
-        MailSenderMock::resetessagesSent();
-
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
                 'role_id' => self::$deputy1->getRole()->getId(), //deputy role
@@ -87,8 +83,6 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('n', $user->getFirstname());
         $this->assertEquals('s', $user->getLastname());
         $this->assertEquals('n.s@example.org', $user->getEmail());
-
-        $this->assertCount(1, MailSenderMock::getMessagesSent());
     }
 
     public function testUpdateAuth()
@@ -190,8 +184,6 @@ class UserControllerTest extends AbstractTestController
 
     public function testChangePasswordNoEmail()
     {
-        MailSenderMock::resetessagesSent();
-
         $url = '/user/'.self::$deputy1->getId().'/set-password';
 
         $this->assertJsonRequest('PUT', $url, [
@@ -203,8 +195,6 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $this->login('deputy@example.org', 'Abcd1234ne', '123abc-deputy');
-
-        $this->assertCount(0, MailSenderMock::getMessagesSent());
     }
 
     /**
@@ -225,7 +215,6 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $this->login('deputy@example.org', 'Abcd1234pa', '123abc-deputy');
-        $this->assertContains('new password', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
     }
 
     /**
@@ -244,8 +233,6 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        $this->assertContains('new password', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
     }
 
     public function testGetOneByIdAuth()
@@ -402,8 +389,6 @@ class UserControllerTest extends AbstractTestController
      */
     public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
     {
-        MailSenderMock::resetessagesSent();
-
         $url = '/user/recreate-token/deputy@example.org/'.$urlPart;
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -420,9 +405,6 @@ class UserControllerTest extends AbstractTestController
         $deputyRefreshed = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
         $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
-
-        // check email has been sent
-        $this->assertContains($emailSubject, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
     }
 
     public function testGetByTokenMissingClientSecre()

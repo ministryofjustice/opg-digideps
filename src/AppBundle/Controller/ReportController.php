@@ -113,76 +113,14 @@ class ReportController extends RestController
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
-        // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
-
-        $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
-        $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
-
         //lets create subsequent year's report
         $nextYearReport = $this->getRepository('Report')->createNextYearReport($currentReport);
-
-        //send confirmation email
-        $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($user, $currentReport, $nextYearReport);
-        $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
-
         $this->getEntityManager()->flush($currentReport);
 
         //response to pass back
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-    /**
-     * @Route("/report/{reportId}/formatted/{addLayout}")
-     * @Method({"GET"})
-     */
-    public function formattedAction($reportId, $addLayout)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $report = $this->getRepository('Report')->find($reportId);
-        /* @var $report EntityDir\Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $template = $addLayout
-            ? 'AppBundle:Report:formatted.html.twig'
-            : 'AppBundle:Report:formatted_body.html.twig';
-
-        return $this->render($template, [
-            'report' => $report,
-            'client' => $report->getClient(),
-            'assets' => $report->getAssets(),
-            'groupAssets' => $report->getAssetsGroupedByType(),
-            'contacts' => $report->getContacts(),
-            'decisions' => $report->getDecisions(),
-            'isEmailAttachment' => true,
-            'deputy' => $report->getClient()->getUsers()->first(),
-            'transfers' => $report->getMoneyTransfers(),
-        ]);
-    }
-
-    /**
-     * @Route("/report/{reportId}/pdf")
-     * @Method({"GET"})
-     */
-    public function pdfAction($reportId)
-    {
-        try {
-            $html = $this->forward('AppBundle:Report:formatted', array(
-                'reportId' => $reportId,
-                'addLayout' => true,
-            ))->getContent();
-
-            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-
-            $response = new Response($pdf);
-            $response->headers->set('Content-Type', 'application/pdf');
-
-            return $response;
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
 
     /**
      * @Route("/report/{id}")

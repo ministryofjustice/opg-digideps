@@ -12,8 +12,6 @@
         "symfony/symfony": "2.8.*",
         "doctrine/orm": "2.5.*",
         "doctrine/doctrine-bundle": "1.5.*",
-        "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.7.*",
         "symfony/swiftmailer-bundle": "2.3.8",
         "symfony/monolog-bundle": "2.7.*",
         "jms/serializer-bundle": "1.0.*",
@@ -27,22 +25,19 @@
         "mockery/mockery": "0.9.*",
         "sendgrid/sendgrid": "2.2.1",
         "snc/redis-bundle": "1.1.*",
-        "predis/predis": "1.0.*",
-        "alphagov/govuk_frontend_toolkit": "dev-master"
+        "predis/predis": "1.0.*"
     },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
@@ -56,11 +51,5 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://govuk-frontend-toolkit.appspot.com"
-        }
-    ]
+    }
 }

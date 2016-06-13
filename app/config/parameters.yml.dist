@@ -9,39 +9,9 @@ parameters:
     locale: en
     secret: setme
     behat_controller_enabled: true
-    smtp_default_hostname: localhost
-    smtp_default_port: 25
-    smtp_default_user: setme
-    smtp_default_password: setme
-    smtp_secure_hostname: localhost
-    smtp_secure_port: 25
-    # the following two paramters can be set to null on production
-    email_mock_address: "/^behat-/i"
-    email_mock_path:  "/tmp/dd_behat_last_sent_email.json"
     anonymous: true
     redis_dsn: redis://localhost
     # activation, change password, reset password emails (Amazon SES, needs @digideps.dsd.io sender )
-    email_send:
-      from_email: no-reply@digideps.dsd.io
-      # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
-    # report submit email with attachment, uses local secure SMTP (no auth needed)
-    email_report_submit:
-      from_email: no-reply@digideps.dsd.io
-      to_email: behat-digideps@digital.justice.gov.uk
-    # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
-    email_feedback_send:
-      from_email: no-reply@digideps.dsd.io
-      to_email: behat-digideps@digital.justice.gov.uk
-    email:
-      base_url:
-        frontend: https://digideps-client.local
-        admin: http://digideps-admin.local
-        routes:
-          user_activate:  /user/activate/{token}
-          password_reset:  /user/password-reset/{token}
-          homepage: /
-          report_overview: /report/{reportId|}/overview
-          client_home: /client/show
     fixtures:
         admin@publicguardian.gsi.gov.uk:
             firstname: Admin

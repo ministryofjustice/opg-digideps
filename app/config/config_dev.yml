@@ -7,14 +7,6 @@ framework:
         strict_requirements: true
     profiler: { only_exceptions: false }
 
-assetic:
-    use_controller: true
-
-#swiftmailer:
-#    delivery_address: me@example.com
-twig:
-    cache:  false
-
 monolog:
    handlers:
        main:

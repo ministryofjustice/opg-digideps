@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": ";;;;;;;;;AASA,QAAS;EACP,eAAe,EAAE,QAAQ;;AAG3B,aAAa;EACX,KAAK,EAAE,IAAI",
-"sources": ["../../../assets/scss/email-template/in-header-styles.scss"],
-"names": [],
-"file": "in-header-styles.html.twig"
-}
