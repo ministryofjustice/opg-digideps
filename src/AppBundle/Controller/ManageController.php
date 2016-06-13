@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
+
+
     /**
      * @Route("/availability")
      * @Method({"GET"})
@@ -18,16 +20,18 @@ class ManageController extends AbstractController
      */
     public function availabilityAction()
     {
-        list($healthy, $errors, $services) = $this->servicesHealth();
+        list($healthy, $services, $errors) = $this->servicesHealth();
 
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
+            'errors' => $errors,
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
 
         return $response;
     }
+
 
     /**
      * @Route("/elb", name="manage-elb")
@@ -39,16 +43,17 @@ class ManageController extends AbstractController
         return ['status' => 'OK'];
     }
 
+
     /**
      * @Route("/availability/pingdom")
      * @Method({"GET"})
      */
     public function healthCheckXmlAction()
     {
-        list($healthy, $errors, $services, $time) = $this->servicesHealth();
+        list($healthy, $errors, $time) = $this->servicesHealth();
 
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $healthy ? 'OK' : 'ERROR: '.$errors,
+            'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
             'time' => $time * 1000,
         ]);
         $response->setStatusCode($healthy ? 200 : 500);
@@ -57,8 +62,9 @@ class ManageController extends AbstractController
         return $response;
     }
 
+
     /**
-     * @return array [boolean isHealty, string errors, array services, time in secs]
+     * @return array [true if healthy, services array, string with errors, time in secs]
      */
     private function servicesHealth()
     {
@@ -67,7 +73,12 @@ class ManageController extends AbstractController
         $services = [
             new \AppBundle\Service\Availability\RedisAvailability($this->container),
             new \AppBundle\Service\Availability\ApiAvailability($this->container),
+            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.default'),
+            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.secure'),
         ];
+        if ($this->container->getParameter('env') !== 'admin') {
+            $services[] = new \AppBundle\Service\Availability\WkHtmlToPdfAvailability($this->container);
+        }
 
         $healthy = true;
         $errors = [];
@@ -79,6 +90,9 @@ class ManageController extends AbstractController
             }
         }
 
-        return [$healthy, implode('. ', $errors), $services, microtime(true) - $start];
+        return [$healthy, $services, $errors, microtime(true) - $start];
     }
+
+
+
 }

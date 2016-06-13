@@ -1,7 +1,7 @@
 Feature: Browser - manage decisions
     
     @browser
-    Scenario: Add and delete reason for no decisions
+    Scenario: browser - Add and delete reason for no decisions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "edit-decisions, decisions"
         When I fill in the following:
@@ -18,7 +18,7 @@ Feature: Browser - manage decisions
             | reason_for_no_decision_reasonForNoDecisions | |
         
     @browser
-    Scenario: Add two decisions then delete one
+    Scenario: browser - Add two decisions then delete one
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "edit-decisions, decisions"
         When I follow "add-decisions-button"

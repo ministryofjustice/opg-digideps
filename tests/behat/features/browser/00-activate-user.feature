@@ -1,8 +1,9 @@
 Feature: Browser - add and activate user
 
     @browser
-    Scenario: login and add deputy user
-        Given I reset the email log
+    Scenario: browser - login and add deputy user
+        Given emails are sent from "deputy" area
+        And I reset the email log
         Given I am on admin login page
         When I fill in the following:
             | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
@@ -12,14 +13,14 @@ Feature: Browser - add and activate user
         Then I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
 
     @browser
-    Scenario: view the homepage and login page
+    Scenario: browser - view the homepage and login page
         Given I am on "/"
         Then I save the page as "home"
         Then I am on "/login"
         And I save the page as "login"
         
     @browser
-    Scenario: Set user password
+    Scenario: browser - Set user password
         Given I am on "/logout"
         And I open the "/user/activate/" link from the email
         And I activate the user with password "Abcd1234"

@@ -15,7 +15,8 @@ Feature: deputy / report / submit
         
     @deputy
     Scenario: report submission
-        Given I reset the email log
+        Given emails are sent from "deputy" area
+        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         # assert after login I'm redirected to report page
@@ -64,7 +65,7 @@ Feature: deputy / report / submit
         When I go to "/report/1/review"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        And the last email containing a link matching "/client/show" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/reports/2" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
         And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-post"
@@ -72,7 +73,8 @@ Feature: deputy / report / submit
 
     @deputy
     Scenario: submit feedback after report
-        Given I reset the email log
+        Given emails are sent from "deputy" area
+        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/1/submitted"
         And I press "feedback_report_save"

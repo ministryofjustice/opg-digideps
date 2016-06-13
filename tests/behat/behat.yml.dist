@@ -20,14 +20,6 @@ default:
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
 
-        ad:
-            description: End to end journey for Assisted Digital user
-            paths:    [ %paths.base%/features/ad ]
-            filters:
-                tags: "~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
-
         textarea:
             description: Tests related to textareas
             paths:    [ %paths.base%/features/components ]

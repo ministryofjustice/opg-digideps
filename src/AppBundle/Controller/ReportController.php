@@ -6,8 +6,10 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
+use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -15,10 +17,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
-        'basic',  'accounts', 'client',
+        'basic',  'accounts', 'client', 'balance',
         'transactions', 'transactionsIn', 'transactionsOut',
         'asset', 'contacts', 'decisions', 'action', 'transfers',
-        'MentalCapacity', //update other groups to this format
+        'mental-capacity', //update other groups to this format
     ];
 
     /**
@@ -27,8 +29,6 @@ class ReportController extends AbstractController
      */
     public function indexAction($cot, $reportId = null)
     {
-        $restClient = $this->get('restClient');
-
         $clients = $this->getUser()->getClients();
         $request = $this->getRequest();
 
@@ -51,7 +51,7 @@ class ReportController extends AbstractController
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $restClient->put('report/'.$reportId, $report, [
+                $this->getRestClient()->put('report/'.$reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
 
@@ -65,10 +65,9 @@ class ReportController extends AbstractController
                 $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
 
                 $reportObj = $this->getReport($report->getId(), ['transactions', 'basic']);
-              //update report to say message has been seen
-              $reportObj->setReportSeen(true);
-
-                $restClient->put('report/'.$report->getId(), $reportObj);
+                //update report to say message has been seen
+                $reportObj->setReportSeen(true);
+                $this->getRestClient()->put('report/'.$report->getId(), $reportObj);
             }
         }
 
@@ -99,7 +98,6 @@ class ReportController extends AbstractController
     public function createAction($clientId, $action = false)
     {
         $request = $this->getRequest();
-        $restClient = $this->get('restClient');
 
         $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['basic']]]);
 
@@ -128,7 +126,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $response = $restClient->post('report', $form->getData());
+            $response = $this->getRestClient()->post('report', $form->getData());
 
             return $this->redirect($this->generateUrl('report_overview', ['reportId' => $response['report']]));
         }
@@ -188,7 +186,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->get('restClient')->put('report/'.$report->getId(), $report, [
+            $this->getRestClient()->put('report/'.$report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
 
@@ -239,9 +237,19 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('restClient')->put('report/'.$report->getId().'/submit', $report, [
+            $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
+            
+            $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
+            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
+            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+    
+            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report');
+            
+            //send confirmation email
+            $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+            $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
@@ -252,6 +260,7 @@ class ReportController extends AbstractController
             'form' => $form->createView(),
         ];
     }
+   
 
     /**
      * Page displaying the report has been submitted.
@@ -277,9 +286,9 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-            $restClient->post('feedback/report', $form->getData());
-
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
+            $this->getMailSender()->send($feedbackEmail, ['html']);
+            
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
 
@@ -319,20 +328,15 @@ class ReportController extends AbstractController
      */
     public function reviewAction($reportId)
     {
-        $restClient = $this->get('restClient');
-
         /** @var \AppBundle\Entity\Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         // check status
         $reportStatusService = new ReportStatusService($report);
 
-        $body = $restClient->get('report/'.$reportId.'/formatted/0', 'raw');
-
         return [
             'report' => $report,
             'deputy' => $this->getUser(),
-            'body' => $body,
             'reportStatus' => $reportStatusService,
         ];
     }
@@ -340,44 +344,41 @@ class ReportController extends AbstractController
     /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      */
-    public function pdfAction($reportId)
+    public function pdfViewAction($reportId)
     {
-        $restClient = $this->get('restClient');
-
         $report = $this->getReport($reportId, ['basic']);
-        $pdf = $restClient->get('report/'.$reportId.'/pdf', 'raw');
+        $pdfBinary = $this->getPdfBinaryContent($reportId);
 
-        $response = new Response($pdf);
+        $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
         $name = 'OPG102-'.$report->getClient()->getCaseNumber().'-'.date_format($report->getEndDate(), 'Y').'.pdf';
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($name).'"');
-        $response->headers->set('Content-length', $pdf->getSize());
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything
         $response->sendHeaders();
 
         return $response;
     }
-
-    private function groupAssets($assets)
+    
+     
+    private function getPdfBinaryContent($reportId)
     {
-        $assetGroups = array();
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        foreach ($assets as $asset) {
-            $type = $asset->getTitle();
+        $html = $this->render('AppBundle:Report:formatted_body.html.twig', array(
+                'report' => $report,
+            ))->getContent();
 
-            if (isset($assetGroups[$type])) {
-                $assetGroups[$type][] = $asset;
-            } else {
-                $assetGroups[$type] = array($asset);
-            }
-        }
-
-        // sort the assets by their type now.
-        ksort($assetGroups);
-
-        return $assetGroups;
+        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
+
 }

@@ -89,7 +89,7 @@ class AssetController extends AbstractController
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($report);
-            $this->get('restClient')->post("report/{$reportId}/asset", $asset);
+            $this->getRestClient()->post("report/{$reportId}/asset", $asset);
             $report->setNoAssetToAdd(false);
             $this->getRestClient()->put('report/'.$reportId, $report);
 
@@ -116,7 +116,7 @@ class AssetController extends AbstractController
         if (!$report->hasAssetWithId($assetId)) {
             throw new \RuntimeException('Asset not found.');
         }
-        $asset = $this->get('restClient')->get("report/{$reportId}/asset/{$assetId}", 'Asset');
+        $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Asset');
         $form = $this->createForm(FormDir\Asset\AbstractAssetType::factory($asset->getType()), $asset);
 
         $form->handleRequest($request);
@@ -124,7 +124,7 @@ class AssetController extends AbstractController
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('restClient')->put("report/{$reportId}/asset/{$assetId}", $asset);
+            $this->getRestClient()->put("report/{$reportId}/asset/{$assetId}", $asset);
 
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
@@ -146,10 +146,9 @@ class AssetController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset', 'accounts']);
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         if ($report->hasAssetWithId($id)) {
-            $restClient->delete("/report/{$reportId}/asset/{$id}");
+            $this->getRestClient()->delete("/report/{$reportId}/asset/{$id}");
         }
 
         return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));

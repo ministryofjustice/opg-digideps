@@ -182,9 +182,8 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-
-            $restClient->sendHomepageFeedback($form->getData());
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
+            $this->getMailSender()->send($feedbackEmail, ['html']);
 
             return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }

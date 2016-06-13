@@ -1,0 +1,76 @@
+.formatted-report {
+    table.money {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+
+        td {
+            @include core-12();
+            padding: em(6, 12) em(20, 12) em(6, 12) 0;
+
+            text-align: left;
+            color: $black;
+            border-bottom: 1px solid $border-colour;
+        }
+
+        th {
+            @include core-12();
+            font-weight: 700;
+            text-align: center;
+            padding: em(12, 12) 0 em(9, 12) 0;
+            color: $black;
+            border-bottom: 1px solid $border-colour;
+            // Right align headings for numeric content
+            &.numeric {
+                text-align: right;
+            }
+        }
+
+        // Use tabular numbers for numeric table cells
+        td.numeric {
+            @include core-12();
+            text-align: right;
+        }
+
+        tr.totals td {
+            @include core-14();
+            padding: em(6, 18) 20px em(9, 18) 0;
+            border-bottom: 0;
+        }
+
+        .grey {
+            background: $grey-3;
+        }
+        .reverse {
+            background: #000;
+            color: $white;
+        }
+
+        .account-number {
+            color: $grey-1;
+            padding: 5px;
+
+            .account-closed {
+                border-radius: 5px;
+                border: 2px solid rgb(74, 74, 74);
+                font-size: 1em;
+                padding: 2px;
+            }
+        }
+
+    }
+
+    table#money-transfers-table {
+        width: 100%;
+
+        thead {
+            th {
+                text-align: left;
+            }
+        }
+        tr td,
+        tr th {
+            border-bottom: 1px solid $border-colour;
+        }
+    }
+}

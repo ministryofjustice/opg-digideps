@@ -40,6 +40,17 @@ trait LinksTrait
         //   $this->printLastResponse();
         //}
     }
+    
+    /**
+     * @Given I visit the behat admin link :link
+     */
+    public function visitBehatAdminLink($link)
+    {
+        $secret = md5('behat-dd-'.$this->getSymfonyParam('secret'));
+
+        $adminUrl = $this->getAdminUrl();
+        $this->visitPath($adminUrl."/behat/{$secret}/{$link}");
+    }
 
     /**
      * Click on element with attribute [behat-link=:link].

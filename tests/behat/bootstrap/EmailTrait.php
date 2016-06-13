@@ -2,17 +2,49 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+
 trait EmailTrait
 {
+    private static $mailSentFrom = 'deputy';
+    
+    
+    /**
+     * @BeforeScenario
+     */
+    public function resetMailSentFrom(BeforeScenarioScope $scope)
+    {
+        self::$mailSentFrom = null;
+    }
+    
+    /**
+     * @Given emails are sent from ":area" area
+     */
+    public function givenEmaislAreSentFrom($area)
+    {
+        $this->visitBehatLink('email-reset');
+        
+        self::$mailSentFrom = $area;
+    }
+    
     /**
      * @param bool $throwExceptionIfNotFound
      * @param int  $index                    = last (default), 1=second last
      * 
      * @return array|null
      */
-    private function getEmailMockFromApi($throwExceptionIfNotFound = true, $index = 'last')
+    private function getEmailMock($throwExceptionIfNotFound = true, $index = 'last')
     {
-        $this->visitBehatLink('email-get-last');
+        switch (self::$mailSentFrom) {
+            case 'admin':
+                $this->visitBehatAdminLink('email-get-last');
+                break;
+            case 'deputy':
+                $this->visitBehatLink('email-get-last');
+                break;
+            default:
+                throw new \Exception('Specify area the email is sent from with [emails are sent from ":area" area]');
+        }
 
         $emailsJson = $this->getSession()->getPage()->getContent();
 
@@ -44,6 +76,7 @@ trait EmailTrait
     public function iResetTheEmailLog()
     {
         $this->visitBehatLink('email-reset');
+        $this->visitBehatAdminLink('email-reset');
     //    $this->assertResponseStatus(200);
 
         $this->assertNoEmailShouldHaveBeenSent();
@@ -54,7 +87,7 @@ trait EmailTrait
      */
     public function assertNoEmailShouldHaveBeenSent()
     {
-        $content = $this->getEmailMockFromApi(false);
+        $content = $this->getEmailMock(false);
         if ($content) {
             throw new \RuntimeException("Found unexpected email with subject '".$content['subject']."'");
         }
@@ -122,7 +155,7 @@ trait EmailTrait
     {
         $this->getFirstLinkInEmailMatching($partialLink);
 
-        $mail = $this->getEmailMockFromApi();
+        $mail = $this->getEmailMock();
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -135,7 +168,7 @@ trait EmailTrait
      */
     public function theWhichEmailShouldHaveBeenSentTo($index, $to)
     {
-        $mail = $this->getEmailMockFromApi(true, $index);
+        $mail = $this->getEmailMock(true, $index);
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -148,7 +181,7 @@ trait EmailTrait
      */
     public function theEmailAttachmentShouldContain($index, $minsizekb)
     {
-        $mail = $this->getEmailMockFromApi(true, $index);
+        $mail = $this->getEmailMock(true, $index);
 
         // find body of the part with the given contentType
         $part = array_filter($mail['parts'], function ($part) {
@@ -169,7 +202,7 @@ trait EmailTrait
      */
     private function getLinksFromEmailHtmlBody()
     {
-        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
+        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
 
         preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
 
@@ -181,7 +214,7 @@ trait EmailTrait
      */
     public function mailContainsText($text)
     {
-        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
+        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
 
         if (strpos($mailContent, $text) === false) {
             throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
@@ -193,7 +226,7 @@ trait EmailTrait
      */
     public function mailNoContainsText($text)
     {
-        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
+        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
 
         if (strpos($mailContent, $text) !== false) {
             throw new \Exception("Text: $text unexpected in email. Body: \n $mailContent");

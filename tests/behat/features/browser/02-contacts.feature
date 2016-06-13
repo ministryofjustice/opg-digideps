@@ -1,7 +1,7 @@
 Feature: Browser - manage contacts
 
     @browser
-    Scenario: Add and delete reason for no contacts
+    Scenario: browser - Add and delete reason for no contacts
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "edit-contacts"
         And I fill in the following:
@@ -18,7 +18,7 @@ Feature: Browser - manage contacts
             | reason_for_no_contact_reasonForNoContacts | |
 
     @browser
-    Scenario: Add two contacts then delete one
+    Scenario: browser - Add two contacts then delete one
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "edit-contacts"
         When I follow "add-contacts-button"

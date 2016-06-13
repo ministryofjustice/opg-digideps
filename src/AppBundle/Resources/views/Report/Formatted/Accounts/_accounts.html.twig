@@ -1,0 +1,16 @@
+<div class="section" id="accounts-section">
+    <h2 class="section-heading">Accounts</h2>
+
+    {% if report.totalsMatch %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_good.html.twig' %}    
+    {% else %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_bad.html.twig' %}
+
+    {% endif %}
+
+    {% include 'AppBundle:Report:Formatted/Accounts/_summary.html.twig' %}
+    {% include 'AppBundle:Report:Formatted/Accounts/_transfers.html.twig' %}
+    {% include 'AppBundle:Report:Formatted/Accounts/_working_out.html.twig' %}
+    {% include 'AppBundle:Report:Formatted/Accounts/_final_summary.html.twig' %}
+    
+</div>

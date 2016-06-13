@@ -10,6 +10,8 @@ docker/my_init.d/* text eol=lf
 *.scss text eol=lf
 *.scss text eol=lf
 *.yml text eol=lf
+*.twig text eol=lf
+*.twig.map text eol=lf
 
 
 *.png binary

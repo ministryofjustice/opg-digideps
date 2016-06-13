@@ -102,3 +102,40 @@ services:
             - { name: monolog.processor, method: processRecord }
     formErrorsFormatter:
             class: AppBundle\Service\FormErrorsFormatter
+    
+    # default transport + swift mailer
+    mailer.transport.smtp.default:
+        class: Swift_SmtpTransport
+        arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
+        calls:
+            - [ setEncryption, [ "tls"]]
+            - [ setUsername, [ %smtp_default_user%]]
+            - [ setPassword, [ %smtp_default_password%]]
+    mailer.swiftMailers.default:
+        class: Swift_Mailer
+        arguments: [ @mailer.transport.smtp.default ]
+    # secure transport + swift mailer
+    mailer.transport.smtp.secure:
+        class: Swift_SmtpTransport
+        arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
+    mailer.swiftMailers.secure:
+        class: Swift_Mailer
+        arguments: [ @mailer.transport.smtp.secure ]
+    # mail sender accepting those the above-created swift mailer
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments: [ @validator, @logger ]
+        calls:
+            - [ addSwiftMailer, [ "default", @mailer.swiftMailers.default] ]
+            - [ addSwiftMailer, [ "secure-smtp" , @mailer.swiftMailers.secure] ]
+            - [ writeToFileEmailMatching, ["%email_mock_address%", "%email_mock_path%"] ]
+    mailFactory:
+        class: AppBundle\Service\Mailer\MailFactory
+        arguments: [ @service_container ]
+    
+    wkhtmltopdf:
+        class: AppBundle\Service\WkHtmlToPdfGenerator
+        arguments:  
+           url: "http://wkhtmltopdf:80"
+           timeoutSeconds: 30
+    

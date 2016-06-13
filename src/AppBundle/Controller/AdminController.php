@@ -43,6 +43,9 @@ class AdminController extends AbstractController
                 ]);
                 $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
 
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'An activation email has been sent to the user.'

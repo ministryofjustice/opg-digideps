@@ -51,7 +51,7 @@ class ContactController extends AbstractController
             $data->setReport($report);
 
             // update contact. The API will also delete reason for no contact
-            $this->get('restClient')->post('report/contact', $data, [
+            $this->getRestClient()->post('report/contact', $data, [
                 'deserialise_group' => 'Default',
             ]);
 
@@ -72,7 +72,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $contact = $this->get('restClient')->get('report/contact/'.$id, 'Contact');
+        $contact = $this->getRestClient()->get('report/contact/'.$id, 'Contact');
         $contact->setReport($report);
 
         $form = $this->createForm(new FormDir\ContactType(), $contact);
@@ -80,7 +80,7 @@ class ContactController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->get('restClient')->put('report/contact', $data);
+            $this->getRestClient()->put('report/contact', $data);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
@@ -105,7 +105,7 @@ class ContactController extends AbstractController
 
         foreach ($report->getContacts() as $contact) {
             if ($contact->getId() == $id) {
-                $this->get('restClient')->delete("/report/contact/{$id}");
+                $this->getRestClient()->delete("/report/contact/{$id}");
             }
         }
 
@@ -122,7 +122,7 @@ class ContactController extends AbstractController
 
         if (!empty($report)) {
             $report->setReasonForNoContacts(null);
-            $this->get('restClient')->put('report/'.$report->getId(), $report);
+            $this->getRestClient()->put('report/'.$report->getId(), $report);
         }
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $report->getId()]));
@@ -141,7 +141,7 @@ class ContactController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->get('restClient')->put('report/'.$reportId, $data);
+            $this->getRestClient()->put('report/'.$reportId, $data);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
@@ -166,7 +166,7 @@ class ContactController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->get('restClient')->put('report/'.$reportId, $data);
+            $this->getRestClient()->put('report/'.$reportId, $data);
         }
 
         return [

@@ -39,7 +39,7 @@
                         {% set attr = attr | merge({'disabled': 'disabled'}) %}
                     {% endif %}
                     {{ form_widget(choiceElement, {'attr': attr}) }}
-                    {{ choiceElement.vars.label }}
+                    {{ choiceElement.vars.label | trans({}, translationDomain)}}
                 </label>
             {% endfor %}
         </fieldset>

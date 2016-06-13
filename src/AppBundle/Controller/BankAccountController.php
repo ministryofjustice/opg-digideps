@@ -34,7 +34,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
             ]);
 
@@ -69,7 +69,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
 
@@ -94,10 +94,8 @@ class BankAccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-
         $report = $this->getReport($reportId, ['basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
-        $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
+        $accounts = $this->getRestClient()->get("/report/{$reportId}/accounts", 'Account[]');
         $report->setAccounts($accounts);
 
         if ($report->getSubmitted()) {
@@ -109,7 +107,7 @@ class BankAccountController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->get('restClient')->put('report/'.$reportId, $data, [
+            $this->getRestClient()->put('report/'.$reportId, $data, [
                 'deserialise_group' => 'balance_mismatch_explanation',
             ]);
         }
@@ -155,7 +153,6 @@ class BankAccountController extends AbstractController
      */
     public function upsertAction(Request $request, $reportId, $id = null)
     {
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
         $type = $id ? 'edit' : 'add';
         $showMigrationWarning = false;
@@ -164,7 +161,7 @@ class BankAccountController extends AbstractController
             if (!$report->hasAaccountWithId($id)) {
                 throw new \RuntimeException('Account not found.');
             }
-            $account = $restClient->get('report/account/'.$id, 'Account');
+            $account = $this->getRestClient()->get('report/account/'.$id, 'Account');
             // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
             $showMigrationWarning = $account->hasMissingInformation();
         } else {
@@ -184,11 +181,11 @@ class BankAccountController extends AbstractController
                 $data->setIsClosed(false);
             }
             if ($type === 'edit') {
-                $restClient->put('/account/'.$id, $account, [
+                $this->getRestClient()->put('/account/'.$id, $account, [
                     'deserialise_group' => 'add_edit',
                 ]);
             } else {
-                $addedAccount = $this->get('restClient')->post('report/'.$reportId.'/account', $account, [
+                $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, [
                     'deserialise_group' => 'add_edit',
                 ]);
                 $id = $addedAccount['id'];
@@ -226,10 +223,9 @@ class BankAccountController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         if ($report->hasAaccountWithId($id)) {
-            $restClient->delete("/account/{$id}");
+            $this->getRestClient()->delete("/account/{$id}");
         }
 
         return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
@@ -283,7 +279,7 @@ class BankAccountController extends AbstractController
                 ], 500);
             }
 
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
                 'deserialise_group' => $type,
             ]);
 

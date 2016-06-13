@@ -5,7 +5,7 @@ form:
     household-bills: Household bills
     accommodation: Accommodation
     care-and-medical: Care and medical
-    client-expenses: <span class="proper-case">%client%'s</span> expenses
+    client-expenses: %client%'s expenses
     fees: Fees
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
