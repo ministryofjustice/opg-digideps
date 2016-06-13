@@ -21,11 +21,15 @@
              
                                 <dt class="label">Address</dt>
                                 <dd class="value textarea">
+                                    {% if contact.address or contact.postcode %}
                                     {{ contact.address }}<br/>
                                     {{ contact.address2 }}<br/>
                                     {{ contact.county }}<br/>
                                     {{ contact.postcode }}<br/>
                                     {{ contact.country | country_name }}
+                                    {% else %}
+                                      -
+                                    {% endif %}
                                 </dd>
                             </dl>
                             <dl class="labelvalue half-width">
