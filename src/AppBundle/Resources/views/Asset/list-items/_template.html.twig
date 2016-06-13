@@ -12,6 +12,6 @@
     </div>
     <div class="column third" >
         <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class=" " >Remove</a><br/>
-        <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="" >Edit</a>
+        <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="behat-link-asset-{{ asset.behatIdentifier | behat_namify }}" >Edit</a>
     </div>
 </div>

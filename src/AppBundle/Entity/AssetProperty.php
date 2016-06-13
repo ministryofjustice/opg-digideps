@@ -376,4 +376,9 @@ class AssetProperty extends Asset
     {
         return strtolower($this->getAddress() . '' .$this->getAddress2());
     }
+
+    public function getBehatIdentifier()
+    {
+        return $this->getAddress() . ' ' . $this->getPostcode();
+    }
 }

@@ -139,4 +139,12 @@ abstract class Asset
      * @return string
      */
     abstract public function getOrderIndex();
+
+    /**
+     * Get an unique human readable ID in order to identify the item in the list based on its content.
+     * Needed by functional testing
+     *
+     * @return string
+     */
+    abstract public function getBehatIdentifier();
 }

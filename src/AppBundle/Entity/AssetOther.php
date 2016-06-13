@@ -108,4 +108,9 @@ class AssetOther extends Asset
 
         return $ret;
     }
+
+    public function getBehatIdentifier()
+    {
+        return $this->getDescription();
+    }
 }
