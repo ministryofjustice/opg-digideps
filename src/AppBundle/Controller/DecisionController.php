@@ -126,7 +126,7 @@ class DecisionController extends AbstractController
 
         if (!empty($report)) {
             $report->setReasonForNoDecisions(null);
-            $restClient->put('report/'.$report->getId(), $report, [
+            $this->getRestClient()->put('report/'.$report->getId(), $report, [
                 'deserialise_group' => 'reasonForNoDecisions'
             ]);
         }
@@ -146,7 +146,7 @@ class DecisionController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $restClient->put('report/'.$reportId, $data, [
+            $this->getRestClient()->put('report/'.$reportId, $data, [
                 'deserialise_group' => 'reasonForNoDecisions'
             ]);
 

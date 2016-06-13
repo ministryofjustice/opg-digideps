@@ -37,7 +37,7 @@ class AbstractController extends Controller
         }
 
         if ($sort != null) {
-            $sort($choices);
+            sort($choices);
         }
 
         return $choices;
