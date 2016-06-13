@@ -9,13 +9,14 @@ class ManageControllerTest extends AbstractControllerTestCase
     public static function availabilityProvider()
     {
         return [
-            [true,  true,  true,  true,  200, ['OK']], //all good
-            [false, true,  true,  true,  500, ['api_errors']],
-            [true,  false, true,  true,  500, ['sd-error']],
-            [true,  true,  false, true,  500, ['ss-error']],
-            [true,  true,  true,  false, 500, ['wkhtmltopdf.isAlive']],
+            [true, true,  true,  true,  true,  200, ['OK']], //all good
+            [false, true, true,  true,  true,  500, ['redis-error']],
+            [true, false, true,  true,  true,  500, ['api_errors']],
+            [true, true,  false, true,  true,  500, ['sd-error']],
+            [true, true,  true,  false, true,  500, ['ss-error']],
+            [true, true,  true,  true,  false, 500, ['wkhtmltopdf.isAlive']],
                 // all down
-            [false, false, false, false, 500, ['api_errors', 'sd-error', 'ss-error', 'wkhtmltopdf.isAlive']],
+            [true, false, false, false, false, 500, ['api_errors', 'sd-error', 'ss-error', 'wkhtmltopdf.isAlive']],
         ];
     }
 
@@ -23,10 +24,21 @@ class ManageControllerTest extends AbstractControllerTestCase
      * @dataProvider availabilityProvider
      */
     public function testAvailability(
-        $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError,
+        $redisHealthy, $apiHealthy, $smtpDefault, $smtpSecure, $wkhtmltopdfError,
         $statusCode, array $mustContain)
     {
         $container = $this->frameworkBundleClient->getContainer();
+
+        //redis mock
+        $redisMock = m::mock('Predis\Client');
+        if ($redisHealthy) {
+            $redisMock->shouldReceive('set')->with('RedisAvailabilityTestKey', 'valueSaved');
+            $redisMock->shouldReceive('get')->with('RedisAvailabilityTestKey')->andReturn('valueSaved');
+        } else {
+            $redisMock->shouldReceive('set')->andThrow(new \RuntimeException('redis-error'));
+        }
+        $container->set('snc_redis.default', $redisMock);
+
 
         // api mock
         $this->restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
