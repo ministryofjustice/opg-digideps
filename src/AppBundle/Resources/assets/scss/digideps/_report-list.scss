@@ -112,125 +112,54 @@
 
 .report-list--assets {
 
-    margin-top: 60px;
+    color: $text-colour;
+    list-style: inherit;
+    padding: 30px 0px;
 
     .report-list__item {
-        position: relative;
+        margin-top: 5px;
+        display: block;
+        border-bottom: none;
+        padding: 5px;
 
-        .report-list__item-fields dd.report-list__item-fields-description--block {
-            margin-left: 0;
-            margin-right: 300px;
+        @include media(mobile) {
+            margin-top: 0;
         }
 
-    }
+        > .heading {
+            @include core-19();
+            color: $text-colour;
+            background: $grey-3;
+            padding: 7px 10px 5px 10px;
+            min-height: 19px;
 
-    dt.report-list__item-fields-term {
-        width: 130px;
-    }
+            @include media(mobile) {
+                font-size: 16px;
+            }
+        }
 
-    dd.report-list__item-fields-description {
-        margin-left: 135px;
-    }
-    
-}
+        .column {
+            float: left;
+            margin: 5px;
+            padding-top: 10px;
 
-.report-list--accounts {
-
-    &.report-list {
-        padding-left: 0;
-
-        .report-list__item {
-
-            dt.report-list__item-fields-term {
-                display: inline;
-                margin-right: 5px;
-                color: inherit;
+            &.first {
+                width: 30%;
             }
 
-            dd.report-list__item-fields-description {
-                display: inline;
-                font-weight: 400;
+            &.second {
+                width: 50%;
+                font-weight: bold;
+            }
 
-                h3 {
-                    @include bold-24();
-                    display: inline;
-                    color: $link-colour;
+            &.third {
+                .edit-link {
+                    float: none;
+                    margin-right: 10px;
                 }
-
-            }
-
-        }
-    }
-
-    .report-list__item-fields-row {
-        display: inline;
-    }
-
-    .report-list__item-fields-col {
-
-        &-bank {
-            display: block;
-            float: left;
-            width: 35%;
-        }
-
-        &-acc-num {
-            display: block;
-            float: left;
-            width: 30%;
-        }
-
-        &-info {
-            display: block;
-            float: left;
-            overflow: hidden;
-            margin-left: 8px;
-            width: 30%;
-        }
-
-    }
-
-    .page-section-warning {
-        top: -10px;
-        margin-bottom: 0;
-
-        #content & {
-            .icon + p {
-                font-weight: 700;
             }
         }
     }
-
-}
-
-.report-list--accounts-closing {
-    border: 0;
-    padding: 0;
-    margin-top: 0;
-    margin-bottom: 30px;
-
-    .report-list__item {
-        border: 0;
-        padding: 0;
-        margin-bottom: 10px;
-    }
-
-    .report-list__item-fields-col {
-
-        &-bank {
-            display: block;
-            float: left;
-            width: 35%;
-        }
-
-        &-acc-num {
-            display: block;
-            float: left;
-            width: 30%;
-        }
-
-    }
-
 }
 
 .report-list-separator {

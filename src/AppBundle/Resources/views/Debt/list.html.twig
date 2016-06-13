@@ -1,0 +1,12 @@
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Debt:layout-debts.html.twig'  %}
+
+{% block maincontent %}
+
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+
+    [DEBTS]
+
+{% endblock %}

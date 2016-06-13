@@ -1,53 +1,31 @@
-{# when loaded with AJAX, only return the "pageBody" block content #}
-{% embed app.request.xmlHttpRequest  ? 
-  'AppBundle:Layouts:ajaxPageBody.html.twig' :
-  'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
 
-    {% set translationDomain = "report-assets" %}
-    {% trans_default_domain translationDomain %}
-    
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
-    
-    {#{% block pageNavigation %}
-        <nav id="back-bar">
-            <a id="overview-button" href="{{ path('assets', {'reportId': report.id}) }}">Return to report assets</a>
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
-        </nav>
-    {% endblock %}#}
-    
-    {% block pageBody %}
-        
-        {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+{# if loaded with AJAX, only renders the maincontent block #}
+{% extends app.request.xmlHttpRequest  ?
+    'AppBundle:Layouts:ajaxPageBody.html.twig' :
+    'AppBundle:Asset:layout-assets.html.twig'
+%}
 
-        <h3 class="heading-medium">
-            {{ ('page.subSectionTitleAdd.' ~ asset.type) | trans({}, translationDomain) }}
-        </h3>
+{% block maincontent %}
 
-        {{ form_errors_list(form) }}
+    <h3 class="heading-medium-large">
+        {{ ('page.subSectionAssetComplete.' ~ asset.type) | trans({'%title%': titleLcFirst }, translationDomain) }}
+    </h3>
 
-        {% include 'AppBundle:Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
-           'form': form,
-        } %}
-        
-        
-        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-            transDomain: translationDomain,
-            section: 'asset',
-            showDelete: false
-        } %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
-        
-        {{ form_end(form) }}
-        
-    {% endblock %}
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts_balance" , {'reportId': report.id }),
-        'previousLabel': 'Balance accounts',
-        'nextLink': path("actions" , {'reportId': report.id }),
-        'nextLabel': 'Actions'
-        } %}
-    {% endblock %}
-{% endembed %}
+    {{ form_errors_list(form) }}
+
+    {% include 'AppBundle:Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
+       'form': form,
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'asset',
+        showDelete: false
+    } %}
+
+    {{ form_end(form) }}
+{% endblock %}

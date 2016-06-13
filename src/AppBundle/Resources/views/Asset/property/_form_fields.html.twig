@@ -1,7 +1,7 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-<div class="form-section">
+{#<div class="form-section">#}
     {{ form_input(form.address, 'form.property.address') }}
 
     {{ form_input(form.address2, 'form.property.address2', {
@@ -11,13 +11,13 @@
     {{ form_input(form.county, 'form.property.county') }}
 
     {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control__postcode' }) }}
-</div>
+{#</div>#}
 
-<div class="form-section">
+{#<div class="form-section">#}
     {{ form_input(form.occupants, 'form.property.occupants') }}
-</div>
+{#</div>#}
 
-<div class="form-section">
+{#<div class="form-section">#}
     {{ form_checkbox_group(form.owned, 'form.property.owned', {
         'labelParameters': {'%client%': report.client.firstname},               
         'fieldSetClass' : 'inline owned_radio',
@@ -33,9 +33,9 @@
              'labelParameters': {'%client%': report.client.firstname},
         }) }}
     </div>
-</div>
+{#</div>#}
 
-<div class="form-section">        
+{#<div class="form-section">        #}
 {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
     'fieldSetClass' : 'inline',
     'items': [
@@ -43,16 +43,16 @@
         {'labelClass': 'block-label', 'elementClass': '' }
     ]
 }) }}
-</div>
+{#</div>#}
 
-<div class="form-section">
+{#<div class="form-section">#}
     {{ form_input(form.value, 'form.property.value', {
              'inputPrefix' : '£',
              'inputClass' : 'form-control__number'
    } ) }}
-</div>
+{#</div>#}
 
-<div class="form-section">
+{#<div class="form-section">#}
     {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
         'fieldSetClass' : 'inline has_mortgage_radio',
         'items': [
@@ -66,9 +66,9 @@
             'inputClass' : 'form-control__number'
         }) }}
     </div>
-</div>
+{#</div>#}
 
-<div class="form-section">        
+{#<div class="form-section">        #}
     {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
         'fieldSetClass' : 'inline',
         'items': [
@@ -76,9 +76,9 @@
             {'labelClass': 'block-label', 'elementClass': '' }
         ]
     }) }}
-</div>
+{#</div>#}
 
-<div class="form-section">    
+{#<div class="form-section">    #}
     {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
         'fieldSetClass' : 'inline is_rented_out_radio',
         'items': [
@@ -97,7 +97,7 @@
             'inputClass' : 'form-control__number'
         }) }}
     </div>
-</div>
+{#</div>#}
 
  <script type="text/javascript">
     $(document).ready(function() {

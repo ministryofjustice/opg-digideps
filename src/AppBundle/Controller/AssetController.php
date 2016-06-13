@@ -100,6 +100,7 @@ class AssetController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'asset' => $asset,
+            'titleLcFirst' => lcfirst($title)
         ];
     }
 

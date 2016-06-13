@@ -229,6 +229,15 @@ class AssetProperty extends Asset
         return $this;
     }
 
+    /**
+     * Get address.
+     */
+    public function getAddressValidLines()
+    {
+        return array_filter([$this->address, $this->address2, $this->county, $this->postcode]);
+    }
+
+
     public function getOccupants()
     {
         return $this->occupants;
@@ -356,5 +365,15 @@ class AssetProperty extends Asset
     public function getType()
     {
         return 'property';
+    }
+
+    public function getListTemplateName()
+    {
+        return 'property';
+    }
+
+    public function getOrderIndex()
+    {
+        return strtolower($this->getAddress() . '' .$this->getAddress2());
     }
 }
