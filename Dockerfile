@@ -11,6 +11,7 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 RUN  gem install sass
 
 # build app dependencies
+RUN  composer self-update
 COPY composer.json /app/
 COPY composer.lock /app/
 WORKDIR /app
@@ -26,7 +27,6 @@ USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
 RUN  composer dump-autoload --optimize
-RUN sass --load-path /app/vendor/alphagov/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/Css/formatted-report.html.twig
 
 # cleanup
 RUN  rm /app/app/config/parameters.yml

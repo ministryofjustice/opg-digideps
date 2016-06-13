@@ -11,35 +11,8 @@ parameters:
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
-    smtp_default_hostname: {{ getv "/smtp/default/hostname" }}
-    smtp_default_port: {{ getv "/smtp/default/port" }}
-    smtp_default_user: {{ getv "/smtp/default/user" }}
-    smtp_default_password: {{ getv "/smtp/default/password" }}
-    smtp_secure_hostname: {{ getv "/smtp/secure/hostname" }}
-    smtp_secure_port: {{ getv "/smtp/secure/port" }}
     anonymous: {{ getv "/security/anonymous" }}
-    email_mock_address: {{ getv "/email/mock/address" }}
-    email_mock_path: {{ getv "/email/mock/path" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
-    email_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: -
-    email_report_submit:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: {{ getv "/email/report/to" }}
-    email_feedback_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: {{ getv "/email/feedback/to" }}
-    email:
-      base_url:
-        frontend: {{ getv "/url/frontend" }}
-        admin: {{ getv "/url/admin" }}
-      routes:
-        user_activate: /user/activate/{token}
-        password_reset: /user/password-reset/{token}
-        homepage: /
-        report_overview: /report/{reportId}/overview
-        client_home: /client/show
     
 {{ if lsdir "/fixtures" }}
     fixtures:

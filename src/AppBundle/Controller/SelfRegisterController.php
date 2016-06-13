@@ -44,7 +44,7 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
-        return ['id' => $user->getId()];
+        return $user;
     }
 
     /*

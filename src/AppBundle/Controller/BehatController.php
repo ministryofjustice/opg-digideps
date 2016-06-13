@@ -21,27 +21,6 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/email")
-     * @Method({"GET"})
-     */
-    public function emailAction()
-    {
-        $this->securityChecks();
-
-        $mailPath = $this->getBehatMailFilePath();
-
-        if (!file_exists($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath not existing.");
-        }
-
-        if (!is_readable($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath unreadable.");
-        }
-
-        return file_get_contents($mailPath);
-    }
-
-    /**
      * @Route("/report/{reportId}")
      * @Method({"PUT"})
      */
@@ -130,47 +109,4 @@ class BehatController extends RestController
         return 'done';
     }
 
-    /**
-     * @Route("/email")
-     * @Method({"DELETE"})
-     */
-    public function emailResetAction()
-    {
-        $this->securityChecks();
-
-        $mailPath = $this->getBehatMailFilePath();
-
-        file_put_contents($mailPath, '');
-
-        return 'Email reset successfully';
-    }
-
-    /**
-     * @Route("/behat-data")
-     * @Method({"DELETE"})
-     */
-//    public function deleteBehatDataAction()    {
-//        $em = $this->getEntityManager();
-//        
-//        foreach ($this->getRepository('User')->findAll() as $user) {  /* @var $user User */
-//            if (preg_match('/^behat-/', $user->getEmail())) {
-//                foreach ($user->getClients() as $client) {
-//                    foreach ($client->getReports() as $report) {
-//                       $em->remove($report);
-//                    }
-//                    $em->remove($client);
-//                }
-//                $em->remove($user);
-//            }
-//        }
-//        
-//        return "User deleted";
-//    }
-
-    private function getBehatMailFilePath()
-    {
-        $this->securityChecks();
-
-        return $this->container->getParameter('email_mock_path');
-    }
 }

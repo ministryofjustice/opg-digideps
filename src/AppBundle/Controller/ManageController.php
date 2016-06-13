@@ -17,13 +17,10 @@ class ManageController extends RestController
     public function availabilityAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
-        list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
-        list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
-        list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
 
         $data = [
-            'healthy' => $dbHealthy && $smtpDefaultHealthy && $smtpSecureHealthy && $wkHtmlToPdfInfoHealthy,
-            'errors' => implode("\n", array_filter([$dbError, $smtpDefaultError, $smtpSecureError, $wkHtmlToPdfInfoError])),
+            'healthy' => $dbHealthy,
+            'errors' => implode("\n", array_filter([$dbError])),
         ];
 
         return $data;
@@ -64,54 +61,4 @@ class ManageController extends RestController
         }
     }
 
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function smtpDefaultInfo()
-    {
-        try {
-            $transport = $this->container->get('mailer.transport.smtp.default'); /* @var $transport \Swift_SmtpTransport */
-            $transport->start();
-            $transport->stop();
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'SMTP default Error: '.$e->getMessage()];
-        }
-    }
-
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function smtpSecureInfo()
-    {
-        try {
-            $transport = $this->container->get('mailer.transport.smtp.secure'); /* @var $transport \Swift_SmtpTransport */
-            $transport->start();
-            $transport->stop();
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'SMTP Secure Error: '.$e->getMessage()];
-        }
-    }
-
-    /**
-     * @return array [boolean healthy, error string]
-     */
-    private function wkHtmlToPdfInfo()
-    {
-        $this->container->get('wkhtmltopdf')->isAlive();
-
-        try {
-            $ret = $this->container->get('wkhtmltopdf')->isAlive();
-            if (!$ret) {
-                throw new \RuntimeException('service down or created an invalid PDF');
-            }
-
-            return [true, ''];
-        } catch (\Exception $e) {
-            return [false, 'wkhtmltopdf HTTP Error: '.$e->getMessage()];
-        }
-    }
 }
