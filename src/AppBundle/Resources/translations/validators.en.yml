@@ -107,10 +107,8 @@ contact:
         minMessage: The name must be at least {{ limit }} letters
         maxMessage: The name can't be longer than {{ limit }} letters
     address:
-        notBlank: Enter the contact's address
         maxMessage: The address can't be longer than {{ limit }} letters
     postcode:
-        notBlank: Enter the contact's postcode
         maxMessage: The postcode can't be longer than {{ limit }} characters
     relationship:
         notBlank: Enter the contact's relationship to the client
