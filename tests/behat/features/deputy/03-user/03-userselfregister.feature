@@ -4,6 +4,7 @@ Feature: User Self Registration
     Scenario: A user can enter their self registration information
         Given I load the application status from "init" 
         And I truncate the users from CASREC:
+        And emails are sent from "deputy" area
         And I reset the email log
         #
         # Add the user and expect failure (not matching in CASREC)
@@ -99,6 +100,7 @@ Feature: User Self Registration
     @deputy
     Scenario: A user can self register and activate
         Given I load the application status from "init"
+        And emails are sent from "deputy" area
         And I reset the email log
         And I add the following users to CASREC:
             | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode |

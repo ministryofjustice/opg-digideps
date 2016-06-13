@@ -17,7 +17,7 @@ class MentalCapacity
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"MentalCapacity"})
+     * @JMS\Groups({"mental-capacity"})
      *
      * @var int
      */
@@ -25,14 +25,14 @@ class MentalCapacity
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"MentalCapacity"})
+     * @JMS\Groups({"mental-capacity"})
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChanged.notBlank", groups={"capacity"})
      */
     private $hasCapacityChanged;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"MentalCapacity"})
+     * @JMS\Groups({"mental-capacity"})
      * 
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
      */

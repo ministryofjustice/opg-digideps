@@ -6,8 +6,8 @@
       {% if service.healthy %}
         OK
       {% else %}
-        <span style="color: #FF0000">{{ service.errors | nl2br }}</span>
+        <span style="color: #FF0000">{{ service.name }} : {{ service.errors | nl2br }}</span>
       {% endif %}
     </li>
-  {% endfor %}   
+  {% endfor %} 
 </ul>

@@ -35,8 +35,8 @@ class MentalCapacityController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->get('restClient')->put('report/'.$reportId.'/mental-capacity', $data, [
-                'deserialise_group' => 'MentalCapacity',
+            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, [
+                'deserialise_group' => 'mental-capacity',
             ]);
 
             return $this->redirect($this->generateUrl('mental_capacity', ['reportId' => $reportId]).'#pageBody');

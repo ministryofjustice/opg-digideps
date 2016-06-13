@@ -22,9 +22,11 @@ agree:
   label: "I agree to this statement"
 agreedBehalfDeputy:
   label: "Are you agreeing on behalf of all deputies?"
+  only_deputy: "I am the only deputy"
+  more_deputies_behalf: "There is more than one deputy, and I’m signing on everyone’s behalf"
+  more_deputies_not_behalf: "There is more than one deputy, but I’m not signing on everyone’s behalf"
 agreedBehalfDeputyExplanation:
   label: "Tell us why." 
-  
 save:
   label: "Submit report"
 status: Status

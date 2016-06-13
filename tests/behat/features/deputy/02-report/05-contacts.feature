@@ -13,8 +13,6 @@ Feature: deputy / report / contacts
             | contact_contactName |
             | contact_relationship |
             | contact_explanation |
-            | contact_address |
-            | contact_postcode |
         # right values
         Then the "contact_explanation" field is expandable
         And I add the following contacts:

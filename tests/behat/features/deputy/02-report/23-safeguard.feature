@@ -2,7 +2,8 @@ Feature: Safeguarding Data entry
 
     @deputy
     Scenario: data entry - Setup the test user
-      Given I load the application status from "init" 
+      Given emails are sent from "admin" area
+      And I load the application status from "init" 
       And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
       When I create a new "Lay Deputy" user "Wilma" "Smith" with email "behat-safe-entry@publicguardian.gsi.gov.uk"
@@ -22,7 +23,6 @@ Feature: Safeguarding Data entry
       And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
-      And I reset the email log
       Then I save the application status into "safeentryuser"
 
     @deputy

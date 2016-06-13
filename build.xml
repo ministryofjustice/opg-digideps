@@ -7,12 +7,12 @@
         <include name="tests/**/*.php"/>
     </fileset>
 
-     <target name="phplint" description="Scan source for PHP syntax errors">
+     <target name="lint" description="Scan source for PHP syntax errors">
         <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
-        <exec command="php app/console twig:lint app/Resources/views" checkreturn="true" passthru="true"></exec>
-        <exec command="php app/console twig:lint src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
+        <exec command="php app/console lint:yaml app/config" checkreturn="true" passthru="true"></exec>
+        <exec command="php app/console lint:twig src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
     </target>
     
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
@@ -87,7 +87,7 @@
         <exec command="npm run build"></exec>
     </target>
 
-    <target name="check" depends="check-validation,phplint">
+    <target name="check" depends="check-validation,lint">
     </target>
 
     <target name="build" depends="cache-clear,composer-install,check,fixtures,build-assets">

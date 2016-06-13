@@ -37,11 +37,30 @@ class BehatController extends AbstractController
     public function getLastEmailAction()
     {
         $this->securityChecks();
-        $content = $this->get('restClient')->get('behat/email', 'array');
+        
+        $mailPath = $this->getBehatMailFilePath();
 
-        return new Response($content);
+        if (!file_exists($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath not existing.");
+        }
+
+        if (!is_readable($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath unreadable.");
+        }
+
+        echo file_get_contents($mailPath);die;
+        
+        return new Response(file_get_contents($mailPath));
     }
 
+    
+    private function getBehatMailFilePath()
+    {
+        $this->securityChecks();
+
+        return $this->container->getParameter('email_mock_path');
+    }
+    
     /**
      * @Route("/{secret}/email-reset")
      * @Method({"GET"})
@@ -49,10 +68,16 @@ class BehatController extends AbstractController
     public function resetAction()
     {
         $this->securityChecks();
-        $content = $this->get('restClient')->delete('behat/email');
+      
+        
+        $mailPath = $this->getBehatMailFilePath();
 
-        return new Response($content);
+        file_put_contents($mailPath, '');
+        
+
+        return new Response('Email reset successfully');
     }
+    
 
     /**
      * @Route("/{secret}/report/{reportId}/change-report-cot/{cotId}")
@@ -62,7 +87,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('restClient')->put('behat/report/'.$reportId, [
+        $this->getRestClient()->put('behat/report/'.$reportId, [
             'cotId' => $cotId,
         ]);
 
@@ -79,7 +104,7 @@ class BehatController extends AbstractController
 
         $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
 
-        $this->get('restClient')->put('behat/report/'.$reportId, [
+        $this->getRestClient()->put('behat/report/'.$reportId, [
             'submitted' => $submitted,
         ]);
 
@@ -94,7 +119,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('restClient')->put('behat/report/'.$reportId, [
+        $this->getRestClient()->put('behat/report/'.$reportId, [
             'end_date' => $dateYmd,
         ]);
 
@@ -109,7 +134,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('restClient')->delete('behat/users/behat-users');
+        $this->getRestClient()->delete('behat/users/behat-users');
 
         return new Response('done');
     }
@@ -134,7 +159,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $entities = $this->get('restClient')->get('behat/audit-log', 'AuditLogEntry[]');
+        $entities = $this->getRestClient()->get('behat/audit-log', 'AuditLogEntry[]');
 
         return ['entries' => $entities];
     }
@@ -157,7 +182,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('restClient')->put('behat/user/'.$email, [
+        $this->getRestClient()->put('behat/user/'.$email, [
             'token_date' => $date,
             'registration_token' => $token,
         ]);
@@ -173,7 +198,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $data = $this->get('restClient')->get('behat/check-app-params', 'array');
+        $data = $this->getRestClient()->get('behat/check-app-params', 'array');
 
         if ($data != 'valid') {
             throw new \RuntimeException('Invalid API params. Response: '.print_r($data, 1));

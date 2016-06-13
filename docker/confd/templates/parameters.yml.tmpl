@@ -5,7 +5,7 @@ parameters:
     api_base_url: {{ getv "/frontend/api/url" }}
     api_client_secret: {{ getv "/frontend/api/client/secret" }}
     non_admin_host: {{ getv "/frontend/nonadmin/host" }}
-    admin_host: http://digideps-admin.local
+    admin_host: {{ getv "/frontend/admin/host" }}
     env: {{ getv "/frontend/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -19,3 +19,21 @@ parameters:
     ga: {{ getv "/frontend/ga" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     behat_controller_enabled: {{ getv "/frontend/behat/controller/enabled" }}
+    email_mock_address: {{ getv "/frontend/email/mock/address" }}
+    email_mock_path: {{ getv "/frontend/email/mock/path" }}
+    email_send:
+        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
+        to_email: -
+    email_report_submit:
+        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
+        to_email: {{ getv "/frontend/email/report/to" }}
+    email_feedback_send:
+        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
+        to_email: {{ getv "/frontend/email/feedback/to" }}
+    # check if used after the refactor
+    smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" }}
+    smtp_default_port: {{ getv "/frontend/smtp/default/port" }}
+    smtp_default_user: {{ getv "/frontend/smtp/default/user" }}
+    smtp_default_password: {{ getv "/frontend/smtp/default/password" }}
+    smtp_secure_hostname: {{ getv "/frontend/smtp/secure/hostname" }}
+    smtp_secure_port: {{ getv "/frontend/smtp/secure/port" }}

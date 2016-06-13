@@ -35,8 +35,6 @@ class ClientController extends AbstractController
      */
     public function editAction()
     {
-        $restClient = $this->get('restClient');
-
         $clients = $this->getUser()->getClients();
         $request = $this->getRequest();
 
@@ -53,7 +51,7 @@ class ClientController extends AbstractController
         if ($form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
-            $restClient->put('client/upsert', $clientUpdated, [
+            $this->getRestClient()->put('client/upsert', $clientUpdated, [
                  'deserialise_group' => 'edit',
             ]);
 
@@ -74,7 +72,6 @@ class ClientController extends AbstractController
     public function addAction()
     {
         $request = $this->getRequest();
-        $restClient = $this->get('restClient');
 
         $clients = $this->getUser()->getClients();
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
@@ -94,8 +91,8 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             $response = ($method === 'post')
-                      ? $restClient->post('client/upsert', $form->getData())
-                      : $restClient->put('client/upsert', $form->getData());
+                      ? $this->getRestClient()->post('client/upsert', $form->getData())
+                      : $this->getRestClient()->put('client/upsert', $form->getData());
 
             return $this->redirect($this->generateUrl('report_create', ['clientId' => $response['id']]));
         }

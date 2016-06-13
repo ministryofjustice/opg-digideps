@@ -18,7 +18,7 @@ explanation:
     label: Reason for contact
     hint: ''
 address:
-    label: Address
+    label: Address (optional)
     hint: ''
 address2:
     label: ' '
@@ -27,7 +27,7 @@ county:
     label: ' '
     hint: ''
 postcode:
-    label: Postcode
+    label: Postcode (optional)
     hint: ''
 country:
     label: Country (optional)

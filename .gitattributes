@@ -1,6 +1,7 @@
 * text=auto
 
 *.sh text eol=lf
+docker/my_init.d/* text eol=lf
 *.php text eol=lf
 *.js text eol=lf
 *.feature text eol=lf
@@ -9,6 +10,9 @@
 *.scss text eol=lf
 *.scss text eol=lf
 *.yml text eol=lf
+*.twig text eol=lf
+*.twig.map text eol=lf
+
 
 *.png binary
 *.jpg binary
