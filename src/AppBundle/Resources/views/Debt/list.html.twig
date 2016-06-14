@@ -28,7 +28,7 @@
         <div class="section no-border-bottom form-horizontal">
             <div class="detail transactions detail-view">
                 {% for debt in form.debts %}
-                    <div class="transaction">
+                    <div class="transaction {{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
                         {{ form_row(debt.debtTypeId) }}
                         {{ form_input(debt.amount, 'amount', {
                             'inputPrefix' : '£',
@@ -76,6 +76,7 @@
                 GOVUK.formatCurrency(event.target);
             });
 
+            new GOVUK.ExpandingMoreDetails('.expand-more-details');
         });
     </script>
 
