@@ -57,7 +57,7 @@ class UserController extends AbstractController
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
             $formType = new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset'),
+                'passwordMismatchMessage' => $this->get('translator')->trans('form.password.validation.passwordMismatch', [], 'password-reset'),
             ]);
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
