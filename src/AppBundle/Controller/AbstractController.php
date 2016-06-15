@@ -20,25 +20,14 @@ class AbstractController extends Controller
     /**
      * @return array $choices
      */
-    public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
+    protected function getAllowedCourtOrderTypeChoiceOptions()
     {
         $responseArray = $this->getRestClient()->get('court-order-type', 'array');
-
-        if (!empty($filter)) {
-            foreach ($responseArray['court_order_types'] as $value) {
-                if (in_array($value['id'], $filter)) {
-                    $choices[$value['id']] = $value['name'];
-                }
-            }
-        } else {
             foreach ($responseArray['court_order_types'] as $value) {
                 $choices[$value['id']] = $value['name'];
             }
-        }
 
-        if ($sort != null) {
-            $sort($choices);
-        }
+        arsort($choices);
 
         return $choices;
     }

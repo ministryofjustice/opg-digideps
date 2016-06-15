@@ -89,6 +89,9 @@ report:
         notBlank: You must select one option
     agreedBehalfDeputyExplanation:
         notBlank: You must explain why you are not signing on everyone's behalf
+    hasDebts:
+        notBlank: You must select one option
+        mustHaveAtLeastOneDebt: You must enter at least one debt
 
 report-declaration:
     agree:
@@ -236,6 +239,13 @@ asset:
             notBlank: Enter the value of this property
             type: Enter the value of this property in numbers
             outOfRange: The value of the property must be less than £100,000,000,000
+debt:
+    amount:
+      notNumeric: Enter a valid value (e.g. 1,040.55)
+      minMessage: The amount must be positive
+      maxMessage: The amount must be less than £100,000,000,000
+    moreDetails:
+      notEmpty: You must give us more information about this amount
 
 
 # validation messages for common elements (e.g. phone fields)

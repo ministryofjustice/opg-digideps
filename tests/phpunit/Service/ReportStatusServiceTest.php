@@ -10,27 +10,29 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param array $reportMethods
-     * 
+     *
      * @return ReportStatusService
      */
-    private function getObjectWithReportMocks(array $reportMethods)
+    private function getReportMocked(array $reportMethods)
     {
         $report = m::mock(Report::class, $reportMethods + [
-            'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
-            'getAccounts' => [],
-            'getAssets' => [],
-            'getDecisions' => [],
-            'getNoAssetToAdd' => null,
-            'getContacts' => null,
-            'getReasonForNoContacts' => null,
-            'getReasonForNoDecisions' => null,
-            'getSafeguarding' => null,
-            'getAction' => null,
-            'getAction' => null,
-            'getMentalCapacity' => null,
-            'hasMoneyIn' => false,
-            'hasMoneyOut' => false,
-        ]);
+                'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
+                'getAccounts' => [],
+                'getAssets' => [],
+                'getDecisions' => [],
+                'getNoAssetToAdd' => null,
+                'getContacts' => null,
+                'getReasonForNoContacts' => null,
+                'getReasonForNoDecisions' => null,
+                'getSafeguarding' => null,
+                'getAction' => null,
+                'getAction' => null,
+                'getMentalCapacity' => null,
+                'hasMoneyIn' => false,
+                'hasMoneyOut' => false,
+                'getHasDebts' => null,
+                'getDebts' => []
+            ]);
 
         return new Rss($report);
     }
@@ -58,7 +60,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function decisions($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getDecisionsState());
     }
 
@@ -80,7 +82,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function contacts($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getContactsState());
     }
 
@@ -109,7 +111,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function safeguarding($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getSafeguardingState());
     }
 
@@ -133,13 +135,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $transfer = m::mock(\AppBundle\Entity\MoneyTransfer::class);
 
         $partial1 = [
-                'getAccounts' => [$accountOk, $accountOk],
-                'hasMoneyIn' => true,
-                'hasMoneyOut' => true,
-                'getBalanceMismatchExplanation' => null,
-                'isTotalsMatch' => false,
-                'getNoTransfersToAdd' => null,
-                'getMoneyTransfers' => [],
+            'getAccounts' => [$accountOk, $accountOk],
+            'hasMoneyIn' => true,
+            'hasMoneyOut' => true,
+            'getBalanceMismatchExplanation' => null,
+            'isTotalsMatch' => false,
+            'getNoTransfersToAdd' => null,
+            'getMoneyTransfers' => [],
         ];
 
         return [
@@ -169,7 +171,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function account($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getAccountsState());
     }
 
@@ -179,9 +181,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             [[], Rss::STATE_NOT_STARTED],
+            // missing sth
+            [['getAssets' => [$asset], 'getHasDebts' => null], Rss::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'yes'], Rss::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'no'], Rss::STATE_INCOMPLETE],
             // done
-            [['getAssets' => [$asset]], Rss::STATE_DONE],
-            [['getNoAssetToAdd' => true], Rss::STATE_DONE],
+            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], Rss::STATE_DONE],
+            [['getAssets' => [$asset], 'getHasDebts' => 'no'], Rss::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], Rss::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], Rss::STATE_DONE],
         ];
     }
 
@@ -191,7 +199,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function assets($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getAssetsState());
     }
 
@@ -212,7 +220,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function actions($mocks, $state)
     {
-        $object = $this->getObjectWithReportMocks($mocks);
+        $object = $this->getReportMocked($mocks);
         $this->assertEquals($state, $object->getActionsState());
     }
 
@@ -221,7 +229,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsEmpty()
     {
-        $object = $this->getObjectWithReportMocks([]);
+        $object = $this->getReportMocked([]);
         $expected = [
             'decisions' => 'not-started',
             'contacts' => 'not-started',
@@ -238,12 +246,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function getRemainingSectionsPartialProvider()
     {
         return [
-             [array_pop($this->decisionsProvider())[0], 'decisions'],
-             [array_pop($this->contactsProvider())[0], 'contacts'],
-             [array_pop($this->safeguardingProvider())[0], 'safeguarding'],
-             [array_pop($this->accountProvider())[0], 'accounts'],
-             [array_pop($this->assetsProvider())[0], 'assets'],
-             [array_pop($this->actionsProvider())[0], 'actions'],
+            // create using last DONE section of each provider
+            [array_pop($this->decisionsProvider())[0], 'decisions'],
+            [array_pop($this->contactsProvider())[0], 'contacts'],
+            [array_pop($this->safeguardingProvider())[0], 'safeguarding'],
+            [array_pop($this->accountProvider())[0], 'accounts'],
+            [array_pop($this->assetsProvider())[0], 'assets'],
+            [array_pop($this->actionsProvider())[0], 'actions'],
         ];
     }
 
@@ -253,7 +262,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsPartial($provider, $keyRemoved)
     {
-        $object = $this->getObjectWithReportMocks($provider);
+        $object = $this->getReportMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());
     }
@@ -263,13 +272,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsNone()
     {
-        $object = $this->getObjectWithReportMocks(
-             array_pop($this->decisionsProvider())[0]
-             + array_pop($this->contactsProvider())[0]
-             + array_pop($this->safeguardingProvider())[0]
-             + array_pop($this->accountProvider())[0]
-             + array_pop($this->assetsProvider())[0]
-             + array_pop($this->actionsProvider())[0]
+        $object = $this->getReportMocked(
+            array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->safeguardingProvider())[0]
+            + array_pop($this->accountProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->actionsProvider())[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());

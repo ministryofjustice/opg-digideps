@@ -43,8 +43,7 @@ class ClientController extends AbstractController
         $report = new EntityDir\Report();
         $report->setClient($client);
 
-        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
-        $form = $this->createForm(new FormDir\ClientType($allowedCot), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
+        $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
 
         // edit client form
@@ -85,8 +84,8 @@ class ClientController extends AbstractController
             $client->addUser($this->getUser()->getId());
         }
 
-        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
-        $form = $this->createForm(new FormDir\ClientType($allowedCot), $client);
+        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions();
+        $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
