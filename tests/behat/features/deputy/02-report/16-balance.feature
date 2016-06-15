@@ -1,4 +1,4 @@
-Feature: deputy / report / account transactions
+Feature: deputy / report / balance
 
     @deputy
     Scenario: balance
@@ -17,9 +17,6 @@ Feature: deputy / report / account transactions
         And I press "transactions_save"
         And I follow "account-balance"
         Then I should see the "balance-good" region
-        # assert report now submittable
-        When I click on "reports, report-2016-open"
-        Then the report should be submittable
         
        
         

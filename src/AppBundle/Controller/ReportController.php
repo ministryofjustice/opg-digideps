@@ -17,10 +17,20 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
-        'basic',  'accounts', 'client', 'balance',
-        'transactions', 'transactionsIn', 'transactionsOut',
-        'asset', 'contacts', 'decisions', 'action', 'transfers',
-        'mental-capacity', //update other groups to this format
+        'accounts',
+        'action',
+        'asset',
+        'balance',
+        'basic',
+        'client',
+        'contacts',
+        'debts',
+        'decisions',
+        'mental-capacity',
+        'transfers',
+        'transactions',
+        'transactionsIn',
+        'transactionsOut',
     ];
 
     /**

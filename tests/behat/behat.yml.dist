@@ -20,47 +20,12 @@ default:
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
 
-        textarea:
+        components:
             description: Tests related to textareas
             paths:    [ %paths.base%/features/components ]
             mink_session: default
-            filters:
-                tags: "@textarea"
             contexts: [ DigidepsBehat\FeatureContext ]
-
-        wip:
-            description: Tests related to the safeguarding section
-            paths:    [ %paths.base%/features ]
-            filters:
-                tags: "@wip"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-        another:
-            description: Tests related to context sensitive add buttons
-            paths:    [ %paths.base%/features ]
-            filters:
-                tags: "@another&&~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-        javascript:
-            description: Tests related to user feedback
-            paths:    [ %paths.base%/features ]
-            mink_session: default
-            filters:
-                tags: "@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
                 
-        browser:
-            description: End to end journey for web browser tests
-            paths:    [ %paths.base%/features/browser ]
-            filters:
-                tags: "@browser"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
-
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
