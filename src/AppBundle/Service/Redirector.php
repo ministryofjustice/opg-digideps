@@ -130,9 +130,9 @@ class Redirector
             return $this->router->generate('client_add');
         }
 
-        if (!$user->hasReports()) {
-            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
-        }
+//        if (!$user->hasReports()) {
+//            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
+//        }
 
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
