@@ -138,7 +138,7 @@ class Redirector
             return $lastUsedUri;
         }
 
-        return $this->router->generate('reportsOdr');
+        return $this->router->generate('index-odr');
 
 //        $reportIds = $clients[0]->getReports();
 //

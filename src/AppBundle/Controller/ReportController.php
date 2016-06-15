@@ -24,7 +24,7 @@ class ReportController extends AbstractController
     ];
 
     /**
-     * @Route("/reports", name="reportsOdr")
+     * @Route("/reports", name="index-odr")
      * @Template()
      */
     public function indexOdrAction()

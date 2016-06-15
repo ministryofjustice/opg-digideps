@@ -1,5 +1,5 @@
 parameters:
   twig_components_extension:
     progress_bars:
-      registration: [1,2,3,4]
+      registration: [1,2,3]
       registration_admin: [1,2]
