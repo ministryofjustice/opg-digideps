@@ -16,5 +16,10 @@ class DoctrineListener
         if ($entity instanceof Report && !$entity->getId()) {
             $entityManager->getRepository('AppBundle\Entity\Report')->addTransactionsToReportIfMissing($entity);
         }
+
+        // add empty debts to report at creation time
+        if ($entity instanceof Report && !$entity->getId()) {
+            $entityManager->getRepository('AppBundle\Entity\Report')->addDebtsToReportIfMissing($entity);
+        }
     }
 }

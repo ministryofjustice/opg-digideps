@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,19 +53,20 @@ class ReportController extends RestController
     /**
      * @Route("/report/{id}")
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function getById(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['basic'];
         $this->setJmsSerialiserGroups($groups);
 
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
 
-        $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
+        $report = $this->findEntityBy('Report', $id);
+        /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $report;
@@ -78,7 +80,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $currentReport = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $currentReport EntityDir\Report */
+        $currentReport = $this->findEntityBy('Report', $id, 'Report not found');
+        /* @var $currentReport EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
         $user = $this->getUser();
         $client = $currentReport->getClient();
@@ -118,8 +121,6 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-    
-
 
     /**
      * @Route("/report/{id}")
@@ -131,17 +132,41 @@ class ReportController extends RestController
 
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
 
-        $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
+        $report = $this->findEntityBy('Report', $id, 'Report not found');
+        /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
+
+        if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
+            $report->setHasDebts($data['has_debts']);
+            // null debts
+            foreach($report->getDebts() as $debt) {
+                $debt->setAmount(null);
+                $debt->setMoreDetails(null);
+                $this->getEntityManager()->flush($debt);
+            }
+            // set debts as per "debts" key
+            foreach ($data['debts'] as $row) {
+                $debt = $report->getDebtByTypeId($row['debt_type_id']);
+                if (!$debt instanceof EntityDir\Debt) {
+                    continue; //not clear when that might happen. kept similar to transaction below
+                }
+                $debt->setAmount($row['amount']);
+                $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
+                $this->getEntityManager()->flush($debt);
+                $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            }
+        }
+
 
         foreach (['transactions_in', 'transactions_out'] as $tk) {
             if (!isset($data[$tk])) {
                 continue;
             }
             foreach ($data[$tk] as $transactionRow) {
-                $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
+                $t = $report->getTransactionByTypeId($transactionRow['id']);
+                /* @var $t EntityDir\Transaction */
                 if (!$t instanceof EntityDir\Transaction) {
                     continue;
                 }
@@ -151,7 +176,7 @@ class ReportController extends RestController
                 }
                 $this->getEntityManager()->flush($t);
             }
-            $this->setJmsSerialiserGroups(['transactions']);
+            $this->setJmsSerialiserGroups(['transactions']); //returns saved data (AJAX operations)
         }
 
         if (array_key_exists('cot_id', $data)) {
@@ -168,11 +193,11 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('reviewed', $data)) {
-            $report->setReviewed((boolean) $data['reviewed']);
+            $report->setReviewed((boolean)$data['reviewed']);
         }
 
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean) $data['report_seen']);
+            $report->setReportSeen((boolean)$data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {

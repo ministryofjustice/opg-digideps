@@ -130,6 +130,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('court_order_type_id', $data);
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
+        $this->assertArrayNotHasKey('debts', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
         $this->assertEquals(self::$client1->getId(), $data['client']['id']);
         $this->assertArrayHasKey('start_date', $data);
@@ -155,6 +156,13 @@ class ReportControllerTest extends AbstractTestController
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
         $this->assertArrayHasKey('assets', $data);
+
+        // assert debts
+        $data = $this->assertJsonRequest('GET', $url.'?groups=debts', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertArrayHasKey('debts', $data);
     }
 
     public function testSubmitAuth()
@@ -238,7 +246,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    public function testUpdate()
+    public function testUpdateAndTransactions()
     {
         $reportId = self::$report1->getId();
         $url = '/report/'.$reportId;
@@ -291,5 +299,72 @@ class ReportControllerTest extends AbstractTestController
 
         $t = array_shift(array_filter($data['transactions_out'], function ($e) { return $e['id'] === 'anything-else-paid-out'; }));
         $this->assertEquals([],  $t['amounts']);
+    }
+
+    public function testDebts()
+    {
+        $reportId = self::$report1->getId();
+        $url = '/report/'.$reportId;
+
+        // "yes"
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'has_debts' => 'yes',
+                'debts' => [
+                    ['debt_type_id' => 'care-fees', 'amount'=>1, 'more_details'=> 'should not be saved'],
+                    ['debt_type_id' => 'credit-cards', 'amount'=>2, 'more_details'=> ''],
+                    ['debt_type_id' => 'loans', 'amount'=>3, 'more_details'=> ''],
+                    ['debt_type_id' => 'other', 'amount'=>4, 'more_details'=> 'md'],
+                ]
+            ],
+        ]);
+
+        $q = http_build_query(['groups' => ['debts']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('care-fees', $debt['debt_type_id']);
+        $this->assertEquals(1, $debt['amount']);
+        $this->assertEquals('', $debt['more_details']);
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('credit-cards', $debt['debt_type_id']);
+        $this->assertEquals(2.00, $debt['amount']);
+        $this->assertEquals('', $debt['more_details']);
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('loans', $debt['debt_type_id']);
+        $this->assertEquals(3.00, $debt['amount']);
+        $this->assertEquals('', $debt['more_details']);
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('other', $debt['debt_type_id']);
+        $this->assertEquals(4.00, $debt['amount']);
+        $this->assertEquals('md', $debt['more_details']);
+        $this->assertEquals(10, $data['debts_total_amount']);
+        $this->assertEquals('yes', $data['has_debts']);
+
+        // "no"
+        self::fixtures()->flush()->clear();
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'has_debts' => 'no',
+                'debts' => []
+            ],
+        ]);
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $debt = array_shift($data['debts']);
+        $this->assertEquals('care-fees', $debt['debt_type_id']);
+        $this->assertEquals(0, $debt['amount']);
+        $this->assertEquals('', $debt['more_details']);
+        $this->assertEquals(0, $data['debts_total_amount']);
+        $this->assertEquals('no', $data['has_debts']);
     }
 }
