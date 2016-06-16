@@ -7,6 +7,8 @@ Feature: deputy / report / submit
         And I click on "reports"
         Then I should not see the "download-2016-report" link
         When I click on "report-2016-open"    
+        And I save the page as "report-submit-overview-pre-add-further-info"
+        # if not found, it means that the report is not submittable
         And I follow "edit-report_add_further_info"
         #And I fill in "report_add_info_furtherInformation" with "test"
         Then I press "report_add_info_saveAndContinue"

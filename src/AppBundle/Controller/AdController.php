@@ -29,8 +29,6 @@ class AdController extends AbstractController
      */
     public function registerAction(Request $request)
     {
-        // Court order number ?
-        // q1, q2, q3
         return [
         ];
     }

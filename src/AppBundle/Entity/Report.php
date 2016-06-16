@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -10,9 +11,12 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @JMS\XmlRoot("report")
  * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
+ * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
 class Report
 {
+
+
     /**
      * 
      */
@@ -138,6 +142,7 @@ class Report
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"reasonForNoContacts"})
      *
      * @var string
      */
@@ -145,6 +150,7 @@ class Report
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"reasonForNoDecisions"})
      *
      * @var string
      */
@@ -152,6 +158,7 @@ class Report
 
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"noAssetsToAdd"})
      *
      * @var bool
      */
@@ -294,6 +301,32 @@ class Report
      * @var string
      */
     private $balanceMismatchExplanation;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Debt>")
+     * @JMS\Groups({"debts"})
+     *
+     * @var ArrayCollection
+     */
+    private $debts;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
+     *
+     * @var string
+     */
+    private $hasDebts;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @var decimal
+     */
+    private $debtsTotalAmount;
 
     /**
      * @return int $id
@@ -998,6 +1031,8 @@ class Report
         $this->transactionsOut = $transactionsOut;
     }
 
+
+
     /**
      * @param Transaction[] $transactions
      *
@@ -1228,4 +1263,77 @@ class Report
 
         return false;
     }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebts()
+    {
+        return $this->debts;
+    }
+
+
+    /**
+     * @param Debt[] $debts
+     */
+    public function setDebts($debts)
+    {
+        $this->debts = $debts;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getDebtsTotalAmount()
+    {
+        return $this->debtsTotalAmount;
+    }
+
+    /**
+     * @param decimal $debtsTotalAmount
+     */
+    public function setDebtsTotalAmount($debtsTotalAmount)
+    {
+        $this->debtsTotalAmount = $debtsTotalAmount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasDebts()
+    {
+        return $this->hasDebts;
+    }
+
+    /**
+     * @param string $hasDebts
+     */
+    public function setHasDebts($hasDebts)
+    {
+        $this->hasDebts = $hasDebts;
+    }
+
+    public function hasAtLeastOneDebtsWithValidAmount()
+    {
+        foreach($this->debts as $debt) {
+            if ($debt->getAmount()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function debtsValid(ExecutionContextInterface $context)
+    {
+        if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
+            $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
+        }
+
+
+    }
+
 }

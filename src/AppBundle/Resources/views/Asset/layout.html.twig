@@ -10,6 +10,7 @@
 {% block leftcontent %}
     {% set route = app.request.attributes.get('_route') %}
     <nav id="account-sub-nav">
-        <a href="{{ path('assets', {'reportId': report.id}) }}" class="{{ ('asset' in route) ? 'active':'' }} behat-link-decisions">{{ 'navLink' | trans({}, 'report-assets') }}</a>
+        <a href="{{ path('assets', {'reportId': report.id}) }}" class="{{ ('asset' in route) ? 'active':'' }} behat-link-assets-tab">{{ 'navLink' | trans({}, 'report-assets') }}</a>
+        <a href="{{ path('debts', {'reportId': report.id}) }}" class="{{ ('debts' in route) ? 'active':'' }} behat-link-debts-tab">{{ 'navLink' | trans({}, 'report-debts') }}</a>
     </nav>
 {% endblock %}
