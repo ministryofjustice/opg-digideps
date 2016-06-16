@@ -20,5 +20,6 @@ form:
       hint: ""
 save:
   label: Save
+
 navLink: Debts
 

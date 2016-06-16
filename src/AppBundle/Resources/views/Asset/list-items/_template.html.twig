@@ -1,0 +1,17 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+<div class="descriptive-list-item">
+    <div class="column first">
+        {% block firstColumn %}
+        {% endblock %}
+    </div>
+    <div class="column second">
+        {% block secondColumn %}
+        {% endblock %}
+    </div>
+    <div class="column third" >
+        <a href="{{ url('delete_asset', { 'reportId': report.id, 'id': asset.id }) }}" class=" " >Remove</a><br/>
+        <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="behat-link-asset-{{ asset.behatIdentifier | behat_namify }}" >Edit</a>
+    </div>
+</div>

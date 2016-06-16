@@ -126,4 +126,25 @@ abstract class Asset
     {
         return $this->valuationDate;
     }
+
+    /**
+     * Get name of the template (Asset/list-items/_<template>.html.twig) used to render the partial in the list view
+     *
+     * @return string
+     */
+    abstract public function getListTemplateName();
+
+    /**
+     * Return a sort of "description" used to order by in the list view
+     * @return string
+     */
+    abstract public function getOrderIndex();
+
+    /**
+     * Get an unique human readable ID in order to identify the item in the list based on its content.
+     * Needed by functional testing
+     *
+     * @return string
+     */
+    abstract public function getBehatIdentifier();
 }

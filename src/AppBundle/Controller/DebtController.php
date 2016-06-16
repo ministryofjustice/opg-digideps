@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
-use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -23,7 +22,7 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['debts', 'basic', 'client']);
+        $report = $this->getReport($reportId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
         if ($report->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
         }
