@@ -1,0 +1,92 @@
+{% set translationDomain = "odr-overview" %}
+{% trans_default_domain translationDomain %}
+
+<ul id="overview-sections" class="overview-sections">
+
+    <li id="finances-and-assets" class="overview-section">
+        <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+        {% include 'AppBundle:Odr:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'accounts',
+            report: report,
+            description: false,
+            state: reportStatus.decisionsState,
+            list: true
+        } %}
+        {% include 'AppBundle:Odr:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'assets',
+            report: report,
+            description: false,
+            state: reportStatus.decisionsState,
+            list: true
+        } %}
+    </li>
+
+    <li id="visists-and-actions" class="overview-section">
+        <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'safeguarding',
+            report: report,
+            info: true,
+            description: true,
+            state: reportStatus.safeguardingState,
+        } %}
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'actions',
+            report: report,
+            description: true,
+            state: reportStatus.actionsState,
+            list: true
+        } %}
+    </li>
+
+
+    <li id="report-submit-section" class="overview-section">
+        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+        {% if reportStatus.isReadyToSubmit and report.isDue %}
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'report_add_further_info',
+            report: report,
+            description: false,
+            state: "not-started",
+            status: "Not started"
+            } %}
+        {%  else %}
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'report_add_further_info',
+            report: report,
+            description: false,
+            state: "not-started",
+            status: "Not started",
+            disableedit: true
+            } %}
+        {%  endif %}
+    </li>
+
+</ul>
+
+{% if report.isDue == true and reportStatus.isReadyToSubmit == false %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'submitWhenReady',
+    iconClass: 'icon icon__notification',
+    id: 'cannot-submit-warning'
+    } %}
+{% endif %}
+
+
+{% if report.isDue == false %}
+    {% set endDate = report.getEndDate() | date(" d F Y")  %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'warningNotDue',
+    transOptions: {'%date%': endDate},
+    iconClass: 'icon icon__notification',
+    id: 'cannot-submit-warning'
+    } %}
+{% endif %}
