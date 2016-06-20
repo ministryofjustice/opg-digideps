@@ -20,6 +20,7 @@ class ReportController extends AbstractController
         'accounts',
         'action',
         'asset',
+        'debts',
         'balance',
         'basic',
         'client',
@@ -356,7 +357,7 @@ class ReportController extends AbstractController
      */
     public function pdfViewAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
         $pdfBinary = $this->getPdfBinaryContent($reportId);
 
         $response = new Response($pdfBinary);
