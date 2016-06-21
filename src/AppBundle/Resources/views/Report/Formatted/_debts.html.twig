@@ -30,10 +30,25 @@
                                 {% endif %}
                             </li>
                         {% endfor %}
+                        
                     </ul>
+                        
+                  
+                        
                 {% endif %}
             </div>
         </div>
+            
+        {% if report.hasDebts == 'yes' %}    
+        {# total value #}
+            <div class="box total">
+                <div class="labelvalue inline">
+                    <div class="label">Debts Total Value</div>
+                    <div class="value" id="assetsTotal">£{{ report.debtsTotalValue | money_format }}</div>
+                </div>
+            </div>   
+        {% endif %}
+            
     </div>
 </div>
 

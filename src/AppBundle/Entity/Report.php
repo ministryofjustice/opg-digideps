@@ -663,6 +663,22 @@ class Report
 
         return $ret;
     }
+    
+    
+    /**
+     * Get debts total value.
+     *
+     * @return float
+     */
+    public function getDebtsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getDebts() as $debt) {
+            $ret += $debt->getAmount();
+        }
+
+        return $ret;
+    }
 
     /**
      * Used in the list view
