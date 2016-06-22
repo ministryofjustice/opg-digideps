@@ -6,11 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Reports.
- *
- * @JMS\XmlRoot("odr_safeguarding")
  * @JMS\ExclusionPolicy("NONE")
- * @ORM\Table(name="safeguarding")
+ * @ORM\Table(name="odr_safeguarding")
  * @ORM\Entity
  */
 class Safeguarding
@@ -28,10 +25,10 @@ class Safeguarding
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="safeguarding")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="safeguarding")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
      */
-    private $report;
+    private $odr;
 
     /**
      * @var string
@@ -43,13 +40,6 @@ class Safeguarding
     private $doYouLiveWithClient;
 
     /**
-     * New textarea replacing deprecated values
-     * how_often_do_you_visit
-     * how_often_do_you_phone_or_video_call
-     * how_often_do_you_write_email_or_letter
-     * how_often_does_client_see_other_people
-     * anything_else_to_tell.
-     * 
      * @var string
      *
      * @JMS\Type("string")
@@ -113,36 +103,14 @@ class Safeguarding
         return $this->id;
     }
 
-    /**
-     * Set report.
-     *
-     * @param Report $report
-     *
-     * @return Contact
-     */
-    public function setReport(Report $report = null)
-    {
-        $this->report = $report;
 
-        return $this;
-    }
-
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
 
     /**
      * Set doYouLiveWithClient.
      *
      * @param string $doYouLiveWithClient
      *
-     * @return Report
+     * 
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
@@ -166,7 +134,7 @@ class Safeguarding
      *
      * @param string $doesClientReceivePaidCare
      *
-     * @return Report
+     * 
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
@@ -190,7 +158,7 @@ class Safeguarding
      *
      * @param string $whoIsDoingTheCaring
      *
-     * @return Report
+     * 
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
@@ -214,7 +182,7 @@ class Safeguarding
      *
      * @param string $doesClientHaveACarePlan
      *
-     * @return Report
+     * 
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {
@@ -238,7 +206,7 @@ class Safeguarding
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
      *
-     * @return Report
+     * 
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
     {
@@ -262,7 +230,7 @@ class Safeguarding
      *
      * @param string $howIsCareFunded
      *
-     * @return Report
+     * 
      */
     public function setHowIsCareFunded($howIsCareFunded)
     {
