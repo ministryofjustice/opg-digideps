@@ -66,12 +66,6 @@ class Fixtures
     {
         $odr = new EntityDir\Odr\Odr($client);
 
-        // start/end dates from today for 365 days
-        $today = new DateTime();
-        $odr->setStartDate($today);
-        $today->modify('+365 days');
-        $odr->setEndDate($today);
-
         foreach ($settersMap as $k => $v) {
             $odr->$k($v);
         }

@@ -18,7 +18,7 @@ class Odr
     /**
      * @var int
      *
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"odr", "odr_id"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -41,26 +41,6 @@ class Odr
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist"})
      **/
     private $visitsCare;
-
-    /**
-     * @var \Date
-     *
-     * @JMS\Groups({"odr"})
-     * @JMS\Accessor(getter="getStartDate")
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @ORM\Column(name="start_date", type="date", nullable=true)
-     */
-    private $startDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @JMS\Groups({"odr"})
-     * @JMS\Accessor(getter="getEndDate")
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @ORM\Column(name="end_date", type="date", nullable=true)
-     */
-    private $endDate;
 
     /**
      * @var \DateTime
@@ -128,38 +108,6 @@ class Odr
     public function setVisitsCare($visitsCare)
     {
         $this->visitsCare = $visitsCare;
-    }
-
-    /**
-     * @return \Date
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * @param \Date $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * @param \DateTime $endDate
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
     }
 
     /**
