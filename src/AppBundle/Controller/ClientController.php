@@ -55,6 +55,13 @@ class ClientController extends RestController
 
         $this->persistAndFlush($client);
 
+        //add ODR if not added yet
+        if (!$client->getOdr()) {
+            $odr = new EntityDir\Odr\Odr($client);
+            $this->persistAndFlush($odr);
+        }
+
+
         return ['id' => $client->getId()];
     }
 
