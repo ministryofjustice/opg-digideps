@@ -58,6 +58,30 @@ class Fixtures
     }
 
     /**
+     * @param EntityDir\Client $client
+     * @param array $settersMap
+     * @return EntityDir\Odr\Odr
+     */
+    public function createOdr(EntityDir\Client $client, array $settersMap = [])
+    {
+        $odr = new EntityDir\Odr\Odr($client);
+
+        // start/end dates from today for 365 days
+        $today = new DateTime();
+        $odr->setStartDate($today);
+        $today->modify('+365 days');
+        $odr->setEndDate($today);
+
+        foreach ($settersMap as $k => $v) {
+            $odr->$k($v);
+        }
+
+        $this->em->persist($odr);
+
+        return $odr;
+    }
+
+    /**
      * @return EntityDir\Report
      */
     public function createReport(EntityDir\Client $client, array $settersMap = [])
@@ -137,6 +161,25 @@ class Fixtures
         $this->em->persist($sg);
 
         return $sg;
+    }
+
+    /**
+     * @param EntityDir\Odr\Odr $odr
+     * @param array $settersMap
+     * @return EntityDir\Odr\Safeguarding
+     */
+    public function createOdrVisitsCare(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $vc = new EntityDir\Odr\VisitsCare();
+        $vc->setOdr($odr);
+        $vc->setDoYouLiveWithClient('yes');
+
+        foreach ($settersMap as $k => $v) {
+            $vc->$k($v);
+        }
+        $this->em->persist($vc);
+
+        return $vc;
     }
 
     /**
