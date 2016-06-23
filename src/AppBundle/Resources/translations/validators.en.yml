@@ -288,6 +288,26 @@ safeguarding:
         invalidMessage: Enter the date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
         notBlank: Choose Yes or No
+
+odr:
+  visitsCare:
+      doYouLiveWithClient:
+          notBlank: Choose Yes or No
+      howOftenDoYouContactClient:
+          notBlank: Give us more details about how often you contact the client and make sure others are looking after the client's needs
+      doesClientReceivePaidCare:
+          notBlank: Choose Yes or No
+      howIsCareFunded:
+          notBlank: Select one option
+      whoIsDoingTheCaring:
+          notBlank: Give us more details about who is caring for the client
+      whenWasCarePlanLastReviewed:
+          notBlank: Please enter last review date
+          invalidMessage: Enter the date in this format: DD/MM/YYYY
+      doesClientHaveACarePlan:
+          notBlank: Choose Yes or No
+
+
 action:
     doYouExpectFinancialDecisions:
         notBlank: Choose Yes or No

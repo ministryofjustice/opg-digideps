@@ -54,7 +54,7 @@ transfersInactive:
     subSectionDescription: "This will become available if you have more than one account"
     edit: "Edit transfers"
     start: "Start money transfers"
-safeguarding:
+visitsCare:
     subSectionTitle: "Visits and care"
     subSectionDescription: "We need to know about your involvement with %client%'s care"
     edit: "Edit visits"
