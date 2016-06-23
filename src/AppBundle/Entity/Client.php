@@ -62,6 +62,13 @@ class Client
     private $reportObjs;
 
     /**
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
+     **/
+    private $odr;
+
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
      *
@@ -524,6 +531,23 @@ class Client
 
         return $reportIds;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOdr()
+    {
+        return $this->odr;
+    }
+
+    /**
+     * @param mixed $odr
+     */
+    public function setOdr($odr)
+    {
+        $this->odr = $odr;
+    }
+
 
     /**
      * Set allowedCourtOrderTypes.

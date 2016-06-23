@@ -5,10 +5,10 @@ namespace AppBundle\Entity\Odr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\Client;
 
 /**
- * @JMS\XmlRoot("odr")
- * @JMS\ExclusionPolicy("NONE")
+ * @ORM\Entity
  * @ORM\Table(name="odr")
  */
 class Odr
@@ -28,21 +28,19 @@ class Odr
     private $id;
 
     /**
-     * @var int
+     * @var \AppBundle\Entity\Client
      *
-     * @JMS\Groups({"basic"})
-     * @JMS\Type("AppBundle\Entity\Client")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
 
     /**
      * @JMS\Groups({"basic"})
-     * @JMS\Type("AppBundle\Entity\Odr\Safeguarding")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Safeguarding",  mappedBy="odr", cascade={"persist"})
+     * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist"})
      **/
-    private $safeguarding;
+    private $visitsCare;
 
     /**
      * @var \Date
@@ -75,6 +73,16 @@ class Odr
     private $submitDate;
 
     /**
+     * Odr constructor.
+     * @param Client $client
+     */
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+
+    /**
      * @return int
      */
     public function getId()
@@ -101,7 +109,7 @@ class Odr
     /**
      * @param int $client
      */
-    public function setClient($client)
+    public function setClient(Client $client)
     {
         $this->client = $client;
     }
@@ -109,17 +117,17 @@ class Odr
     /**
      * @return mixed
      */
-    public function getSafeguarding()
+    public function getVisitsCare()
     {
-        return $this->safeguarding;
+        return $this->visitsCare;
     }
 
     /**
-     * @param mixed $safeguarding
+     * @param mixed $visitsCare
      */
-    public function setSafeguarding($safeguarding)
+    public function setVisitsCare($visitsCare)
     {
-        $this->safeguarding = $safeguarding;
+        $this->visitsCare = $visitsCare;
     }
 
     /**
