@@ -1,0 +1,89 @@
+page.htmlTitle: "Deputy report - overview | GOV.UK"
+report: "report"
+pageSectionTitle: "The deputy report"
+pageSectionDescription: "Your report:"
+heading:
+    title: "Open deputyship record"
+    planningTitle: ""
+    careAndWelfare: ""
+    finances: ""
+    finishYourReport: ""
+
+close: "Close"
+help: "Help"
+submitWhenReady: "You can't submit your report until the report is complete"
+warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
+reportingPeriod: "Reporting period"
+edit: "Edit"
+dueDate: "Due date"
+reportIsReady: "Report is ready to submit"
+yourFinalStep: "Your final step"
+signAndSubmit: "Check and submit"
+readyToSubmit: "Ready to submit"
+notFinished: "Not finished"
+sectionsRemaining: "sections remaining"
+overview: Report overview
+
+contacts:
+    subSectionTitle: "Contacts"
+    subSectionDescription: "Give us the details of people you consulted about %client%"
+    edit: "Edit contacts"
+    start: "Start contacts"
+decisions:
+    subSectionTitle: "Decisions"
+    subSectionDescription: "Add the significant decisions you've made for %client%"
+    edit: "Edit decisions"
+    start: "Start decisions"
+actions:
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: "Tell us about any major changes in the next reporting period"
+    edit: "Edit actions"
+    start: "Start actions"
+accounts:
+    subSectionTitle: "Finances"
+    subSectionDescription: "Add details of all income and spending in the reporting period"
+    edit: "Edit finances"
+    start: "Start finances"
+transfers:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "Tell us about money you've moved between %client%'s accounts"
+    edit: "Edit transfers"
+    start: "Start money transfers"
+transfersInactive:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "This will become available if you have more than one account"
+    edit: "Edit transfers"
+    start: "Start money transfers"
+safeguarding:
+    subSectionTitle: "Visits and care"
+    subSectionDescription: "We need to know about your involvement with %client%'s care"
+    edit: "Edit visits"
+    start: "Start visits"
+assets:
+    subSectionTitle: "Assets"
+    subSectionDescription: "Add %client%'s property, investments and other valuables"
+    edit: "Edit assets"
+    start: "Start assets"
+report_add_further_info:
+    subSectionTitle: "Sign and submit"
+    edit: "Start sign and submit"
+    start: "Start sign and submit"
+
+
+additionalInformation:
+  subSectionTitle: More information
+
+reportSubmit:
+    checkbox:
+        label: I have reviewed and checked this report.
+
+decisionsMadeAsDeputy: Decisions made as deputy
+
+announcement: |
+  We’ve made some changes to the layout of this page.<br/>
+  Use the links on this page to view and edit the different sections of your report.
+
+labels:
+    not-started: "Not started"
+    incomplete: "Not finished"
+    done: "Finished"

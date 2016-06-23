@@ -130,25 +130,26 @@ class Redirector
             return $this->router->generate('client_add');
         }
 
-        if (!$user->hasReports()) {
-            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
-        }
+//        if (!$user->hasReports()) {
+//            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
+//        }
 
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
         }
 
-        $reportIds = $clients[0]->getReports();
+        return $this->router->generate('index-odr');
 
-        foreach ($reportIds as $reportId) {
-            $report = $this->restClient->get("report/{$reportId}", 'Report', ['query' => ['groups' => ['basic']]]);
+//        $reportIds = $clients[0]->getReports();
+//
+//        foreach ($reportIds as $reportId) {
+//            $report = $this->restClient->get("report/{$reportId}", 'Report', ['query' => ['groups' => ['basic']]]);
+//
+//            if (!$report->getSubmitted()) {
+//                return $this->router->generate('report_overview', ['reportId' => $reportId]);
+//            }
+//        }
 
-            if (!$report->getSubmitted()) {
-                return $this->router->generate('report_overview', ['reportId' => $reportId]);
-            }
-        }
-
-        return $this->router->generate('client');
     }
 
     /**

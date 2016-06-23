@@ -5,9 +5,7 @@ registration:
         label: Enter your details
     3:
         label: Add your client's details
-    4:
-        label: Create a report
-        
+
 registration_admin:
     1:
         label: Set your password
