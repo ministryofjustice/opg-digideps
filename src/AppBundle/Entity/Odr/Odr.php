@@ -18,7 +18,7 @@ class Odr
     /**
      * @var int
      *
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"odr"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -36,7 +36,7 @@ class Odr
     private $client;
 
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"odr"})
      * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist"})
      **/
@@ -45,7 +45,7 @@ class Odr
     /**
      * @var \Date
      *
-     * @JMS\Groups({ "basic"})
+     * @JMS\Groups({"odr"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -55,7 +55,7 @@ class Odr
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({ "basic"})
+     * @JMS\Groups({"odr"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -65,7 +65,7 @@ class Odr
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({ "basic"})
+     * @JMS\Groups({"odr"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
