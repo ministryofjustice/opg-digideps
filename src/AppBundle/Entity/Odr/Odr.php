@@ -30,6 +30,7 @@ class Odr
     /**
      * @var \AppBundle\Entity\Client
      *
+     * @JMS\Groups({"client"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */

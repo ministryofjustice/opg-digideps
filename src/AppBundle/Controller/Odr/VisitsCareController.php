@@ -80,7 +80,7 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['visits_care'];
+        $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
         $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id, 'VisitsCare with id:' . $id . ' not found');
