@@ -29,7 +29,7 @@ class RestClient
      * 
      * @var array 
      */
-    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group'];
+    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group', 'deserialise_groups'];
     
     /**
      * @var ClientInterface
@@ -408,20 +408,26 @@ class RestClient
      */
     private function toJson($mixed, array $options = [])
     {
+        $ret = $mixed;
         if (is_object($mixed)) {
             $context = \JMS\Serializer\SerializationContext::create()
                 ->setSerializeNull(true);
 
+            //TODO replace deserialise_group -> deserialise_groupss and wrap with []
             if (!empty($options['deserialise_group'])) {
                 $context->setGroups([$options['deserialise_group']]);
             }
 
-            return $this->serialiser->serialize($mixed, 'json', $context);
+            if (!empty($options['deserialise_groups'])) {
+                $context->setGroups($options['deserialise_groups']);
+            }
+
+            $ret = $this->serialiser->serialize($mixed, 'json', $context);
         } elseif (is_array($mixed)) {
-            return $this->serialiser->serialize($mixed, 'json');
+            $ret = $this->serialiser->serialize($mixed, 'json');
         }
 
-        return $mixed;
+        return $ret;
     }
 
     /**
