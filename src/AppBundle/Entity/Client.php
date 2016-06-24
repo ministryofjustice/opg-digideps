@@ -17,9 +17,9 @@ class Client
 {
     /**
      * @var int
-     * 
+     *
+     * @JMS\Groups({"related","basic", "client", "client-id"})
      * @JMS\Type("integer")
-     * @JMS\Groups({"related","basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -70,7 +70,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -150,7 +150,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -160,7 +160,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
