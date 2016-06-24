@@ -4,8 +4,7 @@
     {% set allowEdit = true %}
 {% endif %}
 
-{#{% set linkToSubSection = path(subSection, {reportId: report.id}) %}#}
-{% set linkToSubSection = '#' %}
+{% set linkToSubSection = linkToSubSection | default('javascript:alert(\'not implemented\')') %}
 
 <div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
@@ -27,7 +26,7 @@
     </span>
 
         {%  if description is defined and description %}
-            <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': report.client.firstname}, translationDomain ) }}</p>
+            <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
         {%  endif %}
 
 

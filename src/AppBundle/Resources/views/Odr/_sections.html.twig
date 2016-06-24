@@ -8,37 +8,38 @@
         {% include 'AppBundle:Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'accounts',
-            report: report,
+            odr: odr,
             description: false,
-            state: reportStatus.decisionsState,
+            state: 'not-started',
             list: true
         } %}
         {% include 'AppBundle:Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'assets',
-            report: report,
+            odr: odr,
             description: false,
-            state: reportStatus.decisionsState,
+            state: 'not-started',
             list: true
         } %}
     </li>
 
     <li id="visists-and-actions" class="overview-section">
         <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'safeguarding',
-            report: report,
+            subSection: 'visitsCare',
+            linkToSubSection: path('odr-visits-care', {odrId: odr.id}),
+            odr: odr,
             info: true,
             description: true,
-            state: reportStatus.safeguardingState,
+            state: 'not-started',
         } %}
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
-            report: report,
+            odr: odr,
             description: true,
-            state: reportStatus.actionsState,
+            state: 'not-started',
             list: true
         } %}
     </li>
@@ -46,11 +47,11 @@
 
     <li id="report-submit-section" class="overview-section">
         <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
-        {% if reportStatus.isReadyToSubmit and report.isDue %}
+        {% if odrStatus.isReadyToSubmit and odr.isDue %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'report_add_further_info',
-            report: report,
+            odr: odr,
             description: false,
             state: "not-started",
             status: "Not started"
@@ -59,7 +60,7 @@
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'report_add_further_info',
-            report: report,
+            odr: odr,
             description: false,
             state: "not-started",
             status: "Not started",
@@ -70,7 +71,7 @@
 
 </ul>
 
-{% if report.isDue == true and reportStatus.isReadyToSubmit == false %}
+{% if odr.isDue == true and odrStatus.isReadyToSubmit == false %}
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,
     pageSectionWarning: 'submitWhenReady',
@@ -80,8 +81,8 @@
 {% endif %}
 
 
-{% if report.isDue == false %}
-    {% set endDate = report.getEndDate() | date(" d F Y")  %}
+{% if odr.isDue == false %}
+    {% set endDate = '[enddate]'  %}
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,
     pageSectionWarning: 'warningNotDue',

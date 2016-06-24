@@ -13,31 +13,30 @@
         <header class="page-report-header">
             <h1 class="heading-xlarge">
                 <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
-                {{ report.client.fullname }}
+                {{ client.fullname }}
             </h1>
         </header>
 
-        {% if reportStatus.isReadyToSubmit and report.isDue %}
-            <div id="header-report-submit" class="hero">
-                <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
-                <div class="message"><a class="button-grey submit-link" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
-            </div>
-        {% endif %}
+        {#{% if odrStatus.isReadyToSubmit and odr.isDue %}#}
+            {#<div id="header-report-submit" class="hero">#}
+                {#<h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>#}
+                {#<div class="message"><a class="button-grey submit-link" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>#}
+            {#</div>#}
+        {#{% endif %}#}
 
         <div id="report-period-due">
             <div id="report-due" class="labelvalue">
                 <div class="label">{{ 'dueDate' | trans() }}:</div>
-                <div class="value">{{ report.dueDate | date(" d F Y") }}</div>
+                <div class="value">???</div>
             </div>
         </div>
-        
         {% include 'AppBundle:Odr:_sections.html.twig' with {
-           report: report
+           odr: odr
         } %}
     </div>
     <div id="pagebody-right-content">
         {%include 'AppBundle:Components:_helpline.html.twig' %}
-        {%include 'AppBundle:Odr:_status.html.twig' with { report: report } %}
+        {%include 'AppBundle:Odr:_status.html.twig' with { odr: odr } %}
     </div>
 </div>
 {% endblock %}

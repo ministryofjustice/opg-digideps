@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
+use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,20 +23,18 @@ class OdrController extends AbstractController
      */
     public function overviewAction()
     {
-        $report = new EntityDir\Report();
-        $clients = $this->getUser()->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-        $report->setClient($client);
-        $report->setId(1);
+        $client = $this->getClientOrThrowException();
+        $odr = $this->getOdr($client->getId(), ['odr', 'visits-care']);
 
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+        if ($odr->getSubmitted()) {
+            throw new \RuntimeException('Odr already submitted and not editable.');
         }
-        $reportStatusService = new ReportStatusService($report);
+        $odrStatus = new OdrStatusService($odr);
 
         return [
-            'report' => $report,
-            'reportStatus' => $reportStatusService,
+            'client' => $client,
+            'odr' => $odr,
+            'odrStatus' => $odrStatus,
         ];
     }
 }

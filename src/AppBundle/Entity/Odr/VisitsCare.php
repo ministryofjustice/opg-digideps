@@ -1,14 +1,18 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Traits\HasOdrTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
 class VisitsCare
 {
+    use HasOdrTrait;
+
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"visits-care"})
      *
      * @var int
      */
@@ -16,44 +20,51 @@ class VisitsCare
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.doYouLiveWithClient.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care"})
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-no"})
      */
     private $howOftenDoYouContactClient;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care"})
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare"})
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care"})
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="odr.visitsCare.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care"})
      */
     private $doesClientHaveACarePlan;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @Assert\NotBlank(message="odr.visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
-     * @Assert\Date( message="odr.visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-hasCarePlan"})
+     * @Assert\Date( message="odr.visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-hasCarePlan"} )
      */
     private $whenWasCarePlanLastReviewed;
 

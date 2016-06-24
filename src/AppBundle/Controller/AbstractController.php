@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Odr\Odr;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report;
@@ -9,6 +10,18 @@ use AppBundle\Service\Client\RestClient;
 
 class AbstractController extends Controller
 {
+    /**
+     * @return Client
+     */
+    protected function getClientOrThrowException()
+    {
+        $clients = $this->getUser()->getClients();
+        if (empty($clients)) {
+            throw new \RuntimeException('Client not found for the logged user.');
+        }
+        return $clients[0];
+    }
+
     /**
      * @return RestClient
      */
@@ -34,7 +47,6 @@ class AbstractController extends Controller
 
     /**
      * @param int   $reportId
-     * @param int   $userId   for secutity checks (if present)
      * @param array $groups
      * 
      * @return Report
@@ -42,6 +54,17 @@ class AbstractController extends Controller
     public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
         return $this->getRestClient()->get("report/{$reportId}", 'Report', ['query' => ['groups' => $groups]]);
+    }
+
+    /**
+     * @param int   $odrId
+     * @param array $groups
+     *
+     * @return Odr
+     */
+    public function getOdr($odrId, array $groups/* = ['basic']*/)
+    {
+        return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', ['query' => ['groups' => $groups]]);
     }
 
     /**
