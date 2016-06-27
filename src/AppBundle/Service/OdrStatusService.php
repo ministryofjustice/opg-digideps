@@ -10,12 +10,12 @@ class OdrStatusService
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
-    /** @var Report */
-    private $report;
+    /** @var Odr */
+    private $odr;
 
-    public function __construct(Odr $report)
+    public function __construct(Odr $odr)
     {
-        $this->report = $report;
+        $this->odr = $odr;
     }
 
     /**
@@ -23,7 +23,13 @@ class OdrStatusService
      */
     public function getRemainingSections()
     {
-        return [];
+        $states = [
+            'visitsCare' => $this->getVisitsCareState(),
+        ];
+
+        return array_filter($states, function ($e) {
+            return $e != self::STATE_DONE;
+        });
     }
 
     /** @return bool */
@@ -38,5 +44,16 @@ class OdrStatusService
     public function getStatus()
     {
         return 'notFinished';
+    }
+
+
+    /** @return string */
+    public function getVisitsCareState()
+    {
+        if (!$this->odr->getVisitsCare() || $this->odr->getVisitsCare()->missingInfo()) {
+            return self::STATE_NOT_STARTED;
+        } else {
+            return self::STATE_DONE;
+        }
     }
 }

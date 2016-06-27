@@ -57,8 +57,8 @@ transfersInactive:
 visitsCare:
     subSectionTitle: "Visits and care"
     subSectionDescription: "We need to know about your involvement with %client%'s care"
-    edit: "Edit visits"
-    start: "Start visits"
+    edit: "Edit visits and care"
+    start: "Start visits and care"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Add %client%'s property, investments and other valuables"

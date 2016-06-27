@@ -32,7 +32,7 @@
             odr: odr,
             info: true,
             description: true,
-            state: 'not-started',
+            state: odrStatus.visitsCareState,
         } %}
         {% include 'AppBundle:Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
