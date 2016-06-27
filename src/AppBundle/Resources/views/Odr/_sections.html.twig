@@ -3,25 +3,25 @@
 
 <ul id="overview-sections" class="overview-sections">
 
-    <li id="finances-and-assets" class="overview-section">
-        <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-        {% include 'AppBundle:Odr:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'accounts',
-            odr: odr,
-            description: false,
-            state: 'not-started',
-            list: true
-        } %}
-        {% include 'AppBundle:Odr:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            odr: odr,
-            description: false,
-            state: 'not-started',
-            list: true
-        } %}
-    </li>
+    {#<li id="finances-and-assets" class="overview-section">#}
+        {#<h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>#}
+        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'accounts',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: 'not-started',#}
+            {#list: true#}
+        {#} %}#}
+        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'assets',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: 'not-started',#}
+            {#list: true#}
+        {#} %}#}
+    {#</li>#}
 
     <li id="visists-and-actions" class="overview-section">
         <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
@@ -34,14 +34,14 @@
             description: true,
             state: odrStatus.visitsCareState,
         } %}
-        {% include 'AppBundle:Odr:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'actions',
-            odr: odr,
-            description: true,
-            state: 'not-started',
-            list: true
-        } %}
+        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'actions',#}
+            {#odr: odr,#}
+            {#description: true,#}
+            {#state: 'not-started',#}
+            {#list: true#}
+        {#} %}#}
     </li>
 
 

@@ -1,9 +1,9 @@
-page.htmlTitle: "Deputy report - overview | GOV.UK"
+page.htmlTitle: "Opening deputyship report - overview | GOV.UK"
 report: "report"
 pageSectionTitle: "The deputy report"
 pageSectionDescription: "Your report:"
 heading:
-    title: "Open deputyship record"
+    title: "Opening deputyship report"
     planningTitle: ""
     careAndWelfare: ""
     finances: ""
@@ -22,7 +22,7 @@ signAndSubmit: "Check and submit"
 readyToSubmit: "Ready to submit"
 notFinished: "Not finished"
 sectionsRemaining: "sections remaining"
-overview: Report overview
+overview: Opening deputyship report
 
 contacts:
     subSectionTitle: "Contacts"
