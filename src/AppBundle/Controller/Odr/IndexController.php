@@ -7,7 +7,6 @@ use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\ReportStatusService;
-use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,27 +17,10 @@ use AppBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @Route("/odr/overview", name="odr_overview")
-     * @Template("AppBundle:Odr:overview.html.twig")
-     */
-    public function overviewAction()
-    {
-        $client = $this->getClientOrThrowException();
-        $odr = $this->getOdr($client->getId(), ['odr', 'visits-care']);
-
-        if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Odr already submitted and not editable.');
-        }
-        $odrStatus = new OdrStatusService($odr);
-
-        return [
-            'client' => $client,
-            'odr' => $odr,
-            'odrStatus' => $odrStatus,
-        ];
-    }
-
+    private static $odrGroupsForValidation = [
+        'odr',
+        'visits-care'
+    ];
 
     /**
      * //TODO move view into Odr directory when branches are integrated
@@ -57,5 +39,47 @@ class IndexController extends AbstractController
             'client' => $client,
             'reports' => $reports,
         ];
+    }
+
+    /**
+     * @Route("/odr/overview", name="odr_overview")
+     * @Template("AppBundle:Odr:overview.html.twig")
+     */
+    public function overviewAction()
+    {
+        $client = $this->getClientOrThrowException();
+        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+
+        if ($odr->getSubmitted()) {
+            throw new \RuntimeException('Odr already submitted and not editable.');
+        }
+        $odrStatus = new OdrStatusService($odr);
+
+        return [
+            'client' => $client,
+            'odr' => $odr,
+            'odrStatus' => $odrStatus,
+        ];
+    }
+
+    /**
+     * @Route("/odr/submit", name="odr_submit")
+     * @Template()
+     */
+    public function submitAction(Request $request)
+    {
+        $client = $this->getClientOrThrowException();
+        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+
+        if ($odr->getSubmitted()) {
+            throw new \RuntimeException('ODR already submitted and not editable.');
+        }
+
+        $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
+        $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, [
+            'deserialise_group' => 'submit',
+        ]);
+
+        return $this->redirect($this->generateUrl('index-odr'));
     }
 }

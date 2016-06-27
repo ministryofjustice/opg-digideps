@@ -1,7 +1,7 @@
 page.htmlTitle: "Opening deputyship report - overview | GOV.UK"
-report: "report"
-pageSectionTitle: "The deputy report"
-pageSectionDescription: "Your report:"
+report: "Opening deputyship report"
+pageSectionTitle: "Opening deputyship report"
+pageSectionDescription: "Your opening deputyship report:"
 heading:
     title: "Opening deputyship report"
     planningTitle: ""
@@ -11,12 +11,12 @@ heading:
 
 close: "Close"
 help: "Help"
-submitWhenReady: "You can't submit your report until the report is complete"
+submitWhenReady: "You can't submit your Opening deputyship report until is complete"
 warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
 reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
-reportIsReady: "Report is ready to submit"
+odrIsReady: "Opening deputyship report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
 readyToSubmit: "Ready to submit"
@@ -64,7 +64,7 @@ assets:
     subSectionDescription: "Add %client%'s property, investments and other valuables"
     edit: "Edit assets"
     start: "Start assets"
-report_add_further_info:
+odr_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"
     start: "Start sign and submit"
@@ -73,15 +73,15 @@ report_add_further_info:
 additionalInformation:
   subSectionTitle: More information
 
-reportSubmit:
+odrSubmit:
     checkbox:
-        label: I have reviewed and checked this report.
+        label: I have reviewed and checked this Opening deputyship report.
 
 decisionsMadeAsDeputy: Decisions made as deputy
 
 announcement: |
   We’ve made some changes to the layout of this page.<br/>
-  Use the links on this page to view and edit the different sections of your report.
+  Use the links on this page to view and edit the different sections of your Opening deputyship report.
 
 labels:
     not-started: "Not started"

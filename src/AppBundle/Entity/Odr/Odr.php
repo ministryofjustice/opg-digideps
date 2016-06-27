@@ -17,10 +17,17 @@ class Odr
      */
     private $id;
 
+    /**
+     * @JMS\Type("boolean")
+     *  @JMS\Groups({"submit"})
+     * @var bool
+     */
+    private $submitted;
 
     /**
      * @var \DateTime
      * @JMS\Type("DateTime")
+     * @JMS\Groups({"submit"})
      */
     private $submitDate;
 
@@ -37,12 +44,6 @@ class Odr
      */
     private $visitsCare;
 
-
-    /**
-     * @JMS\Type("boolean")
-     * @var bool
-     */
-    private $submitted;
 
     /**
      * @return int
@@ -124,6 +125,8 @@ class Odr
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+
+        return $this;
     }
 
     public function isDue()
