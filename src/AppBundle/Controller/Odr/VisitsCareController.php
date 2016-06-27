@@ -41,27 +41,24 @@ class VisitsCareController extends AbstractController
             $data->keepOnlyRelevantData();
 
             //TODO simplify endpoint similarly to account, using a PUT on /odr, 'visits-care' subkey
+            $deserialiseGroup = [
+                'deserialise_groups' => ['visits-care', 'odr-id']
+            ];
             if ($visitsCare->getId() === null) {
-                $this->getRestClient()->post('/odr/visits-care', $data, [
-                    'deserialise_groups' => ['visits-care', 'odr-id']
-                ]);
+                $this->getRestClient()->post('/odr/visits-care', $data, $deserialiseGroup);
             } else {
-                $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, [
-                    'deserialise_groups' => ['visits-care', 'odr-id']
-                ]);
+                $this->getRestClient()->put('/odr/visits-care/' . $visitsCare->getId(), $data, $deserialiseGroup);
             }
 
             //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-visitsCare');
             //$this->get('session')->getFlashBag()->add('action', $t);
 
-            return $this->redirect($this->generateUrl('odr-visits-care', ['odrId' => $odrId]).'#pageBody');
+            return $this->redirect($this->generateUrl('odr-visits-care', ['odrId' => $odrId]) . '#pageBody');
         }
 
-        $reportStatusService = new OdrStatusService($odr);
-
-        return['odr' => $odr,
-                'odrStatus' => $reportStatusService,
-                'form' => $form->createView(),
+        return [
+            'odr' => $odr,
+            'form' => $form->createView(),
         ];
     }
 }
