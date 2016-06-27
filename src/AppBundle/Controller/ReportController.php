@@ -34,23 +34,6 @@ class ReportController extends AbstractController
         'transactionsOut',
     ];
 
-    /**
-     * @Route("/reports", name="index-odr")
-     * @Template()
-     */
-    public function indexOdrAction()
-    {
-        $clients = $this->getUser()->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
-        arsort($reports);
-
-        return [
-            'client' => $client,
-            'reports' => $reports,
-        ];
-    }
 
     /**
      * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
