@@ -79,4 +79,41 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(self::$odr1->getId(), $data['id']);
     }
 
+    public function testSubmitAuth()
+    {
+        $url = '/odr/'.self::$odr1->getId().'/submit';
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+    }
+
+    public function testSubmitAcl()
+    {
+        $url2 = '/odr/'.self::$odr2->getId().'/submit';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+    }
+
+    public function testSubmit()
+    {
+        $this->assertEquals(false, self::$odr1->getSubmitted());
+
+        $odrId = self::$odr1->getId();
+        $url = '/odr/'.$odrId.'/submit';
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'submit_date' => '2015-12-31',
+            ],
+        ]);
+
+        // assert account created with transactions
+        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
+        /* @var $odr \AppBundle\Entity\Odr\Odr */
+        $this->assertEquals(true, $odr->getSubmitted());
+        $this->assertEquals('2015-12-31', $odr->getSubmitDate()->format('Y-m-d'));
+    }
+
 }

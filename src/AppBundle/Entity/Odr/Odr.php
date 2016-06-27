@@ -44,6 +44,15 @@ class Odr
     private $visitsCare;
 
     /**
+     * @var bool
+     *
+     * @JMS\Groups({"odr"})
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="submitted", type="boolean", nullable=true)
+     */
+    private $submitted;
+
+    /**
      * @var \DateTime
      *
      * @JMS\Groups({"odr"})
@@ -109,6 +118,22 @@ class Odr
     public function setVisitsCare($visitsCare)
     {
         $this->visitsCare = $visitsCare;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSubmitted()
+    {
+        return $this->submitted;
+    }
+
+    /**
+     * @param boolean $submitted
+     */
+    public function setSubmitted($submitted)
+    {
+        $this->submitted = $submitted;
     }
 
     /**
