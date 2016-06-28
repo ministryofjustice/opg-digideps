@@ -30,13 +30,13 @@
                 <div class="value">???</div>
             </div>
         </div>
-        {% include 'AppBundle:Odr:_sections.html.twig' with {
+        {% include 'AppBundle:Odr/Index:_sections.html.twig' with {
            odr: odr
         } %}
     </div>
     <div id="pagebody-right-content">
         {%include 'AppBundle:Components:_helpline.html.twig' %}
-        {%include 'AppBundle:Odr:_status.html.twig' with { odr: odr } %}
+        {%include 'AppBundle:Odr/Index:_status.html.twig' with { odr: odr } %}
     </div>
 </div>
 {% endblock %}

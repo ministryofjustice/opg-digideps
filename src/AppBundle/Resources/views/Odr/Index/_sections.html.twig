@@ -5,7 +5,7 @@
 
     {#<li id="finances-and-assets" class="overview-section">#}
         {#<h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>#}
-        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+        {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
             {#transDomain: translationDomain,#}
             {#subSection: 'accounts',#}
             {#odr: odr,#}
@@ -13,7 +13,7 @@
             {#state: 'not-started',#}
             {#list: true#}
         {#} %}#}
-        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+        {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
             {#transDomain: translationDomain,#}
             {#subSection: 'assets',#}
             {#odr: odr,#}
@@ -25,7 +25,7 @@
 
     <li id="visists-and-actions" class="overview-section">
         <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-        {% include 'AppBundle:Odr:_subsection.html.twig' with {
+        {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'visitsCare',
             linkToSubSection: path('odr-visits-care', {odrId: odr.id}),
@@ -34,7 +34,7 @@
             description: true,
             state: odrStatus.visitsCareState,
         } %}
-        {#{% include 'AppBundle:Odr:_subsection.html.twig' with {#}
+        {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
             {#transDomain: translationDomain,#}
             {#subSection: 'actions',#}
             {#odr: odr,#}
@@ -57,9 +57,9 @@
             status: "Not started"
         } %}
         {% if odrStatus.isReadyToSubmit  %}
-            {% include 'AppBundle:Odr:_subsection.html.twig' with sectionParams %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with sectionParams %}
         {%  else %}
-            {% include 'AppBundle:Odr:_subsection.html.twig' with
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with
                 sectionParams | merge({ disableedit: true }) %}
         {%  endif %}
     </li>

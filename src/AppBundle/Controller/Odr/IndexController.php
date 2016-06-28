@@ -24,10 +24,10 @@ class IndexController extends AbstractController
 
     /**
      * //TODO move view into Odr directory when branches are integrated
-     * @Route("/reports", name="index-odr")
-     * @Template("AppBundle:Report:indexOdr.html.twig")
+     * @Route("/odr", name="odr_index")
+     * @Template()
      */
-    public function indexOdrAction()
+    public function indexAction()
     {
         $clients = $this->getUser()->getClients();
         $client = !empty($clients) ? $clients[0] : null;
@@ -43,7 +43,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/odr/overview", name="odr_overview")
-     * @Template("AppBundle:Odr:overview.html.twig")
+     * @Template()
      */
     public function overviewAction()
     {
@@ -80,6 +80,6 @@ class IndexController extends AbstractController
             'deserialise_group' => 'submit',
         ]);
 
-        return $this->redirect($this->generateUrl('index-odr'));
+        return $this->redirect($this->generateUrl('odr_index'));
     }
 }
