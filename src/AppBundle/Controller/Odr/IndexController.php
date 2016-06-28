@@ -139,10 +139,7 @@ class IndexController extends AbstractController
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
-        $name = 'OPG102-'.$odr->getClient()->getCaseNumber().'-ODR-'.date_format($odr->getEndDate(), 'Y').'.pdf';
-
-        $attachmentName = sprintf('DigiOdr-%s_%s_%s.pdf',
-            $odr->getEndDate()->format('Y'),
+        $attachmentName = sprintf('DigiOdr-%s_%s.pdf',
             $odr->getSubmitDate() ? $odr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $odr->getClient()->getCaseNumber()
         );
