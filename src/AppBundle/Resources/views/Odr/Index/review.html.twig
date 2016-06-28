@@ -1,0 +1,69 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}Complete the deputy report{% endblock %}
+
+{% block pageContent %}
+
+    {% if report.submitted == true %}
+        <nav id="back-bar">
+            <a id="back-to-client" href="{{ path('client_show') }}">Your client</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
+    {% endif %}
+    
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+    </div>
+    {% if report.submitted == false %}
+        {% if reportStatus.isReadyToSubmit and report.isDue %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("report_overview" , {'reportId': report.id }),
+            'previousLabel': 'Edit this report',
+            'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+            'nextLabel': 'Sign and submit',
+            'position': 'top'
+            } %}
+        {% else  %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("report_overview" , {'reportId': report.id }),
+            'previousLabel': 'Edit this report',
+            'position': 'top'
+            } %}
+        {% endif %}
+    {% endif %}
+    <a name="pageBody"></a>
+    
+    <div id="page-body">
+        <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
+        {% include 'AppBundle:Report:formatted.html.twig' %}
+    </div>
+
+    <div id="body-footer-nav">
+        {% if report.submitted == false %}
+            {% if reportStatus.isReadyToSubmit and report.isDue %}
+                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                'previousLink': path("report_overview" , {'reportId': report.id }),
+                'previousLabel': 'Edit this report',
+                'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+                'nextLabel': 'Sign and submit',
+                'position': 'bottom'
+                } %}
+            {% else  %}
+                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                'previousLink': path("report_overview" , {'reportId': report.id }),
+                'previousLabel': 'Edit this report',
+                'position': 'bottom'
+                } %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('.pdflink'));
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,27 @@
+<div class="section" id="">
+    <h2 class="section-heading">Mental capacity</h2>
+
+    <div class="dont-break" id="mental-capacity-wrapper">
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Has client's mental capacity to make financial decisions</div>
+
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if mentalCapacity.hasCapacityChanged == 'changed' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="noborder">Changed</td>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if mentalCapacity.hasCapacityChanged == 'stayedSame' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="noborder">Stayed the same</td>
+                    </tr>
+                </table>
+            </div>
+                        
+            {% if mentalCapacity.hasCapacityChanged == 'changed' %}
+                <div class="form-group form-group-vertical">
+                    <div class="value textarea">{{ mentalCapacity.hasCapacityChangedDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>

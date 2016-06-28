@@ -1,0 +1,40 @@
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="section">
+    <h2 class="section-heading">Client’s debts</h2>
+    <div class="dont-break">
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Does the client have any debts ?</div>
+                <table class="yesno" style="width: auto">
+                    <tr>
+                        <td class="checkbox"
+                            data-checkbox="report-has-debts--yes">{% if odr.hasDebts == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox"
+                            data-checkbox="report-has-debts--no">{% if odr.hasDebts == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+                {% if odr.hasDebts == 'yes' %}
+                    <ul class="transactions">
+                        {% for d in debts %}
+                            <li class="transaction {% if d.amount == 0 %}{{ d.amount }} disable{% endif %}">
+                                <div class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</div>
+                                <div class="value">£{{ d.amount | money_format }}</div>
+                                {% if d.hasMoreDetails %}
+                                    <div class="description">
+                                        {{ d.moreDetails | nl2br }}
+                                    </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+

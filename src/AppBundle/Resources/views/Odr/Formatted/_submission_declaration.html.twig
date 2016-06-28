@@ -1,0 +1,34 @@
+{% set translationDomain = "report-declaration" %}
+{% trans_default_domain translationDomain %}
+{% if odr.submitDate != "" %}
+<div class="box">
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: "report-declaration",
+        pageSectionTitle: 'page.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: "report-declaration",
+        pageSectionDescription: 'page.pageSectionDescription',
+        transOptions: {'%separator%': '<br/><br/>'}
+    } %}
+
+    <div class="item">
+        <dl class="labelvalue">
+            <dt class="label">Declaration</dt>
+            <dd class="value" id="declarationString">
+                {{ ('agreedBehalfDeputy.' ~ odr.agreedBehalfDeputy) | trans() }}
+            </dd>
+            {% if (odr.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                <dt class="label">Reason</dt>
+                <dd class="value">{{ odr.agreedBehalfDeputyExplanation | nl2br }}</dd>
+            {% endif %}
+            <dt class="label">Declaration time</dt>
+            <dd class="value">{{odr.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{odr.submitDate | date("d/m/Y") }}</dd>
+            <dt class="label">Deputy name</dt>
+            <dd class="value" id="statusDeputyName">{{ deputy.fullname }}</dd>
+        </dl>
+    </div>
+</div>
+{% endif %}

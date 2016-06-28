@@ -1,0 +1,32 @@
+{% if decisions | length > 0 or odr.reasonForNoDecisions != "" %}
+    <div class="section" id="decisions-section">
+        <h2 class="section-heading"> Decisions made over the reporting period</h2>
+        <div class="box">
+            {% if decisions | length == 0 %}
+                <div class="labelvalue">
+                    <div class="label">No decisions made:</div>
+                    <div class="value textarea">{{ odr.reasonForNoDecisions | nl2br}}</div>
+                </div>
+            {% else %}
+                
+                <ul class="box-list" id="decisions-list">
+                    <li class="decision-item box-list-item">
+                        <h3 class="half-width first">Deputy decision</h3>
+                        <h3 class="half-width">Client involvement</h3>
+                    </li>
+                    {% for decision in decisions %}
+                        <li class="decision-item box-list-item">
+                            <div class="half-width first">
+                                <div class="value textarea">{{ decision.description }}</div>
+                            </div>
+                            
+                            <div class="half-width">
+                                <div class="value textarea ">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

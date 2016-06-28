@@ -1,0 +1,16 @@
+<div class="section" id="accounts-section">
+    <h2 class="section-heading">Accounts</h2>
+
+    {% if odr.totalsMatch %}
+        {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_good.html.twig' %}
+    {% else %}
+        {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_bad.html.twig' %}
+
+    {% endif %}
+
+    {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_summary.html.twig' %}
+    {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_transfers.html.twig' %}
+    {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_working_out.html.twig' %}
+    {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_final_summary.html.twig' %}
+    
+</div>
