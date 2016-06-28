@@ -11,184 +11,33 @@
         </h1>
 
     </header>
-    {# temporary styles for prototype. do NOT merge those to master #}
-    {# end temporary style #}
     <div id="page-body">
 
-        <div class="row">
-            <h2 class="title1">Opening deputyship report</h2>
 
-            <div class="box">
-                <span class="status not-started">NOT STARTED</span>
-                <h3>Mr Joe Bloggs</h3>
-                <p class="date">21st December 2015 - 22nd December 2016</p>
-                <p class="detail">You only need to complete this report once</p>
-                <a href="{{ path('odr_overview') }}" class="button">Start now</a>
-            </div>
-        </div>
+        {% if odr.submitted %}
 
-        <div class="row two-column">
-            <div class="column">
-                <h2 class="title1">Opening deputyship report</h2>
-                <div class="box inactive">
-                    <span class="status not-available">NOT AVAILABLE</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">This report will become available once the opening deputy report is complete</p>
-                </div>
-            </div>
-            <div class="column">
-                <h2 class="title2">Health and Welfare</h2>
-                <div class="box inactive">
-                    <span class="status not-available">NOT AVAILABLE</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">This report will become available once the opening deputy report is complete</p>
-                </div>
-            </div>
-        </div>
+            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+                reportActive: reportActive,
+                enabled: true,
+            } %}
 
-        <div class="row two-column">
-            <div class="column">
-                <h2 class="title1">Opening deputyship report</h2>
-                <div class="box">
-                    <span class="status not-started">NOT STARTED</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">This report will become available once the opening deputy report is complete</p>
-                    <a href="#" class="button">Start now</a>
-                </div>
-            </div>
-            <div class="column">
-                <h2 class="title2">Health and Welfare</h2>
-                <div class="box">
-                    <span class="status not-finished">NOT FINISHED</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">This report will become available once the opening deputy report is complete</p>
-                    <a href="#" class="button">Continue</a>
-                </div>
-            </div>
-        </div>
+            {% include 'AppBundle:Odr/Index:_report_history.html.twig' with {
+                reports: reportsSubmitted,
+                odr: odr,
+            } %}
 
-        <div class="row list-table">
-            <h2>History of report submission (1)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Report type</th>
-                        <th>Reporting period</th>
-                        <th>Submission date</th>
-                        <th>&nbsp;</th>
-                        <th class="action">&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><a href="#" class="report">Open Deputy Report</a></td>
-                        <td>Start of deputyship</td>
-                        <td>dd/mm/yy</td>
-                        <td><a href="#">Download</a></td>
-                        <td class="action"><a href="#" class="button-grey">View</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        {% else %}
 
+            {% include 'AppBundle:Odr/Index:_odr_row.html.twig' with {
+                reports: reportsSubmitted,
+            } %}
 
-        <div class="row two-column">
-            <div class="column">
-                <h2 class="title1">Property and Finance</h2>
-                <div class="box">
-                    <span class="status complete">COMPLETE</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">&nbsp;<br>Submitted</p>
-                    <a href="#" class="button-grey">View</a>
-                </div>
-            </div>
-            <div class="column">
-                <h2 class="title2">Health and Welfare</h2>
-                <div class="box">
-                    <span class="status not-finished">NOT FINISHED</span>
-                    <h3>Mr Joe Bloggs</h3>
-                    <p class="date">21st December 2015 - 22nd December 2016</p>
-                    <p class="detail">This report will become available once the opening deputy report is complete</p>
-                    <a href="#" class="button">Continue</a>
-                </div>
-            </div>
-        </div>
+            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+                reportActive: reportActive,
+                enabled: false,
+            } %}
 
-        <div class="row list-table">
-            <h2>History of report submission (1)</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Report type</th>
-                        <th>Reporting period</th>
-                        <th>Submission date</th>
-                        <th>&nbsp;</th>
-                        <th class="action">&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><a href="#" class="report">Property and Finance</a></td>
-                        <td>21st Dec 2015 - 22nd Dec 2016</td>
-                        <td>21st Dec 2016</td>
-                        <td><a href="#">Download</a></td>
-                        <td class="action"><a href="#" class="button-grey">View</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="#" class="report">Open Deputy Report</a></td>
-                        <td>Start of deputyship</td>
-                        <td>21 Jan 2016</td>
-                        <td><a href="#">Download</a></td>
-                        <td class="action"><a href="#" class="button-grey">View</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        {# ODR #}
-        <div class="row">
-            <h2 class="title1">Opening deputyship report</h2>
-
-            <div class="box">
-                <span class="status not-started">NOT STARTED</span>
-                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-                <p class="detail">You only need to complete this report once</p>
-                <a href="{{ path('odr_overview') }}" class="button">Start now</a>
-            </div>
-        </div>
-
-        {# REPORT #}
-        <div class="row">
-            <h2 class="title2" >Property and finance</h2>
-
-            <div class="box inactive">
-                <span class="status not-available">NOT AVAILABLE</span>
-                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-                <p class="detail">This report will become available once the opening deputy report is complete</p>
-            </div>
-        </div>
-
-        {# see _list-reports.html.twig for field rendering #}
-        {#{% for report in reports %}#}
-            {#{% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}#}
-            {#<div style="border: 1px solid #c0c0c0; ">#}
-                {#<h2>{{ client.firstname }}</h2>#}
-                {#<div>{{ report.period }}</div>#}
-                {#<div>Due: {{ report.dueDate | date }}</div>#}
-                {#<span class="button-wrapper">#}
-                    {#<a href="{{ linkToReportOverviewPage }}" class="open-button button behat-link-report-open behat-link-report-{{ report.getPeriod() | behat_namify }}-open">{{ 'reportDataList.startNow' | trans }}</a>#}
-                {#</span>#}
-                {#<div>#}
-                    {#not started#}
-                {#</div>#}
-            {#</div>#}
-        {#{% endfor %}#}
+        {% endif %}
 
     </div>
 {% endblock %}

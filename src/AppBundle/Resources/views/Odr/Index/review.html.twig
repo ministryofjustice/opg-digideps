@@ -1,34 +1,31 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% set translationDomain = "report-display" %}
-{% trans_default_domain translationDomain %}
-
-{% block pageTitle %}Complete the deputy report{% endblock %}
+{% block pageTitle %}ODR{% endblock %}
 
 {% block pageContent %}
 
-    {% if report.submitted == true %}
+    {% if odr.submitted == true %}
         <nav id="back-bar">
-            <a id="back-to-client" href="{{ path('client_show') }}">Your client</a>
+            <a id="overview-button" href="{{ path('odr_index') }}">Return to Homepage</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
     
     <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+        <h1>Review Opening Deputy Report</h1>
     </div>
-    {% if report.submitted == false %}
-        {% if reportStatus.isReadyToSubmit and report.isDue %}
+    {% if odr.submitted == false %}
+        {% if odrStatus.isReadyToSubmit and odr.isDue %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("report_overview" , {'reportId': report.id }),
-            'previousLabel': 'Edit this report',
-            'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit this odr',
+            'nextLink': path("odr_add_further_info" , {'odrId': odr.id }),
             'nextLabel': 'Sign and submit',
             'position': 'top'
             } %}
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("report_overview" , {'reportId': report.id }),
-            'previousLabel': 'Edit this report',
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit this odr',
             'position': 'top'
             } %}
         {% endif %}
@@ -36,24 +33,24 @@
     <a name="pageBody"></a>
     
     <div id="page-body">
-        <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
-        {% include 'AppBundle:Report:formatted.html.twig' %}
+        <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as pdf</a>
+        {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
     </div>
 
     <div id="body-footer-nav">
-        {% if report.submitted == false %}
-            {% if reportStatus.isReadyToSubmit and report.isDue %}
+        {% if odr.submitted == false %}
+            {% if odrStatus.isReadyToSubmit  %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-                'previousLink': path("report_overview" , {'reportId': report.id }),
-                'previousLabel': 'Edit this report',
-                'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+                'previousLink': path("odr_overview" , {'odrId': odr.id }),
+                'previousLabel': 'Edit this odr',
+                'nextLink': path("odr_add_further_info" , {'odrId': odr.id }),
                 'nextLabel': 'Sign and submit',
                 'position': 'bottom'
                 } %}
             {% else  %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-                'previousLink': path("report_overview" , {'reportId': report.id }),
-                'previousLabel': 'Edit this report',
+                'previousLink': path("odr_overview" , {'odrId': odr.id }),
+                'previousLabel': 'Edit this odr',
                 'position': 'bottom'
                 } %}
             {% endif %}

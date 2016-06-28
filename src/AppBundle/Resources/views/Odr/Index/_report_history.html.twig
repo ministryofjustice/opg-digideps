@@ -1,12 +1,32 @@
-<div class="row">
-    <h2 class="title2">Property and finance</h2>
-
-    <div class="box">
-        {% set additionalClass = reports ? 'not-finished' : 'not-started' %}
-        <span class="status {{ additionalClass }}">NOT STARTED</span>
-        <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-        {#<p class="date">21st December 2015 - 22nd December 2016</p>#}
-        <p class="detail">This report will become available once the opening deputy report is complete</p>
-        <a href="{{ path('report_create', {'clientId': client.id, 'action': 'create'}) }}" class="button">Start now</a>
-    </div>
+<div class="row list-table">
+    <h2>History of report submission ({{ 1 + reports | length }})</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Report type</th>
+            <th>Reporting period</th>
+            <th>Submission date</th>
+            <th>&nbsp;</th>
+            <th class="action">&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <td><a href="{{ path('report_review', {reportId: report.id}) }}" class="report">Property and Finance</a></td>
+                <td>{{ report.startDate | date("j M Y")  }} - {{ report.endDate | date("j M Y")  }}</td>
+                <td>{{ report.submitDate | date("j M Y")  }}</td>
+                <td><a href="{{ path('report_pdf', {reportId: report.id}) }}">Download</a></td>
+                <td class="action"><a href="{{ path('report_review', {reportId: report.id}) }}" class="button-grey">View</a></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="report">Opening Deputy Report</a></td>
+            <td>Start of deputyship</td>
+            <td>{{ odr.submitDate | date("j M Y") }}</td>
+            <td><a href="{{ path('odr_pdf', {odrId: odr.id}) }}">Download</a></td>
+            <td class="action"><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="button-grey">View</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>

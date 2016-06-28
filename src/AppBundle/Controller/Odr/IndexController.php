@@ -29,15 +29,29 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-        $clients = $this->getUser()->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
+        $client = $this->getClientOrThrowException();
+        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
+        $odr = $this->getOdr($client->getOdr()->getId(), ['odr']);
+        $odr->setClient($client);
 
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
-        arsort($reports);
+        //arsort($reports);
+
+        $reportActive = null;
+        $reportsSubmitted = [];
+        foreach($reports as $currentReport) {
+            if ($currentReport->getSubmitted()) {
+                $reportsSubmitted[] = $currentReport;
+            } else {
+                $reportActive = $currentReport;
+            }
+        }
 
         return [
-            'client' => $client,
-            'reports' => $reports,
+            'client' => $odr->getClient(),
+            'odr' => $odr,
+            'reportsSubmitted' => $reportsSubmitted,
+            'reportActive' => $reportActive,
         ];
     }
 
@@ -48,7 +62,9 @@ class IndexController extends AbstractController
     public function overviewAction()
     {
         $client = $this->getClientOrThrowException();
+        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
         $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr->setClient($client);
 
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
@@ -69,7 +85,9 @@ class IndexController extends AbstractController
     public function submitAction(Request $request)
     {
         $client = $this->getClientOrThrowException();
+        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
         $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr->setClient($client);
 
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('ODR already submitted and not editable.');
@@ -81,5 +99,70 @@ class IndexController extends AbstractController
         ]);
 
         return $this->redirect($this->generateUrl('odr_index'));
+    }
+
+    /**
+     * Used for active and archived ODRs.
+     *
+     * @Route("/odr/{odrId}/review", name="odr_review")
+     * @Template()
+     */
+    public function reviewAction($odrId)
+    {
+        $client = $this->getClientOrThrowException();
+        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
+        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr->setClient($client);
+
+        // check status
+        $odrStatusService = new OdrStatusService($odr);
+
+        return [
+            'odr' => $odr,
+            'deputy' => $this->getUser(),
+            'odrStatusService' => $odrStatusService,
+        ];
+    }
+
+    /**
+     * @Route("/odr/deputyodr-{odrId}.pdf", name="odr_pdf")
+     */
+    public function pdfViewAction($odrId)
+    {
+        $client = $this->getClientOrThrowException();
+        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
+        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr->setClient($client);
+
+        $pdfBinary = $this->getPdfBinaryContent($odr);
+
+        $response = new Response($pdfBinary);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        $name = 'OPG102-'.$odr->getClient()->getCaseNumber().'-ODR-'.date_format($odr->getEndDate(), 'Y').'.pdf';
+
+        $attachmentName = sprintf('DigiOdr-%s_%s_%s.pdf',
+            $odr->getEndDate()->format('Y'),
+            $odr->getSubmitDate() ? $odr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $odr->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+
+        return $response;
+    }
+
+
+    private function getPdfBinaryContent($odr)
+    {
+        $html = $this->render('AppBundle:Odr/Formatted:formatted_body.html.twig', array(
+            'odr' => $odr,
+        ))->getContent();
+
+        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
 }
