@@ -1,10 +1,20 @@
 <div class="row">
     <h2 class="title1">Opening deputyship report</h2>
 
-    <div class="box">
-        <span class="status not-started">NOT STARTED</span>
-        <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-        <p class="detail">You only need to complete this report once</p>
-        <a href="{{ path('odr_overview') }}" class="button">Start now</a>
-    </div>
+    {% if odrStatus.status == 'notStarted' %}
+        <div class="box">
+            <span class="status not-started">NOT STARTED</span>
+            <h3>{{ client.firstname }} {{ client.lastname }}</h3>
+            <p class="detail">You only need to complete this report once</p>
+            <a href="{{ path('odr_overview') }}" class="button">Start now</a>
+        </div>
+    {% else %}
+        <div class="box">
+            <span class="status not-finished">NOT FINISHED</span>
+            <h3>{{ client.firstname }} {{ client.lastname }}</h3>
+            <p class="detail">You only need to complete this report once</p>
+            <a href="{{ path('odr_overview') }}" class="button">Continue</a>
+        </div>
+    {% endif %}
+
 </div>

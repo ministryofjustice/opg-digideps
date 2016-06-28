@@ -25,6 +25,7 @@ class OdrStatusService
     {
         $states = [
             'visitsCare' => $this->getVisitsCareState(),
+            //...
         ];
 
         return array_filter($states, function ($e) {
@@ -43,7 +44,16 @@ class OdrStatusService
      */
     public function getStatus()
     {
+        if ($this->isReadyToSubmit()) {
+            return 'readyToSubmit';
+        }
+
+        if (!$this->odr->getVisitsCare()) {
+            return 'notStarted';
+        }
+
         return 'notFinished';
+
     }
 
 

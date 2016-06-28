@@ -30,6 +30,7 @@
 
             {% include 'AppBundle:Odr/Index:_odr_row.html.twig' with {
                 reports: reportsSubmitted,
+                odrStatus: odrStatus,
             } %}
 
             {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {

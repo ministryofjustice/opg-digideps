@@ -31,7 +31,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), ['odr']);
+        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
@@ -47,11 +47,14 @@ class IndexController extends AbstractController
             }
         }
 
+        $odrStatus = new OdrStatusService($odr);
+
         return [
             'client' => $odr->getClient(),
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,
+            'odrStatus' => $odrStatus,
         ];
     }
 
