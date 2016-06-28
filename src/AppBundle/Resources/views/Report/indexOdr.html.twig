@@ -12,79 +12,167 @@
 
     </header>
     {# temporary styles for prototype. do NOT merge those to master #}
-    <style type="text/css">
-        .home-odr h2.title {
-            border-bottom: 1px solid grey;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .home-odr h2 img {
-            vertical-align: middle
-        }
-        .home-odr .box {
-            border: 1px solid grey;
-            margin-bottom: 20px;
-            padding: 10px;
-        }
-        .home-odr .box img {
-            border: 1px solid grey;
-            margin-bottom: 20px;
-        }
-        .home-odr .box p.clientName {
-            font-weight: bold !IMPORTANT;
-            display: block;
-        }
-        .home-odr .box p.grey {
-            display: block;
-            color: grey;
-        }
-        .rounded {
-            font-size: 0.8em;
-            border-radius: 5px;
-            border: 2px solid #4a4a4a;
-            padding: 2px;
-            width: auto;
-            float: right;
-            font-weight:bold;
-        }
-        .rounded-grey {
-            color: grey;
-            border-color: grey;
-        }
-    </style>
     {# end temporary style #}
     <div id="page-body">
 
+        <div class="row">
+            <h2 class="title1">Opening deputyship report</h2>
+
+            <div class="box">
+                <span class="status not-started">NOT STARTED</span>
+                <h3>Mr Joe Bloggs</h3>
+                <p class="date">21st December 2015 - 22nd December 2016</p>
+                <p class="detail">You only need to complete this report once</p>
+                <a href="#" class="button">Start now</a>
+            </div>
+        </div>
+
+        <div class="row two-column">
+            <div class="column">
+                <h2 class="title1">Opening deputyship report</h2>
+                <div class="box inactive">
+                    <span class="status not-available">NOT AVAILABLE</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">This report will become available once the opening deputy report is complete</p>
+                </div>
+            </div>
+            <div class="column">
+                <h2 class="title2">Health and Welfare</h2>
+                <div class="box inactive">
+                    <span class="status not-available">NOT AVAILABLE</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">This report will become available once the opening deputy report is complete</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row two-column">
+            <div class="column">
+                <h2 class="title1">Opening deputyship report</h2>
+                <div class="box">
+                    <span class="status not-started">NOT STARTED</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">This report will become available once the opening deputy report is complete</p>
+                    <a href="#" class="button">Start now</a>
+                </div>
+            </div>
+            <div class="column">
+                <h2 class="title2">Health and Welfare</h2>
+                <div class="box">
+                    <span class="status not-finished">NOT FINISHED</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">This report will become available once the opening deputy report is complete</p>
+                    <a href="#" class="button">Continue</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row list-table">
+            <h2>History of report submission (1)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report type</th>
+                        <th>Reporting period</th>
+                        <th>Submission date</th>
+                        <th>&nbsp;</th>
+                        <th class="action">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="report">Open Deputy Report</a></td>
+                        <td>Start of deputyship</td>
+                        <td>dd/mm/yy</td>
+                        <td><a href="#">Download</a></td>
+                        <td class="action"><a href="#" class="button-grey">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="row two-column">
+            <div class="column">
+                <h2 class="title1">Property and Finance</h2>
+                <div class="box">
+                    <span class="status complete">COMPLETE</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">&nbsp;<br>Submitted</p>
+                    <a href="#" class="button-grey">View</a>
+                </div>
+            </div>
+            <div class="column">
+                <h2 class="title2">Health and Welfare</h2>
+                <div class="box">
+                    <span class="status not-finished">NOT FINISHED</span>
+                    <h3>Mr Joe Bloggs</h3>
+                    <p class="date">21st December 2015 - 22nd December 2016</p>
+                    <p class="detail">This report will become available once the opening deputy report is complete</p>
+                    <a href="#" class="button">Continue</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row list-table">
+            <h2>History of report submission (1)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report type</th>
+                        <th>Reporting period</th>
+                        <th>Submission date</th>
+                        <th>&nbsp;</th>
+                        <th class="action">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="report">Property and Finance</a></td>
+                        <td>21st Dec 2015 - 22nd Dec 2016</td>
+                        <td>21st Dec 2016</td>
+                        <td><a href="#">Download</a></td>
+                        <td class="action"><a href="#" class="button-grey">View</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="report">Open Deputy Report</a></td>
+                        <td>Start of deputyship</td>
+                        <td>21 Jan 2016</td>
+                        <td><a href="#">Download</a></td>
+                        <td class="action"><a href="#" class="button-grey">View</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 
         {# ODR #}
-        <h2 class="title" >
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH8AAABACAYAAAAzkahrAAAKqmlDQ1BJQ0MgUHJvZmlsZQAASImVlgdUU1kax+976Y0Weg29CdKrlNBD781GSCihxBAIAqIiMjgCI4qICKgjMlQFR6XIoCKi2AYFC/YJMqio42ABCyrzgCXs7J7dPfvlfO/+zpf7/ve7N7nn/AEg32LyeCmwBACp3Ax+sKcLLTIqmoYTAhhQkI85MGGy0nn0wEBfgMTi+PeYvgOgufGm0ZzWv3//X0OSHZfOAgAKRDiWnc5KRfgkkj0sHj8DABQPqWuuz+DNcTnC0nykQYQb5zhhgXvmOHaBb8zPCQ12Rfh3APBkJpOfAABpEqnTMlkJiA4Z2S0w4bI5XISdEXZkJTLZCOchvCw1dd0cH0FYL/afdBL+phkr0mQyE0S8sJf5wLtx0nkpzOz/8zj+d6SmCBbX0ECSnMj3Cp7bM3JmjcnrfETMjfUPWGQOe37+PCcKvMIWmZXuGr3IbKabzyILksPoi8zkL73LyWCELjJ/XbBIn5vi7yvSj2OIOC7dPWSR4zkejEXOSQyNWORMTrj/Iqcnh/gszXEV1fmCYFHP8XwP0R5T05d6YzGX1spIDPVa6iFS1A87zs1dVOeGiebzMlxEmryUwKX+UzxF9fTMENG7GcgfbJGTmN6BSzqBovMBdBACwpCkgXDkaQYsgHVGXFbGXMOu63jZfE5CYgaNjtyYOBqDyzJeRjMzMbUCYO7+Lfy87+7O3ytIFr9U47gBYDUGABy3VGO1A3AKWVOyfamm/wgACSIAZ6VYAn7mQg0998AAIhBHOlQAqkAT6AEjpDMrYA+cgTvwBgEgFESBNYAFEkEq4IP1IBdsAYWgGOwEe0AVOAgOg0ZwFBwHnaAHnAMXwVVwA9wGD4AQjIOXYBJMgxkIgnAQBaJCCpAapA0ZQmaQDeQIuUO+UDAUBcVACRAXEkC50FaoGCqDqqBDUBP0M3QKOgddhoage9AoNAG9hT7DKJgMS8MqsA68HLaB6bAPHAqvhhPgNDgHLoB3wJVwLXwE7oDPwVfh27AQfglPoQCKhJJFqaOMUDYoV1QAKhoVj+KjNqGKUBWoWlQrqhs1gLqJEqJeoT6hsWgqmoY2QtujvdBhaBY6Db0JXYKuQjeiO9D96JvoUfQk+huGglHGGGLsMAxMJCYBsx5TiKnA1GPaMRcwtzHjmGksFiuL1cVaY72wUdgk7AZsCXY/tg3bix3CjmGncDicAs4Q54ALwDFxGbhC3D7cEdxZ3DBuHPcRT8Kr4c3wHvhoPBefj6/AN+PP4Ifxz/AzBAmCNsGOEEBgE7IJpYQ6QjfhOmGcMEOUJOoSHYihxCTiFmIlsZV4gfiQ+I5EImmQbElBJA4pj1RJOka6RBolfSJLkQ3IruRVZAF5B7mB3Eu+R35HoVB0KM6UaEoGZQeliXKe8pjyUYwqZizGEGOLbRarFusQGxZ7LU4Q1xani68RzxGvED8hfl38lQRBQkfCVYIpsUmiWuKUxIjElCRV0lQyQDJVskSyWfKy5HMpnJSOlLsUW6pA6rDUeakxKoqqSXWlsqhbqXXUC9Rxaay0rjRDOkm6WPqo9KD0pIyUjIVMuEyWTLXMaRmhLEpWR5YhmyJbKntc9o7sZzkVObpcnNx2uVa5YbkP8kryzvJx8kXybfK35T8r0BTcFZIVdil0KjxSRCsaKAYprlc8oHhB8ZWStJK9EkupSOm40n1lWNlAOVh5g/Jh5WvKUyqqKp4qPJV9KudVXqnKqjqrJqmWq55RnVCjqjmqcdTK1c6qvaDJ0Oi0FFolrZ82qa6s7qUuUD+kPqg+o6GrEaaRr9Gm8UiTqGmjGa9ZrtmnOamlpuWnlavVonVfm6Bto52ovVd7QPuDjq5OhM42nU6d57ryugzdHN0W3Yd6FD0nvTS9Wr1b+lh9G/1k/f36NwxgA0uDRINqg+uGsKGVIcdwv+HQMswy22XcZbXLRozIRnSjTKMWo1FjWWNf43zjTuPXy7WWRy/ftXxg+TcTS5MUkzqTB6ZSpt6m+abdpm/NDMxYZtVmt8wp5h7mm827zN9YGFrEWRywuGtJtfSz3GbZZ/nVytqKb9VqNWGtZR1jXWM9YiNtE2hTYnPJFmPrYrvZtsf2k52VXYbdcbs/7Y3sk+2b7Z+v0F0Rt6JuxZiDhgPT4ZCD0JHmGOP4o6PQSd2J6VTr9MRZ05ntXO/8jK5PT6Ifob92MXHhu7S7fHC1c93o2uuGcvN0K3IbdJdyD3Ovcn/soeGR4NHiMelp6bnBs9cL4+XjtctrhKHCYDGaGJPe1t4bvft9yD4hPlU+T3wNfPm+3X6wn7ffbr+H/tr+XP/OABDACNgd8ChQNzAt8JcgbFBgUHXQ02DT4NzggRBqyNqQ5pDpUJfQ0tAHYXphgrC+cPHwVeFN4R8i3CLKIoSRyyM3Rl6NUoziRHVF46LDo+ujp1a6r9yzcnyV5arCVXdW667OWn15jeKalDWn14qvZa49EYOJiYhpjvnCDGDWMqdiGbE1sZMsV9Ze1ku2M7ucPRHnEFcW9yzeIb4s/nmCQ8LuhIlEp8SKxFccV04V502SV9LBpA/JAckNybMpESltqfjUmNRTXCluMrd/neq6rHVDPENeIU+YZpe2J22S78OvT4fSV6d3ZUgjRueaQE/wnWA00zGzOvPj+vD1J7Iks7hZ17INsrdnP8vxyPlpA3oDa0NfrnrultzRjfSNhzZBm2I39W3W3FyweTzPM69xC3FL8pZf803yy/Lfb43Y2l2gUpBXMPad53cthWKF/MKRbfbbDn6P/p7z/eB28+37tn8rYhddKTYprij+UsIqufKD6Q+VP8zuiN8xWGpVemAndid3551dTrsayyTLcsrGdvvt7iinlReVv9+zds/lCouKg3uJewV7hZW+lV37tPbt3PelKrHqdrVLdVuNcs32mg/72fuHDzgfaD2ocrD44OcfOT/ePeR5qKNWp7biMPZw5uGndeF1Az/Z/NRUr1hfXP+1gdsgbAxu7G+ybmpqVm4ubYFbBC0TR1YduXHU7WhXq1HroTbZtuJj4Jjg2IufY36+c9zneN8JmxOtJ7VP1rRT24s6oI7sjsnOxE5hV1TX0CnvU33d9t3tvxj/0tCj3lN9WuZ06RnimYIzs2dzzk718npfnUs4N9a3tu/B+cjzt/qD+gcv+Fy4dNHj4vkB+sDZSw6Xei7bXT51xeZK51Wrqx3XLK+1/2r5a/ug1WDHdevrXTdsb3QPrRg6M+w0fO6m282Ltxi3rt72vz10J+zO3ZFVI8K77LvP76Xce3M/8/7Mg7yHmIdFjyQeVTxWflz7m/5vbUIr4elRt9FrT0KePBhjjb38Pf33L+MFTylPK56pPWt6bva8Z8Jj4saLlS/GX/Jezrwq/EPyj5rXeq9P/un857XJyMnxN/w3s29L3im8a3hv8b5vKnDq8XTq9MyHoo8KHxs/2Xwa+Bzx+dnM+i+4L5Vf9b92f/P59nA2dXaWx+Qz560ACkk4Ph6Atw0AUKIAoCK+mSi24I/nA1rw9PME/hMveOj5QJxLHTKE5wEQgOQBJPV6AWI1AAh0BiDUGcDm5qL8R6THm5staJE6EWtSMTv7DvGFOH0Avo7Mzs50zs5+rUeavQ9A7/SCL5/3MRwAtKoQz+MzzNkG/jX+AiG5BF+oTD9QAAABnGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4xMjc8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NjQ8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KUW5/MgAAEQdJREFUeAHtXAl4TdcWXpFIIiIxRKggxppDzNQQVA0NPs9QU1u0pS01xNM+U99rtd9r0QlVQzW8UlpiaquoeaoG1RZBqTnGxJQYIsJb/7rOyTnHHXKTk7jfd+/+vnvPtM+e1t5r/WvYx+sBJ/IktxyBfG7Za0+nZQQ8xHfjieAhvof4bjwCbtx1z8r3EN+NR8CNu+5Z+R7iu/EIuHHXPSvfQ3w3HgE37rpn5XuI78Yj4MZd93Hjvudq11NSUujatWt09epVPl6h69dvUKFChSg4uDAVKVKEihYtSkFBQbnaBkeFe4jvaISy+DwjI4MOHz5M+/bto71799Dp06fp7t27D3/plJGRTvny+ZCfX37Kn9+Xf/mpdOnSVKdOJNWtG0k1atQkX1/fLNZmTjYvV3bp3rt3j3x8XHt+3r59mzZsWE/ff7+Kzpw5Q1euXJHVfufOHXLkLffz8xMuULhwEQoLK0UdOnSk9u075BlHcFnib9u2jWbPnkUREbXp9ddfp4IFC5oz3U0qBSt9y5bNtHjxt7ziEygx8Rzdu5fukOC2qvf29qEnnniCKlWqRD179qC2bdsxl/Czld2U+y5HfLDK2Ni59O2339GJE8dZRgZT48ZNaNSof1LlypVN6XROCzl79izNmTObtm/fTqdOnaT09OwT3dgWTIIyZcpQgwYN6NVXX5PJ4OXlZcxmyrVLET8xMZE++mgKbd26lS5duqh20M/Pn6pWrUqDBw+m6OhO6v3HcbJz506aNm0q7d+/n1JSblhd6YUKBVKJEiVkJYeGlqBSpcIE4AEAXrhwni5evEDnz+N4UYCgNfEQEFCQqlSpQkOHvkGtW7cmb29v07vrMsTfunULTZ8+lf78cz/dunVLOorOnzx5gtLS7hJmf9my4dSpUycWA0MoMDBQHYxJkz6kO3duq9fKSdGixWTwlOucHtevXy+T86+/jshqN5aH9vbo0YNq146kgIAAKlCggLBuHAHwgGGAEdLS0tRjQsIBWrLkO55MBxgUZuiKzJcvH4WHl6OYmBh69tlo0/HPYyc+BuKrr+byACyh48eP0/37GTLLe/XqRX37Pk9HjhyhKVMmsUxNlIEpUqQoNWrUSMQABhupadMmdOPGDTnX/oWHl6Uff/xJeyvb53v37qXx48fQoUOHuY33deWEhYVR7959KCoqSogFUZXVBJUQfduxYxstWLCARd2JR8oPDw+niRPfp+bNm5vKAR4r8c+ePfOQzW+jy5cvyXiFhBSjESNi6Omn2zK7LCUrBCx22rTPGGBtkTwAQlWrVqNXXhkknCAioiazz+uPjHf58uX5nW2P3Hf2BmR8TMwI2r17D6/Oe+rr+fJ5U+fO0dSv3wssmysLa1cfOnmC9gM/fPPNQlq2bDlzh9ssUpRCvKh69Wr06adTRRSYhQG8/8NJqSIvj5s3b6J3332HZ/xOJtw1qbpu3Xr0zjsTRcYVKxYi98AugYKhDwcGFmSx8IeIAWCCgwcPMDa4RL//vk/0aWP7YUwZMGCg8bZT1+BMEye+KzgkPf2u+q6vb34aPnwE9e8/kAlTXdi8+jAbJ/7+/owTSlK1atW5vyXpt9/2cp/S1ZKSk6/QuXPnhbsgrxkpz4kP/XfmzJn0xRdfUEJCAsvOu8LK+vbtx6x8FMvLOuTvX0DXN8x0WMSqVKkqv4MH9wtQwmo5evQY3bx50yrwMoP4ixZ9I+z41q2bapsgi4cNG8liqa9wJ1zbS6mpqQz0LlBychJn8xIsYCs/rH4VKlQk6P7x8b+q2AKg8Ny5RJlkderUMYX956kFBVYvoPnt28HmL0v/Q0KK08iRI5nNP80zvpStMZH7xYsXFyNIWFhp+vzz6bRp00Y2nV61+05OHkL+xsZ+xXjium5yAdT17t2bQkJCBIjaqgM4YenSJTxBjwrIA1aAFS80NFRwS+fOXaQM4/vADN26dWMscIbmz5+vcjUsnHnzYln2t6CaNWuyxdD+pDOWa7zOM5m/ceMGJtjndODAAZbjFjRfv359JnwMRUbW1aF3YyON1xhEaAEY2C+/nMNIP82YRa5zKvPHjx/HRpzFPPiZ5UdE1GLZO40qVqxol/CzZ8+m5cuXiRw3ciaIMog14JY33xzNYqOGVUKCW8TEDKdfftml0QS8qEuXLjR58hTmkDlj/7m+8qHazJ07hwkVJwQD4aCz9uvX7yFQquQ0C8OMB2scOPBlNvxUYW4yWWzpVmdANm8mJBykdevWiVhSigDQHD48hjCp7IGuTZs28YqNFRRv1AxQFoxC0PeTkpIEQM6cOUucPko9yrFkyZJS36FDg8RsbLEHPGBz8gbGOb9Tw4YNrU4a5X1Hx5zxDQelnzp1it56601W5WJZjftbVBiw7vfee5919aGCXDERspvAdjt0aM8r8TNq06b1I8Wkp2fo2PUjGezciIuL4wFP1r3fuXNnYdf22gyAOGvWDJbP51SVLTg4SEBsr169GdNEqJMdljyYcu2t4MjISOra9R9iJ1Cam5qaIlwP1tCcpFxj+zCIQC5jBWH1I2GmQo0DYNEaaXLSAbxrEQMnWUWKE38AZCMSVmr//gPE0OOM7g0gGR0dzY6ak1y2Rd8KCCjAJuelVKtWLburbffu3axh9FetfyCsoqL5+/sxfkhhrjCPQWoKPf98fy6vJgPAAGmvrT+IuO7duwlOUqyBsHesXr2aHUKlbb3m8L7pbB+EVuQdGg3C+Ph4c0dfYHTcj2Wl82zeUS8sYqCCEBr2f4iBkydPCciCzIbxCGbS2rVr2yWcUg/UrKSkSyrhcb9585ZiZ3cEso4ePSIYQSFSo0aNxTgDXz4S24PojTeGiQyHS9dReXgHls1WrVrL5IbIQALQjY/fzXaOktm2/JnK9oGOR48eJfJOYfMlSoQym/8vvfbaEHryySoqy5MemPwHMdCuXXv6+OPPxEiE4mFD2MLetzFj/sUrd7FMCEfV/vprpoql5O3YsWOWvGy3bunNzPDSGf30sAiWLVs2S4RH/ZggHTp00LF+TK74+F1iMlba6OzRtJX/88/raMaMGWx4Oaja2WFe/eCDycLm88olCzZbr149mjBhAgdLhLFqNE9UpUOHEmjq1Klsnj0kXCA0tDiPlXVvGfqgBWpA5w0aNMzWxDUrHqFevfqs4/uLCFW4yoEDaKfeH+DMBDCF+J988jGtWLFC1BrtoJUrV5HdsY2zNWjOdMKYF0i8fPkKwipBfCQMWGLiWWady8R+PmbMGFG1rLHdM2dO64gPuQrMYA/hQ51buHAhwesHB46SoOvDoKVMAkxMYB97oFF5V3tE/aVKleVAkWssMiw4BMEj2vHW5s/KuSnEX79+g/jejRUC4DjbSWMZObm2xm1gsNmxYwdPhHNiLbRWPkSFsrrwHKLLUT+AdRYs+N9D9S1zNcIEDeyTOXHuC2dyVJ61dpUsGcoAGpLa4lgCMNW209o79u6ZIvNHjBgmoUdNmjQR2WSvwsf1zM/Pl4YMGSorGG7hiIgImzI3I+O+blART+AoYQUmJycTTLlagmBSQJ+HRRO/1FTrpmhH5eO5r68/T6LMnGD5mc6fzPtZPTNl5bdoESW6djj7nsFWXTHBAweTbP36DdgwVElMrJmrUd9iLfEsT7x0g67PbbnCSi5Xrpzo94jjU8qAjo+4AqUu+CiUc2vl2LtnIXwm9XNCeNRjCvGhT7dsGSVoFGqdqyboxi1atNChZmtt9fLyFmIrg5uenuZwhUEmT5o0hU26cSrIRNlRUa1FBVUQP+z6AJDZSfDyKZMK7wOvaDmBs2WaQnxUmt0OOdvgnObPSjuDgwuxigiHkQVYwW2sHXRrbQCgq1GjBtvhd+rECdRPOGGwQHKakpIu6toRFIRopkxO4Gz5psh8Zyt19fxG4wu0BGuRQnnZD2gTZ88m6tB9WFgZ3URztj2mrXxnK9bmB2rVqkfaZ7bOCxcu7BCB23rX0X1422CmVWLq7ty5KwEjYNn2UDryGzkErnFfKcta3fbKVPIjiMUIFhHUmpV3lTKMR5cg/ocffiCBHcbG2buGSzO3QrkbNmxACOLIdJw8oDVrfhK7ga3Bxras4cOHiQ0h8z0S+zvC0KzZE9A/xOfB0WXPuYN8q1f/pPMw4l7Dho1U+wGunU0uQXwEacKe7kxSInydeSereRs3bsqRNME6a9rmzZvFiAUTtTW0Dps7tmkhIFOb4LrFz1aCTcEeV8B78BBu2rSBuWNmWFdgYEGCam1rMtqqT3vf5WQ+vH1gr9Z+2obn5jlESlRUG92qgmVtwYKvNdwgN1ugL3vRogUc4693NLVs2cquuqovwfqVS6x8bdOgi0dHd9beUs+7du2iAzzqA5NPsLL79OlNP/ywSlabReV7QKtWfc9hZB2tmqxhzWzfvr3qvs5qk+DkUUy/1t6ByIiLWy6eQuU5VnufPn1yrEG4HPFLly7DYV2RSj91R2vsVpfBxAuAvmeeaUcrV65QgyivXr3CHsOPOE5hBiHKRpsKFgxkmT/yEcCnzWPtHPq/YgMwPocIgd8EYkMLJFu3biN7GHPC8lGXyxHfOACP6xoEefnlV9hRs0O2VimDjzBxbNcaO3acbvMoCAE3rVkJOAAxj7t27dRhAsQFDBo02GrYl7N1u5zMd7YDuZkfO4JeeuklHXsFsFu5cqVE9WpRvdntwOYNBKjevHlLt+oHDBho1y/hTDs8xLczWljN3bv35Pg7PfiDZzA2Npb3Fk6XPQN2inD6Eewd2AGMvQ1JSZd1hG/WrJn4JxyphVmt1MP2HYwUNn7ExMSImodAEMV/ju1lX389X9y12EoNg4stXd5BFepjhJuB8Bs3bpSdvEpdyIBQrlGjRsveBrOwj4f46tDbPqlUqTKNGzdBQtSgcyvyHy7ctWvX0LFjR/ljCm15h+5zHKMXZtUOYLt0ki1ncAitXbtWPu1ijPOH6jl27FiHwaP26rD2zEN8a6NiuIcVjeibt9/+t+wv1E4A+OsRToV9dFu2bOXv69Rlt3F9Dtiob1cPx8TZt+83NgztpT179ohlEH5/Y1gWCD9+/AS2O7SyqRUYmpvly1wlPr5CFR8f77AxRquYwxc4A/b5IUbeXsIHksxKQP+IoC1QoIBsOcPOo0zL3AOJ8Ycq+Pffxwhh6xAX+BUvHsq/EAkiQT8vX07ioI/LnP+qbMTAO/BtaFm80mYEf+KLJC1btszxRlClTO0xV4l/8OAhZpdjtPVZPT99+ozV+/Zuzpgx3aE93BhJa6+8rDwD0HrqqWa8v644B60slWhgrbMF4gCExA+hW/jEir8/9Hh/MeRgsqSl3eHfXZ4491TxYawbUUfYqNGzZy9xB5sF8Iz15CrxsbMEdvvcSNgN9DgS4gHgn4efvkmTp1gd+44B2gYhqLE9IPDNm/hZ9iYanxuvIV6A6J97rpfsX8wOfjCWae/adOJjN86LL75or067z2BZs5Ww8ePBA0vwoq08tu77+OQ3VWbCwlesWDHxLMIcvWbNj7Rt23ZZ9QogtNUW4318wqVp06bUsWM0h7nX5pDzMg65mrGM7Fybvl0Lqz0lJTU7bZF3goKCdJYzbUEWM6f2TtbPoR7hI0lmqUnamrE9DNE+aN+RI4fpjz/+5G3ZRwQEAthpYxWwuhHHZ/nsWmU22NTkDzLUEBUO7cNEyKtkOvHzquGuWA9WPKJ3EfUDcIdJge3oluNtWc2Q39ibh7Auy+dYg+WYG5PS0Rh5iO9ohEx4DqAHNI9Vn1NnjAnNUYvwEF8dCvc78dj23Y/mao89xFeHwv1OPMR3P5qrPfYQXx0K9zvxEN/9aK72+P90EFrH1W6VOwAAAABJRU5ErkJggg==" />
-            Opening deputyship report</h2>
-        <div class="box">
-            <div class="rounded rounded-grey">NOT STARTED</div>
-            <p class="clientName">{{ client.firstname }} {{ client.lastname }}</p>
-            <p class="grey">You only need to complete this report once</p>
-            <a href="{{ path('odr_overview') }}" class="button">Start now</a>
-        </div>
+        <div class="row">
+            <h2 class="title1">Opening deputyship report</h2>
 
+            <div class="box">
+                <span class="status not-started">NOT STARTED</span>
+                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
+                <p class="detail">You only need to complete this report once</p>
+                <a href="{{ path('odr_overview') }}" class="button">Start now</a>
+            </div>
+        </div>
 
         {# REPORT #}
-        <h2 class="title" >
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAH8AAABACAYAAAAzkahrAAAKqmlDQ1BJQ0MgUHJvZmlsZQAASImVlgdUU1kax+976Y0Weg29CdKrlNBD781GSCihxBAIAqIiMjgCI4qICKgjMlQFR6XIoCKi2AYFC/YJMqio42ABCyrzgCXs7J7dPfvlfO/+zpf7/ve7N7nn/AEg32LyeCmwBACp3Ax+sKcLLTIqmoYTAhhQkI85MGGy0nn0wEBfgMTi+PeYvgOgufGm0ZzWv3//X0OSHZfOAgAKRDiWnc5KRfgkkj0sHj8DABQPqWuuz+DNcTnC0nykQYQb5zhhgXvmOHaBb8zPCQ12Rfh3APBkJpOfAABpEqnTMlkJiA4Z2S0w4bI5XISdEXZkJTLZCOchvCw1dd0cH0FYL/afdBL+phkr0mQyE0S8sJf5wLtx0nkpzOz/8zj+d6SmCBbX0ECSnMj3Cp7bM3JmjcnrfETMjfUPWGQOe37+PCcKvMIWmZXuGr3IbKabzyILksPoi8zkL73LyWCELjJ/XbBIn5vi7yvSj2OIOC7dPWSR4zkejEXOSQyNWORMTrj/Iqcnh/gszXEV1fmCYFHP8XwP0R5T05d6YzGX1spIDPVa6iFS1A87zs1dVOeGiebzMlxEmryUwKX+UzxF9fTMENG7GcgfbJGTmN6BSzqBovMBdBACwpCkgXDkaQYsgHVGXFbGXMOu63jZfE5CYgaNjtyYOBqDyzJeRjMzMbUCYO7+Lfy87+7O3ytIFr9U47gBYDUGABy3VGO1A3AKWVOyfamm/wgACSIAZ6VYAn7mQg0998AAIhBHOlQAqkAT6AEjpDMrYA+cgTvwBgEgFESBNYAFEkEq4IP1IBdsAYWgGOwEe0AVOAgOg0ZwFBwHnaAHnAMXwVVwA9wGD4AQjIOXYBJMgxkIgnAQBaJCCpAapA0ZQmaQDeQIuUO+UDAUBcVACRAXEkC50FaoGCqDqqBDUBP0M3QKOgddhoage9AoNAG9hT7DKJgMS8MqsA68HLaB6bAPHAqvhhPgNDgHLoB3wJVwLXwE7oDPwVfh27AQfglPoQCKhJJFqaOMUDYoV1QAKhoVj+KjNqGKUBWoWlQrqhs1gLqJEqJeoT6hsWgqmoY2QtujvdBhaBY6Db0JXYKuQjeiO9D96JvoUfQk+huGglHGGGLsMAxMJCYBsx5TiKnA1GPaMRcwtzHjmGksFiuL1cVaY72wUdgk7AZsCXY/tg3bix3CjmGncDicAs4Q54ALwDFxGbhC3D7cEdxZ3DBuHPcRT8Kr4c3wHvhoPBefj6/AN+PP4Ifxz/AzBAmCNsGOEEBgE7IJpYQ6QjfhOmGcMEOUJOoSHYihxCTiFmIlsZV4gfiQ+I5EImmQbElBJA4pj1RJOka6RBolfSJLkQ3IruRVZAF5B7mB3Eu+R35HoVB0KM6UaEoGZQeliXKe8pjyUYwqZizGEGOLbRarFusQGxZ7LU4Q1xani68RzxGvED8hfl38lQRBQkfCVYIpsUmiWuKUxIjElCRV0lQyQDJVskSyWfKy5HMpnJSOlLsUW6pA6rDUeakxKoqqSXWlsqhbqXXUC9Rxaay0rjRDOkm6WPqo9KD0pIyUjIVMuEyWTLXMaRmhLEpWR5YhmyJbKntc9o7sZzkVObpcnNx2uVa5YbkP8kryzvJx8kXybfK35T8r0BTcFZIVdil0KjxSRCsaKAYprlc8oHhB8ZWStJK9EkupSOm40n1lWNlAOVh5g/Jh5WvKUyqqKp4qPJV9KudVXqnKqjqrJqmWq55RnVCjqjmqcdTK1c6qvaDJ0Oi0FFolrZ82qa6s7qUuUD+kPqg+o6GrEaaRr9Gm8UiTqGmjGa9ZrtmnOamlpuWnlavVonVfm6Bto52ovVd7QPuDjq5OhM42nU6d57ryugzdHN0W3Yd6FD0nvTS9Wr1b+lh9G/1k/f36NwxgA0uDRINqg+uGsKGVIcdwv+HQMswy22XcZbXLRozIRnSjTKMWo1FjWWNf43zjTuPXy7WWRy/ftXxg+TcTS5MUkzqTB6ZSpt6m+abdpm/NDMxYZtVmt8wp5h7mm827zN9YGFrEWRywuGtJtfSz3GbZZ/nVytqKb9VqNWGtZR1jXWM9YiNtE2hTYnPJFmPrYrvZtsf2k52VXYbdcbs/7Y3sk+2b7Z+v0F0Rt6JuxZiDhgPT4ZCD0JHmGOP4o6PQSd2J6VTr9MRZ05ntXO/8jK5PT6Ifob92MXHhu7S7fHC1c93o2uuGcvN0K3IbdJdyD3Ovcn/soeGR4NHiMelp6bnBs9cL4+XjtctrhKHCYDGaGJPe1t4bvft9yD4hPlU+T3wNfPm+3X6wn7ffbr+H/tr+XP/OABDACNgd8ChQNzAt8JcgbFBgUHXQ02DT4NzggRBqyNqQ5pDpUJfQ0tAHYXphgrC+cPHwVeFN4R8i3CLKIoSRyyM3Rl6NUoziRHVF46LDo+ujp1a6r9yzcnyV5arCVXdW667OWn15jeKalDWn14qvZa49EYOJiYhpjvnCDGDWMqdiGbE1sZMsV9Ze1ku2M7ucPRHnEFcW9yzeIb4s/nmCQ8LuhIlEp8SKxFccV04V502SV9LBpA/JAckNybMpESltqfjUmNRTXCluMrd/neq6rHVDPENeIU+YZpe2J22S78OvT4fSV6d3ZUgjRueaQE/wnWA00zGzOvPj+vD1J7Iks7hZ17INsrdnP8vxyPlpA3oDa0NfrnrultzRjfSNhzZBm2I39W3W3FyweTzPM69xC3FL8pZf803yy/Lfb43Y2l2gUpBXMPad53cthWKF/MKRbfbbDn6P/p7z/eB28+37tn8rYhddKTYprij+UsIqufKD6Q+VP8zuiN8xWGpVemAndid3551dTrsayyTLcsrGdvvt7iinlReVv9+zds/lCouKg3uJewV7hZW+lV37tPbt3PelKrHqdrVLdVuNcs32mg/72fuHDzgfaD2ocrD44OcfOT/ePeR5qKNWp7biMPZw5uGndeF1Az/Z/NRUr1hfXP+1gdsgbAxu7G+ybmpqVm4ubYFbBC0TR1YduXHU7WhXq1HroTbZtuJj4Jjg2IufY36+c9zneN8JmxOtJ7VP1rRT24s6oI7sjsnOxE5hV1TX0CnvU33d9t3tvxj/0tCj3lN9WuZ06RnimYIzs2dzzk718npfnUs4N9a3tu/B+cjzt/qD+gcv+Fy4dNHj4vkB+sDZSw6Xei7bXT51xeZK51Wrqx3XLK+1/2r5a/ug1WDHdevrXTdsb3QPrRg6M+w0fO6m282Ltxi3rt72vz10J+zO3ZFVI8K77LvP76Xce3M/8/7Mg7yHmIdFjyQeVTxWflz7m/5vbUIr4elRt9FrT0KePBhjjb38Pf33L+MFTylPK56pPWt6bva8Z8Jj4saLlS/GX/Jezrwq/EPyj5rXeq9P/un857XJyMnxN/w3s29L3im8a3hv8b5vKnDq8XTq9MyHoo8KHxs/2Xwa+Bzx+dnM+i+4L5Vf9b92f/P59nA2dXaWx+Qz560ACkk4Ph6Atw0AUKIAoCK+mSi24I/nA1rw9PME/hMveOj5QJxLHTKE5wEQgOQBJPV6AWI1AAh0BiDUGcDm5qL8R6THm5staJE6EWtSMTv7DvGFOH0Avo7Mzs50zs5+rUeavQ9A7/SCL5/3MRwAtKoQz+MzzNkG/jX+AiG5BF+oTD9QAAABnGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4xMjc8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NjQ8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KUW5/MgAAEQdJREFUeAHtXAl4TdcWXpFIIiIxRKggxppDzNQQVA0NPs9QU1u0pS01xNM+U99rtd9r0QlVQzW8UlpiaquoeaoG1RZBqTnGxJQYIsJb/7rOyTnHHXKTk7jfd+/+vnvPtM+e1t5r/WvYx+sBJ/IktxyBfG7Za0+nZQQ8xHfjieAhvof4bjwCbtx1z8r3EN+NR8CNu+5Z+R7iu/EIuHHXPSvfQ3w3HgE37rpn5XuI78Yj4MZd93Hjvudq11NSUujatWt09epVPl6h69dvUKFChSg4uDAVKVKEihYtSkFBQbnaBkeFe4jvaISy+DwjI4MOHz5M+/bto71799Dp06fp7t27D3/plJGRTvny+ZCfX37Kn9+Xf/mpdOnSVKdOJNWtG0k1atQkX1/fLNZmTjYvV3bp3rt3j3x8XHt+3r59mzZsWE/ff7+Kzpw5Q1euXJHVfufOHXLkLffz8xMuULhwEQoLK0UdOnSk9u075BlHcFnib9u2jWbPnkUREbXp9ddfp4IFC5oz3U0qBSt9y5bNtHjxt7ziEygx8Rzdu5fukOC2qvf29qEnnniCKlWqRD179qC2bdsxl/Czld2U+y5HfLDK2Ni59O2339GJE8dZRgZT48ZNaNSof1LlypVN6XROCzl79izNmTObtm/fTqdOnaT09OwT3dgWTIIyZcpQgwYN6NVXX5PJ4OXlZcxmyrVLET8xMZE++mgKbd26lS5duqh20M/Pn6pWrUqDBw+m6OhO6v3HcbJz506aNm0q7d+/n1JSblhd6YUKBVKJEiVkJYeGlqBSpcIE4AEAXrhwni5evEDnz+N4UYCgNfEQEFCQqlSpQkOHvkGtW7cmb29v07vrMsTfunULTZ8+lf78cz/dunVLOorOnzx5gtLS7hJmf9my4dSpUycWA0MoMDBQHYxJkz6kO3duq9fKSdGixWTwlOucHtevXy+T86+/jshqN5aH9vbo0YNq146kgIAAKlCggLBuHAHwgGGAEdLS0tRjQsIBWrLkO55MBxgUZuiKzJcvH4WHl6OYmBh69tlo0/HPYyc+BuKrr+byACyh48eP0/37GTLLe/XqRX37Pk9HjhyhKVMmsUxNlIEpUqQoNWrUSMQABhupadMmdOPGDTnX/oWHl6Uff/xJeyvb53v37qXx48fQoUOHuY33deWEhYVR7959KCoqSogFUZXVBJUQfduxYxstWLCARd2JR8oPDw+niRPfp+bNm5vKAR4r8c+ePfOQzW+jy5cvyXiFhBSjESNi6Omn2zK7LCUrBCx22rTPGGBtkTwAQlWrVqNXXhkknCAioiazz+uPjHf58uX5nW2P3Hf2BmR8TMwI2r17D6/Oe+rr+fJ5U+fO0dSv3wssmysLa1cfOnmC9gM/fPPNQlq2bDlzh9ssUpRCvKh69Wr06adTRRSYhQG8/8NJqSIvj5s3b6J3332HZ/xOJtw1qbpu3Xr0zjsTRcYVKxYi98AugYKhDwcGFmSx8IeIAWCCgwcPMDa4RL//vk/0aWP7YUwZMGCg8bZT1+BMEye+KzgkPf2u+q6vb34aPnwE9e8/kAlTXdi8+jAbJ/7+/owTSlK1atW5vyXpt9/2cp/S1ZKSk6/QuXPnhbsgrxkpz4kP/XfmzJn0xRdfUEJCAsvOu8LK+vbtx6x8FMvLOuTvX0DXN8x0WMSqVKkqv4MH9wtQwmo5evQY3bx50yrwMoP4ixZ9I+z41q2bapsgi4cNG8liqa9wJ1zbS6mpqQz0LlBychJn8xIsYCs/rH4VKlQk6P7x8b+q2AKg8Ny5RJlkderUMYX956kFBVYvoPnt28HmL0v/Q0KK08iRI5nNP80zvpStMZH7xYsXFyNIWFhp+vzz6bRp00Y2nV61+05OHkL+xsZ+xXjium5yAdT17t2bQkJCBIjaqgM4YenSJTxBjwrIA1aAFS80NFRwS+fOXaQM4/vADN26dWMscIbmz5+vcjUsnHnzYln2t6CaNWuyxdD+pDOWa7zOM5m/ceMGJtjndODAAZbjFjRfv359JnwMRUbW1aF3YyON1xhEaAEY2C+/nMNIP82YRa5zKvPHjx/HRpzFPPiZ5UdE1GLZO40qVqxol/CzZ8+m5cuXiRw3ciaIMog14JY33xzNYqOGVUKCW8TEDKdfftml0QS8qEuXLjR58hTmkDlj/7m+8qHazJ07hwkVJwQD4aCz9uvX7yFQquQ0C8OMB2scOPBlNvxUYW4yWWzpVmdANm8mJBykdevWiVhSigDQHD48hjCp7IGuTZs28YqNFRRv1AxQFoxC0PeTkpIEQM6cOUucPko9yrFkyZJS36FDg8RsbLEHPGBz8gbGOb9Tw4YNrU4a5X1Hx5zxDQelnzp1it56601W5WJZjftbVBiw7vfee5919aGCXDERspvAdjt0aM8r8TNq06b1I8Wkp2fo2PUjGezciIuL4wFP1r3fuXNnYdf22gyAOGvWDJbP51SVLTg4SEBsr169GdNEqJMdljyYcu2t4MjISOra9R9iJ1Cam5qaIlwP1tCcpFxj+zCIQC5jBWH1I2GmQo0DYNEaaXLSAbxrEQMnWUWKE38AZCMSVmr//gPE0OOM7g0gGR0dzY6ak1y2Rd8KCCjAJuelVKtWLburbffu3axh9FetfyCsoqL5+/sxfkhhrjCPQWoKPf98fy6vJgPAAGmvrT+IuO7duwlOUqyBsHesXr2aHUKlbb3m8L7pbB+EVuQdGg3C+Ph4c0dfYHTcj2Wl82zeUS8sYqCCEBr2f4iBkydPCciCzIbxCGbS2rVr2yWcUg/UrKSkSyrhcb9585ZiZ3cEso4ePSIYQSFSo0aNxTgDXz4S24PojTeGiQyHS9dReXgHls1WrVrL5IbIQALQjY/fzXaOktm2/JnK9oGOR48eJfJOYfMlSoQym/8vvfbaEHryySoqy5MemPwHMdCuXXv6+OPPxEiE4mFD2MLetzFj/sUrd7FMCEfV/vprpoql5O3YsWOWvGy3bunNzPDSGf30sAiWLVs2S4RH/ZggHTp00LF+TK74+F1iMlba6OzRtJX/88/raMaMGWx4Oaja2WFe/eCDycLm88olCzZbr149mjBhAgdLhLFqNE9UpUOHEmjq1Klsnj0kXCA0tDiPlXVvGfqgBWpA5w0aNMzWxDUrHqFevfqs4/uLCFW4yoEDaKfeH+DMBDCF+J988jGtWLFC1BrtoJUrV5HdsY2zNWjOdMKYF0i8fPkKwipBfCQMWGLiWWady8R+PmbMGFG1rLHdM2dO64gPuQrMYA/hQ51buHAhwesHB46SoOvDoKVMAkxMYB97oFF5V3tE/aVKleVAkWssMiw4BMEj2vHW5s/KuSnEX79+g/jejRUC4DjbSWMZObm2xm1gsNmxYwdPhHNiLbRWPkSFsrrwHKLLUT+AdRYs+N9D9S1zNcIEDeyTOXHuC2dyVJ61dpUsGcoAGpLa4lgCMNW209o79u6ZIvNHjBgmoUdNmjQR2WSvwsf1zM/Pl4YMGSorGG7hiIgImzI3I+O+blART+AoYQUmJycTTLlagmBSQJ+HRRO/1FTrpmhH5eO5r68/T6LMnGD5mc6fzPtZPTNl5bdoESW6djj7nsFWXTHBAweTbP36DdgwVElMrJmrUd9iLfEsT7x0g67PbbnCSi5Xrpzo94jjU8qAjo+4AqUu+CiUc2vl2LtnIXwm9XNCeNRjCvGhT7dsGSVoFGqdqyboxi1atNChZmtt9fLyFmIrg5uenuZwhUEmT5o0hU26cSrIRNlRUa1FBVUQP+z6AJDZSfDyKZMK7wOvaDmBs2WaQnxUmt0OOdvgnObPSjuDgwuxigiHkQVYwW2sHXRrbQCgq1GjBtvhd+rECdRPOGGwQHKakpIu6toRFIRopkxO4Gz5psh8Zyt19fxG4wu0BGuRQnnZD2gTZ88m6tB9WFgZ3URztj2mrXxnK9bmB2rVqkfaZ7bOCxcu7BCB23rX0X1422CmVWLq7ty5KwEjYNn2UDryGzkErnFfKcta3fbKVPIjiMUIFhHUmpV3lTKMR5cg/ocffiCBHcbG2buGSzO3QrkbNmxACOLIdJw8oDVrfhK7ga3Bxras4cOHiQ0h8z0S+zvC0KzZE9A/xOfB0WXPuYN8q1f/pPMw4l7Dho1U+wGunU0uQXwEacKe7kxSInydeSereRs3bsqRNME6a9rmzZvFiAUTtTW0Dps7tmkhIFOb4LrFz1aCTcEeV8B78BBu2rSBuWNmWFdgYEGCam1rMtqqT3vf5WQ+vH1gr9Z+2obn5jlESlRUG92qgmVtwYKvNdwgN1ugL3vRogUc4693NLVs2cquuqovwfqVS6x8bdOgi0dHd9beUs+7du2iAzzqA5NPsLL79OlNP/ywSlabReV7QKtWfc9hZB2tmqxhzWzfvr3qvs5qk+DkUUy/1t6ByIiLWy6eQuU5VnufPn1yrEG4HPFLly7DYV2RSj91R2vsVpfBxAuAvmeeaUcrV65QgyivXr3CHsOPOE5hBiHKRpsKFgxkmT/yEcCnzWPtHPq/YgMwPocIgd8EYkMLJFu3biN7GHPC8lGXyxHfOACP6xoEefnlV9hRs0O2VimDjzBxbNcaO3acbvMoCAE3rVkJOAAxj7t27dRhAsQFDBo02GrYl7N1u5zMd7YDuZkfO4JeeuklHXsFsFu5cqVE9WpRvdntwOYNBKjevHlLt+oHDBho1y/hTDs8xLczWljN3bv35Pg7PfiDZzA2Npb3Fk6XPQN2inD6Eewd2AGMvQ1JSZd1hG/WrJn4JxyphVmt1MP2HYwUNn7ExMSImodAEMV/ju1lX389X9y12EoNg4stXd5BFepjhJuB8Bs3bpSdvEpdyIBQrlGjRsveBrOwj4f46tDbPqlUqTKNGzdBQtSgcyvyHy7ctWvX0LFjR/ljCm15h+5zHKMXZtUOYLt0ki1ncAitXbtWPu1ijPOH6jl27FiHwaP26rD2zEN8a6NiuIcVjeibt9/+t+wv1E4A+OsRToV9dFu2bOXv69Rlt3F9Dtiob1cPx8TZt+83NgztpT179ohlEH5/Y1gWCD9+/AS2O7SyqRUYmpvly1wlPr5CFR8f77AxRquYwxc4A/b5IUbeXsIHksxKQP+IoC1QoIBsOcPOo0zL3AOJ8Ycq+Pffxwhh6xAX+BUvHsq/EAkiQT8vX07ioI/LnP+qbMTAO/BtaFm80mYEf+KLJC1btszxRlClTO0xV4l/8OAhZpdjtPVZPT99+ozV+/Zuzpgx3aE93BhJa6+8rDwD0HrqqWa8v644B60slWhgrbMF4gCExA+hW/jEir8/9Hh/MeRgsqSl3eHfXZ4491TxYawbUUfYqNGzZy9xB5sF8Iz15CrxsbMEdvvcSNgN9DgS4gHgn4efvkmTp1gd+44B2gYhqLE9IPDNm/hZ9iYanxuvIV6A6J97rpfsX8wOfjCWae/adOJjN86LL75or067z2BZs5Ww8ePBA0vwoq08tu77+OQ3VWbCwlesWDHxLMIcvWbNj7Rt23ZZ9QogtNUW4318wqVp06bUsWM0h7nX5pDzMg65mrGM7Fybvl0Lqz0lJTU7bZF3goKCdJYzbUEWM6f2TtbPoR7hI0lmqUnamrE9DNE+aN+RI4fpjz/+5G3ZRwQEAthpYxWwuhHHZ/nsWmU22NTkDzLUEBUO7cNEyKtkOvHzquGuWA9WPKJ3EfUDcIdJge3oluNtWc2Q39ibh7Auy+dYg+WYG5PS0Rh5iO9ohEx4DqAHNI9Vn1NnjAnNUYvwEF8dCvc78dj23Y/mao89xFeHwv1OPMR3P5qrPfYQXx0K9zvxEN/9aK72+P90EFrH1W6VOwAAAABJRU5ErkJggg==" />
-            Property and finance
-        </h2>
+        <div class="row">
+            <h2 class="title2" >Property and finance</h2>
 
-        <div class="box" style="background-color: lightgrey">
-            <div class="rounded">NOT AVAILABLE</div>
-            <p class="clientName">{{ client.firstname }} {{ client.lastname }}</p>
-            <p class="grey">This report will become available once the opening deputy report is complete</p>
-
+            <div class="box inactive">
+                <span class="status not-available">NOT AVAILABLE</span>
+                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
+                <p class="detail">This report will become available once the opening deputy report is complete</p>
+            </div>
         </div>
-
-
-
 
         {# see _list-reports.html.twig for field rendering #}
         {#{% for report in reports %}#}
@@ -103,10 +191,4 @@
         {#{% endfor %}#}
 
     </div>
-
 {% endblock %}
-
-
-
-
-
