@@ -10,19 +10,18 @@
                 </div>
             </div>
             {% else %}
-            {% set assetsTotalValue = 0 %}
             <ul class="list" id="assets">
-                {% for type, assets in groupAssets %}
+                {% for type, assets in report.getAssetsGroupedByTitle %}
                         <li class="asset-group" data-group="{{ type }}">
-                        {% if type == 'property' %}
+                        {# each property has more than a grey box, so they are delegated to #}
+                        {% if type == 'Property' %}
                             {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
                         {% else %}
                              {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
                         {% endif%}
                     </li>
                 {% endfor %}
-        
-                {# total value #}
+
                 <li class="box total">
                     <div class="labelvalue inline">
                         <div class="label">Assets Total Value</div>
