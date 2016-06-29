@@ -50,10 +50,10 @@ class ManageController extends AbstractController
      */
     public function healthCheckXmlAction()
     {
-        list($healthy, $errors, $time) = $this->servicesHealth();
+        list($healthy, $services, $errors, $time) = $this->servicesHealth();
 
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
+            'status' => $healthy ? 'OK' : 'ERROR: ' . print_r($errors, true),
             'time' => $time * 1000,
         ]);
         $response->setStatusCode($healthy ? 200 : 500);
