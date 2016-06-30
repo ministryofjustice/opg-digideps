@@ -91,10 +91,10 @@ gulp.task('sass.application-print', () => {
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
 gulp.task('sass.images', () => {
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
 
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
         .pipe(gulp.dest('./web/images'));
 
     gulp.src(config.sassSrc + '/images/**/*')
@@ -110,9 +110,8 @@ gulp.task('sass.fonts', () => {
 
 // Copy non css related images
 gulp.task('images', () => {
-    gulp.src('node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
-    gulp.src('src/AppBundle/Resources/assets/images/*').pipe(gulp.dest('./web/images'));
-    gulp.src('src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
+    gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
+    gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
 });
 
 
@@ -120,8 +119,8 @@ gulp.task('images', () => {
 // Files are concatinated and then minified with uglify.
 gulp.task('js.prod', ['lint.js'], () => {
     return gulp.src([
-            'node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
-            'node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
+            './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
+            './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             config.jsSrc + '/*.js'])
         .pipe(concat('application.js'))
         .pipe(uglify())
@@ -133,8 +132,8 @@ gulp.task('js.prod', ['lint.js'], () => {
 // Used by the watch process.
 gulp.task('js.debug', function () {
     return gulp.src([
-            'node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
-            'node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
+            './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
+            './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             config.jsSrc + '/*.js'])
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
