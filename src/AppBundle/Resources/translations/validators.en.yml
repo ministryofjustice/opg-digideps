@@ -291,10 +291,10 @@ safeguarding:
 
 odr:
   submissionExceptions:
-      due: Opening deputyship report not due
-      submitted: Opening deputyship report not submitted
-      reviewedAndChecked: Opening deputyship report not reviewed and checked
-      readyForSubmission: Opening deputyship report not ready for submission
+      due: Opening Deputyship Report not due
+      submitted: Opening Deputyship Report not submitted
+      reviewedAndChecked: Opening Deputyship Report not reviewed and checked
+      readyForSubmission: Opening Deputyship Report not ready for submission
   visitsCare:
       doYouLiveWithClient:
           notBlank: Choose Yes or No

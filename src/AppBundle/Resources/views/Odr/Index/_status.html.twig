@@ -3,7 +3,7 @@
 
 <div id="report-status" class="{{ odrStatus.status }}">
     
-    <a class="button-grey heading heading-large" href="#">Review report</a>
+    <a class="button-grey heading heading-large" href="{{ path('odr_review', {odrId: odr.id}) }}">Review report</a>
     <div class="labelsvalues">
         <div class="labelvalue">
             <div class="label">Progress:</div>
@@ -12,7 +12,7 @@
         
         <div class="labelvalue">
             <div class="label">Status:</div>
-            <div class="value">{{ odrStatus.status | trans() }}</div>
+            <div class="value">{{ ('status.' ~ odrStatus.status) | trans() }}</div>
         </div>
     </div>
     

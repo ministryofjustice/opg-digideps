@@ -21,7 +21,7 @@
             </tr>
         {% endfor %}
         <tr>
-            <td><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="report">Opening Deputy Report</a></td>
+            <td><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="report">Opening Deputyship Report</a></td>
             <td>Start of deputyship</td>
             <td>{{ odr.submitDate | date("j M Y") }}</td>
             <td><a href="{{ path('odr_pdf', {odrId: odr.id}) }}">Download</a></td>

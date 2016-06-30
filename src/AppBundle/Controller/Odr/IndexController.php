@@ -123,7 +123,7 @@ class IndexController extends AbstractController
         return [
             'odr' => $odr,
             'deputy' => $this->getUser(),
-            'odrStatusService' => $odrStatusService,
+            'odrStatus' => $odrStatusService,
         ];
     }
 
