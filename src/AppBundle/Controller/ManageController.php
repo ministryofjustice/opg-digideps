@@ -33,6 +33,25 @@ class ManageController extends AbstractController
     }
 
 
+
+    /**
+     * @Route("/availability/pingdom")
+     * @Method({"GET"})
+     */
+    public function healthCheckXmlAction()
+    {
+        list($healthy, $services, $errors, $time) = $this->servicesHealth();
+
+        $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
+            'status' => $healthy ? 'OK' : 'ERRORS: ',
+            'time' => $time * 1000,
+        ]);
+        $response->setStatusCode($healthy ? 200 : 500);
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $response;
+    }
+
     /**
      * @Route("/elb", name="manage-elb")
      * @Method({"GET"})
@@ -43,24 +62,6 @@ class ManageController extends AbstractController
         return ['status' => 'OK'];
     }
 
-
-    /**
-     * @Route("/availability/pingdom")
-     * @Method({"GET"})
-     */
-    public function healthCheckXmlAction()
-    {
-        list($healthy, $errors, $time) = $this->servicesHealth();
-
-        $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
-            'time' => $time * 1000,
-        ]);
-        $response->setStatusCode($healthy ? 200 : 500);
-        $response->headers->set('Content-Type', 'text/xml');
-
-        return $response;
-    }
 
 
     /**

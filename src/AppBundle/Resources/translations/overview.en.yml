@@ -58,7 +58,7 @@ safeguarding:
     edit: "Edit visits"
     start: "Start visits"
 assets:
-    subSectionTitle: "Assets"
+    subSectionTitle: "Assets and debts"
     subSectionDescription: "Add %client%'s property, investments and other valuables"
     edit: "Edit assets"
     start: "Start assets"

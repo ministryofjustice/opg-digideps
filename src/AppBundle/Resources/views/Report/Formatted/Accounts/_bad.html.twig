@@ -6,17 +6,17 @@
 
     <div class="hero third-width first">
         <div class="message">Total balance after money in and money out:</div>
-        <div class="total">£{{ report.calculatedBalance | money_format }}</div>
+        <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
     </div>
 
     <div class="hero third-width">
         <div class="message">Total balance of all bank accounts:</div>
-        <div class="total">£{{ report.accountsClosingBalanceTotal | money_format }}</div>
+        <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
     </div>
 
     <div class="hero third-width">
         <div class="message">Difference:</div>
-        <div class="total">£{{ report.totalsOffset | abs | money_format }}</div>
+        <div class="total">&pound;{{ report.totalsOffset | abs | money_format }}</div>
     </div>
 
 </div>

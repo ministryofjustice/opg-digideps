@@ -31,16 +31,16 @@
                             {% endif %}
                         </div>
                     </td>
-                    <td class="numeric grey">£{{ account.openingBalance | money_format }}</td>
-                    <td class="numeric ">£ {{ (account.closingBalance - account.openingBalance) | money_format }}</td>
-                    <td class="numeric grey">£{{ account.closingBalance | money_format }}</td>
+                    <td class="numeric grey">&pound;{{ account.openingBalance | money_format }}</td>
+                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | money_format }}</td>
+                    <td class="numeric grey">&pound;{{ account.closingBalance | money_format }}</td>
                 </tr>
             {% endfor %}
                 <tr class="totals">
                     <td>&nbsp;</td>
-                    <td class="numeric">£{{ report.accountsOpeningBalanceTotal | money_format }}</td>
+                    <td class="numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">£{{ report.accountsClosingBalanceTotal | money_format}}</td>
+                    <td class="numeric reverse">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</td>
                 </tr>
             </tbody>
         </table>
@@ -51,19 +51,19 @@
             <tbody>
                 <tr>
                     <td>Total of all opening balances:</td>
-                    <td class="grey numeric">£{{ report.accountsOpeningBalanceTotal | money_format }}</td>
+                    <td class="grey numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
                 </tr>
                 <tr>
                     <td>Total money in:</td>
-                    <td class="grey numeric">£{{ report.moneyInTotal | money_format}}</td>
+                    <td class="grey numeric">&pound;{{ report.moneyInTotal | money_format}}</td>
                 </tr>
                 <tr>
                     <td>Total money out:</td>
-                    <td class="grey numeric">£{{ report.moneyOutTotal | money_format}}</td>
+                    <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
                 </tr>
                 <tr class="totals">
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">£{{ report.calculatedBalance | money_format}}</td>
+                    <td class="numeric reverse">&pound;{{ report.calculatedBalance | money_format}}</td>
                 </tr>
             </tbody>
         </table>
