@@ -23,7 +23,7 @@
                              {% set currentBank = transfer.accountTo %}
                             {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
                         </td>
-                        <td>£{{ transfer.amount | money_format }}</td>
+                        <td>&pound;{{ transfer.amount | money_format }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

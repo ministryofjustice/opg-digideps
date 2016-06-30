@@ -1,6 +1,6 @@
 {% if assets | length > 0 or odr.noAssetToAdd == true %}
     <div class="section" id="assets-section">
-        <h2 class="section-heading">Client’s assets</h2>
+        <h2 class="section-heading">Client's assets</h2>
     
         {% if odr.assets | length == 0 %}
             <div class="box contact-item no-contact">
@@ -26,7 +26,7 @@
                 <li class="box total">
                     <div class="labelvalue inline">
                         <div class="label">Assets Total Value</div>
-                        <div class="value" id="assetsTotal">£{{ odr.assetsTotalValue | money_format }}</div>
+                        <div class="value" id="assetsTotal">&pound;{{ odr.assetsTotalValue | money_format }}</div>
                     </div>
                 </li>
             </ul>
