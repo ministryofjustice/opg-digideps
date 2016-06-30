@@ -1,6 +1,6 @@
 
- {% for k, asset in assets %}
-     <h3>Property {{k + 1}}</h3>
+ {% for asset in assets %}
+     <h3>Property {{ loop.index }}</h3>
 
      {# address #}
      <div class="box">
