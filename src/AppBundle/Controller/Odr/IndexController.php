@@ -31,7 +31,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
@@ -66,7 +66,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         if ($odr->getSubmitted()) {
@@ -89,7 +89,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         if ($odr->getSubmitted()) {
@@ -114,7 +114,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         // check status
@@ -134,7 +134,7 @@ class IndexController extends AbstractController
     {
         $client = $this->getClientOrThrowException();
         $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getId(), self::$odrGroupsForValidation);
+        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
         $odr->setClient($client);
 
         $pdfBinary = $this->getPdfBinaryContent($odr);

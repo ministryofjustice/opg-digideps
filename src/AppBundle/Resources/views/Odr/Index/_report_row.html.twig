@@ -1,34 +1,114 @@
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
 <div class="row">
-    <h2 class="title2">Property and finance</h2>
+    <h2 class="heading-medium underlined pf-icon">Property and finance</h2>
 
-    {% if enabled %}
+    {% if odr.submitted %}
+        {#
+        # CLICKABLE REPORT
+        #}
+        {% set status = reportActive ? 'notFinished' : 'notStarted' %}
+        {% set statusClass = reportActive ? 'not-finished' : 'not-started' %}
         <div class="box">
-            {% if reportActive %}
-                <span class="status not-finished">NOT FINISHED</span>
-                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-                {#<p class="date">21st December 2015 - 22nd December 2016</p>#}
-                <p class="detail">You only need to complete this report once</p>
-                <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button">
-                    Continue
-                </a>
-            {% else %}
-                <span class="status not-started">NOT STARTED</span>
-                <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-                {#<p class="date">21st December 2015 - 22nd December 2016</p>#}
-                <p class="detail">You only need to complete this report once</p>
-                <a href="{{ path('report_create', {'clientId': client.id, 'action': 'create'}) }}" class="button">
-                    Start  now
-                </a>
-            {% endif %}
+            <span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+            <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
+            <p class="date">
+                {% if reportActive %}
+                    {{ reportActive.startDate | date("j M Y") }} -
+                    {{ reportActive.endDate | date("j M Y") }}
+                {% endif %}
+            </p>
+            <p class="description">
+                {% if reportActive %}
+                    {{ ('report.due') | trans }}
+                    {{ reportActive.getDueDate() | date("j M Y") }}
+                {% endif %}
+            </p>
+            {% set link = reportActive ?
+            path('report_overview', {'reportId': reportActive.id})
+            : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+            <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
         </div>
-
     {% else %}
+        {#
+         # REPORT NOT ACTIVE
+         #}
+        {% set status = 'notAvailable' %}
         <div class="box inactive">
-            <span class="status not-available">NOT AVAILABLE</span>
-            <h3>{{ client.firstname }} {{ client.lastname }}</h3>
-            <p class="detail">This report will become available once the Opening Deputyship Report is complete</p>
+            <span class="status not-available">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+            <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
+            <p>
+                {{ ('report.' ~ status ~ '.instructions') | trans }}
+            </p>
         </div>
     {% endif %}
+
+
+    {#<div class="box {{ boxAdditionalClass }}">#}
+    {#<span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>#}
+    {#<h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>#}
+    {#<p class="date">#}
+    {#{% if reportActive %}{{ reportActive.getPeriod() }}{% endif %}#}
+    {#</p>#}
+    {#<p>#}
+    {#{{ ('report.' ~ status ~ '.instructions') | trans }}#}
+    {#</p>#}
+    {#{% if reportActive %}#}
+    {#{% set link = enabled ?#}
+    {#path('report_overview', {'reportId': reportActive.id})#}
+    {#: path('report_create', {'clientId': client.id, 'action': 'create'}) %}#}
+    {#<a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>#}
+    {#{% endif %}#}
+    {#</div>#}
+
+
+    {#<div class="box {{ boxAdditionalClass }}">#}
+    {#<span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>#}
+    {#<h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>#}
+    {#<p class="date">#}
+    {#{% if reportActive %}{{ reportActive.getPeriod() }}{% endif %}#}
+    {#</p>#}
+    {#<p>#}
+    {#{{ ('report.' ~ status ~ '.instructions') | trans }}#}
+    {#</p>#}
+    {#{% if reportActive %}#}
+    {#{% set link = enabled ?#}
+    {#path('report_overview', {'reportId': reportActive.id})#}
+    {#: path('report_create', {'clientId': client.id, 'action': 'create'}) %}#}
+    {#<a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>#}
+    {#{% endif %}#}
+    {#</div>#}
+
+
+    {#{% if enabled %}#}
+    {#<div class="box">#}
+    {#{% if reportActive %}#}
+    {#<span class="status not-finished">NOT FINISHED</span>#}
+    {#<h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>#}
+    {#<p class="date">21st December 2015 - 22nd December 2016</p>#}
+    {#<p>You only need to complete this report once</p>#}
+    {#<a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button">#}
+    {#Continue#}
+    {#</a>#}
+    {#{% else %}#}
+    {#<span class="status not-started">NOT STARTED</span>#}
+    {#<h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>#}
+    {#<p class="date">21st December 2015 - 22nd December 2016</p>#}
+    {#<p>You only need to complete this report once</p>#}
+    {#<a href="{{ path('report_create', {'clientId': client.id, 'action': 'create'}) }}" class="button">#}
+    {#Start  now#}
+    {#</a>#}
+    {#{% endif %}#}
+    {#</div>#}
+
+    {#{% else %}#}
+    {#<div class="box inactive">#}
+    {#<span class="status not-available">NOT AVAILABLE</span>#}
+    {#<h3>{{ client.firstname }} {{ client.lastname }}</h3>#}
+    {#<p>This report will become available once the Opening Deputyship Report is complete</p>#}
+    {#</div>#}
+    {#{% endif %}#}
 
 </div>
 

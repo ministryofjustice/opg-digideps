@@ -1,11 +1,16 @@
-<div class="row list-table">
-    <h2>History of report submission ({{ 1 + reports | length }})</h2>
-    <table>
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+<div id="report-history">
+    <h2 class="heading-small">
+        {{ 'history.title' | trans({'%number%': 1 + reports | length}) }}
+    </h2>
+    <table class="report-history">
         <thead>
         <tr>
-            <th>Report type</th>
-            <th>Reporting period</th>
-            <th>Submission date</th>
+            <th>{{ 'history.header.reportType' | trans }}</th>
+            <th>{{ 'history.header.reportingPeriod' | trans }}</th>
+            <th>{{ 'history.header.submissionDate' | trans }}</th>
             <th>&nbsp;</th>
             <th class="action">&nbsp;</th>
         </tr>
@@ -13,19 +18,38 @@
         <tbody>
         {% for report in reports %}
             <tr>
-                <td><a href="{{ path('report_review', {reportId: report.id}) }}" class="report">Property and Finance</a></td>
-                <td>{{ report.startDate | date("j M Y")  }} - {{ report.endDate | date("j M Y")  }}</td>
-                <td>{{ report.submitDate | date("j M Y")  }}</td>
-                <td><a href="{{ path('report_pdf', {reportId: report.id}) }}">Download</a></td>
-                <td class="action"><a href="{{ path('report_review', {reportId: report.id}) }}" class="button-grey">View</a></td>
+                <td><a href="{{ path('report_review', {reportId: report.id}) }}" class="report">
+                        {{ 'history.reports.title' | trans }}
+                    </a>
+                </td>
+                <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                <td>{{ report.submitDate | date("j M Y") }}</td>
+                <td>
+                    <a href="{{ path('report_pdf', {reportId: report.id}) }}">
+                        {{ 'history.reports.download' | trans }}
+                    </a>
+                </td>
+                <td class="action"><a href="{{ path('report_review', {reportId: report.id}) }}"
+                                      class="button-grey">
+                        {{ 'history.reports.view' | trans }}
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         <tr>
-            <td><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="report">Opening Deputyship Report</a></td>
-            <td>Start of deputyship</td>
+            <td><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="report">
+                    {{ 'history.odr.title' | trans }}
+                </a></td>
+            <td> {{ 'history.odr.reportingPeriod' | trans }}</td>
             <td>{{ odr.submitDate | date("j M Y") }}</td>
-            <td><a href="{{ path('odr_pdf', {odrId: odr.id}) }}">Download</a></td>
-            <td class="action"><a href="{{ path('odr_review', {odrId: odr.id}) }}" class="button-grey">View</a></td>
+            <td><a href="{{ path('odr_pdf', {odrId: odr.id}) }}">
+                    {{ 'history.odr.download' | trans }}
+                </a></td>
+            <td class="action">
+                <a href="{{ path('odr_review', {odrId: odr.id}) }}" class="button-grey">
+                    {{ 'history.odr.view' | trans }}
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>

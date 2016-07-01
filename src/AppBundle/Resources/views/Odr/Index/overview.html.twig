@@ -4,7 +4,7 @@
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}page-report-content report-overview{% endblock %}
+{% block contentClass %}page-report-content report-overview odr-overview{% endblock %}
 
 {% block pageContent %}
 <div id="pagebody">
@@ -30,9 +30,94 @@
                 <div class="value">???</div>
             </div>
         </div>
-        {% include 'AppBundle:Odr/Index:_sections.html.twig' with {
-           odr: odr
-        } %}
+
+        <ul id="overview-sections" class="overview-sections">
+
+            {#<li id="finances-and-assets" class="overview-section">#}
+            {#<h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>#}
+            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'accounts',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: 'not-started',#}
+            {#list: true#}
+            {#} %}#}
+            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'assets',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: 'not-started',#}
+            {#list: true#}
+            {#} %}#}
+            {#</li>#}
+
+            <li id="visists-and-actions" class="overview-section">
+                <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'visitsCare',
+                linkToSubSection: path('odr-visits-care', {odrId: odr.id}),
+                odr: odr,
+                info: true,
+                description: true,
+                state: odrStatus.visitsCareState,
+                } %}
+                {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+                {#transDomain: translationDomain,#}
+                {#subSection: 'actions',#}
+                {#odr: odr,#}
+                {#description: true,#}
+                {#state: 'not-started',#}
+                {#list: true#}
+                {#} %}#}
+            </li>
+
+
+            <li id="report-submit-section" class="overview-section">
+                <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+                {% set sectionParams = {
+                transDomain: translationDomain,
+                subSection: 'odr_add_further_info',
+                odr: odr,
+                linkToSubSection: path('odr_submit'),
+                description: false,
+                state: "not-started",
+                status: "Not started"
+                } %}
+                {% if odrStatus.isReadyToSubmit  %}
+                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with sectionParams %}
+                {%  else %}
+                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with
+                    sectionParams | merge({ disableedit: true }) %}
+                {%  endif %}
+            </li>
+
+        </ul>
+
+        {#{% if odr.isDue == true and odrStatus.isReadyToSubmit == false %}#}
+        {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {#}
+        {#transDomain: translationDomain,#}
+        {#pageSectionWarning: 'submitWhenReady',#}
+        {#iconClass: 'icon icon__notification',#}
+        {#id: 'cannot-submit-warning'#}
+        {#} %}#}
+        {#{% endif %}#}
+
+
+        {#{% if odr.isDue == false %}#}
+        {#{% set endDate = '[enddate]'  %}#}
+        {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {#}
+        {#transDomain: translationDomain,#}
+        {#pageSectionWarning: 'warningNotDue',#}
+        {#transOptions: {'%date%': endDate},#}
+        {#iconClass: 'icon icon__notification',#}
+        {#id: 'cannot-submit-warning'#}
+        {#} %}#}
+        {#{% endif %}#}
+
+
     </div>
     <div id="pagebody-right-content">
         {%include 'AppBundle:Components:_helpline.html.twig' %}
