@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Client;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
@@ -78,7 +79,7 @@ class Odr
     }
 
     /**
-     * @return mixed
+     * @return Client
      */
     public function getClient()
     {
@@ -132,6 +133,29 @@ class Odr
     public function isDue()
     {
         return false;
+    }
+
+    /**
+     * Return the due date (calculated as court order date + 40 days)
+     *
+     * @return \DateTime $dueDate
+     */
+    public function getDueDate()
+    {
+        $client = $this->getClient();
+        if (!$client instanceof Client) {
+            return;
+        }
+
+        $cod = $client->getCourtDate();
+
+        if (!$cod instanceof \DateTime) {
+            return;
+        }
+        $dueDate = clone $cod;
+        $dueDate->modify('+40 days');
+
+        return $dueDate;
     }
 
 

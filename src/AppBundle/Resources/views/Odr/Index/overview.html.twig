@@ -27,7 +27,7 @@
         <div id="report-period-due">
             <div id="report-due" class="labelvalue">
                 <div class="label">{{ 'dueDate' | trans() }}:</div>
-                <div class="value">???</div>
+                <div class="value">{{ odr.getDueDate() | date("j M Y") }}</div>
             </div>
         </div>
 
