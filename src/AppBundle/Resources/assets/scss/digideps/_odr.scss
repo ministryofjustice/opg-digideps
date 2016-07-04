@@ -1,6 +1,6 @@
 .home-odr {
 
-  .box {
+  .report-box {
     overflow: hidden;
     border: 2px $grey-2 solid;
     padding: 10px;
@@ -37,7 +37,7 @@
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: 70px 32px;
-    
+
     &.report-icon-pf {
       background-image: url('images/icons/report/pf.png');
 
@@ -72,8 +72,8 @@
       border-color: $grey-3;
     }
     &.not-finished {
-      color: $orange-status;; //TODO CHANGEME
-      border-color: $orange-status;; //TODO CHANGEME
+      color: $orange-status;
+      border-color: $orange-status;
     }
   }
 

@@ -1,12 +1,12 @@
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
-<div class="row">
+<div>
     <h2 class="heading-medium underlined report-icon report-icon-pf">Opening Deputyship Report</h2>
 
     {% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'not-finished' %}
 
-    <div class="box">
+    <div class="report-box">
         <span class="status {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
         <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
         <p>
