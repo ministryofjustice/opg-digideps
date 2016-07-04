@@ -118,12 +118,10 @@
 {% endblock %}
 
 {% block pageBodyFooterNav %}
-    {#{% include 'AppBundle:Components:nextprevious.html.twig' with {#}
-    {#'previousLink': path("contacts" , {'reportId': report.id }),#}
-    {#'previousLabel': 'Contacts',#}
-    {#'nextLink': path("accounts" , {'reportId': report.id }),#}
-    {#'nextLabel': 'Accounts'#}
-    {#} %}#}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'nextLink': path("odr_overview"),
+    'nextLabel': 'ODR Overview'
+    } %}
 {% endblock %}
 
 {% endembed %}
