@@ -15,12 +15,28 @@ cancel:
 
 moneyIn:
   pageSectionTitle: Money coming into %client%’s accounts
-  pageSectionDescription: Tell us about money paid into %client%’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>.<br/><br/>You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.</p><p>Be sure to enter each individual source of income into one category only, so we don’t count them twice when we do the calculation.</p>
+  pageSectionDescription: |
+    Tell us about money paid into %client%’s accounts between %startDate% and %endDate%.
+    %paragraphBreak%
+    You can enter a total for each type of income, or you can enter individual amounts
+    and we'll add them up for you.
+    %paragraphBreak%
+    Be sure to enter each individual source of income into one category only,
+    so we don’t count them twice when we do the calculation.
+  noEntriesWarning: Add money %client% has received below
 moneyin:
   nextSection: Money out
 moneyOut:
   pageSectionTitle: Money you have spent on behalf of %client%
-  pageSectionDescription: Tell us about money you have spent on %client%’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>.<br/><br/>You can enter a total for each type of expense, or you can enter individual amounts and we'll add them up for you.</p><p>Be sure to enter each individual expense into one category only, so we don’t count them twice when we do the calculation.</p>
+  pageSectionDescription: |
+      Tell us about money you have spent on %client%’s day-to-day living and welfare costs
+      between %startDate% and %endDate%.
+      %paragraphBreak%
+      You can enter a total for each type of expense, or you can enter individual amounts
+      and we'll add them up for you.
+      %paragraphBreak%
+      Be sure to enter each individual expense into one category only, so we don’t count them
+      twice when we do the calculation.
   noEntriesWarning: Add money spent on behalf of %client%
 moneyout:
   nextSection: Balance accounts
