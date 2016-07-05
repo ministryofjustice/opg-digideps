@@ -21,6 +21,20 @@ class VisitsCare
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidence.notBlank", groups={"visits-care"})
+     */
+    private $planMoveNewResidence;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidenceDetails.notBlank", groups={"plan-move-residence-yes"})
+     */
+    private $planMoveNewResidenceDetails;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
      * @Assert\NotBlank(message="odr.visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care"})
      */
     private $doYouLiveWithClient;
@@ -85,6 +99,40 @@ class VisitsCare
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPlanMoveNewResidence()
+    {
+        return $this->planMoveNewResidence;
+    }
+
+    /**
+     * @param mixed $planMoveNewResidence
+     */
+    public function setPlanMoveNewResidence($planMoveNewResidence)
+    {
+        $this->planMoveNewResidence = $planMoveNewResidence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlanMoveNewResidenceDetails()
+    {
+        return $this->planMoveNewResidenceDetails;
+    }
+
+    /**
+     * @param mixed $planMoveNewResidenceDetails
+     */
+    public function setPlanMoveNewResidenceDetails($planMoveNewResidenceDetails)
+    {
+        $this->planMoveNewResidenceDetails = $planMoveNewResidenceDetails;
+    }
+
+
 
     /**
      * Set doYouLiveWithClient.
