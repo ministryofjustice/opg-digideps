@@ -18,8 +18,6 @@
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
             'previousLabel': 'Edit Opening deputyship record',
-            'nextLink': path("odr_add_further_info" , {'odrId': odr.id }),
-            'nextLabel': 'Sign and submit',
             'position': 'top'
             } %}
         {% else  %}
@@ -43,8 +41,6 @@
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("odr_overview" , {'odrId': odr.id }),
                 'previousLabel': 'Edit Opening deputyship record',
-                'nextLink': path("odr_add_further_info" , {'odrId': odr.id }),
-                'nextLabel': 'Sign and submit',
                 'position': 'bottom'
                 } %}
             {% else  %}
