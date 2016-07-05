@@ -13,7 +13,13 @@ class VisitsCareType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('doYouLiveWithClient', 'choice', array(
+        $builder
+                ->add('planMoveNewResidence', 'choice', array(
+                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'expanded' => true,
+                ))
+                ->add('planMoveNewResidenceDetails', 'textarea')
+                ->add('doYouLiveWithClient', 'choice', array(
                         'choices' => ['yes' => 'Yes', 'no' => 'No'],
                         'expanded' => true,
                       ))
@@ -73,6 +79,10 @@ class VisitsCareType extends AbstractType
 
                 $data = $form->getData();
                 $validationGroups = ['visits-care'];
+
+                if ($data->getPlanMoveNewResidence() == 'yes') {
+                    $validationGroups[] = 'plan-move-residence-yes';
+                }
 
                 if ($data->getDoYouLiveWithClient() == 'no') {
                     $validationGroups[] = 'visits-care-no';

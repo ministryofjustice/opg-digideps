@@ -23,6 +23,25 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section">
+        {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
+            'fieldSetClass' : 'inline plan-move-residence-radio',
+            'legendClass' : 'form-label',
+            'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="plan-move-residence-details-textarea">
+            {{ form_input(form.planMoveNewResidenceDetails, 'planMoveNewResidenceDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section">
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
             'fieldSetClass' : 'inline do-you-live-radio',
             'legendClass' : 'form-label',
@@ -95,6 +114,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio:'.plan-move-residence-radio input[type=radio]',
+                content: '#plan-move-residence-details-textarea',
+                showWithValue: 'yes'
+            });
             new opg.RadioHide({
                 radio:'.do-you-live-radio input[type=radio]',
                 content: '#visit-questions',

@@ -296,6 +296,10 @@ odr:
       reviewedAndChecked: Opening Deputyship Report not reviewed and checked
       readyForSubmission: Opening Deputyship Report not ready for submission
   visitsCare:
+      planMoveNewResidence:
+          notBlank: Choose Yes or No
+      planMoveNewResidenceDetails:
+          notBlank: Give us more details about the plans to move to a new residence
       doYouLiveWithClient:
           notBlank: Choose Yes or No
       howOftenDoYouContactClient:

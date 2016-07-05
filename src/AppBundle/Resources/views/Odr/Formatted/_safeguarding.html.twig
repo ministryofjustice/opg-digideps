@@ -2,6 +2,30 @@
     <h2 class="section-heading">Visits and care</h2>
 
     <div class="dont-break">
+        <h3 class="fieldset-outer-title">Plan to move to a new residence</h3>
+        <div class="box" id="safeguarding-contact">
+            <div class="checkboxes horizontal">
+                <div class="question">Are there any plan for the client to move to a new residence</div>
+
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if safeguarding.planMoveNewResidence == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if safeguarding.planMoveNewResidence == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
+            </div>
+            {% if safeguarding.planMoveNewResidence == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="question">More details</div>
+                    <div class="value textarea">{{ safeguarding.planMoveNewResidenceDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="dont-break">
         <h3 class="fieldset-outer-title">Contact with client</h3>
         <div class="box" id="safeguarding-contact">
             <div id="do-you-live-with-the-client" class="checkboxes horizontal">

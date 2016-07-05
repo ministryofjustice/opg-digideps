@@ -19,16 +19,27 @@ less_than_once_a_year: Less than once a year
 client_pays_for_all: They pay for all their own care
 
 
-doYouLiveWithClient.label: Do you live with %client%?
-howOftenDoYouContactClient.label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
-doesClientReceivePaidCare.label: Does %client% receive care which is paid for?
-doesClientReceivePaidCare.hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
-howIsCareFunded.label: How is the care funded?
+planMoveNewResidence:
+  label: Are there any plan for %client% to move to a new residence ?
+planMoveNewResidenceDetails:
+  label: Tell us more
+doYouLiveWithClient:
+  label: Do you live with %client%?
+howOftenDoYouContactClient:
+  label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
+doesClientReceivePaidCare:
+  label: Does %client% receive care which is paid for?
+  hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+howIsCareFunded:
+  label: How is the care funded?
+
 client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
 all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
-whoIsDoingTheCaring.label: Who is doing the caring?
-whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers, family members
-doesClientHaveACarePlan.label: Does %client% have a care plan?
+whoIsDoingTheCaring:
+  label: Who is doing the caring?
+  hint: For example, local authority or private residential care, live-in or visiting care workers, family members
+doesClientHaveACarePlan:
+  label: Does %client% have a care plan?
 whenWasCarePlanLastReviewed:
     label: When was the care plan last reviewed?
     hint: (MM/YYYY)
