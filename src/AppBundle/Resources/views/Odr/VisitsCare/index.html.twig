@@ -22,7 +22,6 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain)  }}</h3>
 
     <div class="form-section">
         {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
@@ -42,6 +41,8 @@
             }) }}
         </div>
     </div>
+
+    {#<h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain)  }}</h3>#}
 
     <div class="form-section">
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
