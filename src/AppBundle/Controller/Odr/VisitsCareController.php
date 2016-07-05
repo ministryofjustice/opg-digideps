@@ -114,6 +114,14 @@ class VisitsCareController extends RestController
      */
     private function updateEntity(array $data, EntityDir\Odr\VisitsCare $visitsCare)
     {
+        if (array_key_exists('plan_move_new_residence', $data)) {
+            $visitsCare->setPlanMoveNewResidence($data['plan_move_new_residence']);
+        }
+
+        if (array_key_exists('plan_move_new_residence_details', $data)) {
+            $visitsCare->setPlanMoveNewResidenceDetails($data['plan_move_new_residence_details']);
+        }
+
         if (array_key_exists('do_you_live_with_client', $data)) {
             $visitsCare->setDoYouLiveWithClient($data['do_you_live_with_client']);
         }

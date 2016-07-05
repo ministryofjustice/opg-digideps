@@ -51,6 +51,8 @@ class VisitsCareControllerTest extends AbstractTestController
         'do_you_live_with_client' => 'y-m',
         'how_often_do_you_visit' => 'ho-m',
         'how_often_do_you_contact_client' => 'hodycc',
+        'plan_move_new_residence' => 'yes',
+        'plan_move_new_residence_details' => "Toscany\nItaly",
     ];
 
     public function setUp()
@@ -169,9 +171,14 @@ class VisitsCareControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
+        /**
+         * @var $visitsCare VisitsCare
+         */
         $visitsCare = self::fixtures()->getRepo('Odr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Odr\Safeguarding */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
+        $this->assertEquals('yes', $visitsCare->getPlanMoveNewResidence());
+        $this->assertEquals("Toscany\nItaly", $visitsCare->getPlanMoveNewResidenceDetails());
         $this->assertEquals(self::$odr1->getId(), $visitsCare->getOdr()->getId());
         // TODO assert other fields
     }

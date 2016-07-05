@@ -36,6 +36,24 @@ class VisitsCare
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
+     * @ORM\Column(name="plan_move_residence", type="string", length=4, nullable=true)
+     */
+    private $planMoveNewResidence;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
+     * @ORM\Column(name="plan_move_residence_details", type="text", nullable=true)
+     */
+    private $planMoveNewResidenceDetails;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
     private $doYouLiveWithClient;
@@ -120,25 +138,39 @@ class VisitsCare
         $this->odr = $odr;
     }
 
-
-
     /**
-     * Set doYouLiveWithClient.
-     *
-     * @param string $doYouLiveWithClient
-     *
-     * 
+     * @return string
      */
-    public function setDoYouLiveWithClient($doYouLiveWithClient)
+    public function getPlanMoveNewResidence()
     {
-        $this->doYouLiveWithClient = $doYouLiveWithClient;
-
-        return $this;
+        return $this->planMoveNewResidence;
     }
 
     /**
-     * Get doYouLiveWithClient.
-     *
+     * @param string $planMoveNewResidence
+     */
+    public function setPlanMoveNewResidence($planMoveNewResidence)
+    {
+        $this->planMoveNewResidence = $planMoveNewResidence;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlanMoveNewResidenceDetails()
+    {
+        return $this->planMoveNewResidenceDetails;
+    }
+
+    /**
+     * @param string $planMoveNewResidenceDetails
+     */
+    public function setPlanMoveNewResidenceDetails($planMoveNewResidenceDetails)
+    {
+        $this->planMoveNewResidenceDetails = $planMoveNewResidenceDetails;
+    }
+
+    /**
      * @return string
      */
     public function getDoYouLiveWithClient()
@@ -147,22 +179,30 @@ class VisitsCare
     }
 
     /**
-     * Set doesClientReceivePaidCare.
-     *
-     * @param string $doesClientReceivePaidCare
-     *
-     * 
+     * @param string $doYouLiveWithClient
      */
-    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
+    public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
-        $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
-
-        return $this;
+        $this->doYouLiveWithClient = $doYouLiveWithClient;
     }
 
     /**
-     * Get doesClientReceivePaidCare.
-     *
+     * @return string
+     */
+    public function getHowOftenDoYouContactClient()
+    {
+        return $this->howOftenDoYouContactClient;
+    }
+
+    /**
+     * @param string $howOftenDoYouContactClient
+     */
+    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
+    {
+        $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
+    }
+
+    /**
      * @return string
      */
     public function getDoesClientReceivePaidCare()
@@ -171,94 +211,14 @@ class VisitsCare
     }
 
     /**
-     * Set whoIsDoingTheCaring.
-     *
-     * @param string $whoIsDoingTheCaring
-     *
-     * 
+     * @param string $doesClientReceivePaidCare
      */
-    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
+    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
-        $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
-
-        return $this;
+        $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
     }
 
     /**
-     * Get whoIsDoingTheCaring.
-     *
-     * @return string
-     */
-    public function getWhoIsDoingTheCaring()
-    {
-        return $this->whoIsDoingTheCaring;
-    }
-
-    /**
-     * Set doesClientHaveACarePlan.
-     *
-     * @param string $doesClientHaveACarePlan
-     *
-     * 
-     */
-    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
-    {
-        $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
-
-        return $this;
-    }
-
-    /**
-     * Get doesClientHaveACarePlan.
-     *
-     * @return string
-     */
-    public function getDoesClientHaveACarePlan()
-    {
-        return $this->doesClientHaveACarePlan;
-    }
-
-    /**
-     * Set whenWasCarePlanLastReviewed.
-     *
-     * @param \DateTime $whenWasCarePlanLastReviewed
-     *
-     * 
-     */
-    public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
-    {
-        $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
-
-        return $this;
-    }
-
-    /**
-     * Get whenWasCarePlanLastReviewed.
-     *
-     * @return \DateTime
-     */
-    public function getWhenWasCarePlanLastReviewed()
-    {
-        return $this->whenWasCarePlanLastReviewed;
-    }
-
-    /**
-     * Set howIsCareFunded.
-     *
-     * @param string $howIsCareFunded
-     *
-     * 
-     */
-    public function setHowIsCareFunded($howIsCareFunded)
-    {
-        $this->howIsCareFunded = $howIsCareFunded;
-
-        return $this;
-    }
-
-    /**
-     * Get howIsCareFunded.
-     *
      * @return string
      */
     public function getHowIsCareFunded()
@@ -266,15 +226,60 @@ class VisitsCare
         return $this->howIsCareFunded;
     }
 
-    public function getHowOftenDoYouContactClient()
+    /**
+     * @param string $howIsCareFunded
+     */
+    public function setHowIsCareFunded($howIsCareFunded)
     {
-        return $this->howOftenDoYouContactClient;
+        $this->howIsCareFunded = $howIsCareFunded;
     }
 
-    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
+    /**
+     * @return type
+     */
+    public function getWhoIsDoingTheCaring()
     {
-        $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
-
-        return $this;
+        return $this->whoIsDoingTheCaring;
     }
+
+    /**
+     * @param type $whoIsDoingTheCaring
+     */
+    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
+    {
+        $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
+    }
+
+    /**
+     * @return type
+     */
+    public function getDoesClientHaveACarePlan()
+    {
+        return $this->doesClientHaveACarePlan;
+    }
+
+    /**
+     * @param type $doesClientHaveACarePlan
+     */
+    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
+    {
+        $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
+    }
+
+    /**
+     * @return date
+     */
+    public function getWhenWasCarePlanLastReviewed()
+    {
+        return $this->whenWasCarePlanLastReviewed;
+    }
+
+    /**
+     * @param date $whenWasCarePlanLastReviewed
+     */
+    public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
+    {
+        $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
+    }
+
 }
