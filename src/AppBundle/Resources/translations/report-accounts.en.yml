@@ -66,12 +66,13 @@ balance:
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
       goBack: |
-         Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a>
-         matches your records of money coming in and out of %client%’s accounts.
-         You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
+         After you have entered all of %client%'s income and expenses, you should have a sum of money that matches the one you entered in the closing balance in <a href="%accountsLink%">bank accounts</a>.
+%paragraphBreak%
+         If the two sums don't match, first, check that the figures you gave in <a href="%accountsLink%">bank accounts</a> are correct. If the amounts still don't match, go back and carefully check that you have included all of %client%'s incomings and outgoings correctly in the <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> sections.
+
       cantFind: Can’t find the problem?
       formtitle:
-        label: You can still submit your report, but you must explain why the accounts don't balance.
+        label: If, having checked, you still can't see what's gone wrong, you can use the form below to explain why you weren't able to make the sums add up. You can still submit your report, and we may be able to help.
     balanceAfterReported: Total money in and money out
     totalBankStart: Totals from all bank accounts at start of reporting period
     totalInDuringPeriod: Total money in during reporting period
