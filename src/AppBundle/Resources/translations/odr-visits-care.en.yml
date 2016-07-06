@@ -20,7 +20,7 @@ client_pays_for_all: They pay for all their own care
 
 
 planMoveNewResidence:
-  label: Are there any plan for %client% to move to a new residence ?
+  label: Are there any plans for %client% to move to a new residence ?
 planMoveNewResidenceDetails:
   label: Tell us more
 doYouLiveWithClient:
