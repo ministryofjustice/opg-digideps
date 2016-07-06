@@ -66,10 +66,11 @@ balance:
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
       goBack: |
-         After you have entered all of %client%'s income and expenses, you should have a sum of money that matches the one you entered in the closing balance in <a href="%accountsLink%">bank accounts</a>.
-%paragraphBreak%
+         After you have entered all of %client%'s income and expenses,
+         you should have a sum of money that matches the one you entered in the
+         closing balance in <a href="%accountsLink%">bank accounts</a>.
+         %paragraphBreak%
          If the two sums don't match, first, check that the figures you gave in <a href="%accountsLink%">bank accounts</a> are correct. If the amounts still don't match, go back and carefully check that you have included all of %client%'s incomings and outgoings correctly in the <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> sections.
-
       cantFind: Can’t find the problem?
       formtitle:
         label: If, having checked, you still can't see what's gone wrong, you can use the form below to explain why you weren't able to make the sums add up. You can still submit your report, and we may be able to help.
