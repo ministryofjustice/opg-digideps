@@ -1,9 +1,9 @@
-page.htmlTitle: "Opening Deputyship Report - overview | GOV.UK"
-report: "Opening Deputyship Report"
-pageSectionTitle: "Opening Deputyship Report"
-pageSectionDescription: "Your Opening Deputyship Report:"
+page.htmlTitle: "Opening deputyship report - overview | GOV.UK"
+report: "Opening deputyship report"
+pageSectionTitle: "Opening deputyship report"
+pageSectionDescription: "Your opening deputyship report:"
 heading:
-    title: "Opening Deputyship Report"
+    title: "Opening deputyship deport"
     planningTitle: ""
     careAndWelfare: ""
     finances: ""
@@ -11,12 +11,12 @@ heading:
 
 close: "Close"
 help: "Help"
-submitWhenReady: "You can't submit your Opening Deputyship Report until is complete"
+submitWhenReady: "You can't submit your opening deputyship report until it is complete"
 warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
 reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
-odrIsReady: "Opening Deputyship Report is ready to submit"
+odrIsReady: "Opening deputyship report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
 
@@ -26,27 +26,27 @@ overview: Opening Deputyship Report
 
 contacts:
     subSectionTitle: "Contacts"
-    subSectionDescription: "Give us the details of people you consulted about %client%"
+    subSectionDescription: "Tell us about the people you consulted regarding %client%"
     edit: "Edit contacts"
     start: "Start contacts"
 decisions:
     subSectionTitle: "Decisions"
-    subSectionDescription: "Add the significant decisions you've made for %client%"
+    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
     edit: "Edit decisions"
     start: "Start decisions"
 actions:
     subSectionTitle: "Actions you plan to take"
-    subSectionDescription: "Tell us about any major changes in the next reporting period"
+    subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
     edit: "Edit actions"
     start: "Start actions"
 accounts:
     subSectionTitle: "Finances"
-    subSectionDescription: "Add details of all income and spending in the reporting period"
+    subSectionDescription: "Enter details of all income and spending in the reporting period"
     edit: "Edit finances"
     start: "Start finances"
 transfers:
     subSectionTitle: "Money transfers"
-    subSectionDescription: "Tell us about money you've moved between %client%'s accounts"
+    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
     edit: "Edit transfers"
     start: "Start money transfers"
 transfersInactive:
@@ -56,12 +56,12 @@ transfersInactive:
     start: "Start money transfers"
 visitsCare:
     subSectionTitle: "Visits and care"
-    subSectionDescription: "We need to know about your involvement with %client%'s care"
+    subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
     edit: "Edit visits and care"
     start: "Start visits and care"
 assets:
     subSectionTitle: "Assets"
-    subSectionDescription: "Add %client%'s property, investments and other valuables"
+    subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
     edit: "Edit assets"
     start: "Start assets"
 odr_add_further_info:
@@ -75,13 +75,13 @@ additionalInformation:
 
 odrSubmit:
     checkbox:
-        label: I have reviewed and checked this Opening Deputyship Report.
+        label: I have reviewed and checked this opening deputyship report.
 
 decisionsMadeAsDeputy: Decisions made as deputy
 
 announcement: |
   We’ve made some changes to the layout of this page.<br/>
-  Use the links on this page to view and edit the different sections of your Opening Deputyship Report.
+  Use the links on this page to view and edit the different sections of your opening deputyship report.
 
 status:
     notStarted: "Not started"
