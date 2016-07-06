@@ -19,20 +19,21 @@ class StatsControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1->setRegistrationDate(new \DateTime('2015-10-15'));
+
         self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, [
+            'setFirstname' => 'c1',
+            'setLastName' => 'l1',
+            'setCourtDate' => new \DateTime('2016-12-30'),
+            'setCaseNumber' => '222333t',
+        ]);
 
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1, ['setEndDate' => new \DateTime('yesterday')]);
-        self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank1']);
-        self::fixtures()->createTransaction(self::$report1, 'rent'.microtime(1), [1]);
-        self::fixtures()->createTransaction(self::$report1, 'mortgage'.microtime(1), [2]);
-        self::fixtures()->createTransaction(self::$report1, 'salary'.microtime(1), [3]);
 
-        // report2
+        // report2 (submitted)
         self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true);
 
         self::fixtures()->flush();
@@ -66,13 +67,16 @@ class StatsControllerTest extends AbstractTestController
         ])['data'];
 
         $first = array_shift($data);
-        $this->assertArrayHasKey('is_active', $first);
-        $this->assertArrayHasKey('email', $first);
-        $this->assertArrayHasKey('total_reports', $first);
-        $this->assertArrayHasKey('active_reports', $first);
-        //assert using "GreaterThanOrEqual" in case something else was added from previous tests
-        $this->assertGreaterThanOrEqual(1, $first['active_reports_due']);
-        $this->assertGreaterThanOrEqual(1, $first['active_reports_added_bank_accounts']);
-        $this->assertGreaterThanOrEqual(3, $first['active_reports_added_transactions']);
+        $this->assertEquals(self::$client1->getId(), $first['id']);
+        $this->assertEquals('test', $first['name']);
+        $this->assertEquals('deputy', $first['lastname']);
+        $this->assertEquals('2016-12-30', $first['client_court_order_date']);
+        $this->assertEquals('2015-10-15', $first['registration_date']);
+        $this->assertContains(date('Y-m-d'), $first['last_logged_in']);
+        $this->assertEquals('c1', $first['client_name']);
+        $this->assertEquals('l1', $first['client_lastname']);
+        $this->assertEquals('222333t', $first['client_casenumber']);
+        $this->assertEquals(2, $first['total_reports']);
+        $this->assertEquals(1, $first['active_reports']);
     }
 }
