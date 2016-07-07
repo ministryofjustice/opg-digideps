@@ -64,14 +64,13 @@ Feature: deputy / report / submit
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
-        When I go to "/report/1/review"
-        Then the response status code should be 200
-        And I save the page as "report-submit-display"
+        When I click on "return-to-reports-page"
+        Then the URL should match "/reports/\d+"
+        And the response status code should be 200
         And the last email containing a link matching "/reports/2" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
         And the second_last email should contain a PDF of at least 40 kb
-        And I save the application status into "report-submit-post"
-    
+        And I save the application status into "report-submit-reports"
 
     @deputy
     Scenario: submit feedback after report
