@@ -5,7 +5,7 @@ page:
   yourReportWillBeSent: "Your report has been sent to OPG. You'll get an email shortly to let you know we've received it."
   weWillSendReminder: "We'll send you a reminder when it's time for you to complete the next report. You can make a start on it at any time from now on."
   downloadLink: View %reportName% report
-  returnToCliendPage: Return to your client page
+  returnToHomepage: Return to reports page
   feedback:
     title: Give us your feedback
 thanks:
