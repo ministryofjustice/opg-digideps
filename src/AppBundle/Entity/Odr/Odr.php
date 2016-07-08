@@ -44,6 +44,13 @@ class Odr
     private $visitsCare;
 
     /**
+     * @JMS\Groups({"odr-account"})
+     * @JMS\Type("array<AppBundle\Entity\Odr\Account>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Account", mappedBy="odr", cascade={"persist"})
+     */
+    private $accounts;
+
+    /**
      * @var bool
      *
      * @JMS\Groups({"odr"})
@@ -69,6 +76,7 @@ class Odr
     public function __construct(Client $client)
     {
         $this->client = $client;
+        $this->accounts = new ArrayCollection();
     }
 
 
