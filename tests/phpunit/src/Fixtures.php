@@ -124,6 +124,26 @@ class Fixtures
     }
 
     /**
+     * @return EntityDir\Odr\Account
+     */
+    public function createOdrAccount(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $ret = new EntityDir\Odr\Account();
+        $ret->setOdr($odr);
+        $ret->setAccountNumber('1234')
+            ->setBank('hsbc')
+            ->setSortCode('101010');
+
+        foreach ($settersMap as $k => $v) {
+            $ret->$k($v);
+        }
+
+        $this->em->persist($ret);
+
+        return $ret;
+    }
+
+    /**
      * @return EntityDir\Contact
      */
     public function createContact(EntityDir\Report $report, array $settersMap = [])
