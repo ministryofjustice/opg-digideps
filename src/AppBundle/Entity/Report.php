@@ -671,16 +671,19 @@ class Report
         $ret = [];
         foreach($this->assets as $asset) {
             if ($asset instanceof AssetProperty) {
-                $ret['Property'][$asset->getOrderIndex()] = $asset;
+                $ret['Property'][$asset->getId()] = $asset;
             } else if ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
-                $ret[$title][$asset->getOrderIndex()] = $asset;
+                $ret[$title][$asset->getId()] = $asset;
             }
         }
 
-        // order categories and assets inside
+        return $ret;
+
+        // order categories
         ksort($ret);
+        // order assets inside by key
         foreach ($ret as &$row) {
             ksort($row);
         }

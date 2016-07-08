@@ -90,25 +90,6 @@ class AssetOther extends Asset
             ? $titleToTemplateMap[$this->getTitle()] : 'default';
     }
 
-    /**
-     * @return string
-     */
-    public function getOrderIndex()
-    {
-        $ret = '';
-
-        if ($this->getTitle() == 'Premium bonds') {
-            if ($this->getValuationDate() instanceof \DateTime) {
-                $ret = $this->getValuationDate()->format('Ymd');
-            }
-            $ret .= str_pad($this->getValue(), 30, '0', STR_PAD_LEFT);
-        } else {
-            $ret = strtolower($this->getDescription());
-        }
-
-        return $ret;
-    }
-
     public function getBehatIdentifier()
     {
         return $this->getDescription();
