@@ -1,0 +1,3 @@
+<nav id="account-sub-nav">
+    <a id="account-banks" href="{{ path('odr-bank-accounts' , {'odrId': odr.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>{{ 'nav.bankAccounts' | trans({}, "odr-accounts") }}</a>
+</nav>
