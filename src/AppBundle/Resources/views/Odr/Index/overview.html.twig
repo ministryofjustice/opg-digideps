@@ -33,16 +33,17 @@
 
         <ul id="overview-sections" class="overview-sections">
 
-            {#<li id="finances-and-assets" class="overview-section">#}
-            {#<h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>#}
-            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
-            {#transDomain: translationDomain,#}
-            {#subSection: 'accounts',#}
-            {#odr: odr,#}
-            {#description: false,#}
-            {#state: 'not-started',#}
-            {#list: true#}
-            {#} %}#}
+            <li id="finances-and-assets" class="overview-section">
+            <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'accounts',
+            odr: odr,
+            description: false,
+            state: odrStatus.bankAccountsState,
+            linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
+            list: true
+            } %}
             {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
             {#transDomain: translationDomain,#}
             {#subSection: 'assets',#}

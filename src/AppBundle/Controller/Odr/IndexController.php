@@ -19,7 +19,8 @@ class IndexController extends AbstractController
 {
     private static $odrGroupsForValidation = [
         'odr',
-        'visits-care'
+        'visits-care',
+        'odr-account',
     ];
 
     /**
