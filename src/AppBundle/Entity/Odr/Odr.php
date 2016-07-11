@@ -20,7 +20,7 @@ class Odr
 
     /**
      * @JMS\Type("boolean")
-     *  @JMS\Groups({"submit"})
+     * @JMS\Groups({"submit"})
      * @var bool
      */
     private $submitted;
@@ -45,6 +45,12 @@ class Odr
      */
     private $visitsCare;
 
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
+     *
+     * @var BankAccount
+     */
+    private $bankAccounts;
 
     /**
      * @return int
@@ -110,7 +116,21 @@ class Odr
         $this->visitsCare = $visitsCare;
     }
 
+    /**
+     * @return BankAccount[]
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
+    }
 
+    /**
+     * @param BankAccount[] $bankAccount
+     */
+    public function setBankAccounts($bankAccounts)
+    {
+        $this->bankAccounts = $bankAccounts;
+    }
 
     /**
      * @return boolean
@@ -156,6 +176,22 @@ class Odr
         $dueDate->modify('+40 days');
 
         return $dueDate;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function hasBankAccountWithId($id)
+    {
+        foreach ($this->getBankAccounts() as $bankAccount) {
+            if ($bankAccount->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
