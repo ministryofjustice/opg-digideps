@@ -66,4 +66,13 @@ class OdrStatusService
             return self::STATE_DONE;
         }
     }
+
+    public function bankAccountsState()
+    {
+        if (empty($this->odr->getBankAccounts())) {
+            return self::STATE_NOT_STARTED;
+        } else {
+            return self::STATE_DONE;
+        }
+    }
 }
