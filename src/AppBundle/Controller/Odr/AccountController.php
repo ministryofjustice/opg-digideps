@@ -121,7 +121,6 @@ class AccountController extends RestController
 
     private function fillAccountData(EntityDir\Odr\Account $account, array $data)
     {
-        //basicdata
         if (array_key_exists('bank', $data)) {
             $account->setBank($data['bank']);
         }

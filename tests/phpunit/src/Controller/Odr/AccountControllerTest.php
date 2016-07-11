@@ -130,7 +130,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('1234', $data['account_number']);
         $this->assertEquals(self::$odr1->getId(), $data['odr']['id']);
 
-        // asser  user2 cannot read the account
+        // assert  user2 cannot read the account
         $url2 = '/odr/account/'.self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
@@ -150,12 +150,13 @@ class AccountControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'bank' => 'bank1-modified',
-                'balance_on_cod' => '500',
+                'balance_on_cod' => '499',
             ],
         ])['data'];
 
         $account = self::fixtures()->getRepo('Odr\Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
+        $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
 
         // assert user cannot modify another users' account
         $url2 = '/odr/account/'.self::$account2->getId();
