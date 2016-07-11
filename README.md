@@ -47,3 +47,14 @@ Client secret is required for those.
 * 499 wrong credentials at login (after many failed requests)
 * 500 generic error due to internal exception (e.g. db offline)
 
+## Endpoint conventions
+
+Example with `account` (type) and `odr`(parent type) entities
+
+ * Get account records (odr ID=1): `GET /odr/1/account`
+ * Add account to Odr with ID=1: `POST /odr/1/account`
+ * Get account with id=2:  `GET /odr/account/2`
+ * Edit account with id=2: `PUT /odr/account/2`
+ * Delete account with id=2: `DELETE /odr/account/2`
+
+
