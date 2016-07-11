@@ -142,8 +142,8 @@ class AccountController extends RestController
             $account->setAccountNumber($data['account_number']);
         }
 
-        if (array_key_exists('balance_on_cod', $data)) {
-            $account->setBalanceOnCourtOrderDate($data['balance_on_cod']);
+        if (array_key_exists('balance_on_court_order_date', $data)) {
+            $account->setBalanceOnCourtOrderDate($data['balance_on_court_order_date']);
         }
     }
 }

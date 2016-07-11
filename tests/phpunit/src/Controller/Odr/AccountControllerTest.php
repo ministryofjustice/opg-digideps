@@ -92,7 +92,7 @@ class AccountControllerTest extends AbstractTestController
                 'account_type' => 'savings',
                 'sort_code' => '123456',
                 'account_number' => '1234',
-                'balance_on_cod' => '500.45',
+                'balance_on_court_order_date' => '500.45',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
@@ -150,13 +150,13 @@ class AccountControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'bank' => 'bank1-modified',
-                'balance_on_cod' => '499',
+                'balance_on_court_order_date' => '499',
             ],
         ])['data'];
 
         $account = self::fixtures()->getRepo('Odr\Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
-        $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
+        $this->assertEquals(499, $accouxnt->getBalanceOnCourtOrderDate());
 
         // assert user cannot modify another users' account
         $url2 = '/odr/account/'.self::$account2->getId();
