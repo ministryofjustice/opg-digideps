@@ -179,7 +179,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client-cot"})
      *
      * @var \Date
      *
