@@ -315,6 +315,34 @@ odr:
           invalidMessage: Enter the date in this format: DD/MM/YYYY
       doesClientHaveACarePlan:
           notBlank: Choose Yes or No
+  account:
+      bank:
+          notBlank: Enter the bank or building society name
+          minMessage: The bank or building society name must be at least {{ limit }} characters long
+          maxMessage: The bank or building society name can't be longer than {{ limit }} letters
+      accountType:
+            notBlank: Choose a type of account
+            maxMessage: The account type can't be longer than {{ limit }} letters
+      sortCode:
+          notBlank: Enter the sort code
+          type: The sort code must be in numbers
+          length: The sort code must be {{ limit }} numbers long
+      accountNumber:
+          notBlank: Enter the last 4 numbers of the account number
+          type: The account number must be in numbers
+          length: Enter the last 4 digits of the account number
+      balanceOnCourtOrderDate:
+          notBlank: You must enter the balance on the court order date
+          type: The balance must be in numbers
+          outOfRange: The balance must be less than £10,000,000,000
+      moneyInOut:
+          amount:
+            notNumeric: Use numbers only to enter the amount
+            minMessage: The amount must be more than £{{ limit }}
+            maxMessage: The amount must be less than £10,000,000,000
+            missingWhenDetailsFilled: Enter the total amount or remove the details
+          moreDetails:
+            empty: You must give us more information about this amount
 
 
 action:
