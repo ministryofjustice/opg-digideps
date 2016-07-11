@@ -48,7 +48,7 @@ class Odr
      * @JMS\Type("array<AppBundle\Entity\Odr\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Account", mappedBy="odr", cascade={"persist"})
      */
-    private $accounts;
+    private $bankAccounts;
 
     /**
      * @var bool
@@ -76,7 +76,7 @@ class Odr
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->accounts = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
     }
 
 
@@ -158,6 +158,22 @@ class Odr
     public function setSubmitDate($submitDate)
     {
         $this->submitDate = $submitDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
+    }
+
+    /**
+     * @param mixed $bankAccounts
+     */
+    public function setBankAccounts($bankAccounts)
+    {
+        $this->bankAccounts = $bankAccounts;
     }
 
 

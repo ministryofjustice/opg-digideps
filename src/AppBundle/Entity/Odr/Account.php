@@ -89,7 +89,7 @@ class Account
     /**
      * @var Odr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="accounts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="bankAccounts")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
      */
     private $odr;
