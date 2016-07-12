@@ -191,4 +191,17 @@ class Odr
 
         return false;
     }
+
+    /**
+     *
+     * @return decimal
+     */
+    public function getBalanceOnCourtOrderDateTotal()
+    {
+        $ret = 0;
+        foreach ($this->getBankAccounts() as $account) {
+            $ret += $account->getBalanceOnCourtOrderDate();
+        }
+        return $ret;
+    }
 }

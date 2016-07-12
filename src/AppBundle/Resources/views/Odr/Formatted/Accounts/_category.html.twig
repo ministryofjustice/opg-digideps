@@ -5,7 +5,7 @@
     <h3>{{ ('form.categories.' ~ categoryId) | trans({'%client%': client.firstname}, translationDomain) }}</h3>
     <ul class="transactions">
         {% for transaction in transactions %}
-            {% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_transaction.html.twig' with {
+            {% include 'AppBundle:Odr/Formatted/Accounts:_transaction.html.twig' with {
                 transaction: transaction
             } %}
         {% endfor %}

@@ -6,14 +6,12 @@
             <thead>
                 <tr>
                     <th scope="col">&nbsp;</th>
-                    <th class="grey" scope="col">Opening balance</th>
-                    <th class="" scope="col">Change</th>
-                    <th class="grey " scope="col">Closing balance</th>
+                    <th class="grey" scope="col">Balance on court order date ({{ odr.client.courtDate | date('j M Y') }})</th>
                 </tr>
             </thead>
             <tbody>
 
-            {% for account in odr.accounts %}
+            {% for account in odr.bankAccounts %}
                 <tr>
                     <td>
                         <div class="account-name">
@@ -23,47 +21,14 @@
                             {% if account.requiresBankNameAndSortCode and account.sortCode %}
                                , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
-                            {% if account.isJointAccount =='yes' %}
-                                <span class="account-closed">JOINT ACCOUNT</span>
-                            {% endif %}
-                            {% if account.isClosed %}
-                                <span class="account-closed">ACCOUNT CLOSED</span>
-                            {% endif %}
                         </div>
                     </td>
-                    <td class="numeric grey">&pound;{{ account.openingBalance | money_format }}</td>
-                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | money_format }}</td>
-                    <td class="numeric grey">&pound;{{ account.closingBalance | money_format }}</td>
+                    <td class="numeric grey">&pound;{{ account.balanceOnCourtOrderDate | money_format }}</td>
                 </tr>
             {% endfor %}
                 <tr class="totals">
                     <td>&nbsp;</td>
-                    <td class="numeric">&pound;{{ odr.accountsOpeningBalanceTotal | money_format }}</td>
-                    <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ odr.accountsClosingBalanceTotal | money_format}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <h4 class="heading">Balance after income and expenditure</h4>
-        <table class="money">
-            <tbody>
-                <tr>
-                    <td>Total of all opening balances:</td>
-                    <td class="grey numeric">&pound;{{ odr.accountsOpeningBalanceTotal | money_format }}</td>
-                </tr>
-                <tr>
-                    <td>Total money in:</td>
-                    <td class="grey numeric">&pound;{{ odr.moneyInTotal | money_format}}</td>
-                </tr>
-                <tr>
-                    <td>Total money out:</td>
-                    <td class="grey numeric">&pound;{{ odr.moneyOutTotal | money_format}}</td>
-                </tr>
-                <tr class="totals">
-                    <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ odr.calculatedBalance | money_format}}</td>
+                    <td class="numeric reverse">&pound;{{ odr.balanceOnCourtOrderDateTotal | money_format}}</td>
                 </tr>
             </tbody>
         </table>

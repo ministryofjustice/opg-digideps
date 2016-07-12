@@ -32,7 +32,7 @@
 
         {#{% include 'AppBundle:Odr/Formatted:_assets.html.twig' with {assets: odr.assets} %}#}
         {#{% include 'AppBundle:Odr/Formatted:_debts.html.twig' with {debts: odr.debts} %}#}
-        {#{% include 'AppBundle:Odr/Formatted:Formatted/Accounts/_accounts.html.twig' %}#}
+        {% include 'AppBundle:Odr/Formatted/Accounts:_accounts.html.twig' %}
 
         {#{% if odr.action is not null %}#}
             {#{% include 'AppBundle:Odr/Formatted:_action.html.twig' with {#}
