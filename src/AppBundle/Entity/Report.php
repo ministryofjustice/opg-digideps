@@ -15,8 +15,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
-
-
     /**
      * 
      */
@@ -619,7 +617,6 @@ class Report
     {
         return $this->assets;
     }
-    
 
     /**
      * Get assets total value.
@@ -635,8 +632,7 @@ class Report
 
         return $ret;
     }
-    
-    
+
     /**
      * Get debts total value.
      *
@@ -655,7 +651,7 @@ class Report
     /**
      * Used in the list view
      * AssetProperty is considered having title "Property"
-     * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery"
+     * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery".
      *
      * @return array $assets e.g. [Property => [asset1, asset2], Bonds=>[]...]
      */
@@ -669,10 +665,10 @@ class Report
         ];
 
         $ret = [];
-        foreach($this->assets as $asset) {
+        foreach ($this->assets as $asset) {
             if ($asset instanceof AssetProperty) {
                 $ret['Property'][$asset->getId()] = $asset;
-            } else if ($asset instanceof AssetOther) {
+            } elseif ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
                 $ret[$title][$asset->getId()] = $asset;
@@ -687,7 +683,6 @@ class Report
         foreach ($ret as &$row) {
             ksort($row);
         }
-
 
         return $ret;
     }
@@ -1022,8 +1017,6 @@ class Report
         $this->transactionsOut = $transactionsOut;
     }
 
-
-
     /**
      * @param Transaction[] $transactions
      *
@@ -1263,7 +1256,6 @@ class Report
         return $this->debts;
     }
 
-
     /**
      * @param Debt[] $debts
      */
@@ -1306,7 +1298,7 @@ class Report
 
     public function hasAtLeastOneDebtsWithValidAmount()
     {
-        foreach($this->debts as $debt) {
+        foreach ($this->debts as $debt) {
             if ($debt->getAmount()) {
                 return true;
             }
@@ -1323,8 +1315,5 @@ class Report
         if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
-
-
     }
-
 }

@@ -3,14 +3,10 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Odr
 {
-
     /**
      * @JMS\Type("integer")
      *
@@ -21,6 +17,7 @@ class Odr
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
+     *
      * @var bool
      */
     private $submitted;
@@ -34,6 +31,7 @@ class Odr
 
     /**
      * @JMS\Type("AppBundle\Entity\Client")
+     *
      * @var Client
      */
     private $client;
@@ -133,7 +131,7 @@ class Odr
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSubmitted()
     {
@@ -141,7 +139,7 @@ class Odr
     }
 
     /**
-     * @param boolean $submitted
+     * @param bool $submitted
      */
     public function setSubmitted($submitted)
     {
@@ -156,7 +154,7 @@ class Odr
     }
 
     /**
-     * Return the due date (calculated as court order date + 40 days)
+     * Return the due date (calculated as court order date + 40 days).
      *
      * @return \DateTime $dueDate
      */
@@ -193,6 +191,4 @@ class Odr
 
         return false;
     }
-
-
 }

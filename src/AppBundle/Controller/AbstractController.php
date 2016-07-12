@@ -19,6 +19,7 @@ class AbstractController extends Controller
         if (empty($clients)) {
             throw new \RuntimeException('Client not found for the logged user.');
         }
+
         return $clients[0];
     }
 
@@ -36,9 +37,9 @@ class AbstractController extends Controller
     protected function getAllowedCourtOrderTypeChoiceOptions()
     {
         $responseArray = $this->getRestClient()->get('court-order-type', 'array');
-            foreach ($responseArray['court_order_types'] as $value) {
-                $choices[$value['id']] = $value['name'];
-            }
+        foreach ($responseArray['court_order_types'] as $value) {
+            $choices[$value['id']] = $value['name'];
+        }
 
         arsort($choices);
 
@@ -104,7 +105,7 @@ class AbstractController extends Controller
 
         return $report;
     }
-    
+
     /**
      * @return \AppBundle\Service\Mailer\MailFactory
      */

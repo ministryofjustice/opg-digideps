@@ -53,9 +53,7 @@ class OdrStatusService
         }
 
         return 'notFinished';
-
     }
-
 
     /** @return string */
     public function getVisitsCareState()

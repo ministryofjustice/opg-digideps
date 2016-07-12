@@ -149,7 +149,6 @@ class Redirector
 //                return $this->router->generate('report_overview', ['reportId' => $reportId]);
 //            }
 //        }
-
     }
 
     /**

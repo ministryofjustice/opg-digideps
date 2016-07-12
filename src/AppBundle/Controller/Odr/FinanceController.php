@@ -4,11 +4,8 @@ namespace AppBundle\Controller\Odr;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
@@ -44,8 +41,8 @@ class FinanceController extends AbstractController
      * @Route("/odr/{odrId}/finance/banks/upsert/{id}", name="odr_upsert_bank_account", defaults={ "id" = null })
      *
      * @param Request $request
-     * @param int $odrId
-     * @param int $id account Id
+     * @param int     $odrId
+     * @param int     $id      account Id
      *
      * @Template()
      *
@@ -75,11 +72,11 @@ class FinanceController extends AbstractController
             $data->setOdr($odr);
             // if closing balance is set to non-zero values, un-close the account
             if ($type === 'edit') {
-                $this->getRestClient()->put('/odr/account/' . $id, $bankAccount, [
+                $this->getRestClient()->put('/odr/account/'.$id, $bankAccount, [
                     'deserialise_group' => 'bank-account',
                 ]);
             } else {
-                $addedAccount = $this->getRestClient()->post('odr/' . $odrId . '/account', $bankAccount, [
+                $addedAccount = $this->getRestClient()->post('odr/'.$odrId.'/account', $bankAccount, [
                     'deserialise_group' => 'bank-account',
                 ]);
             }
@@ -114,5 +111,4 @@ class FinanceController extends AbstractController
 
         return $this->redirect($this->generateUrl('odr-bank-accounts', ['odrId' => $odrId]));
     }
-
 }

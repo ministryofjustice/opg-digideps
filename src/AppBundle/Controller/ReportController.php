@@ -6,10 +6,8 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
-use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -33,7 +31,6 @@ class ReportController extends AbstractController
         'transactionsIn',
         'transactionsOut',
     ];
-
 
     /**
      * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
@@ -252,13 +249,13 @@ class ReportController extends AbstractController
             $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
-            
+
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
-    
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report');
-            
+
+            $newReport = $this->getRestClient()->get('report/'.$newReportId['newReportId'], 'Report');
+
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
@@ -272,7 +269,6 @@ class ReportController extends AbstractController
             'form' => $form->createView(),
         ];
     }
-   
 
     /**
      * Page displaying the report has been submitted.
@@ -300,7 +296,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
             $this->getMailSender()->send($feedbackEmail, ['html']);
-            
+
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
 
@@ -380,8 +376,7 @@ class ReportController extends AbstractController
 
         return $response;
     }
-    
-     
+
     private function getPdfBinaryContent($reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
@@ -392,5 +387,4 @@ class ReportController extends AbstractController
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
-
 }

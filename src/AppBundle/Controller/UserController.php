@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
-use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,10 +98,9 @@ class UserController extends AbstractController
             return $this->redirect($redirectUrl);
         }
 
-        
 //             $email = $this->getMailFactory()->createChangePasswordEmail($user);
 //            $this->getMailSender()->send($email, ['html']);
-        
+
         return $this->render($template, [
             'token' => $token,
             'form' => $form->createView(),
@@ -125,7 +123,7 @@ class UserController extends AbstractController
 
         $activationEmail = $this->getMailFactory()->createActivationEmail($user);
         $this->getMailSender()->send($activationEmail, ['text', 'html']);
-        
+
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
 
@@ -311,7 +309,6 @@ class UserController extends AbstractController
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
                 $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-                
             } catch (\Exception $e) {
                 $this->get('logger')->debug($e->getMessage());
             }

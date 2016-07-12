@@ -14,6 +14,7 @@ class ApiAvailability extends ServiceAvailabilityAbstract
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
                 $this->isHealthy = false;
                 $this->errors = 'Cannot read API status. '.json_last_error_msg();
+
                 return;
             }
 

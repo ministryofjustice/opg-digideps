@@ -132,8 +132,6 @@ class VisitsCare
         $this->planMoveNewResidenceDetails = $planMoveNewResidenceDetails;
     }
 
-
-
     /**
      * Set doYouLiveWithClient.
      *

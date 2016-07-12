@@ -128,7 +128,7 @@ abstract class Asset
     }
 
     /**
-     * Get name of the template (Asset/list-items/_<template>.html.twig) used to render the partial in the list view
+     * Get name of the template (Asset/list-items/_<template>.html.twig) used to render the partial in the list view.
      *
      * @return string
      */
@@ -136,7 +136,7 @@ abstract class Asset
 
     /**
      * Get an unique human readable ID in order to identify the item in the list based on its content.
-     * Needed by functional testing
+     * Needed by functional testing.
      *
      * @return string
      */

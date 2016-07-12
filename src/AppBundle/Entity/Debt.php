@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Debt
 {
@@ -24,7 +23,6 @@ class Debt
      */
     private $amount;
 
-
     /**
      * @var string
      * @JMS\Groups({"debts"})
@@ -43,10 +41,11 @@ class Debt
 
     /**
      * Debt constructor.
+     *
      * @param $debtTypeId
      * @param decimal $amount
-     * @param string $hasMoreDetails
-     * @param string $moreDetails
+     * @param string  $hasMoreDetails
+     * @param string  $moreDetails
      */
     public function __construct($debtTypeId, $amount, $hasMoreDetails, $moreDetails)
     {
@@ -135,5 +134,4 @@ class Debt
     {
         $this->moreDetails = $moreDetails;
     }
-
 }

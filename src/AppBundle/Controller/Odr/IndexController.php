@@ -2,17 +2,11 @@
 
 namespace AppBundle\Controller\Odr;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Form as FormDir;
-use AppBundle\Model as ModelDir;
 use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
@@ -24,7 +18,8 @@ class IndexController extends AbstractController
     ];
 
     /**
-     * //TODO move view into Odr directory when branches are integrated
+     * //TODO move view into Odr directory when branches are integrated.
+     *
      * @Route("/odr", name="odr_index")
      * @Template()
      */
@@ -40,7 +35,7 @@ class IndexController extends AbstractController
 
         $reportActive = null;
         $reportsSubmitted = [];
-        foreach($reports as $currentReport) {
+        foreach ($reports as $currentReport) {
             if ($currentReport->getSubmitted()) {
                 $reportsSubmitted[] = $currentReport;
             } else {
@@ -98,7 +93,7 @@ class IndexController extends AbstractController
         }
 
         $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
-        $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, [
+        $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, [
             'deserialise_group' => 'submit',
         ]);
 
@@ -156,7 +151,6 @@ class IndexController extends AbstractController
 
         return $response;
     }
-
 
     private function getPdfBinaryContent($odr)
     {

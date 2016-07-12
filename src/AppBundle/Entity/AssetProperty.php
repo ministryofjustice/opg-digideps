@@ -237,7 +237,6 @@ class AssetProperty extends Asset
         return array_filter([$this->address, $this->address2, $this->county, $this->postcode]);
     }
 
-
     public function getOccupants()
     {
         return $this->occupants;
@@ -374,6 +373,6 @@ class AssetProperty extends Asset
 
     public function getBehatIdentifier()
     {
-        return $this->getAddress() . ' ' . $this->getPostcode();
+        return $this->getAddress().' '.$this->getPostcode();
     }
 }

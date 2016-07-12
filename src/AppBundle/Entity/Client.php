@@ -47,7 +47,6 @@ class Client
      */
     private $reports;
 
-
     /**
      * @var Odr\Odr
      *
@@ -255,7 +254,6 @@ class Client
     {
         $this->odr = $odr;
     }
-
 
     public function removeReport($report)
     {

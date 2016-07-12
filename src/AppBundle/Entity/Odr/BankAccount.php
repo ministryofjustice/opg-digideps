@@ -239,7 +239,6 @@ class BankAccount
         $this->balanceOnCourtOrderDate = $balanceOnCourtOrderDate;
     }
 
-
     /**
      * Sort code required.
      *

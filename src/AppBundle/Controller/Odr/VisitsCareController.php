@@ -4,10 +4,8 @@ namespace AppBundle\Controller\Odr;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Service\ReportStatusService;
 use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,18 +40,18 @@ class VisitsCareController extends AbstractController
 
             //TODO simplify endpoint similarly to account, using a PUT on /odr, 'visits-care' subkey
             $deserialiseGroup = [
-                'deserialise_groups' => ['visits-care', 'odr-id']
+                'deserialise_groups' => ['visits-care', 'odr-id'],
             ];
             if ($visitsCare->getId() === null) {
                 $this->getRestClient()->post('/odr/visits-care', $data, $deserialiseGroup);
             } else {
-                $this->getRestClient()->put('/odr/visits-care/' . $visitsCare->getId(), $data, $deserialiseGroup);
+                $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, $deserialiseGroup);
             }
 
             //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-visitsCare');
             //$this->get('session')->getFlashBag()->add('action', $t);
 
-            return $this->redirect($this->generateUrl('odr-visits-care', ['odrId' => $odrId]) . '#pageBody');
+            return $this->redirect($this->generateUrl('odr-visits-care', ['odrId' => $odrId]).'#pageBody');
         }
 
         return [

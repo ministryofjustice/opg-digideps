@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
-use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,7 +100,7 @@ class AssetController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'asset' => $asset,
-            'titleLcFirst' => lcfirst($title)
+            'titleLcFirst' => lcfirst($title),
         ];
     }
 
@@ -171,7 +170,7 @@ class AssetController extends AbstractController
 
         if ($request->getMethod() == 'POST') {
             $this->getRestClient()->put('report/'.$reportId, $form->getData(), [
-                'deserialise_group' => 'noAssetsToAdd'
+                'deserialise_group' => 'noAssetsToAdd',
             ]);
         }
 
