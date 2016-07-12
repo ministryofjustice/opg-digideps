@@ -999,6 +999,8 @@ class Report
     public function setTransactionsIn($transactionsIn)
     {
         $this->transactionsIn = $transactionsIn;
+
+        return $this;
     }
 
     /**
@@ -1015,6 +1017,8 @@ class Report
     public function setTransactionsOut($transactionsOut)
     {
         $this->transactionsOut = $transactionsOut;
+
+        return $this;
     }
 
     /**
@@ -1262,6 +1266,8 @@ class Report
     public function setDebts($debts)
     {
         $this->debts = $debts;
+
+        return $this;
     }
 
     /**

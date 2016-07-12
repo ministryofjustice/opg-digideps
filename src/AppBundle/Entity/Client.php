@@ -186,6 +186,8 @@ class Client
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+
+        return $this;
     }
 
     public function getUsers()
@@ -253,6 +255,8 @@ class Client
     public function setOdr($odr)
     {
         $this->odr = $odr;
+
+        return $this;
     }
 
     public function removeReport($report)
@@ -309,6 +313,8 @@ class Client
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+
+        return $this;
     }
 
     /**
@@ -325,6 +331,8 @@ class Client
     public function setCaseNumber($caseNumber)
     {
         $this->caseNumber = $caseNumber;
+
+        return $this;
     }
 
     /**
@@ -341,12 +349,16 @@ class Client
     public function setCourtDate($courtDate)
     {
         $this->courtDate = $courtDate;
+
+        return $this;
     }
 
     public function setCourtDateWithoutTime($courtDate = null)
     {
         $this->courtDate = ($courtDate instanceof \DateTime) ?
                 new \DateTime($courtDate->format('Y-m-d')) : null;
+
+        return $this;
     }
 
     /**
@@ -386,6 +398,8 @@ class Client
     public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
     {
         $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
+
+        return $this;
     }
     /**
      * @return string $address
@@ -401,6 +415,8 @@ class Client
     public function setAddress($address)
     {
         $this->address = $address;
+
+        return $this;
     }
 
     /**
@@ -417,6 +433,8 @@ class Client
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
+        return $this;
     }
 
     /**
@@ -433,6 +451,8 @@ class Client
     public function setCounty($county)
     {
         $this->county = $county;
+
+        return $this;
     }
 
     /**
@@ -449,6 +469,8 @@ class Client
     public function setPostcode($postcode)
     {
         $this->postcode = $postcode;
+
+        return $this;
     }
 
     /**
@@ -465,6 +487,8 @@ class Client
     public function setCountry($country)
     {
         $this->country = $country;
+
+        return $this;
     }
 
     /**
@@ -481,6 +505,8 @@ class Client
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
     public function getId()
@@ -491,6 +517,8 @@ class Client
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     public function isValidCourtDate(ExecutionContextInterface $context)

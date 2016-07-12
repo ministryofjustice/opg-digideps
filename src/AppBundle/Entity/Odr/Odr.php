@@ -96,6 +96,8 @@ class Odr
     public function setClient($client)
     {
         $this->client = $client;
+
+        return $this;
     }
 
     /**
@@ -112,6 +114,8 @@ class Odr
     public function setVisitsCare($visitsCare)
     {
         $this->visitsCare = $visitsCare;
+
+        return $this;
     }
 
     /**
