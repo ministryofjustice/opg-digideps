@@ -281,5 +281,4 @@ class VisitsCare
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
     }
-
 }

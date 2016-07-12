@@ -45,7 +45,6 @@ class UserController extends RestController
 
         // send activation email
         $user->recreateRegistrationToken();
-        
 
         $this->persistAndFlush($user);
 

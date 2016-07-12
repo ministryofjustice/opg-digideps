@@ -668,8 +668,6 @@ class Report
         return $this->assets;
     }
 
-    
-
     /**
      * Set noAssetToAdd.
      *
@@ -1018,7 +1016,6 @@ class Report
         $this->debts = $debts;
     }
 
-    
     /**
      * @return Debt[]
      */
@@ -1039,7 +1036,6 @@ class Report
         })->first();
     }
 
-
     /**
      * @param Debt $debt
      */
@@ -1054,6 +1050,7 @@ class Report
 
     /**
      * Get assets total value.
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\SerializedName("debts_total_amount")

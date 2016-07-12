@@ -61,7 +61,6 @@ class ClientController extends RestController
             $this->persistAndFlush($odr);
         }
 
-
         return ['id' => $client->getId()];
     }
 

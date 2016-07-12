@@ -119,7 +119,6 @@ abstract class RestController extends Controller
         });
     }
 
-
     /**
      * @return AuthService
      */
@@ -129,8 +128,8 @@ abstract class RestController extends Controller
     }
 
     /**
- * @param Report $report
- */
+     * @param Report $report
+     */
     protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\Report $report)
     {
         if (!in_array($this->getUser()->getId(), $report->getClient()->getUserIds())) {

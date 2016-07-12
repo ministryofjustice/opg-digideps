@@ -13,7 +13,8 @@ class Debt
 {
     /**
      * Hold debts type
-     * 1st value = id, 2nd value = hasMoreInformation
+     * 1st value = id, 2nd value = hasMoreInformation.
+     *
      * @var array
      */
     public static $debtTypeIds = [
@@ -69,7 +70,6 @@ class Debt
      */
     private $hasMoreDetails;
 
-
     /**
      * @var string
      * @JMS\Groups({"debts"})
@@ -83,8 +83,8 @@ class Debt
      *
      * @param Report $report
      * @param string $debtTypeId
-     * @param boole $hasMoreDetails
-     * @param float $amount
+     * @param boole  $hasMoreDetails
+     * @param float  $amount
      */
     public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount)
     {
@@ -177,7 +177,7 @@ class Debt
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasMoreDetails()
     {
@@ -185,14 +185,10 @@ class Debt
     }
 
     /**
-     * @param boolean $hasMoreDetails
+     * @param bool $hasMoreDetails
      */
     public function setHasMoreDetails($hasMoreDetails)
     {
         $this->hasMoreDetails = $hasMoreDetails;
     }
-
-    
-
-
 }

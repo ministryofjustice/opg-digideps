@@ -71,6 +71,7 @@ class Odr
 
     /**
      * Odr constructor.
+     *
      * @param Client $client
      */
     public function __construct(Client $client)
@@ -78,7 +79,6 @@ class Odr
         $this->client = $client;
         $this->bankAccounts = new ArrayCollection();
     }
-
 
     /**
      * @return int
@@ -129,7 +129,7 @@ class Odr
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getSubmitted()
     {
@@ -137,7 +137,7 @@ class Odr
     }
 
     /**
-     * @param boolean $submitted
+     * @param bool $submitted
      */
     public function setSubmitted($submitted)
     {
@@ -175,6 +175,4 @@ class Odr
     {
         $this->bankAccounts = $bankAccounts;
     }
-
-
 }

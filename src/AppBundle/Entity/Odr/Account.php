@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Odr;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -114,7 +113,6 @@ class Account
     }
 
     /**
-     * @return null
      */
     public function getLastEdit()
     {
@@ -123,11 +121,13 @@ class Account
 
     /**
      * @param null $lastEdit
+     *
      * @return Account
      */
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;
+
         return $this;
     }
 
@@ -141,11 +141,13 @@ class Account
 
     /**
      * @param int $id
+     *
      * @return Account
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -159,11 +161,13 @@ class Account
 
     /**
      * @param string $bank
+     *
      * @return Account
      */
     public function setBank($bank)
     {
         $this->bank = $bank;
+
         return $this;
     }
 
@@ -177,11 +181,13 @@ class Account
 
     /**
      * @param string $accountType
+     *
      * @return Account
      */
     public function setAccountType($accountType)
     {
         $this->accountType = $accountType;
+
         return $this;
     }
 
@@ -195,11 +201,13 @@ class Account
 
     /**
      * @param string $sortCode
+     *
      * @return Account
      */
     public function setSortCode($sortCode)
     {
         $this->sortCode = $sortCode;
+
         return $this;
     }
 
@@ -213,11 +221,13 @@ class Account
 
     /**
      * @param string $accountNumber
+     *
      * @return Account
      */
     public function setAccountNumber($accountNumber)
     {
         $this->accountNumber = $accountNumber;
+
         return $this;
     }
 
@@ -231,11 +241,13 @@ class Account
 
     /**
      * @param \DateTime $createdAt
+     *
      * @return Account
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -249,11 +261,13 @@ class Account
 
     /**
      * @param decimal $balanceOnCourtOrderDate
+     *
      * @return Account
      */
     public function setBalanceOnCourtOrderDate($balanceOnCourtOrderDate)
     {
         $this->balanceOnCourtOrderDate = $balanceOnCourtOrderDate;
+
         return $this;
     }
 
@@ -267,15 +281,13 @@ class Account
 
     /**
      * @param Odr $odr
+     *
      * @return Account
      */
     public function setOdr($odr)
     {
         $this->odr = $odr;
+
         return $this;
     }
-
-
-
-
 }

@@ -548,7 +548,6 @@ class Client
         $this->odr = $odr;
     }
 
-
     /**
      * Set allowedCourtOrderTypes.
      *

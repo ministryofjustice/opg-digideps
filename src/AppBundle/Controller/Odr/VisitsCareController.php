@@ -80,10 +80,10 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['visits-care'];
+        $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id, 'VisitsCare with id:' . $id . ' not found');
+        $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id, 'VisitsCare with id:'.$id.' not found');
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
 
         return $visitsCare;
@@ -107,7 +107,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @param array $data
+     * @param array                    $data
      * @param EntityDir\Odr\VisitsCare $visitsCare
      *
      * @return EntityDir\Odr\VisitsCare $report

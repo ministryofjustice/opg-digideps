@@ -110,7 +110,7 @@ class ReportRepository extends EntityRepository
         foreach (Debt::$debtTypeIds as $row) {
             $debt = new Debt($report, $row[0], $row[1], null);
             $this->_em->persist($debt);
-            $ret++;
+            ++$ret;
         }
 
         return $ret;
