@@ -103,6 +103,20 @@ class Account
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("account_type_text")
+     * @JMS\Groups({"odr-account"})
+     *
+     * @return string
+     */
+    public function getAccountTypeText()
+    {
+        $type = $this->getAccountType();
+
+        return isset(self::$types[$type]) ? self::$types[$type] : null;
+    }
+
+    /**
      * Sort code required.
      *
      * @return string
