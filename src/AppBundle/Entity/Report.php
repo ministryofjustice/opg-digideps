@@ -577,7 +577,7 @@ class Report
     {
         $this->contacts = $contacts;
 
-        return $this->contacts;
+        return $this;
     }
 
     /**
@@ -1004,6 +1004,8 @@ class Report
     public function setTransactionsIn($transactionsIn)
     {
         $this->transactionsIn = $transactionsIn;
+
+        return $this;
     }
 
     /**
@@ -1020,6 +1022,8 @@ class Report
     public function setTransactionsOut($transactionsOut)
     {
         $this->transactionsOut = $transactionsOut;
+
+        return $this;
     }
 
 
@@ -1270,6 +1274,8 @@ class Report
     public function setDebts($debts)
     {
         $this->debts = $debts;
+
+        return $this;
     }
 
     /**
@@ -1286,6 +1292,8 @@ class Report
     public function setDebtsTotalAmount($debtsTotalAmount)
     {
         $this->debtsTotalAmount = $debtsTotalAmount;
+
+        return $this;
     }
 
     /**
@@ -1302,6 +1310,8 @@ class Report
     public function setHasDebts($hasDebts)
     {
         $this->hasDebts = $hasDebts;
+
+        return $this;
     }
 
     public function hasAtLeastOneDebtsWithValidAmount()
@@ -1323,8 +1333,6 @@ class Report
         if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
-
-
     }
 
 }

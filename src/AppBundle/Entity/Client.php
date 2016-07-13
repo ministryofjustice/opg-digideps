@@ -165,21 +165,6 @@ class Client
         $this->reports = [];
     }
 
-    /**
-     * @return string $firstname
-     */
-    public function getFirstname()
-    {
-        return $this->firstname;
-    }
-
-    /**
-     * @param string $firstname
-     */
-    public function setFirstname($firstname)
-    {
-        $this->firstname = $firstname;
-    }
 
     public function getUsers()
     {
@@ -265,13 +250,7 @@ class Client
 
         return false;
     }
-    /**
-     * @return string $lastname
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
+
 
     public function getFullname()
     {
@@ -280,45 +259,7 @@ class Client
         return $this->fullname;
     }
 
-    /**
-     * @param string $lastname
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-    }
 
-    /**
-     * @return string $caseNumber
-     */
-    public function getCaseNumber()
-    {
-        return $this->caseNumber;
-    }
-
-    /**
-     * @param string $caseNumber
-     */
-    public function setCaseNumber($caseNumber)
-    {
-        $this->caseNumber = $caseNumber;
-    }
-
-    /**
-     * @return array $courtDate
-     */
-    public function getCourtDate()
-    {
-        return $this->courtDate;
-    }
-
-    /**
-     * @param array $courtDate
-     */
-    public function setCourtDate($courtDate)
-    {
-        $this->courtDate = $courtDate;
-    }
 
     public function setCourtDateWithoutTime($courtDate = null)
     {
@@ -326,13 +267,7 @@ class Client
                 new \DateTime($courtDate->format('Y-m-d')) : null;
     }
 
-    /**
-     * @return array $allowdCourtOrderTypes
-     */
-    public function getAllowedCourtOrderTypes()
-    {
-        return $this->allowedCourtOrderTypes;
-    }
+
 
     /**
      * @param array $allowedCourtOrderType
@@ -360,116 +295,6 @@ class Client
         return false;
     }
 
-    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
-    {
-        $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
-    }
-    /**
-     * @return string $address
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param string $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-
-    /**
-     * @return string $address2
-     */
-    public function getAddress2()
-    {
-        return $this->address2;
-    }
-
-    /**
-     * @param string $address2
-     */
-    public function setAddress2($address2)
-    {
-        $this->address2 = $address2;
-    }
-
-    /**
-     * @return string $county
-     */
-    public function getCounty()
-    {
-        return $this->county;
-    }
-
-    /**
-     * @param string $county
-     */
-    public function setCounty($county)
-    {
-        $this->county = $county;
-    }
-
-    /**
-     * @return string $postcode
-     */
-    public function getPostcode()
-    {
-        return $this->postcode;
-    }
-
-    /**
-     * @param string $postcode
-     */
-    public function setPostcode($postcode)
-    {
-        $this->postcode = $postcode;
-    }
-
-    /**
-     * @return string $country
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return string $phone
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param string $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
     public function isValidCourtDate(ExecutionContextInterface $context)
     {
         $today = new \DateTime();
@@ -478,4 +303,221 @@ class Client
             $context->addViolationAt('courtDate', 'Court Date cannot be in the future');
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return Client
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param string $firstname
+     * @return Client
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @param string $lastname
+     * @return Client
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCaseNumber()
+    {
+        return $this->caseNumber;
+    }
+
+    /**
+     * @param string $caseNumber
+     * @return Client
+     */
+    public function setCaseNumber($caseNumber)
+    {
+        $this->caseNumber = $caseNumber;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCourtDate()
+    {
+        return $this->courtDate;
+    }
+
+    /**
+     * @param array $courtDate
+     * @return Client
+     */
+    public function setCourtDate($courtDate)
+    {
+        $this->courtDate = $courtDate;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedCourtOrderTypes()
+    {
+        return $this->allowedCourtOrderTypes;
+    }
+
+    /**
+     * @param array $allowedCourtOrderTypes
+     * @return Client
+     */
+    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
+    {
+        $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param string $address
+     * @return Client
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @param string $address2
+     * @return Client
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    /**
+     * @param string $county
+     * @return Client
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @param string $postcode
+     * @return Client
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     * @return Client
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string $phone
+     * @return Client
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
 }
