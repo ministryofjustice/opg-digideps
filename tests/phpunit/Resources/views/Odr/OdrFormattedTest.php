@@ -63,37 +63,11 @@ class OdrFormattedTest extends WebTestCase
         $this->account1->setBank('barclays');
         $this->account2 = new BankAccount();
 
-//        $this->transactionIn1 = new Transaction();
-//        $this->transactionOut1 = new Transaction();
-//
-//        $this->transfer1 = new MoneyTransfer();
-//
-//        $this->debt1 = new Debt('care-fees', 123, false, '');
-//
-//        $this->action1 = new Action();
-//
-//        $this->asset1= new AssetOther();
-//        $this->asset1->setId(1)->setTitle('Artwork')->setDescription('monna lisa');
-//        $this->asset2= new AssetOther();
-//        $this->asset2->setId(2)->setTitle('Antiques')->setDescription('chest of drawers');;
-//        $this->assetProp= new AssetProperty();
-//        $this->assetProp->setAddress('plat house');
-//
-//        $this->decision1 = new Decision();
-
         $this->odr = new Odr();
         $this->odr
             ->setClient($this->client)
             ->setVisitsCare($this->visitsCare)
             ->setBankAccounts([$this->account1, $this->account2])
-
-//            ->setMoneyTransfers([$this->transfer1])
-//            ->setTransactionsIn([$this->transactionIn1])
-//            ->setTransactionsOut([$this->transactionOut1])
-//            ->setDebts([$this->debt1])
-//            ->setAction($this->action1)
-//            ->setAssets([$this->asset1, $this->asset2,$this->assetProp])
-//            ->setDecisions([[$this->decision1]])
         ;
 
         $this->html = $this->twig->render('AppBundle:Odr/Formatted:formatted.html.twig', [
