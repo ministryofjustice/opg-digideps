@@ -56,9 +56,11 @@ class FormattedTest extends WebTestCase
         $this->client->addUser($this->user);
 
         $this->account1 = (new Account())
-            ->setBank('barclays');
+            ->setBank('barclays')
+            ->setOpeningBalance(89);
         $this->account2 = (new Account())
-            ->setBank('HSBC');
+            ->setBank('HSBC')
+            ->setOpeningBalance(43);
 
         $this->transactionIn1 = (new Transaction())
             ->setCategory('household-bills')
@@ -86,7 +88,11 @@ class FormattedTest extends WebTestCase
 
         $this->debt1 = new Debt('care-fees', 123, false, '');
 
-        $this->action1 = new Action();
+        $this->action1 = (new Action())
+            ->setDoYouExpectFinancialDecisions('yes')
+            ->setDoYouExpectFinancialDecisionsDetails('sell both flats')
+            ->setDoYouHaveConcerns('yes')
+            ->setDoYouHaveConcernsDetails('not able next year');
 
         $this->asset1= new AssetOther();
         $this->asset1->setId(1)->setTitle('Artwork')->setDescription('monna lisa');
@@ -118,6 +124,27 @@ class FormattedTest extends WebTestCase
             ->setAction($this->action1)
             ->setAssets([$this->asset1, $this->asset2,$this->assetProp])
             ->setDecisions([$this->decision1, $this->decision2])
+            ->setHasDebts(true)
+            ->setDebts([$this->debt1])
+            ->setAccountsClosingBalanceTotal(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+            )->setCalculatedBalance(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+                + 1234+45 // money in
+                - 1233 // money out
+            )->setTotalsOffset(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+                - (
+                    $this->account1->getOpeningBalance()
+                    + $this->account2->getOpeningBalance()
+                    + 1234+45 // money in
+                    - 1233
+                )
+            )
+            ->setBalanceMismatchExplanation('money lost')
         ;
 
         $this->html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
@@ -199,14 +226,25 @@ class FormattedTest extends WebTestCase
 
     public function testDebts()
     {
-        $this->markTestIncomplete();
+        $this->assertContains('Care fees', $this->html($this->crawler, '#debts-section'));
+        $this->assertContains('123.00', $this->html($this->crawler, '#debts-section'));
+
     }
 
     public function testAction()
     {
-        $this->markTestIncomplete();
+        $this->assertContains('sell both flats', $this->html($this->crawler, '#action-section'));
+        $this->assertContains('not able next year', $this->html($this->crawler, '#action-section'));
+
     }
 
+    public function testBalance()
+    {
+        $this->assertContains('Accounts not balanced', $this->html($this->crawler, '#accounts-section'));
+        $this->assertContains('46.00', $this->html($this->crawler, '#accounts-section'));
+        $this->assertContains('money lost', $this->html($this->crawler, '#accounts-section'));
+
+    }
 
     public function tearDown()
     {
