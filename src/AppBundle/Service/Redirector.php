@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -148,7 +149,7 @@ class Redirector
             }
         }
 
-        return $this->router->generate('client');
+        return $this->router->generate('reports', ['cot'=>Report::PROPERTY_AND_AFFAIRS]);
     }
 
     /**
