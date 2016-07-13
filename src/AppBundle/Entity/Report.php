@@ -1063,6 +1063,8 @@ class Report
     public function setMoneyInTotal($moneyInTotal)
     {
         $this->moneyInTotal = $moneyInTotal;
+
+        return $this;
     }
 
     /**
@@ -1079,6 +1081,8 @@ class Report
     public function setMoneyOutTotal($moneyOutTotal)
     {
         $this->moneyOutTotal = $moneyOutTotal;
+
+        return $this;
     }
 
     /**
