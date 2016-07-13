@@ -1115,6 +1115,8 @@ class Report
     public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
     {
         $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
+
+        return $this;
     }
 
     /**
@@ -1131,6 +1133,8 @@ class Report
     public function setCalculatedBalance($calculatedBalance)
     {
         $this->calculatedBalance = $calculatedBalance;
+
+        return $this;
     }
 
     /**
@@ -1147,6 +1151,8 @@ class Report
     public function setTotalsOffset($totalsOffset)
     {
         $this->totalsOffset = $totalsOffset;
+
+        return $this;
     }
 
     /**
