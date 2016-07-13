@@ -34,7 +34,7 @@ class FormattedTest extends WebTestCase
 
     public function setUp()
     {
-        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
         $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -55,14 +55,34 @@ class FormattedTest extends WebTestCase
             ->setCaseNumber('1234567t');
         $this->client->addUser($this->user);
 
-        $this->account1 = new Account();
-        $this->account1->setBank('barclays');
-        $this->account2 = new Account();
+        $this->account1 = (new Account())
+            ->setBank('barclays');
+        $this->account2 = (new Account())
+            ->setBank('HSBC');
 
-        $this->transactionIn1 = new Transaction();
-        $this->transactionOut1 = new Transaction();
+        $this->transactionIn1 = (new Transaction())
+            ->setCategory('household-bills')
+            ->setAmountsTotal(1234)
+            ->setId('gas');
+        $this->transactionIn2 = (new Transaction())
+            ->setCategory('household-bills')
+            ->setAmountsTotal(45)
+            ->setId('electricity');
+        $this->transactionOut1 = (new Transaction())
+            ->setCategory('moneyout-other') //or accommodation
+            ->setAmountsTotal(1233)
+            ->setId('anything-else-paid-out');
 
-        $this->transfer1 = new MoneyTransfer();
+        $this->transfer1 = (new MoneyTransfer())
+            ->setAccountFrom($this->account1)
+            ->setAccountTo($this->account2)
+            ->setAmount(12345)
+        ;
+        $this->transfer2 = (new MoneyTransfer())
+            ->setAccountFrom($this->account2)
+            ->setAccountTo($this->account1)
+            ->setAmount(98765)
+        ;
 
         $this->debt1 = new Debt('care-fees', 123, false, '');
 
@@ -75,7 +95,14 @@ class FormattedTest extends WebTestCase
         $this->assetProp= new AssetProperty();
         $this->assetProp->setAddress('plat house');
 
-        $this->decision1 = new Decision();
+        $this->decision1 = (new Decision())
+            ->setDescription('sold the flat in SW2')
+            ->setClientInvolvedBoolean(true)
+            ->setClientInvolvedDetails('he wanted to leave this area');
+        $this->decision2 = (new Decision())
+            ->setDescription('bought flat in E1')
+            ->setClientInvolvedBoolean(true)
+            ->setClientInvolvedDetails('he wanted to live here');
 
         $this->report = new Report();
         $this->report
@@ -83,13 +110,14 @@ class FormattedTest extends WebTestCase
             ->setStartDate(new \Datetime('2015-01-01'))
             ->setEndDate(new \Datetime('2015-12-31'))
             ->setAccounts([$this->account1, $this->account2])
-            ->setMoneyTransfers([$this->transfer1])
-            ->setTransactionsIn([$this->transactionIn1])
+            ->setMoneyTransfers([$this->transfer1, $this->transfer2])
+            ->setTransactionsIn([$this->transactionIn1, $this->transactionIn2])
             ->setTransactionsOut([$this->transactionOut1])
-            ->setDebts([$this->debt1])
+            ->setMoneyInTotal(1234+45)
+            ->setMoneyOutTotal(1233)
             ->setAction($this->action1)
             ->setAssets([$this->asset1, $this->asset2,$this->assetProp])
-            ->setDecisions([[$this->decision1]])
+            ->setDecisions([$this->decision1, $this->decision2])
         ;
 
         $this->html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
@@ -145,16 +173,28 @@ class FormattedTest extends WebTestCase
 
     public function testDecisions()
     {
-        $this->markTestIncomplete();
+        $this->assertContains('sold the flat in SW2', $this->html($this->crawler, '#decisions-list'));
+        $this->assertContains('he wanted to leave this area', $this->html($this->crawler, '#decisions-list'));
+        $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-list'));
+        $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-list'));
+
     }
     public function testMoneyTransfers()
     {
-        $this->markTestIncomplete();
+        $this->assertContains('12,345.00', $this->html($this->crawler, '#money-transfers-table'));
+        $this->assertContains('98,765.00', $this->html($this->crawler, '#money-transfers-table'));
     }
 
     public function testTransactions()
     {
-        $this->markTestIncomplete();
+        $this->assertContains('Gas', $this->html($this->crawler, '#moneyIn-transactions'));
+        $this->assertContains('1,234.00', $this->html($this->crawler, '#moneyIn-transactions'));
+        $this->assertContains('Electricity', $this->html($this->crawler, '#moneyIn-transactions'));
+        $this->assertContains('45.00', $this->html($this->crawler, '#moneyIn-transactions'));
+        $this->assertContains('1,279.00', $this->html($this->crawler, '#moneyIn-transactions'));
+
+        $this->assertContains('Anything else paid out', $this->html($this->crawler, '#moneyOut-transactions'));
+        $this->assertContains('1,233.00', $this->html($this->crawler, '#moneyOut-transactions'));
     }
 
     public function testDebts()
