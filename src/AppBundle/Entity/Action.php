@@ -43,59 +43,95 @@ class Action
      */
     private $doYouHaveConcernsDetails;
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param int $id
+     * @return Action
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDoYouExpectFinancialDecisions()
     {
         return $this->doYouExpectFinancialDecisions;
     }
 
-    public function getDoYouHaveConcerns()
-    {
-        return $this->doYouHaveConcerns;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
+    /**
+     * @param mixed $doYouExpectFinancialDecisions
+     * @return Action
+     */
     public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
-
         return $this;
     }
 
-    public function setDoYouHaveConcerns($doYouHaveConcerns)
-    {
-        $this->doYouHaveConcerns = $doYouHaveConcerns;
-
-        return $this;
-    }
-
+    /**
+     * @return mixed
+     */
     public function getDoYouExpectFinancialDecisionsDetails()
     {
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
+    /**
+     * @param mixed $doYouExpectFinancialDecisionsDetails
+     * @return Action
+     */
+    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    {
+        $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDoYouHaveConcerns()
+    {
+        return $this->doYouHaveConcerns;
+    }
+
+    /**
+     * @param mixed $doYouHaveConcerns
+     * @return Action
+     */
+    public function setDoYouHaveConcerns($doYouHaveConcerns)
+    {
+        $this->doYouHaveConcerns = $doYouHaveConcerns;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDoYouHaveConcernsDetails()
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
-    {
-        $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
-    }
-
+    /**
+     * @param mixed $doYouHaveConcernsDetails
+     * @return Action
+     */
     public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+        return $this;
     }
+
+
 }
