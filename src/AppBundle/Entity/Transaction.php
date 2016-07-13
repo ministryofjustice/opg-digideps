@@ -70,6 +70,8 @@ class Transaction
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -86,6 +88,8 @@ class Transaction
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
     }
 
     /**
@@ -102,6 +106,8 @@ class Transaction
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**

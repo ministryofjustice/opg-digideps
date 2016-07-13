@@ -45,43 +45,77 @@ class Decision
      */
     private $clientInvolvedDetails;
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param int $id
+     * @return Decision
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    public function setClientInvolvedBoolean($clientInvolvedBoolean)
+    /**
+     * @param string $description
+     * @return Decision
+     */
+    public function setDescription($description)
     {
-        $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+        $this->description = $description;
+        return $this;
     }
 
-    public function getClientInvolvedBoolean()
+    /**
+     * @return boolean
+     */
+    public function isClientInvolvedBoolean()
     {
         return $this->clientInvolvedBoolean;
     }
 
-    public function setClientInvolvedDetails($clientInvolvedDetails)
+    /**
+     * @param boolean $clientInvolvedBoolean
+     * @return Decision
+     */
+    public function setClientInvolvedBoolean($clientInvolvedBoolean)
     {
-        $this->clientInvolvedDetails = $clientInvolvedDetails;
+        $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+        return $this;
     }
 
-    public function getClientInvolvedDetails()
+    /**
+     * @return boolean
+     */
+    public function isClientInvolvedDetails()
     {
         return $this->clientInvolvedDetails;
     }
 
-    public function setId($id)
+    /**
+     * @param boolean $clientInvolvedDetails
+     * @return Decision
+     */
+    public function setClientInvolvedDetails($clientInvolvedDetails)
     {
-        $this->id = $id;
+        $this->clientInvolvedDetails = $clientInvolvedDetails;
+        return $this;
     }
 
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
+
 }
