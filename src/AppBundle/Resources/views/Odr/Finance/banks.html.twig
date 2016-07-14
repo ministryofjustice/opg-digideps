@@ -4,7 +4,9 @@
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.bankAccounts' | trans({}, "odr-accounts") }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
+    {% endblock %}
 
     {% block leftcontent %}
         {% include 'AppBundle:Odr/Finance:left-nav.html.twig'%}
@@ -12,16 +14,11 @@
 
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
+        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}</h3>
         <p class="page-section-description">
           {{ 'banks.pageSectionDescription' | trans({
             '%client%': odr.client.firstname,
           }, translationDomain)}}</p>
-
-        <section class="help-item">
-          <h3 class="summary heading-medium">{{ 'banks.before' | trans }}</h3>
-          <p class="content page-section-description">{{ 'banks.beforeDescription' | trans }}</p>
-        </section>
 
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}

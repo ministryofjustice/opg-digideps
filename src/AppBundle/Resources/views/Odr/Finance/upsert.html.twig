@@ -4,7 +4,9 @@
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
+    {% endblock %}
 
     {% block leftcontent %}
         {% include 'AppBundle:Odr/Finance:left-nav.html.twig'%}

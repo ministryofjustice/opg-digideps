@@ -1,6 +1,6 @@
 page:
   htmlTitle: "Opening deputyship report - bank accounts | GOV.UK"
-  pageSectionTitle: "Accounts"
+  pageSectionTitle: "Finances: %client%'s accounts"
 
 accountForm:
   bank:

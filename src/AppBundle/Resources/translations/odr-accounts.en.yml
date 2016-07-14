@@ -1,8 +1,8 @@
 page:
   htmlTitle: "Opening deputyship report - bank accounts | GOV.UK"
-  pageSectionTitle: "Accounts"
+  pageSectionTitle: "Finances: %client%'s accounts"
 nav:
-  bankAccounts: Bank accounts
+  bankAccounts: Accounts
 
 save:
   label: Save
@@ -11,8 +11,10 @@ cancel:
 
 banks:
     nextSection: Money in
-    pageSectionTitle: %client%'s bank accounts
-    pageSectionDescription: Give use details about %client%’s bank accounts
+    pageSectionTitle: Saved accounts
+    pageSectionDescription: |
+      Add all the %client%’s bank and building society accounts,
+      including savings accounts and ISAs
     before: Have you filled in an Opening deputyship report for OPG before?
     beforeDescription: |
       You may notice the questions have changed. This is because we
