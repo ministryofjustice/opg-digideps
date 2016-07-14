@@ -40,7 +40,7 @@
             subSection: 'accounts',
             odr: odr,
             description: false,
-            state: odrStatus.bankAccountsState,
+            state: odrStatus.getFinanceState,
             linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
             list: true
             } %}

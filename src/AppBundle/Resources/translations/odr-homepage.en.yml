@@ -8,11 +8,10 @@ odr:
     status: NOT STARTED
     instructions: You only need to complete this report once.
     buttonLabel: Start now
-  # the following will be used when more than a section is implemented
-#  notFinished:
-#    status: NOT FINISHED
-#    instructions: You only need to complete this report once
-#    buttonLabel: Continue
+  notFinished:
+    status: NOT FINISHED
+    instructions: You only need to complete this report once
+    buttonLabel: Continue
   readyToSubmit:
     status: READY TO SUBMIT
     instructions: You only need to complete this report once.

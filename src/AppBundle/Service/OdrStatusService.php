@@ -25,6 +25,7 @@ class OdrStatusService
     {
         $states = [
             'visitsCare' => $this->getVisitsCareState(),
+            'finance' => $this->getFinanceState(),
             //...
         ];
 
@@ -65,7 +66,7 @@ class OdrStatusService
         }
     }
 
-    public function bankAccountsState()
+    public function getFinanceState()
     {
         if (empty($this->odr->getBankAccounts())) {
             return self::STATE_NOT_STARTED;
