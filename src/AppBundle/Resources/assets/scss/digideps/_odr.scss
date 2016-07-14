@@ -20,13 +20,6 @@
     }
   }
 
-  // remove margin from main page title
-  .heading-xlarge {
-    &.no-bottom-margin {
-      margin-bottom: 0px;
-    }
-  }
-
   .underlined {
     border-bottom: 1px solid $grey-3;
   }
@@ -47,10 +40,6 @@
       }
     }
 
-  }
-
-  .heading-grey {
-    color: $grey-2;
   }
 
   .status {
