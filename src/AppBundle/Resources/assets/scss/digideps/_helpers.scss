@@ -1,3 +1,25 @@
+// =======================================================
+// HELPERS
+
+// Negating spacing
+// Remove margins
+.flush          { margin:       0 !important; }
+.flush--top     { margin-top:   0 !important; }
+.flush--right   { margin-right: 0 !important; }
+.flush--bottom  { margin-bottom:0 !important; }
+.flush--left    { margin-left:  0 !important; }
+.flush--ends    { margin-top:   0 !important; margin-bottom: 0 !important; }
+.flush--sides   { margin-right: 0 !important; margin-left:  0 !important; }
+
+// Remove paddings
+.hard           { padding:       0 !important; }
+.hard--top      { padding-top:   0 !important; }
+.hard--right    { padding-right: 0 !important; }
+.hard--bottom   { padding-bottom:0 !important; }
+.hard--left     { padding-left:  0 !important; }
+.hard--ends     { padding-top:   0 !important; padding-bottom:0 !important; }
+.hard--sides    { padding-right: 0 !important; padding-left:  0 !important; }
+
 #content .visuallyhidden {
   position: absolute;
   overflow: hidden;
