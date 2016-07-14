@@ -51,6 +51,18 @@ class Odr
     private $bankAccounts;
 
     /**
+     * @return decimal
+     */
+    public function getBankAccountsBalanceTotal()
+    {
+        $ret = 0;
+        foreach ($this->getBankAccounts() as $bankAccount) {
+            $ret += $bankAccount->getBalanceOnCourtOrderDate();
+        }
+        return $ret;
+    }
+
+    /**
      * @return int
      */
     public function getId()
