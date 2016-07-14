@@ -1,39 +1,39 @@
 span.icon {
 
-  // I'm purposefully forcing icons to be used with span tags, some
-  // implementers like using the i tag, to stand for icon, but we all know
-  // that really that stands for italic which is semantically incorrect.
+    // I'm purposefully forcing icons to be used with span tags, some
+    // implementers like using the i tag, to stand for icon, but we all know
+    // that really that stands for italic which is semantically incorrect.
 
-  // Here's how to use them.
+    // Here's how to use them.
 
-  // 1. Set the container which holds the icon to have a CSS position, possibly :relative.
-  // 2. Insert the SPAN.icon__??? tag and create a new icon block below.
-  // 3. DO NOT SPECIFY ICON POSITIONS IN THIS FILE, PUT THOSE SPECIFICS
-  // IN THE  RELEVANT CSS FILE, e.g. An accordion icon can be used in multiple accordion objects
-  // and the icons location can change so put the positioning CSS in the specific CSS files.
+    // 1. Set the container which holds the icon to have a CSS position, possibly :relative.
+    // 2. Insert the SPAN.icon__??? tag and create a new icon block below.
+    // 3. DO NOT SPECIFY ICON POSITIONS IN THIS FILE, PUT THOSE SPECIFICS
+    // IN THE  RELEVANT CSS FILE, e.g. An accordion icon can be used in multiple accordion objects
+    // and the icons location can change so put the positioning CSS in the specific CSS files.
 
-  // Set some defaults
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  display: block;
-  height: 16px;
-  width: 16px;
-  text-indent: -9999em; //In case we have used some text as well */
-
-  &__notification {
-    background-image: url('images/icons/icon-notification.png');
+    // Set some defaults
+    background-repeat: no-repeat;
     background-position: 0 0;
-    width: 35px;
-    height: 35px;
+    display: block;
+    height: 16px;
+    width: 16px;
+    text-indent: -9999em; //In case we have used some text as well */
 
-  }
+    &__notification {
+        background-image: url('images/icons/icon-notification.png');
+        background-position: 0 0;
+        width: 35px;
+        height: 35px;
 
-  &__notification_yellow_small {
-    background-image: url('images/icons/icon-notification-yellow-24.png');
-    background-position: 0 0;
-    width: 24px;
-    height: 24px;
-    float: left;
-    margin: 0 5px;
-  }
+    }
+
+    &__notification_yellow_small {
+        background-image: url('images/icons/icon-notification-yellow-24.png');
+        background-position: 0 0;
+        width: 24px;
+        height: 24px;
+        float: left;
+        margin: 0 5px;
+    }
 }

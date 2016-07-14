@@ -2,41 +2,41 @@
 
 .form-last-four-digits {
 
-  ul {
-    list-style: disc;
-    margin: 0 0 0 7px;
-    padding: 0;
-    float: left;
+    ul {
+        list-style: disc;
+        margin: 0 0 0 7px;
+        padding: 0;
+        float: left;
 
-    li {
-      width: 0;
-      border: 0 solid $black;
-      float: left;
-      margin: 6px 12px 0 13px;
-      padding: 0;
-      color: $grey-2;
-    }
-  }
-
-  .form-group {
-    float: left;
-    width: 50px;
-    margin-bottom: 0;
-    clear: none;
-
-    input {
-      float: left;
-      width: 40px;
-      margin-right: 5px;
-      text-align: center;
-
-      &::after {
-        content: "-";
-        display: inline;
-      }
-
+        li {
+            width: 0;
+            border: 0 solid $black;
+            float: left;
+            margin: 6px 12px 0 13px;
+            padding: 0;
+            color: $grey-2;
+        }
     }
 
-  }
+    .form-group {
+        float: left;
+        width: 50px;
+        margin-bottom: 0;
+        clear: none;
+
+        input {
+            float: left;
+            width: 40px;
+            margin-right: 5px;
+            text-align: center;
+
+            &::after {
+                content: "-";
+                display: inline;
+            }
+
+        }
+
+    }
 
 }

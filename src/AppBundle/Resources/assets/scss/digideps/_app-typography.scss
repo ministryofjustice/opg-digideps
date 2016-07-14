@@ -2,22 +2,21 @@
 // ==========================================================================
 
 .heading-medium-large {
-  @include bold-27();
+    @include bold-27();
 
-  margin-top: 0;
-  margin-bottom: em(10, 20);
-
-  @include media(tablet) {
     margin-top: 0;
-    margin-bottom: em(20, 24);
-  }
+    margin-bottom: em(10, 20);
 
+    @include media(tablet) {
+        margin-top: 0;
+        margin-bottom: em(20, 24);
+    }
 }
 
 #content {
-  p {
-    @include core-19;
-  }
+    p {
+        @include core-19;
+    }
 }
 
 b {
@@ -26,12 +25,12 @@ b {
 
 // Subheading
 .heading-secondary {
-  color: $grey-1;
+    color: $grey-1;
 }
 
 // Subheading just below a main heading
 .heading-xlarge {
-  + .heading-secondary {
-    margin-top: 10px;
-  }
+    + .heading-secondary {
+        margin-top: 10px;
+    }
 }
