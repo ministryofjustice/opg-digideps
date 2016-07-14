@@ -79,7 +79,7 @@
                     <li>
                         <a href="{{path('ad_logout')}}">Terminate deputy session</a>
                     </li>
-                {% elseif is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
+                {% elseif is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients()) %}
                     <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
                 {% endif %}
             </ul>
