@@ -51,6 +51,13 @@ class Odr
     private $bankAccounts;
 
     /**
+     * @JMS\Groups({"odr-debts"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $debts;
+
+    /**
      * @var bool
      *
      * @JMS\Groups({"odr"})
@@ -174,5 +181,21 @@ class Odr
     public function setBankAccounts($bankAccounts)
     {
         $this->bankAccounts = $bankAccounts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDebts()
+    {
+        return $this->debts;
+    }
+
+    /**
+     * @param mixed $debts
+     */
+    public function setDebts($debts)
+    {
+        $this->debts = $debts;
     }
 }
