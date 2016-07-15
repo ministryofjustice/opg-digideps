@@ -34,17 +34,15 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->user = m::mock(User::class);
         $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
         $this->router = m::mock('Symfony\Component\Routing\RouterInterface')
             ->shouldReceive('generate')->andReturnUsing(function($route, $params = []) {
             return [$route, $params];
         })->getMock();
         $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
-
-        $this->user = m::mock(User::class);
-
-        $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
 
         $this->object = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'prod');
     }
