@@ -33,6 +33,8 @@ class OdrController extends RestController
     }
 
     /**
+     * //TODO merge into update action and update client
+     *
      * @Route("/odr/{id}/submit")
      * @Method({"PUT"})
      */
@@ -50,21 +52,50 @@ class OdrController extends RestController
             throw new \InvalidArgumentException('Missing submit_date');
         }
 
-//        if (empty($data['agreed_behalf_deputy'])) {
-//            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
-//        }
-
-//        $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
-//        if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
-//            $currentReport->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
-//        } else {
-//            $currentReport->setAgreedBehalfDeputyExplanation(null);
-//        }
-
         $odr->setSubmitted(true);
         $odr->setSubmitDate(new \DateTime($data['submit_date']));
         $this->getEntityManager()->flush($odr);
 
         return [];
+    }
+
+    /**
+     * @Route("/odr/{id}")
+     * @Method({"PUT"})
+     */
+    public function update(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+        /* @var $odr EntityDir\Odr\Odr */
+        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+
+        $data = $this->deserializeBodyContent($request);
+
+        if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
+            $odr->setHasDebts($data['has_debts']);
+            // null debts
+            foreach ($odr->getDebts() as $debt) {
+                $debt->setAmount(null);
+                $debt->setMoreDetails(null);
+                $this->getEntityManager()->flush($debt);
+            }
+            // set debts as per "debts" key
+            foreach ($data['debts'] as $row) {
+                $debt = $odr->getDebtByTypeId($row['debt_type_id']);
+                if (!$debt instanceof EntityDir\Odr\Debt) {
+                    continue; //not clear when that might happen. kept similar to transaction below
+                }
+                $debt->setAmount($row['amount']);
+                $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
+                $this->getEntityManager()->flush($debt);
+                $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            }
+        }
+
+        $this->getEntityManager()->flush($odr);
+
+        return ['id' => $odr->getId()];
     }
 }

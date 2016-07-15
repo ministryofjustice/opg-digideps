@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Client;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
  * @ORM\Table(name="odr")
  */
 class Odr
@@ -51,11 +51,21 @@ class Odr
     private $bankAccounts;
 
     /**
-     * @JMS\Groups({"odr-debts"})
+     * @JMS\Groups({"debts"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
+     *
+     * @var string
+     */
+    private $hasDebts;
 
     /**
      * @var bool
@@ -85,6 +95,7 @@ class Odr
     {
         $this->client = $client;
         $this->bankAccounts = new ArrayCollection();
+        $this->debts = new ArrayCollection();
     }
 
     /**
@@ -198,4 +209,65 @@ class Odr
     {
         $this->debts = $debts;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHasDebts()
+    {
+        return $this->hasDebts;
+    }
+
+    /**
+     * @param mixed $hasDebts
+     */
+    public function setHasDebts($hasDebts)
+    {
+        $this->hasDebts = $hasDebts;
+    }
+
+    /**
+     * @param Debt $debt
+     */
+    public function addDebt(Debt $debt)
+    {
+        if (!$this->debts->contains($debt)) {
+            $this->debts->add($debt);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $typeId
+     *
+     * @return Debt
+     */
+    public function getDebtByTypeId($typeId)
+    {
+        return $this->getDebts()->filter(function (Debt $debt) use ($typeId) {
+            return $debt->getDebtTypeId() == $typeId;
+        })->first();
+    }
+
+    /**
+     * Get assets total value.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\SerializedName("debts_total_amount")
+     * @JMS\Groups({"debts"})
+     *
+     * @return float
+     */
+    public function getDebtsTotalAmount()
+    {
+        $ret = 0;
+        foreach ($this->getDebts() as $debt) {
+            $ret += $debt->getAmount();
+        }
+
+        return $ret;
+    }
+
 }
