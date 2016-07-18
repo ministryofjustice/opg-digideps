@@ -81,7 +81,7 @@ class Debt
     /**
      * Debt constructor.
      *
-     * @param Odr $odr
+     * @param Odr    $odr
      * @param string $debtTypeId
      * @param boole  $hasMoreDetails
      * @param float  $amount

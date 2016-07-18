@@ -33,7 +33,7 @@ class OdrController extends RestController
     }
 
     /**
-     * //TODO merge into update action and update client
+     * //TODO merge into update action and update client.
      *
      * @Route("/odr/{id}/submit")
      * @Method({"PUT"})

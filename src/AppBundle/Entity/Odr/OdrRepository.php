@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -10,7 +9,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class OdrRepository extends EntityRepository
 {
-
     /**
      * add empty Debts to Odr.
      * Called from doctrine listener.
@@ -36,6 +34,4 @@ class OdrRepository extends EntityRepository
 
         return $ret;
     }
-
-
 }
