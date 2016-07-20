@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Odr
 {
@@ -49,6 +50,33 @@ class Odr
      * @var BankAccount
      */
     private $bankAccounts;
+
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
+     * @JMS\Groups({"debts"})
+     *
+     * @var ArrayCollection
+     */
+    private $debts;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
+     *
+     * @var string
+     */
+    private $hasDebts;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"debts"})
+     *
+     * @var decimal
+     */
+    private $debtsTotalAmount;
 
     /**
      * @return decimal
@@ -220,4 +248,95 @@ class Odr
         }
         return $ret;
     }
+
+    /**
+     * Get debts total value.
+     *
+     * @return float
+     */
+    public function getDebtsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getDebts() as $debt) {
+            $ret += $debt->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebts()
+    {
+        return $this->debts;
+    }
+
+    /**
+     * @param Debt[] $debts
+     */
+    public function setDebts($debts)
+    {
+        $this->debts = $debts;
+
+        return $this;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getDebtsTotalAmount()
+    {
+        return $this->debtsTotalAmount;
+    }
+
+    /**
+     * @param decimal $debtsTotalAmount
+     */
+    public function setDebtsTotalAmount($debtsTotalAmount)
+    {
+        $this->debtsTotalAmount = $debtsTotalAmount;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasDebts()
+    {
+        return $this->hasDebts;
+    }
+
+    /**
+     * @param string $hasDebts
+     */
+    public function setHasDebts($hasDebts)
+    {
+        $this->hasDebts = $hasDebts;
+
+        return $this;
+    }
+
+    public function hasAtLeastOneDebtsWithValidAmount()
+    {
+        foreach ($this->debts as $debt) {
+            if ($debt->getAmount()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function debtsValid(ExecutionContextInterface $context)
+    {
+        if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
+            $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
+        }
+    }
+
 }

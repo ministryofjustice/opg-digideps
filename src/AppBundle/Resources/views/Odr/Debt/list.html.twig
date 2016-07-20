@@ -1,7 +1,7 @@
 {% set translationDomain = "odr-debts" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Debt:layout-debts.html.twig' %}
+{% extends 'AppBundle:Odr/Debt:layout-debts.html.twig' %}
 
 {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
@@ -86,12 +86,7 @@
         </div>
     </div>
 
-    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-    transDomain: translationDomain,
-    showDelete: false,
-    showCancel: false,
-    section: 'account',
-    } %}
+    
 
     {{ form_end(form) }}
 

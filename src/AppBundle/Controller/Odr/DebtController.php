@@ -2,7 +2,8 @@
 
 namespace AppBundle\Controller\Odr;
 
-use AppBundle\Entity\Report;
+use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
+    private static $odrJmsGroups = ['odr', 'client', 'odr-debt'];
+
     /**
      * List debts.
      *
@@ -20,9 +23,9 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $odrId)
     {
-        $odr = $this->getReport($odrId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+            throw new \RuntimeException('Odr already submitted and not editable.');
         }
 
         $form = $this->createForm(new FormDir\Odr\DebtsType(), $odr);
@@ -33,7 +36,7 @@ class DebtController extends AbstractController
                 'deserialise_group' => 'debts',
             ]);
 
-            return $this->redirect($this->generateUrl('debts', ['odrId' => $odrId]));
+            return $this->redirect($this->generateUrl('odr-debts', ['odrId' => $odrId]));
         }
 
         return [
