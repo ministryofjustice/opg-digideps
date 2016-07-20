@@ -6,7 +6,6 @@
 {% block maincontent %}
 
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
-    <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
