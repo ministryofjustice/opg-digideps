@@ -49,7 +49,7 @@
             subSection: 'assets',
             odr: odr,
             description: false,
-            state: 'not-started',
+            state: odrStatus.getAssetsDebtsState,
             linkToSubSection: path('odr-debts', {odrId: odr.id}),
             list: true
             } %}

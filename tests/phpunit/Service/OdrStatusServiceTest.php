@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\BankAccount;
+use AppBundle\Entity\Odr\Debt;
 use AppBundle\Entity\Odr\VisitsCare;
 use Mockery as m;
 use AppBundle\Entity\Odr\Odr;
@@ -20,6 +21,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $odr = m::mock(Odr::class, $odrMethods + [
                 'getVisitsCare' => [],
                 'getBankAccounts' => [],
+                'getHasDebts' => null,
             ]);
 
         return new OdrStatusService($odr);
@@ -46,10 +48,9 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
      * @dataProvider visitsCareProvider
      */
-    public function visitsCare($mocks, $state)
+    public function testVisitsCare($mocks, $state)
     {
         $object = $this->getOdrMocked($mocks);
         $this->assertEquals($state, $object->getVisitsCareState());
@@ -70,15 +71,48 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
      * @dataProvider financeProvider
      */
-    public function financeCare($mocks, $state)
+    public function testFinance($mocks, $state)
     {
         $object = $this->getOdrMocked($mocks);
         $this->assertEquals($state, $object->getFinanceState());
     }
 
+    public function assetsDebtsProvider()
+    {
+        $debt1 = m::mock(Debt::class);
+
+        return [
+            // not started
+            [['getHasDebts'=>null], OdrStatusService::STATE_NOT_STARTED],
+            //done
+            [['getHasDebts'=>'yes'], OdrStatusService::STATE_DONE],
+            [['getHasDebts'=>'no'], OdrStatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider assetsDebtsProvider
+     */
+    public function assetsDebts($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getAssetsDebtsState());
+    }
+
+    /**
+     * @test
+     */
+    public function getRemainingSectionsAll()
+    {
+        $object = $this->getOdrMocked([]);
+        $rs = $object->getRemainingSections();
+        $this->assertEquals('not-started', $rs['visitsCare']);
+        $this->assertEquals('not-started', $rs['finance']);
+        $this->assertEquals('not-started', $rs['assetsDebts']);
+    }
 
     public function getRemainingSectionsPartialProvider()
     {
@@ -86,6 +120,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
             // create using last DONE section of each provider
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             [array_pop($this->financeProvider())[0], 'finance'],
+            [array_pop($this->assetsDebtsProvider())[0], 'assetsDebts'],
         ];
     }
 
@@ -108,6 +143,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getOdrMocked(
             array_pop($this->visitsCareProvider())[0]
             + array_pop($this->financeProvider())[0]
+            + array_pop($this->assetsDebtsProvider())[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());
