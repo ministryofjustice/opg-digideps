@@ -125,7 +125,7 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals('2015-12-31', $odr->getSubmitDate()->format('Y-m-d'));
     }
 
-    public function testDebts()
+    public function testPutDebts()
     {
         $url = '/odr/'.self::$odr1->getId();
 
