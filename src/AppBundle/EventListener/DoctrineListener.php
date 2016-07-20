@@ -24,7 +24,7 @@ class DoctrineListener
 
         // create ODR + debts when client gets created
         if ($entity instanceof EntityDir\Odr\Odr && !$entity->getId()) {
-            $entityManager->getRepository('AppBundle\Entity\Odr\Odr')->addDebtsToReportIfMissing($entity);
+            $entityManager->getRepository('AppBundle\Entity\Odr\Odr')->addDebtsToOdrIfMissing($entity);
         }
     }
 }

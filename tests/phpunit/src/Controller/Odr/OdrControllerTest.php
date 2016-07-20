@@ -80,7 +80,7 @@ class OdrControllerTest extends AbstractTestController
 
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debts', [
+        $data = $this->assertJsonRequest('GET', $url.'?groups=odr-debt', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];

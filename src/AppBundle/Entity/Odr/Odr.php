@@ -59,7 +59,7 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"odr-debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
@@ -256,7 +256,7 @@ class Odr
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\SerializedName("debts_total_amount")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"odr-debt"})
      *
      * @return float
      */

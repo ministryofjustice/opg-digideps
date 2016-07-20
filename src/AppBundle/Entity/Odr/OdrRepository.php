@@ -17,7 +17,7 @@ class OdrRepository extends EntityRepository
      *
      * @return int changed records
      */
-    public function addDebtsToReportIfMissing(Odr $odr)
+    public function addDebtsToOdrIfMissing(Odr $odr)
     {
         $ret = 0;
 
