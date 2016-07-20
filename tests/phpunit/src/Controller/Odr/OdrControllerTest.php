@@ -144,7 +144,7 @@ class OdrControllerTest extends AbstractTestController
             ],
         ]);
 
-        $q = http_build_query(['groups' => ['debts']]);
+        $q = http_build_query(['groups' => ['odr-debt']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,

@@ -51,7 +51,7 @@ class Odr
     private $bankAccounts;
 
     /**
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"odr-debt"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
