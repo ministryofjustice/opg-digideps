@@ -28,7 +28,7 @@ class Odr
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Client
+     * @var Client
      *
      * @JMS\Groups({"client"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
@@ -37,6 +37,8 @@ class Odr
     private $client;
 
     /**
+     * @var VisitsCare
+     *
      * @JMS\Groups({"odr"})
      * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist"})
@@ -44,6 +46,8 @@ class Odr
     private $visitsCare;
 
     /**
+     * @var Account[]
+     *
      * @JMS\Groups({"odr-account"})
      * @JMS\Type("array<AppBundle\Entity\Odr\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Account", mappedBy="odr", cascade={"persist"})
@@ -51,6 +55,8 @@ class Odr
     private $bankAccounts;
 
     /**
+     * @var Debt[]
+     *
      * @JMS\Groups({"odr-debt"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
@@ -58,6 +64,8 @@ class Odr
     private $debts;
 
     /**
+     * @var bool
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-debt"})
      *
@@ -66,6 +74,23 @@ class Odr
      * @var string
      */
     private $hasDebts;
+
+    /**
+     * @var Asset[]
+     *
+     * @JMS\Groups({"odr-asset"})
+     * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Asset", mappedBy="odr", cascade={"persist"})
+     */
+    private $assets;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
+     */
+    private $noAssetToAdd;
 
     /**
      * @var bool
@@ -96,6 +121,7 @@ class Odr
         $this->client = $client;
         $this->bankAccounts = new ArrayCollection();
         $this->debts = new ArrayCollection();
+        $this->assets = new ArrayCollection();
     }
 
     /**
@@ -268,5 +294,63 @@ class Odr
         }
 
         return $ret;
+    }
+
+    /**
+     * Add assets.
+     *
+     * @param Asset $assets
+     *
+     * @return Odr
+     */
+    public function addAsset(Asset $assets)
+    {
+        $this->assets[] = $assets;
+
+        return $this;
+    }
+
+    /**
+     * Remove assets.
+     *
+     * @param Asset $assets
+     */
+    public function removeAsset(Asset $assets)
+    {
+        $this->assets->removeElement($assets);
+    }
+
+    /**
+     * Get assets.
+     *
+     * @return Asset[]
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+
+    /**
+     * Set noAssetToAdd.
+     *
+     * @param bool $noAssetToAdd
+     *
+     * @return Odr
+     */
+    public function setNoAssetToAdd($noAssetToAdd)
+    {
+        $this->noAssetToAdd = $noAssetToAdd;
+
+        return $this;
+    }
+
+    /**
+     * Get noAssetToAdd.
+     *
+     * @return bool
+     */
+    public function getNoAssetToAdd()
+    {
+        return $this->noAssetToAdd;
     }
 }
