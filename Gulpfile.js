@@ -111,6 +111,7 @@ gulp.task('sass.fonts', () => {
 // Copy non css related images
 gulp.task('images', () => {
     gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
+    gulp.src('./node_modules/govuk_template_mustache/assets/images/*').pipe(gulp.dest('./web/images'));
     gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
 });
 
