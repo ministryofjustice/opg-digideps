@@ -213,6 +213,22 @@ class Fixtures
     }
 
     /**
+     * @return EntityDir\Odr\Asset
+     */
+    public function createOdrAsset($type, EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $asset = EntityDir\Odr\Asset::factory($type);
+        $asset->setOdr($odr);
+
+        foreach ($settersMap as $k => $v) {
+            $asset->$k($v);
+        }
+        $this->em->persist($asset);
+
+        return $asset;
+    }
+
+    /**
      * @return EntityDir\Decision
      */
     public function createDecision(EntityDir\Report $report, array $settersMap = [])
