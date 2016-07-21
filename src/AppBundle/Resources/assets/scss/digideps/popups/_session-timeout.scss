@@ -14,14 +14,13 @@
     @include core-19();
 
     width: 480px;
-    height: 210px;
 
     border: 10px solid $black;
     background-color: $white;
     opacity: 1;
 
     margin: 100px auto 0;
-    padding: 30px;
+    padding: 0 30px 30px 30px;
 
     .page-section-title {
       font-size: 30px;

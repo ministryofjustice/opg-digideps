@@ -62,7 +62,7 @@
         <div class="half-width">
             <dl class="labelvalue">
                 <dt class="label">Estimated value of the property?</dt>
-                <dd class="value inline">&pound;{{ asset.value }} </dd>
+                <dd class="value inline">&pound;{{ asset.value | money_format }} </dd>
             </dl>
             
             <dl class="labelvalue">
@@ -80,7 +80,7 @@
             {% if asset.mortgageOutstandingAmount %}
                 <dl class="labelvalue">
                     <dt class="label">If yes, how much is there left to pay?</dt>
-                    <dd class="value inline">&pound;{{ asset.mortgageOutstandingAmount }} </dd>
+                    <dd class="value inline">&pound;{{ asset.mortgageOutstandingAmount | money_format }} </dd>
                 </dl> 
             {% endif %}
             

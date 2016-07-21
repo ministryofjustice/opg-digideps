@@ -9,9 +9,7 @@
 {% block pageHeader %}
     {{ parent() }}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'manualLogout.pageSectionTitle' | trans }}</h1>
-    </div>
+    <p class="lede">{{ 'manualLogout.pageSectionTitle' | trans }}</p>
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,

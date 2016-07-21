@@ -1,57 +1,59 @@
 {% set translationDomain = "report-debts" %}
 {% trans_default_domain translationDomain %}
 
-<div class="section" id="debts-section">
-    <h2 class="section-heading">
-        Client's debts
-    </h2>
-    <div class="dont-break">
-        <div class="box">
-            <div class="checkboxes horizontal">
-                <div class="question">Does the client have any debts ?</div>
-                <table class="yesno" style="width: auto">
-                    <tr>
-                        <td class="checkbox"
-                            data-checkbox="report-has-debts--yes">{% if report.hasDebts == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox"
-                            data-checkbox="report-has-debts--no">{% if report.hasDebts == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
-                    </tr>
-                </table>
-                {% if report.hasDebts == 'yes' %}
-                    <ul class="transactions">
-                        {% for d in debts %}
-                            <li class="transaction {% if d.amount == 0 %}{{ d.amount }} disable{% endif %}">
-                                <div class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</div>
-                                <div class="value">&pound;{{ d.amount | money_format }}</div>
-                                {% if d.hasMoreDetails %}
-                                    <div class="description">
-                                        {{ d.moreDetails | nl2br }}
-                                    </div>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                        
-                    </ul>
-                        
-                  
-                        
-                {% endif %}
-            </div>
-        </div>
-            
-        {% if report.hasDebts == 'yes' %}    
-        {# total value #}
-            <div class="box total">
-                <div class="labelvalue inline">
-                    <div class="label">Debts Total Value</div>
-                    <div class="value" id="assetsTotal">&pound;{{ report.debtsTotalValue | money_format }}</div>
+{% if report.hasDebts is not null %}
+    <div class="section" id="debts-section">
+        <h2 class="section-heading">
+            Client's debts
+        </h2>
+        <div class="dont-break">
+            <div class="box">
+                <div class="checkboxes horizontal">
+                    <div class="question">Does the client have any debts ?</div>
+                    <table class="yesno" style="width: auto">
+                        <tr>
+                            <td class="checkbox"
+                                data-checkbox="report-has-debts--yes">{% if report.hasDebts == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">Yes</td>
+                            <td class="checkbox"
+                                data-checkbox="report-has-debts--no">{% if report.hasDebts == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">No</td>
+                        </tr>
+                    </table>
+                    {% if report.hasDebts == 'yes' %}
+                        <ul class="transactions">
+                            {% for d in debts %}
+                                <li class="transaction {% if d.amount == 0 %}{{ d.amount }} disable{% endif %}">
+                                    <div class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</div>
+                                    <div class="value">&pound;{{ d.amount | money_format }}</div>
+                                    {% if d.hasMoreDetails %}
+                                        <div class="description">
+                                            {{ d.moreDetails | nl2br }}
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+
+
+
+                    {% endif %}
                 </div>
-            </div>   
-        {% endif %}
-            
+            </div>
+
+            {% if report.hasDebts == 'yes' %}
+                {# total value #}
+                <div class="box total">
+                    <div class="labelvalue inline">
+                        <div class="label">Debts Total Value</div>
+                        <div class="value" id="assetsTotal">&pound;{{ report.debtsTotalValue | money_format }}</div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
     </div>
-</div>
+{% endif %}
 
 
