@@ -1,6 +1,9 @@
 $path: '/images/';
 @import "govuk-elements";
 
+//GOV.UK EXTENSIONS
+@import "extensions/elements/icons";
+
 // DIGIDEPS
 @import "digideps/colours";
 @import "digideps/popups/session-timeout";
@@ -63,3 +66,6 @@ $path: '/images/';
 @import "digideps/swatch";
 @import "digideps/transfers";
 @import "digideps/odr";
+
+// SHAME
+@import "shame";

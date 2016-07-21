@@ -167,6 +167,7 @@ gulp.task('lint.js', function () {
 // Watch the source files and recompile in debug mode when there are changed.
 gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
+    gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
     gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
 });
