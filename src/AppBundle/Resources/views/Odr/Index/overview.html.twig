@@ -44,15 +44,16 @@
             linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
             list: true
             } %}
-            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
-            {#transDomain: translationDomain,#}
-            {#subSection: 'assets',#}
-            {#odr: odr,#}
-            {#description: false,#}
-            {#state: 'not-started',#}
-            {#list: true#}
-            {#} %}#}
-            {#</li>#}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'assets',
+            odr: odr,
+            description: false,
+            state: odrStatus.getAssetsDebtsState,
+            linkToSubSection: path('odr-debts', {odrId: odr.id}),
+            list: true
+            } %}
+            </li>
 
             <li id="visists-and-actions" class="overview-section">
                 <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>

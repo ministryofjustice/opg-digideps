@@ -1,0 +1,93 @@
+{% set translationDomain = "odr-debts" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Debt:layout-debts.html.twig' %}
+
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+{% block maincontent %}
+    <h3 class="heading-medium-large">{{ 'page.heading' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
+
+    {{ form_errors_list(form) }}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
+
+    {{ form_checkbox_group(form.hasDebts, 'hasDebts', {
+        'formGroupClass': 'margin-bottom-reduced',
+        'fieldSetClass' : 'inline client-has-debts',
+        'legendClass' : 'form-label',
+        'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+
+    <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+        <div class="section no-border-bottom form-horizontal">
+            <div class="detail transactions detail-view">
+                {% for debt in form.debts %}
+                    <div class="transaction {{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
+                        {{ form_row(debt.debtTypeId) }}
+                        {{ form_input(debt.amount, 'amount', {
+                            'inputPrefix' : '£',
+                            'inputClass' : 'form-control__number transaction-value',
+                            'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                            'formGroupClass': ' form-group-value'
+                        }) }}
+
+                        {% if debt.moreDetails is defined %}
+                            {{ form_input(debt.moreDetails, 'moreDetails', {
+                                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                                'formGroupClass': 'form-group-combo-description',
+                                'inputClass': ' transaction-more-details'
+                            }) }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="sub-total hidden">
+                    Total debts
+                    :£<span class="value">{{ odr.debtsTotalAmount | money_format }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // client has debt radio box hide/show debts list
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio: '.client-has-debts input[type=radio]',
+                content: '#debts-sections-list',
+                hideOnYes: false
+            });
+
+            // auto save (disable as it removes submit button, needed to save radio choice
+            {#new GOVUK.AutoSave({#}
+                {#form: $('form.debts-form'),#}
+                {#statusElement: $('#save-status'),#}
+                {#url: '{{ path('debts_save_json', {'odrId': odr.id}) }}'#}
+            {#});#}
+
+            // auto format currencies
+            $('input.transaction-value').on('blur', function (event) {
+                GOVUK.formatCurrency(event.target);
+            });
+
+            new GOVUK.ExpandingMoreDetails('.expand-more-details');
+        });
+    </script>
+
+    <div id="save-debts" class="save-section no-margin">
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+        </div>
+    </div>
+
+    
+
+    {{ form_end(form) }}
+
+{% endblock %}

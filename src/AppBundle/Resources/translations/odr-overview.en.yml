@@ -60,10 +60,10 @@ visitsCare:
     edit: "Edit visits and care"
     start: "Start visits and care"
 assets:
-    subSectionTitle: "Assets"
+    subSectionTitle: "Assets and debts"
     subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
     edit: "Edit assets"
-    start: "Start assets"
+    start: "Start assets and debts"
 odr_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"

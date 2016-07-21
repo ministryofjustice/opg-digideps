@@ -26,7 +26,7 @@ class OdrStatusService
         $states = [
             'visitsCare' => $this->getVisitsCareState(),
             'finance' => $this->getFinanceState(),
-            //...
+            'assetsDebts' => $this->getAssetsDebtsState(),
         ];
 
         return array_filter($states, function ($e) {
@@ -73,5 +73,18 @@ class OdrStatusService
         } else {
             return self::STATE_DONE;
         }
+    }
+
+    public function getAssetsDebtsState()
+    {
+        $hasDebts = $this->odr->getHasDebts();
+
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+
+        if ($debtsSectionComplete) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
     }
 }
