@@ -80,7 +80,7 @@
             {% if asset.mortgageOutstandingAmount %}
                 <dl class="labelvalue">
                     <dt class="label">If yes, how much is there left to pay?</dt>
-                    <dd class="value inline">&pound;{{ asset.mortgageOutstandingAmount }} </dd>
+                    <dd class="value inline">&pound;{{ asset.mortgageOutstandingAmount | money_format }} </dd>
                 </dl> 
             {% endif %}
             
