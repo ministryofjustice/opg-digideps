@@ -176,7 +176,7 @@ transfer:
         notBlank: You need to enter a closing balance
     amount:
           notBlank: You need to enter the amount
-          notNumeric: Enter a valid amount
+          notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000
 asset:
@@ -241,7 +241,7 @@ asset:
             outOfRange: The value of the property must be less than £100,000,000,000
 debt:
     amount:
-      notNumeric: Enter a valid value (e.g. 1,040.55)
+      notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive
       maxMessage: The amount must be less than £100,000,000,000
     moreDetails:
@@ -337,7 +337,7 @@ odr:
           outOfRange: The balance must be less than £10,000,000,000
       moneyInOut:
           amount:
-            notNumeric: Use numbers only to enter the amount
+            notNumeric: Please use numbers only to enter the amount
             minMessage: The amount must be more than £{{ limit }}
             maxMessage: The amount must be less than £10,000,000,000
             missingWhenDetailsFilled: Enter the total amount or remove the details
