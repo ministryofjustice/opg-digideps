@@ -1,8 +1,6 @@
 // Typography - Application specific version
 // ==========================================================================
 // GOV.UK front end toolkit dependencies
-@import "typography";
-@import "colours";
 
 .heading-medium-large {
   @include bold-27();
@@ -20,6 +18,9 @@
 #content {
   p {
     @include core-19;
+  }
+  .lede {
+    @include core-24;
   }
 }
 
