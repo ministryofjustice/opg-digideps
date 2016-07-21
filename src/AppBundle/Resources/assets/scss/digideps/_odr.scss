@@ -24,24 +24,6 @@
         border-bottom: 1px solid $grey-3;
     }
 
-    .report-icon {
-        display: block;
-        padding: 5px 0px 10px 85px;
-        background-repeat: no-repeat;
-        background-position: 0 0;
-        background-size: 70px 32px;
-
-        &.report-icon-pf {
-            background-image: url('images/icons/report/pf.png');
-
-            // needs review
-            @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-                background-image: url('images/icons/report/pf_2x.png');
-            }
-        }
-
-    }
-
     .status {
         font-size: 0.8em;
         border-radius: 5px;

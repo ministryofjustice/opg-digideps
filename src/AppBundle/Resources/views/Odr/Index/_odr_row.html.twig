@@ -1,18 +1,19 @@
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
-<div>
-    <h2 class="heading-medium underlined report-icon report-icon-pf">Opening Deputyship Report</h2>
+<h2 class="heading-large header">
+	<span class="icon icon-property"></span>
+	<span class="icon icon-finance"></span>
+	Opening deputyship report
+</h2>
 
-    {% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'not-finished' %}
+{% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'not-finished' %}
 
-    <div class="report-box">
-        <span class="status {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
-        <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
-        <p>
-            {{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}
-        </p>
-        <a href="{{ path('odr_overview') }}" class="button">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
-    </div>
-
+<div class="report-box">
+    <span class="status {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
+    <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
+    <p>
+        {{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}
+    </p>
+    <a href="{{ path('odr_overview') }}" class="button">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
 </div>
