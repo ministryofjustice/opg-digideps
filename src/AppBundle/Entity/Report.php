@@ -172,9 +172,7 @@ class Report
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
-     * @Assert\True(message="report.submissionExceptions.submitted", groups={"submitted"})
-     * @Assert\False(message="report.submissionExceptions.notSubmitted", groups={"notSubmitted"})
-     * 
+     *
      * @var bool
      */
     private $submitted;
