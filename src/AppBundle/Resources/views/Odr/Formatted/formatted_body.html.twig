@@ -1,5 +1,4 @@
 {% set client = odr.client %}
-{#{% set groupAssets = odr.getAssetsGroupedByType %}#}
 {#{% set contacts = odr.getContacts %}#}
 {#{% set decisions = odr.getDecisions %}#}
 {% set isEmailAttachment = true %}
@@ -30,7 +29,7 @@
             } %}
         {% endif %}
 
-        {#{% include 'AppBundle:Odr/Formatted:_assets.html.twig' with {assets: odr.assets} %}#}
+        {% include 'AppBundle:Odr/Formatted:_assets.html.twig' with {assets: odr.assets} %}
         {% include 'AppBundle:Odr/Formatted:_debts.html.twig' with {debts: odr.debts} %}
         {% include 'AppBundle:Odr/Formatted/Accounts:_accounts.html.twig' %}
 

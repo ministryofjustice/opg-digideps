@@ -12,12 +12,12 @@
             {% else %}
             {% set assetsTotalValue = 0 %}
             <ul class="list" id="assets">
-                {% for type, assets in groupAssets %}
+                {% for type, assets in odr.getAssetsGroupedByTitle %}
                         <li class="asset-group" data-group="{{ type }}">
-                        {% if type == 'property' %}
-                            {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
+                        {% if type == 'Property' %}
+                            {% include 'AppBundle:Odr/Formatted/Asset:_property.html.twig' %}
                         {% else %}
-                             {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
+                             {% include 'AppBundle:Odr/Formatted/Asset:_other.html.twig' %}
                         {% endif%}
                     </li>
                 {% endfor %}
