@@ -16,6 +16,7 @@ class IndexController extends AbstractController
         'visits-care',
         'odr-account',
         'odr-debt',
+        'odr-asset',
     ];
 
     /**

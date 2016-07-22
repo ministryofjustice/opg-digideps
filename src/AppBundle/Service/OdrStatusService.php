@@ -77,14 +77,21 @@ class OdrStatusService
 
     public function getAssetsDebtsState()
     {
+        $hasAtLeastOneAsset = count($this->odr->getAssets()) > 0;
+        $noAssetsToAdd = $this->odr->getNoAssetToAdd();
         $hasDebts = $this->odr->getHasDebts();
 
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
         $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
 
-        if ($debtsSectionComplete) {
+        if ($assetsSubSectionComplete && $debtsSectionComplete) {
             return self::STATE_DONE;
         }
 
-        return self::STATE_NOT_STARTED;
+        return self::STATE_INCOMPLETE;
     }
 }

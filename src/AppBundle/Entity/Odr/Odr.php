@@ -417,7 +417,7 @@ class Odr
     /**
      * @return boolean
      */
-    public function isNoAssetToAdd()
+    public function getNoAssetToAdd()
     {
         return $this->noAssetToAdd;
     }

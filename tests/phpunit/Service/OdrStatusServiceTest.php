@@ -7,14 +7,14 @@ use AppBundle\Entity\Odr\Debt;
 use AppBundle\Entity\Odr\VisitsCare;
 use Mockery as m;
 use AppBundle\Entity\Odr\Odr;
-use AppBundle\Service\OdrStatusService;
+use AppBundle\Service\OdrStatusService as StatusService;
 
 class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param array $odrMethods
      *
-     * @return OdrStatusService
+     * @return StatusService
      */
     private function getOdrMocked(array $odrMethods)
     {
@@ -22,9 +22,11 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getVisitsCare' => [],
                 'getBankAccounts' => [],
                 'getHasDebts' => null,
+                'getNoAssetToAdd' => null,
+                'getAssets' => [],
             ]);
 
-        return new OdrStatusService($odr);
+        return new StatusService($odr);
     }
 
 
@@ -40,10 +42,10 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             // not started
-            [[], OdrStatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $visitsCareErr], OdrStatusService::STATE_NOT_STARTED],
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $visitsCareErr], StatusService::STATE_NOT_STARTED],
             // done
-            [['getVisitsCare' => $visitsCareOk], OdrStatusService::STATE_DONE],
+            [['getVisitsCare' => $visitsCareOk], StatusService::STATE_DONE],
         ];
     }
 
@@ -63,10 +65,10 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             // not started
-            [[], OdrStatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => []], OdrStatusService::STATE_NOT_STARTED],
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
             // done
-            [['getBankAccounts' => [$bankAccount1]], OdrStatusService::STATE_DONE],
+            [['getBankAccounts' => [$bankAccount1]], StatusService::STATE_DONE],
         ];
     }
 
@@ -81,14 +83,19 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function assetsDebtsProvider()
     {
-        $debt1 = m::mock(Debt::class);
+        $asset = m::mock(\AppBundle\Entity\Asset::class);
 
         return [
-            // not started
-            [['getHasDebts'=>null], OdrStatusService::STATE_NOT_STARTED],
-            //done
-            [['getHasDebts'=>'yes'], OdrStatusService::STATE_DONE],
-            [['getHasDebts'=>'no'], OdrStatusService::STATE_DONE],
+            [[], StatusService::STATE_NOT_STARTED],
+            // missing sth
+            [['getAssets' => [$asset], 'getHasDebts' => null], StatusService::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'no'], StatusService::STATE_INCOMPLETE],
+            // done
+            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], StatusService::STATE_DONE],
         ];
     }
 
@@ -96,7 +103,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider assetsDebtsProvider
      */
-    public function assetsDebts($mocks, $state)
+    public function assets($mocks, $state)
     {
         $object = $this->getOdrMocked($mocks);
         $this->assertEquals($state, $object->getAssetsDebtsState());
@@ -120,7 +127,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
             // create using last DONE section of each provider
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             [array_pop($this->financeProvider())[0], 'finance'],
-            [array_pop($this->assetsDebtsProvider())[0], 'assetsDebts'],
+            [array_pop($this->assetsDebtsProvider())[0], 'assets'],
         ];
     }
 
