@@ -43,49 +43,6 @@
         }
     }
 
-    .status {
-
-        @include box-sizing(border-box);
-        @include inline-block();
-
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 1.42857;
-        text-transform: uppercase;
-        padding: 2px 5px 0 5px;
-        margin: 20px 0 15px 0;
-        float: left;
-        text-align: center;
-        border-radius: 5px;
-        border: 2px solid $grey-status;
-
-        @include media(mobile) {
-            font-size: 11px;
-            float: right;
-            margin: 10px 0 10px 0;
-        }
-
-        &.not-started {
-            color: $grey-status;
-        }
-
-        &.done {
-            color: $green-status;
-            border-color: $green-status;
-        }
-
-        &.incomplete {
-            color: $orange-status;
-            border-color: $orange-status;
-        }
-
-        &.account-closed {
-            color: $red-unknown;
-            border: 2px solid $red-unknown;
-        }
-
-    }
-
     .description {
         float: none;
         clear: both;

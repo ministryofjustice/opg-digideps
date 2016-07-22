@@ -62,6 +62,10 @@
         margin-bottom: 30px;
     }
 
+    .card-body {
+        display: inline-block;
+    }
+
     .labelvalue {
         @extend %contain-floats;
 
@@ -111,6 +115,28 @@
     
     &.disabled {
         background: $grey-1;
+    }
+
+    &-plain {
+        @include border-radius(0px);
+
+        padding: $gutter-half;
+        border: 1px solid $border-colour;
+        background: $white;
+        color: $black;
+
+        &.last {
+            margin-bottom: $gutter*2;
+        }
+
+        &.disabled {
+            background-color: $grey-3;
+        }
+    }
+
+    .button.right {
+        margin-top: $gutter;
+        clear: right;
     }
 
     

@@ -1,50 +1,52 @@
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
-<div>
-    <h2 class="heading-medium underlined report-icon report-icon-pf">Property and finance</h2>
+<h2 class="heading-large header">
+    <span class="icon icon-property"></span>
+    <span class="icon icon-finance"></span>
+    Property and finance
+</h2>
 
-    {% if odr.submitted %}
-        {#
-        # CLICKABLE REPORT
-        #}
-        {% set status = reportActive ? 'notFinished' : 'notStarted' %}
-        {% set statusClass = reportActive ? 'not-finished' : 'not-started' %}
-        <div class="report-box">
-            <span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
-            <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
-            <p class="date">
-                {% if reportActive %}
-                    {{ reportActive.startDate | date("j M Y") }} -
-                    {{ reportActive.endDate | date("j M Y") }}
-                {% endif %}
-            </p>
-            <p class="description">
-                {% if reportActive %}
-                    {{ ('report.due') | trans }}
-                    {{ reportActive.getDueDate() | date("j M Y") }}
-                {% endif %}
-            </p>
-            {% set link = reportActive ?
-            path('report_overview', {'reportId': reportActive.id})
-            : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
-            <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+{% if odr.submitted %}
+    {#
+    # CLICKABLE REPORT
+    #}
+    {% set status = reportActive ? 'notFinished' : 'notStarted' %}
+    {% set statusClass = reportActive ? 'not-finished' : 'not-started' %}
+    <div class="card card-plain">
+        <span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+        <p class="date">
+            {% if reportActive %}
+                {{ reportActive.startDate | date("j M Y") }} -
+                {{ reportActive.endDate | date("j M Y") }}
+            {% endif %}
+        </p>
+        <p class="description">
+            {% if reportActive %}
+                {{ ('report.due') | trans }}
+                {{ reportActive.getDueDate() | date("j M Y") }}
+            {% endif %}
+        </p>
+        {% set link = reportActive ?
+        path('report_overview', {'reportId': reportActive.id})
+        : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+        <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+    </div>
+{% else %}
+    {#
+     # REPORT NOT ACTIVE
+     #}
+    {% set status = 'notAvailable' %}
+    <div class="card card-plain disabled">
+        <span class="status status-corner not-available">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+        <div class="card-body">
+            <p>{{ ('report.' ~ status ~ '.instructions') | trans }}</p>
         </div>
-    {% else %}
-        {#
-         # REPORT NOT ACTIVE
-         #}
-        {% set status = 'notAvailable' %}
-        <div class="report-box inactive">
-            <span class="status not-available">{{ ('report.' ~ status ~ '.status') | trans }}</span>
-            <h3 class="heading-small">{{ client.firstname }} {{ client.lastname }}</h3>
-            <p>
-                {{ ('report.' ~ status ~ '.instructions') | trans }}
-            </p>
-        </div>
-    {% endif %}
+    </div>
+{% endif %}
 
-</div>
 
 
 

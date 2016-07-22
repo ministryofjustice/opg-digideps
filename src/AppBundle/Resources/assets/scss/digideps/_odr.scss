@@ -1,53 +1,5 @@
 .home-odr {
 
-    .report-box {
-        overflow: hidden;
-        border: 2px $grey-2 solid;
-        padding: 10px;
-
-        &.inactive {
-            background-color: $grey-3;
-            .status {
-                &.not-available {
-                    color: $black;
-                    border-color: $black;
-                }
-            }
-        }
-
-        .button {
-          float: right;
-        }
-    }
-
-    .underlined {
-        border-bottom: 1px solid $grey-3;
-    }
-
-    .status {
-        font-size: 0.8em;
-        border-radius: 5px;
-        line-height: 1em;
-        border: 2px solid $grey-3;
-        padding: 2px 2px 0;
-        width: auto;
-        float: right;
-        font-weight: bold;
-
-        &.not-started {
-            color: $grey-3;
-            border-color: $grey-3;
-        }
-        &.not-available {
-            color: $grey-3;
-            border-color: $grey-3;
-        }
-        &.not-finished {
-            color: $orange-status;
-            border-color: $orange-status;
-        }
-    }
-
     #report-history {
         margin-top: 50px;
 
