@@ -64,7 +64,7 @@ class Odr
      * @JMS\Type("string")
      * @JMS\Groups({"debts"})
      *
-     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
+     * @Assert\NotBlank(message="odr.hasDebts.notBlank", groups={"debts"})
      *
      * @var string
      */
@@ -77,6 +77,21 @@ class Odr
      * @var decimal
      */
     private $debtsTotalAmount;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
+     *
+     * @var Asset[]
+     */
+    private $assets;
+
+    /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"noAssetsToAdd"})
+     *
+     * @var bool
+     */
+    private $noAssetToAdd;
 
     /**
      * @return decimal
@@ -335,8 +350,102 @@ class Odr
     public function debtsValid(ExecutionContextInterface $context)
     {
         if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
-            $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
+            $context->addViolation('odr.hasDebts.mustHaveAtLeastOneDebt');
         }
+    }
+
+
+    /**
+     * @param array $assets
+     *
+     * @return self
+     */
+    public function setAssets($assets)
+    {
+        $this->assets = $assets;
+
+        return $this;
+    }
+
+    /**
+     * @return array $assets
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+
+    /**
+     * Used in the list view
+     * AssetProperty is considered having title "Property"
+     * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery".
+     *
+     * @return array $assets e.g. [Property => [asset1, asset2], Bonds=>[]...]
+     */
+    public function getAssetsGroupedByTitle()
+    {
+        // those needs to be grouped together
+        $titleToGroupOverride = [
+            'Artwork' => 'Artwork, antiques and jewellery',
+            'Antiques' => 'Artwork, antiques and jewellery',
+            'Jewellery' => 'Artwork, antiques and jewellery',
+        ];
+
+        $ret = [];
+        foreach ($this->assets as $asset) {
+            if ($asset instanceof AssetProperty) {
+                $ret['Property'][$asset->getId()] = $asset;
+            } elseif ($asset instanceof AssetOther) {
+                $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
+                    $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
+                $ret[$title][$asset->getId()] = $asset;
+            }
+        }
+
+        return $ret;
+
+        // order categories
+        ksort($ret);
+        // order assets inside by key
+        foreach ($ret as &$row) {
+            ksort($row);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isNoAssetToAdd()
+    {
+        return $this->noAssetToAdd;
+    }
+
+    /**
+     * @param boolean $noAssetToAdd
+     * @return Odr
+     */
+    public function setNoAssetToAdd($noAssetToAdd)
+    {
+        $this->noAssetToAdd = $noAssetToAdd;
+        return $this;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function hasAssetWithId($id)
+    {
+        foreach ($this->getAssets() as $asset) {
+            if ($asset->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

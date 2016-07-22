@@ -316,9 +316,6 @@ class VisitsCare
     }
 
     /**
-     * checks if report is missing
-     * information.
-     *
      * @return bool
      */
     public function missingInfo()
