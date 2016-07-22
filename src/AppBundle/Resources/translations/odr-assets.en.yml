@@ -1,0 +1,104 @@
+page:
+  htmlTitle: "Opening deputyship report - assets | GOV.UK"
+  pageSectionTitle: "%client%'s assets"
+  pageSectionDescription: "Add details of any property, valuables or investments that %client% owns."
+  pageSectionWarning: ""
+  subSectionTitleSelect: Add an asset
+  subSectionAssetComplete:
+    other: "Add an asset: %title%"
+    property: Add a property
+  subSectionTitleEdit: 
+    other: "Edit this asset"
+    property: Edit this property
+form:
+  controls:
+    addButton:
+      label: "Add an asset"
+      moreLabel: "Add another asset"
+    next:
+      label: Continue
+  property:
+    address:
+      label: Address
+    address2:
+      label: ""
+    county:
+      label: ""
+    postcode:
+      label: "Postcode"
+    occupants:
+      label: "Who lives at this property?"
+    owned:
+      label: Is the property fully or part-owned by %client%?
+    ownedPercentage:
+      label: What is %client%’s share of the property?
+    isSubjectToEquityRelease:
+      label: Is this property subject to an equity release scheme?
+    value:
+      label: What is the value of property? This can be an estimate.
+    hasMortgage:
+      label: Is there a mortgage on the property?
+    mortgageOutstandingAmount:
+      label: How much is left to pay?
+    hasCharges:
+      label: Are there any other charges on the property?
+      hint: For example, from the local authority to recover care fees
+    isRentedOut:
+      label: Is the property rented out? (partly or fully)
+    rentAgreementEndDate:
+      label: When does the rental agreement end?
+      hint: (MM/YYYY)
+    rentIncomeMonth:
+      label: What is the rental income each month?
+
+navLink: Assets
+           
+title:
+    label: What sort of asset is it?
+    hint: ""
+value:
+    label: "Value"
+    hint: "Can be an estimated value"
+description:
+    label: "Asset description"
+    hint: ""
+valuationDate:
+    legend: Valuation date (optional)
+    hint: "(DD/MM/YYYY)"
+    label: Valuation date
+next:
+    label: Next
+editLink: 
+    other: "Edit this asset"
+    property: "Edit this property"
+
+no_assets:
+    label: %client% has no assets
+    description: If %client% has no assets, please click the checkbox below.
+    selected: %client% has no assets
+save:
+    label: Save
+cancel:
+    label: Cancel
+delete:
+    label: Delete
+    message: "Are you sure that you want to delete this asset?"
+defaultDropDownOption:
+    option: Please select ...
+dropdown:
+    # values will be automatically ordered alphabetically. other_assets will always be kept last
+    property: Property
+    #savings_accounts: Savings accounts
+    investment_bonds: Investment bonds
+    #isa: ISAs
+    unit_trusts: Unit trusts
+    national_savings_certificates: National savings certificates
+    stocks_shares: Stocks and shares
+    premium_bonds: Premium bonds
+    vehicles: Vehicles
+    artwork: Artwork
+    antiques: Antiques
+    jewellery: Jewellery
+    assets_held_outside_england_and_wales: Assets held outside England and Wales
+    #court_funds_office_accounts: Court Funds Office accounts
+    other_assets: Other valuable assets

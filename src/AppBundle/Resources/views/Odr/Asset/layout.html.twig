@@ -10,6 +10,7 @@
 {% block leftcontent %}
     {% set route = app.request.attributes.get('_route') %}
     <nav id="account-sub-nav">
-        <a href="{{ path('odr-debts', {'odrId': odr.id}) }}" class="{{ ('odr-debts' in route) ? 'active':'' }} behat-link-debts-tab">{{ 'navLink' | trans({}, 'odr-debts') }}</a>
-    </nav>
+        <a href="{{ path('odr-assets', {'odrId': odr.id}) }}" class="{{ ('asset' in route) ? 'active':'' }} behat-link-debts-tab">{{ 'navLink' | trans({}, 'odr-assets') }}</a>
+        <a href="{{ path('odr-debts', {'odrId': odr.id}) }}" class="{{ ('debt' in route) ? 'active':'' }} behat-link-assets-tab">{{ 'navLink' | trans({}, 'odr-debts') }}</a>
+         </nav>
 {% endblock %}

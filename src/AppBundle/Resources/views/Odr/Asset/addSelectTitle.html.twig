@@ -1,0 +1,63 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Asset:layout-assets.html.twig'  %}
+
+{% block maincontent %}
+  <div id="assets-maincontent">
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
+
+      <h3 class="heading-medium-large">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
+
+      {{ form_select(form.title, 'title') }}
+
+      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
+        {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
+
+        {% if showCancelLink %}
+          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+          transDomain: translationDomain,
+          linkButtonLabel: 'cancel.label',
+          linkClass: 'button-link',
+          linkHref: path('assets', {'odrId': odr.id})
+          } %}
+        {% endif %}
+
+      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var wrapper = $("#assets-maincontent"),
+                assetTitleTitle = $('#odr_asset_title_title'),
+                urlToLoadPattern,
+                urlToLoad,
+                selectedTitle;
+
+            // when the dropdown changes, replace the pagebody-left-content with the result of the next page (add-complete)
+            assetTitleTitle.change(function(event) {
+                selectedTitle = $(event.target).val();
+                if (selectedTitle === '') {
+                    return;
+                }
+
+                urlToLoadPattern = '{{ path('odr-asset-add-complete', {'odrId': odr.id, 'title' : '--placeholder--'}) }}';
+                urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
+
+                $.get(urlToLoad, function( html ) {
+                    var $element = $(html);
+
+                    wrapper.text('').append($element);
+                    $element.find('textarea').expanding();
+                    $element.find('input')[0].focus();
+                });
+
+            });
+        });
+    </script>
+  </div>
+{% endblock %}

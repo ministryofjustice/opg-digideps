@@ -1,0 +1,34 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Asset:layout-assets.html.twig'  %}
+
+{% block maincontent %}
+
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+
+    {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
+        'odr': odr,
+        'section': 'assets',
+        'transDomain': translationDomain,
+        'data': odr.assets,
+    } %}
+
+    {% if assets is not empty %}
+        <ul class="behat-region-list-assets report-list report-list--assets overview-sections">
+            {% for assetTitle, assets in odr.assetsGroupedByTitle %}
+                <li class="report-list__item">
+                <h2 class="heading">{{ assetTitle }}</h2>
+                {% for asset in assets %}
+                    {% include 'AppBundle:Odr/Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
+                    'asset': asset,
+                    } %}
+                {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ render(controller('AppBundle:Odr/Asset:_noAssets', { 'odrId': odr.id, 'request': app.request })) }}
+    {% endif %}
+
+{% endblock %}

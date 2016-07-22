@@ -1,0 +1,9 @@
+{% extends 'AppBundle:Odr/Asset:list-items/_template.html.twig' %}
+
+{% block firstColumn %}
+    Address:
+{% endblock %}
+
+{% block secondColumn %}
+    {{ asset.AddressValidLines | join('</br>') | raw  }}
+{% endblock %}

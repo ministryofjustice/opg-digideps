@@ -1,0 +1,13 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Asset:layout.html.twig' %}
+
+{% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': '#',
+        'previousLabel': 'Balance accounts',
+        'nextLink': '#',
+        'nextLabel': 'Debts'
+        } %}
+{% endblock %}

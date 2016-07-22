@@ -1,0 +1,32 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Asset:layout-assets.html.twig'  %}
+
+{% block maincontent %}
+
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+
+    <h3 class="heading-medium">{{ ('page.subSectionTitleEdit.' ~ assetToEdit.type) | trans({}, translationDomain) }}</h3>
+
+    {{ form_errors_list(form) }}
+
+    {% include 'AppBundle:Odr/Asset/' ~ assetToEdit.type ~ ':_form_fields.html.twig' with {
+                'form': form,
+             } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+                transDomain: translationDomain,
+                section: 'asset',
+                listLink: '#',
+                deleteLink: '#',
+            } %}
+
+
+    {{ form_end(form) }}
+
+
+{% endblock %}

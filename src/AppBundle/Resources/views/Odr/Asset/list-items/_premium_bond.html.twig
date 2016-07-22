@@ -1,0 +1,9 @@
+{% extends 'AppBundle:Odr/Asset:list-items/_template.html.twig' %}
+
+{% block firstColumn %}
+    Bond:
+{% endblock %}
+
+{% block secondColumn %}
+    £{{  asset.value }} &nbsp; | &nbsp; {{  asset.valuationDate | date('d/m/Y') }}
+{% endblock %}
