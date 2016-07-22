@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use Mockery as m;
 use AppBundle\Entity\Report;
-use AppBundle\Service\ReportStatusService as Rss;
+use AppBundle\Service\ReportStatusService as StatusService;
 
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +33,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebts' => []
             ]);
 
-        return new Rss($report);
+        return new StatusService($report);
     }
 
     public function decisionsProvider()
@@ -42,14 +42,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
 
         return [
-            [[], Rss::STATE_NOT_STARTED, false],
+            [[], StatusService::STATE_NOT_STARTED, false],
             // incomplete
-            [['getDecisions' => [$decision]], Rss::STATE_INCOMPLETE, false],
-            [['getReasonForNoDecisions' => 'x'], Rss::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mc], Rss::STATE_INCOMPLETE, false],
+            [['getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
+            [['getReasonForNoDecisions' => 'x'], StatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mc], StatusService::STATE_INCOMPLETE, false],
             // done
-            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], Rss::STATE_DONE, true],
-            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], Rss::STATE_DONE, true],
+            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], StatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], StatusService::STATE_DONE, true],
         ];
     }
 
@@ -68,10 +68,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $contact = m::mock(\AppBundle\Entity\Contact::class);
 
         return [
-            [[], Rss::STATE_NOT_STARTED, false],
+            [[], StatusService::STATE_NOT_STARTED, false],
             // done
-            [['getContacts' => [$contact]], Rss::STATE_DONE, true],
-            [['getReasonForNoContacts' => 'x'], Rss::STATE_DONE, true],
+            [['getContacts' => [$contact]], StatusService::STATE_DONE, true],
+            [['getReasonForNoContacts' => 'x'], StatusService::STATE_DONE, true],
         ];
     }
 
@@ -97,10 +97,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             // not started
-            [[], Rss::STATE_NOT_STARTED],
-            [['getSafeguarding' => $safegErr], Rss::STATE_NOT_STARTED],
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getSafeguarding' => $safegErr], StatusService::STATE_NOT_STARTED],
             // done
-            [['getSafeguarding' => $safegOk], Rss::STATE_DONE],
+            [['getSafeguarding' => $safegOk], StatusService::STATE_DONE],
         ];
     }
 
@@ -145,22 +145,22 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             // not started
-            [[], Rss::STATE_NOT_STARTED],
-            [['getAccounts' => [$accountOk]], Rss::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountClosingMissing]], Rss::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountMissingInfo]], Rss::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk]], Rss::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk], 'hasMoneyIn' => true], Rss::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk], 'hasMoneyOut' => true], Rss::STATE_INCOMPLETE],
-            [['getMoneyTransfers' => [$transfer]] + $partial1, Rss::STATE_INCOMPLETE],
-            [['getNoTransfersToAdd' => 'x'] + $partial1, Rss::STATE_INCOMPLETE],
-            [['isTotalsMatch' => true] + $partial1, Rss::STATE_INCOMPLETE],
-            [['getBalanceMismatchExplanation' => 'x'] + $partial1, Rss::STATE_INCOMPLETE],
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountClosingMissing]], StatusService::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountMissingInfo]], StatusService::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk], 'hasMoneyIn' => true], StatusService::STATE_INCOMPLETE],
+            [['getAccounts' => [$accountOk], 'hasMoneyOut' => true], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransfers' => [$transfer]] + $partial1, StatusService::STATE_INCOMPLETE],
+            [['getNoTransfersToAdd' => 'x'] + $partial1, StatusService::STATE_INCOMPLETE],
+            [['isTotalsMatch' => true] + $partial1, StatusService::STATE_INCOMPLETE],
+            [['getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_INCOMPLETE],
             //done
-            [['getNoTransfersToAdd' => 'x', 'isTotalsMatch' => true] + $partial1, Rss::STATE_DONE],
-            [['getMoneyTransfers' => [$transfer], 'isTotalsMatch' => true] + $partial1, Rss::STATE_DONE],
+            [['getNoTransfersToAdd' => 'x', 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
+            [['getMoneyTransfers' => [$transfer], 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
             // one account does not require trnasfers or transfer explanation
-            [['getAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, Rss::STATE_DONE],
+            [['getAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_DONE],
         ];
     }
 
@@ -174,27 +174,27 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getAccountsState());
     }
 
-    public function assetsProvider()
+    public function assetsDebtsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
 
         return [
-            [[], Rss::STATE_NOT_STARTED],
+            [[], StatusService::STATE_NOT_STARTED],
             // missing sth
-            [['getAssets' => [$asset], 'getHasDebts' => null], Rss::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'yes'], Rss::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'no'], Rss::STATE_INCOMPLETE],
+            [['getAssets' => [$asset], 'getHasDebts' => null], StatusService::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getAssets' => [], 'getHasDebts' => 'no'], StatusService::STATE_INCOMPLETE],
             // done
-            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], Rss::STATE_DONE],
-            [['getAssets' => [$asset], 'getHasDebts' => 'no'], Rss::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], Rss::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], Rss::STATE_DONE],
+            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], StatusService::STATE_DONE],
         ];
     }
 
     /**
      * @test
-     * @dataProvider assetsProvider
+     * @dataProvider assetsDebtsProvider
      */
     public function assets($mocks, $state)
     {
@@ -207,9 +207,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $action = m::mock(\AppBundle\Entity\Action::class);
 
         return [
-            [[], Rss::STATE_NOT_STARTED],
+            [[], StatusService::STATE_NOT_STARTED],
             // done
-            [['getAction' => $action], Rss::STATE_DONE],
+            [['getAction' => $action], StatusService::STATE_DONE],
         ];
     }
 
@@ -250,7 +250,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->contactsProvider())[0], 'contacts'],
             [array_pop($this->safeguardingProvider())[0], 'safeguarding'],
             [array_pop($this->accountProvider())[0], 'accounts'],
-            [array_pop($this->assetsProvider())[0], 'assets'],
+            [array_pop($this->assetsDebtsProvider())[0], 'assets'],
             [array_pop($this->actionsProvider())[0], 'actions'],
         ];
     }
@@ -276,7 +276,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             + array_pop($this->contactsProvider())[0]
             + array_pop($this->safeguardingProvider())[0]
             + array_pop($this->accountProvider())[0]
-            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->assetsDebtsProvider())[0]
             + array_pop($this->actionsProvider())[0]
         );
 
