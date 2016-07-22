@@ -1,13 +1,22 @@
 <!--Component: button-bar-add-start-->
 
+{# TODO: consider removing this, too much magic with section variables #}
 {% if data is defined and data is not empty %}
     {% set label = 'form.controls.addButton.moreLabel' %}
 {% else %}
     {% set label = 'form.controls.addButton.label' %}
 {% endif %}
 
+{% set link ='#' %}
+{% if report is defined %}
+    {% set link = '/report/' ~ report.id ~'/' ~ section ~ '/add#pageBody' %}
+{% endif %}
+{% if odr is defined %}
+    {% set link = '/odr/' ~ odr.id ~'/' ~ section ~ '/add#pageBody' %}
+{% endif %}
+
 <div class="form-group button-bar button-bar-add button-bar-add-{{ section }}" id="button-bar-add-{{ section}}">
-    <a id="add-{{ section }}-button" class="button-secondary" href="/report/{{ report.id }}/{{ section }}/add#pageBody">
+    <a id="add-{{ section }}-button" class="button-secondary" href="{{ link }}">
         {{ label | default('Add')|trans({}, transDomain) }}
     </a>
 </div>
