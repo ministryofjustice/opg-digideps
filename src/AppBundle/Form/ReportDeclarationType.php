@@ -39,7 +39,7 @@ class ReportDeclarationType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData();
-                $validationGroups = ['submitted', 'declare'];
+                $validationGroups = ['declare'];
 
                 if ($data->getAgreedBehalfDeputy() == 'more_deputies_not_behalf') {
                     $validationGroups[] = 'declare-explanation';
