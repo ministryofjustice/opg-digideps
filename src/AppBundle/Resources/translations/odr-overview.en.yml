@@ -62,7 +62,7 @@ visitsCare:
 assets:
     subSectionTitle: "Assets and debts"
     subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
-    edit: "Edit assets"
+    edit: "Edit assets and debts"
     start: "Start assets and debts"
 odr_add_further_info:
     subSectionTitle: "Sign and submit"
