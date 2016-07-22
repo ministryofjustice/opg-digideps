@@ -290,6 +290,9 @@ safeguarding:
         notBlank: Choose Yes or No
 
 odr:
+  hasDebts:
+      notBlank: You must select one option
+      mustHaveAtLeastOneDebt: You must enter at least one debt
   submissionExceptions:
       due: Opening Deputyship Report not due
       submitted: Opening Deputyship Report not submitted
@@ -350,6 +353,66 @@ odr:
         maxMessage: The amount must be less than £100,000,000,000
       moreDetails:
         notEmpty: You must give us more information about this amount
+  asset:
+      title:
+          notBlank: Choose the type of asset from the list
+          maxMessage: The asset name can't be longer than {{ limit }} letters
+      value:
+          notBlank: Enter the value of this asset
+          type: Enter a valid amount for this asset
+          outOfRange: The amount must be less than £10,000,000,000
+      description:
+          notBlank: Enter a description of this asset
+          length: This description is too short
+      date:
+          notBlank: Enter the date the asset was valued
+          date: Enter a valid date
+      no_assets:
+          notBlank: Tell us if the client has no assets to add
+      property:
+          address:
+              notBlank: Enter the address
+              maxMessage: The address can't be longer than 200 letters
+          address2:
+              maxMessage: The address can't be longer than 200 letters
+          county:
+              maxMessage: The county can't be longer than 75 letters
+          postcode:
+              notBlank: Enter the postcode
+              maxMessage: The postcode can't be longer than {{ limit }} characters
+          occupants:
+              notBlank: Tell us who lives at the property
+              maxMessage: Your answer can't be longer than 500 letters
+          owned:
+              notBlank: You must say whether the property is fully or part-owned
+          ownedPercentage:
+              notBlank: Tell us what their share of the property is
+              type: Enter a number between 1 and 100 for the property share
+          isSubjectToEquityRelease:
+              notBlank: You must say whether there is an equity release scheme
+          hasMortgage:
+              notBlank: You must say whether there is an outstanding mortgage
+          mortgageOutstandingAmount:
+              notBlank: Tell us how much is left to pay on the mortgage
+              type: Enter the outstanding mortgage in numbers
+              outOfRange: The amount must be less than £100,000,000,000
+          hasCharges:
+              notBlank: You must say whether there is a charge on the property
+          isRentedOut:
+              notBlank: You must say whether the property is rented out
+          rentIncomeMonth:
+              notBlank: Enter the monthly rental income
+              type: Enter an amount in numbers
+              notBlank: Enter monthly income from renting this property
+              notBlank: Enter the value of the rental income
+              type: Enter the rental income in numbers
+              outOfRange: The value must be less than £10,000,000,000
+          rentAgreementEndDate:
+              notBlank: Enter a date for the end of the rental agreement
+          value:
+              notBlank: Enter the value of this property
+              type: Enter the value of this property in numbers
+              outOfRange: The value of the property must be less than £100,000,000,000
 
 
 action:
