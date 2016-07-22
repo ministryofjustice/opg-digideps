@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -126,7 +127,7 @@ class Redirector
 
         $clients = $user->getClients();
 
-        $client = $clients[0];
+        $client = $clients[0]; /* @var $client Client */
         if (!$client->hasDetails()) {
             return $this->router->generate('client_add');
         }
