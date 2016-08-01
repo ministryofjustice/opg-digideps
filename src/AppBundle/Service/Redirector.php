@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -60,7 +61,7 @@ class Redirector
         SecurityContextInterface $security,
         RouterInterface $router,
         Session $session,
-        Client\RestClient $restClient,
+        RestClient $restClient,
         $env
     ) {
         $this->security = $security;
