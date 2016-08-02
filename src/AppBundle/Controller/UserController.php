@@ -118,7 +118,6 @@ class UserController extends AbstractController
     {
         // check $token is correct
         $user = $this->getRestClient()->loadUserByToken($token); /* @var $user EntityDir\User*/
-        $user = $this->getRestClient()->get('user/'.$user->getId(), 'User'); /* @var $user EntityDir\User*/
 
         // recreate token
         // the endpoint will also send the activation email
