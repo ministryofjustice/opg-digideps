@@ -47,3 +47,9 @@ Client secret is required for those.
 * 499 wrong credentials at login (after many failed requests)
 * 500 generic error due to internal exception (e.g. db offline)
 
+## Notes about JMS groups
+For an entity named `Abc`, use the group `abc` for the properties (except the relationships).
+
+Same with entity `Xyz` where properties have the JMS group `xyz`.
+
+If `Abc` has a relationship 1:N with `Xyz`, then add the group `xyz` to the 

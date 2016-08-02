@@ -227,6 +227,8 @@ class UserController extends RestController
 
         $this->getEntityManager()->flush($user);
 
+        $this->setJmsSerialiserGroups(['user']);
+
         return $user;
     }
 
