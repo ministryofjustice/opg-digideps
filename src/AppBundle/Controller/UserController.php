@@ -193,7 +193,7 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
 
         $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
         $form->handleRequest($request);
@@ -240,7 +240,7 @@ class UserController extends AbstractController
      **/
     public function showAction()
     {
-        $user = $this->getUser();
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
         $clients = $this->getUser()->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -260,7 +260,7 @@ class UserController extends AbstractController
     public function editAction()
     {
         $request = $this->getRequest();
-        $user = $this->getUser();
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
 
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
