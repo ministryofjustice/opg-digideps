@@ -125,7 +125,6 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('bank1', $data['bank']);
         $this->assertEquals('101010', $data['sort_code']);
         $this->assertEquals('1234', $data['account_number']);
-        $this->assertEquals(self::$report1->getId(), $data['report']['id']);
 
         // asser  user2 cannot read the account
         $url2 = '/report/account/'.self::$account2->getId();
