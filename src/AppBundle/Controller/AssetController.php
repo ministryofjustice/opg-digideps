@@ -33,7 +33,7 @@ class AssetController extends RestController
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($reportId, $assetId)
+    public function getOneById(Request $request, $reportId, $assetId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
@@ -42,6 +42,9 @@ class AssetController extends RestController
 
         $asset = $this->findEntityBy('Asset', $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
+
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['asset'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $asset;
     }
