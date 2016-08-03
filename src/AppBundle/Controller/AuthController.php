@@ -80,6 +80,9 @@ class AuthController extends RestController
             $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
 
+        // needed for redirector
+        $this->setJmsSerialiserGroups(['user', 'role', 'client', 'report']);
+
         return $user;
     }
 

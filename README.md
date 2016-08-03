@@ -58,3 +58,10 @@ Example with `account` (type) and `odr`(parent type) entities
  * Delete account with id=2: `DELETE /odr/account/2`
 
 
+## Notes about JMS groups
+For an entity named `Abc`, use the group `abc` for the properties (except the relationships).
+
+Same with entity `Xyz` where properties have the JMS group `xyz`.
+
+If `Abc` has a relationship 1:N with `Xyz`, then add the group `xyz` to the 
+>>>>>>> 1134a413138f8cdf37e6340bbb5926006a52e58a

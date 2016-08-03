@@ -47,7 +47,7 @@ class Client
     private $userObjs;
 
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic", "report"})
      * @JMS\Accessor(getter="getReportIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
@@ -80,7 +80,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      * 
@@ -90,7 +90,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -100,7 +100,8 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
+     *
      *
      * @var string
      *
@@ -110,7 +111,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -120,7 +121,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -130,7 +131,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -140,7 +141,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      *
      * @var string
      *
@@ -170,7 +171,7 @@ class Client
 
     /**
      * @JMS\Type("array")
-     * @JMS\Groups({"related","basic"})
+     * @JMS\Groups({"related","basic","client"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
      * @var array
