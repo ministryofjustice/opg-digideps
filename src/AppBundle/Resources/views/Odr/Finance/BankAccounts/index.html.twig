@@ -25,7 +25,7 @@
 
                 {% if odr.bankAccounts is not empty %}
                     {% for account in odr.bankAccounts %}
-                        {% include 'AppBundle:Odr/Finance:bank-list-item.html.twig' with {
+                        {% include 'AppBundle:Odr/Finance/BankAccounts:bank-list-item.html.twig' with {
                             account: account,
                             odr: odr
                         }%}

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 
-class FinanceController extends AbstractController
+class BankAccountsController extends AbstractController
 {
     private static $odrJmsGroups = ['odr', 'client', 'odr-account', 'client-cot'];
 
@@ -18,11 +18,11 @@ class FinanceController extends AbstractController
      * @Route("/odr/{odrId}/finance/banks", name="odr-bank-accounts")
      *
      * @param int $odrId
-     * @Template()
+     * @Template("AppBundle:Odr/Finance/BankAccounts:index.html.twig")
      *
      * @return array
      */
-    public function banksAction($odrId)
+    public function indexAction($odrId)
     {
         $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         if ($odr->getSubmitted()) {
