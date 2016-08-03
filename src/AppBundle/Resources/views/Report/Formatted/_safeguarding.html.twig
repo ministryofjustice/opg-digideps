@@ -80,14 +80,18 @@
         <h3 class="fieldset-outer-title">Care plan</h3>
         <div class="box" id="care-plan-subsection">
             <div class="question">If there is a care plan, when was it last reviewed?</div>
-            <dl class="labelvalue inline">
-                <dd class="checkbox">{% if safeguarding.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</dd>
-                <dt class="label">There is no care plan</dt>
-            </dl>
-            <dl class="labelvalue">
-                <dt class="label">Review date</dt>
-                <dd class="value">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</dd>
-            </dl>
+            {% if safeguarding.doesClientHaveACarePlan == 'no' %}
+                <dl class="labelvalue inline">
+                    <dd class="checkbox">X</dd>
+                    <dt class="label">There is no care plan</dt>
+                </dl>
+            {% endif %}
+            {% if safeguarding.doesClientHaveACarePlan == 'yes' %}
+                <dl class="labelvalue">
+                    <dt class="label">Review date</dt>
+                    <dd class="value">{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}</dd>
+                </dl>
+            {% endif %}
         </div>
     </div>
 
