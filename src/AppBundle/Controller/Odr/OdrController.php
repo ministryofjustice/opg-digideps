@@ -94,6 +94,34 @@ class OdrController extends RestController
             }
         }
 
+        if (array_key_exists('state_benefits', $data)) {
+            $odr->setStateBenefits($data['state_benefits']);
+        }
+
+        if (array_key_exists('receive_state_pension', $data)) {
+            $odr->setReceiveStatePension($data['receive_state_pension']);
+        }
+
+        if (array_key_exists('receive_other_income', $data)) {
+            $odr->setReceiveOtherIncome($data['receive_other_income']);
+        }
+
+        if (array_key_exists('expect_compensation', $data)) {
+            $odr->setExpectCompensation($data['expect_compensation']);
+        }
+
+        if (array_key_exists('one_off', $data)) {
+            foreach ($data['one_off'] as $row) {
+                $incomeOneOff = $odr->getIncomeOneOffByTypeId($row['type_id']);
+                if (!$incomeOneOff instanceof EntityDir\Odr\IncomeOneOff) {
+                    continue; //not clear when that might happen. kept similar to transaction below
+                }
+                $incomeOneOff->setAmount($row['amount']);
+                $this->getEntityManager()->flush($incomeOneOff);
+                //$this->setJmsSerialiserGroups(['odr-income-one-off']); //returns saved data (AJAX operations)
+            }
+        }
+
         $this->getEntityManager()->flush($odr);
 
         return ['id' => $odr->getId()];
