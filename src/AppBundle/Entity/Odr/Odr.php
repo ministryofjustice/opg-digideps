@@ -3,11 +3,14 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Odr\Traits\OdrIncomeBenefitTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Odr
 {
+    use OdrIncomeBenefitTrait;
+
     /**
      * @JMS\Type("integer")
      *
@@ -92,6 +95,7 @@ class Odr
      * @var bool
      */
     private $noAssetToAdd;
+
 
     /**
      * @return decimal
