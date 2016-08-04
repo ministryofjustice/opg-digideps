@@ -9,12 +9,164 @@
     {% endblock %}
 
     {% block leftcontent %}
-        {% include 'AppBundle:Odr/Finance:left-nav.html.twig'%}
+        {% include 'AppBundle:Odr/Finance:left-nav.html.twig' %}
     {% endblock %}
 
     {% block maincontent %}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
+        <div class="sections">
+            {# state benefits #}
+            <div class="section">
+                <div class="summary" id="stateBenefits">
+                    <div class="title">{{ 'categories.stateBenefits'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
+                </div>
+                <div class="detail transactions detail-view">
+                    {% for sbSingleForm in form.stateBenefits %}
+                        <div class="transaction">
+                            {% set labelText = sbSingleForm.typeId.vars.value %}
 
-        ...
+                            {{ form_row(sbSingleForm.typeId) }}
+
+                            {{ form_input(sbSingleForm.present, 'xxx', {
+                                'inputClass' : '',
+                                'labelText': labelText,
+                                'formGroupClass': ' form-group-value'
+                            }) }}
+
+                            {% if sbSingleForm.moreDetails is defined %}
+                                {{ form_input(sbSingleForm.moreDetails, '', {
+                                    'labelText': ('form.entries.' ~ 'xxx' ~ '.moreInformations') | trans({'%client%': odr.client.firstname}),
+                                    'formGroupClass': '',
+                                    'inputClass': 'expanding transaction-more-details'
+                                }) }}
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {# pensionsOtherIncome #}
+            <div class="section">
+                <div class="summary" id="stateBenefits">
+                    <div class="title">{{ 'categories.pensionsOtherIncome'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="form-section">
+                        <fieldset>
+                            <legend class="hidden">receiveStatePension</legend>
+                            {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
+                                'fieldSetClass' : 'inline expect-financial-dec-radio',
+                                'legendClass' : 'form-label',
+                                'legendText' : 'form.receiveStatePension.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'hintText' : 'form.receiveStatePension.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'items': [
+                                {'labelClass': 'block-label', 'elementClass': '' },
+                                {'labelClass': 'block-label', 'elementClass': '' }
+                                ]
+                            }) }}
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="hidden">receiveOtherIncome</legend>
+                            {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
+                                'fieldSetClass' : 'inline',
+                                'legendClass' : 'form-label',
+                                'legendText' : 'form.receiveOtherIncome.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'hintText' : 'form.receiveOtherIncome.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'items': [
+                                {'labelClass': 'block-label', 'elementClass': '' },
+                                {'labelClass': 'block-label', 'elementClass': '' }
+                                ]
+                            }) }}
+                            <div id="financial-decisions-textarea" class="hidden-detail">
+                                {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
+                                    'labelClass': 'required',
+                                    'labelParameters': { '%client%': odr.client.firstname },
+                                    'inputClass': 'expanding'
+                                }) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            {# damages #}
+            <div class="section">
+                <div class="summary" id="damages">
+                    <div class="title">{{ 'categories.damages'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="form-section">
+                        <fieldset>
+                            <legend class="hidden">expectCompensationDamages</legend>
+                            {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
+                                'fieldSetClass' : 'inline expect-financial-dec-radio',
+                                'legendClass' : 'form-label',
+                                'legendText' : 'form.expectCompensationDamages.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'hintText' : 'form.expectCompensationDamages.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
+                                'items': [
+                                {'labelClass': 'block-label', 'elementClass': '' },
+                                {'labelClass': 'block-label', 'elementClass': '' }
+                                ]
+                            }) }}
+                            <div id="" class="hidden-detail">
+                                {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
+                                    'labelClass': 'required',
+                                    'labelParameters': { '%client%': odr.client.firstname },
+                                    'inputClass': 'expanding'
+                                }) }}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+
+            {# oneOff #}
+            <div class="section">
+                <div class="summary" id="stateBenefits">
+                    <div class="title">{{ 'categories.oneOff'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
+                </div>
+                <div class="detail transactions detail-view">
+                    {% for sbSingleForm in form.oneOff %}
+                        <div class="transaction">
+                            {% set labelText = sbSingleForm.typeId.vars.value %}
+                            {{ form_row(sbSingleForm.typeId) }}
+                            {{ form_input(sbSingleForm.present, 'xxx', {
+                                'inputClass' : '',
+                                'labelText': labelText,
+                                'formGroupClass': ' form-group-value'
+                            }) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+        <script>
+            $(document).ready(function () {
+                new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
+                {#new GOVUK.AutoSave({#}
+                {#form: $('form.expanding-transaction-table'),#}
+                {#statusElement: $('#save-status'),#}
+                {#url: '{{ path('accounts_money_save_json', {'reportId': odr.id, 'type': jsonEndpoint}) }}',#}
+                {#preprocessor: GOVUK.moneyInOuPreprocessor#}
+                {#});#}
+//                $('form.expanding-transaction-table button[type="submit"]').hide();
+
+//                $('.add-transaction').removeClass('hidden');
+
+//                $('input.transaction-value').on('blur', function (event) {
+//                    GOVUK.formatCurrency(event.target);
+//                });
+
+//                GOVUK.accountTransactionExpander();
+            });
+        </script>
+
 
 
     {% endblock %}
