@@ -49,7 +49,7 @@ services:
             - { name: twig.extension }
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session, @restClient, "%env%" ]
+        arguments: [ @security.context, @router, @session, "%env%" ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]
