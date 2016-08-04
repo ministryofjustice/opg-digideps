@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Action;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -31,7 +32,7 @@ class ActionType extends AbstractType
             'translation_domain' => 'report-action',
             'validation_groups' => function (FormInterface $form) {
 
-                $data = $form->getData(); /* @var $data \AppBundle\Entity\Action */
+                $data = $form->getData(); /* @var $data Action */
                 $validationGroups = ['action'];
 
                 if ($data->getDoYouExpectFinancialDecisions() == 'yes') {

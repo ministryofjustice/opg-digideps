@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use AppBundle\Entity\Debt;
+use AppBundle\Entity\Report\Debt;
 
 class DebtSingleType extends AbstractType
 {
@@ -39,11 +39,11 @@ class DebtSingleType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Debt',
+            'data_class' => 'AppBundle\Entity\Report\Debt',
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Debt */
+                /* @var $data \AppBundle\Entity\Report\Debt */
                 $validationGroups = ['debts'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class TransactionSingleType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-             'data_class' => 'AppBundle\Entity\Transaction',
+             'data_class' => 'AppBundle\Entity\Report\Transaction',
              'validation_groups' => ['transactions'],
              'translation_domain' => 'report-transactions',
         ]);

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
@@ -20,7 +21,7 @@ class AssetController extends AbstractController
      * List assets and also handle no-asset checkbox-form.
      *
      * @Route("/{reportId}/assets", name="assets")
-     * @Template("AppBundle:Asset:list.html.twig")
+     * @Template("AppBundle:Report/Asset:list.html.twig")
      */
     public function listAction(Request $request, $reportId)
     {
@@ -45,13 +46,13 @@ class AssetController extends AbstractController
      * When JS is enabled, there the content of that page is auto-loaded via AJAX
      *
      * @Route("/{reportId}/assets/add", name="asset_add_select_title")
-     * @Template("AppBundle:Asset:addSelectTitle.html.twig")
+     * @Template("AppBundle:Report/Asset:addSelectTitle.html.twig")
      */
     public function addSelectTitleAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
 
-        $form = $this->createForm('asset_title', new EntityDir\AssetOther(), [
+        $form = $this->createForm('asset_title', new EntityDir\Report\AssetOther(), [
             'action' => $this->generateUrl('asset_add_select_title', ['reportId' => $reportId]),
         ]);
 
@@ -71,16 +72,16 @@ class AssetController extends AbstractController
      * Shows the full add asset form.
      *
      * @Route("/{reportId}/assets/add-complete/{title}", name="asset_add_complete")
-     * @Template("AppBundle:Asset:addComplete.html.twig")
+     * @Template("AppBundle:Report/Asset:addComplete.html.twig")
      */
     public function addCompleteAction(Request $request, $reportId, $title)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
 
         // [.. change form and template (or forward) depending on the asset title ]
-        $asset = EntityDir\Asset::factory($title);
+        $asset = EntityDir\Report\Asset::factory($title);
 
-        $form = $this->createForm(FormDir\Asset\AbstractAssetType::factory($title), $asset, [
+        $form = $this->createForm(FormDir\Report\Asset\AbstractAssetType::factory($title), $asset, [
             'action' => $this->generateUrl('asset_add_complete', ['reportId' => $reportId, 'title' => $title]),
         ]);
 
@@ -110,7 +111,7 @@ class AssetController extends AbstractController
      * the edit form is "inline" so it needs.
      *
      * @Route("/{reportId}/assets/{assetId}/edit", name="asset_edit")
-     * @Template("AppBundle:Asset:edit.html.twig")
+     * @Template("AppBundle:Report/Asset:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $assetId)
     {
@@ -118,7 +119,7 @@ class AssetController extends AbstractController
         if (!$report->hasAssetWithId($assetId)) {
             throw new \RuntimeException('Asset not found.');
         }
-        $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Asset');
+        $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Report\\Asset');
         $form = $this->createForm(FormDir\Asset\AbstractAssetType::factory($asset->getType()), $asset);
 
         $form->handleRequest($request);
@@ -161,12 +162,12 @@ class AssetController extends AbstractController
      *
      * @Route("/{reportId}/noassets", name="no_assets")
      *
-     * @Template("AppBundle:Asset:_noAssets.html.twig")
+     * @Template("AppBundle:Report/Asset:_noAssets.html.twig")
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset', 'accounts']);
-        $form = $this->createForm(new FormDir\NoAssetToAddType(), $report, []);
+        $form = $this->createForm(new FormDir\Report\NoAssetToAddType(), $report, []);
         $form->handleRequest($request);
 
         if ($request->getMethod() == 'POST') {

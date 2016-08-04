@@ -1,7 +1,7 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Asset:layout-assets.html.twig'  %}
+{% extends 'AppBundle:Report/Asset:layout-assets.html.twig'  %}
 
 {% block maincontent %}
 
@@ -13,7 +13,7 @@
 
     {{ form_errors_list(form) }}
 
-    {% include 'AppBundle:Asset/' ~ assetToEdit.type ~ ':_form_fields.html.twig' with {
+    {% include 'AppBundle:Report/Asset/' ~ assetToEdit.type ~ ':_form_fields.html.twig' with {
                 'form': form,
              } %}
 

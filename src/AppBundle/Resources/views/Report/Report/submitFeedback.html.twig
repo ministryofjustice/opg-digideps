@@ -27,7 +27,7 @@
             </a>
         </div>
         <div class="link">
-            <a href="{{ path('client_show')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
+            <a href="{{ path('reports', {'cot': report.courtOrderTypeId})}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
         </div>
     {% endblock %}
 

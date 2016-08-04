@@ -8,7 +8,7 @@
     {% block info %}<span id="save-status"></span>{% endblock %}
 
     {% block leftcontent %}
-        {% include 'AppBundle:BankAccount:left-nav.html.twig'%}
+        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
     {% endblock %}
 
     {% block maincontent %}
@@ -20,7 +20,7 @@
                 '%endDate%': '<span class="no-wrap">' ~ report.endDate | date("j F Y") ~ '</span>',
                 '%paragraphBreak%': '</p><p>',
             }) | raw }}</p>
-        {% include 'AppBundle:BankAccount:transactions.html.twig' with {
+        {% include 'AppBundle:Report/BankAccount:transactions.html.twig' with {
         transDomain: translationDomain,
         transactionsGrouped: report.groupByCategory(report.transactionsOut),
         transactionsTotal: report.getMoneyOutTotal,

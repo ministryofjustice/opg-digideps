@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,7 +37,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add", name="add_contact")
-     * @Template("AppBundle:Contact:add.html.twig")
+     * @Template("AppBundle:Report/Contact:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -66,7 +67,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/{id}/edit", name="edit_contact")
-     * @Template("AppBundle:Contact:edit.html.twig")
+     * @Template("AppBundle:Report/Contact:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id)
     {
@@ -132,7 +133,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/nonereason", name="edit_contacts_nonereason")
-     * @Template("AppBundle:Contact:edit_none_reason.html.twig")
+     * @Template("AppBundle:Report/Contact:edit_none_reason.html.twig")
      */
     public function noneReasonAction(Request $request, $reportId)
     {
@@ -159,7 +160,7 @@ class ContactController extends AbstractController
     /**
      * Sub controller action called when the no contact form is embedded in another page.
      *
-     * @Template("AppBundle:Contact:_none_reason_form.html.twig")
+     * @Template("AppBundle:Report\Contact:_none_reason_form.html.twig")
      */
     public function _noneReasonFormAction(Request $request, $reportId)
     {

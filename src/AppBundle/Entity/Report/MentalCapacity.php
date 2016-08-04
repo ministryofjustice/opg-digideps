@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
@@ -13,7 +14,7 @@ class MentalCapacity
     const CAPACITY_CHANGED = 'changed';
     const CAPACITY_STAYED_SAME = 'stayedSame';
 
-    use Traits\HasReportTrait;
+    use HasReportTrait;
 
     /**
      * @JMS\Type("integer")

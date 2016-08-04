@@ -5,7 +5,7 @@
 
     <li id="planning-section" class="overview-section">
         <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'decisions',
             report: report,
@@ -13,7 +13,7 @@
             state: reportStatus.decisionsState,
             list: true
         } %}
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
@@ -26,7 +26,7 @@
 
     <li id="welfare-section" class="overview-section">
         <h2 class="heading">{{ 'heading.careAndWelfare' | trans() }}</h2>
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'safeguarding',
             report: report,
@@ -36,10 +36,10 @@
         } %}
     </li>
 
-    {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') %}
+    {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.finances' | trans() }}</h2>
-            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'accounts',
                 report: report,
@@ -47,7 +47,7 @@
                 warning: true,
                 description: true
             } %}
-            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
                 report: report,
@@ -61,7 +61,7 @@
 
     <li id="report-submit-section" class="overview-section">
         <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
             report: report,
@@ -71,7 +71,7 @@
         } %}
 
         {% if reportStatus.isReadyToSubmit and report.isDue %}
-            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
                 report: report,
@@ -80,7 +80,7 @@
                 status: "Not started"
             } %}
         {%  else %}
-            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
                 report: report,

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Client;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
@@ -15,8 +16,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
-
-
     /**
      * 
      */
@@ -85,56 +84,56 @@ class Report
     private $period;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Account>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Account>")
      *
      * @var Account[]
      */
     private $accounts;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
      *
      * @var MoneyTransfer[]
      */
     private $moneyTransfers;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Contact>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Contact>")
      *
      * @var Contact[]
      */
     private $contacts;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Asset>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
      *
      * @var Asset[]
      */
     private $assets;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Decision>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
      *
      * @var Decision[]
      */
     private $decisions;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Safeguarding")
+     * @JMS\Type("AppBundle\Entity\Report\Safeguarding")
      *
-     * @var \AppBundle\Entity\Safeguarding
+     * @var Safeguarding
      */
     private $safeguarding;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Action")
+     * @JMS\Type("AppBundle\Entity\Report\Action")
      *
-     * @var \AppBundle\Entity\Action
+     * @var Action
      */
     private $action;
 
     /**
-     * @JMS\Type("AppBundle\Entity\MentalCapacity")
+     * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
      *
      * @var MentalCapacity
      */
@@ -228,7 +227,7 @@ class Report
     private $agreedBehalfDeputyExplanation;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\Groups({"transactionsIn"})
      *
      * @var Transaction[]
@@ -236,7 +235,7 @@ class Report
     private $transactionsIn;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\Groups({"transactionsOut"})
      *
      * @var Transaction[]
@@ -301,7 +300,7 @@ class Report
     private $balanceMismatchExplanation;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Debt>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Debt>")
      * @JMS\Groups({"debts"})
      *
      * @var ArrayCollection
@@ -783,7 +782,7 @@ class Report
     }
 
     /**
-     * @return \AppBundle\Entity\Safeguarding
+     * @return \AppBundle\Entity\Report\Safeguarding
      */
     public function getSafeguarding()
     {
@@ -791,7 +790,7 @@ class Report
     }
 
     /**
-     * @param \AppBundle\Entity\Safeguarding $safeguarding
+     * @param \AppBundle\Entity\Report\Safeguarding $safeguarding
      */
     public function setSafeguarding($safeguarding)
     {

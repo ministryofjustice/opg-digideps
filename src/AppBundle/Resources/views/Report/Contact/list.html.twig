@@ -29,22 +29,22 @@
         } %}
 
         {% if contacts is not empty %}
-            {% include 'AppBundle:Contact:_contact_list.html.twig' with {
+            {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
             'report': report,
             'contacts': contacts,
             'transDomain': translationDomain
             } %}
         {% else %}
             {% if report.reasonForNoContacts is not empty %}
-                {% include 'AppBundle:Contact:_none_reason_description.html.twig' with {'report': report} %}
+                {% include 'AppBundle:Report/Contact:_none_reason_description.html.twig' with {'report': report} %}
             {% else %}
-                <div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>
+                <div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Report/Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>
             {% endif %}
         {% endif %}
 
     {% endblock %}
 
     {% block pageBodyFooterNav %}
-       {% include 'AppBundle:Contact:_nextprevious.html.twig' %}
+       {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
     {% endblock %}
 {% endembed %}

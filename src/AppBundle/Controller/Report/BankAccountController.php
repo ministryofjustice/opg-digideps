@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
@@ -30,7 +31,7 @@ class BankAccountController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
+        $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -65,7 +66,7 @@ class BankAccountController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\TransactionsType('transactionsOut'), $report);
+        $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -95,14 +96,14 @@ class BankAccountController extends AbstractController
     public function balanceAction(Request $request, $reportId)
     {
         $report = $this->getReport($reportId, ['basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
-        $accounts = $this->getRestClient()->get("/report/{$reportId}/accounts", 'Account[]');
+        $accounts = $this->getRestClient()->get("/report/{$reportId}/accounts", 'Report\\Account[]');
         $report->setAccounts($accounts);
 
         if ($report->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\ReasonForBalanceType(), $report);
+        $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -161,16 +162,16 @@ class BankAccountController extends AbstractController
             if (!$report->hasAaccountWithId($id)) {
                 throw new \RuntimeException('Account not found.');
             }
-            $account = $this->getRestClient()->get('report/account/'.$id, 'Account');
+            $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
             // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
             $showMigrationWarning = $account->hasMissingInformation();
         } else {
-            $account = new EntityDir\Account();
+            $account = new EntityDir\Report\Account();
             $account->setReport($report);
         }
         // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
         $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
-        $form = $this->createForm(new FormDir\AccountType(), $account);
+        $form = $this->createForm(new FormDir\Report\AccountType(), $account);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -263,7 +264,7 @@ class BankAccountController extends AbstractController
                 ], 500);
             }
 
-            $form = $this->createForm(new FormDir\TransactionsType($type), $report, ['method' => 'PUT']);
+            $form = $this->createForm(new FormDir\Report\TransactionsType($type), $report, ['method' => 'PUT']);
             $form->handleRequest($request);
 
             if (!$form->isValid()) {

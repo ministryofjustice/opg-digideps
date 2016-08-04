@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
@@ -18,7 +19,7 @@ class DebtController extends AbstractController
      * List debts
      *
      * @Route("/report/{reportId}/debts", name="debts")
-     * @Template("AppBundle:Debt:list.html.twig")
+     * @Template("AppBundle:Report/Debt:list.html.twig")
      */
     public function listAction(Request $request, $reportId)
     {
@@ -27,7 +28,7 @@ class DebtController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\DebtsType, $report);
+        $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -55,7 +56,7 @@ class DebtController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\DebtsType, $report);
+        $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

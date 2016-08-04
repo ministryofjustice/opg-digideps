@@ -20,7 +20,7 @@ class ClientController extends AbstractController
 
         $client = !empty($clients) ? $clients[0] : null;
 
-        $report = new EntityDir\Report();
+        $report = new EntityDir\Report\Report();
         $report->setClient($client);
 
         return [
@@ -40,7 +40,7 @@ class ClientController extends AbstractController
 
         $client = !empty($clients) ? $clients[0] : null;
 
-        $report = new EntityDir\Report();
+        $report = new EntityDir\Report\Report();
         $report->setClient($client);
 
         $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);

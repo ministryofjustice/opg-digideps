@@ -15,7 +15,7 @@
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
 
-        {% include 'AppBundle:Contact:_contact_form.html.twig' with {
+        {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
         'translationDomain': translationDomain,
         'showAddForm': true,
         'form': form
@@ -23,7 +23,7 @@
     {% endblock %}
 
     {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Contact:_nextprevious.html.twig' %}
+        {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
     {% endblock %}
 
 {% endembed %}

@@ -7,7 +7,7 @@
             From:
          </div>
          <ul class="card-list">
-            {% include 'AppBundle:MoneyTransfer:card.html.twig' with {
+            {% include 'AppBundle:Report/MoneyTransfer:card.html.twig' with {
                 'account': transfer.accountFrom,
                 'additionalClass': 'expandable',
             }%}
@@ -16,7 +16,7 @@
       <div class="column-one-half"  >
          <div class="form-label"  >To:</div>
          <ul class="card-list">
-            {% include 'AppBundle:MoneyTransfer:card.html.twig' with {
+            {% include 'AppBundle:Report/MoneyTransfer:card.html.twig' with {
                 'account': transfer.accountTo,
                 'additionalClass': 'expandable',
             }%}

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ class TransactionsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-             'data_class' => 'AppBundle\Entity\Report',
+             'data_class' => 'AppBundle\Entity\Report\Report',
              'validation_groups' => ['transactions'],
              // enable validation on AccountTransactionSingleType collections
              'cascade_validation' => true,

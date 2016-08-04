@@ -25,7 +25,7 @@
         <h3 class="heading heading-medium">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
         <ul class="card-list">
             {% for account in report.getAccountsWithNoClosingBalance %}
-                {% include 'AppBundle:BankAccount:bank-list-item-incomplete.html.twig' with {
+                {% include 'AppBundle:Report/BankAccount:bank-list-item-incomplete.html.twig' with {
                 account: account,
                 report: report
                 } %}

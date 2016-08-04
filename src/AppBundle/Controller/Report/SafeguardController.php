@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,7 +24,7 @@ class SafeguardController extends AbstractController
         }
 
         if ($report->getSafeguarding() == null) {
-            $safeguarding = new EntityDir\Safeguarding();
+            $safeguarding = new EntityDir\Report\Safeguarding();
         } else {
             $safeguarding = $report->getSafeguarding();
         }

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
@@ -28,15 +29,15 @@ class MoneyTransferController extends AbstractController
         }
 
         if (($nofAccounts = count($report->getAccounts())) < 2) {
-            return $this->render('AppBundle:MoneyTransfer:index_unhappy.html.twig', [
+            return $this->render('AppBundle:Report/MoneyTransfer:index_unhappy.html.twig', [
                     'report' => $report,
                     'subsection' => 'transfers',
                     'nOfAccounts' => $nofAccounts,
             ]);
         }
 
-        $transfer = new EntityDir\MoneyTransfer();
-        $form = $this->createForm(new FormDir\TransferType($report->getAccounts()), $transfer);
+        $transfer = new EntityDir\Report\MoneyTransfer();
+        $form = $this->createForm(new FormDir\Report\TransferType($report->getAccounts()), $transfer);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -45,7 +46,7 @@ class MoneyTransferController extends AbstractController
             return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
         }
 
-        return $this->render('AppBundle:MoneyTransfer:index.html.twig', [
+        return $this->render('AppBundle:Report/MoneyTransfer:index.html.twig', [
                 'report' => $report,
                 'subsection' => 'transfers',
                 'form' => $form->createView(),
@@ -66,13 +67,13 @@ class MoneyTransferController extends AbstractController
     /**
      * Sub controller action called when the no transfers form is embedded in another page.
      *
-     * @Template("AppBundle:MoneyTransfer:_noTransfers.html.twig")
+     * @Template("AppBundle:Report/MoneyTransfer:_noTransfers.html.twig")
      */
     public function _noTransfersPartialAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
 
-        $form = $this->createForm(new FormDir\NoTransfersToAddType(), $report, []);
+        $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $request->getMethod() == 'POST' && $form->isValid()) {
@@ -156,7 +157,7 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
 
-        $form = $this->createForm(new FormDir\NoTransfersToAddType(), $report, []);
+        $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

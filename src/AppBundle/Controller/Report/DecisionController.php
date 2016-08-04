@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,7 +14,7 @@ class DecisionController extends AbstractController
 {
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
-     * @Template("AppBundle:Decision:list.html.twig")
+     * @Template()
      *
      * @param int $reportId
      *
@@ -37,15 +38,15 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/add", name="add_decision")
-     * @Template("AppBundle:Decision:add.html.twig")
+     * @Template("AppBundle:Report/Decision:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $decision = new EntityDir\Decision();
+        $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
-        $form = $this->createForm(new FormDir\DecisionType(), $decision);
+        $form = $this->createForm(new FormDir\Report\DecisionType(), $decision);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -67,15 +68,15 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/{id}/edit", name="edit_decision")
-     * @Template("AppBundle:Decision:edit.html.twig")
+     * @Template("AppBundle:Report/Decision:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $decision = $this->getRestClient()->get('report/decision/'.$id, 'Decision');
+        $decision = $this->getRestClient()->get('report/decision/'.$id, 'Report\\Decision');
 
-        $form = $this->createForm(new FormDir\DecisionType(), $decision);
+        $form = $this->createForm(new FormDir\Report\DecisionType(), $decision);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -136,12 +137,12 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/nonereason", name="edit_decisions_nonereason")
-     * @Template("AppBundle:Decision:edit_none_reason.html.twig")
+     * @Template("AppBundle:Report/Decision:edit_none_reason.html.twig")
      */
     public function noneReasonAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
+        $form = $this->createForm(new FormDir\Report\ReasonForNoDecisionType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -162,13 +163,13 @@ class DecisionController extends AbstractController
     /**
      * Sub controller action called when the no decision form is embedded in another page.
      *
-     * @Template("AppBundle:Decision:_none_reason_form.html.twig")
+     * @Template("AppBundle:Report/Decision:_none_reason_form.html.twig")
      */
     public function _noneReasonFormAction(Request $request, $reportId)
     {
         $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId' => $reportId]);
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
+        $form = $this->createForm(new FormDir\Report\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

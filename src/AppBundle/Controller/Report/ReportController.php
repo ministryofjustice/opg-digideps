@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
@@ -51,13 +52,13 @@ class ReportController extends AbstractController
         });
         arsort($reports);
 
-        $report = new EntityDir\Report();
+        $report = new EntityDir\Report\Report();
         $report->setClient($client);
 
         // edit report dates
         if ($reportId) {
             $report = $this->getReport($reportId, ['transactions', 'basic']);
-            $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
+            $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
             ]);
             $editReportDatesForm->handleRequest($request);
@@ -116,23 +117,23 @@ class ReportController extends AbstractController
 
         $existingReports = $this->getReportsIndexedById($client, ['basic']);
 
-        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
+        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report\Report) {
             $report = $firstReport;
         } else {
             // new report
-            $report = new EntityDir\Report();
+            $report = new EntityDir\Report\Report();
 
             //if client has property & affairs and health & welfare then give them property & affairs
             //else give them health and welfare
             if (count($allowedCourtOrderTypes) > 1) {
-                $report->setCourtOrderTypeId(EntityDir\Report::PROPERTY_AND_AFFAIRS);
+                $report->setCourtOrderTypeId(EntityDir\Report\Report::PROPERTY_AND_AFFAIRS);
             } else {
                 $report->setCourtOrderTypeId($allowedCourtOrderTypes[0]);
             }
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\ReportType(), $report,
+        $form = $this->createForm(new FormDir\Report\ReportType(), $report,
                                   ['action' => $this->generateUrl('report_create', ['clientId' => $clientId])]);
         $form->handleRequest($request);
 
@@ -147,7 +148,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     * @Template("AppBundle:Overview:overview.html.twig")
+     * @Template("AppBundle:Report/Overview:overview.html.twig")
      */
     public function overviewAction($reportId)
     {
@@ -193,7 +194,7 @@ class ReportController extends AbstractController
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
 
-        $form = $this->createForm(new FormDir\ReportFurtherInfoType(), $report);
+        $form = $this->createForm(new FormDir\Report\ReportFurtherInfoType(), $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
@@ -243,7 +244,7 @@ class ReportController extends AbstractController
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
 
-        $form = $this->createForm(new FormDir\ReportDeclarationType(), $report);
+        $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // set report submitted with date
@@ -256,7 +257,7 @@ class ReportController extends AbstractController
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
     
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report');
+            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
             
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);

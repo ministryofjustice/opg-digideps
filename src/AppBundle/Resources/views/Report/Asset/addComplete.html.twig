@@ -4,7 +4,7 @@
 {# if loaded with AJAX, only renders the maincontent block #}
 {% extends app.request.xmlHttpRequest  ?
     'AppBundle:Layouts:ajaxPageBody.html.twig' :
-    'AppBundle:Asset:layout-assets.html.twig'
+    'AppBundle:Report/Asset:layout-assets.html.twig'
 %}
 
 {% block maincontent %}
@@ -17,7 +17,7 @@
 
     {{ form_errors_list(form) }}
 
-    {% include 'AppBundle:Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
+    {% include 'AppBundle:Report/Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
        'form': form,
     } %}
 

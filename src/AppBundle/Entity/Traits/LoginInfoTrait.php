@@ -3,40 +3,80 @@
 namespace AppBundle\Entity\Traits;
 
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Report;
 
-trait HasReportTrait
+trait LoginInfoTrait
 {
     /**
-     * @JMS\Type("AppBundle\Entity\Report")
+     * @JMS\Type("integer")
+     * @var integer
      */
-    private $report;
+    private $idOfClientWithDetails;
 
     /**
-     * @JMS\VirtualProperty
-     * 
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $activeReportId;
+
+    /**
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $numberOfReports;
+
+
+    /**
      * @return int
      */
-    public function getReportId()
+    public function getIdOfClientWithDetails()
     {
-        return $this->report ? $this->report->getId() : null;
+        return $this->idOfClientWithDetails;
     }
 
     /**
-     * @return Report
+     * @param int $idOfClientWithDetails
+     * @return HasReportTrait
      */
-    public function getReport()
+    public function setIdOfClientWithDetails($idOfClientWithDetails)
     {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
-    {
-        $this->report = $report;
-
+        $this->idOfClientWithDetails = $idOfClientWithDetails;
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getActiveReportId()
+    {
+        return $this->activeReportId;
+    }
+
+    /**
+     * @param int $activeReportId
+     * @return HasReportTrait
+     */
+    public function setActiveReportId($activeReportId)
+    {
+        $this->activeReportId = $activeReportId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfReports()
+    {
+        return $this->numberOfReports;
+    }
+
+    /**
+     * @param int $numberOfReports
+     * @return HasReportTrait
+     */
+    public function setNumberOfReports($numberOfReports)
+    {
+        $this->numberOfReports = $numberOfReports;
+        return $this;
+    }
+
 }

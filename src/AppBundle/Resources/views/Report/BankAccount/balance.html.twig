@@ -7,16 +7,16 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}{% endblock %}
 
     {% block leftcontent %}
-        {% include 'AppBundle:BankAccount:left-nav.html.twig'%}
+        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
     {% endblock %}
     
     {% block maincontent %}
         {% if report.isMissingMoneyOrAccountsOrClosingBalance() %}
-            {% include 'AppBundle:BankAccount:_balance-incomplete.html.twig'%}
+            {% include 'AppBundle:Report/BankAccount:_balance-incomplete.html.twig'%}
         {% elseif report.isTotalsMatch %}
-            {% include 'AppBundle:BankAccount:_balance-good.html.twig'%}
+            {% include 'AppBundle:Report/BankAccount:_balance-good.html.twig'%}
         {% else %}
-            {% include 'AppBundle:BankAccount:_balance-bad.html.twig'%}
+            {% include 'AppBundle:Report/BankAccount:_balance-bad.html.twig'%}
         {% endif %}
     {% endblock %}
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,7 +12,7 @@ class MentalCapacityController extends AbstractController
 {
     /**
      * @Route("/report/{reportId}/mental-capacity", name="mental_capacity")
-     * @Template("AppBundle:MentalCapacity:edit.html.twig")
+     * @Template()
      * 
      * @param int $reportId
      *
@@ -23,11 +24,11 @@ class MentalCapacityController extends AbstractController
 
         $mc = $report->getMentalCapacity();
         if ($mc == null) {
-            $mc = new EntityDir\MentalCapacity();
+            $mc = new EntityDir\Report\MentalCapacity();
         }
 
         $request = $this->getRequest();
-        $form = $this->createForm(new FormDir\MentalCapacityType(), $mc);
+        $form = $this->createForm(new FormDir\Report\MentalCapacityType(), $mc);
 
         $form->handleRequest($request);
 

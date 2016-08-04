@@ -1,7 +1,7 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Asset:layout-assets.html.twig'  %}
+{% extends 'AppBundle:Report/Asset:layout-assets.html.twig'  %}
 
 {% block maincontent %}
 
@@ -20,7 +20,7 @@
                 <li class="report-list__item">
                 <h2 class="heading">{{ assetTitle }}</h2>
                 {% for asset in assets %}
-                    {% include 'AppBundle:Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
+                    {% include 'AppBundle:Report/Asset:list-items/_' ~ asset.listTemplateName ~ '.html.twig' with {
                     'asset': asset,
                     } %}
                 {% endfor %}
@@ -28,7 +28,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
+        {{ render(controller('AppBundle:Report/Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
     {% endif %}
 
 {% endblock %}

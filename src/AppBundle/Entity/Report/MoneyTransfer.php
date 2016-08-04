@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
@@ -28,7 +28,7 @@ class MoneyTransfer
     /**
      * @var Account
      * @JMS\SerializedName("accountFrom")
-     * @JMS\Type("AppBundle\Entity\Account")
+     * @JMS\Type("AppBundle\Entity\Report\Account")
      */
     private $accountFrom;
 
@@ -41,7 +41,7 @@ class MoneyTransfer
     /**
      * @var Account
      * @JMS\SerializedName("accountTo")
-     * @JMS\Type("AppBundle\Entity\Account")
+     * @JMS\Type("AppBundle\Entity\Report\Account")
      */
     private $accountTo;
 

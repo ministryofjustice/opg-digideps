@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,13 +24,13 @@ class ActionController extends AbstractController
         }
 
         if ($report->getAction() == null) {
-            $action = new EntityDir\Action();
+            $action = new EntityDir\Report\Action();
         } else {
             $action = $report->getAction();
         }
 
         $request = $this->getRequest();
-        $form = $this->createForm(new FormDir\ActionType(), $action);
+        $form = $this->createForm(new FormDir\Report\ActionType(), $action);
 
         $form->handleRequest($request);
 

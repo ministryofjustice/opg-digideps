@@ -1,12 +1,13 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Action;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Entity\MentalCapacity;
+use AppBundle\Entity\Report\MentalCapacity;
 
 class MentalCapacityType extends AbstractType
 {
@@ -31,7 +32,7 @@ class MentalCapacityType extends AbstractType
             'translation_domain' => 'report-mental-capacity',
             'validation_groups' => function (FormInterface $form) {
 
-                $data = $form->getData(); /* @var $data \AppBundle\Entity\Action */
+                $data = $form->getData(); /* @var $data Action */
                 $validationGroups = ['capacity'];
 
                 if ($data->getHasCapacityChanged() == 'changed') {

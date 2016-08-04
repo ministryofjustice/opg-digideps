@@ -1,14 +1,15 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @JMS\Discriminator(field = "type", map = {
- *    "other": "AppBundle\Entity\AssetOther",
- *    "property": "AppBundle\Entity\AssetProperty"
+ *    "other": "AppBundle\Entity\Report\AssetOther",
+ *    "property": "AppBundle\Entity\Report\AssetProperty"
  * })
  */
 abstract class Asset
@@ -18,7 +19,7 @@ abstract class Asset
      */
     protected $type;
 
-    use Traits\HasReportTrait;
+    use HasReportTrait;
 
     /**
      * @param string $type

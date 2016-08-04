@@ -11,20 +11,20 @@
     <div id="pagebody-left-content">
 
         {% block pageHeader %}
-            {% include 'AppBundle:Overview:_header.html.twig' %}
+            {% include 'AppBundle:Report/Overview:_header.html.twig' %}
         {% endblock %}
         
-        {%include 'AppBundle:Overview:_period.html.twig' with {
+        {%include 'AppBundle:Report/Overview:_period.html.twig' with {
             report: report
         } %}
         
-        {%include 'AppBundle:Overview:_sections.html.twig' with {
+        {%include 'AppBundle:Report/Overview:_sections.html.twig' with {
            report: report
         } %}
     </div>
     <div id="pagebody-right-content">
         {%include 'AppBundle:Components:_helpline.html.twig' %}
-        {%include 'AppBundle:Overview:_status.html.twig' with { report: report } %}
+        {%include 'AppBundle:Report/Overview:_status.html.twig' with { report: report } %}
     </div>
 </div>
 {% endblock %}

@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Entity\Account;
+use AppBundle\Entity\Report\Account;
 
 class AccountType extends AbstractType
 {
@@ -66,7 +66,7 @@ class AccountType extends AbstractType
             'translation_domain' => 'report-account-form',
             'validation_groups' => function (FormInterface $form) {
 
-                $data = $form->getData(); /* @var $data \AppBundle\Entity\Account */
+                $data = $form->getData(); /* @var $data \AppBundle\Entity\Report\Account */
                 $validationGroups = ['add_edit'];
 
                 if ($data->requiresBankNameAndSortCode()) {

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Safeguarding
 {
-    use Traits\HasReportTrait;
+    use HasReportTrait;
 
     /**
      * @JMS\Type("integer")

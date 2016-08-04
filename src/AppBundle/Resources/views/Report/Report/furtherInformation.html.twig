@@ -13,11 +13,11 @@
     {% block pageBody %}
             
         {% if action == 'edit' %}
-          {% include 'AppBundle:Report:_furtherInformationEdit.html.twig' %}
+          {% include 'AppBundle:Report/Report:_furtherInformationEdit.html.twig' %}
         {% endif %}
         
         {% if action == 'view' %}
-          {% include 'AppBundle:Report:_furtherInformationView.html.twig' %}
+          {% include 'AppBundle:Report/Report:_furtherInformationView.html.twig' %}
         {% endif %}
 
     {% endblock %}
