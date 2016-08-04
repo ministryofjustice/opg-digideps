@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use Mockery as m;
 
@@ -15,7 +15,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->report = new Report();
-        $this->account = m::mock('AppBundle\Entity\Account');
+        $this->account = m::mock('AppBundle\Entity\Report\Account');
         $this->account->shouldIgnoreMissing();
     }
 

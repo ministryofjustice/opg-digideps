@@ -40,7 +40,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
 
-        $this->report = m::stub('AppBundle\Entity\Report');
+        $this->report = m::stub('AppBundle\Entity\Report\Report');
         $this->client = m::mock('AppBundle\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(2)

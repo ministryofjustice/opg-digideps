@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 class TransactionTest extends \PHPUnit_Framework_TestCase
 {

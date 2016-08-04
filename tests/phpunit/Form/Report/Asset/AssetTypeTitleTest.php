@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Asset;
+namespace AppBundle\Form\Report\Asset;
 
 use Mockery as m;
 

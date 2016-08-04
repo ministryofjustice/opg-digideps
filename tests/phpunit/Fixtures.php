@@ -1,7 +1,7 @@
 <?php
 
-use AppBundle\Entity\Account;
-use AppBundle\Entity\AccountTransaction;
+use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\AccountTransaction;
 use AppBundle\Entity\Report;
 
 /**
