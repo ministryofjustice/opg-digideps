@@ -3,3 +3,65 @@ page:
   pageSectionTitle: "Finances: %client%'s income and benefits"
 nav:
   incomeBenefits: Income and benefits
+
+categories:
+  stateBenefits: State benefits
+  pensionsOtherIncome: Pensions and other income
+  damages: Damages
+  oneOff: One-off
+
+benefits:
+  contributionsBasedAllowance:
+    label: Contributions based allowance
+  incomeSupportPensionGuaranteeCredit:
+    label: Income Support / Pension Guarantee Credit
+  incomerelatedEmploymentSupportAllowance:
+    label: Income-related Employment and Support Allowance
+  incomebasedJobSeekerAllowance:
+    label: Income-based Job Seeker’s Allowance
+  housingBenefit:
+    label: Housing benefit
+  universalCredit:
+    label: Universal Credit
+  severeDisablementAllowance:
+    label: Severe Disablement Allowance
+  disabilityLivingAllowance:
+    label: Disability Living Allowance
+  attendanceAllowance:
+    label: Attendance Allowance
+  prsonalIndependencePayment:
+    label: Personal Independence Payment
+  workingChildTaxCredits:
+    label: Working and Child tax credits
+  otherBenefits:
+    label: Other benefits
+    moreInfo: Please tell us more about these benefits
+
+form:
+  receiveStatePension:
+    label: Does %client% receive a state pension?
+    hint: " "
+  receiveOtherIncome:
+    label: Does %client% receive any other regular income?
+    hint: For example, private pension, dividends, wages or salary
+  receiveOtherIncomeDetails:
+    label: Tell us more
+  expectCompensationDamages:
+    label: Are you expecting any compensation awards or damages to be paid to %client%?
+    hint: ""
+  expectCompensationDamagesDetails:
+    label: Please tell us more about any damages or compensation awards
+
+oneOff:
+  bequestOrInheritance:
+    label: Bequest or inheritance
+  cashGiftReceived:
+    label: Cash gift received
+  refunds:
+    label: Refunds
+  saleAsset:
+    label: Sale of an asset
+  saleInvestment:
+    label: Sale of investment
+  saleProperty:
+    label: Sale of property
