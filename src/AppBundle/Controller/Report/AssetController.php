@@ -120,7 +120,7 @@ class AssetController extends AbstractController
             throw new \RuntimeException('Asset not found.');
         }
         $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Report\\Asset');
-        $form = $this->createForm(FormDir\Asset\AbstractAssetType::factory($asset->getType()), $asset);
+        $form = $this->createForm(FormDir\Report\Asset\AbstractAssetType::factory($asset->getType()), $asset);
 
         $form->handleRequest($request);
 
