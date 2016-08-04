@@ -79,7 +79,7 @@ class AssetTypeProperty extends AbstractAssetType
     {
         return function (FormInterface $form) {
 
-            /** @var $data \AppBundle\Entity\AssetProperty */
+            /** @var $data \AppBundle\Entity\Report\AssetProperty */
             $data = $form->getData();
             $validationGroups = ['property'];
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
@@ -13,7 +13,7 @@ class ContactController extends AbstractController
 {
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
-     * @Template("AppBundle:Contact:list.html.twig")
+     * @Template()
      *
      * @param int $reportId
      *
@@ -42,8 +42,8 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $contact = new EntityDir\Contact();
-        $form = $this->createForm(new FormDir\ContactType(), $contact);
+        $contact = new EntityDir\Report\Contact();
+        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -72,10 +72,10 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $contact = $this->getRestClient()->get('report/contact/'.$id, 'Contact');
+        $contact = $this->getRestClient()->get('report/contact/'.$id, 'Report\\Contact');
         $contact->setReport($report);
 
-        $form = $this->createForm(new FormDir\ContactType(), $contact);
+        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -138,7 +138,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report);
+        $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -165,7 +165,7 @@ class ContactController extends AbstractController
     {
         $actionUrl = $this->generateUrl('edit_contacts_nonereason', ['reportId' => $reportId]);
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
+        $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
