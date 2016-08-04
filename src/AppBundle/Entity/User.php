@@ -726,4 +726,60 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user-login"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("id_of_client_with_details")
+     */
+    public function getIdOfClientWithDetails()
+    {
+        return $this->getFirstClient() ? $this->getFirstClient()->hasDetails() : null;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user-login"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("active_report_id")
+     */
+    public function getActiveReportId()
+    {
+        $reports = $this->getFirstClient() ? $this->getFirstClient()->getReports() : [];
+        foreach($reports as $report) {
+            if (!$report->getSubmitted()) {
+                return $report->getId();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user-login"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("number_of_reports")
+     */
+    public function getNumberOfReports()
+    {
+        return $this->getFirstClient() ? count($this->getFirstClient()->getReports()) : 0;
+    }
+
+    /**
+     * @return null|Client
+     */
+    private function getFirstClient()
+    {
+        $clients = $this->getClients();
+        if (count($clients) === 0) {
+            return null;
+        }
+
+        return $clients->first();
+    }
+
+
+
 }
