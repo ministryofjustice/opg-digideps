@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Odr;
 
+use AppBundle\Entity\Odr\BankAccount;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -15,7 +16,7 @@ class BankAccountType extends AbstractType
     {
         $builder->add('id', 'hidden');
         $builder->add('accountType', 'choice', [
-            'choices' => Account::$types,
+            'choices' => BankAccount::$types,
             'expanded' => false,
             'empty_value' => 'Please select',
         ]);
