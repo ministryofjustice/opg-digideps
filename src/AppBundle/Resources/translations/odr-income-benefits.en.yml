@@ -41,13 +41,6 @@ stateBenefits:
 
 pensionsOtherIncome:
   label: Pensions and other income
-
-damages:
-  label: Damages
-
-form:
-  save:
-   label: Save
   receiveStatePension:
     label: Does %client% receive a state pension?
     hint: " "
@@ -55,12 +48,19 @@ form:
     label: Does %client% receive any other regular income?
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
-    label: Tell us more
+      label: Tell us more
+
+damages:
+  label: Damages
   expectCompensationDamages:
     label: Are you expecting any compensation awards or damages to be paid to %client%?
     hint: ""
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
+
+form:
+  save:
+   label: Save
 
 oneOff:
   label: One-off

@@ -1,5 +1,4 @@
 {% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
-
     {% set translationDomain = "odr-income-benefits" %}
     {% trans_default_domain translationDomain %}
 
@@ -65,6 +64,18 @@
 //                });
 
                 GOVUK.accountTransactionExpander();
+
+                new opg.RadioHide({
+                    radio:'.expect-compensation-damages input[type=radio]',
+                    content: '#expect-compensation-damages-details',
+                    showWithValue: 'yes'
+                });
+                new opg.RadioHide({
+                    radio:'.receive-other-income input[type=radio]',
+                    content: '#receive-other-income-details',
+                    showWithValue: 'yes'
+                });
+
             });
         </script>
 

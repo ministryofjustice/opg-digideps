@@ -1,9 +1,9 @@
-{% trans_default_domain translationDomain %}
-
-
 {% embed 'AppBundle:Odr/Finance/IncomeBenefits:_category.html.twig' with {
 categoryKey: categoryKey,
 } %}
+    {% set translationDomain = "odr-income-benefits" %}
+    {% trans_default_domain translationDomain %}
+
     {% block detail %}
         <p class="page-section-description">
             {{ (categoryKey ~ '.description') | trans(clientTrans, translationDomain)}}
