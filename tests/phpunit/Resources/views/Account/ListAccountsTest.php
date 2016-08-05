@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Account;
+use AppBundle\Entity\Report\Account;
 use AppBundle\Entity\Report;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
@@ -14,19 +14,19 @@ class ListAccountsTest extends WebTestCase
     {
         $this->markTestSkipped('deprecated');
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
 
-        $account1 = m::mock('AppBundle\Entity\Account')
+        $account1 = m::mock('AppBundle\Entity\Report\Account')
                 ->shouldIgnoreMissing()
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('getBank')->andReturn('hsbc bank')
                 ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(false)
                 ->getMock();
 
-        $account2 = m::mock('AppBundle\Entity\Account')
+        $account2 = m::mock('AppBundle\Entity\Report\Account')
                 ->shouldIgnoreMissing()
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('getBank')->andReturn('halifax bank')

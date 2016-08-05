@@ -1,0 +1,11 @@
+{% extends 'AppBundle:Report/Asset:list-items/_template.html.twig' %}
+
+{% block firstColumn %}
+    Description: <br/>
+
+{% endblock %}
+
+{% block secondColumn %}
+    {{  asset.description }}<br/>
+    £{{  asset.value | money_format }}
+{% endblock %}

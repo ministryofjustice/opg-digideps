@@ -1,0 +1,31 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{# if loaded with AJAX, only renders the maincontent block #}
+{% extends app.request.xmlHttpRequest  ?
+    'AppBundle:Layouts:ajaxPageBody.html.twig' :
+    'AppBundle:Report/Asset:layout-assets.html.twig'
+%}
+
+{% block maincontent %}
+
+    <h3 class="heading-medium-large">
+        {{ ('page.subSectionAssetComplete.' ~ asset.type) | trans({'%title%': titleLcFirst }, translationDomain) }}
+    </h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+
+    {{ form_errors_list(form) }}
+
+    {% include 'AppBundle:Report/Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
+       'form': form,
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'asset',
+        showDelete: false
+    } %}
+
+    {{ form_end(form) }}
+{% endblock %}

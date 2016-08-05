@@ -1,0 +1,41 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+
+    {% set translationDomain = "report-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyOut' | trans({}, "report-accounts") }}{% endblock %}
+    {% block info %}<span id="save-status"></span>{% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+        <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({
+                '%client%': report.client.firstname,
+                '%startDate%': '<span class="no-wrap">' ~ report.startDate | date("j F Y") ~ '</span>',
+                '%endDate%': '<span class="no-wrap">' ~ report.endDate | date("j F Y") ~ '</span>',
+                '%paragraphBreak%': '</p><p>',
+            }) | raw }}</p>
+        {% include 'AppBundle:Report/BankAccount:transactions.html.twig' with {
+        transDomain: translationDomain,
+        transactionsGrouped: report.groupByCategory(report.transactionsOut),
+        transactionsTotal: report.getMoneyOutTotal,
+        formTransactions: form.transactionsOut
+        } %}
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'previousLabel': 'Money in',
+        'nextLink': path("accounts_balance" , {'reportId': report.id }),
+        'nextLabel': 'Balance accounts'
+        } %}
+    {% endblock %}
+
+{% endembed %}

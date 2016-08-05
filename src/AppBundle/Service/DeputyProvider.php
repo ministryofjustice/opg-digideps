@@ -39,7 +39,7 @@ class DeputyProvider implements UserProviderInterface
     {
         try {
             $user = $this->restClient->login($credentials);
-          // set logged user ID to the restClient (for future requests in this lifespan. e.g. set password on user activation)
+            // set logged user ID to the restClient (for future requests in this lifespan. e.g. set password on user activation)
           $this->restClient->setLoggedUserId($user->getId());
 
             return $user;

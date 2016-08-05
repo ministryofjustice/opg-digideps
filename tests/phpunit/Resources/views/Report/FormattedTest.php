@@ -2,19 +2,19 @@
 
 namespace AppBundle\Resources\views\Report;
 
-use AppBundle\Entity\Account;
-use AppBundle\Entity\Action;
-use AppBundle\Entity\AssetOther;
-use AppBundle\Entity\AssetProperty;
+use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\Action;
+use AppBundle\Entity\Report\AssetOther;
+use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Debt;
-use AppBundle\Entity\Decision;
-use AppBundle\Entity\MoneyTransfer;
-use AppBundle\Entity\Transaction;
+use AppBundle\Entity\Report\Debt;
+use AppBundle\Entity\Report\Decision;
+use AppBundle\Entity\Report\MoneyTransfer;
+use AppBundle\Entity\Report\Transaction;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Report as Report;
+use AppBundle\Entity\Report\Report as Report;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;

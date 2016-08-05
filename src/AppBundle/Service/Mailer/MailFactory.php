@@ -90,6 +90,10 @@ class MailFactory
         return $email;
     }
 
+    /**
+     * @param EntityDir\User $user
+     * @return ModelDir\Email
+     */
     public function createResetPasswordEmail(EntityDir\User $user)
     {
         $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
@@ -145,11 +149,12 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\Client $client
-     *
+     * @param EntityDir\User $user
+     * @param EntityDir\Report\Report $report
+     * @param $pdfBinaryContent
      * @return ModelDir\Email
      */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Report $report, $pdfBinaryContent)
+    public function createReportEmail(EntityDir\User $user, EntityDir\Report\Report $report, $pdfBinaryContent)
     {
         $email = new ModelDir\Email();
 
@@ -203,10 +208,11 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
-     * 
+     * @param EntityDir\Report\Report $submittedReport
+     * @param EntityDir\Report $newReport
      * @return ModelDir\Email
      */
-    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report $submittedReport, EntityDir\Report $newReport)
+    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
 
@@ -214,7 +220,7 @@ class MailFactory
             'submittedReport' => $submittedReport,
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
-                'cot' => EntityDir\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
+                'cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
             ]),
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
         ];

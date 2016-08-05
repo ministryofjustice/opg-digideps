@@ -3,7 +3,7 @@
 namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Report as Report;
+use AppBundle\Entity\Report\Report as Report;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Mockery as m;
@@ -44,7 +44,7 @@ class PeriodTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_period.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_period.html.twig', [
             'report' => $this->report,
         ]);
 
@@ -62,7 +62,7 @@ class PeriodTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_period.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_period.html.twig', [
             'report' => $this->report,
         ]);
 
@@ -91,7 +91,7 @@ class PeriodTest extends WebTestCase
 
         $this->dueFormatted = $dueDate->format(' d F Y');
 
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('getSubmitted')->andReturn(false)
                 ->shouldReceive('getId')->andReturn(1)

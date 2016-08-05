@@ -1,0 +1,34 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+    {% set translationDomain = "report-submitted" %}
+    {% trans_default_domain translationDomain %}
+
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+
+    {% block pageNavigation %}
+        {# no navigation bar for declaration #}
+    {% endblock %}
+
+    {% block pageBody %}
+
+        <p class="flash">{{ 'thanks.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
+
+        <p class="page-section-description">{{ 'thanks.more' | trans({
+            '[linkStart]': '<a href="' ~ path('feedback') ~ '">',
+            '[linkEnd]': '</a>'
+        
+        }) | raw }}</p>
+
+
+        <div class="link">
+            <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
+                {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
+            </a>
+        </div>
+        <div class="link">
+            <a href="{{ path('reports', {'cot': report.courtOrderTypeId})}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
+        </div>
+    {% endblock %}
+
+{% endembed %}

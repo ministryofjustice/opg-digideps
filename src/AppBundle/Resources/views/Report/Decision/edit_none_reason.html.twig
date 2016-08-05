@@ -1,0 +1,51 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Report/Decision:layout-decisions.html.twig'  %}
+
+{% block maincontent %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription'
+        } %}
+
+    {% if report.decisions %}
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionDescription: 'page.pageSectionEditInfo'
+            } %}
+    {% endif %}
+
+    {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
+        'report': report,
+        'section': 'decisions',
+        'transDomain': translationDomain,
+        'data': report.decisions
+        } %}
+
+    <div class="report-list-separator"> </div>
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form ' } }) }}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+            transDomain: translationDomain,
+            subSectionDescription: 'no_decision.subSectionDescription',
+            iconClass: 'icon icon__notification'
+            } %}
+
+    {{ form_input(form.reasonForNoDecisions, 'no_decision.controls.reason', {
+                'labelClass': 'visuallyhidden',
+                'inputClass': 'expanding'
+            }) }}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_reason_bar.html.twig' with {
+            transDomain: translationDomain,
+            section: 'decision',
+            showDelete: true,
+            showCancel: true,
+            deleteLabelPrefix: 'delete-reason'
+            } %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
