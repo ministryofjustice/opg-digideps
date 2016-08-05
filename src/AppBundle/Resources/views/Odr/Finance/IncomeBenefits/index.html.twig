@@ -3,9 +3,11 @@
     {% set translationDomain = "odr-income-benefits" %}
     {% trans_default_domain translationDomain %}
 
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block title %}
-        {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
     {% endblock %}
 
     {% block leftcontent %}
@@ -13,137 +15,97 @@
     {% endblock %}
 
     {% block maincontent %}
+
+        <p class="page-section-description">
+            {{ 'page.pageDescription' | trans(clientTrans, translationDomain) }}</p>
+
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
         <div class="sections">
-            {# state benefits #}
-            <div class="section">
-                <div class="summary" id="stateBenefits">
-                    <div class="title">{{ 'categories.stateBenefits'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
-                </div>
-                <div class="detail transactions detail-view">
-                    {% for sbSingleForm in form.stateBenefits %}
-                        <div class="transaction">
-                            {% set labelText = sbSingleForm.typeId.vars.value %}
+            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
+            categoryKey: 'stateBenefits',
+            formElements: form.stateBenefits,
+            } %}
 
-                            {{ form_row(sbSingleForm.typeId) }}
+            {% embed 'AppBundle:Odr/Finance/IncomeBenefits:_simple_elements.html.twig' with {
+            categoryKey: 'pensionsOtherIncome',
+            } %}
+                {% block elements %}
+                    <fieldset>
+                        <legend class="hidden">receiveStatePension</legend>
+                        {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
+                            'fieldSetClass' : 'inline expect-financial-dec-radio',
+                            'legendClass' : 'form-label',
+                            'legendText' : 'form.receiveStatePension.label' | trans(clientTrans, translationDomain),
+                            'hintText' : 'form.receiveStatePension.hint' | trans(clientTrans, translationDomain),
+                            'items': [
+                            {'labelClass': 'block-label', 'elementClass': '' },
+                            {'labelClass': 'block-label', 'elementClass': '' }
+                            ]
+                        }) }}
+                    </fieldset>
 
-                            {{ form_input(sbSingleForm.present, 'xxx', {
-                                'inputClass' : '',
-                                'labelText': labelText,
-                                'formGroupClass': ' form-group-value'
+                    <fieldset>
+                        <legend class="hidden">receiveOtherIncome</legend>
+                        {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
+                            'fieldSetClass' : 'inline',
+                            'legendClass' : 'form-label',
+                            'legendText' : 'form.receiveOtherIncome.label' | trans(clientTrans, translationDomain),
+                            'hintText' : 'form.receiveOtherIncome.hint' | trans(clientTrans, translationDomain),
+                            'items': [
+                            {'labelClass': 'block-label', 'elementClass': '' },
+                            {'labelClass': 'block-label', 'elementClass': '' }
+                            ]
+                        }) }}
+                        <div id="financial-decisions-textarea" class="hidden-detail">
+                            {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
+                                'labelClass': 'required',
+                                'labelParameters': { '%client%': odr.client.firstname },
+                                'inputClass': 'expanding'
                             }) }}
-
-                            {% if sbSingleForm.moreDetails is defined %}
-                                {{ form_input(sbSingleForm.moreDetails, '', {
-                                    'labelText': ('form.entries.' ~ 'xxx' ~ '.moreInformations') | trans({'%client%': odr.client.firstname}),
-                                    'formGroupClass': '',
-                                    'inputClass': 'expanding transaction-more-details'
-                                }) }}
-                            {% endif %}
-
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {# pensionsOtherIncome #}
-            <div class="section">
-                <div class="summary" id="stateBenefits">
-                    <div class="title">{{ 'categories.pensionsOtherIncome'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
-                </div>
+                    </fieldset>
+                {% endblock %}
+            {% endembed %}
 
-                <div class="detail">
-                    <div class="form-section">
-                        <fieldset>
-                            <legend class="hidden">receiveStatePension</legend>
-                            {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
-                                'fieldSetClass' : 'inline expect-financial-dec-radio',
-                                'legendClass' : 'form-label',
-                                'legendText' : 'form.receiveStatePension.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'hintText' : 'form.receiveStatePension.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'items': [
-                                {'labelClass': 'block-label', 'elementClass': '' },
-                                {'labelClass': 'block-label', 'elementClass': '' }
-                                ]
+
+            {% embed 'AppBundle:Odr/Finance/IncomeBenefits:_simple_elements.html.twig' with {
+            categoryKey: 'damages',
+            } %}
+                {% block elements %}
+                    <fieldset>
+                        <legend class="hidden">expectCompensationDamages</legend>
+                        {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
+                            'fieldSetClass' : 'inline expect-financial-dec-radio',
+                            'legendClass' : 'form-label',
+                            'legendText' : 'form.expectCompensationDamages.label' | trans(clientTrans, translationDomain),
+                            'hintText' : 'form.expectCompensationDamages.hint' | trans(clientTrans, translationDomain),
+                            'items': [
+                            {'labelClass': 'block-label', 'elementClass': '' },
+                            {'labelClass': 'block-label', 'elementClass': '' }
+                            ]
+                        }) }}
+                        <div id="" class="hidden-detail">
+                            {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
+                                'labelClass': 'required',
+                                'labelParameters': { '%client%': odr.client.firstname },
+                                'inputClass': 'expanding'
                             }) }}
-                        </fieldset>
-
-                        <fieldset>
-                            <legend class="hidden">receiveOtherIncome</legend>
-                            {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
-                                'fieldSetClass' : 'inline',
-                                'legendClass' : 'form-label',
-                                'legendText' : 'form.receiveOtherIncome.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'hintText' : 'form.receiveOtherIncome.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'items': [
-                                {'labelClass': 'block-label', 'elementClass': '' },
-                                {'labelClass': 'block-label', 'elementClass': '' }
-                                ]
-                            }) }}
-                            <div id="financial-decisions-textarea" class="hidden-detail">
-                                {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
-                                    'labelClass': 'required',
-                                    'labelParameters': { '%client%': odr.client.firstname },
-                                    'inputClass': 'expanding'
-                                }) }}
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-
-            {# damages #}
-            <div class="section">
-                <div class="summary" id="damages">
-                    <div class="title">{{ 'categories.damages'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
-                </div>
-
-                <div class="detail">
-                    <div class="form-section">
-                        <fieldset>
-                            <legend class="hidden">expectCompensationDamages</legend>
-                            {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
-                                'fieldSetClass' : 'inline expect-financial-dec-radio',
-                                'legendClass' : 'form-label',
-                                'legendText' : 'form.expectCompensationDamages.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'hintText' : 'form.expectCompensationDamages.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
-                                'items': [
-                                {'labelClass': 'block-label', 'elementClass': '' },
-                                {'labelClass': 'block-label', 'elementClass': '' }
-                                ]
-                            }) }}
-                            <div id="" class="hidden-detail">
-                                {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
-                                    'labelClass': 'required',
-                                    'labelParameters': { '%client%': odr.client.firstname },
-                                    'inputClass': 'expanding'
-                                }) }}
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-
+                        </div>
+                    </fieldset>
+                {% endblock %}
+            {% endembed %}
 
             {# oneOff #}
-            <div class="section">
-                <div class="summary" id="stateBenefits">
-                    <div class="title">{{ 'categories.oneOff'  | trans({'%client%': odr.client.firstname}) | raw }}</div>
-                </div>
-                <div class="detail transactions detail-view">
-                    {% for sbSingleForm in form.oneOff %}
-                        <div class="transaction">
-                            {% set labelText = sbSingleForm.typeId.vars.value %}
-                            {{ form_row(sbSingleForm.typeId) }}
-                            {{ form_input(sbSingleForm.present, 'xxx', {
-                                'inputClass' : '',
-                                'labelText': labelText,
-                                'formGroupClass': ' form-group-value'
-                            }) }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
+            categoryKey: 'oneOff',
+            formElements: form.oneOff,
+            } %}
         </div>
+
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save,'form.save', { 'buttonClass': '' }) }}
+        </div>
+
         {{ form_end(form) }}
 
         <script>
@@ -163,7 +125,7 @@
 //                    GOVUK.formatCurrency(event.target);
 //                });
 
-//                GOVUK.accountTransactionExpander();
+                GOVUK.accountTransactionExpander();
             });
         </script>
 

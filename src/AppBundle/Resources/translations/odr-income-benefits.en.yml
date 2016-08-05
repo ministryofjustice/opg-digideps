@@ -1,43 +1,53 @@
 page:
   htmlTitle: "Opening deputyship report - income and benefits | GOV.UK"
   pageSectionTitle: "Finances: %client%'s income and benefits"
+  pageDescription: |
+    As a deputy, it's important that you review %client%'s finances every year,
+    look after their affairs and explain any decisions you've made.
+    This includes making sure %client% is getting all the benefits they're entitled to.
 nav:
   incomeBenefits: Income and benefits
 
-categories:
-  stateBenefits: State benefits
-  pensionsOtherIncome: Pensions and other income
-  damages: Damages
-  oneOff: One-off
+stateBenefits:
+  label: State benefits
+  description: Which benefits does %client% receive?
+  hint: Please tick all that apply
+  entries:
+    contributionsBasedAllowance:
+      label: Contributions based allowance
+    incomeSupportPensionGuaranteeCredit:
+      label: Income Support / Pension Guarantee Credit
+    incomerelatedEmploymentSupportAllowance:
+      label: Income-related Employment and Support Allowance
+    incomebasedJobSeekerAllowance:
+      label: Income-based Job Seeker’s Allowance
+    housingBenefit:
+      label: Housing benefit
+    universalCredit:
+      label: Universal Credit
+    severeDisablementAllowance:
+      label: Severe Disablement Allowance
+    disabilityLivingAllowance:
+      label: Disability Living Allowance
+    attendanceAllowance:
+      label: Attendance Allowance
+    prsonalIndependencePayment:
+      label: Personal Independence Payment
+    workingChildTaxCredits:
+      label: Working and Child tax credits
+    otherBenefits:
+      label: Other benefits
+      moreInfo: Please tell us more about these benefits
 
-benefits:
-  contributionsBasedAllowance:
-    label: Contributions based allowance
-  incomeSupportPensionGuaranteeCredit:
-    label: Income Support / Pension Guarantee Credit
-  incomerelatedEmploymentSupportAllowance:
-    label: Income-related Employment and Support Allowance
-  incomebasedJobSeekerAllowance:
-    label: Income-based Job Seeker’s Allowance
-  housingBenefit:
-    label: Housing benefit
-  universalCredit:
-    label: Universal Credit
-  severeDisablementAllowance:
-    label: Severe Disablement Allowance
-  disabilityLivingAllowance:
-    label: Disability Living Allowance
-  attendanceAllowance:
-    label: Attendance Allowance
-  prsonalIndependencePayment:
-    label: Personal Independence Payment
-  workingChildTaxCredits:
-    label: Working and Child tax credits
-  otherBenefits:
-    label: Other benefits
-    moreInfo: Please tell us more about these benefits
+pensionsOtherIncome:
+  label: Pensions and other income
+
+damages:
+  label: Damages
 
 form:
+  save:
+   label: Save
   receiveStatePension:
     label: Does %client% receive a state pension?
     hint: " "
@@ -53,15 +63,19 @@ form:
     label: Please tell us more about any damages or compensation awards
 
 oneOff:
-  bequestOrInheritance:
-    label: Bequest or inheritance
-  cashGiftReceived:
-    label: Cash gift received
-  refunds:
-    label: Refunds
-  saleAsset:
-    label: Sale of an asset
-  saleInvestment:
-    label: Sale of investment
-  saleProperty:
-    label: Sale of property
+  label: One-off
+  description: Which types of one-off payments has %client% received?
+  hint: Please tick all that apply
+  entries:
+    bequestOrInheritance:
+      label: Bequest or inheritance
+    cashGiftReceived:
+      label: Cash gift received
+    refunds:
+      label: Refunds
+    saleAsset:
+      label: Sale of an asset
+    saleInvestment:
+      label: Sale of investment
+    saleProperty:
+      label: Sale of property
