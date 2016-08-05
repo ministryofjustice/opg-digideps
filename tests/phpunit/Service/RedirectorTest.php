@@ -42,9 +42,10 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             return [$route, $params];
         })->getMock();
         $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
-        $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
 
-        $this->object = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'prod');
+        $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
+
+        $this->object = new Redirector($this->security, $this->router, $this->session, 'prod');
     }
 
     public static function firstPageAfterLoginProvider()
@@ -55,9 +56,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         return [
            ['ROLE_ADMIN', [], ['admin_homepage', []]],
            ['ROLE_LAY_DEPUTY', ['hasDetails'=>false], ['user_details', []]],
-           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'hasClients'=>false], ['client_add', []]],
-           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'hasClients'=>true, 'getClients'=>[$clientWithoutDetails]], ['client_add', []]],
-           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'hasClients'=>true, 'getClients'=>[$clientWithDetails]], ['odr_index', []]],
+           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>null], ['client_add', []]],
+           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>1, 'getActiveReportId'=>1], ['report_overview', ['reportId'=>1]]],
+           ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>1, 'getActiveReportId'=>null], ['odr_index', []]],
 
         ];
     }

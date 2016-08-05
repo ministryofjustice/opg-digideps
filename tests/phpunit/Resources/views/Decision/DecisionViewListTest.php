@@ -43,14 +43,14 @@ class DecisionViewListTest extends WebTestCase
         $decision = $this->getMockDecision();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getDecisions')->andReturn([$decision])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [$decision],
         ]);
@@ -67,7 +67,7 @@ class DecisionViewListTest extends WebTestCase
     {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
@@ -75,7 +75,7 @@ class DecisionViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoDecisions')->andReturn('nothing')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [],
         ]);
@@ -91,7 +91,7 @@ class DecisionViewListTest extends WebTestCase
     /*public function dontShowNextWhenNoDecisionsNoReasonAndDue() {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -100,7 +100,7 @@ class DecisionViewListTest extends WebTestCase
             ->getMock();
 
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => []
         ]);
@@ -123,14 +123,14 @@ class DecisionViewListTest extends WebTestCase
         $decision = $this->getMockDecision();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getDecisions')->andReturn([$decision])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'client' => $client,
             'decisions' => [$decision],
@@ -148,14 +148,14 @@ class DecisionViewListTest extends WebTestCase
         $decision = $this->getMockDecision();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getDecisions')->andReturn([$decision])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [$decision],
         ]);
@@ -170,14 +170,14 @@ class DecisionViewListTest extends WebTestCase
     {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getDecisions')->andReturn([])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [],
         ]);
@@ -193,7 +193,7 @@ class DecisionViewListTest extends WebTestCase
     public function listActionEmbedReasonFormWhenNoReasonAndDue()
     {
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -201,7 +201,7 @@ class DecisionViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoDecisions')->andReturn('')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [],
         ]);
@@ -216,7 +216,7 @@ class DecisionViewListTest extends WebTestCase
     public function showReasonDescriptionWhenReason()
     {
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -224,7 +224,7 @@ class DecisionViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoDecisions')->andReturn('some reason')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Decision:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Decision:list.html.twig', [
             'report' => $report,
             'decisions' => [],
         ]);
@@ -237,7 +237,7 @@ class DecisionViewListTest extends WebTestCase
 
     private function getMockDecision()
     {
-        $decision = m::mock('AppBundle\Entity\Decision')
+        $decision = m::mock('AppBundle\Entity\Report\Decision')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('getDescription')->andReturn('abcd')

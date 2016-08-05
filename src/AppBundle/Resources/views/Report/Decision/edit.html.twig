@@ -1,0 +1,20 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Report/Decision:layout-decisions.html.twig'  %}
+
+{% block maincontent %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Report/Decision:_decision_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'showAddForm': true,
+    'form': form
+    } %}
+
+{% endblock %}
+    

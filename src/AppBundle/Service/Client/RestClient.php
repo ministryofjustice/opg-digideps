@@ -125,7 +125,6 @@ class RestClient
     {
         $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-
         // store auth token
         $this->tokenStorage->set($user->getId(), $response->getHeader(self::HEADER_AUTH_TOKEN));
 

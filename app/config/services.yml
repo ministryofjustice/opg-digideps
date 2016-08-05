@@ -49,7 +49,7 @@ services:
             - { name: twig.extension }
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session, @restClient, "%env%" ]
+        arguments: [ @security.context, @router, @session, "%env%" ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]
@@ -74,7 +74,7 @@ services:
         class: AppBundle\Service\AuditLogger
         arguments: [@restClient, @security.context, @service_container]
     app.form.type.report.assetTitle:
-        class: AppBundle\Form\Asset\AssetTypeTitle
+        class: AppBundle\Form\Report\Asset\AssetTypeTitle
         arguments: [%asset_dropdown%, @translator, "report-assets", "other_assets"]
         tags:
             - { name: form.type, alias: asset_title }

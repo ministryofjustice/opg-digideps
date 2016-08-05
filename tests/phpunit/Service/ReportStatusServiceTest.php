@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use Mockery as m;
-use AppBundle\Entity\Report;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService as StatusService;
 
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
@@ -87,11 +87,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function safeguardingProvider()
     {
-        $safegOk = m::mock(\AppBundle\Entity\Safeguarding::class, [
+        $safegOk = m::mock(\AppBundle\Entity\Report\Safeguarding::class, [
             'missingSafeguardingInfo' => false,
         ]);
 
-        $safegErr = m::mock(\AppBundle\Entity\Safeguarding::class, [
+        $safegErr = m::mock(\AppBundle\Entity\Report\Safeguarding::class, [
             'missingSafeguardingInfo' => true,
         ]);
 
@@ -116,17 +116,17 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function accountProvider()
     {
-        $accountOk = m::mock(\AppBundle\Entity\Account::class, [
+        $accountOk = m::mock(\AppBundle\Entity\Report\Account::class, [
             'hasClosingBalance' => true,
             'hasMissingInformation' => false,
         ]);
 
-        $accountClosingMissing = m::mock(\AppBundle\Entity\Account::class, [
+        $accountClosingMissing = m::mock(\AppBundle\Entity\Report\Account::class, [
             'hasClosingBalance' => false,
             'hasMissingInformation' => false,
         ]);
 
-        $accountMissingInfo = m::mock(\AppBundle\Entity\Account::class, [
+        $accountMissingInfo = m::mock(\AppBundle\Entity\Report\Account::class, [
             'hasClosingBalance' => true,
             'hasMissingInformation' => true,
         ]);

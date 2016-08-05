@@ -22,7 +22,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
 
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('getDecisions')->andReturn([])
@@ -37,7 +37,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
             ->getMock();
 
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient')
-            ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])->andReturn($this->report)
+            ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])->andReturn($this->report)
             ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 

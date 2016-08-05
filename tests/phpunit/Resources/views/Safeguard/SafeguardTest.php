@@ -40,10 +40,10 @@ class SafeguardTest extends WebTestCase
     /** @test */
     public function showContinueWhenSafeguardingSaved()
     {
-        $safeguarding = new EntityDir\Safeguarding();
+        $safeguarding = new EntityDir\Report\Safeguarding();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('isDue')->andReturn(false)
@@ -56,7 +56,7 @@ class SafeguardTest extends WebTestCase
 
         $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
 
-        $html = $this->twig->render('AppBundle:Safeguard:edit.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Safeguard:edit.html.twig', [
             'report' => $report,
             'form' => $form->createView(),
             'client' => $client,

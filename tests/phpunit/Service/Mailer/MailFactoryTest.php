@@ -84,7 +84,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $client = m::mock('AppBundle\Entity\Client', [
             'getCaseNumber'=>'1234567t',
         ]);
-        $report = m::mock('AppBundle\Entity\Report', [
+        $report = m::mock('AppBundle\Entity\Report\Report', [
             'getClient'=>$client,
             'getEndDate'=>new \DateTime('2016-12-31'),
             'getSubmitDate'=>new \DateTime('2017-01-01'),

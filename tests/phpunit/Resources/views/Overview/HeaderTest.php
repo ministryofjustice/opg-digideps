@@ -3,7 +3,7 @@
 namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Report as Report;
+use AppBundle\Entity\Report\Report as Report;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Mockery as m;
@@ -39,7 +39,7 @@ class HeaderTest extends WebTestCase
     /** @test */
     public function reportDueAllSectionsCompletedShowSubmission()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -49,7 +49,7 @@ class HeaderTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_header.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -73,7 +73,7 @@ class HeaderTest extends WebTestCase
     /** @test */
     public function reportNotDueAllSectionsCompleteDontShowSubmission()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
@@ -83,7 +83,7 @@ class HeaderTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_header.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -97,7 +97,7 @@ class HeaderTest extends WebTestCase
     /** @test */
     public function reportDueAllSectionsNotCompleteDontShowSubmission()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
@@ -107,7 +107,7 @@ class HeaderTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_header.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -121,7 +121,7 @@ class HeaderTest extends WebTestCase
     /** @test */
     public function reportDueAllSectionsCompleteDontShowNews()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -131,7 +131,7 @@ class HeaderTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_header.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
             'app' => $this->getApp(),
