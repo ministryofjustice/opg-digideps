@@ -1,13 +1,11 @@
 {% trans_default_domain translationDomain %}
 
 <div class="section">
-    <div class="summary" id="stateBenefits">
+    <div class="summary" id="">
         <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
     </div>
     <div class="detail">
-        <div class="form-section">
-        {% block elements %}
+        {% block detail %}
         {% endblock %}
-        </div>
     </div>
 </div>

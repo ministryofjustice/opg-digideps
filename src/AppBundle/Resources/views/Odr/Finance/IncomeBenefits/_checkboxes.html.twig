@@ -1,10 +1,10 @@
 {% trans_default_domain translationDomain %}
 
-<div class="section">
-    <div class="summary" id="stateBenefits">
-        <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
-    </div>
-    <div class="detail">
+
+{% embed 'AppBundle:Odr/Finance/IncomeBenefits:_category.html.twig' with {
+categoryKey: categoryKey,
+} %}
+    {% block detail %}
         <p class="page-section-description">
             {{ (categoryKey ~ '.description') | trans(clientTrans, translationDomain)}}
         </p>
@@ -14,15 +14,12 @@
         {% for sbSingleForm in formElements %}
             <fieldset class="">
                 {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
-
                 {{ form_input(sbSingleForm.present, '', {
                     'inputClass' : '',
                     'labelText': labelText,
                     'formGroupClass': ''
                 }) }}
-
                 {{ form_row(sbSingleForm.typeId) }} {#hidden#}
-
                 {% if sbSingleForm.moreDetails is defined %}
                     {{ form_input(sbSingleForm.moreDetails, '', {
                         'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(clientTrans),
@@ -33,5 +30,5 @@
 
             </fieldset>
         {% endfor %}
-    </div>
-</div>
+    {% endblock %}
+{% endembed %}

@@ -26,74 +26,13 @@
             formElements: form.stateBenefits,
             } %}
 
-            {% embed 'AppBundle:Odr/Finance/IncomeBenefits:_simple_elements.html.twig' with {
+            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_pensions_other_income.html.twig' with {
             categoryKey: 'pensionsOtherIncome',
             } %}
-                {% block elements %}
-                    <fieldset>
-                        <legend class="hidden">receiveStatePension</legend>
-                        {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
-                            'fieldSetClass' : 'inline expect-financial-dec-radio',
-                            'legendClass' : 'form-label',
-                            'legendText' : 'form.receiveStatePension.label' | trans(clientTrans, translationDomain),
-                            'hintText' : 'form.receiveStatePension.hint' | trans(clientTrans, translationDomain),
-                            'items': [
-                            {'labelClass': 'block-label', 'elementClass': '' },
-                            {'labelClass': 'block-label', 'elementClass': '' }
-                            ]
-                        }) }}
-                    </fieldset>
 
-                    <fieldset>
-                        <legend class="hidden">receiveOtherIncome</legend>
-                        {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
-                            'fieldSetClass' : 'inline',
-                            'legendClass' : 'form-label',
-                            'legendText' : 'form.receiveOtherIncome.label' | trans(clientTrans, translationDomain),
-                            'hintText' : 'form.receiveOtherIncome.hint' | trans(clientTrans, translationDomain),
-                            'items': [
-                            {'labelClass': 'block-label', 'elementClass': '' },
-                            {'labelClass': 'block-label', 'elementClass': '' }
-                            ]
-                        }) }}
-                        <div id="financial-decisions-textarea" class="hidden-detail">
-                            {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
-                                'labelClass': 'required',
-                                'labelParameters': { '%client%': odr.client.firstname },
-                                'inputClass': 'expanding'
-                            }) }}
-                        </div>
-                    </fieldset>
-                {% endblock %}
-            {% endembed %}
-
-
-            {% embed 'AppBundle:Odr/Finance/IncomeBenefits:_simple_elements.html.twig' with {
-            categoryKey: 'damages',
+            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_damages.html.twig' with {
+            categoryKey: 'pensionsOtherIncome',
             } %}
-                {% block elements %}
-                    <fieldset>
-                        <legend class="hidden">expectCompensationDamages</legend>
-                        {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
-                            'fieldSetClass' : 'inline expect-financial-dec-radio',
-                            'legendClass' : 'form-label',
-                            'legendText' : 'form.expectCompensationDamages.label' | trans(clientTrans, translationDomain),
-                            'hintText' : 'form.expectCompensationDamages.hint' | trans(clientTrans, translationDomain),
-                            'items': [
-                            {'labelClass': 'block-label', 'elementClass': '' },
-                            {'labelClass': 'block-label', 'elementClass': '' }
-                            ]
-                        }) }}
-                        <div id="" class="hidden-detail">
-                            {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
-                                'labelClass': 'required',
-                                'labelParameters': { '%client%': odr.client.firstname },
-                                'inputClass': 'expanding'
-                            }) }}
-                        </div>
-                    </fieldset>
-                {% endblock %}
-            {% endembed %}
 
             {# oneOff #}
             {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
