@@ -3,7 +3,7 @@
 namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Report as Report;
+use AppBundle\Entity\Report\Report as Report;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Mockery as m;
@@ -42,7 +42,7 @@ class SectionsTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -60,7 +60,7 @@ class SectionsTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -78,7 +78,7 @@ class SectionsTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -96,7 +96,7 @@ class SectionsTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -114,7 +114,7 @@ class SectionsTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -130,7 +130,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function whenAReportIsDueAndAllSectionsCompletedAllowSubmission()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -140,7 +140,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -154,7 +154,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function whenAReportIsNotDueAndAllSectionsCompletedDontAllowSubmission()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
@@ -164,7 +164,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -178,7 +178,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function whenAReportIsDueAndAllSectionsCompletedIndicateActive()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -188,7 +188,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -202,7 +202,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function whenAReportIsNotDueAndAllSectionsCompletedIndicateInactive()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
@@ -212,7 +212,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -226,7 +226,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function whenAReportIsNotDueAndAllSectionsAreNotCompletedIndicateInactive()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->getMock();
@@ -236,7 +236,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(false)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -256,7 +256,7 @@ class SectionsTest extends WebTestCase
 
         $formatted = $tomorrow->format(' d F Y');
 
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->shouldReceive('getEndDate')->andReturn($tomorrow)
@@ -267,7 +267,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -283,7 +283,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function showSubmitWarningIsDueButNotReady()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -293,7 +293,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(false)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -314,7 +314,7 @@ class SectionsTest extends WebTestCase
 
         $formatted = $tomorrow->format(' d F Y');
 
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(false)
                 ->shouldReceive('getEndDate')->andReturn($tomorrow)
@@ -325,7 +325,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(false)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -341,7 +341,7 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function dontShowSubmitWarningIsDueAndReady()
     {
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
                 ->getMock();
@@ -351,7 +351,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -373,7 +373,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getDecisionsStatus')->andReturn('0 Decisions')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -395,7 +395,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getDecisionsStatus')->andReturn('1 Decision')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -417,7 +417,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getContactsStatus')->andReturn('0 Contacts')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -439,7 +439,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getContactsStatus')->andReturn('1 Contact')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -460,7 +460,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getSafeguardingStatus')->andReturn('notstarted')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -481,7 +481,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getSafeguardingState')->andReturn('done')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -503,7 +503,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getAccountsStatus')->andReturn('0 Accounts')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -525,7 +525,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getAccountsStatus')->andReturn('1 Accounts')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -547,7 +547,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getAccountsStatus')->andReturn('1 Accounts')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -569,7 +569,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getAssetsStatus')->andReturn('0 Assets')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -591,7 +591,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getAssetsStatus')->andReturn('1 Assets')
                 ->getMock();
 
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
         ]);
@@ -610,7 +610,7 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getFirstname')->andReturn('Fred')
                 ->getMock();
 
-        $this->report = m::mock('AppBundle\Entity\Report')
+        $this->report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('getSubmitted')->andReturn(false)
                 ->shouldReceive('getId')->andReturn(1)

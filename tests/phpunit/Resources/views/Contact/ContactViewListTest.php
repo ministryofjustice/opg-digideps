@@ -43,14 +43,14 @@ class ContactViewListTest extends WebTestCase
         $contact = $this->getMockContact();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getContacts')->andReturn([$contact])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [$contact],
         ]);
@@ -71,7 +71,7 @@ class ContactViewListTest extends WebTestCase
     {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
@@ -79,7 +79,7 @@ class ContactViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoContacts')->andReturn('nothing')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [],
         ]);
@@ -99,7 +99,7 @@ class ContactViewListTest extends WebTestCase
     /*public function DontShowNextPreviousWhenNoContactsNoReasonAndDue() {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -108,7 +108,7 @@ class ContactViewListTest extends WebTestCase
             ->getMock();
 
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => []
         ]);
@@ -132,14 +132,14 @@ class ContactViewListTest extends WebTestCase
         $contact = $this->getMockContact();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getContacts')->andReturn([$contact])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'client' => $client,
             'contacts' => [$contact],
@@ -157,14 +157,14 @@ class ContactViewListTest extends WebTestCase
         $contact = $this->getMockContact();
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getContacts')->andReturn([$contact])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [$contact],
         ]);
@@ -179,14 +179,14 @@ class ContactViewListTest extends WebTestCase
     {
 
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getContacts')->andReturn([])
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [],
         ]);
@@ -202,7 +202,7 @@ class ContactViewListTest extends WebTestCase
     public function listActionEmbedReasonFormWhenNoReasonAndDue()
     {
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -210,7 +210,7 @@ class ContactViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoContacts')->andReturn('')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [],
         ]);
@@ -225,7 +225,7 @@ class ContactViewListTest extends WebTestCase
     public function showReasonDescriptionWhenReason()
     {
         // mock data
-        $report = m::mock('AppBundle\Entity\Report')
+        $report = m::mock('AppBundle\Entity\Report\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
@@ -233,7 +233,7 @@ class ContactViewListTest extends WebTestCase
             ->shouldReceive('getReasonForNoContacts')->andReturn('some reason')
             ->getMock();
 
-        $html = $this->twig->render('AppBundle:Contact:list.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Contact:list.html.twig', [
             'report' => $report,
             'contacts' => [],
         ]);
@@ -246,7 +246,7 @@ class ContactViewListTest extends WebTestCase
 
     private function getMockContact()
     {
-        $contact = m::mock('AppBundle\Entity\Contact')
+        $contact = m::mock('AppBundle\Entity\Report\Contact')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('getContactName')->andReturn('abcd')

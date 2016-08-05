@@ -8,7 +8,7 @@ use AppBundle\Entity\Report;
 trait HasReportTrait
 {
     /**
-     * @JMS\Type("AppBundle\Entity\Report")
+     * @JMS\Type("AppBundle\Entity\Report\Report")
      */
     private $report;
 

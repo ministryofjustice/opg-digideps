@@ -2,9 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report;
-use AppBundle\Service\Client\RestClient;
+use AppBundle\Entity as EntityDir;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -61,13 +59,11 @@ class Redirector
         SecurityContextInterface $security,
         RouterInterface $router,
         Session $session,
-        RestClient $restClient,
         $env
     ) {
         $this->security = $security;
         $this->router = $router;
         $this->session = $session;
-        $this->restClient = $restClient;
         $this->env = $env;
     }
 
@@ -112,38 +108,30 @@ class Redirector
             return $this->router->generate('user_details');
         }
 
-        if (!$user->hasClients()) {
+        // redirect to add_client if client is not added
+        $clientId = $user->getIdOfClientWithDetails();
+        if (!$clientId) {
             return $this->router->generate('client_add');
         }
 
-        $clients = $user->getClients();
+        // redirect to create report if report is not created
+        //if (0 == $user->getNumberOfReports()) {
+        //    return $this->router->generate('report_create', ['clientId' => $clientId]);
+        //}
 
-        $client = $clients[0]; /* @var $client Client */
-        if (!$client->hasDetails()) {
-            return $this->router->generate('client_add');
-        }
-
-//        if (!$user->hasReports()) {
-//            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
-//        }
-
+        // last accessed url
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
         }
 
+        // if there is an active report, redirect to its overview page
+        if ($activeReportId = $user->getActiveReportId()) {
+            return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
+        }
+
+        // default => ODR homepage / dashboard
         return $this->router->generate('odr_index');
 
-//        $reportIds = $clients[0]->getReports();
-//
-//        foreach ($reportIds as $reportId) {
-//            $report = $this->restClient->get("report/{$reportId}", 'Report', ['query' => ['groups' => ['basic']]]);
-//
-//            if (!$report->getSubmitted()) {
-//                return $this->router->generate('report_overview', ['reportId' => $reportId]);
-//            }
-//        }
-
-        return $this->router->generate('reports', ['cot'=>Report::PROPERTY_AND_AFFAIRS]);
     }
 
     /**

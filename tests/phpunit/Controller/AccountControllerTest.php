@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Report\Account;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Mockery as m;
@@ -22,7 +23,7 @@ class AccountControllerTest extends WebTestCase
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
 
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
-        $this->report = m::mock('AppBundle\Entity\Report');
+        $this->report = m::mock('AppBundle\Entity\Report\Report');
         $this->t1 = m::mock('AppBundle\Entity\Transaction')
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('getHasMoreDetails')->andReturn(false)
@@ -55,7 +56,7 @@ class AccountControllerTest extends WebTestCase
             'code' => 403,
         ]);
         $this->restClient
-                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])
                 ->andThrow($restClientException);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -69,7 +70,7 @@ class AccountControllerTest extends WebTestCase
         $this->report->shouldReceive('getSubmitted')->andReturn(true);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])
                 ->andReturn($this->report);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -95,7 +96,7 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('toArray')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])
                 ->andReturn($this->report);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -117,7 +118,7 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getData')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])->andReturn($this->report)
+                ->shouldReceive('get')->withArgs(['report/1', 'Report\\Report', m::any()])->andReturn($this->report)
                 ->shouldReceive('put')->withArgs(['report/1', m::any(), m::any()])->andThrow(new \AppBundle\Exception\RestClientException('put error', 1))
         ;
 
@@ -142,7 +143,7 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getData')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->with('report/1', 'Report', m::any())->andReturn($this->report)
+                ->shouldReceive('get')->with('report/1', 'Report\\Report', m::any())->andReturn($this->report)
                 ->shouldReceive('put')->with('report/1', m::any(), m::any())->andReturn(null);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -161,7 +162,7 @@ class AccountControllerTest extends WebTestCase
 
     public function testaccountsetClosingBalanceTest()
     {
-        $account = new \AppBundle\Entity\Account();
+        $account = new Account();
 
         // false case
         $this->assertFalse($account->isClosingBalanceZero());

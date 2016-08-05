@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Report;
+use AppBundle\Entity\Report\Report;
 
 class ReportStatusService
 {
