@@ -76,6 +76,9 @@ class AccountController extends RestController
         $account = $this->findEntityBy('Account', $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['account'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
         return $account;
     }
 
@@ -97,6 +100,8 @@ class AccountController extends RestController
         $account->setLastEdit(new \DateTime());
 
         $this->getEntityManager()->flush();
+
+        $this->setJmsSerialiserGroups(['account']);
 
         return $account;
     }

@@ -652,4 +652,12 @@ class Client
     {
         return $this->country;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasDetails()
+    {
+        return !empty($this->getAddress());
+    }
 }

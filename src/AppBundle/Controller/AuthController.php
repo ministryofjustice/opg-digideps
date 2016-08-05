@@ -81,7 +81,7 @@ class AuthController extends RestController
         });
 
         // needed for redirector
-        $this->setJmsSerialiserGroups(['user', 'role', 'client', 'report']);
+        $this->setJmsSerialiserGroups(['user', 'role', 'user-login']);
 
         return $user;
     }

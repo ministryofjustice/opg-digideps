@@ -85,7 +85,7 @@ class Report
     private $hasDebts;
 
     /**
-     * @JMS\Groups({"decisions"})
+     * @JMS\Groups({"decisions", "decision"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
