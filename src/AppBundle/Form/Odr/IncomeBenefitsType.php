@@ -47,7 +47,7 @@ class IncomeBenefitsType extends AbstractType
                     $validationGroups[] = 'receive-other-income-yes';
                 }
 
-                if ($data->getExpectCompensationDamages()) {
+                if ($data->getExpectCompensationDamages() == 'yes') {
                     $validationGroups[] = 'expect-compensation-damage-yes';
                 }
 
