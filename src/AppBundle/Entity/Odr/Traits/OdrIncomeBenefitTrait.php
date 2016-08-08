@@ -38,7 +38,7 @@ trait OdrIncomeBenefitTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-income-pension"})
-     * @Assert\NotBlank(message="odr.incomeBenefits.receiveOtherIncomeDetails.notBlank", groups={"receive-other-income-yes"})
+     * @Assert\NotBlank(message="odr.incomeBenefit.receiveOtherIncomeDetails.notBlank", groups={"receive-other-income-yes"})
      */
     private $receiveOtherIncomeDetails;
 
@@ -55,7 +55,7 @@ trait OdrIncomeBenefitTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-income-damages"})
-     * @Assert\NotBlank(message="odr.incomeBenefits.expectCompensationDamagesDetails.notBlank", groups={"expect-compensation-damage-yes"})
+     * @Assert\NotBlank(message="odr.incomeBenefit.expectCompensationDamagesDetails.notBlank", groups={"expect-compensation-damage-yes"})
      */
     private $expectCompensationDamagesDetails;
 

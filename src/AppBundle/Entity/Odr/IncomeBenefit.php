@@ -4,7 +4,11 @@ namespace AppBundle\Entity\Odr;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"odr-state-benefits"})
+ */
 class IncomeBenefit
 {
 //    public static $stateBenefitsKeys = [
@@ -47,8 +51,6 @@ class IncomeBenefit
      * @var string
      * @JMS\Groups({"odr-income-benefit"})
      * @JMS\Type("string")
-     *
-     * @Assert\NotBlank(message="odr.incomeBenefit.moreDetails.notEmpty", groups={"odr-income-benefit-more-details"})
      */
     private $moreDetails;
 
@@ -131,5 +133,29 @@ class IncomeBenefit
         $this->moreDetails = $moreDetails;
     }
 
+    /**
+     * flag moreDetails invalid if amount is given and moreDetails is empty
+     * flag amount invalid if moreDetails is given and amount is empty.
+     *
+     * @param ExecutionContextInterface $context
+     */
+    public function moreDetailsValidate(ExecutionContextInterface $context)
+    {
+        // if the transaction required no moreDetails, no validation is needed
+        if (!$this->getHasMoreDetails()) {
+            return;
+        }
+
+        $isPresent = $this->isPresent();
+        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
+
+        if ($isPresent && !$hasMoreDetails) {
+            $context->addViolationAt('moreDetails', 'odr.incomeBenefit.moreDetails.notBlank');
+        }
+
+        if (!$isPresent && $hasMoreDetails) {
+            $context->addViolationAt('present', 'odr.incomeBenefit.present.notBlank');
+        }
+    }
 
 }

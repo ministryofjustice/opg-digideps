@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Odr;
 
+use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +15,9 @@ class IncomeBenefitsType extends AbstractType
     {
         $builder
             ->add('id', 'hidden')
-            ->add('stateBenefits', 'collection', ['type' => new IncomeBenefitSingleType()])
+            ->add('stateBenefits', 'collection', [
+                'type' => new IncomeBenefitSingleType(),
+            ])
             ->add('receiveStatePension', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
@@ -53,7 +56,6 @@ class IncomeBenefitsType extends AbstractType
 
                 return $validationGroups;
             },
-            // enable validation on AccountTransactionSingleType collections
             'cascade_validation' => true,
             'translation_domain' => 'odr-income-benefits',
         ]);

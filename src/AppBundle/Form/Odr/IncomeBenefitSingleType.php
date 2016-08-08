@@ -32,18 +32,7 @@ class IncomeBenefitSingleType extends AbstractType
     {
         $resolver->setDefaults([
              'data_class' => 'AppBundle\Entity\Odr\IncomeBenefit',
-             'validation_groups' => function (FormInterface $form) {
-                 $validationGroups = [''];
-                 $data = $form->getData();
-                 /* @var $data IncomeBenefit */
-//                 if ($data->getHasMoreDetails()) {
-//                     $validationGroups[] = 'odr-income-benefit-more-details';
-//                 }
-
-                 $validationGroups[] = 'odr-income-benefit-more-details';
-
-                 return $validationGroups;
-             },
+             'validation_groups' => ['odr-state-benefits'],
              'translation_domain' => 'odr-income-benefits',
         ]);
     }
