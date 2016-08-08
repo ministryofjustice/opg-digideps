@@ -335,7 +335,7 @@ odr:
           type: The account number must be in numbers
           length: Enter the last 4 digits of the account number
       balanceOnCourtOrderDate:
-          notBlank: Please enter the balance of the account on the date of the court order
+          notBlank: Please enter the account balance on the date shown on the court order
           type: The balance must be in numbers
           outOfRange: The balance must be less than £10,000,000,000
       moneyInOut:
