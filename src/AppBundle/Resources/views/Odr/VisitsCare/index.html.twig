@@ -141,8 +141,10 @@
 
 {% block pageBodyFooterNav %}
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("odr-debts" , {'odrId': odr.id }),
+    'previousLabel': 'Debts',
     'nextLink': path("odr_overview"),
-    'nextLabel': 'ODR Overview'
+    'nextLabel': 'Overview'
     } %}
 {% endblock %}
 

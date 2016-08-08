@@ -5,9 +5,9 @@
 
 {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': '#',
-        'previousLabel': 'Balance accounts',
-        'nextLink': '#',
+        'previousLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'previousLabel': 'Income and benefits',
+        'nextLink': path("odr-debts" , {'odrId': odr.id }),
         'nextLabel': 'Debts'
         } %}
 {% endblock %}

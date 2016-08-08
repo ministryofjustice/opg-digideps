@@ -76,10 +76,8 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("odr_overview" , {'odrId': odr.id }),
-        'previousLabel': 'Visits and care',
-        'nextLink': path("odr_overview" , {'odrId': odr.id }),
-        'nextLabel': 'Money transfers'
+        'nextLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'nextLabel': 'Income and benefits'
         } %}
     {% endblock %}
 

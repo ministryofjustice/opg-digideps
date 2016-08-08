@@ -85,10 +85,10 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("odr_overview" , {'odrId': odr.id }),
-        'previousLabel': 'Visits and care',
-        'nextLink': path("odr_overview" , {'odrId': odr.id }),
-        'nextLabel': 'Money transfers'
+        'previousLink': path("odr-bank-accounts" , {'odrId': odr.id }),
+        'previousLabel': 'Accounts',
+        'nextLink': path("odr-assets" , {'odrId': odr.id }),
+        'nextLabel': 'Assets and debts'
         } %}
     {% endblock %}
 

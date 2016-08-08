@@ -4,10 +4,10 @@
 {% extends 'AppBundle:Odr/Asset:layout.html.twig' %}
 
 {% block pageBodyFooterNav %}
-        {#{% include 'AppBundle:Components:nextprevious.html.twig' with {#}
-        {#'previousLink': path('assets' , {'reportId': report.id }),#}
-        {#'previousLabel': 'Assets',#}
-        {#'nextLink': path("actions" , {'reportId': report.id }),#}
-        {#'nextLabel': 'Actions'#}
-        {#} %}#}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path('odr-assets' , {'odrId': odr.id }),
+        'previousLabel': 'Assets',
+        'nextLink': path('odr-visits-care' , {'odrId': odr.id }),
+        'nextLabel': 'Visits and care'
+        } %}
 {% endblock %}
