@@ -5,6 +5,7 @@ namespace AppBundle\Form\Odr;
 use AppBundle\Entity\Odr\IncomeBenefit;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -31,7 +32,18 @@ class IncomeBenefitSingleType extends AbstractType
     {
         $resolver->setDefaults([
              'data_class' => 'AppBundle\Entity\Odr\IncomeBenefit',
-             'validation_groups' => ['odr-income-benefit'],
+             'validation_groups' => function (FormInterface $form) {
+                 $validationGroups = [''];
+                 $data = $form->getData();
+                 /* @var $data IncomeBenefit */
+//                 if ($data->getHasMoreDetails()) {
+//                     $validationGroups[] = 'odr-income-benefit-more-details';
+//                 }
+
+                 $validationGroups[] = 'odr-income-benefit-more-details';
+
+                 return $validationGroups;
+             },
              'translation_domain' => 'odr-income-benefits',
         ]);
     }

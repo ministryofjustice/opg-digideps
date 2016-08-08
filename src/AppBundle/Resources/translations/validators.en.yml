@@ -413,7 +413,11 @@ odr:
               notBlank: Please enter the value of this property
               type: Please enter the value of this property in numbers
               outOfRange: The value of the property must be less than £100,000,000,000
-
+  incomeBenefits:
+      receiveOtherIncomeDetails:
+          notBlank: Please tell us more about any other income received
+      expectCompensationDamagesDetails:
+          notBlank: Please tell us more about any damages or compensation awards
 
 action:
     doYouExpectFinancialDecisions:

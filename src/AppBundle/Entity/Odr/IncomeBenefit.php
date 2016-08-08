@@ -48,7 +48,7 @@ class IncomeBenefit
      * @JMS\Groups({"odr-income-benefit"})
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank(message="odr.incomeBenefit.moreDetails.notEmpty", groups={"income-benefit-more-details"})
+     * @Assert\NotBlank(message="odr.incomeBenefit.moreDetails.notEmpty", groups={"odr-income-benefit-more-details"})
      */
     private $moreDetails;
 
