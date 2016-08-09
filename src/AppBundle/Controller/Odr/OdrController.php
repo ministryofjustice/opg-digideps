@@ -20,7 +20,7 @@ class OdrController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['odr'];
+        $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['odr'];
         $this->setJmsSerialiserGroups($groups);
 
         //$this->getRepository('Odr\Odr')->warmUpArrayCacheTransactionTypes();
@@ -95,7 +95,13 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('state_benefits', $data)) {
-            $odr->setStateBenefits($data['state_benefits']);
+            foreach ($data['state_benefits'] as $row) {
+                $e = $odr->getStateBenefitByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Odr\IncomeBenefitStateBenefit) {
+                    $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
+                    $this->getEntityManager()->flush($e);
+                }
+            }
         }
 
         if (array_key_exists('receive_state_pension', $data)) {
@@ -106,19 +112,25 @@ class OdrController extends RestController
             $odr->setReceiveOtherIncome($data['receive_other_income']);
         }
 
-        if (array_key_exists('expect_compensation', $data)) {
-            $odr->setExpectCompensation($data['expect_compensation']);
+        if (array_key_exists('receive_other_income_details', $data)) {
+            $odr->setReceiveOtherIncomeDetails($data['receive_other_income_details']);
+        }
+
+        if (array_key_exists('expect_compensation_damages', $data)) {
+            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+        }
+
+        if (array_key_exists('expect_compensation_damages_details', $data)) {
+            $odr->setExpectCompensationDamagesDetails($data['expect_compensation_damages_details']);
         }
 
         if (array_key_exists('one_off', $data)) {
             foreach ($data['one_off'] as $row) {
-                $incomeOneOff = $odr->getIncomeOneOffByTypeId($row['type_id']);
-                if (!$incomeOneOff instanceof EntityDir\Odr\IncomeOneOff) {
-                    continue; //not clear when that might happen. kept similar to transaction below
+                $e = $odr->getOneOffByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Odr\IncomeBenefitStateBenefit) {
+                    $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
+                    $this->getEntityManager()->flush($e);
                 }
-                $incomeOneOff->setAmount($row['amount']);
-                $this->getEntityManager()->flush($incomeOneOff);
-                //$this->setJmsSerialiserGroups(['odr-income-one-off']); //returns saved data (AJAX operations)
             }
         }
 

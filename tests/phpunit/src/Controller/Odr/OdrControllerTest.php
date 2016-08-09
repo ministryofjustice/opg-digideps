@@ -193,12 +193,17 @@ class OdrControllerTest extends AbstractTestController
 
     public function testIncomeBenefits()
     {
-        $this->markTestIncomplete();
         $url = '/odr/'.self::$odr1->getId();
 
         $st = [
-            'employment_support_allowance_incapacity_benefit',
-            'income_support_pension_guarantee_credit'
+            ['type_id'=>'contributions_based_allowance', 'present'=>true, 'more_details'=>null],
+            ['type_id'=>'income_support_pension_guarantee_credit', 'present'=>false, 'more_details'=>null],
+            ['type_id'=>'other_benefits', 'present'=>true, 'more_details'=>'obmd'],
+        ];
+
+        $oo = [
+            ['type_id'=>'bequest_or_inheritance', 'present'=>true, 'more_details'=>null],
+            ['type_id'=>'sale_of_an_asset', 'present'=>false, 'more_details'=>null],
         ];
 
         $this->assertJsonRequest('PUT', $url, [
@@ -206,37 +211,74 @@ class OdrControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'state_benefits' => $st,
-                'receive_state_pension' => 'yes',
+                'receive_state_pension' => 'no',
                 'receive_other_income' => 'yes',
-                'expect_compensation' => 'yes',
-                'one_off' => [ //similar to debts
-                    ['type_id' => 'bequest_or_inheritance', 'amount'=>345],
-                    ['type_id' => 'cash_gift_received', 'amount'=>34],
-                ],
+                'receive_other_income_details' => 'roid',
+                'expect_compensation_damages' => 'yes',
+                'expect_compensation_damages_details' => 'exdd',
+                'one_off' => $oo,
             ],
         ]);
 
         $q = http_build_query(['groups' => [
+            'odr-income-benefits',
             'odr-income-state-benefits',
             'odr-income-pension',
             'odr-income-damages',
-            'odr-income-one-off',
+            'odr-income-one-off'
         ]]);
-        //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
-        $this->assertEquals('bequest_or_inheritance', $data['income_one_off'][0]['type_id']);
-        $this->assertEquals('345.00', $data['income_one_off'][0]['amount']);
+        $this->assertEquals([
+            'id' => 1,
+            'type_id' => 'contributions_based_allowance',
+            'present' => true,
+            'has_more_details' => false,
+            'more_details' => null,
+        ], $data['state_benefits'][0]);
 
-        $this->assertEquals('refunds', $data['income_one_off'][2]['type_id']);
-        $this->assertEquals(null, $data['income_one_off'][2]['amount']);
+        $this->assertEquals([
+            'id' => 2,
+            'type_id' => 'income_support_pension_guarantee_credit',
+            'present' => false,
+            'has_more_details' => false,
+            'more_details' => null,
+        ], $data['state_benefits'][1]);
 
-        $this->assertEquals('yes', $data['receive_state_pension']);
+        $this->assertEquals([
+            'id' => 12,
+            'type_id' => 'other_benefits',
+            'present' => true,
+            'has_more_details' => true,
+            'more_details' => 'obmd',
+        ], $data['state_benefits'][11]);
+
+        $this->assertEquals('no', $data['receive_state_pension']);
         $this->assertEquals('yes', $data['receive_other_income']);
-        $this->assertEquals('yes', $data['expect_compensation']);
+        $this->assertEquals('roid', $data['receive_other_income_details']);
+        $this->assertEquals('yes', $data['expect_compensation_damages']);
+        $this->assertEquals('exdd', $data['expect_compensation_damages_details']);
+
+        $this->assertEquals([
+            'id' => 1,
+            'type_id' => 'bequest_or_inheritance',
+            'present' => true,
+            'has_more_details' => false,
+            'more_details' => null,
+        ], $data['one_off'][0]);
+
+        $this->assertEquals([
+            'id' => 2,
+            'type_id' => 'cash_gift_received',
+            'present' => false,
+            'has_more_details' => false,
+            'more_details' => null,
+        ], $data['one_off'][1]);
+
+
     }
 
 }
