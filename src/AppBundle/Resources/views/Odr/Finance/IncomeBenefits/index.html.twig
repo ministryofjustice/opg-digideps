@@ -18,7 +18,7 @@
         <p class="page-section-description">
             {{ 'page.pageDescription' | trans(clientTrans, translationDomain) }}</p>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table' }}) }}
         <div class="sections">
             {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
             categoryKey: 'stateBenefits',
