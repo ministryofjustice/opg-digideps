@@ -122,4 +122,42 @@ trait OdrIncomeBenefitSingleTrait
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getHasMoreDetails()
+    {
+        return $this->hasMoreDetails;
+    }
+
+    /**
+     * @param string $hasMoreDetails
+     * @return OdrIncomeBenefitSingleTrait
+     */
+    public function setHasMoreDetails($hasMoreDetails)
+    {
+        $this->hasMoreDetails = $hasMoreDetails;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoreDetails()
+    {
+        return $this->moreDetails;
+    }
+
+    /**
+     * @param string $moreDetails
+     * @return OdrIncomeBenefitSingleTrait
+     */
+    public function setMoreDetails($moreDetails)
+    {
+        $this->moreDetails = $moreDetails;
+        return $this;
+    }
+
+
+
 }

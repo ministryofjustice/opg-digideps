@@ -9,6 +9,9 @@
 namespace AppBundle\Entity\Traits;
 
 
+use AppBundle\Entity\Odr\IncomeBenefitOneOff;
+use AppBundle\Entity\Odr\IncomeBenefitStateBenefit;
+
 trait OdrIncomeBenefitTrait
 {
     /**
@@ -19,6 +22,24 @@ trait OdrIncomeBenefitTrait
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $stateBenefits;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr-income-pension"})
+     * @ORM\Column(name="receive_state_pension", type="text", nullable=true)
+     */
+    private $receiveStatePension;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr-income-pension"})
+     * @ORM\Column(name="receive_other_income", type="text", nullable=true)
+     */
+    private $receiveOtherIncome;
 
     /**
      * @var string
@@ -37,6 +58,15 @@ trait OdrIncomeBenefitTrait
      * @ORM\Column(name="expect_compensation_damages", type="text", nullable=true)
      */
     private $expectCompensationDamages;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr-income-damages"})
+     * @ORM\Column(name="expect_compensation_damages_details", type="text", nullable=true)
+     */
+    private $expectCompensationDamagesDetails;
 
 
     /**
@@ -106,6 +136,62 @@ trait OdrIncomeBenefitTrait
     }
 
     /**
+     * @return string
+     */
+    public function getExpectCompensationDamagesDetails()
+    {
+        return $this->expectCompensationDamagesDetails;
+    }
+
+    /**
+     * @param string $expectCompensationDamagesDetails
+     * @return OdrIncomeBenefitTrait
+     */
+    public function setExpectCompensationDamagesDetails($expectCompensationDamagesDetails)
+    {
+        $this->expectCompensationDamagesDetails = $expectCompensationDamagesDetails;
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getReceiveStatePension()
+    {
+        return $this->receiveStatePension;
+    }
+
+    /**
+     * @param string $receiveStatePension
+     * @return OdrIncomeBenefitTrait
+     */
+    public function setReceiveStatePension($receiveStatePension)
+    {
+        $this->receiveStatePension = $receiveStatePension;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReceiveOtherIncome()
+    {
+        return $this->receiveOtherIncome;
+    }
+
+    /**
+     * @param string $receiveOtherIncome
+     * @return OdrIncomeBenefitTrait
+     */
+    public function setReceiveOtherIncome($receiveOtherIncome)
+    {
+        $this->receiveOtherIncome = $receiveOtherIncome;
+        return $this;
+    }
+
+
+    /**
      * @return IncomeBenefit[]
      */
     public function getOneOff()
@@ -130,14 +216,26 @@ trait OdrIncomeBenefitTrait
     /**
      * @param string $typeId
      *
-     * @return IncomeOneOff
+     * @return IncomeBenefitOneOff
      */
-//    public function getIncomeOneOffByTypeId($typeId)
-//    {
-//        return $this->getIncomeOneOff()->filter(function (IncomeOneOff $incomeOneOff) use ($typeId) {
-//            return $incomeOneOff->getTypeId() == $typeId;
-//        })->first();
-//    }
+    public function getOneOffByTypeId($typeId)
+    {
+        return $this->getOneOff()->filter(function (IncomeBenefitOneOff $incomeOneOff) use ($typeId) {
+            return $incomeOneOff->getTypeId() == $typeId;
+        })->first();
+    }
+
+    /**
+     * @param string $typeId
+     *
+     * @return IncomeBenefitStateBenefit
+     */
+    public function getStateBenefitByTypeId($typeId)
+    {
+        return $this->getStateBenefits()->filter(function (IncomeBenefitStateBenefit $sb) use ($typeId) {
+            return $sb->getTypeId() == $typeId;
+        })->first();
+    }
 
 
 }

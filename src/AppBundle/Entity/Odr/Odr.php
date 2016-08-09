@@ -96,24 +96,6 @@ class Odr
      */
     private $noAssetToAdd;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
-     * @ORM\Column(name="receive_state_pension", type="text", nullable=true)
-     */
-    private $receiveStatePension;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
-     * @ORM\Column(name="receive_other_income", type="text", nullable=true)
-     */
-    private $receiveOtherIncome;
-
 
     /**
      * @var bool

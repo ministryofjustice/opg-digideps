@@ -28,6 +28,7 @@ class Version085 extends AbstractMigration
         $this->addSql('ALTER TABLE odr ADD receive_other_income TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE odr ADD receive_other_income_details TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE odr ADD expect_compensation_damages TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr ADD expect_compensation_damages_details TEXT DEFAULT NULL');
     }
 
     /**
@@ -44,5 +45,6 @@ class Version085 extends AbstractMigration
         $this->addSql('ALTER TABLE odr DROP receive_other_income');
         $this->addSql('ALTER TABLE odr DROP receive_other_income_details');
         $this->addSql('ALTER TABLE odr DROP expect_compensation_damages');
+        $this->addSql('ALTER TABLE odr DROP expect_compensation_damages_details');
     }
 }
