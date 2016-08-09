@@ -27,7 +27,6 @@ class IncomeBenefit
 
     /**
      * @var string
-     * @JMS\Groups({"odr-income-benefit"})
      * @JMS\Type("boolean")
      */
     private $hasMoreDetails;
