@@ -11,21 +11,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class IncomeBenefit
 {
-//    public static $stateBenefitsKeys = [
-//        'contributionsBasedAllowance' => false,
-//        'incomeSupportPensionGuaranteeCredit' => false,
-//        'incomerelatedEmploymentSupportAllowance' => false,
-//        'incomebasedJobSeekerAllowance' => false,
-//        'housingBenefit' => false,
-//        'universalCredit' => false,
-//        'severeDisablementAllowance' => false,
-//        'disabilityLivingAllowance' => false,
-//        'attendanceAllowance' => false,
-//        'prsonalIndependencePayment' => false,
-//        'workingChildTaxCredits' => false,
-//        'otherBenefits' => true,
-//    ];
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"odr-income-benefit"})
