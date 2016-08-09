@@ -15,18 +15,18 @@ class IncomeBenefitStateBenefit
     use OdrIncomeBenefitSingleTrait;
 
     public static $stateBenefitsKeys = [
-        'contributionsBasedAllowance' => false,
-        'incomeSupportPensionGuaranteeCredit' => false,
-        'incomerelatedEmploymentSupportAllowance' => false,
-        'incomebasedJobSeekerAllowance' => false,
-        'housingBenefit' => false,
-        'universalCredit' => false,
-        'severeDisablementAllowance' => false,
-        'disabilityLivingAllowance' => false,
-        'attendanceAllowance' => false,
-        'prsonalIndependencePayment' => false,
-        'workingChildTaxCredits' => false,
-        'otherBenefits' => true,
+        'contributions_based_allowance' => false,
+        'income_support_pension_guarantee_credit' => false,
+        'income_related_employment_support_allowance' => false,
+        'income_based_job_seeker_allowance' => false,
+        'housing_benefit' => false,
+        'universal_credit' => false,
+        'severe_disablement_allowance' => false,
+        'disability_living_allowance' => false,
+        'attendance_allowance' => false,
+        'personal_independence_payment' => false,
+        'working_child_tax_credits' => false,
+        'other_benefits' => true,
     ];
 
     /**
