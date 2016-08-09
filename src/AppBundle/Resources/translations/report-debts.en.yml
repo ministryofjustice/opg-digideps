@@ -2,7 +2,7 @@ page:
   htmlTitle: "Deputy report - debts | GOV.UK"
   pageSectionTitle: "Debts"
   pageSectionDescription: "Don't tell us about amounts left to pay on a mortgage. Go to assets to give us this information."
-  heading: Debts owned by %client%
+  heading: Debts owed by %client%
 
 form:
   entries:
