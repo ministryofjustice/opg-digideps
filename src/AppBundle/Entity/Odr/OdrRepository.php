@@ -36,27 +36,34 @@ class OdrRepository extends EntityRepository
     }
 
     /**
-     * add empty IncomeOneOff to Odr.
      * Called from doctrine listener.
      *
      * @param Odr $odr
      *
      * @return int changed records
      */
-    public function addIncomeOneOffToOdrIfMissing(Odr $odr)
+    public function addIncomeBenefitsToOdrIfMissing(Odr $odr)
     {
         $ret = 0;
 
-        // skips if already added
-        if (count($odr->getIncomeOneOff()) > 0) {
-            return $ret;
+        if (count($odr->getStateBenefits()) === 0) {
+            foreach (IncomeBenefitStateBenefit::$stateBenefitsKeys as $typeId => $hasMoreDetails) {
+                $incomeBenefit = new IncomeBenefitStateBenefit($odr, $typeId, $hasMoreDetails);
+                $this->_em->persist($incomeBenefit);
+                $odr->addStateBenefits($incomeBenefit);
+                ++$ret;
+            }
         }
 
-        foreach (IncomeOneOff::$ids as $id) {
-            $incomeOneOff = new IncomeOneOff($odr, $id, null);
-            $this->_em->persist($incomeOneOff);
-            ++$ret;
+        if (count($odr->getOneOff()) === 0) {
+            foreach (IncomeBenefitOneOff::$oneOffKeys as $typeId => $hasMoreDetails) {
+                $incomeBenefit = new IncomeBenefitOneOff($odr, $typeId, $hasMoreDetails);
+                $this->_em->persist($incomeBenefit);
+                $odr->addOneOff($incomeBenefit);
+                ++$ret;
+            }
         }
+
 
         return $ret;
     }

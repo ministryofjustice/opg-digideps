@@ -24,8 +24,10 @@ class DoctrineListener
 
         // create ODR + debts and income one off when client gets created
         if ($entity instanceof EntityDir\Odr\Odr && !$entity->getId()) {
-            $entityManager->getRepository('AppBundle\Entity\Odr\Odr')->addDebtsToOdrIfMissing($entity);
-            $entityManager->getRepository('AppBundle\Entity\Odr\Odr')->addIncomeOneOffToOdrIfMissing($entity);
+            $odrRepo = $entityManager->getRepository('AppBundle\Entity\Odr\Odr');
+            /* @var $odrRepo EntityDir\Odr\OdrRepository */
+            $odrRepo->addDebtsToOdrIfMissing($entity);
+            $odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
         }
     }
 }

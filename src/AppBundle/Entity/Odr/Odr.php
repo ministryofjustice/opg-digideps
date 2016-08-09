@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Traits\OdrIncomeBenefitTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,15 +14,9 @@ use AppBundle\Entity\Client;
  */
 class Odr
 {
-    const PROPERTY_AND_AFFAIRS = 2;
+    use OdrIncomeBenefitTrait;
 
-    private static $stateBenefitsKeys = [
-        'employment_support_allowance_incapacity_benefit',
-        'income_support_pension_guarantee_credit',
-        'income_related_employment_and_support_allowance',
-        '',
-        // ...11 in total. copy later //TODO
-    ];
+    const PROPERTY_AND_AFFAIRS = 2;
 
     /**
      * @var int
@@ -71,14 +66,6 @@ class Odr
      */
     private $debts;
 
-    /**
-     * @var IncomeOneOff[]
-     *
-     * @JMS\Groups({"odr-income-one-off"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\IncomeOneOff", mappedBy="odr", cascade={"persist"})
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $incomeOneOff;
 
     /**
      * @var bool
@@ -110,15 +97,6 @@ class Odr
     private $noAssetToAdd;
 
     /**
-     * @var array
-     *
-     * @JMS\Groups({"odr-income-state-benefits"})
-     * @JMS\Type("array")
-     * @ORM\Column(name="state_benefits", type="array", nullable=true)
-     */
-    private $stateBenefits;
-
-    /**
      * @var string
      *
      * @JMS\Type("string")
@@ -136,14 +114,6 @@ class Odr
      */
     private $receiveOtherIncome;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-damages"})
-     * @ORM\Column(name="expect_compensation", type="text", nullable=true)
-     */
-    private $expectCompensation;
 
     /**
      * @var bool
@@ -175,7 +145,8 @@ class Odr
         $this->bankAccounts = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->assets = new ArrayCollection();
-        $this->incomeOneOff = new ArrayCollection();
+        $this->stateBenefits = new ArrayCollection();
+        $this->oneOff = new ArrayCollection();
     }
 
     /**
@@ -406,109 +377,6 @@ class Odr
     public function getNoAssetToAdd()
     {
         return $this->noAssetToAdd;
-    }
-
-    /**
-     * @return IncomeOneOff[]
-     */
-    public function getIncomeOneOff()
-    {
-        return $this->incomeOneOff;
-    }
-
-    /**
-     * @param IncomeOneOff[] $incomeOneOff
-     * @return Odr
-     */
-    public function setIncomeOneOff($incomeOneOff)
-    {
-        $this->incomeOneOff = $incomeOneOff;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getStateBenefits()
-    {
-        return $this->stateBenefits;
-    }
-
-    /**
-     * @param array $stateBenefits
-     * @return Odr
-     */
-    public function setStateBenefits($stateBenefits)
-    {
-        $this->stateBenefits = $stateBenefits;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReceiveStatePension()
-    {
-        return $this->receiveStatePension;
-    }
-
-    /**
-     * @param string $receiveStatePension
-     * @return Odr
-     */
-    public function setReceiveStatePension($receiveStatePension)
-    {
-        $this->receiveStatePension = $receiveStatePension;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReceiveOtherIncome()
-    {
-        return $this->receiveOtherIncome;
-    }
-
-    /**
-     * @param string $receiveOtherIncome
-     * @return Odr
-     */
-    public function setReceiveOtherIncome($receiveOtherIncome)
-    {
-        $this->receiveOtherIncome = $receiveOtherIncome;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getExpectCompensation()
-    {
-        return $this->expectCompensation;
-    }
-
-    /**
-     * @param string $expectCompensation
-     * @return Odr
-     */
-    public function setExpectCompensation($expectCompensation)
-    {
-        $this->expectCompensation = $expectCompensation;
-        return $this;
-    }
-
-
-    /**
-     * @param string $typeId
-     *
-     * @return IncomeOneOff
-     */
-    public function getIncomeOneOffByTypeId($typeId)
-    {
-        return $this->getIncomeOneOff()->filter(function (IncomeOneOff $incomeOneOff) use ($typeId) {
-            return $incomeOneOff->getTypeId() == $typeId;
-        })->first();
     }
 
 
