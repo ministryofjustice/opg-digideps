@@ -13,29 +13,29 @@ stateBenefits:
   description: Which benefits does %client% receive?
   hint: Please tick all that apply
   entries:
-    contributionsBasedAllowance:
+    contributions_based_allowance:
       label: Contributions based allowance
-    incomeSupportPensionGuaranteeCredit:
+    income_support_pension_guarantee_credit:
       label: Income Support / Pension Guarantee Credit
-    incomerelatedEmploymentSupportAllowance:
+    income_related_employment_support_allowance:
       label: Income-related Employment and Support Allowance
-    incomebasedJobSeekerAllowance:
+    income_based_job_seeker_allowance:
       label: Income-based Job Seeker’s Allowance
-    housingBenefit:
+    housing_benefit:
       label: Housing benefit
-    universalCredit:
+    universal_credit:
       label: Universal Credit
-    severeDisablementAllowance:
+    severe_disablement_allowance:
       label: Severe Disablement Allowance
-    disabilityLivingAllowance:
+    disability_living_allowance:
       label: Disability Living Allowance
-    attendanceAllowance:
+    attendance_allowance:
       label: Attendance Allowance
-    prsonalIndependencePayment:
+    personal_independence_payment:
       label: Personal Independence Payment
-    workingChildTaxCredits:
+    working_child_tax_credits:
       label: Working and Child tax credits
-    otherBenefits:
+    other_benefits:
       label: Other benefits
       moreInfo: Please tell us more about these benefits
 
@@ -67,15 +67,15 @@ oneOff:
   description: Which types of one-off payments has %client% received?
   hint: Please tick all that apply
   entries:
-    bequestOrInheritance:
+    bequest_or_inheritance:
       label: Bequest or inheritance
-    cashGiftReceived:
+    cash_gift_received:
       label: Cash gift received
     refunds:
       label: Refunds
-    saleAsset:
+    sale_of_an_asset:
       label: Sale of an asset
-    saleInvestment:
+    sale_of_investment:
       label: Sale of investment
-    saleProperty:
+    sale_of_property:
       label: Sale of property
