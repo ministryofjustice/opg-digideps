@@ -42,9 +42,13 @@ class IncomeBenefitsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            echo "<pre>";\Doctrine\Common\Util\Debug::dump($odr->getStateBenefits(), 4);die;
             $this->getRestClient()->put('odr/' . $odrId, $form->getData(), [
-                'deserialise_group' => 'odr-state-',
+                'deserialise_groups' => [
+                    'odr-income-benefit',
+                    'odr-income-pension',
+                    'odr-income-damages',
+                    'odr-one-off',
+                ],
             ]);
 
             return $this->redirect($this->generateUrl('odr-income-benefits', ['odrId' => $odrId]));
