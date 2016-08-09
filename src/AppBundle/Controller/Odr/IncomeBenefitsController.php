@@ -16,6 +16,7 @@ class IncomeBenefitsController extends AbstractController
         'odr',
         'client',
         'client-cot',
+        'odr-income-benefits',
         'odr-income-state-benefits',
         'odr-income-pension',
         'odr-income-damages',
@@ -36,22 +37,6 @@ class IncomeBenefitsController extends AbstractController
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
-
-        // temp to test form
-        $odr->setStateBenefits([
-            new EntityDir\Odr\IncomeBenefit('contributionsBasedAllowance', true),
-            new EntityDir\Odr\IncomeBenefit('housingBenefit', false),
-            new EntityDir\Odr\IncomeBenefit('otherBenefits', true, true, 'santa claus money'),
-        ])
-            ->setReceiveStatePension('no')
-            ->setReceiveOtherIncome('yes')
-            ->setReceiveOtherIncomeDetails('brother sends money')
-            ->setExpectCompensationDamages('yes')
-            ->setOneOff([
-                new EntityDir\Odr\IncomeBenefit('bequestOrInheritance', true),
-                new EntityDir\Odr\IncomeBenefit('cashGiftReceived', false),
-                new EntityDir\Odr\IncomeBenefit('refunds', true),
-            ]);
 
         $form = $this->createForm(new FormDir\Odr\IncomeBenefitsType(), $odr);
         $form->handleRequest($request);
