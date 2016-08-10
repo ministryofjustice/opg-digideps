@@ -26,11 +26,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['transactionsIn', 'basic', 'client', 'balance']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'basic', 'client', 'balance']);
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
 
@@ -61,10 +57,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['transactionsOut', 'basic', 'client', 'balance']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'basic', 'client', 'balance']);
 
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
         $form->handleRequest($request);
@@ -95,14 +88,7 @@ class BankAccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
-        $accounts = $this->getRestClient()->get("/report/{$reportId}/accounts", 'Report\\Account[]');
-        $report->setAccounts($accounts);
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'balance', 'account', 'client', 'transactionsIn', 'transactionsOut']);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
@@ -130,10 +116,7 @@ class BankAccountController extends AbstractController
      */
     public function banksAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'client', 'balance', 'accounts']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'client', 'balance', 'account']);
 
         return [
             'report' => $report,
@@ -154,7 +137,7 @@ class BankAccountController extends AbstractController
      */
     public function upsertAction(Request $request, $reportId, $id = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'account']);
         $type = $id ? 'edit' : 'add';
         $showMigrationWarning = false;
 
@@ -223,7 +206,7 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'account']);
 
         if ($report->hasAaccountWithId($id)) {
             $this->getRestClient()->delete("/account/{$id}");
@@ -253,7 +236,6 @@ class BankAccountController extends AbstractController
     {
         try {
             $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
-
             if ($report->getSubmitted()) {
                 return new JsonResponse([
                     'success' => false,
