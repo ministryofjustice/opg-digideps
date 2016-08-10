@@ -49,7 +49,7 @@ class Report
     private $contacts;
 
     /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"account", "accounts"})
      * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
