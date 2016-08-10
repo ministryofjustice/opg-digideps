@@ -10,33 +10,6 @@ use AppBundle\Entity as EntityDir;
 class AccountController extends RestController
 {
     /**
-     * @deprecated in favour of report/{id}?group=[accounts]
-     * @Route("/report/{id}/accounts")
-     * @Method({"GET"})
-     */
-    public function getAccountsAction(Request $request, $id)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
-
-        $report = $this->findEntityBy('Report', $id);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $accounts = $this->getRepository('Account')->findByReport($report, [
-            'id' => 'DESC',
-        ]);
-
-        if (count($accounts) === 0) {
-            return [];
-        }
-
-        return $accounts;
-    }
-
-    /**
      * @Route("/report/{reportId}/account")
      * @Method({"POST"})
      */

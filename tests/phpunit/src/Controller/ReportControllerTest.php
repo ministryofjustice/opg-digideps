@@ -136,12 +136,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
 
-        // assert accounts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=accounts', [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
-        $this->assertArrayHasKey('accounts', $data);
+
 
         // assert decisions
         $data = $this->assertJsonRequest('GET', $url.'?groups=decisions', [
