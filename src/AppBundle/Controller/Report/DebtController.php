@@ -23,11 +23,7 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
@@ -51,11 +47,7 @@ class DebtController extends AbstractController
      */
     public function debtSaveJsonAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['debts', 'basic']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'basic']);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 

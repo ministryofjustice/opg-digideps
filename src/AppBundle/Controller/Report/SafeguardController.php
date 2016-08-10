@@ -17,12 +17,7 @@ class SafeguardController extends AbstractController
      */
     public function editAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic']); // check the report is owned by this user.
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic']);
         if ($report->getSafeguarding() == null) {
             $safeguarding = new EntityDir\Report\Safeguarding();
         } else {

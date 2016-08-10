@@ -23,11 +23,7 @@ class MoneyTransferController extends AbstractController
      */
     public function index(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'client', 'accounts', 'transfers']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'client', 'accounts', 'transfers']);
         if (($nofAccounts = count($report->getAccounts())) < 2) {
             return $this->render('AppBundle:Report/MoneyTransfer:index_unhappy.html.twig', [
                     'report' => $report,
