@@ -5,23 +5,30 @@ categoryKey: 'damages',
     {% trans_default_domain translationDomain %}
 
     {% block detail %}
-            <legend class="hidden">expectCompensationDamages</legend>
-            {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
-                'fieldSetClass' : 'inline expect-compensation-damages',
-                'legendClass' : 'form-label',
-                'legendText' : 'damages.expectCompensationDamages.label' | trans(clientTrans, translationDomain),
-                'hintText' : 'damages.expectCompensationDamages.hint' | trans(clientTrans, translationDomain),
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+
+        <legend class="hidden">expectCompensationDamages</legend>
+        {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
+            'fieldSetClass' : 'inline expect-compensation-damages',
+            'legendClass' : 'form-label',
+            'legendText' : 'damages.expectCompensationDamages.label' | trans(clientTrans, translationDomain),
+            'hintText' : 'damages.expectCompensationDamages.hint' | trans(clientTrans, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="expect-compensation-damages-details" class="hidden-detail">
+            {{ form_input(form.expectCompensationDamagesDetails, 'damages.expectCompensationDamagesDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
             }) }}
-            <div id="expect-compensation-damages-details" class="hidden-detail">
-                {{ form_input(form.expectCompensationDamagesDetails, 'damages.expectCompensationDamagesDetails', {
-                    'labelClass': 'required',
-                    'labelParameters': { '%client%': odr.client.firstname },
-                    'inputClass': 'expanding'
-                }) }}
-            </div>
+        </div>
+
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save, 'damages.save', { 'buttonClass': '' }) }}
+        </div>
+        {{ form_end(form) }}
     {% endblock %}
 {% endembed %}

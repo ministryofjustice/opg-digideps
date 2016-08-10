@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
@@ -38,26 +39,38 @@ class IncomeBenefitsController extends AbstractController
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
 
-        $form = $this->createForm(new FormDir\Odr\IncomeBenefitsType(), $odr);
-        $form->handleRequest($request);
+        $formStateBenefit = $this->createForm(new FormDir\Odr\IncomeBenefit\StateBenefitType(), $odr);
+        $this->handleForm($formStateBenefit, ['odr-state-benefits'], $odrId);
 
-        if ($form->isValid()) {
-            $this->getRestClient()->put('odr/' . $odrId, $form->getData(), [
-                'deserialise_groups' => [
-                    'odr-income-benefit',
-                    'odr-income-pension',
-                    'odr-income-damages',
-                    'odr-one-off',
-                ],
-            ]);
+        $formPension = $this->createForm(new FormDir\Odr\IncomeBenefit\PensionType(), $odr);
+        $this->handleForm($formPension, ['odr-income-pension'], $odrId);
 
-            return $this->redirect($this->generateUrl('odr-income-benefits', ['odrId' => $odrId]));
-        }
+        $formDamage = $this->createForm(new FormDir\Odr\IncomeBenefit\DamageType(), $odr);
+        $this->handleForm($formDamage, ['odr-income-damages'], $odrId);
+
+        $formOneOff = $this->createForm(new FormDir\Odr\IncomeBenefit\OneOffType(), $odr);
+        $this->handleForm($formOneOff, ['odr-one-off'], $odrId);
 
         return [
             'odr' => $odr,
             'subsection' => 'incomeBenefits',
-            'form' => $form->createView(),
+            'formStateBenefit' => $formStateBenefit->createView(),
+            'formPension' => $formPension->createView(),
+            'formDamage' => $formDamage->createView(),
+            'formOneOff' => $formOneOff->createView(),
         ];
+    }
+
+    private function handleForm(Form $form, array $jmsGroups, $odrId)
+    {
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->getRestClient()->put('odr/' . $odrId, $form->getData(), [
+                'deserialise_groups' => $jmsGroups,
+            ]);
+
+            return $this->redirect($this->generateUrl('odr-income-benefits', ['odrId' => $odrId]));
+        }
     }
 }

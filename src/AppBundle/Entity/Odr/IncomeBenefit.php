@@ -7,13 +7,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"odr-state-benefits"})
+ * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"odr-state-benefits", "odr-one-off"})
  */
 class IncomeBenefit
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-benefit"})
+     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
      */
     private $typeId;
 
@@ -21,7 +21,7 @@ class IncomeBenefit
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"odr-income-benefit"})
+     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
      */
     private $present;
 
@@ -33,7 +33,7 @@ class IncomeBenefit
 
     /**
      * @var string
-     * @JMS\Groups({"odr-income-benefit"})
+     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
      * @JMS\Type("string")
      */
     private $moreDetails;

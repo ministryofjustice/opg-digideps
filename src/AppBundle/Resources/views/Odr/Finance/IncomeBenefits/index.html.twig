@@ -18,33 +18,33 @@
         <p class="page-section-description">
             {{ 'page.pageDescription' | trans(clientTrans, translationDomain) }}</p>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table' }}) }}
-        <div class="sections">
-            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
-            categoryKey: 'stateBenefits',
-            formElements: form.stateBenefits,
-            } %}
+        <div class="expanding-transaction-table">
+            <div class="sections">
+                {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
+                categoryKey: 'stateBenefits',
+                form: formStateBenefit,
+                formElements: formStateBenefit.stateBenefits,
+                } %}
 
-            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_pensions_other_income.html.twig' with {
-            categoryKey: 'pensionsOtherIncome',
-            } %}
+                {% include 'AppBundle:Odr/Finance/IncomeBenefits:_pensions_other_income.html.twig' with {
+                categoryKey: 'pensionsOtherIncome',
+                form: formPension
+                } %}
 
-            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_damages.html.twig' with {
-            categoryKey: 'pensionsOtherIncome',
-            } %}
+                {% include 'AppBundle:Odr/Finance/IncomeBenefits:_damages.html.twig' with {
+                categoryKey: 'damage',
+                form: formDamage
+                } %}
 
-            {# oneOff #}
-            {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
-            categoryKey: 'oneOff',
-            formElements: form.oneOff,
-            } %}
+                {% include 'AppBundle:Odr/Finance/IncomeBenefits:_checkboxes.html.twig' with {
+                categoryKey: 'oneOff',
+                formElements: formOneOff.oneOff,
+                form: formOneOff,
+                sectionClass: 'no-border-bottom',
+                } %}
+            </div>
         </div>
 
-        <div class="save-bar button-bar">
-            {{ form_submit(form.save,'form.save', { 'buttonClass': '' }) }}
-        </div>
-
-        {{ form_end(form) }}
 
         <script>
             $(document).ready(function () {
@@ -66,12 +66,12 @@
                 GOVUK.accountTransactionExpander();
 
                 new opg.RadioHide({
-                    radio:'.expect-compensation-damages input[type=radio]',
+                    radio: '.expect-compensation-damages input[type=radio]',
                     content: '#expect-compensation-damages-details',
                     showWithValue: 'yes'
                 });
                 new opg.RadioHide({
-                    radio:'.receive-other-income input[type=radio]',
+                    radio: '.receive-other-income input[type=radio]',
                     content: '#receive-other-income-details',
                     showWithValue: 'yes'
                 });

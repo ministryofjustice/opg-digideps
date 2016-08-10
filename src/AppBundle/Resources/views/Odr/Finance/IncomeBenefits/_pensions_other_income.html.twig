@@ -5,6 +5,8 @@ categoryKey: 'pensionsOtherIncome',
     {% trans_default_domain translationDomain %}
 
     {% block detail %}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+
         {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
             'fieldSetClass' : 'inline',
             'legendClass' : 'form-label',
@@ -32,6 +34,11 @@ categoryKey: 'pensionsOtherIncome',
                 'inputClass': 'expanding'
             }) }}
         </div>
-        </fieldset>
+
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save, 'pensionsOtherIncome.save', { 'buttonClass': '' }) }}
+        </div>
+        {{ form_end(form) }}
+
     {% endblock %}
 {% endembed %}

@@ -11,6 +11,9 @@ categoryKey: categoryKey,
         <p class="form-hint ">
             {{ (categoryKey ~ '.hint') | trans(clientTrans, translationDomain)}}
         </p>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+
         {% for sbSingleForm in formElements %}
             <fieldset class="">
                 {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
@@ -30,5 +33,9 @@ categoryKey: categoryKey,
 
             </fieldset>
         {% endfor %}
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save, categoryKey ~ '.save', { 'buttonClass': '' }) }}
+        </div>
+        {{ form_end(form) }}
     {% endblock %}
 {% endembed %}

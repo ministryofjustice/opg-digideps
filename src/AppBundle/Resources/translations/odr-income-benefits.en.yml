@@ -38,6 +38,8 @@ stateBenefits:
     other_benefits:
       label: Other benefits
       moreInfo: Please tell us more about these benefits
+  save:
+    label: Save state benefits
 
 pensionsOtherIncome:
   label: Pensions and other income
@@ -49,6 +51,8 @@ pensionsOtherIncome:
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
       label: Tell us more
+  save:
+    label: Save pensions and other income
 
 damages:
   label: Damages
@@ -57,10 +61,8 @@ damages:
     hint: ""
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
-
-form:
   save:
-   label: Save
+      label: Save Damages
 
 oneOff:
   label: One-off
@@ -79,3 +81,5 @@ oneOff:
       label: Sale of investment
     sale_of_property:
       label: Sale of property
+  save:
+    label: Save One-off
