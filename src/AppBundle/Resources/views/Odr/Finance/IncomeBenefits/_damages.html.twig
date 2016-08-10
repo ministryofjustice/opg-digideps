@@ -5,8 +5,6 @@ categoryKey: 'damages',
     {% trans_default_domain translationDomain %}
 
     {% block detail %}
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
-
         <legend class="hidden">expectCompensationDamages</legend>
         {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
             'fieldSetClass' : 'inline expect-compensation-damages',
@@ -25,10 +23,5 @@ categoryKey: 'damages',
                 'inputClass': 'expanding'
             }) }}
         </div>
-
-        <div class="save-bar button-bar">
-            {{ form_submit(form.save, 'damages.save', { 'buttonClass': '' }) }}
-        </div>
-        {{ form_end(form) }}
     {% endblock %}
 {% endembed %}

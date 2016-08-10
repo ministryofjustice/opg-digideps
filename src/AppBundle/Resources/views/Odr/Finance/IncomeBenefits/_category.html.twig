@@ -6,7 +6,13 @@
         <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
     </div>
     <div class="detail">
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+        {{ form_errors_list(form) }}
         {% block detail %}
         {% endblock %}
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save, categoryKey ~ '.save', { 'buttonClass': '' }) }}
+        </div>
+        {{ form_end(form) }}
     </div>
 </div>
