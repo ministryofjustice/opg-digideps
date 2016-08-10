@@ -62,7 +62,7 @@ damages:
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
   save:
-      label: Save Damages
+      label: Save damages
 
 oneOff:
   label: One-off
@@ -82,4 +82,4 @@ oneOff:
     sale_of_property:
       label: Sale of property
   save:
-    label: Save One-off
+    label: Save one-off
