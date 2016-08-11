@@ -212,7 +212,7 @@ class Report
      * @var string
      *              
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","submit"})
+     * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -221,7 +221,7 @@ class Report
      * @var string
      *              
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","submit"})
+     * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
