@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
 class Report
 {
