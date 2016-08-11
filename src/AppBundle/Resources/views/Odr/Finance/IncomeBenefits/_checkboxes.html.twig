@@ -15,10 +15,10 @@ categoryKey: categoryKey,
         {% for sbSingleForm in formElements %}
             <fieldset class="">
                 {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
-                {{ form_input(sbSingleForm.present, '', {
+                {{ form_checkbox(sbSingleForm.present, '', {
                     'inputClass' : '',
                     'labelText': labelText,
-                    'formGroupClass': ''
+                    'formGroupClass': 'form-group-compound'
                 }) }}
                 {{ form_row(sbSingleForm.typeId) }} {#hidden#}
                 {% if sbSingleForm.moreDetails is defined %}
