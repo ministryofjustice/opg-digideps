@@ -44,7 +44,7 @@ class Role implements RoleInterface
     private $id;
 
     /**
-     * @JMS\Groups({ "audit_log", "role"})
+     * @JMS\Groups({"role", "audit_log"})
      * @ORM\Column(name="name", type="string", length=60 )
      */
     private $name;
