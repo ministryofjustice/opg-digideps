@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Reports.
  *
- * @JMS\XmlRoot("report")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")

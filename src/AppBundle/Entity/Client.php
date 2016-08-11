@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Client.
  * 
- * @JMS\XmlRoot("client")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="client")
  * @ORM\Entity
