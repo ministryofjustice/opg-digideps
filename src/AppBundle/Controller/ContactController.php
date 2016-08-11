@@ -21,7 +21,8 @@ class ContactController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['contact'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $contact = $this->findEntityBy('Contact', $id);

@@ -148,7 +148,7 @@ class UserController extends RestController
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['basic'];
+            $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins to access any user, otherwise the user can only see himself
