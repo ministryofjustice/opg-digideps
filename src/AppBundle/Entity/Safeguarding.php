@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Reports.
  *
- * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="safeguarding")
  * @ORM\Entity
  */

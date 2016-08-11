@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="mental_capacity")
  * @ORM\Entity
  */
