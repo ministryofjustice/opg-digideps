@@ -15,7 +15,7 @@ class MoneyTransfer
 {
     /**
      * @var int
-     * @JMS\Groups({"money-transfer", "transfers", "basic"})
+     * @JMS\Groups({"money-transfer", "transfers"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,14 +24,14 @@ class MoneyTransfer
 
     /**
      * @var string
-     * @JMS\Groups({"money-transfer", "transfers", "basic"})
+     * @JMS\Groups({"money-transfer", "transfers"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;
 
     /**
      * @var Account
-     * @JMS\Groups({"transfers", "basic"})
+     * @JMS\Groups({"transfers"})
      * @JMS\SerializedName("accountFrom")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transfersFrom")
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
@@ -40,7 +40,7 @@ class MoneyTransfer
 
     /**
      * @var Account
-     * @JMS\Groups({"transfers", "basic"})
+     * @JMS\Groups({"transfers"})
      * @JMS\SerializedName("accountTo")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transfersTo")
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
