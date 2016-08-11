@@ -22,7 +22,7 @@ class DecisionController extends AbstractController
      */
     public function listAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'decisions']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'decision']);
 
         $decisions = $report->getDecisions();
 
@@ -106,7 +106,7 @@ class DecisionController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['decisions']);
+        $report = $this->getReport($reportId, ['decision']);
 
         foreach ($report->getDecisions() as $decision) {
             if ($decision->getId() == $id) {
