@@ -39,17 +39,21 @@ class AbstractController extends Controller
      * 
      * @return Report
      */
-    public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
+    public function getReport($reportId, array $groups = [])
     {
+        $groups[] = 'report';
+        $groups = array_unique($groups);
+        sort($groups); // helps HTTP caching
         return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', ['query' => ['groups' => $groups]]);
     }
 
     /**
      * @param Client $client
-     * 
+     * @param array $groups
+     *
      * @return Report[]
      */
-    public function getReportsIndexedById(Client $client, $groups)
+    public function getReportsIndexedById(Client $client, $groups = [])
     {
         $reportIds = $client->getReports();
 
@@ -72,7 +76,7 @@ class AbstractController extends Controller
      *
      * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, array $groups)
+    protected function getReportIfReportNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {

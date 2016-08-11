@@ -23,7 +23,7 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
@@ -47,7 +47,7 @@ class DebtController extends AbstractController
      */
     public function debtSaveJsonAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts']);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 

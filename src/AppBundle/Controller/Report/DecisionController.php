@@ -22,7 +22,7 @@ class DecisionController extends AbstractController
      */
     public function listAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'decisions']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'decisions']);
 
         $decisions = $report->getDecisions();
 
@@ -42,7 +42,7 @@ class DecisionController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
 
         $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
@@ -72,7 +72,7 @@ class DecisionController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
 
         $decision = $this->getRestClient()->get('report/decision/'.$id, 'Report\\Decision');
 
@@ -106,7 +106,7 @@ class DecisionController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic', 'decisions']);
+        $report = $this->getReport($reportId, ['decisions']);
 
         foreach ($report->getDecisions() as $decision) {
             if ($decision->getId() == $id) {
@@ -123,7 +123,7 @@ class DecisionController extends AbstractController
     public function deleteReasonAction($reportId)
     {
         //just do some checks to make sure user is allowed to update this report
-        $report = $this->getReport($reportId, ['basic', 'transactions']);
+        $report = $this->getReport($reportId, ['transactions']);
 
         if (!empty($report)) {
             $report->setReasonForNoDecisions(null);
@@ -141,7 +141,7 @@ class DecisionController extends AbstractController
      */
     public function noneReasonAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
         $form = $this->createForm(new FormDir\Report\ReasonForNoDecisionType(), $report);
         $form->handleRequest($request);
 
@@ -168,7 +168,7 @@ class DecisionController extends AbstractController
     public function _noneReasonFormAction(Request $request, $reportId)
     {
         $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId' => $reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
         $form = $this->createForm(new FormDir\Report\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 

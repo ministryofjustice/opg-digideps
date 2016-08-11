@@ -26,7 +26,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'basic', 'client', 'balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'client', 'balance']);
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
 
@@ -57,7 +57,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'basic', 'client', 'balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'client', 'balance']);
 
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
         $form->handleRequest($request);
@@ -88,7 +88,7 @@ class BankAccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'balance', 'account', 'client', 'transactionsIn', 'transactionsOut']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'client', 'transactionsIn', 'transactionsOut']);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
@@ -116,7 +116,7 @@ class BankAccountController extends AbstractController
      */
     public function banksAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'client', 'balance', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['client', 'balance', 'account']);
 
         return [
             'report' => $report,
@@ -137,7 +137,7 @@ class BankAccountController extends AbstractController
      */
     public function upsertAction(Request $request, $reportId, $id = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
         $type = $id ? 'edit' : 'add';
         $showMigrationWarning = false;
 
@@ -206,7 +206,7 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
 
         if ($report->hasAaccountWithId($id)) {
             $this->getRestClient()->delete("/account/{$id}");
@@ -235,7 +235,7 @@ class BankAccountController extends AbstractController
     public function moneySaveJson(Request $request, $reportId, $type)
     {
         try {
-            $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
+            $report = $this->getReport($reportId, [$type, 'balance']);
             if ($report->getSubmitted()) {
                 return new JsonResponse([
                     'success' => false,

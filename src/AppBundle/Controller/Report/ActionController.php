@@ -17,7 +17,7 @@ class ActionController extends AbstractController
      */
     public function editAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'action']); // check the report is owned by this user.
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']); // check the report is owned by this user.
         if ($report->getAction() == null) {
             $action = new EntityDir\Report\Action();
         } else {

@@ -17,7 +17,7 @@ class SafeguardController extends AbstractController
      */
     public function editAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
         if ($report->getSafeguarding() == null) {
             $safeguarding = new EntityDir\Report\Safeguarding();
         } else {

@@ -22,7 +22,7 @@ class ContactController extends AbstractController
      */
     public function listAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'contacts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'contacts']);
         $contacts = $report->getContacts();
 
         if (empty($contacts) && $report->isDue() == false) {
@@ -41,7 +41,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
 
         $contact = new EntityDir\Report\Contact();
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
@@ -71,7 +71,7 @@ class ContactController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
 
         $contact = $this->getRestClient()->get('report/contact/'.$id, 'Report\\Contact');
         $contact->setReport($report);
@@ -102,7 +102,7 @@ class ContactController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic', 'contacts']);
+        $report = $this->getReport($reportId, ['contacts']);
 
         foreach ($report->getContacts() as $contact) {
             if ($contact->getId() == $id) {
@@ -119,7 +119,7 @@ class ContactController extends AbstractController
     public function deleteReasonAction($reportId)
     {
         //just do some checks to make sure user is allowed to update this report
-        $report = $this->getReport($reportId, ['basic', 'transactions']);
+        $report = $this->getReport($reportId, ['transactions']);
 
         if (!empty($report)) {
             $report->setReasonForNoContacts(null);
@@ -137,7 +137,7 @@ class ContactController extends AbstractController
      */
     public function noneReasonAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
 
         $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report);
         $form->handleRequest($request);
@@ -165,7 +165,7 @@ class ContactController extends AbstractController
     public function _noneReasonFormAction(Request $request, $reportId)
     {
         $actionUrl = $this->generateUrl('edit_contacts_nonereason', ['reportId' => $reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client']);
         $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 

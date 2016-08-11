@@ -23,7 +23,6 @@ class ReportController extends AbstractController
         'asset',
         'debts',
         'balance',
-        'basic',
         'client',
         'contacts',
         'debts',
@@ -46,7 +45,7 @@ class ReportController extends AbstractController
 
         $client = !empty($clients) ? $clients[0] : null;
 
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
+        $reports = $client ? $this->getReportsIndexedById($client, []) : [];
         $reports = array_filter($reports, function ($r) use ($cot) {
             return $r->getCourtOrderTypeId() == $cot;
         });
@@ -57,7 +56,7 @@ class ReportController extends AbstractController
 
         // edit report dates
         if ($reportId) {
-            $report = $this->getReport($reportId, ['transactions', 'basic']);
+            $report = $this->getReport($reportId, ['transactions']);
             $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
             ]);
@@ -76,7 +75,7 @@ class ReportController extends AbstractController
             if ($report->getReportSeen() === false) {
                 $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
 
-                $reportObj = $this->getReport($report->getId(), ['transactions', 'basic']);
+                $reportObj = $this->getReport($report->getId(), ['transactions']);
                 //update report to say message has been seen
                 $reportObj->setReportSeen(true);
                 $this->getRestClient()->put('report/'.$report->getId(), $reportObj);
@@ -111,11 +110,11 @@ class ReportController extends AbstractController
     {
         $request = $this->getRequest();
 
-        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['basic']]]);
+        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['client']]]);
 
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
 
-        $existingReports = $this->getReportsIndexedById($client, ['basic']);
+        $existingReports = $this->getReportsIndexedById($client);
 
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report\Report) {
             $report = $firstReport;

@@ -20,7 +20,7 @@ class MentalCapacityController extends AbstractController
      */
     public function editAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'mental-capacity']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'mental-capacity']);
 
         $mc = $report->getMentalCapacity();
         if ($mc == null) {
