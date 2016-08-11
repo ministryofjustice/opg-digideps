@@ -62,7 +62,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -88,7 +88,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -97,7 +97,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
     private $registrationToken;
@@ -105,7 +105,7 @@ class User implements UserInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="email_confirmed", type="boolean", nullable=true)
      */
     private $emailConfirmed;
@@ -113,7 +113,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * 
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
@@ -135,7 +135,7 @@ class User implements UserInterface
      * 
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      */
     private $gaTrackingId;
 
@@ -143,7 +143,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
@@ -152,7 +152,7 @@ class User implements UserInterface
      * @var string
      * 
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
@@ -161,7 +161,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
     private $address3;
@@ -170,7 +170,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
@@ -179,7 +179,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
     private $addressCountry;
@@ -188,7 +188,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;
@@ -197,7 +197,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
     private $phoneAlternative;
@@ -205,7 +205,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user", "basic"})
      * 
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */

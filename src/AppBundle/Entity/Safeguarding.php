@@ -18,7 +18,7 @@ class Safeguarding
     /**
      * @var int
      *
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -37,7 +37,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
     private $doYouLiveWithClient;
@@ -53,7 +53,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
     private $howOftenDoYouContactClient;
@@ -62,7 +62,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
     private $doesClientReceivePaidCare;
@@ -71,7 +71,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column(name="how_is_care_funded", length=255, type="string", nullable=true)
      */
     private $howIsCareFunded;
@@ -80,7 +80,7 @@ class Safeguarding
      * @var type
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column( name="who_is_doing_the_caring", type="text", nullable=true)
      */
     private $whoIsDoingTheCaring;
@@ -89,7 +89,7 @@ class Safeguarding
      * @var type
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
     private $doesClientHaveACarePlan;
@@ -98,7 +98,7 @@ class Safeguarding
      * @var date
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"safeguarding", "transactions","basic"})
      * @ORM\Column(name="when_was_care_plan_last_reviewed", type="date", nullable=true, options={ "default": null })
      */
     private $whenWasCarePlanLastReviewed;

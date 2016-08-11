@@ -15,7 +15,7 @@ class MoneyTransfer
 {
     /**
      * @var int
-     * @JMS\Groups({"transfers", "basic"})
+     * @JMS\Groups({"money-transfer", "transfers", "basic"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,7 +24,7 @@ class MoneyTransfer
 
     /**
      * @var string
-     * @JMS\Groups({"transfers", "basic"})
+     * @JMS\Groups({"money-transfer", "transfers", "basic"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;

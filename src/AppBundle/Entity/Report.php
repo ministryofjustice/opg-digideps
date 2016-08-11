@@ -22,7 +22,7 @@ class Report
     /**
      * @var int
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -130,7 +130,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -139,7 +139,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -149,7 +149,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -159,7 +159,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -178,7 +178,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
@@ -203,7 +203,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
@@ -212,7 +212,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
@@ -220,7 +220,7 @@ class Report
     /**
      * @var bool
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -228,7 +228,7 @@ class Report
 
     /**
      * @var bool
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="reviewed", type="boolean", nullable=true)
      */
@@ -236,7 +236,7 @@ class Report
 
     /**
      * @var bool
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
@@ -255,7 +255,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
     private $agreedBehalfDeputy;
@@ -264,7 +264,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report", "basic"})
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
