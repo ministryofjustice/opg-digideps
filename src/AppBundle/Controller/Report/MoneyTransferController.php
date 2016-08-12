@@ -23,7 +23,7 @@ class MoneyTransferController extends AbstractController
      */
     public function index(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['basic', 'client', 'accounts', 'transfers']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
         if (($nofAccounts = count($report->getAccounts())) < 2) {
             return $this->render('AppBundle:Report/MoneyTransfer:index_unhappy.html.twig', [
                     'report' => $report,
@@ -67,7 +67,7 @@ class MoneyTransferController extends AbstractController
      */
     public function _noTransfersPartialAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
 
         $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);
@@ -151,7 +151,7 @@ class MoneyTransferController extends AbstractController
      */
     public function noTransfersJson(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
 
         $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);

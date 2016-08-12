@@ -163,7 +163,7 @@ class UserController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->getRestClient()->put('user/'.$user->getId(), $form->getData(), [
-                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full',
+                    $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
 
                 if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
@@ -278,7 +278,7 @@ class UserController extends AbstractController
              * the api
              */
             $this->getRestClient()->put('user/'.$user->getId(), $formData, [
-                'deserialise_group' => 'user_details_full',
+                'user_details_full'
             ]);
 
             return $this->redirect($this->generateUrl('user_show'));

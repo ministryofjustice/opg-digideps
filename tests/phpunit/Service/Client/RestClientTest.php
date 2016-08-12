@@ -241,6 +241,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $responseData = ['b'];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
+        $jmsGroups = ['j1', 'j2'];
 
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
@@ -254,9 +255,10 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
                 'headers' => ['AuthToken' => $this->sessionToken],
+                'query' => ['groups'=>$jmsGroups]
             ])->andReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->get($endpointUrl, $responseType));
+        $this->assertEquals($responseData, $this->object->get($endpointUrl, $responseType, $jmsGroups));
     }
 
     public function testGetEntity()

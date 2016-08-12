@@ -15,6 +15,7 @@ class Contact
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"contact"})
      *
      * @var int
      */
@@ -23,8 +24,10 @@ class Contact
     /**
      * @Assert\NotBlank( message="contact.name.notBlank" )
      * @Assert\Length( min=2, minMessage="contact.name.minMessage", max=255, maxMessage="contact.name.maxMessage")
+     *
      * @JMS\SerializedName("contact_name")
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
      *
      * @var string
      */
@@ -32,12 +35,16 @@ class Contact
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $address;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $address2;
@@ -50,12 +57,15 @@ class Contact
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\Length( max=10, maxMessage="contact.postcode.maxMessage")
      */
     private $postcode;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
      */
     private $country;
 
@@ -63,6 +73,8 @@ class Contact
      * Reason for contact.
      * 
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\notBlank( message="contact.explanation.notBlank" )
      * @Assert\Length( min=6, minMessage="contact.explanation.length")
      */
@@ -72,6 +84,8 @@ class Contact
      * Relationship to the client.
      * 
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\NotBlank( message="contact.relationship.notBlank" )
      * @Assert\Length( min = 2, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
      */
@@ -79,6 +93,8 @@ class Contact
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
+     *
      * @Assert\Length( max=20, maxMessage="contact.phone.maxMessage")
      */
     private $phone;

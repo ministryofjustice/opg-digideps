@@ -29,7 +29,7 @@ class RestClient
      * 
      * @var array 
      */
-    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group'];
+    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
     
     /**
      * @var ClientInterface
@@ -168,32 +168,77 @@ class RestClient
     {
         return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [], false);
     }
-    
+
+
+    /**
+     * @param string $endpoint             e.g. /user
+     * @param string $expectedResponseType Entity class to deserialise response into
+     *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed)
+     *                                     or "Account[]" to deseialise into an array of entities
+     *
+     * @return mixed $expectedResponseType type
+     */
+    public function get($endpoint, $expectedResponseType, $jmsGroups = [])
+    {
+        $options = [];
+        if ($jmsGroups) {
+            $options['query']['groups'] = $jmsGroups;
+        }
+
+        return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
+                'addAuthToken' => true
+            ] + $options);
+    }
+
 
     /**
      * @param string              $endpoint e.g. /user
      * @param string|object|array $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $options  keys: deserialise_group
+     * @param array               $options  keys: deserialise_groups
      * 
      * @return string response body
      */
-    public function put($endpoint, $mixed, array $options = [], $expectedResponseType = 'array')
+    public function put($endpoint, $mixed, array $jmsGroups = [])
     {
-        return $this->apiCall('put', $endpoint, $mixed, $expectedResponseType, $options);
+        $options = [];
+        if ($jmsGroups) {
+            $options['query']['groups'] = $jmsGroups;
+        }
+
+        return $this->apiCall('put', $endpoint, $mixed, 'array', $options);
     }
 
     /**
      * @param string        $endpoint e.g. /user
      * @param string|object $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array         $options  keys: deserialise_group
+     * @param array         $options  keys: deserialise_groups
      * 
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $options = [], $expectedResponseType = 'array')
+    public function post($endpoint, $mixed, array $jmsGroups = [])
     {
-        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
+        $options = [];
+        if ($jmsGroups) {
+            $options['query']['groups'] = $jmsGroups;
+        }
+
+        return $this->apiCall('post', $endpoint, $mixed, 'array', $options);
     }
-    
+
+
+    /**
+     * @param string $endpoint e.g. /user
+     *
+     * @return string response body
+     */
+    public function delete($endpoint)
+    {
+        return $this->apiCall('delete', $endpoint, null, 'array', [
+            'addAuthToken' => true
+        ]);
+    }
+
+
     /**
      * Call POST /selfregister passing client secret.
      * 
@@ -247,35 +292,6 @@ class RestClient
         }
     }
     
-
-    /**
-     * @param string $endpoint             e.g. /user
-     * @param string $expectedResponseType Entity class to deserialise response into 
-     *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed) 
-     *                                     or "Account[]" to deseialise into an array of entities
-     *
-     * @return mixed $expectedResponseType type
-     */
-    public function get($endpoint, $expectedResponseType, $options = [])
-    {
-        return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
-            'addAuthToken' => true
-            ] + $options);
-    }
-
-    
-    
-    /**
-     * @param string $endpoint e.g. /user
-     * 
-     * @return string response body
-     */
-    public function delete($endpoint)
-    {
-        return $this->apiCall('delete', $endpoint, null, 'array', [
-            'addAuthToken' => true
-        ]);
-    }
 
     
     /**
@@ -411,8 +427,8 @@ class RestClient
             $context = \JMS\Serializer\SerializationContext::create()
                 ->setSerializeNull(true);
 
-            if (!empty($options['deserialise_group'])) {
-                $context->setGroups([$options['deserialise_group']]);
+            if (!empty($options['deserialise_groups'])) {
+                $context->setGroups($options['deserialise_groups']);
             }
 
             return $this->serialiser->serialize($mixed, 'json', $context);

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Report\Report;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -33,7 +34,6 @@ class Client
     private $firstname;
 
     /**
-     * @JMS\Accessor(setter="addUsers")
      * @JMS\Type("array")
      *
      * @var array
@@ -41,7 +41,7 @@ class Client
     private $users;
 
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\Report\Report>")
      *
      * @var array
      */
@@ -171,7 +171,7 @@ class Client
         return $this->users;
     }
 
-    public function addUsers($users)
+    public function setUsers($users)
     {
         $this->users = $users;
 
@@ -191,6 +191,22 @@ class Client
     public function getReports()
     {
         return $this->reports;
+    }
+
+    /**
+     * @param int $id report ID
+     *
+     * @return Report|null
+     */
+    public function getReportById($id)
+    {
+        foreach($this->reports as $report) {
+            if ($report->getId() == $id) {
+                return $report;
+            }
+        }
+
+        return null;
     }
 
     /**

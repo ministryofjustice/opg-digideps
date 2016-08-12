@@ -212,7 +212,7 @@ class Report
      * @var string
      *              
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","submit"})
+     * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -221,7 +221,7 @@ class Report
      * @var string
      *              
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","submit"})
+     * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
@@ -301,7 +301,7 @@ class Report
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Debt>")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var ArrayCollection
      */
@@ -309,7 +309,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
      *
@@ -319,7 +319,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var decimal
      */
@@ -1255,7 +1255,7 @@ class Report
      * 
      * @return bool
      */
-    public function hasAaccountWithId($id)
+    public function hasAccountWithId($id)
     {
         foreach ($this->getAccounts() as $asset) {
             if ($asset->getId() == $id) {

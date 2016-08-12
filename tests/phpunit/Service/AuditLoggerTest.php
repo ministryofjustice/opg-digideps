@@ -60,7 +60,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
             return true;
         };
         $this->user->shouldReceive('getId')->andReturn(1);
-        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
+        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['audit_log_save']);
 
         $this->object->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
     }
@@ -90,7 +90,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getId')->andReturn(2)
             ->getMock();
         $this->user->shouldReceive('getId')->andReturn(1);
-        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
+        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['audit_log_save']);
 
         $this->object->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $userEdited);
     }

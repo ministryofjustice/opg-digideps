@@ -9,12 +9,14 @@ trait HasReportTrait
 {
     /**
      * @JMS\Type("AppBundle\Entity\Report\Report")
+     * @JMS\Groups({"report-object"})
      */
     private $report;
 
     /**
      * @JMS\VirtualProperty
-     * 
+     * @JMS\Groups({"report-id"})
+     *
      * @return int
      */
     public function getReportId()
