@@ -15,6 +15,7 @@ class Decision
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"decision"})
      *
      * @var int
      */
@@ -22,6 +23,8 @@ class Decision
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"decision"})
+     *
      * @Assert\NotBlank( message="decision.description.notBlank" )
      * @Assert\Length( min=2, minMessage="decision.description.length")
      *
@@ -31,7 +34,9 @@ class Decision
 
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
+     *
      * @JMS\Type("boolean")
+     * @JMS\Groups({"decision"})
      *
      * @var bool
      */
@@ -40,7 +45,9 @@ class Decision
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank")
      * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length")
+     *
      * @JMS\Type("string")
+     * @JMS\Groups({"decision"})
      *
      * @var bool
      */

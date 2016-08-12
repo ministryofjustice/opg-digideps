@@ -64,7 +64,7 @@ class ReportController extends AbstractController
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
                 $this->getRestClient()->put('report/'.$reportId, $report, [
-                     'deserialise_group' => 'startEndDates',
+                     'startEndDates'
                 ]);
 
                 return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
@@ -190,7 +190,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // add furher info
             $this->getRestClient()->put('report/'.$report->getId(), $report, [
-                'deserialise_group' => 'furtherInformation',
+                'furtherInformation'
             ]);
 
             // next or save: redirect to report declration
@@ -238,7 +238,7 @@ class ReportController extends AbstractController
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
-                'deserialise_group' => 'submit',
+                'submit'
             ]);
             
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());

@@ -32,7 +32,7 @@ class BankAccountController extends AbstractController
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'transactionsIn',
+                'transactionsIn',
             ]);
 
             return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
@@ -64,7 +64,7 @@ class BankAccountController extends AbstractController
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'transactionsOut',
+                'transactionsOut',
             ]);
 
             return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
@@ -95,7 +95,7 @@ class BankAccountController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, [
-                'deserialise_group' => 'balance_mismatch_explanation',
+                'balance_mismatch_explanation',
             ]);
         }
 
@@ -166,11 +166,11 @@ class BankAccountController extends AbstractController
             }
             if ($type === 'edit') {
                 $this->getRestClient()->put('/account/'.$id, $account, [
-                    'deserialise_group' => 'account',
+                    'account',
                 ]);
             } else {
                 $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, [
-                    'deserialise_group' => 'account',
+                    'account',
                 ]);
                 $id = $addedAccount['id'];
             }
@@ -263,7 +263,7 @@ class BankAccountController extends AbstractController
             }
 
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => $type,
+                $type
             ]);
 
             return new JsonResponse(['success' => true]);

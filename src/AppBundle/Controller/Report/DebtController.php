@@ -29,7 +29,7 @@ class DebtController extends AbstractController
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
-                'deserialise_group' => 'debt',
+                'debt',
             ]);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
@@ -53,7 +53,7 @@ class DebtController extends AbstractController
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
-                'deserialise_group' => 'debt',
+                'debt',
             ]);
 
             return JsonResponse(['success' => true]);
