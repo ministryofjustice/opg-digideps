@@ -63,15 +63,15 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
     public function testLoadUserByUsername()
     {
         $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
-        $this->restClient->shouldReceive('get')->with('user/1', 'User')->andReturn('user');
+        $this->restClient->shouldReceive('get')->with('user/1', 'User', ['user', 'role', 'user-login'])->andReturn('user');
 
         $this->assertEquals('user', $this->object->LoadUserByUsername(1));
     }
 
     public function testSupportsClass()
     {
-        $this->assertTrue($this->object->supportsClass("AppBundle\Entity\User"));
-        $this->assertFalse($this->object->supportsClass("AppBundle\Entity\Report"));
+        $this->assertTrue($this->object->supportsClass('AppBundle\Entity\User'));
+        $this->assertFalse($this->object->supportsClass('AppBundle\Entity\Report'));
     }
 
     public function tearDown()
