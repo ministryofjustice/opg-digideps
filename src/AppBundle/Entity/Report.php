@@ -1055,7 +1055,7 @@ class Report
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\SerializedName("debts_total_amount")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @return float
      */

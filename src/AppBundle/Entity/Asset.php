@@ -51,8 +51,8 @@ abstract class Asset
     private $lastedit;
 
     /**
-     * @var int
-     * @JMS\Exclude
+     * @var Report
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="assets")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */

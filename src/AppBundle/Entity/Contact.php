@@ -114,10 +114,8 @@ class Contact
     private $lastedit;
 
     /**
-     * @var int
-     * @JMS\Groups({"report"})
-     * @JMS\Type("AppBundle\Entity\Report")
-     * 
+     * @var Report
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="contacts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */

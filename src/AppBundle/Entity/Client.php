@@ -18,7 +18,7 @@ class Client
      * @var int
      * 
      * @JMS\Type("integer")
-     * @JMS\Groups({"client", "related"})
+     * @JMS\Groups({"client"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -39,14 +39,7 @@ class Client
     private $users;
 
     /**
-     * @JMS\Groups({"related"})
-     * @JMS\Accessor(getter="getUsers", setter="addUser")
-     * @JMS\Type("array<AppBundle\Entity\User>")
-     */
-    private $userObjs;
-
-    /**
-     * @JMS\Groups({ "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
@@ -54,7 +47,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -64,7 +57,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      * 
@@ -74,7 +67,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -84,7 +77,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      *
      * @var string
@@ -95,7 +88,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -105,7 +98,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -115,7 +108,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -125,7 +118,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -135,7 +128,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -145,7 +138,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -155,7 +148,7 @@ class Client
 
     /**
      * @JMS\Type("array")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
      * @var array
@@ -164,7 +157,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"client","related"})
+     * @JMS\Groups({"client"})
      *
      * @var \Date
      *
