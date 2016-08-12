@@ -191,7 +191,7 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['user', 'role', 'client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -237,7 +237,7 @@ class UserController extends AbstractController
      **/
     public function showAction()
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['user', 'role', 'client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -256,7 +256,7 @@ class UserController extends AbstractController
      **/
     public function editAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['user', 'client', 'role']);
 
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
