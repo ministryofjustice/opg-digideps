@@ -220,7 +220,8 @@ class UserController extends AbstractController
      */
     public function passwordEditDoneAction(Request $request)
     {
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
         return [

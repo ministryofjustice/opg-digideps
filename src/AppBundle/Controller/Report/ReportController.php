@@ -179,7 +179,8 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
         $client = $clients[0];
 
         $form = $this->createForm(new FormDir\Report\ReportFurtherInfoType(), $report);
@@ -226,7 +227,8 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
         $client = $clients[0];
 
         $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
