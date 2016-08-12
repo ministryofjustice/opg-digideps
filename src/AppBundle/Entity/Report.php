@@ -39,34 +39,35 @@ class Report
     private $client;
 
     /**
-     * @JMS\Groups({"contacts"})
+     * @JMS\Groups({"contact"})
      * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
 
     /**
-     * @JMS\Groups({"account", "accounts"})
+     * @JMS\Groups({"account"})
      * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
 
     /**
-     * @JMS\Groups({"transfers"})
+     * @JMS\Groups({"money-transfer"})
      * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
 
     /**
+     * @JMS\Groups({"transaction"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
 
     /**
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Debt", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -74,7 +75,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
@@ -83,7 +84,7 @@ class Report
     private $hasDebts;
 
     /**
-     * @JMS\Groups({"decisions", "decision"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
@@ -241,7 +242,7 @@ class Report
 
     /**
      * @var string
-     * @JMS\Groups({"balance", "report"})
+     * @JMS\Groups({"balance"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
@@ -947,7 +948,7 @@ class Report
      * Virtual JMS property with IN transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn"})
+     * @JMS\Groups({"transaction", "transactionsIn"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\SerializedName("transactions_in")
      *
@@ -973,7 +974,7 @@ class Report
      * Virtual JMS property with OUT transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsOut"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\SerializedName("transactions_out")
      *

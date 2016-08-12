@@ -100,7 +100,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("id")
      *
      * @return string
@@ -112,7 +112,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("type")
      *
      * @return string
@@ -124,7 +124,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("category")
      *
      * @return string
@@ -137,7 +137,7 @@ class Transaction
     /**
      * @return array of floats
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("amounts_total")
      */
     public function getAmountsTotal()
