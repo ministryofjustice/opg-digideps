@@ -46,6 +46,10 @@ class ActionController extends RestController
         $action = $this->findEntityBy('Action', $id, 'Action with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['action'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
         return $action;
     }
 
