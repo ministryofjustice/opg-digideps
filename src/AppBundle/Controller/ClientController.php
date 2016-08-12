@@ -11,22 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientController extends AbstractController
 {
     /**
-     * @return EntityDir\Client|null
-     */
-    private function getClient()
-    {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
-        $clients = $user->getClients();
-        return !empty($clients) ? $clients[0] : null;
-    }
-
-    /**
      * @Route("/user-account/client-show", name="client_show")
      * @Template()
      */
     public function showAction(Request $request)
     {
-        $client = $this->getClient();
+        $client = $this->getFirstClient();
 
         return [
             'client' => $client,
@@ -40,7 +30,7 @@ class ClientController extends AbstractController
      */
     public function editAction(Request $request)
     {
-        $client = $this->getClient();
+        $client = $this->getFirstClient();
 
         $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
@@ -84,7 +74,7 @@ class ClientController extends AbstractController
             $client->addUser($this->getUser()->getId());
         }
 
-        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions();
+        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions(); //TODO inject into form
         $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client);
 
         $form->handleRequest($request);

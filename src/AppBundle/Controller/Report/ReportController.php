@@ -18,34 +18,34 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
-        'accounts',
+        'account',
         'action',
         'asset',
-        'debts',
+        'debt',
         'balance',
         'client',
-        'contacts',
+        'contact',
         'debts',
-        'decisions',
+        'decision',
+        'safeguarding',
         'mental-capacity',
-        'transfers',
-        'transactions',
-        'transactionsIn',
-        'transactionsOut',
+        'money-transfer',
+        'transaction',
     ];
 
     /**
+     * List of reports
+     *
      * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
      * @Template()
      */
-    public function indexAction($cot, $reportId = null)
+    public function indexAction(Request $request, $cot, $reportId = null)
     {
-        $clients = $this->getUser()->getClients();
-        $request = $this->getRequest();
-
+        $user = $this->getUserWithData(['user', 'client', 'report']);
+        $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
-        $reports = $client ? $this->getReportsIndexedById($client, []) : [];
+        $reports = $client ? $client->getReports() : [];
         $reports = array_filter($reports, function ($r) use ($cot) {
             return $r->getCourtOrderTypeId() == $cot;
         });
@@ -56,7 +56,7 @@ class ReportController extends AbstractController
 
         // edit report dates
         if ($reportId) {
-            $report = $this->getReport($reportId, ['transactions']);
+            $report = $client->getReportById($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
             ]);
@@ -88,7 +88,7 @@ class ReportController extends AbstractController
             'reports' => $reports,
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
             'newReportNotification' => $newReportNotification,
             'filter' => 'propFinance', // extend with param when required
         ];
@@ -106,10 +106,8 @@ class ReportController extends AbstractController
      * )
      * @Template()
      */
-    public function createAction($clientId, $action = false)
+    public function createAction(Request $request, $clientId, $action = false)
     {
-        $request = $this->getRequest();
-
         $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['client']);
 
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();

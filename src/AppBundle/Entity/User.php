@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements AdvancedUserInterface
 {
     use LoginInfoTrait;
+
     const TOKEN_EXPIRE_HOURS = 48;
 
     /**

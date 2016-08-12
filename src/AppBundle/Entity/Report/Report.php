@@ -1255,7 +1255,7 @@ class Report
      * 
      * @return bool
      */
-    public function hasAaccountWithId($id)
+    public function hasAccountWithId($id)
     {
         foreach ($this->getAccounts() as $asset) {
             if ($asset->getId() == $id) {

@@ -23,13 +23,13 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
-                'deserialise_group' => 'debts',
+                'deserialise_group' => 'debt',
             ]);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
@@ -47,13 +47,13 @@ class DebtController extends AbstractController
      */
     public function debtSaveJsonAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
         $form = $this->createForm(new FormDir\Report\DebtsType, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
-                'deserialise_group' => 'debts',
+                'deserialise_group' => 'debt',
             ]);
 
             return JsonResponse(['success' => true]);

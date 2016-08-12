@@ -26,7 +26,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'client', 'balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
 
@@ -57,7 +57,7 @@ class BankAccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'client', 'balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'balance']);
 
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
         $form->handleRequest($request);
@@ -88,7 +88,7 @@ class BankAccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'client', 'transactionsIn', 'transactionsOut']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'transaction']);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
@@ -116,7 +116,7 @@ class BankAccountController extends AbstractController
      */
     public function banksAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['client', 'balance', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account']);
 
         return [
             'report' => $report,
@@ -142,7 +142,7 @@ class BankAccountController extends AbstractController
         $showMigrationWarning = false;
 
         if ($type === 'edit') {
-            if (!$report->hasAaccountWithId($id)) {
+            if (!$report->hasAccountWithId($id)) {
                 throw new \RuntimeException('Account not found.');
             }
             $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
@@ -206,9 +206,9 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
 
-        if ($report->hasAaccountWithId($id)) {
+        if ($report->hasAccountWithId($id)) {
             $this->getRestClient()->delete("/account/{$id}");
         }
 

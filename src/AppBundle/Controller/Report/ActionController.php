@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\ReportStatusService;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
@@ -15,34 +16,33 @@ class ActionController extends AbstractController
      * @Route("/report/{reportId}/actions", name="actions")
      * @Template()
      */
-    public function editAction($reportId)
+    public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']); // check the report is owned by this user.
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
         if ($report->getAction() == null) {
             $action = new EntityDir\Report\Action();
         } else {
             $action = $report->getAction();
         }
 
-        $request = $this->getRequest();
         $form = $this->createForm(new FormDir\Report\ActionType(), $action);
-
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/action', $data);
+            $this->getRestClient()->put('report/' . $reportId . '/action', $data);
 
-            return $this->redirect($this->generateUrl('actions', ['reportId' => $reportId]).'#pageBody');
+            return $this->redirect($this->generateUrl('actions', ['reportId' => $reportId]) . '#pageBody');
         }
 
         $reportStatusService = new ReportStatusService($report);
 
-        return['report' => $report,
-                'reportStatus' => $reportStatusService,
-                'form' => $form->createView(),
+        return [
+            'report' => $report,
+            'reportStatus' => $reportStatusService,
+            'form' => $form->createView(),
         ];
     }
 }
