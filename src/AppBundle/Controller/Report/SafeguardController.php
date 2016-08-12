@@ -34,7 +34,7 @@ class SafeguardController extends AbstractController
             $data->keepOnlyRelevantSafeguardingData();
 
             if ($safeguarding->getId() == null) {
-                $this->getRestClient()->post('report/safeguarding', $data, ['deserialise_group' => 'Default']);
+                $this->getRestClient()->post('report/safeguarding', $data, ['deserialise_groups' => ['safeguarding', 'report-id']]);
             } else {
                 $this->getRestClient()->put('report/safeguarding/'.$safeguarding->getId(), $data, ['deserialise_group' => 'safeguarding']);
             }

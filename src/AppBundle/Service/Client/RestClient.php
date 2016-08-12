@@ -29,7 +29,7 @@ class RestClient
      * 
      * @var array 
      */
-    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group'];
+    private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_group', 'deserialise_groups'];
     
     /**
      * @var ClientInterface
@@ -173,7 +173,7 @@ class RestClient
     /**
      * @param string              $endpoint e.g. /user
      * @param string|object|array $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $options  keys: deserialise_group
+     * @param array               $options  keys: deserialise_group, deserialise_groups
      * 
      * @return string response body
      */
@@ -417,6 +417,10 @@ class RestClient
 
             if (!empty($options['deserialise_group'])) {
                 $context->setGroups([$options['deserialise_group']]);
+            }
+
+            if (!empty($options['deserialise_groups'])) {
+                $context->setGroups($options['deserialise_groups']);
             }
 
             return $this->serialiser->serialize($mixed, 'json', $context);
