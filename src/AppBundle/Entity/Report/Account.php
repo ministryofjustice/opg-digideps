@@ -99,7 +99,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
      * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance", "add_edit"})
-     * @JMS\Groups({"balance", "add_edit"})
+     * @JMS\Groups({"account"})
      * 
      * @var decimal
      */

@@ -73,7 +73,7 @@ class Safeguarding
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"safeguarding"})
-     * 
+     *
      * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
      * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
      */
