@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -46,18 +47,10 @@ class Client
 
     /**
      * @JMS\Groups({ "report"})
-     * @JMS\Accessor(getter="getReportIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
-
-    /**
-     * @JMS\Groups({"related"})
-     * @JMS\Accessor(getter="getReports", setter="addReport")
-     * @JMS\Type("array<AppBundle\Entity\Report>")
-     */
-    private $reportObjs;
 
     /**
      * @JMS\Type("string")
@@ -193,8 +186,8 @@ class Client
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     /**
