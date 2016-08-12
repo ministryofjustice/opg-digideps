@@ -16,6 +16,7 @@ class Safeguarding
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"safeguarding"})
      *
      * @var int
      */
@@ -23,42 +24,56 @@ class Safeguarding
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
      */
     private $howOftenDoYouContactClient;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})
+     *
      * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
      */
     private $doesClientHaveACarePlan;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"safeguarding"})
+     * 
      * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
      * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
      */

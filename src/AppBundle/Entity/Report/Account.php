@@ -37,7 +37,7 @@ class Account
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank_name"})
      * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank_name"})
      * 
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     * @JMS\Groups({"account"})
      * 
      * @var string
      */
@@ -48,7 +48,7 @@ class Account
      * @Assert\NotBlank(message="account.accountType.notBlank", groups={"add_edit"})
      * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"add_edit"})
      *
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     * @JMS\Groups({"account"})
      *
      * @var string
      */
@@ -66,7 +66,7 @@ class Account
      * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"sortcode"})
      * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"sortcode"})
      * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"sortcode"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     * @JMS\Groups({"account"})
      * 
      * @var string
      */
@@ -77,7 +77,7 @@ class Account
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"add_edit"})
      * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"add_edit"})
      * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"add_edit"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     * @JMS\Groups({"account"})
      * 
      * @var string
      */
@@ -85,7 +85,7 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     * @JMS\Groups({"account"})
      *
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"add_edit"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"add_edit"})
@@ -99,7 +99,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
      * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance", "add_edit"})
-     * @JMS\Groups({"balance", "edit_details_report_due","edit_details", "add_edit"})
+     * @JMS\Groups({"balance", "add_edit"})
      * 
      * @var decimal
      */
@@ -107,7 +107,7 @@ class Account
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"add_edit"})
+     * @JMS\Groups({"account"})
      *
      * @var bool
      */
@@ -115,7 +115,7 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"add_edit"})
+     * @JMS\Groups({"account"})
      * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"add_edit"})
      * 
      * @var string

@@ -166,11 +166,11 @@ class BankAccountController extends AbstractController
             }
             if ($type === 'edit') {
                 $this->getRestClient()->put('/account/'.$id, $account, [
-                    'deserialise_group' => 'add_edit',
+                    'deserialise_group' => 'account',
                 ]);
             } else {
                 $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, [
-                    'deserialise_group' => 'add_edit',
+                    'deserialise_group' => 'account',
                 ]);
                 $id = $addedAccount['id'];
             }

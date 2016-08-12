@@ -301,7 +301,7 @@ class Report
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Debt>")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var ArrayCollection
      */
@@ -309,7 +309,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
      *
@@ -319,7 +319,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var decimal
      */
