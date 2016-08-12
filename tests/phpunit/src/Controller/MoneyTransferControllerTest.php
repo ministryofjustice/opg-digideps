@@ -74,7 +74,8 @@ class MoneyTransferControllerTest extends AbstractTestController
 
     public function testGetTransfers()
     {
-        $url = '/report/'.self::$report1->getId().'?groups=transfers';
+        $url = '/report/'.self::$report1->getId()
+            .'?' . http_build_query(['groups' => ['money-transfer', 'account']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [

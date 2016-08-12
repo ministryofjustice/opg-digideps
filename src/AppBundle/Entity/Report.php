@@ -9,10 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Reports.
  *
- * @JMS\XmlRoot("report")
- * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
 class Report
@@ -22,7 +19,7 @@ class Report
     /**
      * @var int
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -34,7 +31,7 @@ class Report
     /**
      * @var int
      * 
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
@@ -42,34 +39,35 @@ class Report
     private $client;
 
     /**
-     * @JMS\Groups({"contacts"})
+     * @JMS\Groups({"contact"})
      * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
 
     /**
-     * @JMS\Groups({"account", "accounts"})
+     * @JMS\Groups({"account"})
      * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
 
     /**
-     * @JMS\Groups({"transfers"})
+     * @JMS\Groups({"money-transfer"})
      * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
 
     /**
+     * @JMS\Groups({"transaction"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
 
     /**
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Debt", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -77,7 +75,7 @@ class Report
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
@@ -86,7 +84,7 @@ class Report
     private $hasDebts;
 
     /**
-     * @JMS\Groups({"decisions", "decision"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
@@ -100,21 +98,21 @@ class Report
     private $assets;
 
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"safeguarding"})
      * @JMS\Type("AppBundle\Entity\Safeguarding")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
     private $safeguarding;
 
     /**
-     * @JMS\Groups({"basic", "action"})
+     * @JMS\Groups({ "action"})
      * @JMS\Type("AppBundle\Entity\Action")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Action",  mappedBy="report", cascade={"persist"})
      **/
     private $action;
 
     /**
-     * @JMS\Groups({"basic", "mental-capacity"})
+     * @JMS\Groups({ "mental-capacity"})
      * @JMS\Type("AppBundle\Entity\MentalCapacity")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\MentalCapacity",  mappedBy="report", cascade={"persist"})
      **/
@@ -130,7 +128,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -139,7 +137,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -149,7 +147,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -159,7 +157,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -178,7 +176,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
@@ -186,7 +184,7 @@ class Report
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
@@ -194,7 +192,7 @@ class Report
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic", "transfers", "report"})
+     * @JMS\Groups({"report", "transfers"})
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noTransfersToAdd;
@@ -203,7 +201,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
@@ -212,7 +210,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
@@ -220,7 +218,7 @@ class Report
     /**
      * @var bool
      *
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -228,7 +226,7 @@ class Report
 
     /**
      * @var bool
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="reviewed", type="boolean", nullable=true)
      */
@@ -236,7 +234,7 @@ class Report
 
     /**
      * @var bool
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
@@ -244,7 +242,7 @@ class Report
 
     /**
      * @var string
-     * @JMS\Groups({"balance", "basic", "report"})
+     * @JMS\Groups({"balance"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
@@ -255,7 +253,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
     private $agreedBehalfDeputy;
@@ -264,7 +262,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "report"})
+     * @JMS\Groups({"report"})
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
@@ -850,7 +848,7 @@ class Report
      * @JMS\VirtualProperty
      * @JMS\Type("integer")
      * @JMS\SerializedName("court_order_type_id")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"report"})
      * 
      * @return int
      */
@@ -950,7 +948,7 @@ class Report
      * Virtual JMS property with IN transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn"})
+     * @JMS\Groups({"transaction", "transactionsIn"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\SerializedName("transactions_in")
      *
@@ -976,7 +974,7 @@ class Report
      * Virtual JMS property with OUT transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsOut"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\SerializedName("transactions_out")
      *
@@ -1057,7 +1055,7 @@ class Report
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\SerializedName("debts_total_amount")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @return float
      */
@@ -1196,7 +1194,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance", "basic"})
+     * @JMS\Groups({"balance"})
      * @JMS\Type("boolean")
      * @JMS\SerializedName("totals_match")
      */

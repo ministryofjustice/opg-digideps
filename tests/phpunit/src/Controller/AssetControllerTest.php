@@ -54,45 +54,27 @@ class AssetControllerTest extends AbstractTestController
         }
     }
 
-    public function testgetAssetsAuth()
-    {
-        $url = '/report/'.self::$report1->getId().'/assets';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetAssetsAcl()
-    {
-        $url2 = '/report/'.self::$report2->getId().'/assets';
-
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
 
     public function testgetAssets()
     {
-        $url = '/report/'.self::$report1->getId().'/assets';
+        $url = '/report/'.self::$report1->getId().'?groups=asset';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
-            ])['data'];
-
-        // order by id ASC (insert order)
-        usort($data, function ($a, $b) {
-            return $a['id'] > $b['id'];
-        });
+            ])['data']['assets'];
 
         $this->assertCount(2, $data);
 
-        $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
-        $this->assertEquals('asset1', $data[0]['title']);
-        $this->assertEquals('other', $data[0]['type']);
+        $this->assertEquals(self::$assetp1->getId(), $data[0]['id']);
+        $this->assertEquals('ha1', $data[0]['address']);
+        $this->assertEquals('property', $data[0]['type']);
 
-        $this->assertEquals(self::$assetp1->getId(), $data[1]['id']);
-        $this->assertEquals('ha1', $data[1]['address']);
-        $this->assertEquals('property', $data[1]['type']);
+        $this->assertEquals(self::$asset1->getId(), $data[1]['id']);
+        $this->assertEquals('asset1', $data[1]['title']);
+        $this->assertEquals('other', $data[1]['type']);
+
     }
 
     public function testgetOneByIdAuth()

@@ -25,7 +25,7 @@ class Debt
 
     /**
      * @var int
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -44,7 +44,7 @@ class Debt
 
     /**
      * @var string
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
@@ -54,7 +54,7 @@ class Debt
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -62,7 +62,7 @@ class Debt
 
     /**
      * @var bool
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @JMS\Type("boolean")
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
@@ -72,7 +72,7 @@ class Debt
 
     /**
      * @var string
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */

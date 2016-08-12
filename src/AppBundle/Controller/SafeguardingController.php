@@ -82,7 +82,8 @@ class SafeguardingController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $serialiseGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['safeguarding'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
         $safeguarding = $this->findEntityBy('Safeguarding', $id, 'Safeguarding with id:'.$id.' not found');

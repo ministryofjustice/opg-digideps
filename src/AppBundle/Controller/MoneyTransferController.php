@@ -34,7 +34,7 @@ class MoneyTransferController extends RestController
         $this->persistAndFlush($transfer);
         $this->persistAndFlush($report);
 
-        $this->setJmsSerialiserGroups(['transfers']);
+        $this->setJmsSerialiserGroups(['money-transfer']);
 
         return $transfer->getId();
     }

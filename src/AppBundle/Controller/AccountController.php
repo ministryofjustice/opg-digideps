@@ -42,14 +42,11 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
-
         $account = $this->findEntityBy('Account', $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['account'];
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['account'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $account;
