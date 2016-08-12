@@ -45,7 +45,7 @@ class AbstractController extends Controller
         $groups[] = 'client';
         $groups = array_unique($groups);
         sort($groups); // helps HTTP caching
-        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', ['query' => ['groups' => $groups]]);
+        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
     }
 
     /**

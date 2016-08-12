@@ -11,17 +11,22 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientController extends AbstractController
 {
     /**
+     * @return EntityDir\Client|null
+     */
+    private function getClient()
+    {
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
+        $clients = $user->getClients();
+        return !empty($clients) ? $clients[0] : null;
+    }
+
+    /**
      * @Route("/user-account/client-show", name="client_show")
      * @Template()
      */
     public function showAction(Request $request)
     {
-        $clients = $this->getUser()->getClients();
-
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $report = new EntityDir\Report\Report();
-        $report->setClient($client);
+        $client = $this->getClient();
 
         return [
             'client' => $client,
@@ -33,15 +38,9 @@ class ClientController extends AbstractController
      * @Route("/user-account/client-edit", name="client_edit")
      * @Template()
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $clients = $this->getUser()->getClients();
-        $request = $this->getRequest();
-
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $report = new EntityDir\Report\Report();
-        $report->setClient($client);
+        $client = $this->getClient();
 
         $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
@@ -68,15 +67,16 @@ class ClientController extends AbstractController
      * @Route("/client/add", name="client_add")
      * @Template()
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        $request = $this->getRequest();
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
+        $clients = $user->getClients();
 
-        $clients = $this->getUser()->getClients();
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
             // update existing client
             $method = 'put';
             $client = $clients[0]; //existing client
+            $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
         } else {
             // new client
             $method = 'post';

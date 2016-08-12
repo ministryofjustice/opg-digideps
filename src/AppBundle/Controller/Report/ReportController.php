@@ -110,7 +110,7 @@ class ReportController extends AbstractController
     {
         $request = $this->getRequest();
 
-        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['client']]]);
+        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['client']);
 
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
 
