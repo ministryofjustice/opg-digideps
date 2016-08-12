@@ -256,8 +256,12 @@ class RestClient
      *
      * @return mixed $expectedResponseType type
      */
-    public function get($endpoint, $expectedResponseType, $options = [])
+    public function get($endpoint, $expectedResponseType, $jmsGroups = [], $options = [])
     {
+        if ($jmsGroups) {
+            $options['query']['groups'] = $jmsGroups;
+        }
+        
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
             'addAuthToken' => true
             ] + $options);
