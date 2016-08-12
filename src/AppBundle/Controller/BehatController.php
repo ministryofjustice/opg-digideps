@@ -108,5 +108,4 @@ class BehatController extends RestController
 
         return 'done';
     }
-
 }

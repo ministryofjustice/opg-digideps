@@ -119,7 +119,6 @@ abstract class RestController extends Controller
         });
     }
 
-
     /**
      * @return AuthService
      */

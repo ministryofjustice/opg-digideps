@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +60,7 @@ class ReportController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $groups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['report'];
+            ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
@@ -122,7 +121,6 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-
     /**
      * @Route("/report/{id}")
      * @Method({"PUT"})
@@ -142,7 +140,7 @@ class ReportController extends RestController
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $report->setHasDebts($data['has_debts']);
             // null debts
-            foreach($report->getDebts() as $debt) {
+            foreach ($report->getDebts() as $debt) {
                 $debt->setAmount(null);
                 $debt->setMoreDetails(null);
                 $this->getEntityManager()->flush($debt);
@@ -159,7 +157,6 @@ class ReportController extends RestController
                 $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
             }
         }
-
 
         foreach (['transactions_in', 'transactions_out'] as $tk) {
             if (!isset($data[$tk])) {
@@ -194,11 +191,11 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('reviewed', $data)) {
-            $report->setReviewed((boolean)$data['reviewed']);
+            $report->setReviewed((boolean) $data['reviewed']);
         }
 
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean)$data['report_seen']);
+            $report->setReportSeen((boolean) $data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {

@@ -60,5 +60,4 @@ class ManageController extends RestController
             return [false, $returnMessage];
         }
     }
-
 }

@@ -79,7 +79,6 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
      *
-     *
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)

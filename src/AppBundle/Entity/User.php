@@ -747,13 +747,13 @@ class User implements UserInterface
     public function getActiveReportId()
     {
         $reports = $this->getFirstClient() ? $this->getFirstClient()->getReports() : [];
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
             if (!$report->getSubmitted()) {
                 return $report->getId();
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -774,12 +774,9 @@ class User implements UserInterface
     {
         $clients = $this->getClients();
         if (count($clients) === 0) {
-            return null;
+            return;
         }
 
         return $clients->first();
     }
-
-
-
 }
