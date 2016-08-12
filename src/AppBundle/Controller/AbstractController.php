@@ -25,6 +25,10 @@ class AbstractController extends Controller
      */
     protected function getUserWithData(array $jmsGroups)
     {
+        $jmsGroups[] = 'user';
+        $jmsGroups = array_unique($jmsGroups);
+        sort($jmsGroups);
+
         return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
     }
 

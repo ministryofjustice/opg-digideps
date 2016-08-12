@@ -149,7 +149,7 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request)
     {
-        $user = $this->getUserWithData('user');
+        $user = $this->getUserWithData(['user', 'role']);
 
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
         $notification = $request->query->has('notification') ? $request->query->get('notification') : null;
