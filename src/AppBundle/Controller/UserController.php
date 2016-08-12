@@ -149,8 +149,8 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request)
     {
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $this->getRestClient()->get('user/'.$userId, 'User'); /* @var $user EntityDir\User*/
+        $user = $this->getUserWithData('user');
+
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
         $notification = $request->query->has('notification') ? $request->query->get('notification') : null;
 
@@ -193,7 +193,9 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
+        $user = $this->getUserWithData(['user', 'client']);
+        $clients = $user->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
 
         $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
         $form->handleRequest($request);
@@ -206,9 +208,6 @@ class UserController extends AbstractController
 
             return $this->redirect($this->generateUrl('user_password_edit_done'));
         }
-
-        $clients = $this->getUser()->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
 
         return [
             'client' => $client,
@@ -240,8 +239,8 @@ class UserController extends AbstractController
      **/
     public function showAction()
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'client']);
+        $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
         return [
@@ -257,10 +256,9 @@ class UserController extends AbstractController
      * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
      **/
-    public function editAction()
+    public function editAction(Request $request)
     {
-        $request = $this->getRequest();
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User'); /* @var $user EntityDir\User*/
+        $user = $this->getUserWithData(['user', 'client']);
 
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
@@ -284,8 +282,7 @@ class UserController extends AbstractController
             return $this->redirect($this->generateUrl('user_show'));
         }
 
-        $clients = $this->getUser()->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
+        $client = !empty($user->getClients()) ? $user->getClients()[0] : null;
 
         return [
             'client' => $client,
