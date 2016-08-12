@@ -7,10 +7,8 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
-use Doctrine\Common\Util\Debug;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -34,7 +32,7 @@ class ReportController extends AbstractController
     ];
 
     /**
-     * List of reports
+     * List of reports.
      *
      * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
      * @Template()
@@ -56,7 +54,6 @@ class ReportController extends AbstractController
 
         // edit report dates
         if ($reportId) {
-
             $report = $this->getReport($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
@@ -64,7 +61,7 @@ class ReportController extends AbstractController
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
                 $this->getRestClient()->put('report/'.$reportId, $report, [
-                     'startEndDates'
+                     'startEndDates',
                 ]);
 
                 return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
@@ -190,7 +187,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // add furher info
             $this->getRestClient()->put('report/'.$report->getId(), $report, [
-                'furtherInformation'
+                'furtherInformation',
             ]);
 
             // next or save: redirect to report declration
@@ -238,15 +235,15 @@ class ReportController extends AbstractController
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
-                'submit'
+                'submit',
             ]);
-            
+
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
-    
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
-            
+
+            $newReport = $this->getRestClient()->get('report/'.$newReportId['newReportId'], 'Report\\Report');
+
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
@@ -260,7 +257,6 @@ class ReportController extends AbstractController
             'form' => $form->createView(),
         ];
     }
-   
 
     /**
      * Page displaying the report has been submitted.
@@ -288,7 +284,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
             $this->getMailSender()->send($feedbackEmail, ['html']);
-            
+
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
 
@@ -368,8 +364,7 @@ class ReportController extends AbstractController
 
         return $response;
     }
-    
-     
+
     private function getPdfBinaryContent($reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
@@ -380,5 +375,4 @@ class ReportController extends AbstractController
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
-
 }

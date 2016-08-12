@@ -63,11 +63,13 @@ class Decision
 
     /**
      * @param int $id
+     *
      * @return Decision
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -81,16 +83,18 @@ class Decision
 
     /**
      * @param string $description
+     *
      * @return Decision
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClientInvolvedBoolean()
     {
@@ -98,17 +102,19 @@ class Decision
     }
 
     /**
-     * @param boolean $clientInvolvedBoolean
+     * @param bool $clientInvolvedBoolean
+     *
      * @return Decision
      */
     public function setClientInvolvedBoolean($clientInvolvedBoolean)
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClientInvolvedDetails()
     {
@@ -116,14 +122,14 @@ class Decision
     }
 
     /**
-     * @param boolean $clientInvolvedDetails
+     * @param bool $clientInvolvedDetails
+     *
      * @return Decision
      */
     public function setClientInvolvedDetails($clientInvolvedDetails)
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
+
         return $this;
     }
-
-
 }

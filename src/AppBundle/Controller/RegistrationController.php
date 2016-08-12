@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form as FormDir;
-use AppBundle\Service\Client\RestClient;
 use AppBundle\Model as ModelDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
@@ -36,7 +35,7 @@ class RegistrationController extends AbstractController
                 $user = $this->getRestClient()->registerUser($data);
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail);
-                
+
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);

@@ -11,8 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class ManageController extends AbstractController
 {
-
-
     /**
      * @Route("/availability")
      * @Method({"GET"})
@@ -31,8 +29,6 @@ class ManageController extends AbstractController
 
         return $response;
     }
-
-
 
     /**
      * @Route("/availability/pingdom")
@@ -61,8 +57,6 @@ class ManageController extends AbstractController
     {
         return ['status' => 'OK'];
     }
-
-
 
     /**
      * @return array [true if healthy, services array, string with errors, time in secs]
@@ -93,7 +87,4 @@ class ManageController extends AbstractController
 
         return [$healthy, $services, $errors, microtime(true) - $start];
     }
-
-
-
 }

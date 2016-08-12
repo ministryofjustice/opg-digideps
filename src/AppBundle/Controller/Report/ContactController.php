@@ -53,7 +53,7 @@ class ContactController extends AbstractController
 
             // update contact. The API will also delete reason for no contact
             $this->getRestClient()->post('report/contact', $data, [
-                'contact'
+                'contact',
             ]);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
@@ -117,7 +117,7 @@ class ContactController extends AbstractController
         if (!empty($report)) {
             $report->setReasonForNoContacts(null);
             $this->get('restClient')->put('report/'.$report->getId(), $report, [
-                'reasonForNoContacts'
+                'reasonForNoContacts',
             ]);
         }
 
@@ -138,7 +138,7 @@ class ContactController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $this->get('restClient')->put('report/'.$reportId, $data, [
-                'reasonForNoContacts'
+                'reasonForNoContacts',
             ]);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
@@ -164,7 +164,7 @@ class ContactController extends AbstractController
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/'.$reportId, $form->getData(), [
-                'reasonForNoContacts'
+                'reasonForNoContacts',
             ]);
         }
 

@@ -32,9 +32,9 @@ class ActionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/' . $reportId . '/action', $data);
+            $this->getRestClient()->put('report/'.$reportId.'/action', $data);
 
-            return $this->redirect($this->generateUrl('actions', ['reportId' => $reportId]) . '#pageBody');
+            return $this->redirect($this->generateUrl('actions', ['reportId' => $reportId]).'#pageBody');
         }
 
         $reportStatusService = new ReportStatusService($report);

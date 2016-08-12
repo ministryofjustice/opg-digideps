@@ -120,7 +120,7 @@ class DecisionController extends AbstractController
         if (!empty($report)) {
             $report->setReasonForNoDecisions(null);
             $this->getRestClient()->put('report/'.$report->getId(), $report, [
-                'reasonForNoDecisions'
+                'reasonForNoDecisions',
             ]);
         }
 
@@ -140,7 +140,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, [
-                'reasonForNoDecisions'
+                'reasonForNoDecisions',
             ]);
 
             return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
@@ -167,7 +167,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, [
-                'reasonForNoDecisions'
+                'reasonForNoDecisions',
             ]);
         }
 

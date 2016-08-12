@@ -8,22 +8,24 @@ trait LoginInfoTrait
 {
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $idOfClientWithDetails;
 
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $activeReportId;
 
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $numberOfReports;
-
 
     /**
      * @return int
@@ -35,11 +37,13 @@ trait LoginInfoTrait
 
     /**
      * @param int $idOfClientWithDetails
+     *
      * @return HasReportTrait
      */
     public function setIdOfClientWithDetails($idOfClientWithDetails)
     {
         $this->idOfClientWithDetails = $idOfClientWithDetails;
+
         return $this;
     }
 
@@ -53,11 +57,13 @@ trait LoginInfoTrait
 
     /**
      * @param int $activeReportId
+     *
      * @return HasReportTrait
      */
     public function setActiveReportId($activeReportId)
     {
         $this->activeReportId = $activeReportId;
+
         return $this;
     }
 
@@ -71,12 +77,13 @@ trait LoginInfoTrait
 
     /**
      * @param int $numberOfReports
+     *
      * @return HasReportTrait
      */
     public function setNumberOfReports($numberOfReports)
     {
         $this->numberOfReports = $numberOfReports;
+
         return $this;
     }
-
 }

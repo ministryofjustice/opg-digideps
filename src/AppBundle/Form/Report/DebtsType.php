@@ -8,7 +8,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DebtsType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -19,7 +18,7 @@ class DebtsType extends AbstractType
             ))
             ->add('debts', 'collection', [
                 'type' => new DebtSingleType(),
-                'cascade_validation' => true
+                'cascade_validation' => true,
             ])
             ->add('save', 'submit');
     }

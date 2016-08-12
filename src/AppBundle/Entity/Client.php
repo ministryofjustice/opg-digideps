@@ -165,7 +165,6 @@ class Client
         $this->reports = [];
     }
 
-
     public function getUsers()
     {
         return $this->users;
@@ -200,13 +199,13 @@ class Client
      */
     public function getReportById($id)
     {
-        foreach($this->reports as $report) {
+        foreach ($this->reports as $report) {
             if ($report->getId() == $id) {
                 return $report;
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -267,7 +266,6 @@ class Client
         return false;
     }
 
-
     public function getFullname()
     {
         $this->fullname = $this->firstname.' '.$this->lastname;
@@ -275,15 +273,11 @@ class Client
         return $this->fullname;
     }
 
-
-
     public function setCourtDateWithoutTime($courtDate = null)
     {
         $this->courtDate = ($courtDate instanceof \DateTime) ?
                 new \DateTime($courtDate->format('Y-m-d')) : null;
     }
-
-
 
     /**
      * @param array $allowedCourtOrderType
@@ -330,11 +324,13 @@ class Client
 
     /**
      * @param int $id
+     *
      * @return Client
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -348,11 +344,13 @@ class Client
 
     /**
      * @param string $firstname
+     *
      * @return Client
      */
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -366,11 +364,13 @@ class Client
 
     /**
      * @param string $lastname
+     *
      * @return Client
      */
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -384,11 +384,13 @@ class Client
 
     /**
      * @param string $caseNumber
+     *
      * @return Client
      */
     public function setCaseNumber($caseNumber)
     {
         $this->caseNumber = $caseNumber;
+
         return $this;
     }
 
@@ -402,11 +404,13 @@ class Client
 
     /**
      * @param array $courtDate
+     *
      * @return Client
      */
     public function setCourtDate($courtDate)
     {
         $this->courtDate = $courtDate;
+
         return $this;
     }
 
@@ -420,11 +424,13 @@ class Client
 
     /**
      * @param array $allowedCourtOrderTypes
+     *
      * @return Client
      */
     public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
     {
         $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
+
         return $this;
     }
 
@@ -438,11 +444,13 @@ class Client
 
     /**
      * @param string $address
+     *
      * @return Client
      */
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -456,11 +464,13 @@ class Client
 
     /**
      * @param string $address2
+     *
      * @return Client
      */
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -474,11 +484,13 @@ class Client
 
     /**
      * @param string $county
+     *
      * @return Client
      */
     public function setCounty($county)
     {
         $this->county = $county;
+
         return $this;
     }
 
@@ -492,11 +504,13 @@ class Client
 
     /**
      * @param string $postcode
+     *
      * @return Client
      */
     public function setPostcode($postcode)
     {
         $this->postcode = $postcode;
+
         return $this;
     }
 
@@ -510,11 +524,13 @@ class Client
 
     /**
      * @param string $country
+     *
      * @return Client
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -528,12 +544,13 @@ class Client
 
     /**
      * @param string $phone
+     *
      * @return Client
      */
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
         return $this;
     }
-
 }

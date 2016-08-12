@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -263,7 +262,7 @@ class BankAccountController extends AbstractController
             }
 
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                $type
+                $type,
             ]);
 
             return new JsonResponse(['success' => true]);

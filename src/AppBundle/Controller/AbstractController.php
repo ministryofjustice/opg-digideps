@@ -29,7 +29,7 @@ class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
+        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -37,7 +37,7 @@ class AbstractController extends Controller
      */
     protected function getFirstClient()
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
         $clients = $user->getClients();
 
         return !empty($clients) ? $clients[0] : null;
@@ -49,9 +49,9 @@ class AbstractController extends Controller
     protected function getAllowedCourtOrderTypeChoiceOptions()
     {
         $responseArray = $this->getRestClient()->get('court-order-type', 'array');
-            foreach ($responseArray['court_order_types'] as $value) {
-                $choices[$value['id']] = $value['name'];
-            }
+        foreach ($responseArray['court_order_types'] as $value) {
+            $choices[$value['id']] = $value['name'];
+        }
 
         arsort($choices);
 
@@ -76,7 +76,7 @@ class AbstractController extends Controller
 
     /**
      * @param Client $client
-     * @param array $groups
+     * @param array  $groups
      *
      * @return Report[]
      */
@@ -112,7 +112,7 @@ class AbstractController extends Controller
 
         return $report;
     }
-    
+
     /**
      * @return \AppBundle\Service\Mailer\MailFactory
      */

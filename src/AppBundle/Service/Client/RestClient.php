@@ -25,12 +25,12 @@ class RestClient
 
     /**
      * Keep here a list of options for the methods
-     * Needed on the rawSafeCall
+     * Needed on the rawSafeCall.
      * 
-     * @var array 
+     * @var array
      */
     private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
-    
+
     /**
      * @var ClientInterface
      */
@@ -159,7 +159,7 @@ class RestClient
     }
 
     /**
-     * @param string   $email
+     * @param string $email
      * @param string $type
      * 
      * @return \AppBundle\Entity\User
@@ -168,7 +168,6 @@ class RestClient
     {
         return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [], false);
     }
-
 
     /**
      * @param string $endpoint             e.g. /user
@@ -186,10 +185,9 @@ class RestClient
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
-                'addAuthToken' => true
+                'addAuthToken' => true,
             ] + $options);
     }
-
 
     /**
      * @param string              $endpoint e.g. /user
@@ -225,7 +223,6 @@ class RestClient
         return $this->apiCall('post', $endpoint, $mixed, 'array', $options);
     }
 
-
     /**
      * @param string $endpoint e.g. /user
      *
@@ -234,10 +231,9 @@ class RestClient
     public function delete($endpoint)
     {
         return $this->apiCall('delete', $endpoint, null, 'array', [
-            'addAuthToken' => true
+            'addAuthToken' => true,
         ]);
     }
-
 
     /**
      * Call POST /selfregister passing client secret.
@@ -250,15 +246,16 @@ class RestClient
     {
         return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [], false);
     }
-    
+
     /**
-     * 
      * @param type $method
      * @param type $endpoint
      * @param type $data
      * @param type $expectedResponseType
      * @param type $options
+     *
      * @return type
+     *
      * @throws \InvalidArgumentException
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
@@ -266,7 +263,7 @@ class RestClient
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
-        
+
         $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
@@ -278,8 +275,8 @@ class RestClient
 
         if ($expectedResponseType == 'response') {
             return $response;
-        } 
-        
+        }
+
         $responseArray = $this->extractDataArray($response);
         if ($expectedResponseType == 'array') {
             return $responseArray;
@@ -291,9 +288,7 @@ class RestClient
             throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
-    
 
-    
     /**
      * Performs HTTP client call
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
@@ -313,9 +308,9 @@ class RestClient
         if (!empty($options['addClientSecret'])) {
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
         }
-        
+
         // remove internal options, not recognised by guzzle
-        foreach(self::$availableOptions as $ao) {
+        foreach (self::$availableOptions as $ao) {
             unset($options[$ao]);
             unset($options[$ao]);
             unset($options[$ao]);

@@ -22,12 +22,11 @@ class MailFactory
      * @var Container
      */
     protected $container;
-    
+
     /**
      * @var Router
      */
     protected $router;
-
 
     public function __construct(Container $container)
     {
@@ -49,9 +48,9 @@ class MailFactory
     {
         switch ($area) {
             case self::AREA_DEPUTY:
-                return $this->container->getParameter('non_admin_host') . $this->router->generate($routeName, $params);
+                return $this->container->getParameter('non_admin_host').$this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
-                return $this->container->getParameter('admin_host') . $this->router->generate($routeName, $params);
+                return $this->container->getParameter('admin_host').$this->router->generate($routeName, $params);
             default:
                 throw new \Exception("area $area not found");
         }
@@ -59,18 +58,19 @@ class MailFactory
 
     /**
      * @param \AppBundle\Entity\User $user
+     *
      * @return \AppBundle\Model\Email
      */
     public function createActivationEmail(EntityDir\User $user)
     {
         $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
-        
+
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->generateAbsoluteLink($area, 'homepage', []),
             'link' => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
-                'token' => $user->getRegistrationToken()
+                'token' => $user->getRegistrationToken(),
              ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -92,6 +92,7 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
+     *
      * @return ModelDir\Email
      */
     public function createResetPasswordEmail(EntityDir\User $user)
@@ -149,9 +150,10 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $report
      * @param $pdfBinaryContent
+     *
      * @return ModelDir\Email
      */
     public function createReportEmail(EntityDir\User $user, EntityDir\Report\Report $report, $pdfBinaryContent)
@@ -163,14 +165,14 @@ class MailFactory
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
-        
+
         $client = $report->getClient();
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $client->getCaseNumber()
         );
-            
+
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
@@ -207,9 +209,10 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report $newReport
+     * @param EntityDir\Report        $newReport
+     *
      * @return ModelDir\Email
      */
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)

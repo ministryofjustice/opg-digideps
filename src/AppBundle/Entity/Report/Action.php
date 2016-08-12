@@ -54,11 +54,13 @@ class Action
 
     /**
      * @param int $id
+     *
      * @return Action
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -72,11 +74,13 @@ class Action
 
     /**
      * @param mixed $doYouExpectFinancialDecisions
+     *
      * @return Action
      */
     public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
+
         return $this;
     }
 
@@ -90,11 +94,13 @@ class Action
 
     /**
      * @param mixed $doYouExpectFinancialDecisionsDetails
+     *
      * @return Action
      */
     public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+
         return $this;
     }
 
@@ -108,11 +114,13 @@ class Action
 
     /**
      * @param mixed $doYouHaveConcerns
+     *
      * @return Action
      */
     public function setDoYouHaveConcerns($doYouHaveConcerns)
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
+
         return $this;
     }
 
@@ -126,13 +134,13 @@ class Action
 
     /**
      * @param mixed $doYouHaveConcernsDetails
+     *
      * @return Action
      */
     public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+
         return $this;
     }
-
-
 }
