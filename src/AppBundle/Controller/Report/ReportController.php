@@ -56,7 +56,8 @@ class ReportController extends AbstractController
 
         // edit report dates
         if ($reportId) {
-            $report = $client->getReportById($reportId);
+
+            $report = $this->getReport($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
             ]);
