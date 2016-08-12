@@ -151,7 +151,7 @@ class MoneyTransferController extends AbstractController
      */
     public function noTransfersJson(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
 
         $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);
