@@ -54,7 +54,6 @@ class AssetControllerTest extends AbstractTestController
         }
     }
 
-
     public function testgetAssets()
     {
         $url = '/report/'.self::$report1->getId().'?groups=asset';
@@ -74,7 +73,6 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(self::$asset1->getId(), $data[1]['id']);
         $this->assertEquals('asset1', $data[1]['title']);
         $this->assertEquals('other', $data[1]['type']);
-
     }
 
     public function testgetOneByIdAuth()

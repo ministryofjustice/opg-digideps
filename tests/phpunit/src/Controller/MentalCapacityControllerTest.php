@@ -64,7 +64,6 @@ class MentalCapacityControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-
     public function testupdate()
     {
         $url = '/report/'.self::$report1->getId().'/mental-capacity';
@@ -84,8 +83,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
-        
-        
+
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -100,7 +98,5 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
-        
     }
-
 }

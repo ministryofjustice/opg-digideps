@@ -52,8 +52,6 @@ class AccountControllerTest extends AbstractTestController
         }
     }
 
-
-
     public function testaddAccount()
     {
         $url = '/report/'.self::$report1->getId().'/account';

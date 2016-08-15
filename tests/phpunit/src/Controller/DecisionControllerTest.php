@@ -86,7 +86,6 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEquals(self::$decision1->getDescription(), $data['description']);
     }
 
-
     public function testgetDecisions()
     {
         $url = '/report/'.self::$report1->getId().'?groups=decision';

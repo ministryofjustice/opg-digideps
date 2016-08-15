@@ -122,7 +122,7 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/'.self::$report1->getId();
 
-        $q =  http_build_query(['groups' => ['report', 'client']]);
+        $q = http_build_query(['groups' => ['report', 'client']]);
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
@@ -135,7 +135,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(self::$client1->getId(), $data['client']['id']);
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
-
 
         // assert decisions
         $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
@@ -307,11 +306,11 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'has_debts' => 'yes',
                 'debts' => [
-                    ['debt_type_id' => 'care-fees', 'amount'=>1, 'more_details'=> 'should not be saved'],
-                    ['debt_type_id' => 'credit-cards', 'amount'=>2, 'more_details'=> ''],
-                    ['debt_type_id' => 'loans', 'amount'=>3, 'more_details'=> ''],
-                    ['debt_type_id' => 'other', 'amount'=>4, 'more_details'=> 'md'],
-                ]
+                    ['debt_type_id' => 'care-fees', 'amount' => 1, 'more_details' => 'should not be saved'],
+                    ['debt_type_id' => 'credit-cards', 'amount' => 2, 'more_details' => ''],
+                    ['debt_type_id' => 'loans', 'amount' => 3, 'more_details' => ''],
+                    ['debt_type_id' => 'other', 'amount' => 4, 'more_details' => 'md'],
+                ],
             ],
         ]);
 
@@ -347,7 +346,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'has_debts' => 'no',
-                'debts' => []
+                'debts' => [],
             ],
         ]);
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
