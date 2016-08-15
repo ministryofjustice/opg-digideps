@@ -39,7 +39,6 @@ class ManageControllerTest extends AbstractControllerTestCase
         }
         $container->set('snc_redis.default', $redisMock);
 
-
         // api mock
         $this->restClient->shouldReceive('get')->with('manage/availability', 'array')->andReturn([
             'healthy' => $apiHealthy,
@@ -145,5 +144,4 @@ class ManageControllerTest extends AbstractControllerTestCase
     {
         m::close();
     }
-
 }

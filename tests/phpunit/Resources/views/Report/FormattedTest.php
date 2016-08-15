@@ -12,7 +12,6 @@ use AppBundle\Entity\Report\Decision;
 use AppBundle\Entity\Report\MoneyTransfer;
 use AppBundle\Entity\Report\Transaction;
 use AppBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Report\Report as Report;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,11 +93,11 @@ class FormattedTest extends WebTestCase
             ->setDoYouHaveConcerns('yes')
             ->setDoYouHaveConcernsDetails('not able next year');
 
-        $this->asset1= new AssetOther();
+        $this->asset1 = new AssetOther();
         $this->asset1->setId(1)->setTitle('Artwork')->setDescription('monna lisa');
-        $this->asset2= new AssetOther();
-        $this->asset2->setId(2)->setTitle('Antiques')->setDescription('chest of drawers');;
-        $this->assetProp= new AssetProperty();
+        $this->asset2 = new AssetOther();
+        $this->asset2->setId(2)->setTitle('Antiques')->setDescription('chest of drawers');
+        $this->assetProp = new AssetProperty();
         $this->assetProp->setAddress('plat house');
 
         $this->decision1 = (new Decision())
@@ -119,10 +118,10 @@ class FormattedTest extends WebTestCase
             ->setMoneyTransfers([$this->transfer1, $this->transfer2])
             ->setTransactionsIn([$this->transactionIn1, $this->transactionIn2])
             ->setTransactionsOut([$this->transactionOut1])
-            ->setMoneyInTotal(1234+45)
+            ->setMoneyInTotal(1234 + 45)
             ->setMoneyOutTotal(1233)
             ->setAction($this->action1)
-            ->setAssets([$this->asset1, $this->asset2,$this->assetProp])
+            ->setAssets([$this->asset1, $this->asset2, $this->assetProp])
             ->setDecisions([$this->decision1, $this->decision2])
             ->setHasDebts(true)
             ->setDebts([$this->debt1])
@@ -132,7 +131,7 @@ class FormattedTest extends WebTestCase
             )->setCalculatedBalance(
                 $this->account1->getOpeningBalance()
                 + $this->account2->getOpeningBalance()
-                + 1234+45 // money in
+                + 1234 + 45 // money in
                 - 1233 // money out
             )->setTotalsOffset(
                 $this->account1->getOpeningBalance()
@@ -140,7 +139,7 @@ class FormattedTest extends WebTestCase
                 - (
                     $this->account1->getOpeningBalance()
                     + $this->account2->getOpeningBalance()
-                    + 1234+45 // money in
+                    + 1234 + 45 // money in
                     - 1233
                 )
             )
@@ -149,7 +148,7 @@ class FormattedTest extends WebTestCase
 
         $this->html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
             'report' => $this->report,
-            'app' => ['user'=>$this->user] //mock twig app.user from the view
+            'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
 
         $this->crawler = new Crawler($this->html);
@@ -189,7 +188,6 @@ class FormattedTest extends WebTestCase
         $this->assertContains('barclays', $this->html($this->crawler, '#account-summary'));
     }
 
-
     public function testAssets()
     {
         $this->assertContains('monna lisa', $this->html($this->crawler, '#assets-section'));
@@ -197,14 +195,12 @@ class FormattedTest extends WebTestCase
         $this->assertContains('plat house', $this->html($this->crawler, '#assets-section'));
     }
 
-
     public function testDecisions()
     {
         $this->assertContains('sold the flat in SW2', $this->html($this->crawler, '#decisions-list'));
         $this->assertContains('he wanted to leave this area', $this->html($this->crawler, '#decisions-list'));
         $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-list'));
         $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-list'));
-
     }
     public function testMoneyTransfers()
     {
@@ -228,14 +224,12 @@ class FormattedTest extends WebTestCase
     {
         $this->assertContains('Care fees', $this->html($this->crawler, '#debts-section'));
         $this->assertContains('123.00', $this->html($this->crawler, '#debts-section'));
-
     }
 
     public function testAction()
     {
         $this->assertContains('sell both flats', $this->html($this->crawler, '#action-section'));
         $this->assertContains('not able next year', $this->html($this->crawler, '#action-section'));
-
     }
 
     public function testBalance()
@@ -243,7 +237,6 @@ class FormattedTest extends WebTestCase
         $this->assertContains('Accounts not balanced', $this->html($this->crawler, '#accounts-section'));
         $this->assertContains('46.00', $this->html($this->crawler, '#accounts-section'));
         $this->assertContains('money lost', $this->html($this->crawler, '#accounts-section'));
-
     }
 
     public function tearDown()

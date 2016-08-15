@@ -7,8 +7,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 trait EmailTrait
 {
     private static $mailSentFrom = 'deputy';
-    
-    
+
     /**
      * @BeforeScenario
      */
@@ -16,17 +15,17 @@ trait EmailTrait
     {
         self::$mailSentFrom = null;
     }
-    
+
     /**
      * @Given emails are sent from ":area" area
      */
     public function givenEmaislAreSentFrom($area)
     {
         $this->visitBehatLink('email-reset');
-        
+
         self::$mailSentFrom = $area;
     }
-    
+
     /**
      * @param bool $throwExceptionIfNotFound
      * @param int  $index                    = last (default), 1=second last

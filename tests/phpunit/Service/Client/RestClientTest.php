@@ -147,18 +147,17 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($loggedUser, $this->object->loadUserByToken($token));
     }
 
-
     public function testRegisterUser()
     {
         $this->logger->shouldReceive('error')->andReturnUsing(function ($e) { echo $e;});
         $user = m::mock('AppBundle\Entity\User');
-        
+
         $data = ['id' => 1];
         $responseArray = ['success' => true, 'data' => $data];
         $responseJson = json_encode($responseArray);
         $selfRegData = m::mock('AppBundle\Model\SelfRegisterData');
         $selfRegDataJson = 'selfRegData.json';
-        
+
         $this->serialiser
             ->shouldReceive('serialize')->with($selfRegData, 'json', m::any())->andReturn($selfRegDataJson)
             ->shouldReceive('deserialize')->with(json_encode($data), 'AppBundle\Entity\User', 'json')->andReturn($user)
@@ -255,7 +254,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
                 'headers' => ['AuthToken' => $this->sessionToken],
-                'query' => ['groups'=>$jmsGroups]
+                'query' => ['groups' => $jmsGroups],
             ])->andReturn($this->endpointResponse);
 
         $this->assertEquals($responseData, $this->object->get($endpointUrl, $responseType, $jmsGroups));

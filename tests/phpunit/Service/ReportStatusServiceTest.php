@@ -31,7 +31,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'hasMoneyIn' => false,
                 'hasMoneyOut' => false,
                 'getHasDebts' => null,
-                'getDebts' => []
+                'getDebts' => [],
             ]);
 
         return new StatusService($report);
