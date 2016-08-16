@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Odr\Finance;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
@@ -66,9 +66,7 @@ class IncomeBenefitsController extends AbstractController
         $request = $this->getRequest();
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->getRestClient()->put('odr/' . $odrId, $form->getData(), [
-                'deserialise_groups' => $jmsGroups,
-            ]);
+            $this->getRestClient()->put('odr/' . $odrId, $form->getData(), $jmsGroups);
 
             return $this->redirect($this->generateUrl('odr-income-benefits', ['odrId' => $odrId]));
         }

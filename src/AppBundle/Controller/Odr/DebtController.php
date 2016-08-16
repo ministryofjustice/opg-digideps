@@ -32,9 +32,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('odr/'.$odr->getId(), $form->getData(), [
-                'deserialise_group' => 'debts',
-            ]);
+            $this->get('restClient')->put('odr/'.$odr->getId(), $form->getData(), ['debts']);
 
             return $this->redirect($this->generateUrl('odr-debts', ['odrId' => $odrId]));
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Odr\Finance;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
@@ -18,7 +18,7 @@ class BankAccountsController extends AbstractController
      * @Route("/odr/{odrId}/finance/banks", name="odr-bank-accounts")
      *
      * @param int $odrId
-     * @Template("AppBundle:Odr/Finance/BankAccounts:index.html.twig")
+     * @Template()
      *
      * @return array
      */
@@ -72,13 +72,9 @@ class BankAccountsController extends AbstractController
             $data->setOdr($odr);
             // if closing balance is set to non-zero values, un-close the account
             if ($type === 'edit') {
-                $this->getRestClient()->put('/odr/account/'.$id, $bankAccount, [
-                    'deserialise_group' => 'bank-account',
-                ]);
+                $this->getRestClient()->put('/odr/account/'.$id, $bankAccount, ['bank-account']);
             } else {
-                $addedAccount = $this->getRestClient()->post('odr/'.$odrId.'/account', $bankAccount, [
-                    'deserialise_group' => 'bank-account',
-                ]);
+                $this->getRestClient()->post('odr/'.$odrId.'/account', $bankAccount, ['bank-account']);
             }
 
             return $this->redirect($this->generateUrl('odr-bank-accounts', ['odrId' => $odrId]));

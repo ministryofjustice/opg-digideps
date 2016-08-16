@@ -11,15 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
 {
+    private static $odrJmsGroups = [
+        'odr',
+        'client',
+        'visits-care',
+    ];
+
     /**
      * @Route("/odr/{odrId}/visits-care", name="odr-visits-care")
      * @Template()
      */
     public function indexAction(Request $request, $odrId)
     {
-        $client = $this->getClientOrThrowException();
-        $odr = $this->getOdr($client->getId(), ['odr', 'client', 'visits-care']);
-
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
@@ -38,18 +42,11 @@ class VisitsCareController extends AbstractController
             $data->setOdr($odr);
             $data->keepOnlyRelevantData();
 
-            //TODO simplify endpoint similarly to account, using a PUT on /odr, 'visits-care' subkey
-            $deserialiseGroup = [
-                'deserialise_groups' => ['visits-care', 'odr-id'],
-            ];
             if ($visitsCare->getId() === null) {
-                $this->getRestClient()->post('/odr/visits-care', $data, $deserialiseGroup);
+                $this->getRestClient()->post('/odr/visits-care', $data, ['visits-care', 'odr-id']);
             } else {
-                $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, $deserialiseGroup);
+                $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, ['visits-care', 'odr-id']);
             }
-
-            //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-visitsCare');
-            //$this->get('session')->getFlashBag()->add('action', $t);
 
             return $this->redirect($this->generateUrl('odr-visits-care', ['odrId' => $odrId]).'#pageBody');
         }

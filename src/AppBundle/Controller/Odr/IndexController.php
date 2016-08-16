@@ -13,6 +13,7 @@ class IndexController extends AbstractController
 {
     private static $odrGroupsForValidation = [
         'odr',
+        'client',
         'visits-care',
         'odr-account',
         'odr-debt',
@@ -27,13 +28,16 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-        $client = $this->getClientOrThrowException();
-        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-        $odr->setClient($client);
+//        $client = $this->getFirstClient();
+//        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
+//        $client = $odr->getClient();
 
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
-        //arsort($reports);
+        $user = $this->getUserWithData(['user', 'client', 'report', 'odr']);
+        $client = $user->getClients()[0];
+        $odr = $client->getOdr();
+
+        $reports = $client ? $client->getReports() : [];
+        arsort($reports);
 
         $reportActive = null;
         $reportsSubmitted = [];
@@ -48,7 +52,7 @@ class IndexController extends AbstractController
         $odrStatus = new OdrStatusService($odr);
 
         return [
-            'client' => $odr->getClient(),
+            'client' => $client,
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,
@@ -62,10 +66,8 @@ class IndexController extends AbstractController
      */
     public function overviewAction()
     {
-        $client = $this->getClientOrThrowException();
-        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-        $odr->setClient($client);
+        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
@@ -85,19 +87,15 @@ class IndexController extends AbstractController
      */
     public function submitAction(Request $request)
     {
-        $client = $this->getClientOrThrowException();
-        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-        $odr->setClient($client);
+        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('ODR already submitted and not editable.');
         }
 
         $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
-        $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, [
-            'deserialise_group' => 'submit',
-        ]);
+        $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, ['submit']);
 
         return $this->redirect($this->generateUrl('odr_index'));
     }
@@ -110,10 +108,8 @@ class IndexController extends AbstractController
      */
     public function reviewAction($odrId)
     {
-        $client = $this->getClientOrThrowException();
-        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-        $odr->setClient($client);
+        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $odr = $client->getOdr();
 
         // check status
         $odrStatusService = new OdrStatusService($odr);
@@ -130,10 +126,8 @@ class IndexController extends AbstractController
      */
     public function pdfViewAction($odrId)
     {
-        $client = $this->getClientOrThrowException();
-        $client = $this->getRestClient()->get('client/'.$client->getId(), 'Client');
-        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-        $odr->setClient($client);
+        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $odr = $client->getOdr();
 
         $pdfBinary = $this->getPdfBinaryContent($odr);
 

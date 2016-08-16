@@ -11,19 +11,6 @@ use AppBundle\Service\Client\RestClient;
 class AbstractController extends Controller
 {
     /**
-     * @return Client
-     */
-    protected function getClientOrThrowException()
-    {
-        $clients = $this->getUser()->getClients();
-        if (empty($clients)) {
-            throw new \RuntimeException('Client not found for the logged user.');
-        }
-
-        return $clients[0];
-    }
-
-    /**
      * @return RestClient
      */
     protected function getRestClient()
@@ -48,9 +35,9 @@ class AbstractController extends Controller
     /**
      * @return Client|null
      */
-    protected function getFirstClient()
+    protected function getFirstClient($groups = ['user', 'client'])
     {
-        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $groups); /* @var $user EntityDir\User*/
         $clients = $user->getClients();
 
         return !empty($clients) ? $clients[0] : null;
@@ -94,7 +81,7 @@ class AbstractController extends Controller
      */
     public function getOdr($odrId, array $groups/* = ['basic']*/)
     {
-        return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', ['query' => ['groups' => $groups]]);
+        return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', $groups);
     }
 
     /**

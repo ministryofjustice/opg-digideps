@@ -19,7 +19,7 @@
         <h3 class="heading-medium-large">{{ ('banks.' ~ type ~ '.pageSectionTitle') | trans }}</h3>
         <p class="page-section-description">{{ ('banks.' ~ type ~ '.pageSectionDescription') | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
         
-        {% include 'AppBundle:Odr/Finance:_account_form.html.twig' %}
+        {% include 'AppBundle:Odr/Finance/BankAccounts:_account_form.html.twig' %}
         
     {% endblock %}
 
