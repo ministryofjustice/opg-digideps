@@ -156,7 +156,7 @@ class AccountControllerTest extends AbstractTestController
 
         $account = self::fixtures()->getRepo('Odr\Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
-        $this->assertEquals(499, $accouxnt->getBalanceOnCourtOrderDate());
+        $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
 
         // assert user cannot modify another users' account
         $url2 = '/odr/account/'.self::$account2->getId();

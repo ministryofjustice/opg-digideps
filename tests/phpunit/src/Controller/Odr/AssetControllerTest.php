@@ -240,7 +240,6 @@ class AssetControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        die;
         $url = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,

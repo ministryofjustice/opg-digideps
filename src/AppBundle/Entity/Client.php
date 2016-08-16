@@ -47,6 +47,13 @@ class Client
     private $reports;
 
     /**
+     * @JMS\Groups({"basic", "odr", "odr_id"})
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
+     **/
+    private $odr;
+
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"client"})
      *
