@@ -30,9 +30,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'transactionsIn',
-            ]);
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsIn']);
 
             return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
         }
@@ -62,9 +60,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'transactionsOut',
-            ]);
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsOut']);
 
             return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
         }
@@ -93,9 +89,7 @@ class BankAccountController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('report/'.$reportId, $data, [
-                'balance_mismatch_explanation',
-            ]);
+            $this->getRestClient()->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
         }
 
         return [
@@ -164,13 +158,9 @@ class BankAccountController extends AbstractController
                 $data->setIsClosed(false);
             }
             if ($type === 'edit') {
-                $this->getRestClient()->put('/account/'.$id, $account, [
-                    'account',
-                ]);
+                $this->getRestClient()->put('/account/'.$id, $account, ['account']);
             } else {
-                $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, [
-                    'account',
-                ]);
+                $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, ['account']);
                 $id = $addedAccount['id'];
             }
 
@@ -261,9 +251,7 @@ class BankAccountController extends AbstractController
                 ], 500);
             }
 
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                $type,
-            ]);
+            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [$type]);
 
             return new JsonResponse(['success' => true]);
         } catch (\Exception $e) {

@@ -26,9 +26,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
-                'debt',
-            ]);
+            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), ['debt']);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
         }
@@ -50,9 +48,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
-                'debt',
-            ]);
+            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), ['debt']);
 
             return JsonResponse(['success' => true]);
         }
