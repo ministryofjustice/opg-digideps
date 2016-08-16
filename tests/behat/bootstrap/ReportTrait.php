@@ -532,7 +532,6 @@ trait ReportTrait
         $this->assertResponseStatus(200);
     }
 
-
     /**
      * @Given the report should not be submittable
      */

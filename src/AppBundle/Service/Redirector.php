@@ -132,6 +132,7 @@ class Redirector
         // default => ODR homepage / dashboard
         return $this->router->generate('odr_index');
 
+        //return $this->router->generate('reports', ['cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS]);
     }
 
     /**

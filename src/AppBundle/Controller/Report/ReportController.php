@@ -16,35 +16,34 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
-        'accounts',
+        'account',
         'action',
         'asset',
-        'debts',
+        'debt',
         'balance',
-        'basic',
         'client',
-        'contacts',
+        'contact',
         'debts',
-        'decisions',
+        'decision',
+        'safeguarding',
         'mental-capacity',
-        'transfers',
-        'transactions',
-        'transactionsIn',
-        'transactionsOut',
+        'money-transfer',
+        'transaction',
     ];
 
     /**
+     * List of reports.
+     *
      * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
      * @Template()
      */
-    public function indexAction($cot, $reportId = null)
+    public function indexAction(Request $request, $cot, $reportId = null)
     {
-        $clients = $this->getUser()->getClients();
-        $request = $this->getRequest();
-
+        $user = $this->getUserWithData(['user', 'client', 'report']);
+        $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
+        $reports = $client ? $client->getReports() : [];
         $reports = array_filter($reports, function ($r) use ($cot) {
             return $r->getCourtOrderTypeId() == $cot;
         });
@@ -55,14 +54,14 @@ class ReportController extends AbstractController
 
         // edit report dates
         if ($reportId) {
-            $report = $this->getReport($reportId, ['transactions', 'basic']);
+            $report = $this->getReport($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates',
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
                 $this->getRestClient()->put('report/'.$reportId, $report, [
-                     'deserialise_group' => 'startEndDates',
+                     'startEndDates',
                 ]);
 
                 return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
@@ -74,7 +73,7 @@ class ReportController extends AbstractController
             if ($report->getReportSeen() === false) {
                 $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
 
-                $reportObj = $this->getReport($report->getId(), ['transactions', 'basic']);
+                $reportObj = $this->getReport($report->getId(), ['transactions']);
                 //update report to say message has been seen
                 $reportObj->setReportSeen(true);
                 $this->getRestClient()->put('report/'.$report->getId(), $reportObj);
@@ -87,7 +86,7 @@ class ReportController extends AbstractController
             'reports' => $reports,
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
             'newReportNotification' => $newReportNotification,
             'filter' => 'propFinance', // extend with param when required
         ];
@@ -105,15 +104,13 @@ class ReportController extends AbstractController
      * )
      * @Template()
      */
-    public function createAction($clientId, $action = false)
+    public function createAction(Request $request, $clientId, $action = false)
     {
-        $request = $this->getRequest();
-
-        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['query' => ['groups' => ['basic']]]);
+        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['client']);
 
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
 
-        $existingReports = $this->getReportsIndexedById($client, ['basic']);
+        $existingReports = $this->getReportsIndexedById($client);
 
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report\Report) {
             $report = $firstReport;
@@ -151,11 +148,7 @@ class ReportController extends AbstractController
     public function overviewAction($reportId)
     {
         // get all the groups (needed by ReportStatusService
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
         $reportStatusService = new ReportStatusService($report);
 
         return [
@@ -175,7 +168,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator = $this->get('translator');
@@ -185,11 +178,9 @@ class ReportController extends AbstractController
         if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted');
-        }
 
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
         $client = $clients[0];
 
         $form = $this->createForm(new FormDir\Report\ReportFurtherInfoType(), $report);
@@ -197,7 +188,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // add furher info
             $this->getRestClient()->put('report/'.$report->getId(), $report, [
-                'deserialise_group' => 'furtherInformation',
+                'furtherInformation',
             ]);
 
             // next or save: redirect to report declration
@@ -225,7 +216,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator = $this->get('translator');
@@ -235,11 +226,9 @@ class ReportController extends AbstractController
         if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted');
-        }
 
-        $clients = $this->getUser()->getClients();
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
         $client = $clients[0];
 
         $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
@@ -248,15 +237,15 @@ class ReportController extends AbstractController
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
-                'deserialise_group' => 'submit',
+                'submit',
             ]);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
 
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
-            
+            $newReport = $this->getRestClient()->get('report/'.$newReportId['newReportId'], 'Report\\Report');
+
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);

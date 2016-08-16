@@ -20,7 +20,7 @@ class MentalCapacityController extends AbstractController
      */
     public function editAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'mental-capacity']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['mental-capacity']);
 
         $mc = $report->getMentalCapacity();
         if ($mc == null) {
@@ -37,7 +37,7 @@ class MentalCapacityController extends AbstractController
             $data->setReport($report);
 
             $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, [
-                'deserialise_group' => 'mental-capacity',
+                'mental-capacity',
             ]);
 
             return $this->redirect($this->generateUrl('mental_capacity', ['reportId' => $reportId]).'#pageBody');

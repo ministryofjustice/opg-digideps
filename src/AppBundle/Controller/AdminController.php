@@ -38,9 +38,7 @@ class AdminController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $this->getRestClient()->post('user', $form->getData(), [
-                    'deserialise_group' => 'admin_add_user', //only serialise the properties modified by this form)
-                ]);
+                $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
                 $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
 
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);

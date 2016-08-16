@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report;
@@ -32,6 +32,31 @@ class AbstractController extends Controller
     }
 
     /**
+     * @param array $jmsGroups
+     *
+     * @return User|null
+     */
+    protected function getUserWithData(array $jmsGroups)
+    {
+        $jmsGroups[] = 'user';
+        $jmsGroups = array_unique($jmsGroups);
+        sort($jmsGroups);
+
+        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
+    }
+
+    /**
+     * @return Client|null
+     */
+    protected function getFirstClient()
+    {
+        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', ['user', 'client']); /* @var $user EntityDir\User*/
+        $clients = $user->getClients();
+
+        return !empty($clients) ? $clients[0] : null;
+    }
+
+    /**
      * @return array $choices
      */
     protected function getAllowedCourtOrderTypeChoiceOptions()
@@ -50,11 +75,15 @@ class AbstractController extends Controller
      * @param int   $reportId
      * @param array $groups
      * 
-     * @return Report
+     * @return Report\Report
      */
-    public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
+    public function getReport($reportId, array $groups = [])
     {
-        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', ['query' => ['groups' => $groups]]);
+        $groups[] = 'report';
+        $groups[] = 'client';
+        $groups = array_unique($groups);
+        sort($groups); // helps HTTP caching
+        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
     }
 
     /**
@@ -70,10 +99,11 @@ class AbstractController extends Controller
 
     /**
      * @param Client $client
-     * 
+     * @param array  $groups
+     *
      * @return Report[]
      */
-    public function getReportsIndexedById(Client $client, $groups)
+    public function getReportsIndexedById(Client $client, $groups = [])
     {
         $reportIds = $client->getReports();
 
@@ -96,7 +126,7 @@ class AbstractController extends Controller
      *
      * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, array $groups)
+    protected function getReportIfReportNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {

@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,17 +21,13 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['debts', 'basic', 'client'/*, 'transactions', 'asset', 'accounts'*/]);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
-        $form = $this->createForm(new FormDir\Report\DebtsType, $report);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
+        $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'debts',
+                'debt',
             ]);
 
             return $this->redirect($this->generateUrl('debts', ['reportId' => $reportId]));
@@ -49,17 +45,13 @@ class DebtController extends AbstractController
      */
     public function debtSaveJsonAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['debts', 'basic']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
-        $form = $this->createForm(new FormDir\Report\DebtsType, $report);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
+        $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'debts',
+                'debt',
             ]);
 
             return JsonResponse(['success' => true]);

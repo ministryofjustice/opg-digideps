@@ -13,7 +13,7 @@ class Transaction
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
     private $id;
 

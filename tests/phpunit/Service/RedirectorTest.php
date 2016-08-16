@@ -59,7 +59,6 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
            ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>null], ['client_add', []]],
            ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>1, 'getActiveReportId'=>1], ['report_overview', ['reportId'=>1]]],
            ['ROLE_LAY_DEPUTY', ['hasDetails'=>true, 'getIdOfClientWithDetails'=>1, 'getActiveReportId'=>null], ['odr_index', []]],
-
         ];
     }
 

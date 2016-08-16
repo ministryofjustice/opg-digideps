@@ -22,7 +22,7 @@ class ContactController extends AbstractController
      */
     public function listAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'contacts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
         $contacts = $report->getContacts();
 
         if (empty($contacts) && $report->isDue() == false) {
@@ -41,7 +41,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
 
         $contact = new EntityDir\Report\Contact();
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
@@ -53,7 +53,7 @@ class ContactController extends AbstractController
 
             // update contact. The API will also delete reason for no contact
             $this->getRestClient()->post('report/contact', $data, [
-                'deserialise_group' => 'Default',
+                'contact',
             ]);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
@@ -71,7 +71,7 @@ class ContactController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
 
         $contact = $this->getRestClient()->get('report/contact/'.$id, 'Report\\Contact');
         $contact->setReport($report);
@@ -101,14 +101,7 @@ class ContactController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic', 'contacts']);
-
-        foreach ($report->getContacts() as $contact) {
-            if ($contact->getId() == $id) {
-                $this->getRestClient()->delete("/report/contact/{$id}");
-            }
-        }
+        $this->getRestClient()->delete("/report/contact/{$id}");
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
     }
@@ -119,12 +112,12 @@ class ContactController extends AbstractController
     public function deleteReasonAction($reportId)
     {
         //just do some checks to make sure user is allowed to update this report
-        $report = $this->getReport($reportId, ['basic', 'transactions']);
+        $report = $this->getReport($reportId);
 
         if (!empty($report)) {
             $report->setReasonForNoContacts(null);
             $this->get('restClient')->put('report/'.$report->getId(), $report, [
-                'deserialise_group' => 'reasonForNoContacts',
+                'reasonForNoContacts',
             ]);
         }
 
@@ -137,7 +130,7 @@ class ContactController extends AbstractController
      */
     public function noneReasonAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
 
         $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report);
         $form->handleRequest($request);
@@ -145,7 +138,7 @@ class ContactController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $this->get('restClient')->put('report/'.$reportId, $data, [
-                'deserialise_group' => 'reasonForNoContacts',
+                'reasonForNoContacts',
             ]);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
@@ -165,13 +158,13 @@ class ContactController extends AbstractController
     public function _noneReasonFormAction(Request $request, $reportId)
     {
         $actionUrl = $this->generateUrl('edit_contacts_nonereason', ['reportId' => $reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
         $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/'.$reportId, $form->getData(), [
-                'deserialise_group' => 'reasonForNoContacts',
+                'reasonForNoContacts',
             ]);
         }
 

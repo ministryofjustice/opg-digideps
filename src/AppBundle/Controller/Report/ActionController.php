@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\ReportStatusService;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
@@ -15,23 +16,16 @@ class ActionController extends AbstractController
      * @Route("/report/{reportId}/actions", name="actions")
      * @Template()
      */
-    public function editAction($reportId)
+    public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'action']); // check the report is owned by this user.
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
         if ($report->getAction() == null) {
             $action = new EntityDir\Report\Action();
         } else {
             $action = $report->getAction();
         }
 
-        $request = $this->getRequest();
         $form = $this->createForm(new FormDir\Report\ActionType(), $action);
-
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -45,9 +39,10 @@ class ActionController extends AbstractController
 
         $reportStatusService = new ReportStatusService($report);
 
-        return['report' => $report,
-                'reportStatus' => $reportStatusService,
-                'form' => $form->createView(),
+        return [
+            'report' => $report,
+            'reportStatus' => $reportStatusService,
+            'form' => $form->createView(),
         ];
     }
 }

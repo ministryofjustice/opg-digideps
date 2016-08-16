@@ -92,6 +92,7 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
+     *
      * @return ModelDir\Email
      */
     public function createResetPasswordEmail(EntityDir\User $user)
@@ -149,9 +150,10 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $report
      * @param $pdfBinaryContent
+     *
      * @return ModelDir\Email
      */
     public function createReportEmail(EntityDir\User $user, EntityDir\Report\Report $report, $pdfBinaryContent)
@@ -207,9 +209,10 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report $newReport
+     * @param EntityDir\Report        $newReport
+     *
      * @return ModelDir\Email
      */
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)

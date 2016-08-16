@@ -50,7 +50,7 @@ class AuditLogger
             ->setUserEdited($userEdited);
 
         $ret = $this->restClient->post('audit-log', $entry, [
-            'deserialise_group' => 'audit_log_save',
+            'audit_log_save',
          ]);
 
         return $ret;

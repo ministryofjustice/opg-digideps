@@ -25,17 +25,13 @@ class BankAccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['transactionsIn', 'basic', 'client', 'balance']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'transactionsIn',
+                'transactionsIn',
             ]);
 
             return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
@@ -60,17 +56,14 @@ class BankAccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['transactionsOut', 'basic', 'client', 'balance']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'balance']);
 
         $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => 'transactionsOut',
+                'transactionsOut',
             ]);
 
             return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
@@ -94,21 +87,14 @@ class BankAccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
-        $accounts = $this->getRestClient()->get("/report/{$reportId}/accounts", 'Report\\Account[]');
-        $report->setAccounts($accounts);
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'transaction']);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, [
-                'deserialise_group' => 'balance_mismatch_explanation',
+                'balance_mismatch_explanation',
             ]);
         }
 
@@ -129,10 +115,7 @@ class BankAccountController extends AbstractController
      */
     public function banksAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'client', 'balance', 'accounts']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
-        }
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account']);
 
         return [
             'report' => $report,
@@ -153,12 +136,12 @@ class BankAccountController extends AbstractController
      */
     public function upsertAction(Request $request, $reportId, $id = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
         $type = $id ? 'edit' : 'add';
         $showMigrationWarning = false;
 
         if ($type === 'edit') {
-            if (!$report->hasAaccountWithId($id)) {
+            if (!$report->hasAccountWithId($id)) {
                 throw new \RuntimeException('Account not found.');
             }
             $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
@@ -182,11 +165,11 @@ class BankAccountController extends AbstractController
             }
             if ($type === 'edit') {
                 $this->getRestClient()->put('/account/'.$id, $account, [
-                    'deserialise_group' => 'add_edit',
+                    'account',
                 ]);
             } else {
                 $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, [
-                    'deserialise_group' => 'add_edit',
+                    'account',
                 ]);
                 $id = $addedAccount['id'];
             }
@@ -222,9 +205,9 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
 
-        if ($report->hasAaccountWithId($id)) {
+        if ($report->hasAccountWithId($id)) {
             $this->getRestClient()->delete("/account/{$id}");
         }
 
@@ -251,8 +234,7 @@ class BankAccountController extends AbstractController
     public function moneySaveJson(Request $request, $reportId, $type)
     {
         try {
-            $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
-
+            $report = $this->getReport($reportId, [$type, 'balance']);
             if ($report->getSubmitted()) {
                 return new JsonResponse([
                     'success' => false,
@@ -280,7 +262,7 @@ class BankAccountController extends AbstractController
             }
 
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [
-                'deserialise_group' => $type,
+                $type,
             ]);
 
             return new JsonResponse(['success' => true]);

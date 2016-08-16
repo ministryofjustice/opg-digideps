@@ -9,7 +9,7 @@ class Debt
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      */
     private $debtTypeId;
 
@@ -17,7 +17,7 @@ class Debt
      * @var decimal
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
      * @Assert\Range(min=0, max=100000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
      */
@@ -25,14 +25,14 @@ class Debt
 
     /**
      * @var string
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @JMS\Type("boolean")
      */
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      * @JMS\Type("string")
      *
      * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debts-more-details"})

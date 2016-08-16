@@ -40,7 +40,7 @@ trait LinksTrait
         //   $this->printLastResponse();
         //}
     }
-    
+
     /**
      * @Given I visit the behat admin link :link
      */

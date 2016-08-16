@@ -65,7 +65,7 @@ class DeputyProvider implements UserProviderInterface
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
             ->setLoggedUserId($id)
-            ->get('user/'.$id, 'User');
+            ->get('user/'.$id, 'User', ['user', 'role', 'user-login']);
     }
 
     /**
@@ -99,6 +99,6 @@ class DeputyProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === "AppBundle\Entity\User";
+        return $class === 'AppBundle\Entity\User';
     }
 }

@@ -15,6 +15,7 @@ class Decision
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"decision"})
      *
      * @var int
      */
@@ -22,6 +23,8 @@ class Decision
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"decision"})
+     *
      * @Assert\NotBlank( message="decision.description.notBlank" )
      * @Assert\Length( min=2, minMessage="decision.description.length")
      *
@@ -31,7 +34,9 @@ class Decision
 
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
+     *
      * @JMS\Type("boolean")
+     * @JMS\Groups({"decision"})
      *
      * @var bool
      */
@@ -40,7 +45,9 @@ class Decision
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank")
      * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length")
+     *
      * @JMS\Type("string")
+     * @JMS\Groups({"decision"})
      *
      * @var bool
      */
@@ -56,11 +63,13 @@ class Decision
 
     /**
      * @param int $id
+     *
      * @return Decision
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -74,16 +83,18 @@ class Decision
 
     /**
      * @param string $description
+     *
      * @return Decision
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClientInvolvedBoolean()
     {
@@ -91,17 +102,19 @@ class Decision
     }
 
     /**
-     * @param boolean $clientInvolvedBoolean
+     * @param bool $clientInvolvedBoolean
+     *
      * @return Decision
      */
     public function setClientInvolvedBoolean($clientInvolvedBoolean)
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClientInvolvedDetails()
     {
@@ -109,14 +122,14 @@ class Decision
     }
 
     /**
-     * @param boolean $clientInvolvedDetails
+     * @param bool $clientInvolvedDetails
+     *
      * @return Decision
      */
     public function setClientInvolvedDetails($clientInvolvedDetails)
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
+
         return $this;
     }
-
-
 }
