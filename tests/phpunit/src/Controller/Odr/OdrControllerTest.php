@@ -206,6 +206,7 @@ class OdrControllerTest extends AbstractTestController
             ['type_id'=>'sale_of_an_asset', 'present'=>false, 'more_details'=>null],
         ];
 
+        // PUT
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -220,6 +221,7 @@ class OdrControllerTest extends AbstractTestController
             ],
         ]);
 
+        // GET and assert
         $q = http_build_query(['groups' => [
             'odr-income-benefits',
             'odr-income-state-benefits',
@@ -232,6 +234,7 @@ class OdrControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
+        // assert state benefits
         $this->assertEquals([
             'id' => 1,
             'type_id' => 'contributions_based_allowance',
@@ -256,12 +259,14 @@ class OdrControllerTest extends AbstractTestController
             'more_details' => 'obmd',
         ], $data['state_benefits'][11]);
 
+        // assert income and damages (Odr properties)
         $this->assertEquals('no', $data['receive_state_pension']);
         $this->assertEquals('yes', $data['receive_other_income']);
         $this->assertEquals('roid', $data['receive_other_income_details']);
         $this->assertEquals('yes', $data['expect_compensation_damages']);
         $this->assertEquals('exdd', $data['expect_compensation_damages_details']);
 
+        // assert one-off
         $this->assertEquals([
             'id' => 1,
             'type_id' => 'bequest_or_inheritance',
@@ -277,7 +282,6 @@ class OdrControllerTest extends AbstractTestController
             'has_more_details' => false,
             'more_details' => null,
         ], $data['one_off'][1]);
-
 
     }
 
