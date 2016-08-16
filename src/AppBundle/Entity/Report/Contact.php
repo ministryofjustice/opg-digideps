@@ -51,6 +51,7 @@ class Contact
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"contact"})
      * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $county;

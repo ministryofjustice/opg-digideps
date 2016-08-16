@@ -60,9 +60,7 @@ class ReportController extends AbstractController
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $this->getRestClient()->put('report/'.$reportId, $report, [
-                     'startEndDates',
-                ]);
+                $this->getRestClient()->put('report/'.$reportId, $report, ['startEndDates']);
 
                 return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
             }
@@ -187,9 +185,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->getRestClient()->put('report/'.$report->getId(), $report, [
-                'furtherInformation',
-            ]);
+            $this->getRestClient()->put('report/'.$report->getId(), $report, ['furtherInformation']);
 
             // next or save: redirect to report declration
             if ($form->get('saveAndContinue')->isClicked()) {
@@ -236,9 +232,7 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, [
-                'submit',
-            ]);
+            $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);

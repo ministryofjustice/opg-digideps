@@ -274,9 +274,7 @@ class UserController extends AbstractController
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            $this->getRestClient()->put('user/'.$user->getId(), $formData, [
-                'user_details_full',
-            ]);
+            $this->getRestClient()->put('user/'.$user->getId(), $formData, ['user_details_full']);
 
             return $this->redirect($this->generateUrl('user_show'));
         }
