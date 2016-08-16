@@ -62,7 +62,6 @@ class ActionControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-
     public function testupdate()
     {
         $url = '/report/'.self::$report1->getId().'/action';
@@ -86,7 +85,7 @@ class ActionControllerTest extends AbstractTestController
         $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('yes', $action->getDoYouHaveConcerns());
         $this->assertEquals('cd', $action->getDoYouHaveConcernsDetails());
-        
+
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -103,7 +102,5 @@ class ActionControllerTest extends AbstractTestController
         $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('no', $action->getDoYouHaveConcerns());
         $this->assertEquals(null, $action->getDoYouHaveConcernsDetails());
-        
     }
-
 }

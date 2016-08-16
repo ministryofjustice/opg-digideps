@@ -232,7 +232,6 @@ class UserControllerTest extends AbstractTestController
                 'send_email' => 'password-reset',
             ],
         ]);
-
     }
 
     public function testGetOneByIdAuth()

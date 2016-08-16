@@ -20,14 +20,14 @@ class Decision
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="decision_id_seq", allocationSize=1, initialValue=1)
-     * @JMS\Groups({"decision", "related","basic"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("integer")
      */
     private $id;
 
     /**
      * @var string
-     * @JMS\Groups({"decision", "related","basic"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("string")
      * @ORM\Column(type="text")
      */
@@ -35,22 +35,22 @@ class Decision
 
     /**
      * @var bool
-     * @JMS\Groups({"decision", "related","basic"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
     private $clientInvolvedBoolean;
 
     /**
-     * @JMS\Groups({"decision", "related","basic"})
+     * @JMS\Groups({"decision"})
      * @JMS\Type("string")
      * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
     private $clientInvolvedDetails;
 
     /**
-     * @var int
-     * @JMS\Groups({"related"})
+     * @var Report
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="decisions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */

@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * CourtOrderType.
  *
- * @JMS\XmlRoot("court_order_type")
  * @ORM\Table(name="court_order_type")
  * @ORM\Entity
  */

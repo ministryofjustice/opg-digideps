@@ -10,26 +10,6 @@ use AppBundle\Entity as EntityDir;
 class AssetController extends RestController
 {
     /**
-     * @Route("/report/{reportId}/assets", requirements={"reportId":"\d+"})
-     * @Method({"GET"})
-     */
-    public function getAll($reportId)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $report = $this->findEntityBy('Report', $reportId);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $assets = $this->getRepository('Asset')->findByReport($report);
-
-        if (count($assets) == 0) {
-            return [];
-        }
-
-        return $assets;
-    }
-
-    /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
      */
@@ -43,7 +23,8 @@ class AssetController extends RestController
         $asset = $this->findEntityBy('Asset', $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['asset'];
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['asset'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $asset;

@@ -86,30 +86,15 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEquals(self::$decision1->getDescription(), $data['description']);
     }
 
-    public function testgetDecisionsAuth()
-    {
-        $url = '/report/'.self::$report1->getId().'/decisions';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetDecisionsAcl()
-    {
-        $url2 = '/report/'.self::$report2->getId().'/decisions';
-
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
     public function testgetDecisions()
     {
-        $url = '/report/'.self::$report1->getId().'/decisions';
+        $url = '/report/'.self::$report1->getId().'?groups=decision';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            ])['data']['decisions'];
 
         $this->assertCount(1, $data);
         $this->assertEquals(self::$decision1->getId(), $data[0]['id']);

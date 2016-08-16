@@ -122,8 +122,8 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/'.self::$report1->getId();
 
-        // assert get groups=basic
-        $data = $this->assertJsonRequest('GET', $url, [
+        $q = http_build_query(['groups' => ['report', 'client']]);
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
@@ -136,15 +136,8 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
 
-        // assert accounts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=accounts', [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
-        $this->assertArrayHasKey('accounts', $data);
-
         // assert decisions
-        $data = $this->assertJsonRequest('GET', $url.'?groups=decisions', [
+        $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
@@ -158,7 +151,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('assets', $data);
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debts', [
+        $data = $this->assertJsonRequest('GET', $url.'?groups=debt', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -270,7 +263,7 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         // both
-        $q = http_build_query(['groups' => ['transactionsIn', 'transactionsOut', 'basic']]);
+        $q = http_build_query(['groups' => ['report', 'transactionsIn', 'transactionsOut']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
                 'mustSucceed' => true,
@@ -313,15 +306,15 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'has_debts' => 'yes',
                 'debts' => [
-                    ['debt_type_id' => 'care-fees', 'amount'=>1, 'more_details'=> 'should not be saved'],
-                    ['debt_type_id' => 'credit-cards', 'amount'=>2, 'more_details'=> ''],
-                    ['debt_type_id' => 'loans', 'amount'=>3, 'more_details'=> ''],
-                    ['debt_type_id' => 'other', 'amount'=>4, 'more_details'=> 'md'],
-                ]
+                    ['debt_type_id' => 'care-fees', 'amount' => 1, 'more_details' => 'should not be saved'],
+                    ['debt_type_id' => 'credit-cards', 'amount' => 2, 'more_details' => ''],
+                    ['debt_type_id' => 'loans', 'amount' => 3, 'more_details' => ''],
+                    ['debt_type_id' => 'other', 'amount' => 4, 'more_details' => 'md'],
+                ],
             ],
         ]);
 
-        $q = http_build_query(['groups' => ['debts']]);
+        $q = http_build_query(['groups' => ['debt']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
@@ -353,7 +346,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'has_debts' => 'no',
-                'debts' => []
+                'debts' => [],
             ],
         ]);
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [

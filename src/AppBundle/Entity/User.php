@@ -19,7 +19,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"basic","audit_log","user"})
+     * @JMS\Groups({"audit_log","user"})
      * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -29,7 +29,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @JMS\Groups({"basic", "client"})
+     * @JMS\Groups({ "client"})
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
      */
@@ -38,7 +38,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "audit_log","user"})
+     * @JMS\Groups({ "audit_log","user"})
      * 
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -49,7 +49,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "audit_log","user"})
+     * @JMS\Groups({ "audit_log","user"})
      */
     private $lastname;
 
@@ -62,7 +62,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -72,7 +72,7 @@ class User implements UserInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic","user"})
+     * @JMS\Groups({"user"})
      * 
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
@@ -88,7 +88,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -97,7 +97,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
     private $registrationToken;
@@ -105,7 +105,7 @@ class User implements UserInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="email_confirmed", type="boolean", nullable=true)
      */
     private $emailConfirmed;
@@ -113,7 +113,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * 
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
@@ -122,7 +122,7 @@ class User implements UserInterface
     /**
      * @var int
      * 
-     * @JMS\Groups({"basic","audit_log", "role"})
+     * @JMS\Groups({"audit_log", "role"})
      * @JMS\Type("AppBundle\Entity\Role")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
@@ -135,7 +135,7 @@ class User implements UserInterface
      * 
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      */
     private $gaTrackingId;
 
@@ -143,7 +143,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
@@ -152,7 +152,7 @@ class User implements UserInterface
      * @var string
      * 
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
@@ -161,7 +161,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
     private $address3;
@@ -170,7 +170,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
@@ -179,7 +179,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
     private $addressCountry;
@@ -188,7 +188,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;
@@ -197,7 +197,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
     private $phoneAlternative;
@@ -205,7 +205,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"basic", "user"})
+     * @JMS\Groups({"user"})
      * 
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
@@ -747,13 +747,13 @@ class User implements UserInterface
     public function getActiveReportId()
     {
         $reports = $this->getFirstClient() ? $this->getFirstClient()->getReports() : [];
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
             if (!$report->getSubmitted()) {
                 return $report->getId();
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -774,12 +774,9 @@ class User implements UserInterface
     {
         $clients = $this->getClients();
         if (count($clients) === 0) {
-            return null;
+            return;
         }
 
         return $clients->first();
     }
-
-
-
 }

@@ -46,6 +46,10 @@ class MentalCapacityController extends RestController
         $mc = $this->findEntityBy('MentalCapacity', $id, 'MentalCapacity with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['mental-capacity'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
         return $mc;
     }
 

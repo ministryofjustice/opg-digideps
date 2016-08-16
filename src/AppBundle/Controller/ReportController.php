@@ -59,7 +59,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $groups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();

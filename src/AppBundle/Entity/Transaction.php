@@ -32,7 +32,7 @@ class Transaction
     /**
      * @var TransactionType
      *
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType", fetch="EAGER")
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
@@ -43,7 +43,7 @@ class Transaction
      * @var array
      * 
      * @JMS\Type("array<string>")
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(type="simple_array", nullable=true)
      */
@@ -51,7 +51,7 @@ class Transaction
 
     /**
      * @var string
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
@@ -59,7 +59,7 @@ class Transaction
 
     /**
      * @var string
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\Type("boolean")
      * @JMS\Accessor(getter="hasMoreDetails")
      */
@@ -100,7 +100,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("id")
      *
      * @return string
@@ -112,7 +112,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("type")
      *
      * @return string
@@ -124,7 +124,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("category")
      *
      * @return string
@@ -137,7 +137,7 @@ class Transaction
     /**
      * @return array of floats
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("amounts_total")
      */
     public function getAmountsTotal()

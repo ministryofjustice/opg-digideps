@@ -2,14 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * Client.
  * 
- * @JMS\XmlRoot("client")
- * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="client")
  * @ORM\Entity
  */
@@ -20,6 +19,7 @@ class Client
      *
      * @JMS\Groups({"related","basic", "client", "client-id"})
      * @JMS\Type("integer")
+     * @JMS\Groups({"client"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -28,7 +28,7 @@ class Client
     private $id;
 
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"user"})
      * @JMS\Accessor(getter="getUserIds")
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
@@ -40,37 +40,15 @@ class Client
     private $users;
 
     /**
-     * @JMS\Groups({"related"})
-     * @JMS\Accessor(getter="getUsers", setter="addUser")
-     * @JMS\Type("array<AppBundle\Entity\User>")
-     */
-    private $userObjs;
-
-    /**
-     * @JMS\Groups({"basic", "report"})
-     * @JMS\Accessor(getter="getReportIds")
+     * @JMS\Groups({"report"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
 
     /**
-     * @JMS\Groups({"related"})
-     * @JMS\Accessor(getter="getReports", setter="addReport")
-     * @JMS\Type("array<AppBundle\Entity\Report>")
-     */
-    private $reportObjs;
-
-    /**
-     * @JMS\Groups({"basic", "odr", "odr_id"})
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
-     **/
-    private $odr;
-
-    /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -80,7 +58,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      * 
@@ -90,7 +68,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -100,8 +78,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
-     *
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -111,7 +88,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -121,7 +98,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -131,7 +108,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -141,7 +118,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -151,7 +128,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -161,7 +138,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      *
      * @var string
      *
@@ -171,7 +148,7 @@ class Client
 
     /**
      * @JMS\Type("array")
-     * @JMS\Groups({"related","basic","client"})
+     * @JMS\Groups({"client"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
      * @var array
@@ -180,7 +157,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"related","basic","client-cot"})
+     * @JMS\Groups({"client"})
      *
      * @var \Date
      *
@@ -202,8 +179,8 @@ class Client
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     /**

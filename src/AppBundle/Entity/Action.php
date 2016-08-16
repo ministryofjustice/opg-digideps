@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="action")
  * @ORM\Entity
  */
@@ -27,6 +26,8 @@ class Action
     private $id;
 
     /**
+     * @var Report
+     *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="action")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */

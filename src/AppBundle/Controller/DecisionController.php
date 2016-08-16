@@ -13,24 +13,6 @@ use AppBundle\Entity as EntityDir;
 class DecisionController extends RestController
 {
     /**
-     * @Route("/{reportId}/decisions")
-     * @Method({"GET"})
-     *
-     * @param int $reportId
-     */
-    public function getDecisions($reportId)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $report = $this->findEntityBy('Report', $reportId);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $this->setJmsSerialiserGroups(['decision']);
-
-        return $this->getRepository('Decision')->findBy(['report' => $report]);
-    }
-
-    /**
      * @Route("/decision")
      * @Method({"POST", "PUT"})
      */

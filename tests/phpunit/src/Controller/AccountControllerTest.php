@@ -52,31 +52,6 @@ class AccountControllerTest extends AbstractTestController
         }
     }
 
-    public function testgetAccountsAuth()
-    {
-        $url = '/report/'.self::$report1->getId().'/accounts';
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetAccountsAcl()
-    {
-        $url2 = '/report/'.self::$report2->getId().'/accounts';
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
-    public function testgetAccounts()
-    {
-        // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', '/report/'.self::$report1->getId().'/accounts', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertCount(1, $data);
-        $this->assertEquals(self::$account1->getId(), $data[0]['id']);
-        $this->assertEquals(self::$account1->getBank(), $data[0]['bank']);
-    }
-
     public function testaddAccount()
     {
         $url = '/report/'.self::$report1->getId().'/account';
@@ -109,6 +84,24 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
         return $account->getId();
+    }
+
+    /**
+     * @depends testaddAccount
+     */
+    public function testgetAccounts()
+    {
+        $url = '/report/'.self::$report1->getId();
+
+        // assert accounts
+        $data = $this->assertJsonRequest('GET', $url.'?groups=account', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data']['accounts'];
+        $this->assertCount(2, $data);
+        $this->assertTrue($data[0]['id'] != $data[1]['id']);
+        $this->assertArrayHasKey('bank', $data[0]);
+        $this->assertArrayHasKey('bank', $data[1]);
     }
 
     public function testgetOneById()
