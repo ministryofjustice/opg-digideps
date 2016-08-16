@@ -192,7 +192,7 @@ class RestClient
     /**
      * @param string              $endpoint e.g. /user
      * @param string|object|array $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $options  keys: deserialise_groups
+     * @param array               $jmsGroups  deserialise_groups
      * 
      * @return string response body
      */
@@ -200,7 +200,7 @@ class RestClient
     {
         $options = [];
         if ($jmsGroups) {
-            $options['query']['groups'] = $jmsGroups;
+            $options['deserialise_groups'] = $jmsGroups;
         }
 
         return $this->apiCall('put', $endpoint, $mixed, 'array', $options);
@@ -209,7 +209,7 @@ class RestClient
     /**
      * @param string        $endpoint e.g. /user
      * @param string|object $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array         $options  keys: deserialise_groups
+     * @param array         $jmsGroups  deserialise_groups
      * 
      * @return string response body
      */
@@ -217,7 +217,7 @@ class RestClient
     {
         $options = [];
         if ($jmsGroups) {
-            $options['query']['groups'] = $jmsGroups;
+            $options['deserialise_groups'] = $jmsGroups;
         }
 
         return $this->apiCall('post', $endpoint, $mixed, 'array', $options);
