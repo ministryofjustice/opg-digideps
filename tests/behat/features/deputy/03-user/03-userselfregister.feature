@@ -7,13 +7,66 @@ Feature: User Self Registration
         And emails are sent from "deputy" area
         And I reset the email log
         #
-        # Add the user and expect failure (not matching in CASREC)
+        # Form all empty
         #
-        And I am on "/register"
+        When I am on "/register"
+        And I fill in the following:
+            | self_registration_firstname |   |
+            | self_registration_lastname  |   |
+            | self_registration_email_first     |  |
+            | self_registration_email_second     |  |
+            | self_registration_postcode  |  |
+            | self_registration_clientLastname |  |
+            | self_registration_caseNumber     |   |
+        And I press "self_registration_save"
+        Then I should see a "#error-summary" element
+        Then the following fields should have an error:
+            | self_registration_firstname |
+            | self_registration_lastname  |
+            | self_registration_email_first     |
+            | self_registration_clientLastname |
+            | self_registration_caseNumber     |
+        #
+        # email invalid
+        #
+        When I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email_first     | aaa@invaliddomain.comm |
+            | self_registration_email_second     | aaa@invaliddomain.comm |
+            | self_registration_postcode  |  |
+            | self_registration_clientLastname | Cross  tolley  |
+            | self_registration_caseNumber     | 11112222      |
+        And I press "self_registration_save"
+        Then I should see a "#error-summary" element
+        Then the following fields should have an error:
+            | self_registration_email_first     |
+        #
+        # email mismatch
+        #
+        When I am on "/register"
+        And I fill in the following:
+            | self_registration_firstname | Zac                |
+            | self_registration_lastname  | Tolley             |
+            | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email_second     | behat-zac.tolley-diff@digital.justice.gov.uk |
+            | self_registration_postcode  |  |
+            | self_registration_clientLastname | Cross  tolley  |
+            | self_registration_caseNumber     | 11112222      |
+        And I press "self_registration_save"
+        Then I should see a "#error-summary" element
+        Then the following fields should have an error:
+            | self_registration_email_first     |
+        #
+        # CASREC mismatch
+        #
+        When I am on "/register"
+        And I fill in the following:
+            | self_registration_firstname | Zac                |
+            | self_registration_lastname  | Tolley             |
+            | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email_second     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  |  |
             | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 11112222      |
@@ -22,21 +75,18 @@ Feature: User Self Registration
         And I save the page as "selfreg-error-mismatch"
         And I should be on "/register"
         #
-        # Add user to casrec and expect error for postcode
+        # Postcode mismatch
         # 
         Given I add the following users to CASREC:
             | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode | 
             |11112222   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
             |11113333   | Cross-Tolley2 | D002     | Tolley2 | SW1 3RF2      |
-        #
-        # expect postcode error
-        #
         And I press "self_registration_save"
         Then the following fields should have an error:
             | self_registration_postcode |
         And I save the page as "selfreg-error-postcode"
         #
-        # fix postcode and expect success
+        # success (by fixing postcode)
         #
         And I fill in the following:
             | self_registration_postcode  | SW1 3RF |  
@@ -64,7 +114,8 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley-new@digital.justice.gov.uk |
+            | self_registration_email_first     | behat-zac.tolley-new@digital.justice.gov.uk |
+            | self_registration_email_second     | behat-zac.tolley-new@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             # add case number already used
@@ -79,7 +130,8 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac2                |
             | self_registration_lastname  | Tolley2             |
-            | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_email_first     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_email_second    | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF2 |
             | self_registration_clientLastname | Cross-Tolley2  |
             | self_registration_caseNumber     | 11113333      |
@@ -89,13 +141,14 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_email_first     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_email_second     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
         Then the following fields should have an error:
-            | self_registration_email |
+            | self_registration_email_first |
 
     @deputy
     Scenario: A user can self register and activate
@@ -109,7 +162,8 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email_second     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 11112222      |
