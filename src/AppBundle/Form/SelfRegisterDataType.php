@@ -21,8 +21,8 @@ class SelfRegisterDataType extends AbstractType
                 'constraints' => [
                     new Constraints\Email([
                         'message' => 'user.email.invalid',
-                        'checkMX' => false,
-                        'checkHost' => false,
+                        'checkMX' => true,
+                        'checkHost' => true,
                     ]),
                 ],
             ])
