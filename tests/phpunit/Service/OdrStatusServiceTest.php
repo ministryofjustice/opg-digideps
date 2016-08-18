@@ -24,6 +24,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getHasDebts' => null,
                 'getNoAssetToAdd' => null,
                 'getAssets' => [],
+                'incomeBenefitsStatus' => 'not-started',
             ]);
 
         return new StatusService($odr);
@@ -66,9 +67,13 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             // not started
             [[], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'not-started'], StatusService::STATE_NOT_STARTED],
+            // incomplete
+            [['getBankAccounts' => [$bankAccount1], 'incomeBenefitsStatus'=>'not-started'], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'incomplete'], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'done'], StatusService::STATE_INCOMPLETE],
             // done
-            [['getBankAccounts' => [$bankAccount1]], StatusService::STATE_DONE],
+            [['getBankAccounts' => [$bankAccount1], 'incomeBenefitsStatus'=>'done'], StatusService::STATE_DONE],
         ];
     }
 

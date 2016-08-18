@@ -18,6 +18,11 @@ class IndexController extends AbstractController
         'odr-account',
         'odr-debt',
         'odr-asset',
+        'odr-income-benefits',
+        'odr-income-state-benefits',
+        'odr-income-pension',
+        'odr-income-damages',
+        'odr-income-one-off',
     ];
 
     /**
@@ -66,7 +71,7 @@ class IndexController extends AbstractController
      */
     public function overviewAction()
     {
-        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $client = $this->getFirstClient(array_merge(['user'], self::$odrGroupsForValidation));
         $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {

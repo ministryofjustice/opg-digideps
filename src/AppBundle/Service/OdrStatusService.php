@@ -68,11 +68,15 @@ class OdrStatusService
 
     public function getFinanceState()
     {
-        if (empty($this->odr->getBankAccounts())) {
+        if (empty($this->odr->getBankAccounts()) && $this->odr->incomeBenefitsStatus() == 'not-started') {
             return self::STATE_NOT_STARTED;
-        } else {
+        }
+
+        if (count($this->odr->getBankAccounts()) > 0 && $this->odr->incomeBenefitsStatus()=='done') {
             return self::STATE_DONE;
         }
+
+        return self::STATE_INCOMPLETE;
     }
 
     public function getAssetsDebtsState()

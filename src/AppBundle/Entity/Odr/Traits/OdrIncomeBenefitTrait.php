@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Odr\IncomeBenefit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -71,7 +72,7 @@ trait OdrIncomeBenefitTrait
     private $oneOff;
 
     /**
-     * @return IncomeBenefit
+     * @return IncomeBenefit[]
      */
     public function getStateBenefits()
     {
@@ -194,6 +195,47 @@ trait OdrIncomeBenefitTrait
     {
         $this->oneOff = $oneOff;
         return $this;
+    }
+
+    /**
+     * @return string not-started/incomplete/done
+     */
+    public function incomeBenefitsStatus()
+    {
+        $stCount = 0;
+        foreach($this->getStateBenefits() as $st) {
+            if ($st->isPresent()) {
+                $stCount++;
+            }
+        }
+
+        $q1 = $this->getReceiveStatePension();
+        $q2 = $this->getReceiveOtherIncome();
+        $q3 = $this->getExpectCompensationDamages();
+
+        $ooCount = 0;
+
+        foreach($this->getOneOff() as $oo) {
+            if ($oo->isPresent()) {
+                $ooCount++;
+            }
+        }
+
+        if ($stCount === 0
+            && $q1 == null && $q2 == null && $q3 == null
+            && $ooCount === 0
+        ) {
+            return 'not-started';
+        }
+
+        if ($stCount > 0
+            && $q1 != null && $q2 != null && $q3 != null
+            && $ooCount > 0
+        ) {
+            return 'done';
+        }
+
+        return 'incomplete';
     }
 
 
