@@ -170,9 +170,7 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->getMethod() == 'POST') {
-            $this->getRestClient()->put('report/'.$reportId, $form->getData(), [
-                'noAssetsToAdd',
-            ]);
+            $this->getRestClient()->put('report/'.$reportId, $form->getData(), ['noAssetsToAdd']);
         }
 
         return [

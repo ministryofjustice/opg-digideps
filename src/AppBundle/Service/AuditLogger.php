@@ -49,9 +49,7 @@ class AuditLogger
             ->setAction($action)
             ->setUserEdited($userEdited);
 
-        $ret = $this->restClient->post('audit-log', $entry, [
-            'audit_log_save',
-         ]);
+        $ret = $this->restClient->post('audit-log', $entry, ['audit_log_save']);
 
         return $ret;
     }
