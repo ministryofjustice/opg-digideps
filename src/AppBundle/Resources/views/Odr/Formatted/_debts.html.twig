@@ -1,6 +1,7 @@
 {% set translationDomain = "odr-debts" %}
 {% trans_default_domain translationDomain %}
 
+{% if odr.hasDebts  %}
 <div class="section">
     <h2 class="section-heading">Client's debts</h2>
     <div class="dont-break">
@@ -36,5 +37,5 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 

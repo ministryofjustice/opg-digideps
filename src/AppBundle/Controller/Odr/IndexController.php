@@ -113,6 +113,8 @@ class IndexController extends AbstractController
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
+        $odr->setClient($client);
+
 
         // check status
         $odrStatusService = new OdrStatusService($odr);
