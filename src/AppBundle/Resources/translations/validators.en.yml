@@ -414,6 +414,8 @@ odr:
               type: Please enter the value of this property in numbers
               outOfRange: The value of the property must be less than £100,000,000,000
   incomeBenefit:
+      receiveStatePension:
+          notBlank: Choose yes or no
       receiveOtherIncome:
           notBlank: Choose yes or no
       receiveOtherIncomeDetails:
