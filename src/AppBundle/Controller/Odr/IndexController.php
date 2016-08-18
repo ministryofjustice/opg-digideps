@@ -131,8 +131,9 @@ class IndexController extends AbstractController
      */
     public function pdfViewAction($odrId)
     {
-        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
+        $odr->setClient($client);
 
         $pdfBinary = $this->getPdfBinaryContent($odr);
 
