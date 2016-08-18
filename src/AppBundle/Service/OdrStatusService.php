@@ -49,7 +49,10 @@ class OdrStatusService
             return 'readyToSubmit';
         }
 
-        if (!$this->odr->getVisitsCare()) {
+        if ($this->getVisitsCareState() == self::STATE_NOT_STARTED
+            && $this->getFinanceState() == self::STATE_NOT_STARTED
+            && $this->getAssetsDebtsState() == self::STATE_NOT_STARTED
+        ) {
             return 'notStarted';
         }
 

@@ -12,8 +12,10 @@ use AppBundle\Controller\AbstractController;
 class IndexController extends AbstractController
 {
     private static $odrGroupsForValidation = [
-        'odr',
+        'user',
         'client',
+        'odr',
+        'report',
         'visits-care',
         'odr-account',
         'odr-debt',
@@ -33,11 +35,7 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-//        $client = $this->getFirstClient();
-//        $odr = $this->getOdr($client->getOdr()->getId(), self::$odrGroupsForValidation);
-//        $client = $odr->getClient();
-
-        $user = $this->getUserWithData(['user', 'client', 'report', 'odr']);
+        $user = $this->getUserWithData(self::$odrGroupsForValidation);
         $client = $user->getClients()[0];
         $odr = $client->getOdr();
 
@@ -71,7 +69,7 @@ class IndexController extends AbstractController
      */
     public function overviewAction()
     {
-        $client = $this->getFirstClient(array_merge(['user'], self::$odrGroupsForValidation));
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {
@@ -92,7 +90,7 @@ class IndexController extends AbstractController
      */
     public function submitAction(Request $request)
     {
-        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {
@@ -113,7 +111,7 @@ class IndexController extends AbstractController
      */
     public function reviewAction($odrId)
     {
-        $client = $this->getFirstClient(['user', 'client', 'odr']);
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
 
         // check status

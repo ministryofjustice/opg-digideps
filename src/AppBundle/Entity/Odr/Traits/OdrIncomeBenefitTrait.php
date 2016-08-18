@@ -197,29 +197,32 @@ trait OdrIncomeBenefitTrait
         return $this;
     }
 
+    private function countRecordsPresent($elements)
+    {
+        if (empty($elements)) {
+            return 0;
+        }
+
+        $count = 0;
+        foreach($elements as $st) {
+            if ($st->isPresent()) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
     /**
      * @return string not-started/incomplete/done
      */
     public function incomeBenefitsStatus()
     {
-        $stCount = 0;
-        foreach($this->getStateBenefits() as $st) {
-            if ($st->isPresent()) {
-                $stCount++;
-            }
-        }
-
+        $stCount = $this->countRecordsPresent($this->getStateBenefits());
         $q1 = $this->getReceiveStatePension();
         $q2 = $this->getReceiveOtherIncome();
         $q3 = $this->getExpectCompensationDamages();
-
-        $ooCount = 0;
-
-        foreach($this->getOneOff() as $oo) {
-            if ($oo->isPresent()) {
-                $ooCount++;
-            }
-        }
+        $ooCount = $this->countRecordsPresent($this->getOneOff());
 
         if ($stCount === 0
             && $q1 == null && $q2 == null && $q3 == null
@@ -237,6 +240,5 @@ trait OdrIncomeBenefitTrait
 
         return 'incomplete';
     }
-
 
 }
