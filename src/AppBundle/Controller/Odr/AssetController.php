@@ -25,11 +25,6 @@ class AssetController extends AbstractController
         $odr = $this->getOdr($odrId,self::$odrJmsGroups);
         $assets = $odr->getAssets();
 
-        // if there are no assets and the odr is not due, show new asset form
-        if (empty($assets) && !$odr->isDue()) {
-            return $this->redirect($this->generateUrl('odr-asset-add-select-title', ['odrId' => $odrId]));
-        }
-
         return [
             'odr' => $odr,
             'assets' => $assets,
@@ -89,8 +84,6 @@ class AssetController extends AbstractController
             $asset = $form->getData();
             $asset->setOdr($odr);
             $this->getRestClient()->post("odr/{$odrId}/asset", $asset);
-            $odr->setNoAssetToAdd(false);
-            $this->getRestClient()->put('odr/'.$odrId, $odr);
 
             return $this->redirect($this->generateUrl('odr-assets', ['odrId' => $odrId]));
         }
@@ -164,7 +157,7 @@ class AssetController extends AbstractController
     public function _noAssetsAction(Request $request, $odrId)
     {
         $odr = $this->getOdr($odrId,self::$odrJmsGroups);
-        $form = $this->createForm(new FormDir\Odr\NoAssetToAddType(), $odr, []);
+        $form = $this->createForm(new FormDir\Odr\Asset\NoAssetToAddType(), $odr, []);
         $form->handleRequest($request);
 
         if ($request->getMethod() == 'POST') {
