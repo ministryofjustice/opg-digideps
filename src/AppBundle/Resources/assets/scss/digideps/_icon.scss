@@ -3,22 +3,22 @@
 // Using an extended icon mixin because of file-url issues
 
 .icon__notification {
-    @include icon(icon-notification, 35, 35);
+    @include icon(icon-notification, 35, 35, 'images/icons');
 }
 
 .icon__notification_yellow_small  {
-    @include icon(icon-notification-yellow-24, 24, 24);
+    @include icon(icon-notification-yellow-24, 24, 24, 'images/icons');
     float: left;
     margin: 0 5px;
 }
 
 .icon-property {
-    @include icon(icon-property, 43, 39);
+    @include icon(icon-property, 43, 39, 'images/icons');
     background-size: contain;
 }
 
 .icon-finance {
-    @include icon(icon-finance, 41, 39);
+    @include icon(icon-finance, 41, 39, 'images/icons');
     margin-right: 10px;
     background-size: contain;
 }
