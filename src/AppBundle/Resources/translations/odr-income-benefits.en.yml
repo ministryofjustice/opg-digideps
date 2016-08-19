@@ -20,7 +20,7 @@ stateBenefits:
     income_related_employment_support_allowance:
       label: Income-related Employment and Support Allowance
     income_based_job_seeker_allowance:
-      label: Income-based Job Seeker’s Allowance
+      label: Income-based Job Seeker's Allowance
     housing_benefit:
       label: Housing benefit
     universal_credit:
