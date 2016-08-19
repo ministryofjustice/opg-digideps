@@ -214,6 +214,8 @@ trait OdrIncomeBenefitTrait
     }
 
     /**
+     * Used from OdrStatusService
+     * 
      * @return string not-started/incomplete/done
      */
     public function incomeBenefitsStatus()
@@ -242,6 +244,10 @@ trait OdrIncomeBenefitTrait
     }
 
     /**
+     * Display status of each category
+     * Called from template
+     *
+     * @param string $category
      * @return string
      */
     public function incomeBenefitsSectionStatus($category)
