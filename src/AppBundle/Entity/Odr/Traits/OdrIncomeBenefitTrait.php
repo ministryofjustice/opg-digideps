@@ -197,20 +197,20 @@ trait OdrIncomeBenefitTrait
         return $this;
     }
 
-    private function countRecordsPresent($elements)
+    /**
+     * @param IncomeBenefit[] $elements
+     *
+     * @return int
+     */
+    public function countRecordsPresent($elements)
     {
-        if (empty($elements)) {
+        if (empty($elements) || !is_array($elements)) {
             return 0;
         }
 
-        $count = 0;
-        foreach($elements as $st) {
-            if ($st->isPresent()) {
-                $count++;
-            }
-        }
-
-        return $count;
+        return count(array_filter($elements, function($st) {
+            return $st instanceof IncomeBenefit && $st->isPresent();
+        }));
     }
 
     /**
