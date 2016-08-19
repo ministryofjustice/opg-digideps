@@ -4,6 +4,7 @@
 <div class="section {{ sectionClass | default('') }}" id="section{{ categoryKey }}">
     <div class="summary" id="">
         <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
+        <div class="sub-total">{{ odr.incomeBenefitsSectionStatus(categoryKey) }}</div>
     </div>
     <div class="detail">
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}

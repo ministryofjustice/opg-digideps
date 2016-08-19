@@ -241,4 +241,28 @@ trait OdrIncomeBenefitTrait
         return 'incomplete';
     }
 
+    /**
+     * @return string
+     */
+    public function incomeBenefitsSectionStatus($category)
+    {
+        switch ($category) {
+            case 'stateBenefits';
+                $count = $this->countRecordsPresent($this->getStateBenefits());
+                return "{$count} Selected";
+
+            case 'pensionsOtherIncome';
+                $completed = $this->getReceiveStatePension() && $this->getReceiveOtherIncome();
+                return $completed ? 'Completed' : '';
+
+            case 'damages';
+                $completed = $this->getExpectCompensationDamages();
+                return $completed ? 'Completed' : '';
+
+            case 'oneOff';
+                $count = $this->countRecordsPresent($this->getOneOff());
+                return "{$count} Selected";
+        }
+    }
+
 }
