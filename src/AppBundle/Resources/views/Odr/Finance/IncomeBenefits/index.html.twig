@@ -49,21 +49,13 @@
         <script>
             $(document).ready(function () {
                 new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
-                {#new GOVUK.AutoSave({#}
-                {#form: $('form.expanding-transaction-table'),#}
-                {#statusElement: $('#save-status'),#}
-                {#url: '{{ path('accounts_money_save_json', {'reportId': odr.id, 'type': jsonEndpoint}) }}',#}
-                {#preprocessor: GOVUK.moneyInOuPreprocessor#}
-                {#});#}
-//                $('form.expanding-transaction-table button[type="submit"]').hide();
-
-//                $('.add-transaction').removeClass('hidden');
-
-//                $('input.transaction-value').on('blur', function (event) {
-//                    GOVUK.formatCurrency(event.target);
-//                });
 
                 GOVUK.accountTransactionExpander();
+
+                new opg.RadioHide({
+                    radio: '#odr_income__stateBenefits_11_present',
+                    content: '#form-group-odr_income__stateBenefits_11_moreDetails',
+                });
 
                 new opg.RadioHide({
                     radio: '.expect-compensation-damages input[type=radio]',

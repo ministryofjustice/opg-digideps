@@ -215,7 +215,7 @@ trait OdrIncomeBenefitTrait
 
     /**
      * Used from OdrStatusService
-     * 
+     *
      * @return string not-started/incomplete/done
      */
     public function incomeBenefitsStatus()

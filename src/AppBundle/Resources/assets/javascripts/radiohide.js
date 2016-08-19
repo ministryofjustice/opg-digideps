@@ -42,7 +42,7 @@ var opg = opg || {};
                 value = this.radio[iPos].value.toLowerCase();
             }
         }
-        
+
         if (value === undefined) {
             if (this.hideByDefault === true) {
                 this.hideContent();
