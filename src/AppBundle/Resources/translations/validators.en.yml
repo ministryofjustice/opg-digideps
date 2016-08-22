@@ -428,7 +428,13 @@ odr:
           notBlank: Please tick this box as more information are given
       moreDetails:
           notBlank: Please give us some more information
-
+  expenses:
+      paidForAnything:
+         notBlank: Choose yes or no
+      planningToClaimExpenses:
+         notBlank: Choose yes or no
+      planningToClaimExpensesDetails:
+         notBlank: Please tell us more about any expenses you plan to claim in the future
 
 
 action:
