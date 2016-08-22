@@ -1,0 +1,26 @@
+page:
+  htmlTitle: "Opening deputyship report - expenses | GOV.UK"
+  pageSectionTitle: "Finances: %client%'s expenses"
+  pageDescription: |
+    ...
+    ...
+nav:
+  expenses: Deputy expenses
+
+form:
+  paidForAnything:
+    label: Did you pay for anything for %client% before you were given your court order ?
+  expenses:
+    explanation:
+      label: Describe the expense
+    amount:
+      label: Amount
+    addAnother:
+      label: Add another expense
+  planningToClaimExpenses:
+    label: Are you planning to claim expenses in the future ?
+  planningToClaimExpensesDetails:
+    label: Please tell us more about any expenses you plan to claim in the future
+
+  save:
+      label: Save
