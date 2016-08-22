@@ -1,4 +1,5 @@
 <nav id="account-sub-nav">
+    <a id="expenses" href="{{ path('odr-expenses' , {'odrId': odr.id}) }}" {% if subsection == 'expenses' %}class="active"{% endif %}>{{ 'nav.expenses' | trans({}, "odr-expenses") }}</a>
     <a id="account-banks" href="{{ path('odr-bank-accounts' , {'odrId': odr.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>{{ 'nav.bankAccounts' | trans({}, "odr-accounts") }}</a>
     <a id="income-benefits" href="{{ path('odr-income-benefits' , {'odrId': odr.id}) }}" {% if subsection == 'incomeBenefits' %}class="active"{% endif %}>{{ 'nav.incomeBenefits' | trans({}, "odr-income-benefits") }}</a>
 </nav>

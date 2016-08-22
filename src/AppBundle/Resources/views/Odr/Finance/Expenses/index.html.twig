@@ -1,0 +1,116 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+    {% set translationDomain = "odr-expenses" %}
+    {% trans_default_domain translationDomain %}
+
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Finance:left-nav.html.twig' %}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section">
+            {{ form_checkbox_group(form.paidForAnything, 'form.paidForAnything', {
+                'fieldSetClass' : 'inline paid-anything',
+                'legendClass' : 'form-label',
+                'legendText' : 'form.paidForAnything.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+            <div id="paid-anything-details-expenses">
+                {% for singleExpenseForm in form.expenses %}
+                    <fieldset class="form-group expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
+                        {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation') }}
+                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount') }}
+                        <a href="#">Edit</a>
+                        <a href="#" class="expense_remove_link">Remove</a>
+                    </fieldset>
+                {% endfor %}
+            </div>
+            <div>Total: £<span id="expense_total">0</span></div>
+
+            <div class="form-group button-bar">
+                <button type="button" id="expense_add_one" class="button ">{{ 'form.expenses.addAnother.label' |trans }}</button>
+            </div>
+
+        </div>
+
+        <div class="form-section">
+            {{ form_checkbox_group(form.planningToClaimExpenses, 'planningToClaimExpenses', {
+                'fieldSetClass' : 'inline planning-claim-expenses',
+                'legendClass' : 'form-label',
+                'legendText' : 'form.planningToClaimExpenses.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+            <div id="planning-claim-expenses-textarea">
+                {{ form_input(form.planningToClaimExpensesDetails, 'form.planningToClaimExpensesDetails', {
+                    'labelClass': 'required',
+                    'labelParameters': { '%client%': odr.client.firstname },
+                    'inputClass': 'expanding'
+                }) }}
+            </div>
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script>
+            $(document).ready(function () {
+                new opg.RadioHide({
+                    radio: '.paid-anything input[type=radio]',
+                    content: '#paid-anything-details-expenses',
+                    showWithValue: 'yes'
+                });
+
+                new opg.RadioHide({
+                    radio: '.planning-claim-expenses input[type=radio]',
+                    content: '#planning-claim-expenses-textarea',
+                    showWithValue: 'yes'
+                });
+
+                // add another expense button
+                $('#expense_add_one').click(function(e){
+                    var expenseRowTemplate = $('#paid-anything-details-expenses .expense-row-template')
+                            .clone()
+                            .removeClass('expense-row-template')
+                            .removeClass('hidden');
+                    $('#paid-anything-details-expenses').append(expenseRowTemplate);
+                });
+
+                $('.expense_remove_link').click(function(e) {
+                    $(e.target).parents('.expense-row').remove();
+                    return false;
+                });
+
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("odr-bank-accounts" , {'odrId': odr.id }),
+        'previousLabel': 'Accounts',
+        'nextLink': path("odr-assets" , {'odrId': odr.id }),
+        'nextLabel': 'Assets and debts'
+        } %}
+    {% endblock %}
+
+
+{% endembed %}

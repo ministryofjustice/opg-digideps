@@ -41,7 +41,7 @@
             odr: odr,
             description: false,
             state: odrStatus.getFinanceState,
-            linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
+            linkToSubSection: path('odr-expenses', {odrId: odr.id}),
             list: true
             } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
