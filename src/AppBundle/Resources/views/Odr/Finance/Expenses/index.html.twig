@@ -31,7 +31,9 @@
                 {% for singleExpenseForm in form.expenses %}
                     <fieldset class="form-group expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
                         {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation') }}
-                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount') }}
+                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
+                            'inputClass': 'expenseAmount'
+                        }) }}
                         <a href="#">Edit</a>
                         <a href="#" class="expense_remove_link">Remove</a>
                     </fieldset>
@@ -97,6 +99,9 @@
                     $(e.target).parents('.expense-row').remove();
                     return false;
                 });
+
+                new opg.TotalCalculator($('.expenseAmount'), $('#expense_total'));
+
 
             });
         </script>
