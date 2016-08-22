@@ -29,13 +29,17 @@
             }) }}
             <div id="paid-anything-details-expenses">
                 {% for singleExpenseForm in form.expenses %}
-                    <fieldset class="form-group expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
-                        {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation') }}
-                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
-                            'inputClass': 'expenseAmount'
+                    <fieldset class="expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
+                        {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
+                            'formGroupClass': 'explanation',
                         }) }}
-                        <a href="#">Edit</a>
-                        <a href="#" class="expense_remove_link">Remove</a>
+                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
+                            'inputClass': 'expenseAmount',
+                            'formGroupClass': 'amount',
+                        }) }}
+                       <div class="remove">
+                         <a href="#" class="expense_remove_link">Remove</a>
+                       </div>
                     </fieldset>
                 {% endfor %}
             </div>
