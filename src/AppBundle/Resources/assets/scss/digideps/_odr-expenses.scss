@@ -1,19 +1,29 @@
 /*
 * Temporary CSS to give an idea about the layout
-* for @biggs to rewrite 
+* for @biggs to rewrite
 */
+#paid-anything-details-expenses {
+    .expense-row {
 
-.expense-row {
+        .explanation {
+            width: 65%;
+        }
+        .amount {
+            width: 20%;
+        }
+        .remove {
+            float: left;
+            width: 15%;
+            padding-top: 30px;
+        }
+    }
 
-    .explanation {
-        width: 65%;
+    .total {
+        @include bold-19();
+        float: right;
+        padding-right: 10px;
     }
-    .amount {
-        width: 20%;
-    }
-    .remove {
-        float: left;
-        width: 15%;
-        padding-top: 30px;
-    }
+
 }
+
+

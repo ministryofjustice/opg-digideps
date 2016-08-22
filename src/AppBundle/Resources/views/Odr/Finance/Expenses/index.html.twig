@@ -28,26 +28,29 @@
                 ]
             }) }}
             <div id="paid-anything-details-expenses">
-                {% for singleExpenseForm in form.expenses %}
-                    <fieldset class="expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
-                        {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
-                            'formGroupClass': 'explanation',
-                        }) }}
-                        {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
-                            'inputClass': 'expenseAmount',
-                            'formGroupClass': 'amount',
-                        }) }}
-                       <div class="remove">
-                         <a href="#" class="expense_remove_link">Remove</a>
-                       </div>
-                    </fieldset>
-                {% endfor %}
-            </div>
-            <div>Total: £<span id="expense_total">0</span></div>
+                <div class="expense-rows">
+                    {% for singleExpenseForm in form.expenses %}
+                        <fieldset class="expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
+                            {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
+                                'formGroupClass': 'explanation',
+                            }) }}
+                            {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
+                                'inputClass': 'expenseAmount',
+                                'formGroupClass': 'amount',
+                            }) }}
+                           <div class="remove">
+                             <a href="#" class="expense_remove_link">Remove</a>
+                           </div>
+                        </fieldset>
+                    {% endfor %}
+                </div>
+                <div class="total">Total: £<span class="expense_total">0</span></div>
 
-            <div class="form-group button-bar">
-                <button type="button" id="expense_add_one" class="button ">{{ 'form.expenses.addAnother.label' |trans }}</button>
+                <div class="form-group button-bar">
+                    <button type="button" id="expense_add_one" class="button ">{{ 'form.expenses.addAnother.label' |trans }}</button>
+                </div>
             </div>
+
 
         </div>
 
@@ -90,22 +93,28 @@
                     showWithValue: 'yes'
                 });
 
+
+                var totalCalculator = new opg.TotalCalculator(
+                        '#paid-anything-details-expenses',
+                        '.expenseAmount',
+                        '.expense_total'
+                );
+
                 // add another expense button
                 $('#expense_add_one').click(function(e){
                     var expenseRowTemplate = $('#paid-anything-details-expenses .expense-row-template')
                             .clone()
                             .removeClass('expense-row-template')
                             .removeClass('hidden');
-                    $('#paid-anything-details-expenses').append(expenseRowTemplate);
+                    $('#paid-anything-details-expenses .expense-rows').append(expenseRowTemplate);
+                    totalCalculator.updateTotal();
                 });
 
-                $('.expense_remove_link').click(function(e) {
+                $('#paid-anything-details-expenses').on('click', '.expense_remove_link', function(e) {
                     $(e.target).parents('.expense-row').remove();
+                    totalCalculator.updateTotal();
                     return false;
                 });
-
-                new opg.TotalCalculator($('.expenseAmount'), $('#expense_total'));
-
 
             });
         </script>

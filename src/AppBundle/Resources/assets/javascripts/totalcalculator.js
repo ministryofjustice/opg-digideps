@@ -6,14 +6,15 @@ var opg = opg || {};
 
 (function ($, opg) {
     
-    opg.TotalCalculator = function (elements, totalElement) {
+    opg.TotalCalculator = function (wrapper, elementsSelector, totalElementSelector) {
 
         var _this = this;
 
-        this.elements = elements;
-        this.totalElement = totalElement;
+        _this.wrapper = $(wrapper);
+        _this.elementsSelector = elementsSelector;
+        _this.totalElementSelector = totalElementSelector;
 
-        this.elements.on('change keyup', function(){
+        _this.wrapper.on('change keyup', this.elementsSelector, function(){
             _this.updateTotal();
         });
 
@@ -22,13 +23,13 @@ var opg = opg || {};
 
     opg.TotalCalculator.prototype.updateTotal = function() {
         var total = 0;
-        this.elements.each(function(i, e) {
+        this.wrapper.find(this.elementsSelector).each(function(i, e) {
             var eVal = parseFloat($(e).val().replace(/,/g , ""));
-            if (!isNaN(eVal)) {
+            if (!isNaN(eVal) && eVal > 0.01) {
                 total += eVal;
             }
         });
-        this.totalElement.html(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        this.wrapper.find(this.totalElementSelector).html(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     };
 
 })(jQuery, opg);
