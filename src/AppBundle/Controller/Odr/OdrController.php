@@ -134,6 +134,10 @@ class OdrController extends RestController
             }
         }
 
+        if (array_key_exists('no_asset_to_add', $data)) {
+            $odr->setNoAssetToAdd($data['no_asset_to_add']);
+        }
+
         $this->getEntityManager()->flush($odr);
 
         return ['id' => $odr->getId()];

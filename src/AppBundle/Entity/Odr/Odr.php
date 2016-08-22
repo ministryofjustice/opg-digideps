@@ -91,7 +91,7 @@ class Odr
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"odr"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;

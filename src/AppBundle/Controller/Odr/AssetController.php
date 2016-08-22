@@ -57,7 +57,7 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy('Odr\Odr', $odrId); /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
         $this->validateArray($data, [
             'type' => 'mustExist',
@@ -66,7 +66,7 @@ class AssetController extends RestController
         $asset->setOdr($odr);
 
         $this->updateEntityWithData($asset, $data);
-
+        $odr->setNoAssetToAdd();
         $this->persistAndFlush($asset);
 
         return ['id' => $asset->getId()];
