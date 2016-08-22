@@ -27,7 +27,7 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
                 ]
             }) }}
-            <div id="paid-anything-details-expenses">
+            <div id="expenses-wrapper">
                 <div class="expense-rows">
                     {% for singleExpenseForm in form.expenses %}
                         <fieldset class="expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
@@ -35,7 +35,7 @@
                                 'formGroupClass': 'explanation',
                             }) }}
                             {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
-                                'inputClass': 'expenseAmount',
+                                'inputClass': 'expense-amount',
                                 'formGroupClass': 'amount',
                             }) }}
                            <div class="remove">
@@ -44,14 +44,13 @@
                         </fieldset>
                     {% endfor %}
                 </div>
-                <div class="total">Total: £<span class="expense_total">0</span></div>
-
-                <div class="form-group button-bar">
-                    <button type="button" id="expense_add_one" class="button ">{{ 'form.expenses.addAnother.label' |trans }}</button>
+                <div class="form-group">
+                    <a href="#" id="expenses-add-link" class="add-expense-link">
+                        {{ 'form.expenses.addAnother.label' |trans }}
+                    </a>
+                    <div class="total">Total: £<span class="expense_total">0</span></div>
                 </div>
-            </div>
-
-
+             </div>
         </div>
 
         <div class="form-section">
@@ -83,7 +82,7 @@
             $(document).ready(function () {
                 new opg.RadioHide({
                     radio: '.paid-anything input[type=radio]',
-                    content: '#paid-anything-details-expenses',
+                    content: '#expenses-wrapper',
                     showWithValue: 'yes'
                 });
 
@@ -93,27 +92,29 @@
                     showWithValue: 'yes'
                 });
 
+                // total calculator
+                var totalCalculator = new opg.TotalCalculator({
+                    'wrapperSelector': '#expenses-wrapper',
+                    'amountSelector':  '.expense-amount',
+                    'totalSelector' : '.expense_total',
+                });
 
-                var totalCalculator = new opg.TotalCalculator(
-                        '#paid-anything-details-expenses',
-                        '.expenseAmount',
-                        '.expense_total'
-                );
-
-                // add another expense button
-                $('#expense_add_one').click(function(e){
-                    var expenseRowTemplate = $('#paid-anything-details-expenses .expense-row-template')
+                // add expense link
+                $('#expenses-add-link').click(function(e) {
+                    e.preventDefault();
+                    var expenseRowTemplate = $('#expenses-wrapper .expense-row-template')
                             .clone()
                             .removeClass('expense-row-template')
                             .removeClass('hidden');
-                    $('#paid-anything-details-expenses .expense-rows').append(expenseRowTemplate);
+                    $('#expenses-wrapper .expense-rows').append(expenseRowTemplate);
                     totalCalculator.updateTotal();
                 });
 
-                $('#paid-anything-details-expenses').on('click', '.expense_remove_link', function(e) {
+                // remove link
+                $('#expenses-wrapper').on('click', '.expense_remove_link', function(e) {
+                    e.preventDefault();
                     $(e.target).parents('.expense-row').remove();
                     totalCalculator.updateTotal();
-                    return false;
                 });
 
             });

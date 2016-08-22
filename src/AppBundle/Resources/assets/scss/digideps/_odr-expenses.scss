@@ -2,7 +2,7 @@
 * Temporary CSS to give an idea about the layout
 * for @biggs to rewrite
 */
-#paid-anything-details-expenses {
+#expenses-wrapper {
     .expense-row {
 
         .explanation {
@@ -22,6 +22,19 @@
         @include bold-19();
         float: right;
         padding-right: 10px;
+    }
+
+    .add-expense-link {
+        @include core-16();
+        display: inline-block;
+        margin: 0 15px 15px 0;
+        padding-left: 20px;
+        background: url("images/icons/smallplus.png") 0 1px no-repeat;
+        color: $link-colour;
+
+        &:focus {
+            outline: none;
+        }
     }
 
 }
