@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Traits\OdrExpensesTrait;
 use AppBundle\Entity\Traits\OdrIncomeBenefitTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -15,6 +16,7 @@ use AppBundle\Entity\Client;
 class Odr
 {
     use OdrIncomeBenefitTrait;
+    use OdrExpensesTrait;
 
     const PROPERTY_AND_AFFAIRS = 2;
 
