@@ -15,6 +15,13 @@
 
     {% block maincontent %}
 
+        <h3 class="heading-small">
+            {{ 'page.pageDescription' | trans({
+                '%client%': odr.client.firstname,
+                '%linkStart%': '<a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">',
+                '%linkEnd%': '</a>',
+            }, translationDomain )  | raw }}</h3>
+
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section">
