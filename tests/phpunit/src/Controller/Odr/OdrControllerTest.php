@@ -285,4 +285,52 @@ class OdrControllerTest extends AbstractTestController
 
     }
 
+    public function testExpensesPutAndGet()
+    {
+        $url = '/odr/'.self::$odr1->getId();
+
+        $q = http_build_query(['groups' => ['odr-expenses']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals([], $data['expenses']);
+        $this->assertEquals(null, $data['paid_for_anything']);
+        $this->assertEquals(null, $data['planning_to_claim_expenses']);
+        $this->assertEquals(null, $data['planning_to_claim_expenses_details']);
+
+        // "yes"
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'paid_for_anything' => 'yes',
+                'expenses' => [
+                    ['explanation' => 'care home fees', 'amount'=>895.00],
+                    ['explanation' => 'new electric bed', 'amount'=>4512.50],
+                    ['explanation' => '', 'amount'=>''],
+                ],
+                'planning_to_claim_expenses' => 'yes',
+                'planning_to_claim_expenses_details' => 'bed need to be replaced',
+
+            ],
+        ]);
+
+        $q = http_build_query(['groups' => ['odr-expenses']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals('yes', $data['paid_for_anything']);
+        $this->assertEquals('yes', $data['planning_to_claim_expenses']);
+        $this->assertEquals('bed need to be replaced', $data['planning_to_claim_expenses_details']);
+        $this->assertCount(2, $data['expenses']);
+        $this->assertEquals('care home fees', $data['expenses'][0]['explanation']);
+        $this->assertEquals(895.00, $data['expenses'][0]['amount']);
+        $this->assertEquals('new electric bed', $data['expenses'][1]['explanation']);
+        $this->assertEquals(4512.50, $data['expenses'][1]['amount']);
+    }
+
 }

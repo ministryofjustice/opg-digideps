@@ -138,7 +138,31 @@ class OdrController extends RestController
             $odr->setNoAssetToAdd($data['no_asset_to_add']);
         }
 
-        $this->getEntityManager()->flush($odr);
+        if (array_key_exists('paid_for_anything', $data)) {
+            $odr->setPaidForAnything($data['paid_for_anything']);
+        }
+
+        if (array_key_exists('planning_to_claim_expenses', $data)) {
+            $odr->setPlanningToClaimExpenses($data['planning_to_claim_expenses']);
+        }
+
+        if (array_key_exists('planning_to_claim_expenses_details', $data)) {
+            $odr->setPlanningToClaimExpensesDetails($data['planning_to_claim_expenses_details']);
+        }
+
+        if (array_key_exists('expenses', $data)) {
+            foreach($odr->getExpenses() as $e) {
+                $this->getEntityManager()->remove($e);
+            }
+            foreach ($data['expenses'] as $row) {
+                if ($row['explanation'] && $row['amount']) {
+                    $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
+                    $this->getEntityManager()->persist($exp);
+                }
+            }
+        }
+
+        $this->getEntityManager()->flush();
 
         return ['id' => $odr->getId()];
     }
