@@ -76,10 +76,10 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("odr-expenses" , {'odrId': odr.id }),
-        'previousLabel': "Deputy's expenses",
-        'nextLink': path("odr-income-benefits" , {'odrId': odr.id }),
-        'nextLabel': 'Income and benefits'
+        'previousLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'previousLabel': 'Income and benefits',
+        'nextLink': path("odr-assets" , {'odrId': odr.id }),
+        'nextLabel': 'Assets and debts'
         } %}
     {% endblock %}
 
