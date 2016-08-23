@@ -82,6 +82,16 @@ trait OdrExpensesTrait
         return $this;
     }
 
+    /**
+     * @param Expense $expense
+     * @return OdrExpensesTrait
+     */
+    public function addExpense(Expense $expense)
+    {
+        $this->expenses[] = $expense;
+        return $this;
+    }
+
 
     /**
      * @return string

@@ -36,13 +36,7 @@ class ExpensesController extends AbstractController
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
 
-        $odr->setPaidForAnything('yes');
-        $odr->setPlanningToClaimExpenses('yes');
-        $odr->setExpenses([
-            (new EntityDir\Odr\Expense())->setExplanation('expl1')->setAmount(123),
-            (new EntityDir\Odr\Expense())->setExplanation('expl2')->setAmount(4567),
-            (new EntityDir\Odr\Expense()), //for empty form
-        ]);
+        $odr->addExpense(new EntityDir\Odr\Expense());
 
         $form = $this->createForm(new FormDir\Odr\Expense\ExpensesType(), $odr);
         $form->handleRequest($request);
