@@ -25,6 +25,7 @@ class IndexController extends AbstractController
         'odr-income-pension',
         'odr-income-damages',
         'odr-income-one-off',
+        'odr-expenses',
     ];
 
     /**
