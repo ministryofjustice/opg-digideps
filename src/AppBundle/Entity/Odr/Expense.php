@@ -10,8 +10,11 @@ class Expense
 {
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-expenses"})
+     *
+     * @Assert\NotBlank(message="odr.expenses.explanation.notBlank", groups={"odr-expenses"})
      */
     private $explanation;
 

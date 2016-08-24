@@ -37,9 +37,9 @@
                 ]
             }) }}
             <div id="expenses-wrapper">
-                <div class="expense-rows">
+                <div class="expense-rows" >
                     {% for singleExpenseForm in form.expenses %}
-                        <fieldset class="expense-row {{ loop.last ? 'expense-row-template hidden' : '' }}">
+                        <fieldset class="expense-row">
                             {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
                                 'formGroupClass': 'explanation',
                             }) }}
@@ -52,6 +52,19 @@
                            </div>
                         </fieldset>
                     {% endfor %}
+
+                    <fieldset class="expense-row expense-row-template hidden">
+                        {{ form_input(form.expenses.vars.prototype.explanation, 'form.expenses.explanation', {
+                            'formGroupClass': 'explanation',
+                        }) }}
+                        {{ form_input(form.expenses.vars.prototype.amount, 'form.expenses.amount', {
+                            'inputClass': 'expense-amount',
+                            'formGroupClass': 'amount',
+                        }) }}
+                        <div class="remove">
+                            <a href="#" class="expense_remove_link">Remove</a>
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="form-group">
                     <a href="#" id="expenses-add-link" class="add-expense-link">
@@ -108,15 +121,22 @@
                     'totalSelector' : '.expense_total',
                 });
 
-                // add expense link
+                // add link: add rows and update totals
                 $('#expenses-add-link').click(function(e) {
                     e.preventDefault();
-                    var expenseRowTemplate = $('#expenses-wrapper .expense-row-template')
+                    var expenseRowTemplate = $('.expense-rows .expense-row-template')
                             .clone()
                             .removeClass('expense-row-template')
                             .removeClass('hidden');
+
+                    var index = $('.expense-rows .expense-row').length;
+                    expenseRowTemplate.find('input').each(function(i, e) {
+                        var el = $(e);
+                        el.attr('name',  el.attr('name').replace(/__name__/g, index)  );
+                        el.attr('id',  el.attr('id').replace(/__name__/g, index)  );
+                    });
+
                     $('#expenses-wrapper .expense-rows').append(expenseRowTemplate);
-                    totalCalculator.updateTotal();
                 });
 
                 // remove link
@@ -125,6 +145,8 @@
                     $(e.target).parents('.expense-row').remove();
                     totalCalculator.updateTotal();
                 });
+
+
 
             });
         </script>

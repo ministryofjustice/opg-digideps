@@ -19,7 +19,11 @@ class ExpensesType extends AbstractType
                     'expanded' => true,
                 ))
                 ->add('expenses', 'collection', [
-                    'type' => new ExpenseSingleType()
+                    'type' => new ExpenseSingleType(),
+                    'allow_add' => true, // let the form collection know that it will receive an unknown number of tags
+                    'allow_delete' => true,
+                    'delete_empty' => true,
+                    'prototype' => true,
                 ])
                 ->add('planningToClaimExpenses', 'choice', array(
                         'choices' => ['yes' => 'Yes', 'no' => 'No'],

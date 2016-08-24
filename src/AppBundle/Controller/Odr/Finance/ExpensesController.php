@@ -36,8 +36,6 @@ class ExpensesController extends AbstractController
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
 
-        $odr->addExpense(new EntityDir\Odr\Expense());
-
         $form = $this->createForm(new FormDir\Odr\Expense\ExpensesType(), $odr);
         $form->handleRequest($request);
         if ($form->isValid()) {
