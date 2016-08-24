@@ -138,8 +138,17 @@ class OdrController extends RestController
             $odr->setNoAssetToAdd($data['no_asset_to_add']);
         }
 
-        if (array_key_exists('paid_for_anything', $data)) {
+        if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
             $odr->setPaidForAnything($data['paid_for_anything']);
+            foreach($odr->getExpenses() as $e) {
+                $this->getEntityManager()->remove($e);
+            }
+            foreach ($data['paid_for_anything']=='yes' ? $data['expenses'] : [] as $row) {
+                if ($row['explanation'] && $row['amount']) {
+                    $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
+                    $this->getEntityManager()->persist($exp);
+                }
+            }
         }
 
         if (array_key_exists('planning_to_claim_expenses', $data)) {
@@ -148,18 +157,6 @@ class OdrController extends RestController
 
         if (array_key_exists('planning_to_claim_expenses_details', $data)) {
             $odr->setPlanningToClaimExpensesDetails($data['planning_to_claim_expenses_details']);
-        }
-
-        if (array_key_exists('expenses', $data)) {
-            foreach($odr->getExpenses() as $e) {
-                $this->getEntityManager()->remove($e);
-            }
-            foreach ($data['expenses'] as $row) {
-                if ($row['explanation'] && $row['amount']) {
-                    $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
-                    $this->getEntityManager()->persist($exp);
-                }
-            }
         }
 
         $this->getEntityManager()->flush();
