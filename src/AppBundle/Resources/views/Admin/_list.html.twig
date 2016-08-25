@@ -92,12 +92,7 @@
     {% for user in users %}
       <tr>
           <td>
-              {#{% if (app.user.id  != user.id) and (app.user.roleId != user.roleId) %}
-                    <a href='{{ path('admin_editUser', { id: user.id })}}'>{{ user.firstname }}</a>
-              {% else %}
-                  {{ user.firstname }}
-              {% endif %}#}
-              <a href='{{ path('admin_editUser', { id: user.id })}}' class="behat-link-user-{{ user.email }}" >{{ user.firstname }}</a>
+              <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id })}}' class="behat-link-user-{{ user.email }}" >{{ user.firstname }}</a>
           </td>
         <td>{{ user.lastname }}</td>
         <td>{{ user.email }}</td>

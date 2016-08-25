@@ -5,29 +5,11 @@
 
 {% block pageContent %}
     {% block pageHeader %}
-        <header class="page-header">
-            <div class="hgroup">
-                <h1>
-                    <span>{% block serviceName %}Complete the deputy report{% endblock %}</span>
-                    {% block title %}test{% endblock %}
-                </h1>
-            </div>
-        </header>
     {% endblock %}
 
     {% block pageNavigation %}
-        <div class="js-tabs nav-tabs">
-            <ul class="tabs-nav">
-                <li><a id="tab-details">Your details</a></li>
-                <li class="active"><a id="tab-users">Users</a></li>
-                <li><a id="tab-configuration">Configuration</a></li>
-            </ul>
-        </div>
-
-        <div class="js-tab-content tab-content tabs-body">
-        <div class="js-tab-pane tab-pane tabs-panel tabs-panel-selected" role="tabpanel" aria-hidden="false"
-        aria-expanded="true" aria-labelledby="tab-overview-panel">
     {% endblock %}
+
     <a name="pageBody"></a>
     {% block validationSummary %}
         {{ form_errors_list(form) }}
@@ -39,7 +21,5 @@
     </div>
 
     {% block endPageNavigation %}
-        </div>
-        </div>
     {% endblock %}
 {% endblock %}

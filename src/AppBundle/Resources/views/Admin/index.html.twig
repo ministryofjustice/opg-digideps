@@ -14,6 +14,10 @@
 {% block pageBody %}    
     {% include 'AppBundle:Admin:_add.html.twig' with { 'title': 'Add a user'} %}
 
+    <hr>
+    {% include 'AppBundle:Admin:_jump_to_user.html.twig' with {users: users, form: form} %}
+
+    <hr>
     {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
 
 {% endblock %}
