@@ -6,7 +6,7 @@
         <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
         <div class="sub-total">{{ odr.incomeBenefitsSectionStatus(categoryKey) }}</div>
     </div>
-    <div class="detail">
+    <div class="detail no-border-top">
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
         {{ form_errors_list(form) }}
         {% block detail %}
