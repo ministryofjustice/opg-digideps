@@ -297,8 +297,6 @@ class OdrControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals([], $data['expenses']);
         $this->assertEquals(null, $data['paid_for_anything']);
-        $this->assertEquals(null, $data['planning_to_claim_expenses']);
-        $this->assertEquals(null, $data['planning_to_claim_expenses_details']);
 
         // "yes"
         $this->assertJsonRequest('PUT', $url, [
@@ -311,8 +309,6 @@ class OdrControllerTest extends AbstractTestController
                     ['explanation' => 'new electric bed', 'amount'=>4512.50],
                     ['explanation' => '', 'amount'=>''],
                 ],
-                'planning_to_claim_expenses' => 'yes',
-                'planning_to_claim_expenses_details' => 'bed need to be replaced',
 
             ],
         ]);
@@ -324,8 +320,6 @@ class OdrControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertEquals('yes', $data['paid_for_anything']);
-        $this->assertEquals('yes', $data['planning_to_claim_expenses']);
-        $this->assertEquals('bed need to be replaced', $data['planning_to_claim_expenses_details']);
         $this->assertCount(2, $data['expenses']);
         $this->assertEquals('care home fees', $data['expenses'][0]['explanation']);
         $this->assertEquals(895.00, $data['expenses'][0]['amount']);

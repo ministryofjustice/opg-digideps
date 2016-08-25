@@ -151,14 +151,6 @@ class OdrController extends RestController
             }
         }
 
-        if (array_key_exists('planning_to_claim_expenses', $data)) {
-            $odr->setPlanningToClaimExpenses($data['planning_to_claim_expenses']);
-        }
-
-        if (array_key_exists('planning_to_claim_expenses_details', $data)) {
-            $odr->setPlanningToClaimExpensesDetails($data['planning_to_claim_expenses_details']);
-        }
-
         $this->getEntityManager()->flush();
 
         return ['id' => $odr->getId()];

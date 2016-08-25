@@ -29,24 +29,6 @@ trait OdrExpensesTrait
     private $expenses;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
-     * @ORM\Column(name="planning_claim_expenses", type="string", length=3, nullable=true)
-     */
-    private $planningToClaimExpenses;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
-     * @ORM\Column(name="planning_claim_expenses_details", type="text", nullable=true)
-     */
-    private $planningToClaimExpensesDetails;
-
-    /**
      * @return string
      */
     public function getPaidForAnything()
@@ -94,44 +76,5 @@ trait OdrExpensesTrait
 
         return $this;
     }
-
-
-    /**
-     * @return string
-     */
-    public function getPlanningToClaimExpenses()
-    {
-        return $this->planningToClaimExpenses;
-    }
-
-    /**
-     * @param string $planningToClaimExpenses
-     * @return OdrExpensesTrait
-     */
-    public function setPlanningToClaimExpenses($planningToClaimExpenses)
-    {
-        $this->planningToClaimExpenses = $planningToClaimExpenses;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlanningToClaimExpensesDetails()
-    {
-        return $this->planningToClaimExpensesDetails;
-    }
-
-    /**
-     * @param string $planningToClaimExpensesDetails
-     * @return OdrExpensesTrait
-     */
-    public function setPlanningToClaimExpensesDetails($planningToClaimExpensesDetails)
-    {
-        $this->planningToClaimExpensesDetails = $planningToClaimExpensesDetails;
-        return $this;
-    }
-
-
 
 }
