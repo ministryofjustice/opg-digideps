@@ -24,9 +24,9 @@
                 '%linkEnd%': '</a>',
             }, translationDomain )  | raw }}</h3>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
 
-        <div class="form-section">
+        <div class="">
             {{ form_checkbox_group(form.paidForAnything, 'form.paidForAnything', {
                 'fieldSetClass' : 'inline paid-anything',
                 'legendClass' : 'form-label',
@@ -36,8 +36,9 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
                 ]
             }) }}
-            <div id="expenses-wrapper">
+            <div id="expenses-wrapper" class="form-section">
                 <div class="expense-rows" >
+                    {% do form.expenses.setRendered %}
                     {% for singleExpenseForm in form.expenses %}
                         <fieldset class="expense-row">
                             {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
@@ -75,25 +76,6 @@
              </div>
         </div>
 
-        <div class="form-section">
-            {{ form_checkbox_group(form.planningToClaimExpenses, 'planningToClaimExpenses', {
-                'fieldSetClass' : 'inline planning-claim-expenses',
-                'legendClass' : 'form-label',
-                'legendText' : 'form.planningToClaimExpenses.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
-            }) }}
-            <div id="planning-claim-expenses-textarea">
-                {{ form_input(form.planningToClaimExpensesDetails, 'form.planningToClaimExpensesDetails', {
-                    'labelClass': 'required',
-                    'labelParameters': { '%client%': odr.client.firstname },
-                    'inputClass': 'expanding'
-                }) }}
-            </div>
-        </div>
-
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'form.save') }}
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
@@ -105,12 +87,6 @@
                 new opg.RadioHide({
                     radio: '.paid-anything input[type=radio]',
                     content: '#expenses-wrapper',
-                    showWithValue: 'yes'
-                });
-
-                new opg.RadioHide({
-                    radio: '.planning-claim-expenses input[type=radio]',
-                    content: '#planning-claim-expenses-textarea',
                     showWithValue: 'yes'
                 });
 
@@ -155,8 +131,8 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'nextLink': path("odr-bank-accounts" , {'odrId': odr.id }),
-        'nextLabel': 'Accounts',
+        'nextLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'nextLabel': 'Income and benefits',
         } %}
     {% endblock %}
 

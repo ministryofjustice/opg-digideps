@@ -29,24 +29,6 @@ trait OdrExpensesTrait
     private $expenses;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
-     * @Assert\NotBlank(message="odr.expenses.planningToClaimExpenses.notBlank", groups={"odr-expenses"})
-     */
-    private $planningToClaimExpenses;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
-     * @Assert\NotBlank(message="odr.expenses.planningToClaimExpensesDetails.notBlank", groups={"odr-expenses-planning-claim-yes"})
-     */
-    private $planningToClaimExpensesDetails;
-
-    /**
      * @return string
      */
     public function getPaidForAnything()
@@ -91,44 +73,5 @@ trait OdrExpensesTrait
         $this->expenses[] = $expense;
         return $this;
     }
-
-
-    /**
-     * @return string
-     */
-    public function getPlanningToClaimExpenses()
-    {
-        return $this->planningToClaimExpenses;
-    }
-
-    /**
-     * @param string $planningToClaimExpenses
-     * @return OdrExpensesTrait
-     */
-    public function setPlanningToClaimExpenses($planningToClaimExpenses)
-    {
-        $this->planningToClaimExpenses = $planningToClaimExpenses;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlanningToClaimExpensesDetails()
-    {
-        return $this->planningToClaimExpensesDetails;
-    }
-
-    /**
-     * @param string $planningToClaimExpensesDetails
-     * @return OdrExpensesTrait
-     */
-    public function setPlanningToClaimExpensesDetails($planningToClaimExpensesDetails)
-    {
-        $this->planningToClaimExpensesDetails = $planningToClaimExpensesDetails;
-        return $this;
-    }
-
-
 
 }

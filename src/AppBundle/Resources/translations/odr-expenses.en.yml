@@ -17,10 +17,6 @@ form:
       label: Amount
     addAnother:
       label: Add another expense
-  planningToClaimExpenses:
-    label: Are you planning to claim expenses in the future ?
-  planningToClaimExpensesDetails:
-    label: Please tell us more about any expenses you plan to claim in the future
 
   save:
       label: Save

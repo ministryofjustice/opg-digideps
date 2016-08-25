@@ -125,9 +125,9 @@ class Redirector
         }
 
         // if there is an active report, redirect to its overview page
-        if ($activeReportId = $user->getActiveReportId()) {
-            return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
-        }
+//        if ($activeReportId = $user->getActiveReportId()) {
+//            return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
+//        }
 
         // default => ODR homepage / dashboard
         return $this->router->generate('odr_index');

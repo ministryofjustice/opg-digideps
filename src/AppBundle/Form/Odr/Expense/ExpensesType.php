@@ -25,11 +25,6 @@ class ExpensesType extends AbstractType
                     'delete_empty' => true,
                     'prototype' => true,
                 ])
-                ->add('planningToClaimExpenses', 'choice', array(
-                        'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                        'expanded' => true,
-                      ))
-                ->add('planningToClaimExpensesDetails', 'textarea')
                 ->add('save', 'submit');
     }
 
@@ -37,17 +32,7 @@ class ExpensesType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'odr-expenses',
-            'validation_groups' => function (FormInterface $form) {
-
-                $data = $form->getData();
-                $validationGroups = ['odr-expenses'];
-
-                if ($data->getPlanningToClaimExpenses() == 'yes') {
-                    $validationGroups[] = 'odr-expenses-planning-claim-yes';
-                }
-
-                return $validationGroups;
-            },
+            'validation_groups' => ['odr-expenses'],
         ]);
     }
 
