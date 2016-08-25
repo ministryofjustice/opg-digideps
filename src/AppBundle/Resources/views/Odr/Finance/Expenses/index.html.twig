@@ -38,6 +38,7 @@
             }) }}
             <div id="expenses-wrapper">
                 <div class="expense-rows" >
+                    {% do form.expenses.setRendered %}
                     {% for singleExpenseForm in form.expenses %}
                         <fieldset class="expense-row">
                             {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
