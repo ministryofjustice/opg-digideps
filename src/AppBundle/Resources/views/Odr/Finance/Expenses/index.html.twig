@@ -76,25 +76,6 @@
              </div>
         </div>
 
-        <div class="form-section">
-            {{ form_checkbox_group(form.planningToClaimExpenses, 'planningToClaimExpenses', {
-                'fieldSetClass' : 'inline planning-claim-expenses',
-                'legendClass' : 'form-label',
-                'legendText' : 'form.planningToClaimExpenses.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
-            }) }}
-            <div id="planning-claim-expenses-textarea">
-                {{ form_input(form.planningToClaimExpensesDetails, 'form.planningToClaimExpensesDetails', {
-                    'labelClass': 'required',
-                    'labelParameters': { '%client%': odr.client.firstname },
-                    'inputClass': 'expanding'
-                }) }}
-            </div>
-        </div>
-
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'form.save') }}
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
@@ -106,12 +87,6 @@
                 new opg.RadioHide({
                     radio: '.paid-anything input[type=radio]',
                     content: '#expenses-wrapper',
-                    showWithValue: 'yes'
-                });
-
-                new opg.RadioHide({
-                    radio: '.planning-claim-expenses input[type=radio]',
-                    content: '#planning-claim-expenses-textarea',
                     showWithValue: 'yes'
                 });
 
