@@ -42,7 +42,6 @@
 {% endif %}
 
 
-
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
   
@@ -59,7 +58,7 @@
                  {% if reportsCount == 0 %}
                     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                            transDomain: 'admin',
-                           linkButtonLabel: 'delete.label',
+                           linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
                            linkClass: 'button-link',
                            linkHref: path('admin_delete_confirm', { id: id })
                            } %}
