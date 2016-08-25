@@ -156,8 +156,8 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'nextLink': path("odr-bank-accounts" , {'odrId': odr.id }),
-        'nextLabel': 'Accounts',
+        'nextLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'nextLabel': 'Income and benefits',
         } %}
     {% endblock %}
 
