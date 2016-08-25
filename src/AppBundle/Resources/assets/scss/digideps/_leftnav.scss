@@ -1,18 +1,18 @@
 $darkblue: #175ea5;
 
 .left-nav-container {
-    
+
     @extend %site-width-container;
     @extend %contain-floats;
     clear: both;
-    
+
     .left-nav {
         box-sizing: border-box;
         width: 25%;
         float: left;
         margin: 0;
         padding: 0;
-        
+
         nav a {
             @include core-19();
             display: block;
@@ -26,16 +26,16 @@ $darkblue: #175ea5;
                 text-align: right;
                 float: right;
             }
-            
+
             &.active {
                 background: $link-colour;
                 color: $white;
             }
-        
+
         }
-        
+
     }
-    
+
     .right-content {
         box-sizing: border-box;
         width: 75%;
@@ -53,7 +53,7 @@ $darkblue: #175ea5;
         > div:first-child {
             margin-top: 0;
         }
-        
+
     }
-    
+
 }

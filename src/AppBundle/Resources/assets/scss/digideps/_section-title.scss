@@ -1,11 +1,11 @@
 .page-section-title-container {
     min-height: 57px;
     width: 100%;
-    
+
     @include media(mobile) {
         margin-bottom: 0;
     }
-    
+
     h1 {
         @include bold-36();
         @include inline-block();
@@ -17,35 +17,35 @@
         margin-top: 30px;
         line-height: 2.5;
     }
-    
+
 }
 
 body.fixed {
 
     padding-top: 4.5em;
-    
+
     .page-section-title-wrapper {
         @include box-shadow(0 1px 6px $grey-1);
         display: block;
         position: fixed;
         top: 0;
         left: 0;
-        
+
         box-sizing: border-box;
         padding: 0 $gutter-half;
         width: 100%;
         z-index: 999;
         background: $white;
         min-height: 4.5em;
-        
+
         @include media(tablet) {
             padding: 0 $gutter;
         }
-        
+
         @include media($min-width: ($site-width + $gutter * 2)) {
             padding: 0 auto;
         }
-        
+
         .page-section-title-container {
             max-width: 960px;
             margin: 0 auto;

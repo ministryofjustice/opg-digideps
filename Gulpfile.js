@@ -152,7 +152,7 @@ gulp.task('vendor', function () {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// Check that the sass complies with simple rules for it's creation to encourage good code.
+// Check that the sass complies with simple rules for its creation to encourage good code.
 gulp.task('lint.sass', function() {
     return gulp.src('src/AppBundle/Resources/assets/scss/**/*.scss')
         .pipe(scsslint());

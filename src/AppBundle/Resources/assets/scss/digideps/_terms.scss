@@ -1,11 +1,11 @@
 .terms {
 
-    .heading-large, 
-    .heading-medium, 
+    .heading-large,
+    .heading-medium,
     .heading-small {
         margin: 40px 0 20px 0;
     }
-    
+
     p {
         @include core-19();
         margin-bottom: 20px;
@@ -15,7 +15,7 @@
         display: block;
         margin: 10px 0 0 20px;
     }
-    
+
     .list-bullet {
         @include core-19();
         margin-left: 20px;

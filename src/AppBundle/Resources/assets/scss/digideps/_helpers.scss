@@ -1,6 +1,9 @@
 // =======================================================
 // HELPERS
 
+// scss-lint:disable SpaceBeforeBrace, SpaceAfterPropertyColon
+// Special formatting here
+
 // Negating spacing
 // Remove margins
 .flush          { margin:       0 !important; }
@@ -19,6 +22,8 @@
 .hard--left     { padding-left:  0 !important; }
 .hard--ends     { padding-top:   0 !important; padding-bottom:0 !important; }
 .hard--sides    { padding-right: 0 !important; padding-left:  0 !important; }
+
+// scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
 
 #content .visuallyhidden {
     position: absolute;

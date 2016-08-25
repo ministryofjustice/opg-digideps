@@ -7,28 +7,32 @@
 
         td {
             text-align: center;
+
             .checkbox {
                 margin: 5px 0;
             }
         }
     }
 
-    table.yesno, #safegaurding-care-funding table {
-
+    table.yesno,
+    #safegaurding-care-funding table {
         margin: 10px 0;
 
         .label {
             width: 5em;
         }
+
         &.small {
             width: auto;
+
             .label {
                 width: auto;
             }
         }
     }
 
-    #safeguarding-contact, #care-arrangements-subsection {
+    #safeguarding-contact,
+    #care-arrangements-subsection {
         margin-top: 10px;
     }
 
@@ -50,6 +54,7 @@
                 width: 200px;
                 display: table-cell;
             }
+
             td {
                 padding-top: 0;
                 padding-bottom: 0;

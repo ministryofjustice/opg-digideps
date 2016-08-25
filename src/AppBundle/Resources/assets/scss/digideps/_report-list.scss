@@ -22,7 +22,7 @@
                 @include bold-24();
                 float: left;
             }
-            
+
             .report-list__item-edit-link {
                 @include core-19();
                 position: absolute;
@@ -55,7 +55,7 @@
             dd.report-list__item-fields-description {
                 @include bold-19();
                 display: block;
-                
+
                 &--block {
                     position: relative;
                     margin-left: auto;
@@ -100,21 +100,21 @@
             overflow: visible;
             z-index: 10;
         }
-        
+
         .report-list__item-fields dd.report-list__item-fields-description--block {
             margin-left: 0;
             margin-right: 300px;
         }
 
     }
-    
+
 }
 
 .report-list--assets {
 
     color: $text-colour;
     list-style: inherit;
-    padding: 30px 0px;
+    padding: 30px 0;
 
     .report-list__item {
         margin-top: 5px;

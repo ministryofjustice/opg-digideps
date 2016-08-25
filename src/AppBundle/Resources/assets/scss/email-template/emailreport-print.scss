@@ -1,42 +1,48 @@
 .formatted-report {
-    
+
     #report-header {
         margin: 0 0 10px 0;
         padding-top: 0;
         background: none;
     }
-    
-    fieldset, fieldset.single-field-fieldset {
+
+    fieldset,
+    fieldset.single-field-fieldset {
         padding: 1px;
         margin: 1px;
-        background: #ffffff;
+        background: $white;
         margin-top: 10px;
     }
 
     fieldset.extended-down {
         padding-bottom: 0;
     }
-    
+
     .decision-item {
         border-bottom: none;
     }
-    
-    .financial-transactions, #balancing .transaction {
-        background: #ffffff;
-    }
+
+    .financial-transactions,
     #balancing .transaction {
-        border: 1px solid #000000;
+        background: $white;
     }
-    
+
+    #balancing .transaction {
+        border: 1px solid $black;
+    }
+
     .financial-transactions .transaction {
         padding: 5px 0 20px 0;
     }
-    
-    #accounts-section, #declaration {
+
+    #accounts-section,
+    #declaration {
         page-break-before: always;
     }
-    
-    .checkbox, .item-value, .value {
+
+    .checkbox,
+    .item-value,
+    .value {
         margin: 2px;
         zoom: 1;
     }

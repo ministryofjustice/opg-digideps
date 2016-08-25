@@ -115,7 +115,7 @@ form {
 }
 
 .form-group {
-    float: none; // Only flat left if within a form container.
+    float: none;// Only flat left if within a form container.
     form & {
         float: left;
     }
@@ -152,7 +152,7 @@ form {
     &.margin-bottom-reduced {
         margin-bottom: 15px;
     }
-    
+
 }
 
 .form-group_button-bar {

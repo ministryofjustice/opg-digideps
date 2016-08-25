@@ -6,7 +6,7 @@
     @include icon(icon-notification, 35, 35, 'images/icons');
 }
 
-.icon__notification_yellow_small  {
+.icon__notification_yellow_small {
     @include icon(icon-notification-yellow-24, 24, 24, 'images/icons');
     float: left;
     margin: 0 5px;

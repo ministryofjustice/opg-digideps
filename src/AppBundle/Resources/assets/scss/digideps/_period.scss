@@ -5,7 +5,7 @@
     padding: 23px 0 20px 0;
     margin: 30px 0 30px 0;
     border-bottom: 1px solid $grey-3;
-    
+
     @include media($min-width: 641px, $max-width: 768px) {
         padding: 10px 0 10px 0;
     }
@@ -33,5 +33,5 @@
         }
 
     }
-    
+
 }
