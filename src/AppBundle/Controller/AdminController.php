@@ -80,7 +80,7 @@ class AdminController extends AbstractController
      */
     public function editUserAction(Request $request, $id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User');
+        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'report']);
 
         if (empty($user)) {
             throw new \Exception('User does not exists');
