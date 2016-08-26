@@ -72,18 +72,23 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/edit-user/{id}", name="admin_editUser")
+     * @Route("/edit-user", name="admin_editUser")
      * @Method({"GET", "POST"})
      * @Template
      * 
      * @param Request $request
      */
-    public function editUserAction(Request $request, $id)
+    public function editUserAction(Request $request)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User');
+        $what = $request->get('what');
+        $filter = $request->get('filter');
 
-        if (empty($user)) {
-            throw new \Exception('User does not exists');
+        try {
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report']);
+        } catch (\Exception $e)  {
+            return $this->render('AppBundle:Admin:error.html.twig', [
+                'error' => 'User not found',
+            ]);
         }
 
         $form = $this->createForm(new FormDir\AddUserType([
@@ -101,11 +106,11 @@ class AdminController extends AbstractController
 
                 $request->getSession()->getFlashBag()->add('action', 'action.message');
 
-                $this->redirect($this->generateUrl('admin_editUser', ['id' => $user->getId()]));
+                $this->redirect($this->generateUrl('admin_editUser', ['what'=>'user_id', 'filter' => $user->getId()]));
             }
         }
 
-        return ['form' => $form->createView(), 'action' => 'edit', 'id' => $id, 'user' => $user];
+        return ['form' => $form->createView(), 'action' => 'edit', 'id' => $user->getId(), 'user' => $user];
     }
 
     /**
