@@ -38,20 +38,24 @@ class AdminController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
-                $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
+                try {
+                    $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
+                    $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
 
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'An activation email has been sent to the user.'
-                );
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'An activation email has been sent to the user.'
+                    );
 
-                $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
+                    $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
-                return $this->redirect($this->generateUrl('admin_homepage'));
+                    return $this->redirect($this->generateUrl('admin_homepage'));
+                } catch (RestClientException $e) {
+                    $form->get('email')->addError(new FormError($e->getData()['message']));
+                }
             }
         }
 
