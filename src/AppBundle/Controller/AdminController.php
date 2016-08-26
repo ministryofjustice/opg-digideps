@@ -30,7 +30,7 @@ class AdminController extends AbstractController
         $sortOrder = $request->query->has('sort_order') ? $request->query->get('sort_order') : 'ASC';
 
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->getRestClient()->get('role', 'Role[]'),
+            'roleChoices' => EntityDir\Role::$availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
@@ -84,7 +84,7 @@ class AdminController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report']);
         } catch (\Exception $e)  {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -92,7 +92,7 @@ class AdminController extends AbstractController
         }
 
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->getRestClient()->get('role', 'Role[]'),
+            'roleChoices' => EntityDir\Role::$availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
             'roleIdDisabled' => $user->getId() == $this->getUser()->getId(),
         ]), $user);
