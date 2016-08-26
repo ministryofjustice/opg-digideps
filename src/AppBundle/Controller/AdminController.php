@@ -144,7 +144,7 @@ class AdminController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User');
+        $user = $this->getRestClient()->get("user/{$id}", 'User' , ['user', 'role', 'client', 'report']);
 
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 
