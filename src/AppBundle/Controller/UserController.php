@@ -140,10 +140,40 @@ class UserController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $user = $this->getRepository('User')->find($id);
-        if (!$user) {
-            throw new \RuntimeException('User not found', 419);  // DD-1336
+        return $this->getOneByFilter($request, 'user_id', $id);
+    }
+
+    /**
+     * @Route("/get-one-by/{what}/{filter}", requirements={
+     *   "what" = "(user_id|email|case_number)"
+     * })
+     * @Method({"GET"})
+     */
+    public function getOneByFilter(Request $request, $what, $filter)
+    {
+        if ($what == 'email') {
+            $user = $this->getRepository('User')->findOneBy(['email' => $filter]);
+            if (!$user) {
+                throw new \RuntimeException('User not found', 404);
+            }
+        } else if ($what == 'case_number') {
+            $client = $this->getRepository('Client')->findOneBy(['caseNumber'=>$filter]);
+            if (!$client) {
+                throw new \RuntimeException('Client not found', 404);
+            }
+            if (empty($client->getUsers())) {
+                throw new \RuntimeException('Client has not users', 404);
+            }
+            $user = $client->getUsers()[0];
+        } else if ($what == 'user_id') {
+            $user = $this->getRepository('User')->find($filter);
+            if (!$user) {
+                throw new \RuntimeException('User not found', 419);
+            }
+        } else {
+            throw new \RuntimeException('wrong query', 500);
         }
+
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
@@ -152,13 +182,14 @@ class UserController extends RestController
 
         // only allow admins to access any user, otherwise the user can only see himself
         if (!$this->isGranted(EntityDir\Role::ADMIN) && !$requestedUserIsLogged) {
-            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+            throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
 
         return $user;
     }
 
     /**
+     * Delete user with clients
      * @Route("/{id}")
      * @Method({"DELETE"})
      * 
@@ -168,7 +199,15 @@ class UserController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $user = $this->findEntityBy('User', $id);
+        $user = $this->findEntityBy('User', $id);  /* @var $user EntityDir\User */
+
+        // delete clients
+        foreach ($user->getClients() as $client) {
+            if (count($client->getReports()) > 0) {
+                throw new \RuntimeException('cannot delete user with reports');
+            }
+            $this->getEntityManager()->remove($client);
+        }
 
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
