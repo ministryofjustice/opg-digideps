@@ -30,7 +30,7 @@ class AdminController extends AbstractController
         $sortOrder = $request->query->has('sort_order') ? $request->query->get('sort_order') : 'ASC';
 
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->getRestClient()->get('role', 'Role[]'),
+            'roleChoices' => EntityDir\Role::$availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
@@ -38,20 +38,24 @@ class AdminController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
-                $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
+                try {
+                    $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
+                    $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
 
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'An activation email has been sent to the user.'
-                );
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'An activation email has been sent to the user.'
+                    );
 
-                $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
+                    $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
-                return $this->redirect($this->generateUrl('admin_homepage'));
+                    return $this->redirect($this->generateUrl('admin_homepage'));
+                } catch (RestClientException $e) {
+                    $form->get('email')->addError(new FormError($e->getData()['message']));
+                }
             }
         }
 
@@ -84,7 +88,7 @@ class AdminController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report']);
         } catch (\Exception $e)  {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -92,7 +96,7 @@ class AdminController extends AbstractController
         }
 
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->getRestClient()->get('role', 'Role[]'),
+            'roleChoices' => EntityDir\Role::$availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
             'roleIdDisabled' => $user->getId() == $this->getUser()->getId(),
         ]), $user);
@@ -144,7 +148,7 @@ class AdminController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User');
+        $user = $this->getRestClient()->get("user/{$id}", 'User' , ['user', 'role', 'client', 'report']);
 
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 

@@ -24,13 +24,11 @@ class AddUserType extends AbstractType
     private $roleIdDisabled;
 
     /**
-     * @param array $options keys: array roles, roleIdEmptyValue
+     * @param array $options keys: array roleChoices, array roleIdEmptyValue
      */
     public function __construct(array $options)
     {
-        foreach ($options['roles'] as $role) {
-            $this->roleChoices[$role->getId()] = $role->getName();
-        }
+        $this->roleChoices = $options['roleChoices'];
         $this->roleIdEmptyValue = $options['roleIdEmptyValue'];
         $this->roleIdDisabled = empty($options['roleIdDisabled']) ? false : true;
     }
