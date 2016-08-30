@@ -1,16 +1,16 @@
-/*
-* Temporary CSS to give an idea about the layout
-* for @biggs to rewrite
-*/
+// Temporary CSS to give an idea about the layout for @biggs to rewrite
+
 #expenses-wrapper {
     .expense-row {
 
         .explanation {
             width: 60%;
         }
+
         .amount {
             width: 25%;
         }
+
         .remove {
             float: left;
             width: 15%;
@@ -37,14 +37,12 @@
         }
     }
 
-    .form-group{
+    .form-group {
         &.error {
-            padding-left: 0px;
+            padding-left: 0;
             border-left: none;
-            margin: 0px;
+            margin: 0;
         }
     }
 
 }
-
-

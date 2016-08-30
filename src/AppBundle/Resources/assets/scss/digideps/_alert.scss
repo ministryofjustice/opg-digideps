@@ -29,7 +29,7 @@
     position: relative;
     overflow: hidden;
     background: rgba($turquoise, .1) url("images/icons/tick.png") 10px 13px no-repeat;
-    
+
     &.flash-news {
         box-sizing: border-box;
         background: $newsbg url("images/icons/info.png") 10px 10px no-repeat;
@@ -37,12 +37,12 @@
         margin-bottom: 30px;
         width: 100%;
         padding-left: 50px;
-    
+
         @include media(mobile) {
             margin-bottom: 20px;
         }
     }
-    
+
 }
 
 #content .report-submission p.flash {

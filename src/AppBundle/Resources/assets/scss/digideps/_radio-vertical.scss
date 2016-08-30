@@ -2,16 +2,16 @@
 .form-group.radio-vertical-group {
     @extend %contain-floats;
     box-sizing: border-box;
-    
+
     @include media(tablet) {
         margin-bottom: 40px;
     }
-    
+
     .form-label {
         width: 100%;
         float: left;
     }
-    
+
     .form-control.radio-vertical {
         width: 15%;
         display: inline-block;
@@ -23,7 +23,7 @@
         background: $white;
         box-sizing: border-box;
         padding: 0 3px;
-        
+
         @include media($max_width: 767px) {
             width: auto;
             float: none;
@@ -41,7 +41,7 @@
             height: 5em;
             float: none;
             background: $grey-3;
-            
+
             @include media($max_width: 767px) {
                 height: auto;
                 margin: 5px 10px 5px 0;
@@ -51,9 +51,9 @@
                 outline: 3px solid $white;
             }
         }
-        
-        
-            
+
+
+
         .input-wrapper {
             margin: 10px 0 3px 0;
             padding: 10px 0;
@@ -63,7 +63,7 @@
             clear: both;
             text-align: center;
             display: block;
-        
+
             @include media($max_width: 767px) {
                 height: auto;
                 width: auto;
@@ -78,19 +78,19 @@
                 outline: 3px solid $grey-3;
             }
         }
-        
+
         &.selected .input-wrapper {
             background: $white;
             border: 1px solid $black;
-            
+
             @include media($max_width: 767px) {
                 background-color: $white;
                 border: 1px solid $white;
                 outline: 3px solid $white;
             }
-        
+
         }
-        
+
         &.selected label {
             @include media($max_width: 767px) {
                 background: $white;
@@ -100,16 +100,16 @@
 
         &.focused .input-wrapper {
             outline: 3px solid $yellow;
-            
+
             @include media($max_width: 767px) {
                 background-color: initial;
                 border: 1px solid $white;
                 outline: 3px solid $white;
             }
-        
+
         }
-        
-        &.focused label, 
+
+        &.focused label,
         &.focused.selected label {
             @include media($max_width: 767px) {
                 outline: 3px solid $yellow;

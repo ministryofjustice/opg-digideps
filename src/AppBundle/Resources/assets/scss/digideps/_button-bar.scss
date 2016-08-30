@@ -1,7 +1,7 @@
-.button-bar {  
-    margin-top: 10px;  
+.button-bar {
+    margin-top: 10px;
     margin-bottom: 10px;
-    
+
     &.confirm-bar {
 
         background: $grey-3;
@@ -45,7 +45,7 @@ form .form-group.button-bar {
     margin: 30px 0 30px 0;
 
     &.no-margin {
-        margin: 0px;
+        margin: 0;
     }
 }
 

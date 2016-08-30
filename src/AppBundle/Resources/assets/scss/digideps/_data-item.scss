@@ -5,7 +5,7 @@ $item-right-margin: 263px;
 $declaration-margin: 170px;
 
 .item-list {
-    
+
     border-top: 1px solid $panel-colour;
     border-bottom: 1px solid $panel-colour;
     margin: 30px 0 40px 0;
@@ -19,31 +19,31 @@ $declaration-margin: 170px;
         &:first-child {
             border-top: 0;
         }
-    
-        .edit-button, 
-        .view-button, 
+
+        .edit-button,
+        .view-button,
         .button-wrapper {
             top: 30px;
         }
-            
+
     }
 
 }
 
 .item {
-    
+
     @include core-19();
     position: relative;
 
     margin-top: 40px;
-    
+
     .title {
         @include bold-24();
         margin-bottom: 5px;
     }
-    
-    .edit-button, 
-    .view-button, 
+
+    .edit-button,
+    .view-button,
     .button-wrapper {
         width: 32%;
         position: absolute;
@@ -54,7 +54,7 @@ $declaration-margin: 170px;
 
 .item-data {
     @extend %contain-floats;
-    
+
     .item-label {
         color: $grey-1;
         margin: 0 0 0 0;
@@ -62,7 +62,7 @@ $declaration-margin: 170px;
         float: left;
         clear: both;
     }
-    
+
     .item-value {
         @include bold-19();
         color: $black;
@@ -79,18 +79,19 @@ $declaration-margin: 170px;
             display: block;
             margin-bottom: 5px;
         }
-        
+
         .item-value {
             margin-left: $item-label-default-width + 20;
             display: block;
             margin-bottom: 5px;
             float: none;
         }
-        
+
         &.large-labels {
             .item-label {
                 width: $item-label-default-width + 40;
-            } 
+            }
+
             .item-value {
                 margin-left: $item-label-default-width + 40 + 20;
             }
@@ -127,13 +128,13 @@ $declaration-margin: 170px;
             @include core-24();
         }
     }
-    
+
 }
 
 
 .no-reason {
     margin: 40px 0 40px 0;
-    
+
     .edit-button {
         text-align: right;
     }
@@ -142,7 +143,7 @@ $declaration-margin: 170px;
 
 .my-client {
 
-    .item-list.reports, 
+    .item-list.reports,
     .client-details {
         width: 85%;
     }
@@ -152,14 +153,14 @@ $declaration-margin: 170px;
             .item-label {
                 width: $client-label-width;
             }
-            
+
             .item-value {
                 margin-left: $client-label-width;
             }
         }
     }
 
-    
+
 }
 
 .reports-page {
@@ -168,11 +169,11 @@ $declaration-margin: 170px;
             bottom: 30px;
             top: auto;
         }
-        
+
         .open-button {
             @include core-24();
         }
-        
+
         .item {
             list-style-type: none;
         }
@@ -187,7 +188,7 @@ $declaration-margin: 170px;
             width: $your-label-width;
             margin-bottom: 25px;
         }
-        
+
         .item-value {
             margin-left: $your-label-width;
             margin-bottom: 25px;
@@ -201,7 +202,7 @@ $declaration-margin: 170px;
         .item-label {
             width: $declaration-margin;
         }
-        
+
         .item-value {
             margin-left: $declaration-margin;
         }

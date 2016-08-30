@@ -10,21 +10,21 @@ p#helpline {
     @include media(mobile) {
         display: none;
     }
-    
+
     @include media(tablet) {
         @include bold-16();
         padding-left: 33px;
         background-size: 27px 31px;
         background-position: 0 3px;
     }
-    
+
     @include media(desktop) {
         @include bold-19();
         padding-left: 50px;
         background-size: 35px 44px;
         background-position: 0 0;
     }
-    
+
 }
 
 #back-bar p#helpline {

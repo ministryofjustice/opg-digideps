@@ -10,12 +10,14 @@
             *width: 30%;
             float: left;
         }
+
         .asset-valuationDate {
             width: 22%;
             padding-right: 3%;
             *width: 30%;
             float: left;
         }
+
         .asset-value {
             width: 22%;
             padding-right: 3%;
@@ -27,7 +29,9 @@
 
     #assets .total {
         float: right;
-        .value, .label {
+
+        .value,
+        .label {
             font-weight: bold;
         }
     }

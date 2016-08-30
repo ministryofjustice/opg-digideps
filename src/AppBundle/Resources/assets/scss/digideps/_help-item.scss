@@ -3,7 +3,7 @@
 }
 
 .accordian.help-item {
-    
+
     .summary {
         @include bold-19();
         color: $link-colour;
@@ -11,11 +11,11 @@
         padding-left: 30px;
         background: url("images/icons/solid-arrow.png") 0 0 no-repeat;
     }
-    
+
     &.closed .summary {
         background-position: 0 -80px;
     }
-    
+
     .content {
         margin-left: 30px;
     }

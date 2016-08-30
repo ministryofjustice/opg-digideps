@@ -1,3 +1,4 @@
+// scss-lint:disable TransitionAll
 
 .radio-hide-content {
     display: block;
@@ -16,5 +17,7 @@
         -moz-opacity: 0;
         opacity: 0;
     }
-    
+
 }
+
+// scss-lint:enable TransitionAll

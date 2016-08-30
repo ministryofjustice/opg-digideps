@@ -1,51 +1,51 @@
 .report-overview {
-    
+
     .page-section-warning {
 
         width: auto;
-        
+
         @include media(mobile) {
             #submit-start-at {
                 display: block;
             }
         }
-        
+
     }
-    
+
     span.icon.icon__notification {
-        
+
         @include media(mobile) {
             display: none;
         }
-    
+
     }
 
     #pagebody {
 
         @extend %grid-row;
-        
+
         #pagebody-left-content {
             @include grid-column(3 / 4, $full-width: tablet);
         }
-        
+
         #pagebody-right-content {
             @include grid-column(1 / 4, $full-width: tablet);
-            
+
             #helpline {
                 margin-top: 40px;
             }
-            
+
             .heading {
                 width: 100%;
                 text-align: center;
             }
-            
+
             #report-status .labelsvalues {
                 margin-top: 23px;
             }
-            
+
         }
-        
+
     }
-    
+
 }

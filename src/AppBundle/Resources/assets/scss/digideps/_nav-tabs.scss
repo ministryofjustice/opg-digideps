@@ -175,17 +175,17 @@
 
     .tab-content {
         margin: 0;
-        
+
         .tab-pane {
             border-top: 0;
             padding: 0;
         }
-        
+
         .inner {
             padding: 0 1em 1em;
             border-bottom: solid 1px $tabinnercolor;
         }
-    
+
     }
 
 }
@@ -193,7 +193,6 @@
 .reports-page #global-header .header-proposition #proposition-links a.reports-link,
 .client-page #global-header .header-proposition #proposition-links a.user-account-link,
 .deputy-page #global-header .header-proposition #proposition-links a.user-account-link,
-.deputy-password-page #global-header .header-proposition #proposition-links a.user-account-link
-{
+.deputy-password-page #global-header .header-proposition #proposition-links a.user-account-link {
     color: $link-colour;
 }

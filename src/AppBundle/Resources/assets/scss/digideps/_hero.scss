@@ -1,149 +1,149 @@
 .hero {
-    
+
     background: $turquoise;
     padding: 0;
     margin: 30px 0 30px 0;
     text-align: center;
     overflow: hidden;
-    
-    h2, 
-    .message, 
+
+    h2,
+    .message,
     .total {
         margin: 30px 0 37px 0;
         color: $white;
     }
-    
-    
+
+
     h2 {
         @include bold-48(1.2);
     }
-    
+
     .message {
         @include core-24();
-        
+
         .button {
-            margin-left: 10px;    
+            margin-left: 10px;
         }
 
         b {
             @include bold-24();
         }
     }
-    
+
     .total {
         @include bold-24();
     }
-    
+
     .hero-column {
         box-sizing: border-box;
         padding: 0 30px 0 30px;
         float: left;
         text-align: center;
-        
+
         .message {
-            @include core-19(); 
+            @include core-19();
         }
 
         b {
             @include bold-19();
         }
     }
- 
+
     &.split-two {
         @extend %contain-floats;
-        
+
         .message {
             height: 2.5em;
         }
-        
+
         .hero-column {
             width: 50%;
-    
+
             &:first-child {
                 border-right: 1px solid $white;
             }
-    
+
         }
-        
+
     }
-    
+
     &.split-three {
         @extend %contain-floats;
 
         .message {
             height: 3em;
         }
-        
+
         .hero-column {
             width: 33%;
             border-left: 10px solid $white;
-            
+
             &:first-child {
-                border-left: 0; 
+                border-left: 0;
             }
         }
     }
-    
+
     &.orange {
         background: $orange;
-        
+
         &.white-text {
             color: $white;
         }
-    
+
     }
-    
+
     &.lightorange {
         background: $light-orange;
     }
-    
+
     &.orange-white-text {
         background: $orange;
     }
-    
+
     &.yellow {
         background: $yellow;
     }
-    
+
     &.compact {
         margin: 10px 0 10px 0;
     }
-    
+
     &.two-columns {
         padding: 20px;
-        
+
         .left {
             float: left;
             width: 80%;
             text-align: left;
-        
+
             .title {
                 font-weight: 400;
                 font-size: 1.1em;
                 margin-bottom: 0;
-                
+
                 &.text-medium {
                     font-size: 1.2em;
                 }
             }
-        
+
             .description {
                 color: $grey-1;
                 margin-bottom: 0;
             }
-        
+
         }
-        
+
         .right {
             float: left;
             width: 20%;
             text-align: right;
-            
+
             &.text-big {
                 font-size: 1.3em;
                 font-weight: 700;
             }
-            
+
         }
     }
 }
