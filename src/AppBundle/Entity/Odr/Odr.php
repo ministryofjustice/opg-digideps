@@ -68,7 +68,6 @@ class Odr
      */
     private $debts;
 
-
     /**
      * @var bool
      *
@@ -97,7 +96,6 @@ class Odr
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
-
 
     /**
      * @var bool
@@ -362,6 +360,4 @@ class Odr
     {
         return $this->noAssetToAdd;
     }
-
-
 }

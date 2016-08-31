@@ -41,9 +41,9 @@ trait OdrIncomeBenefitSingleTrait
     /**
      * Debt constructor.
      *
-     * @param Odr $odr
+     * @param Odr    $odr
      * @param string $typeId
-     * @param float $amount
+     * @param float  $amount
      */
     public function __construct(Odr $odr, $typeId, $hasMoreDetails)
     {
@@ -85,7 +85,6 @@ trait OdrIncomeBenefitSingleTrait
         $this->odr = $odr;
     }
 
-
     /**
      * @return string
      */
@@ -96,11 +95,13 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $typeId
+     *
      * @return IncomeOneOff
      */
     public function setTypeId($typeId)
     {
         $this->typeId = $typeId;
+
         return $this;
     }
 
@@ -114,11 +115,13 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $present
+     *
      * @return IncomeBenefit
      */
     public function setPresent($present)
     {
         $this->present = $present;
+
         return $this;
     }
 
@@ -132,11 +135,13 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $hasMoreDetails
+     *
      * @return OdrIncomeBenefitSingleTrait
      */
     public function setHasMoreDetails($hasMoreDetails)
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
@@ -150,14 +155,13 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $moreDetails
+     *
      * @return OdrIncomeBenefitSingleTrait
      */
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
+
         return $this;
     }
-
-
-
 }

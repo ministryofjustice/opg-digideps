@@ -20,7 +20,7 @@ class OdrController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['odr'];
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['odr'];
         $this->setJmsSerialiserGroups($groups);
 
         //$this->getRepository('Odr\Odr')->warmUpArrayCacheTransactionTypes();
@@ -140,10 +140,10 @@ class OdrController extends RestController
 
         if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
             $odr->setPaidForAnything($data['paid_for_anything']);
-            foreach($odr->getExpenses() as $e) {
+            foreach ($odr->getExpenses() as $e) {
                 $this->getEntityManager()->remove($e);
             }
-            foreach ($data['paid_for_anything']=='yes' ? $data['expenses'] : [] as $row) {
+            foreach ($data['paid_for_anything'] == 'yes' ? $data['expenses'] : [] as $row) {
                 if ($row['explanation'] && $row['amount']) {
                     $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
                     $this->getEntityManager()->persist($exp);

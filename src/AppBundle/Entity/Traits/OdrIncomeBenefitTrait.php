@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: elvis
  * Date: 08/08/2016
- * Time: 15:46
+ * Time: 15:46.
  */
 
 namespace AppBundle\Entity\Traits;
-
 
 use AppBundle\Entity\Odr\IncomeBenefitOneOff;
 use AppBundle\Entity\Odr\IncomeBenefitStateBenefit;
@@ -68,7 +67,6 @@ trait OdrIncomeBenefitTrait
      */
     private $expectCompensationDamagesDetails;
 
-
     /**
      * @var IncomeBenefit[]
      *
@@ -88,6 +86,7 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param IncomeBenefit[] $stateBenefits
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function addStateBenefits($stateBenefits)
@@ -109,11 +108,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $receiveOtherIncomeDetails
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setReceiveOtherIncomeDetails($receiveOtherIncomeDetails)
     {
         $this->receiveOtherIncomeDetails = $receiveOtherIncomeDetails;
+
         return $this;
     }
 
@@ -127,11 +128,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $expectCompensationDamages
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamages($expectCompensationDamages)
     {
         $this->expectCompensationDamages = $expectCompensationDamages;
+
         return $this;
     }
 
@@ -145,14 +148,15 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $expectCompensationDamagesDetails
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamagesDetails($expectCompensationDamagesDetails)
     {
         $this->expectCompensationDamagesDetails = $expectCompensationDamagesDetails;
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -164,11 +168,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $receiveStatePension
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setReceiveStatePension($receiveStatePension)
     {
         $this->receiveStatePension = $receiveStatePension;
+
         return $this;
     }
 
@@ -182,14 +188,15 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $receiveOtherIncome
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setReceiveOtherIncome($receiveOtherIncome)
     {
         $this->receiveOtherIncome = $receiveOtherIncome;
+
         return $this;
     }
-
 
     /**
      * @return IncomeBenefit[]
@@ -201,6 +208,7 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param IncomeBenefit[] $oneOff
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function addOneOff($oneOff)
@@ -211,7 +219,6 @@ trait OdrIncomeBenefitTrait
 
         return $this;
     }
-
 
     /**
      * @param string $typeId
@@ -236,6 +243,4 @@ trait OdrIncomeBenefitTrait
             return $sb->getTypeId() == $typeId;
         })->first();
     }
-
-
 }

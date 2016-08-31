@@ -42,5 +42,4 @@ class IncomeBenefitOneOff
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
      */
     private $odr;
-
 }

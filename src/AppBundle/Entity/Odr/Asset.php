@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\Odr\Odr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -153,6 +152,7 @@ abstract class Asset
 
     /**
      * @param Odr $odr
+     *
      * @return Asset
      */
     public function setOdr(Odr $odr = null)
@@ -174,11 +174,13 @@ abstract class Asset
 
     /**
      * @param string $type
+     *
      * @return Asset
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 

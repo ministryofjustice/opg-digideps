@@ -29,7 +29,6 @@ class Expense
      */
     private $explanation;
 
-
     /**
      * @var float
      *
@@ -51,7 +50,8 @@ class Expense
 
     /**
      * Expense constructor.
-     * @param Odr $odr
+     *
+     * @param Odr    $odr
      * @param string $explanation
      * @param $amount
      */
@@ -63,7 +63,6 @@ class Expense
         $this->amount = $amount;
     }
 
-
     /**
      * @return mixed
      */
@@ -74,11 +73,13 @@ class Expense
 
     /**
      * @param mixed $explanation
+     *
      * @return Expense
      */
     public function setExplanation($explanation)
     {
         $this->explanation = $explanation;
+
         return $this;
     }
 
@@ -92,15 +93,13 @@ class Expense
 
     /**
      * @param string $amount
+     *
      * @return Expense
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
-
-
-
-
 }

@@ -64,9 +64,6 @@ class OdrRepository extends EntityRepository
             }
         }
 
-
         return $ret;
     }
-
-
 }
