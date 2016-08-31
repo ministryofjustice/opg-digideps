@@ -190,9 +190,9 @@ class RestClient
     }
 
     /**
-     * @param string              $endpoint e.g. /user
-     * @param string|object|array $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $jmsGroups  deserialise_groups
+     * @param string              $endpoint  e.g. /user
+     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array               $jmsGroups deserialise_groups
      * 
      * @return string response body
      */
@@ -207,9 +207,9 @@ class RestClient
     }
 
     /**
-     * @param string        $endpoint e.g. /user
-     * @param string|object $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array         $jmsGroups  deserialise_groups
+     * @param string        $endpoint  e.g. /user
+     * @param string|object $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array         $jmsGroups deserialise_groups
      * 
      * @return string response body
      */

@@ -2,11 +2,9 @@
 
 namespace AppBundle\Form\Odr\IncomeBenefit;
 
-use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OneOffType extends AbstractType
@@ -16,7 +14,7 @@ class OneOffType extends AbstractType
         $builder
             ->add('id', 'hidden')
             ->add('oneOff', 'collection', [
-                'type' => new IncomeBenefitSingleType()
+                'type' => new IncomeBenefitSingleType(),
             ])
             ->add('save', 'submit');
     }

@@ -18,7 +18,7 @@ class IncomeBenefit
     private $typeId;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
@@ -40,8 +40,9 @@ class IncomeBenefit
 
     /**
      * IncomeBenefit constructor.
+     *
      * @param $typeId
-     * @param bool $present
+     * @param bool   $present
      * @param string $hasMoreDetails
      * @param string $moreDetails
      */
@@ -70,7 +71,7 @@ class IncomeBenefit
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPresent()
     {
@@ -78,7 +79,7 @@ class IncomeBenefit
     }
 
     /**
-     * @param boolean $present
+     * @param bool $present
      */
     public function setPresent($present)
     {
@@ -141,5 +142,4 @@ class IncomeBenefit
             $context->addViolationAt('present', 'odr.incomeBenefit.present.notBlank');
         }
     }
-
 }

@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Odr;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Expense
 {
@@ -17,7 +16,6 @@ class Expense
      * @Assert\NotBlank(message="odr.expenses.explanation.notBlank", groups={"odr-expenses"})
      */
     private $explanation;
-
 
     /**
      * @var float
@@ -42,11 +40,13 @@ class Expense
 
     /**
      * @param mixed $explanation
+     *
      * @return Expense
      */
     public function setExplanation($explanation)
     {
         $this->explanation = $explanation;
+
         return $this;
     }
 
@@ -60,15 +60,13 @@ class Expense
 
     /**
      * @param string $amount
+     *
      * @return Expense
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
-
-
-
-
 }

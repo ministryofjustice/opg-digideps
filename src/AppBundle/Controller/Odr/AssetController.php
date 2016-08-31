@@ -22,7 +22,7 @@ class AssetController extends AbstractController
      */
     public function listAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         $assets = $odr->getAssets();
 
         return [
@@ -42,7 +42,7 @@ class AssetController extends AbstractController
      */
     public function addSelectTitleAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
 
         $form = $this->createForm('odr_asset_title', new EntityDir\Odr\AssetOther(), [
             'action' => $this->generateUrl('odr-asset-add-select-title', ['odrId' => $odrId]),
@@ -68,7 +68,7 @@ class AssetController extends AbstractController
      */
     public function addCompleteAction(Request $request, $odrId, $title)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
 
         // [.. change form and template (or forward) depending on the asset title ]
         $asset = EntityDir\Odr\Asset::factory($title);
@@ -105,7 +105,7 @@ class AssetController extends AbstractController
      */
     public function editAction(Request $request, $odrId, $assetId)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         if (!$odr->hasAssetWithId($assetId)) {
             throw new \RuntimeException('Asset not found.');
         }
@@ -138,7 +138,7 @@ class AssetController extends AbstractController
      */
     public function deleteAction($odrId, $id)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
 
         if ($odr->hasAssetWithId($id)) {
             $this->getRestClient()->delete("/odr/{$odrId}/asset/{$id}");
@@ -156,7 +156,7 @@ class AssetController extends AbstractController
      */
     public function _noAssetsAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId,self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
         $form = $this->createForm(new FormDir\Odr\Asset\NoAssetToAddType(), $odr, []);
         $form->handleRequest($request);
 

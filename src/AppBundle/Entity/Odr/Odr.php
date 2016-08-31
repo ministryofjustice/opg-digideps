@@ -56,7 +56,6 @@ class Odr
      */
     private $bankAccounts;
 
-
     /**
      * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
      * @JMS\Groups({"debts"})
@@ -98,7 +97,6 @@ class Odr
      */
     private $noAssetToAdd;
 
-
     /**
      * @return decimal
      */
@@ -108,6 +106,7 @@ class Odr
         foreach ($this->getBankAccounts() as $bankAccount) {
             $ret += $bankAccount->getBalanceOnCourtOrderDate();
         }
+
         return $ret;
     }
 
@@ -258,7 +257,6 @@ class Odr
     }
 
     /**
-     *
      * @return decimal
      */
     public function getBalanceOnCourtOrderDateTotal()
@@ -267,6 +265,7 @@ class Odr
         foreach ($this->getBankAccounts() as $account) {
             $ret += $account->getBalanceOnCourtOrderDate();
         }
+
         return $ret;
     }
 
@@ -360,7 +359,6 @@ class Odr
         }
     }
 
-
     /**
      * @param array $assets
      *
@@ -421,7 +419,7 @@ class Odr
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNoAssetToAdd()
     {
@@ -429,12 +427,14 @@ class Odr
     }
 
     /**
-     * @param boolean $noAssetToAdd
+     * @param bool $noAssetToAdd
+     *
      * @return Odr
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
         $this->noAssetToAdd = $noAssetToAdd;
+
         return $this;
     }
 
@@ -468,5 +468,4 @@ class Odr
 
         return $ret;
     }
-
 }
