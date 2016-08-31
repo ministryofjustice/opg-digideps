@@ -5,7 +5,6 @@ namespace AppBundle\Form\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\IncomeBenefit;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;

@@ -13,13 +13,12 @@ use JMS\Serializer\Annotation as JMS;
 class Role
 {
     public static $availableRoles = [
-        1 => "OPG Administrator",
-        2 => "Lay Deputy",
+        1 => 'OPG Administrator',
+        2 => 'Lay Deputy',
 //        3 => "Professional Deputy",
 //        4 => "Local Authority Deputy",
 //        5 => "Assisted Digital Support",
     ];
-
 
     /**
      * @JMS\Type("integer")

@@ -116,7 +116,6 @@ class IndexController extends AbstractController
         $odr = $client->getOdr();
         $odr->setClient($client);
 
-
         // check status
         $odrStatusService = new OdrStatusService($odr);
 

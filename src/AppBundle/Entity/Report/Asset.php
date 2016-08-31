@@ -108,6 +108,7 @@ abstract class Asset
 
     /**
      * @param $value
+     *
      * @return static
      */
     public function setValue($value)
@@ -124,6 +125,7 @@ abstract class Asset
 
     /**
      * @param $valuationDate
+     *
      * @return static
      */
     public function setValuationDate($valuationDate)
