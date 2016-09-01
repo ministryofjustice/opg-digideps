@@ -12,26 +12,30 @@
     # CLICKABLE REPORT
     #}
     {% set status = reportActive ? 'notFinished' : 'notStarted' %}
-    {% set statusClass = reportActive ? 'not-finished' : 'not-started' %}
+    {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
     <div class="card card-plain">
-        <span class="status {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
-        <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
-        <p class="date">
-            {% if reportActive %}
-                {{ reportActive.startDate | date("j M Y") }} -
-                {{ reportActive.endDate | date("j M Y") }}
-            {% endif %}
-        </p>
-        <p class="description">
-            {% if reportActive %}
-                {{ ('report.due') | trans }}
-                {{ reportActive.getDueDate() | date("j M Y") }}
-            {% endif %}
-        </p>
+        <span class="status status-corner {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        <div class="card-body">
+            <p>
+                {% if reportActive %}
+                    {{ reportActive.startDate | date("jS F Y") }} -
+                    {{ reportActive.endDate | date("jS F Y") }}
+                {% endif %}
+            </p>
+            <p class="text-secondary soft-half--top">
+                {% if reportActive %}
+                    {{ ('report.due') | trans }}
+                    {{ reportActive.getDueDate() | date("jS F Y") }}
+                {% endif %}
+            </p>
+        </div>
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
         : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
-        <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+        <div class="card-actions">
+            <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+        </div>
     </div>
 {% else %}
     {#
