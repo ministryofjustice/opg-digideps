@@ -59,6 +59,10 @@ visitsCare:
     subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
     edit: "Edit visits and care"
     start: "Start visits and care"
+actions:
+    subSectionTitle: "Actions"
+    edit: "Edit actions"
+    start: "Start actions"
 assets:
     subSectionTitle: "Assets and debts"
     subSectionDescription: "Enter details of %client%'s property, investments and other valuables"

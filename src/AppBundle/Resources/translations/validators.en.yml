@@ -432,6 +432,21 @@ odr:
   expenses:
       paidForAnything:
          notBlank: Choose yes or no
+  action:
+    actionGiveGiftsToClient:
+      notBlank: Please tell us if you intending to give any gifts
+    actionGiveGiftsToClientDetails:
+      notBlank: Please give us some more information
+    actionMoreInfo:
+      notBlank: Please tell us if you intending to give any gifts
+    actionMoreInfoDetails:
+      notBlank: Please give us some more information
+    actionPropertyMaintenance:
+      notBlank: Please tell use if there are plans for maintenance or alterations to any property
+    actionPropertySellingRent:
+      notBlank: Please tell us if you are you planning to sell or rent any property
+    actionPropertyBuy:
+      notBlank: Please tell us if you are you planning to buy a property
 
 
 action:

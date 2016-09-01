@@ -1,0 +1,75 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+    {% set translationDomain = "odr-action-info" %}
+    {% trans_default_domain translationDomain %}
+
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Action:left-nav.html.twig' %}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        {{ form_errors_list(form) }}
+
+        <h3 class="heading-small">
+            {{ 'page.pageDescription' | trans({
+                '%client%': odr.client.firstname,
+                '%linkStart%': '<a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">',
+                '%linkEnd%': '</a>',
+            }, translationDomain )  | raw }}</h3>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
+
+        {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
+            'fieldSetClass' : 'inline more-info-group',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionMoreInfo.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="more-info-wrapper" class="form-section">
+            {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script>
+            $(document).ready(function () {
+                new opg.RadioHide({
+                    radio: '.more-info-group input[type=radio]',
+                    content: '#more-info-wrapper',
+                    showWithValue: 'yes'
+                });
+
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path('odr-action-property' , {'odrId': odr.id }),
+        'previousLabel': 'Property',
+        'nextLink': path("odr_overview"),
+        'nextLabel': 'Report overview',
+        } %}
+    {% endblock %}
+
+
+{% endembed %}

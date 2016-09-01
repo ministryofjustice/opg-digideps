@@ -101,4 +101,9 @@ class OdrStatusService
 
         return self::STATE_INCOMPLETE;
     }
+
+    public function getActionsState()
+    {
+        return self::STATE_NOT_STARTED;
+    }
 }
