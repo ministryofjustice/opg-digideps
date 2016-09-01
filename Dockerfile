@@ -16,7 +16,8 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 
 RUN  npm install --global gulp
 RUN  npm install --global browserify
-RUN  gem install sass scss_lint
+RUN  gem install sass -v 3.4.22
+RUN  gem install scss_lint -v 0.49.0
 
 # build app dependencies
 COPY composer.json /app/
