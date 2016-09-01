@@ -58,6 +58,11 @@
 .soft-half--ends    { padding-top:   $gutter-half !important; padding-bottom:$gutter-half !important; }
 .soft-half--sides   { padding-right: $gutter-half !important; padding-left:  $gutter-half !important; }
 
+// Text alignment
+.text--left     { text-align: left   !important; }
+.text--center   { text-align: center !important; }
+.text--right    { text-align: right  !important; }
+
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
 
 #content .visuallyhidden {
@@ -82,3 +87,5 @@
 .right {
     float: right;
 }
+
+
