@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Odr\IncomeBenefit;
 
-use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

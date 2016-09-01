@@ -75,7 +75,7 @@ class OdrStatusService
             return self::STATE_NOT_STARTED;
         }
 
-        if (count($this->odr->getBankAccounts()) > 0 && $this->odr->incomeBenefitsStatus()=='done') {
+        if (count($this->odr->getBankAccounts()) > 0 && $this->odr->incomeBenefitsStatus() == 'done') {
             return self::STATE_DONE;
         }
 

@@ -158,7 +158,7 @@ class DecisionController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('report/'.$reportId, $data, ['reasonForNoDecisions',]);
+            $this->getRestClient()->put('report/'.$reportId, $data, ['reasonForNoDecisions']);
         }
 
         return [

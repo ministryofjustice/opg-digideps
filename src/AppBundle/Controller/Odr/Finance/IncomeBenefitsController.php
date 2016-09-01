@@ -2,12 +2,10 @@
 
 namespace AppBundle\Controller\Odr\Finance;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 
@@ -66,7 +64,7 @@ class IncomeBenefitsController extends AbstractController
         $request = $this->getRequest();
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->getRestClient()->put('odr/' . $odrId, $form->getData(), $jmsGroups);
+            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), $jmsGroups);
 
             return $this->redirect($this->generateUrl('odr-income-benefits', ['odrId' => $odrId]));
         }

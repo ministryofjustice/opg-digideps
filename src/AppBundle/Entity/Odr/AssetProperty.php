@@ -375,5 +375,4 @@ class AssetProperty extends Asset
     {
         return $this->getAddress().' '.$this->getPostcode();
     }
-
 }

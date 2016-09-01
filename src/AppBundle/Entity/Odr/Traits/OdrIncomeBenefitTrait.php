@@ -2,14 +2,12 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\IncomeBenefit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait OdrIncomeBenefitTrait
 {
-
     /**
      * @JMS\Type("array<AppBundle\Entity\Odr\IncomeBenefit>")
      * @JMS\Groups({"odr-state-benefits"})
@@ -81,11 +79,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param IncomeBenefit $stateBenefits
+     *
      * @return Odr
      */
     public function setStateBenefits($stateBenefits)
     {
         $this->stateBenefits = $stateBenefits;
+
         return $this;
     }
 
@@ -99,11 +99,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $receiveStatePension
+     *
      * @return Odr
      */
     public function setReceiveStatePension($receiveStatePension)
     {
         $this->receiveStatePension = $receiveStatePension;
+
         return $this;
     }
 
@@ -117,11 +119,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $receiveOtherIncome
+     *
      * @return Odr
      */
     public function setReceiveOtherIncome($receiveOtherIncome)
     {
         $this->receiveOtherIncome = $receiveOtherIncome;
+
         return $this;
     }
 
@@ -153,11 +157,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $expectCompensationDamages
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamages($expectCompensationDamages)
     {
         $this->expectCompensationDamages = $expectCompensationDamages;
+
         return $this;
     }
 
@@ -171,11 +177,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param string $expectCompensationDamagesDetails
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamagesDetails($expectCompensationDamagesDetails)
     {
         $this->expectCompensationDamagesDetails = $expectCompensationDamagesDetails;
+
         return $this;
     }
 
@@ -189,11 +197,13 @@ trait OdrIncomeBenefitTrait
 
     /**
      * @param IncomeBenefit[] $oneOff
+     *
      * @return OdrIncomeBenefitTrait
      */
     public function setOneOff($oneOff)
     {
         $this->oneOff = $oneOff;
+
         return $this;
     }
 
@@ -208,13 +218,13 @@ trait OdrIncomeBenefitTrait
             return 0;
         }
 
-        return count(array_filter($elements, function($st) {
+        return count(array_filter($elements, function ($st) {
             return $st instanceof IncomeBenefit && $st->isPresent();
         }));
     }
 
     /**
-     * Used from OdrStatusService
+     * Used from OdrStatusService.
      *
      * @return string not-started/incomplete/done
      */
@@ -245,9 +255,10 @@ trait OdrIncomeBenefitTrait
 
     /**
      * Display status of each category
-     * Called from template
+     * Called from template.
      *
      * @param string $category
+     *
      * @return string
      */
     public function incomeBenefitsSectionStatus($category)
@@ -255,20 +266,23 @@ trait OdrIncomeBenefitTrait
         switch ($category) {
             case 'stateBenefits';
                 $count = $this->countRecordsPresent($this->getStateBenefits());
+
                 return "{$count} Selected";
 
             case 'pensionsOtherIncome';
                 $completed = $this->getReceiveStatePension() && $this->getReceiveOtherIncome();
+
                 return $completed ? 'Completed' : '';
 
             case 'damages';
                 $completed = $this->getExpectCompensationDamages();
+
                 return $completed ? 'Completed' : '';
 
             case 'oneOff';
                 $count = $this->countRecordsPresent($this->getOneOff());
+
                 return "{$count} Selected";
         }
     }
-
 }

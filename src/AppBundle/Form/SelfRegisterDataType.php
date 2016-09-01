@@ -15,8 +15,16 @@ class SelfRegisterDataType extends AbstractType
             ->add('firstname', 'text')
             ->add('lastname', 'text')
             ->add('postcode', 'text')
-            ->add('email', 'email',  ['constraints' => [
-                new Constraints\Email(['message' => 'login.email.inValid']), ],
+            ->add('email', 'repeated',  [
+                'type' => 'email',
+                'invalid_message' => 'user.email.doesNotMatch',
+                'constraints' => [
+                    new Constraints\Email([
+                        'message' => 'user.email.invalid',
+                        'checkMX' => true,
+                        'checkHost' => true,
+                    ]),
+                ],
             ])
             ->add('clientLastname', 'text')
             ->add('caseNumber', 'text')

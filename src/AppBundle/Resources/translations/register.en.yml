@@ -13,8 +13,12 @@ firstname:
 lastname:
     label: "Your last name"
 email:
-    label: "Your email"
-    existingError: That email has already been registered with this service.
+    first:
+      label: "Your email"
+      existingError: That email has already been registered with this service.
+      invalid: Enter a valid email address
+    second:
+      label: "Confirm your email"
 postcode:
     label: "Your post code"
     matchingError: You haven't entered a post code. Do you live in the UK? If you have a UK post code, please enter it.

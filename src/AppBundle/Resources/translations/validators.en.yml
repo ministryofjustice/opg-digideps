@@ -1,9 +1,10 @@
 # translations for validation messages. Rules in validation
 user:
   email:
-    invalid: This email {{ value }} is not valid
+    invalid: This email is not valid
     notBlank: You must enter an email address
-    maxLength: The email can't be longer than {{ limit }}
+    maxLength: The email can't be longer than {{ limit }} characters
+    doesNotMatch: Email does not match
   firstname:
     notBlank: Enter your first name
     minLength: Your first name must be at least {{ limit }} letters long

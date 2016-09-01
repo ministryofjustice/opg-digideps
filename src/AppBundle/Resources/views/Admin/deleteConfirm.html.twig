@@ -29,7 +29,7 @@
                transDomain: 'admin',
                linkButtonLabel: 'no.label',
                linkClass: 'button-secondary',
-               linkHref: path('admin_editUser', { id: user.id })
+               linkHref: path('admin_editUser', { what: 'user_id', filter: user.id })
                } %}
                
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
