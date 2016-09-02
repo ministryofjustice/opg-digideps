@@ -20,7 +20,7 @@ class OdrController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['odr'];
+        $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['odr'];
         $this->setJmsSerialiserGroups($groups);
 
         //$this->getRepository('Odr\Odr')->warmUpArrayCacheTransactionTypes();
@@ -148,6 +148,37 @@ class OdrController extends RestController
                     $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
                     $this->getEntityManager()->persist($exp);
                 }
+            }
+        }
+
+        // actions
+        if (array_key_exists('action_give_gifts_to_client', $data)) {
+            $odr->setActionGiveGiftsToClient($data['action_give_gifts_to_client']);
+            if (array_key_exists('action_give_gifts_to_client_details', $data)) {
+                $odr->setActionGiveGiftsToClientDetails(
+                    $data['action_give_gifts_to_client'] == 'yes' ? $data['action_give_gifts_to_client_details'] : null
+                );
+            }
+        }
+
+        if (array_key_exists('action_property_maintenance', $data)) {
+            $odr->setActionPropertyMaintenance($data['action_property_maintenance']);
+        }
+
+        if (array_key_exists('action_property_selling_rent', $data)) {
+            $odr->setActionPropertySellingRent($data['action_property_selling_rent']);
+        }
+
+        if (array_key_exists('action_property_buy', $data)) {
+            $odr->setActionPropertyBuy($data['action_property_buy']);
+        }
+
+        if (array_key_exists('action_more_info', $data)) {
+            $odr->setActionMoreInfo($data['action_more_info']);
+            if (array_key_exists('action_more_info_details', $data)) {
+                $odr->setActionMoreInfoDetails(
+                    $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
+                );
             }
         }
 

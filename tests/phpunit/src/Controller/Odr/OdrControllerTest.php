@@ -327,4 +327,44 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(4512.50, $data['expenses'][1]['amount']);
     }
 
+    public function testActions()
+    {
+        $url = '/odr/'.self::$odr1->getId();
+
+        // PUT
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'action_give_gifts_to_client' => 'yes',
+                'action_give_gifts_to_client_details' => 'md1',
+                'action_property_maintenance' => 'yes',
+                'action_property_selling_rent' => 'no',
+                'action_property_buy' => 'yes',
+                'action_more_info' => 'no',
+                'action_more_info_details' => 'md2',
+            ],
+        ]);
+
+        // GET and assert
+        $q = http_build_query(['groups' => [
+            'odr-action-give-gifts',
+            'odr-action-property',
+            'odr-action-more-info',
+        ]]);
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertEquals('yes', $data['action_give_gifts_to_client']);
+        $this->assertEquals('md1', $data['action_give_gifts_to_client_details']);
+        $this->assertEquals('yes', $data['action_property_maintenance']);
+        $this->assertEquals('no', $data['action_property_selling_rent']);
+        $this->assertEquals('yes', $data['action_property_buy']);
+        $this->assertEquals('no', $data['action_more_info']);
+        $this->assertEquals('', $data['action_more_info_details']);
+
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Traits\OdrActionTrait;
 use AppBundle\Entity\Traits\OdrExpensesTrait;
 use AppBundle\Entity\Traits\OdrIncomeBenefitTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,6 +18,7 @@ class Odr
 {
     use OdrIncomeBenefitTrait;
     use OdrExpensesTrait;
+    use OdrActionTrait;
 
     const PROPERTY_AND_AFFAIRS = 2;
 
