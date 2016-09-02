@@ -15,9 +15,9 @@ class ActionsController extends AbstractController
         'odr',
         'client',
         'client-cot',
-        'odr-actions-gifts',
-        'odr-actions-property',
-        'odr-actions-info',
+        'odr-action-give-gifts',
+        'odr-action-property',
+        'odr-action-more-info',
     ];
 
     /**
@@ -39,7 +39,7 @@ class ActionsController extends AbstractController
         $form = $this->createForm(new FormDir\Odr\Action\GiftsType(), $odr);
         $form->handleRequest($request);
         if ($form->isValid()) {
-//            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-give-gifts']);
+            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-give-gifts']);
 
             return $this->redirect($this->generateUrl('odr-action-gifts', ['odrId' => $odrId]));
         }
@@ -70,7 +70,7 @@ class ActionsController extends AbstractController
         $form = $this->createForm(new FormDir\Odr\Action\PropertyType(), $odr);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['odr-action-gifts']);
+            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-property']);
 
             return $this->redirect($this->generateUrl('odr-action-property', ['odrId' => $odrId]));
         }
@@ -101,9 +101,9 @@ class ActionsController extends AbstractController
         $form = $this->createForm(new FormDir\Odr\Action\InfoType(), $odr);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['odr-action-info']);
+            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-more-info']);
 
-//            return $this->redirect($this->generateUrl('odr-action-info', ['odrId' => $odrId]));
+            return $this->redirect($this->generateUrl('odr-action-info', ['odrId' => $odrId]));
         }
 
         return [
