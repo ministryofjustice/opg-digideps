@@ -1,0 +1,94 @@
+<div class="section" id="safeguarding-section">
+    <h2 class="section-heading">Actions you plan to take</h2>
+
+    <div class="dont-break">
+        <h3 class="fieldset-outer-title">Gifts</h3>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Are you intending to give any gifts on behalf of the client</div>
+
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionGiveGiftsToClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionGiveGiftsToClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
+            </div>
+            {% if odr.actionGiveGiftsToClient == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="question">More details</div>
+                    <div class="value textarea">{{ odr.actionGiveGiftsToClientDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="dont-break">
+        <h3 class="fieldset-outer-title">Property</h3>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Are there plans for maintenance or alterations to any property owned by the client ?</div>
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertyMaintenance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertyMaintenance == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="checkboxes horizontal">
+                <div class="question">Are you planning to sell or rent any property owned by the client ?</div>
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertySellingRent == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertySellingRent == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="checkboxes horizontal">
+                <div class="question">Are you planning to buy a property for the client ?</div>
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertyBuy == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionPropertyBuy == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="dont-break">
+        <h3 class="fieldset-outer-title">Further information</h3>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Is there anything else you'd like to tell us ?</div>
+
+                <table class="yesno">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if odr.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
+            </div>
+            {% if odr.actionMoreInfo == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="question">More details</div>
+                    <div class="value textarea">{{ odr.actionMoreInfoDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
