@@ -24,7 +24,7 @@
         {#{% endif %}#}
         {#{% include 'AppBundle:Odr/Formatted:_contacts.html.twig' %}#}
         {% if odr.visitsCare is not null %}
-            {% include 'AppBundle:Odr/Formatted:_safeguarding.html.twig' with {
+            {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' with {
                 'safeguarding': odr.visitsCare
             } %}
         {% endif %}

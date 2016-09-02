@@ -30,7 +30,7 @@ b {
 
 // Subheading
 .heading-secondary {
-    color: $grey-1;
+    color: $secondary-text-colour;
 }
 
 // Subheading just below a main heading
@@ -38,4 +38,9 @@ b {
     + .heading-secondary {
         margin-top: 10px;
     }
+}
+
+// Secondary Text
+.text-secondary {
+  color: $secondary-text-colour;
 }

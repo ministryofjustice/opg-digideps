@@ -7,13 +7,15 @@
 	Opening deputyship report
 </h2>
 
-{% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'not-finished' %}
+{% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'incomplete' %}
 
 <div class="card card-plain last">
     <span class="status status-corner {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
     <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
-    <div class="card-body">
-	    <p>{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}</p>
+    <div class="card-body soft-half--top">
+	    <p class="text-secondary">{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}</p>
     </div>
-    <a href="{{ path('odr_overview') }}" class="button right">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+    <div class="card-actions">
+	    <a href="{{ path('odr_overview') }}" class="button right">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+    </div>
 </div>

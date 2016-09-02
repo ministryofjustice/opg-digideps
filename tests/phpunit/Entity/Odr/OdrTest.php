@@ -34,18 +34,20 @@ class OdrTest extends \PHPUnit_Framework_TestCase
     public function testIncomeBenefitsStatus()
     {
         $this->assertEquals('not-started', $this->odr->incomeBenefitsStatus());
-        $this->odr->setStateBenefits([$this->incomeUnticked]);
-        $this->assertEquals('not-started', $this->odr->incomeBenefitsStatus());
 
         $this->odr->setStateBenefits([$this->incomeTicked]);
-        $this->assertEquals('incomplete', $this->odr->incomeBenefitsStatus());
+        $this->assertEquals('incomplete', $this->odr->incomeBenefitsStatus(), 'state benefits and one-off should be ignored');
 
-        $this->odr->setOneOff([$this->incomeTicked]);
         $this->odr->setReceiveStatePension('yes');
         $this->odr->setReceiveOtherIncome('yes');
         $this->odr->setReceiveOtherIncomeDetails('..');
         $this->odr->setExpectCompensationDamages('yes');
         $this->odr->setExpectCompensationDamagesDetails('..');
+
+        // state benefits and one-off should be ignored
+        $this->odr->setStateBenefits([$this->incomeUnticked]);
+        $this->odr->setOneOff([$this->incomeUnticked]);
+
         $this->assertEquals('done', $this->odr->incomeBenefitsStatus());
         
     }

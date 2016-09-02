@@ -2,7 +2,6 @@
     <h2 class="section-heading">Visits and care</h2>
 
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Plans to move to a new residence</h3>
         <div class="box" id="safeguarding-contact">
             <div class="checkboxes horizontal">
                 <div class="question">Are there any plans for the client to move to a new residence</div>
@@ -26,7 +25,6 @@
         </div>
     </div>
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Contact with client</h3>
         <div class="box" id="safeguarding-contact">
             <div id="do-you-live-with-the-client" class="checkboxes horizontal">
                 <div class="question">Do you live with the client?</div>
@@ -50,7 +48,6 @@
         </div>
     </div>
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Care arrangements</h3>
         <div class="box" id="care-arrangements-subsection">
 
             <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
@@ -66,6 +63,7 @@
                 </table>
             </div>
 
+            {% if safeguarding.doesClientReceivePaidCare == 'yes' %}
             <div class="checkboxes horizontal" id="safeguarding-care-funding">
                 <div class="label intro">If yes, how is the care funded?</div>
                 <div class="form-group right-label">
@@ -91,6 +89,7 @@
                     </table>
                 </div>
             </div>
+            {% endif %}
 
             <div class="form-group form-group-vertical">
                 <div class="question">Who is doing the caring?</div>
@@ -101,17 +100,20 @@
     </div>
 
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Care plan</h3>
         <div class="box" id="care-plan-subsection">
             <div class="question">If there is a care plan, when was it last reviewed?</div>
+            {% if safeguarding.doesClientHaveACarePlan == 'no' %}
             <dl class="labelvalue inline">
-                <dd class="checkbox">{% if safeguarding.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</dd>
+                <dd class="checkbox">X</dd>
                 <dt class="label">There is no care plan</dt>
             </dl>
+            {% endif %}
+            {% if safeguarding.doesClientHaveACarePlan == 'yes' %}
             <dl class="labelvalue">
                 <dt class="label">Review date</dt>
                 <dd class="value">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</dd>
             </dl>
+            {% endif %}
         </div>
     </div>
 

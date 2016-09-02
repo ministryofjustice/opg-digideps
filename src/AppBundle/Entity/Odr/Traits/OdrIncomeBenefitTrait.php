@@ -231,22 +231,19 @@ trait OdrIncomeBenefitTrait
     public function incomeBenefitsStatus()
     {
         $stCount = $this->countRecordsPresent($this->getStateBenefits());
-        $q1 = $this->getReceiveStatePension();
-        $q2 = $this->getReceiveOtherIncome();
-        $q3 = $this->getExpectCompensationDamages();
+        $statePens = $this->getReceiveStatePension();
+        $otherInc = $this->getReceiveOtherIncome();
+        $compensDamag = $this->getExpectCompensationDamages();
         $ooCount = $this->countRecordsPresent($this->getOneOff());
 
         if ($stCount === 0
-            && $q1 == null && $q2 == null && $q3 == null
+            && $statePens == null && $otherInc == null && $compensDamag == null
             && $ooCount === 0
         ) {
             return 'not-started';
         }
 
-        if ($stCount > 0
-            && $q1 != null && $q2 != null && $q3 != null
-            && $ooCount > 0
-        ) {
+        if ($statePens != null && $otherInc != null && $compensDamag != null) {
             return 'done';
         }
 
