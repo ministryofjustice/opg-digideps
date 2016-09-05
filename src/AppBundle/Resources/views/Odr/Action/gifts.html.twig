@@ -1,0 +1,80 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+    {% set translationDomain = "odr-action-gifts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Action:left-nav.html.twig' %}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        {{ form_errors_list(form) }}
+
+        <p class="page-section-description">
+            {{ 'page.pageDescription' | trans({
+                '%client%': odr.client.firstname,
+                '%linkStart%': '<a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf" target="_blank">',
+                '%linkEnd%': '</a>',
+            }, translationDomain )  | raw }}</p>
+
+        <p class="page-section-description">
+            {{ 'page.pageDescription2' | trans({
+                '%client%': odr.client.firstname,
+            }, translationDomain )  | raw }}</p>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
+
+        {{ form_checkbox_group(form.actionGiveGiftsToClient, 'form.actionGiveGiftsToClient', {
+            'fieldSetClass' : 'inline give-gifts-client',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionGiveGiftsToClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="give-gifts-client-wrapper" class="form-section">
+            {{ form_input(form.actionGiveGiftsToClientDetails, 'form.actionGiveGiftsToClientDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script>
+            $(document).ready(function () {
+                new opg.RadioHide({
+                    radio: '.give-gifts-client input[type=radio]',
+                    content: '#give-gifts-client-wrapper',
+                    showWithValue: 'yes'
+                });
+
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path('odr-visits-care' , {'odrId': odr.id }),
+        'previousLabel': 'Visits and care',
+        'nextLink': path("odr-action-property" , {'odrId': odr.id }),
+        'nextLabel': 'Property',
+        } %}
+    {% endblock %}
+
+
+{% endembed %}

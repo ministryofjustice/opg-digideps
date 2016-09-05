@@ -1,0 +1,78 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+    {% set translationDomain = "odr-action-property" %}
+    {% trans_default_domain translationDomain %}
+
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Action:left-nav.html.twig' %}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        {{ form_errors_list(form) }}
+
+        <h3 class="heading-small">
+            {{ 'page.pageDescription' | trans({
+                '%client%': odr.client.firstname,
+                '%linkStart%': '<a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">',
+                '%linkEnd%': '</a>',
+            }, translationDomain )  | raw }}</h3>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
+
+        {{ form_checkbox_group(form.actionPropertyMaintenance, 'form.actionPropertyMaintenance', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertyMaintenance.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+
+        {{ form_checkbox_group(form.actionPropertySellingRent, 'form.actionPropertySellingRent', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+
+        {{ form_checkbox_group(form.actionPropertyBuy, 'form.actionPropertyBuy', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertyBuy.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path('odr-action-gifts' , {'odrId': odr.id }),
+        'previousLabel': 'Gifts',
+        'nextLink': path("odr-action-info" , {'odrId': odr.id }),
+        'nextLabel': 'Further information',
+        } %}
+    {% endblock %}
+
+
+{% endembed %}
