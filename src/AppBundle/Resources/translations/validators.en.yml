@@ -291,6 +291,14 @@ safeguarding:
         notBlank: Choose Yes or No
 
 odr:
+  agree: If you want to submit your report, you must agree to the declaration
+  agreedBehalfDeputy:
+      notBlank: You must select one option
+  agreedBehalfDeputyExplanation:
+      notBlank: You must explain why you are not signing on everyone's behalf
+  hasDebts:
+      notBlank: You must select one option
+      mustHaveAtLeastOneDebt: You must enter at least one debt
   hasDebts:
       notBlank: Please select one option
       mustHaveAtLeastOneDebt: Please enter at least one debt
@@ -447,7 +455,6 @@ odr:
       notBlank: Please tell us if you are you planning to sell or rent any property
     actionPropertyBuy:
       notBlank: Please tell us if you are you planning to buy a property
-
 
 action:
     doYouExpectFinancialDecisions:
