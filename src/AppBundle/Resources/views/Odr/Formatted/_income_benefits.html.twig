@@ -7,7 +7,7 @@
             <div class=" right-label labelvalue">
                 <div class="checkbox">{{ st.present ? 'X' : '&nbsp;' }}</div>
                 <label>{{ ('stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
-                {% if st.hasMoreDetails %}
+                {% if st.hasMoreDetails and st.moreDetails %}
                     <div class=" textarea">
                         {{ st.moreDetails | nl2br }}
                     </div>
