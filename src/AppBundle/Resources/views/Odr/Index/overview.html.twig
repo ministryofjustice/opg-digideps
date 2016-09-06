@@ -87,39 +87,21 @@
                 linkToSubSection: path('odr_submit'),
                 description: false,
                 state: "not-started",
-                status: "Not started"
+                status: "Not started",
+                editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',
                 } %}
                 {% if odrStatus.isReadyToSubmit  %}
-                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with sectionParams %}
+                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with sectionParams | merge({
+                    editLinkClass: 'button',
+                    }) %}
                 {%  else %}
-                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with
-                    sectionParams | merge({ disableedit: true }) %}
+                    {% include 'AppBundle:Odr/Index:_subsection.html.twig' with sectionParams | merge({
+                    disableedit: true ,
+                    }) %}
                 {%  endif %}
             </li>
 
         </ul>
-
-        {#{% if odr.isDue == true and odrStatus.isReadyToSubmit == false %}#}
-        {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {#}
-        {#transDomain: translationDomain,#}
-        {#pageSectionWarning: 'submitWhenReady',#}
-        {#iconClass: 'icon icon__notification',#}
-        {#id: 'cannot-submit-warning'#}
-        {#} %}#}
-        {#{% endif %}#}
-
-
-        {#{% if odr.isDue == false %}#}
-        {#{% set endDate = '[enddate]'  %}#}
-        {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {#}
-        {#transDomain: translationDomain,#}
-        {#pageSectionWarning: 'warningNotDue',#}
-        {#transOptions: {'%date%': endDate},#}
-        {#iconClass: 'icon icon__notification',#}
-        {#id: 'cannot-submit-warning'#}
-        {#} %}#}
-        {#{% endif %}#}
-
 
     </div>
     <div id="pagebody-right-content">

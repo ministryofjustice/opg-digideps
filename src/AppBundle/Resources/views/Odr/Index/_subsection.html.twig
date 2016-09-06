@@ -14,7 +14,7 @@
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
         <span class="status {{ state }}">{{ ('labels.' ~ state) | trans({}, 'overview') }}</span>
 
-    <span  class="edit-link
+    <span  class="{{ editLinkClass | default('edit-link') }}
             {% if allowEdit == false %}disabled{% endif %}"
            {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %}
     >
