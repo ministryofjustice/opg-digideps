@@ -33,8 +33,6 @@ class OdrController extends RestController
     }
 
     /**
-     * //TODO merge into update action and update client.
-     *
      * @Route("/odr/{id}/submit")
      * @Method({"PUT"})
      */
@@ -48,16 +46,25 @@ class OdrController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        if (empty($data['submit_date'])) {
-            throw new \InvalidArgumentException('Missing submit_date');
+        if (empty($data['agreed_behalf_deputy'])) {
+            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
+        }
+        $odr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
+        if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
+            $odr->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
+        } else {
+            $odr->setAgreedBehalfDeputyExplanation(null);
         }
 
         $odr->setSubmitted(true);
         $odr->setSubmitDate(new \DateTime($data['submit_date']));
+
         $this->getEntityManager()->flush($odr);
 
+        //response to pass back
         return [];
     }
+
 
     /**
      * @Route("/odr/{id}")

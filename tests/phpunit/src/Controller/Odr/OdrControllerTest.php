@@ -53,7 +53,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testGetOneByIdAuth()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -61,26 +61,26 @@ class OdrControllerTest extends AbstractTestController
 
     public function testGetOneByIdAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId();
+        $url2 = '/odr/' . self::$odr2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
 
     public function testGetOneByIdData()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertEquals(self::$odr1->getId(), $data['id']);
 
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=odr-debt', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=odr-debt', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -88,46 +88,9 @@ class OdrControllerTest extends AbstractTestController
 
     }
 
-    public function testSubmitAuth()
-    {
-        $url = '/odr/'.self::$odr1->getId().'/submit';
-
-        $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-    }
-
-    public function testSubmitAcl()
-    {
-        $url2 = '/odr/'.self::$odr2->getId().'/submit';
-
-        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
-    }
-
-    public function testSubmit()
-    {
-        $this->assertEquals(false, self::$odr1->getSubmitted());
-
-        $odrId = self::$odr1->getId();
-        $url = '/odr/'.$odrId.'/submit';
-
-        $this->assertJsonRequest('PUT', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => [
-                'submit_date' => '2015-12-31',
-            ],
-        ]);
-
-        // assert account created with transactions
-        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
-        /* @var $odr \AppBundle\Entity\Odr\Odr */
-        $this->assertEquals(true, $odr->getSubmitted());
-        $this->assertEquals('2015-12-31', $odr->getSubmitDate()->format('Y-m-d'));
-    }
-
     public function testDebts()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // "yes"
         $this->assertJsonRequest('PUT', $url, [
@@ -136,17 +99,17 @@ class OdrControllerTest extends AbstractTestController
             'data' => [
                 'has_debts' => 'yes',
                 'debts' => [
-                    ['debt_type_id' => 'care-fees', 'amount'=>1, 'more_details'=> 'should not be saved'],
-                    ['debt_type_id' => 'credit-cards', 'amount'=>2, 'more_details'=> ''],
-                    ['debt_type_id' => 'loans', 'amount'=>3, 'more_details'=> ''],
-                    ['debt_type_id' => 'other', 'amount'=>4, 'more_details'=> 'md'],
+                    ['debt_type_id' => 'care-fees', 'amount' => 1, 'more_details' => 'should not be saved'],
+                    ['debt_type_id' => 'credit-cards', 'amount' => 2, 'more_details' => ''],
+                    ['debt_type_id' => 'loans', 'amount' => 3, 'more_details' => ''],
+                    ['debt_type_id' => 'other', 'amount' => 4, 'more_details' => 'md'],
                 ]
             ],
         ]);
 
         $q = http_build_query(['groups' => ['odr-debt']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -179,7 +142,7 @@ class OdrControllerTest extends AbstractTestController
                 'debts' => []
             ],
         ]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -193,17 +156,17 @@ class OdrControllerTest extends AbstractTestController
 
     public function testIncomeBenefits()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         $st = [
-            ['type_id'=>'contributions_based_allowance', 'present'=>true, 'more_details'=>null],
-            ['type_id'=>'income_support_pension_guarantee_credit', 'present'=>false, 'more_details'=>null],
-            ['type_id'=>'other_benefits', 'present'=>true, 'more_details'=>'obmd'],
+            ['type_id' => 'contributions_based_allowance', 'present' => true, 'more_details' => null],
+            ['type_id' => 'income_support_pension_guarantee_credit', 'present' => false, 'more_details' => null],
+            ['type_id' => 'other_benefits', 'present' => true, 'more_details' => 'obmd'],
         ];
 
         $oo = [
-            ['type_id'=>'bequest_or_inheritance', 'present'=>true, 'more_details'=>null],
-            ['type_id'=>'sale_of_an_asset', 'present'=>false, 'more_details'=>null],
+            ['type_id' => 'bequest_or_inheritance', 'present' => true, 'more_details' => null],
+            ['type_id' => 'sale_of_an_asset', 'present' => false, 'more_details' => null],
         ];
 
         // PUT
@@ -229,7 +192,7 @@ class OdrControllerTest extends AbstractTestController
             'odr-income-damages',
             'odr-income-one-off'
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -287,11 +250,11 @@ class OdrControllerTest extends AbstractTestController
 
     public function testExpensesPutAndGet()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         $q = http_build_query(['groups' => ['odr-expenses']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -305,9 +268,9 @@ class OdrControllerTest extends AbstractTestController
             'data' => [
                 'paid_for_anything' => 'yes',
                 'expenses' => [
-                    ['explanation' => 'care home fees', 'amount'=>895.00],
-                    ['explanation' => 'new electric bed', 'amount'=>4512.50],
-                    ['explanation' => '', 'amount'=>''],
+                    ['explanation' => 'care home fees', 'amount' => 895.00],
+                    ['explanation' => 'new electric bed', 'amount' => 4512.50],
+                    ['explanation' => '', 'amount' => ''],
                 ],
 
             ],
@@ -315,7 +278,7 @@ class OdrControllerTest extends AbstractTestController
 
         $q = http_build_query(['groups' => ['odr-expenses']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -329,7 +292,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testActions()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -352,7 +315,7 @@ class OdrControllerTest extends AbstractTestController
             'odr-action-property',
             'odr-action-more-info',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -365,6 +328,72 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals('no', $data['action_more_info']);
         $this->assertEquals('', $data['action_more_info_details']);
 
+    }
+
+    public function testSubmitAuth()
+    {
+        $url = '/odr/' . self::$odr1->getId() . '/submit';
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+    }
+
+    public function testSubmitAcl()
+    {
+        $url2 = '/odr/' . self::$odr2->getId() . '/submit';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+    }
+
+    public function testSubmitNotAllAgree()
+    {
+        $this->assertEquals(false, self::$odr1->getSubmitted());
+
+        $odrId = self::$odr1->getId();
+        $url = '/odr/' . $odrId . '/submit';
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'submit_date' => '2015-12-30',
+                'agreed_behalf_deputy' => 'more_deputies_not_behalf',
+                'agreed_behalf_deputy_explanation' => 'abdexplanation',
+            ],
+        ]);
+
+        // assert account created with transactions
+        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
+        /* @var $odr \AppBundle\Entity\Odr\Odr */
+        $this->assertEquals(true, $odr->getSubmitted());
+        $this->assertEquals('more_deputies_not_behalf', $odr->getAgreedBehalfDeputy());
+        $this->assertEquals('abdexplanation', $odr->getAgreedBehalfDeputyExplanation());
+    }
+
+    public function testSubmit()
+    {
+        $this->assertEquals(false, self::$odr1->getSubmitted());
+
+        $odrId = self::$odr1->getId();
+        $url = '/odr/' . $odrId . '/submit';
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'submit_date' => '2015-12-30',
+                'agreed_behalf_deputy' => 'only_deputy',
+                'agreed_behalf_deputy_explanation' => 'should not be saved',
+            ],
+        ]);
+
+        // assert account created with transactions
+        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
+        /* @var $odr \AppBundle\Entity\Odr\Odr */
+        $this->assertEquals(true, $odr->getSubmitted());
+        $this->assertEquals('only_deputy', $odr->getAgreedBehalfDeputy());
+        $this->assertEquals(null, $odr->getAgreedBehalfDeputyExplanation());
+        $this->assertEquals('2015-12-30', $odr->getSubmitDate()->format('Y-m-d'));
     }
 
 }

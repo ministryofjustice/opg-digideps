@@ -118,6 +118,25 @@ class Odr
      */
     private $submitDate;
 
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr"})
+     * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
+     */
+    private $agreedBehalfDeputy;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr"})
+     * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
+     */
+    private $agreedBehalfDeputyExplanation;
+
     /**
      * Odr constructor.
      *
@@ -362,4 +381,42 @@ class Odr
     {
         return $this->noAssetToAdd;
     }
+
+    /**
+     * @return string
+     */
+    public function getAgreedBehalfDeputy()
+    {
+        return $this->agreedBehalfDeputy;
+    }
+
+    /**
+     * @param string $agreedBehalfDeputy
+     * @return Odr
+     */
+    public function setAgreedBehalfDeputy($agreedBehalfDeputy)
+    {
+        $this->agreedBehalfDeputy = $agreedBehalfDeputy;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAgreedBehalfDeputyExplanation()
+    {
+        return $this->agreedBehalfDeputyExplanation;
+    }
+
+    /**
+     * @param string $agreedBehalfDeputyExplanation
+     * @return Odr
+     */
+    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
+    {
+        $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+        return $this;
+    }
+
+
 }
