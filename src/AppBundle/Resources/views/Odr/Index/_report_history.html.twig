@@ -37,7 +37,7 @@
     {% endfor %}
     <tr>
         <td>
-            <a href="{{ path('odr_review', {odrId: odr.id}) }}">
+            <a href="{{ path('odr_review') }}">
                 {{ 'history.odr.title' | trans }}
             </a>
         </td>
@@ -49,7 +49,7 @@
             </a>
         </td>
         <td class="text--right hard--right">
-            <a href="{{ path('odr_review', {odrId: odr.id}) }}" class="button-secondary">
+            <a href="{{ path('odr_review') }}" class="button-secondary">
                 {{ 'history.odr.view' | trans }}
             </a>
         </td>
