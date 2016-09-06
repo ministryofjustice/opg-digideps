@@ -112,5 +112,4 @@ class ActionsController extends AbstractController
             'subsection' => 'info',
         ];
     }
-
 }
