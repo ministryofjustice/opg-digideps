@@ -1,6 +1,7 @@
-{% set translationDomain = "report-declaration" %}
+{% set translationDomain = "odr-declaration" %}
 {% trans_default_domain translationDomain %}
-{% if odr.submitDate != "" %}
+{% if odr.submitted %}
+<div class="section" id="declaration">
 <div class="box">
 
     {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
@@ -30,5 +31,6 @@
             <dd class="value" id="statusDeputyName">{{ deputy.fullname }}</dd>
         </dl>
     </div>
+</div>
 </div>
 {% endif %}
