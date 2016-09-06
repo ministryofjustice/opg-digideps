@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use AppBundle\Entity\Traits\HasOdrTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
@@ -21,7 +20,6 @@ trait ActionTrait
      * @Assert\NotBlank(message="odr.action.actionGiveGiftsToClientDetails.notBlank", groups={"action-give-gifts-details"})
      */
     private $actionGiveGiftsToClientDetails;
-
 
     /**
      * @JMS\Type("string")
@@ -44,7 +42,6 @@ trait ActionTrait
      */
     private $actionPropertyBuy;
 
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"action-more-info"})
@@ -59,7 +56,6 @@ trait ActionTrait
      */
     private $actionMoreInfoDetails;
 
-
     /**
      * @return mixed
      */
@@ -70,11 +66,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionGiveGiftsToClient
+     *
      * @return ActionTrait
      */
     public function setActionGiveGiftsToClient($actionGiveGiftsToClient)
     {
         $this->actionGiveGiftsToClient = $actionGiveGiftsToClient;
+
         return $this;
     }
 
@@ -88,11 +86,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionGiveGiftsToClientDetails
+     *
      * @return ActionTrait
      */
     public function setActionGiveGiftsToClientDetails($actionGiveGiftsToClientDetails)
     {
         $this->actionGiveGiftsToClientDetails = $actionGiveGiftsToClientDetails;
+
         return $this;
     }
 
@@ -106,11 +106,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionPropertyMaintenance
+     *
      * @return ActionTrait
      */
     public function setActionPropertyMaintenance($actionPropertyMaintenance)
     {
         $this->actionPropertyMaintenance = $actionPropertyMaintenance;
+
         return $this;
     }
 
@@ -124,11 +126,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionPropertySellingRent
+     *
      * @return ActionTrait
      */
     public function setActionPropertySellingRent($actionPropertySellingRent)
     {
         $this->actionPropertySellingRent = $actionPropertySellingRent;
+
         return $this;
     }
 
@@ -142,14 +146,15 @@ trait ActionTrait
 
     /**
      * @param mixed $actionPropertyBuy
+     *
      * @return ActionTrait
      */
     public function setActionPropertyBuy($actionPropertyBuy)
     {
         $this->actionPropertyBuy = $actionPropertyBuy;
+
         return $this;
     }
-
 
     /**
      * @return mixed
@@ -161,11 +166,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionMoreInfo
+     *
      * @return ActionTrait
      */
     public function setActionMoreInfo($actionMoreInfo)
     {
         $this->actionMoreInfo = $actionMoreInfo;
+
         return $this;
     }
 
@@ -179,13 +186,13 @@ trait ActionTrait
 
     /**
      * @param mixed $actionMoreInfoDetails
+     *
      * @return ActionTrait
      */
     public function setActionMoreInfoDetails($actionMoreInfoDetails)
     {
         $this->actionMoreInfoDetails = $actionMoreInfoDetails;
+
         return $this;
     }
-
-
 }

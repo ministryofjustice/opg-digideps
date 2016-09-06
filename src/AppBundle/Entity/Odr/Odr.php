@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Odr\Traits\AgreeTrait;
 use AppBundle\Entity\Odr\Traits\OdrExpensesTrait;
 use AppBundle\Entity\Odr\Traits\OdrIncomeBenefitTrait;
 use AppBundle\Entity\Odr\Traits\ActionTrait;
@@ -14,6 +15,7 @@ class Odr
     use OdrIncomeBenefitTrait;
     use OdrExpensesTrait;
     use ActionTrait;
+    use AgreeTrait;
 
     /**
      * @JMS\Type("integer")
