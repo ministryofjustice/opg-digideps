@@ -26,6 +26,9 @@ class IndexController extends AbstractController
         'odr-income-damages',
         'odr-income-one-off',
         'odr-expenses',
+        'odr-action-give-gifts',
+        'odr-action-property',
+        'odr-action-more-info',
     ];
 
     /**

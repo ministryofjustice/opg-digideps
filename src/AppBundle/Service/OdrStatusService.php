@@ -27,6 +27,7 @@ class OdrStatusService
             'visitsCare' => $this->getVisitsCareState(),
             'finance' => $this->getFinanceState(),
             'assetsDebts' => $this->getAssetsDebtsState(),
+            'actions' => $this->getActionsState(),
         ];
 
         return array_filter($states, function ($e) {
@@ -96,6 +97,25 @@ class OdrStatusService
         $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
 
         if ($assetsSubSectionComplete && $debtsSectionComplete) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
+
+    public function getActionsState()
+    {
+        $giftsStarted = !empty($this->odr->getActionGiveGiftsToClient());
+        $propertyStarted = !empty($this->odr->getActionPropertyBuy())
+            || !empty($this->odr->getActionPropertyMaintenance())
+            || !empty($this->odr->getActionPropertySellingRent());
+        $moreInfoStarted = !empty($this->odr->getActionMoreInfo());
+
+        if (!$giftsStarted && !$propertyStarted && !$moreInfoStarted) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        if ($giftsStarted && $propertyStarted && $moreInfoStarted) {
             return self::STATE_DONE;
         }
 

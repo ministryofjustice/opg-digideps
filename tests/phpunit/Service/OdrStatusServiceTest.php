@@ -25,6 +25,11 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getNoAssetToAdd' => null,
                 'getAssets' => [],
                 'incomeBenefitsStatus' => 'not-started',
+                'getActionGiveGiftsToClient' => null,
+                'getActionPropertyBuy' => null,
+                'getActionPropertyMaintenance' => null,
+                'getActionPropertySellingRent' => null,
+                'getActionMoreInfo' => null,
             ]);
 
         return new StatusService($odr);
@@ -114,6 +119,40 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getAssetsDebtsState());
     }
 
+    public function actionProvider()
+    {
+        $allDone = [
+            'getActionGiveGiftsToClient' => 'yes',
+            'getActionPropertyBuy' => 'yes',
+            'getActionPropertyMaintenance' => 'yes',
+            'getActionPropertySellingRent' => 'yes',
+            'getActionMoreInfo' => 'yes',
+        ];
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            // missing sth
+            [['getActionGiveGiftsToClient' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getActionPropertyBuy' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getActionPropertyMaintenance' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getActionPropertySellingRent' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getActionMoreInfo' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getActionMoreInfo' => 'yes', 'getActionPropertySellingRent' => 'yes'], StatusService::STATE_INCOMPLETE],
+            // done
+            [$allDone, StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider actionProvider
+     */
+    public function actions($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getActionsState());
+    }
+
     /**
      * @test
      */
@@ -121,9 +160,11 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->getOdrMocked([]);
         $rs = $object->getRemainingSections();
+        $this->assertCount(4, $rs);
         $this->assertEquals('not-started', $rs['visitsCare']);
         $this->assertEquals('not-started', $rs['finance']);
         $this->assertEquals('not-started', $rs['assetsDebts']);
+        $this->assertEquals('not-started', $rs['actions']);
     }
 
     public function getRemainingSectionsPartialProvider()
@@ -133,6 +174,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             [array_pop($this->financeProvider())[0], 'finance'],
             [array_pop($this->assetsDebtsProvider())[0], 'assets'],
+            [array_pop($this->actionProvider())[0], 'actions'],
         ];
     }
 
@@ -144,18 +186,21 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->getOdrMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
-        //$this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
+        $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
     }
 
     /**
      * @test
      */
-    public function getRemainingSectionsNone()
+    public function getReadyToSubmit()
     {
+        $this->assertFalse($this->getOdrMocked([])->isReadyToSubmit());
+
         $object = $this->getOdrMocked(
             array_pop($this->visitsCareProvider())[0]
             + array_pop($this->financeProvider())[0]
             + array_pop($this->assetsDebtsProvider())[0]
+            + array_pop($this->actionProvider())[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());
