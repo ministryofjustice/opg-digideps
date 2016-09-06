@@ -14,10 +14,12 @@
         <h1>Review Opening Deputyship Report</h1>
     </div>
     {% if odr.submitted == false %}
-        {% if odrStatus.isReadyToSubmit and odr.isDue %}
+        {% if odrStatus.isReadyToSubmit %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
             'previousLabel': 'Edit Opening deputyship record',
+            'nextLink': path("odr_declaration"),
+            'nextLabel': 'Sign and submit',
             'position': 'top'
             } %}
         {% else  %}
@@ -41,6 +43,8 @@
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("odr_overview" , {'odrId': odr.id }),
                 'previousLabel': 'Edit Opening deputyship record',
+                'nextLink': path("odr_declaration"),
+                'nextLabel': 'Sign and submit',
                 'position': 'bottom'
                 } %}
             {% else  %}
