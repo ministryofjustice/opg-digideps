@@ -17,12 +17,12 @@
             </h1>
         </header>
 
-        {#{% if odrStatus.isReadyToSubmit and odr.isDue %}#}
-            {#<div id="header-report-submit" class="hero">#}
-                {#<h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>#}
-                {#<div class="message"><a class="button-grey submit-link" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>#}
-            {#</div>#}
-        {#{% endif %}#}
+        {% if odrStatus.isReadyToSubmit %}
+            <div id="header-report-submit" class="hero">
+                <h2 class="heading">{{ 'odrReady' | trans }}</h2>
+                <div class="message"><a class="button-grey submit-link" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
+            </div>
+        {% endif %}
 
         <div id="report-period-due">
             <div id="report-due" class="labelvalue">

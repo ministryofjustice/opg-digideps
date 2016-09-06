@@ -9,17 +9,12 @@ heading:
     finances: ""
     finishYourReport: ""
 
-close: "Close"
-help: "Help"
-submitWhenReady: "You can't submit your opening deputyship report until it is complete"
-warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
-reportingPeriod: "Reporting period"
-edit: "Edit"
-dueDate: "Due date"
-odrIsReady: "Opening deputyship report is ready to submit"
-yourFinalStep: "Your final step"
+
 signAndSubmit: "Check and submit"
 
+dueDate: "Due date"
+
+odrReady: Report ready to submit
 
 sectionsRemaining: "sections remaining"
 overview: Opening Deputyship Report
