@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "odr-submitted" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+
+
+{% block pageContent %}
+
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+    </div>
+
+
+    <div id="page-body">
+        <div id="pagebody-left-content">
+            <p class="flash">{{ 'page.thankYouForsubmitting' | trans }}</p>
+
+            <p class="page-section-description">{{ 'page.yourReportWillBeSent' | trans }}</p>
+
+            <p class="page-section-description">{{ 'page.weWillSendReminder' | trans }}</p>
+
+            <div class="link">
+                <a href="{{ path('odr_review') }}" class="behat-link-download-report">
+                    {{ 'page.downloadLink' | trans }}
+                </a>
+            </div>
+
+            <div class="link">
+                <a href="{{ path('odr_index') }}"
+                   class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
+            </div>
+
+        </div>
+        <div id="body-footer-nav">{% block pageBodyFooterNav %}{% endblock %}</div>
+    </div>
+{% endblock %}

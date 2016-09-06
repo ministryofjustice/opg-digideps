@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Form\Odr\ReportDeclarationType;
 use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -77,7 +78,7 @@ class IndexController extends AbstractController
         $odr = $client->getOdr();
 
         if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Odr already submitted and not editable.');
+            throw new \RuntimeException('Report already submitted and not editable.');
         }
         $odrStatus = new OdrStatusService($odr);
 
@@ -89,31 +90,12 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/odr/submit", name="odr_submit")
-     * @Template()
-     */
-    public function submitAction(Request $request)
-    {
-        $client = $this->getFirstClient(self::$odrGroupsForValidation);
-        $odr = $client->getOdr();
-
-        if ($odr->getSubmitted()) {
-            throw new \RuntimeException('ODR already submitted and not editable.');
-        }
-
-        $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
-        $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, ['submit']);
-
-        return $this->redirect($this->generateUrl('odr_index'));
-    }
-
-    /**
      * Used for active and archived ODRs.
      *
-     * @Route("/odr/{odrId}/review", name="odr_review")
+     * @Route("/odr/review", name="odr_review")
      * @Template()
      */
-    public function reviewAction($odrId)
+    public function reviewAction()
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
@@ -149,7 +131,6 @@ class IndexController extends AbstractController
         );
 
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
-//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -164,5 +145,72 @@ class IndexController extends AbstractController
         ))->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+    }
+
+    /**
+     * @Route("/odr/declaration", name="odr_declaration")
+     * @Template()
+     */
+    public function declarationAction(Request $request)
+    {
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
+        $odr = $client->getOdr();
+        $odr->setClient($client);
+
+        // check status
+        $odrStatus = new OdrStatusService($odr);
+        if (!$odrStatus->isReadyToSubmit()) {
+            throw new \RuntimeException('Report not ready for submission');
+        }
+
+        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $clients = $user->getClients();
+        $client = $clients[0];
+
+        $form = $this->createForm(new ReportDeclarationType(), $odr);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // set report submitted with date
+            $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, ['submit']);
+
+            $pdfBinaryContent = $this->getPdfBinaryContent($odr);
+            $reportEmail = $this->getMailFactory()->createOdrEmail($this->getUser(), $odr, $pdfBinaryContent);
+            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+
+            //send confirmation email
+            $reportConfirmEmail = $this->getMailFactory()->createOdrSubmissionConfirmationEmail($this->getUser(), $odr);
+            $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+
+            return $this->redirect($this->generateUrl('odr_submit_confirmation'));
+        }
+
+        return [
+            'odr' => $odr,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * Page displaying the report has been submitted.
+     *
+     * @Route("/odr/submitted", name="odr_submit_confirmation")
+     * @Template()
+     */
+    public function submitConfirmationAction(Request $request)
+    {
+        $client = $this->getFirstClient(self::$odrGroupsForValidation);
+        $odr = $client->getOdr();
+        $odr->setClient($client);
+
+        if (!$odr->getSubmitted()) {
+            throw new \RuntimeException('Report not submitted');
+        }
+
+        return [
+            'odr' => $odr,
+            'homePageHeaderLink' => $this->generateUrl('client_show'),
+        ];
     }
 }
