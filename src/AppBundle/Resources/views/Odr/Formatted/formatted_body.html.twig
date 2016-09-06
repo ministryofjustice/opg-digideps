@@ -1,10 +1,6 @@
 {% set client = odr.client %}
-{#{% set contacts = odr.getContacts %}#}
-{#{% set decisions = odr.getDecisions %}#}
 {% set isEmailAttachment = true %}
 {% set deputy = app.user %}
-{#{% set transfers = odr.getMoneyTransfers %}#}
-{#{% set mentalCapacity = odr.getMentalCapacity %}#}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}
@@ -14,39 +10,13 @@
     <div id="content" class="formatted-report content">
         <div id="report-header">Office of the Public Guardian</div>
         <h1>Opening Deputyship Report</h1>
-
         {% include 'AppBundle:Odr/Formatted:_client_information.html.twig' %}
-        {#{% include 'AppBundle:Odr/Formatted:_decisions.html.twig' %}#}
-        {#{% if odr.mentalCapacity is not null %}#}
-            {#{% include 'AppBundle:Odr/Formatted:_mental-capacity.html.twig' with {#}
-                {#'mentalCapacity': odr.mentalCapacity#}
-            {#} %}#}
-        {#{% endif %}#}
-        {#{% include 'AppBundle:Odr/Formatted:_contacts.html.twig' %}#}
-        {% if odr.visitsCare is not null %}
-            {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' with {
-                'safeguarding': odr.visitsCare
-            } %}
-        {% endif %}
-
-        {% include 'AppBundle:Odr/Formatted:_assets.html.twig' with {assets: odr.assets} %}
-        {% include 'AppBundle:Odr/Formatted:_debts.html.twig' with {debts: odr.debts} %}
+        {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_assets.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_debts.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_income_benefits.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_actions.html.twig' %}
         {% include 'AppBundle:Odr/Formatted/Accounts:_accounts.html.twig' %}
-
-        {#{% if odr.action is not null %}#}
-            {#{% include 'AppBundle:Odr/Formatted:_action.html.twig' with {#}
-                {#'action': odr.action#}
-            {#} %}#}
-        {#{% endif %}#}
-
-        {#{% if odr.furtherInformation %}#}
-            {#{% include 'AppBundle:Odr/Formatted:_further_information.html.twig' %}#}
-        {#{% endif %}#}
-        {#<div class="section" id="declaration">#}
-            {#{% include 'AppBundle:Odr/Formatted:_submission_declaration.html.twig' %}#}
-        {#</div>#}
     </div>
 </div>
