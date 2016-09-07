@@ -4,36 +4,52 @@
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+{% block contentClass %}{{ parent() }} report-submission report-overview js-report-assets-input{% endblock %}
 
+{% set clientTrans = {'%client%': odr.client.firstname} %}
 
 {% block pageContent %}
 
     <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+        <h1>{{ 'page.pageSectionTitle' | trans(clientTrans) }}</h1>
     </div>
 
 
-    <div id="page-body">
+    <div id="pagebody">
         <div id="pagebody-left-content">
-            <p class="flash">{{ 'page.thankYouForsubmitting' | trans }}</p>
 
-            <p class="page-section-description">{{ 'page.yourReportWillBeSent' | trans }}</p>
-
-            <p class="page-section-description">{{ 'page.weWillSendReminder' | trans }}</p>
-
-            <div class="link">
-                <a href="{{ path('odr_review') }}" class="behat-link-download-report">
-                    {{ 'page.downloadLink' | trans }}
-                </a>
+            <div id="header-report-submit" class="hero">
+                <h2 class="heading">{{ 'reportSubmitted' | trans }}</h2>
             </div>
 
-            <div class="link">
-                <a href="{{ path('odr_index') }}"
-                   class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
-            </div>
+            <p class="">[mail icon] {{ 'weHaveSentEmail' | trans }}</p>
+
+            <hr>
+
+            <!-- what happens next -->
+            <p class="page-section-description">{{ 'whatHappensNext.title' | trans }}</p>
+            <p>{{ 'whatHappensNext.body1' | trans }}</p>
+            <p>{{ 'whatHappensNext.body2' | trans }}</p>
+            <a href="{{ path('report_create', {'clientId': odr.client.id}) }}" class="button">
+                {{ 'whatHappensNext.startButton' | trans }}
+            </a>
+
+            <hr>
+
+            <!-- Give us feedback -->
+            <p class="page-section-description">{{ 'giveUsFeedback.title' | trans }}</p>
+            <p>{{ 'giveUsFeedback.body1' | trans }}</p>
+            <p>{{ 'giveUsFeedback.body2' | trans({
+                    '%linkStart%': '<a href="..." target="_blank">',
+                    '%linkEnd%': '</a>'
+                }) | raw }}</p>
 
         </div>
-        <div id="body-footer-nav">{% block pageBodyFooterNav %}{% endblock %}</div>
+
+        <div id="pagebody-right-content">
+            {% include 'AppBundle:Odr/Index:_status.html.twig' with {
+            showReviewButton: false
+            } %}
+        </div>
     </div>
 {% endblock %}

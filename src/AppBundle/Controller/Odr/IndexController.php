@@ -112,9 +112,9 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/odr/deputyodr-{odrId}.pdf", name="odr_pdf")
+     * @Route("/odr/deputyodr.pdf", name="odr_pdf")
      */
-    public function pdfViewAction($odrId)
+    public function pdfViewAction()
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
@@ -208,8 +208,11 @@ class IndexController extends AbstractController
             throw new \RuntimeException('Report not submitted');
         }
 
+        $odrStatus = new OdrStatusService($odr);
+
         return [
             'odr' => $odr,
+            'odrStatus' => $odrStatus,
             'homePageHeaderLink' => $this->generateUrl('client_show'),
         ];
     }

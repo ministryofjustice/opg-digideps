@@ -44,7 +44,7 @@
         <td>{{ 'history.odr.reportingPeriod' | trans }}</td>
         <td>{{ odr.submitDate | date("j M Y") }}</td>
         <td>
-            <a href="{{ path('odr_pdf', {odrId: odr.id}) }}">
+            <a href="{{ path('odr_pdf') }}">
                 {{ 'history.odr.download' | trans }}
             </a>
         </td>
