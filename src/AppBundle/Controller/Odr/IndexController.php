@@ -162,6 +162,9 @@ class IndexController extends AbstractController
         if (!$odrStatus->isReadyToSubmit()) {
             throw new \RuntimeException('Report not ready for submission');
         }
+        if ($odr->getSubmitted()) {
+            throw new \RuntimeException('Report already submitted and not editable.');
+        }
 
         $user = $this->getUserWithData(['user', 'role', 'client']);
         $clients = $user->getClients();
