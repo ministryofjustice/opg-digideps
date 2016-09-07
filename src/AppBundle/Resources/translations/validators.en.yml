@@ -290,6 +290,25 @@ safeguarding:
     doesClientHaveACarePlan:
         notBlank: Choose Yes or No
 
+action:
+    doYouExpectFinancialDecisions:
+        notBlank: Choose yes or no
+    doYouExpectFinancialDecisionsDetails:
+        notBlank: Please tell us more about any decisions or actions you may have to take
+    doYouHaveConcerns:
+        notBlank: Choose yes or no
+    doYouHaveConcernsDetails:
+        notBlank: Please tell us more about any concerns you may have
+mentalCapacity:
+    hasCapacityChanged:
+        notBlank: Select one option
+    hasCapacityChangedDetails:
+        notBlank: You must tell us how the client's mental capacity has changed
+
+feedbackAfterReport:
+    satisfactionLevel:
+        notEmpty: Please selection an option
+
 odr:
   agree: If you want to submit your opening deputyship report, you must agree to the declaration
   agreedBehalfDeputy:
@@ -456,21 +475,3 @@ odr:
     actionPropertyBuy:
       notBlank: Please tell us if you are you planning to buy a property
 
-action:
-    doYouExpectFinancialDecisions:
-        notBlank: Choose yes or no
-    doYouExpectFinancialDecisionsDetails:
-        notBlank: Please tell us more about any decisions or actions you may have to take
-    doYouHaveConcerns:
-        notBlank: Choose yes or no
-    doYouHaveConcernsDetails:
-        notBlank: Please tell us more about any concerns you may have
-mentalCapacity:
-    hasCapacityChanged:
-        notBlank: Select one option
-    hasCapacityChangedDetails:
-        notBlank: You must tell us how the client's mental capacity has changed
-
-feedbackAfterReport:
-    satisfactionLevel:
-        notEmpty: Please selection an option
