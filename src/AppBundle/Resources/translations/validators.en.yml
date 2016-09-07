@@ -291,7 +291,7 @@ safeguarding:
         notBlank: Choose Yes or No
 
 odr:
-  agree: If you want to submit your report, you must agree to the declaration
+  agree: If you want to submit your opening deputyship report, you must agree to the declaration
   agreedBehalfDeputy:
       notBlank: You must select one option
   agreedBehalfDeputyExplanation:

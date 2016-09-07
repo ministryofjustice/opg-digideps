@@ -4,21 +4,19 @@
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} report-declaration js-report-assets-input{% endblock %}
+{% block contentClass %}{{ parent() }} report-overview report-declaration js-report-assets-input{% endblock %}
 
 
 {% block pageContent %}
-
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
-    </div>
-
-
-    <div id="page-body">
+    <div id="pagebody">
         <div id="pagebody-left-content">
             {% block validationSummary %}
                 {{ form_errors_list(form) }}
             {% endblock %}
+
+            <div id="page-section-title-container" class="page-section-title-container">
+                <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+            </div>
 
             {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
             transDomain: translationDomain,
@@ -63,9 +61,22 @@
                     });
                 });
             </script>
+
+            <p class="balance-warning page-section-warning">
+                <span class="icon icon__notification"></span>
+                <span class="page-section-description left-margin-big">{{ 'unableToEditAfterSubmission' | trans()  }}</span>
+            </p>
+
         </div>
-        <div id="body-footer-nav">{% block pageBodyFooterNav %}{% endblock %}</div>
+        <!-- end left-content -->
+
+        <div id="pagebody-right-content">
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </div>
+
     </div>
+
+
 
 
 

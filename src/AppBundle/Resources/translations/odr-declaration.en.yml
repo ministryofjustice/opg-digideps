@@ -1,6 +1,6 @@
 page:
   htmlTitle: "Deputy report - deputy's declaration | GOV.UK"
-  pageSectionTitle: "Deputy's declaration"
+  pageSectionTitle: "Your court order"
   pageSectionDescription: |
         I confirm the information I have given in this report is true and
         correct to the best of my knowledge and belief.
@@ -35,3 +35,5 @@ deputyName: Deputy name
 deputyAgreed: Deputy agreed
 partlyAgreed: Not agreed by all deputies
 partAgreedReason: Reason
+
+unableToEditAfterSubmission: You will be unable to edit this report after you submit
