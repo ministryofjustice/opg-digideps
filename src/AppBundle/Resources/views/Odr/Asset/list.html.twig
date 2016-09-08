@@ -7,8 +7,15 @@
 
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
 
+    {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
+        'odr': odr,
+        'section': 'assets',
+        'transDomain': translationDomain,
+        'data': odr.assets,
+    } %}
+
     {% if assets is not empty %}
-        <ul class="behat-region-list-assets report-list no-border-top report-list--assets overview-sections">
+        <ul class="behat-region-list-assets report-list report-list--assets overview-sections">
             {% for assetTitle, assets in odr.assetsGroupedByTitle %}
                 <li class="report-list__item">
                 <h2 class="heading">{{ assetTitle }}</h2>
@@ -20,25 +27,7 @@
                 </li>
             {% endfor %}
         </ul>
-
-        <div class="report-list-separator"></div>
-
-        {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
-        'odr': odr,
-        'section': 'assets',
-        'transDomain': translationDomain,
-        'data': odr.assets,
-        } %}
-
     {% else %}
-
-        {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
-        'odr': odr,
-        'section': 'assets',
-        'transDomain': translationDomain,
-        'data': odr.assets,
-        } %}
-
         {{ render(controller('AppBundle:Odr/Asset:_noAssets', { 'odrId': odr.id, 'request': app.request })) }}
     {% endif %}
 
