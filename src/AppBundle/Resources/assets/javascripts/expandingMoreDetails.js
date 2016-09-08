@@ -17,7 +17,7 @@
         // more details
         inputBox.on('keyup input paste change', function (event) {
             var value = parseFloat($(event.target).val().replace(/,/g, ""));
-            console.log(value);
+            //console.log(value);
             if (!isNaN(value) && value !== 0) {
                 textareaGroup.removeClass('hidden');
             } else {
