@@ -67,11 +67,14 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="form-group">
+                <div class="form-group hidden" id="js-expense-controls">
                     <a href="#" id="expenses-add-link" class="add-expense-link">
                         {{ 'form.expenses.addAnother.label' |trans }}
                     </a>
                     <div class="total">Total: £<span class="expense_total">0</span></div>
+                </div>
+                <div class="form-group" id="nojs-expense-controls">
+                    <p class="form-hint">After having saved, a new empty row will appear.</p>
                 </div>
              </div>
         </div>
@@ -122,6 +125,8 @@
                     totalCalculator.updateTotal();
                 });
 
+                $('#js-expense-controls').removeClass('hidden');
+                $('#nojs-expense-controls').addClass('hidden');
 
 
             });

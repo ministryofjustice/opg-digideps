@@ -19,7 +19,7 @@ class ExpensesType extends AbstractType
                     'type' => new ExpenseSingleType(),
                     'allow_add' => true, // let the form collection know that it will receive an unknown number of tags
                     'allow_delete' => true,
-                    'delete_empty' => true,
+                    'delete_empty' => false,
                     'prototype' => true,
                 ])
                 ->add('save', 'submit');
