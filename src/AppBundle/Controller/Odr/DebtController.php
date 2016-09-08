@@ -30,7 +30,9 @@ class DebtController extends AbstractController
         $form = $this->createForm(new FormDir\Odr\DebtsType(), $odr);
         $form->handleRequest($request);
 
-        $form->addError(new FormError($this->get('translator')->trans('odr.debt.atLeastOne', [], 'validators')));
+        if ($form->isSubmitted() && $odr->getHasDebts() =='yes' && !$odr->hasAtLeastOneDebt()) {
+            $form->addError(new FormError($this->get('translator')->trans('odr.debt.atLeastOne', [], 'validators')));
+        }
 
         if ($form->isValid()) {
             $this->get('restClient')->put('odr/'.$odr->getId(), $form->getData(), ['debts']);

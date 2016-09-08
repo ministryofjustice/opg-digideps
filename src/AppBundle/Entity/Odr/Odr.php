@@ -64,7 +64,7 @@ class Odr
      * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
      * @JMS\Groups({"debts"})
      *
-     * @var ArrayCollection
+     * @var Debt[]
      */
     private $debts;
 
@@ -294,6 +294,18 @@ class Odr
     public function getDebts()
     {
         return $this->debts;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasAtLeastOneDebt()
+    {
+        $debtsWithAValidAmount = array_filter($this->debts, function($debt) {
+            return !empty($debt->getAmount());
+        });
+
+        return count($debtsWithAValidAmount) > 0;
     }
 
     /**
