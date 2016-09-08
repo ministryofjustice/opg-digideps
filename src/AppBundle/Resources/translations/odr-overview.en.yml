@@ -65,8 +65,8 @@ assets:
     start: "Start assets and debts"
 odr_add_further_info:
     subSectionTitle: "Sign and submit"
-    edit: "Start sign and submit"
-    start: "Start sign and submit"
+    edit: "Sign and submit"
+    start: "Sign and submit"
 
 
 additionalInformation:
