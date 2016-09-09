@@ -381,7 +381,7 @@ odr:
         maxMessage: The amount must be less than £100,000,000,000
       moreDetails:
         notEmpty: You must give us more information about this amount
-      atLeastOne: You must add at lest one debt
+      atLeastOne: You must add at least one debt
   asset:
       title:
           notBlank: Choose the type of asset from the list
