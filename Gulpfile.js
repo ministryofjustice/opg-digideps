@@ -3,7 +3,7 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     del = require('del'),
-    minifyCss = require('gulp-minify-css'),
+    uglifycss = require('gulp-uglifycss'),
     importCss = require('gulp-import-css'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
@@ -52,7 +52,7 @@ gulp.task('sass.application', () => {
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -63,7 +63,7 @@ gulp.task('sass.application-ie7', () => {
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -84,7 +84,7 @@ gulp.task('sass.application-print', () => {
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
