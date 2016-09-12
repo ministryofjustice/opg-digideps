@@ -109,7 +109,7 @@ class AssetController extends AbstractController
         if (!$odr->hasAssetWithId($assetId)) {
             throw new \RuntimeException('Asset not found.');
         }
-        $asset = $this->getRestClient()->get("odr/{$odrId}/asset/{$assetId}", 'Asset');
+        $asset = $this->getRestClient()->get("odr/{$odrId}/asset/{$assetId}", 'Odr\Asset');
         $form = $this->createForm(FormDir\Odr\Asset\AbstractAssetType::factory($asset->getType()), $asset);
 
         $form->handleRequest($request);
