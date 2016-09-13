@@ -15,10 +15,10 @@
                 <div class="value">{{ odr.submitDate | date("j F Y") }}</div>
             </div>
             <div>
-                <a href="{{ path('odr_review') }}">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
+                <a href="{{ path('odr_pdf') }}">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
             </div>
             <div>
-                <a href="{{ path('odr_pdf') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
+                <a href="{{ path('odr_review') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
             </div>
         {% else %}
             <div class="labelvalue">
