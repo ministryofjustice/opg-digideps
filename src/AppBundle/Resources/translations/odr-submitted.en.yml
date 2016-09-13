@@ -5,10 +5,10 @@ page:
 reportSubmitted: Report submitted
 weHaveSentEmail: We have sent you a confirmation email
 whatHappensNext:
-  title: What heppens next
+  title: What happens next
   body1: |
     When it's time for you to complete the next report, we will send you a reminder.
-    You can maek a start on it at any time.
+    You can make a start on it at any time.
   body2: |
     If you have any questions about this report, contact the Helpline.
   startButton: Start next report
