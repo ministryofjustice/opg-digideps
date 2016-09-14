@@ -2,6 +2,7 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Entity\User;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ComponentsExtension extends \Twig_Extension
@@ -17,17 +18,13 @@ class ComponentsExtension extends \Twig_Extension
     private $translator;
 
     /**
-     * @var array
+     * ComponentsExtension constructor.
+     *
+     * @param TranslatorInterface $translator
      */
-    private $params;
-
-    /**
-     * @param array $params
-     */
-    public function __construct(TranslatorInterface $translator, $params)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->params = $params;
     }
 
     public function initRuntime(\Twig_Environment $environment)
@@ -39,7 +36,7 @@ class ComponentsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
+            'progress_bar_registration' => new \Twig_Function_Method($this, 'progressBarRegistration'),
             'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
         ];
     }
@@ -50,23 +47,23 @@ class ComponentsExtension extends \Twig_Extension
             'country_name' => new \Twig_SimpleFilter('country_name', function ($value) {
                 return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
             }),
-           'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function ($value) {
-               if ($value instanceof \DateTime) {
-                   return $this->formatTimeDifference([
-                       'from' => $value,
-                       'to' => new \DateTime(),
-                       'translationDomain' => 'common',
-                       'translationPrefix' => 'lastLoggedIn.',
-                       'defaultDateFormat' => 'd F Y',
-                   ]);
-               }
+            'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function ($value) {
+                if ($value instanceof \DateTime) {
+                    return $this->formatTimeDifference([
+                        'from' => $value,
+                        'to' => new \DateTime(),
+                        'translationDomain' => 'common',
+                        'translationPrefix' => 'lastLoggedIn.',
+                        'defaultDateFormat' => 'd F Y',
+                    ]);
+                }
             }),
             'pad_day_month' => new \Twig_SimpleFilter('pad_day_month', function ($value) {
-               if ($value && (int) $value >= 1 &&  (int) $value <= 9) {
-                   return '0'.(int) $value;
-               }
+                if ($value && (int) $value >= 1 && (int) $value <= 9) {
+                    return '0'.(int) $value;
+                }
 
-               return $value;
+                return $value;
             }),
             // convert 'Very Random "string" !!" into "very-random-string"
             'behat_namify' => new \Twig_SimpleFilter('behat_namify', function ($string) {
@@ -77,7 +74,7 @@ class ComponentsExtension extends \Twig_Extension
                 $string = preg_replace('/[-\s]+/', '-', $string);     // convert spaces to hyphens
                 $string = strtolower($string);                        // convert to lowercase
 
-               return $string;
+                return $string;
             }),
             'money_format' => new \Twig_SimpleFilter('money_format', function ($string) {
                 return number_format($string, 2, '.', ',');
@@ -91,7 +88,7 @@ class ComponentsExtension extends \Twig_Extension
      * @param string translationPrefix
      * @param string defaultDateFormat e.g. d F Y
      * @param string translationDomain
-     * 
+     *
      * @return string formatted interval
      */
     public function formatTimeDifference(array $options)
@@ -177,25 +174,26 @@ class ComponentsExtension extends \Twig_Extension
      * @param string $barName
      * @param int    $activeStepNumber
      */
-    public function progressBar($barName, $activeStepNumber)
+    public function progressBarRegistration(User $user, $selectedStepId)
     {
-        if (empty($this->params['progress_bars'][$barName])) {
-            return "[ Progress bar $barName not found or empty, check your configuration files ]";
+        if (in_array($user->getRole()['role'], ['ROLE_ADMIN', 'ROLE_AD'])) {
+            $availableStepIds = ['password', 'user_details'];
+        } else {
+            $availableStepIds = ['password', 'user_details', 'client_details', 'create_report'];
         }
-
-        $steps = [];
+        $progressSteps = [];
+        $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
         // set classes and labels from translation
-        foreach ($this->params['progress_bars'][$barName] as $stepNumber) {
-            $steps[] = [
-                'label' => $this->translator->trans($barName.'.'.$stepNumber.'.label', [], 'progress-bar'),
-                'class' => (($stepNumber == $activeStepNumber)     ? ' progress--active '    : '')
-                         .(($stepNumber < $activeStepNumber)      ? ' progress--completed ' : '')
-                         .(($stepNumber == $activeStepNumber - 1) ? ' progress--previous '  : ''),
+        foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
+            $progressSteps[$availableStepId] = [
+                'class' => (($selectedStepNumber == $currentStepNumber) ? ' progress--active ' : '')
+                    .(($currentStepNumber < $selectedStepNumber) ? ' progress--completed ' : '')
+                    .(($currentStepNumber == $selectedStepNumber - 1) ? ' progress--previous ' : ''),
             ];
         }
 
         echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
-            'progressSteps' => $steps,
+            'progressSteps' => $progressSteps,
         ]);
     }
 

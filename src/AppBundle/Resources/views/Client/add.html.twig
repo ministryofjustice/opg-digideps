@@ -7,12 +7,7 @@
 {% block title %}{{ 'addClient.h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
-        {{ progress_bar('registration_admin', 3) }}
-    {% else %}
-        {{ progress_bar('registration', 3) }}
-    {% endif %}
-
+     {{ progress_bar_registration(app.user, 'client_details') }}
 {% endblock %}
 
 {% block validationSummary %}

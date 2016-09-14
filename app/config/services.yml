@@ -1,6 +1,3 @@
-imports:
-    - { resource: twig.yml }
-    
 services:
     security.validator.d_user_password:
         class: AppBundle\Validator\Constraints\DUserPasswordValidator
@@ -38,7 +35,7 @@ services:
     componentsExtension:
         class: AppBundle\Twig\ComponentsExtension
         public: false
-        arguments: [  @translator, "%twig_components_extension%" ]
+        arguments: [  @translator ]
         tags:
             - { name: twig.extension }
     assetsExtension:
