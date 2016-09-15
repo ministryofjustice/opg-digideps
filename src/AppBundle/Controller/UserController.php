@@ -89,7 +89,7 @@ class UserController extends AbstractController
 
             // after password reset
             if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
-                $redirectUrl = $this->get('redirectorService')->getFirstPageAfterLogin(false);
+                $redirectUrl = $this->get('redirectorService')->getFirstPageAfterLogin();
             } else { // activate:  o to 2nd step
                 $redirectUrl = $this->generateUrl('user_details');
             }

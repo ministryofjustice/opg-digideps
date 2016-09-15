@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Form\Odr\ReportDeclarationType;
 use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,6 +42,12 @@ class IndexController extends AbstractController
     public function indexAction()
     {
         $user = $this->getUserWithData(self::$odrGroupsForValidation);
+
+        // in case the user jumps to this page directly via URL
+        if (!$user->isOdrEnabled()) {
+            return $this->redirectToRoute('reports', ['cot' => Report::PROPERTY_AND_AFFAIRS]);
+        }
+
         $client = $user->getClients()[0];
         $odr = $client->getOdr();
 
