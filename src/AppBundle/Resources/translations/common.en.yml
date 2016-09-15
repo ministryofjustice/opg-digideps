@@ -5,3 +5,13 @@ lastLoggedIn:
   exactDate: "%date%"
   
 back.label: Back to deputy report
+
+registrationProgressBar:
+    password:
+        label: Set your password
+    user_details:
+        label: Enter your details
+    client_details:
+        label: Add your client's details
+    create_report:
+        label: Create a report

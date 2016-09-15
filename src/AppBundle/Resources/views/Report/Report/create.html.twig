@@ -5,7 +5,7 @@
 {% block title %}{{ 'createReport.h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {{ progress_bar('registration', 4) }}
+    {{ progress_bar_registration(app.user, 'create_report') }}
 {% endblock %}
 
 {% block validationSummary %}
