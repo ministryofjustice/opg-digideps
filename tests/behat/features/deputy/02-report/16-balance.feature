@@ -10,7 +10,7 @@ Feature: deputy / report / balance
         When I follow "edit-accounts"
         And I follow "account-balance"
         Then I should see the "balance-bad" region
-        And I should see "£105.00" in the "unaccounted-for" region
+        And I should see "105.00" in the "unaccounted-for" region
         # fix and assert is good
         When I follow "account-moneyin"
         And I fill in "transactions_transactionsIn_2_amounts_0" with "105"
