@@ -15,7 +15,7 @@
   {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
   {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
   {{ form_select(form.roleId,'roleId', { 'labelClass': 'required' }) }}
-  
+  {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}

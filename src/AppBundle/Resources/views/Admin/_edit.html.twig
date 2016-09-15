@@ -1,24 +1,32 @@
 {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-              transDomain: 'admin'
-        } %}
+transDomain: 'admin'
+} %}
 
 {% if action is defined %}
 {% else %}
 {% endif %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-<h1 class="form-title heading-medium-large">
-    {{title}}
-</h1>
-  {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
-  {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
-  {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
-  {{ form_select(form.roleId,'roleId', { 'labelClass': 'required' }) }}
-
 {% set firstClient = (user.clients | length) > 0 ? (user.clients | first) : null %}
 {% set reports = firstClient ? firstClient.reports : [] %}
 {% set reportsCount = reports | length %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+<h1 class="form-title heading-medium-large">
+    {{ title }}
+</h1>
+{{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
+  {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
+  {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+  {{ form_select(form.roleId,'roleId', { 'labelClass': 'required' }) }}
+    {% if reportsCount > 0 %}
+        <fieldset disabled>
+            You can't change this value after a report has been created.
+            {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
+        </fieldset>
+    {% else %}
+        {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
+    {% endif %}
 
 <h2 class="heading-small">Client</h2>
 {% if firstClient %}
@@ -47,25 +55,25 @@
   
   {% if action is defined %}
       {% if action == 'edit' %}
-             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: 'admin',
-                    linkButtonLabel: 'cancel.label',
-                    linkClass: 'button-link',
-                    linkHref: path('admin_homepage')
-                    } %}
-            {# only admin are allowed to delete users (except themselves when logged) #}
-             {% if is_granted('ROLE_ADMIN') and app.user.id != user.id  %}
-                 {% if reportsCount == 0 %}
-                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                           transDomain: 'admin',
-                           linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
-                           linkClass: 'button-link',
-                           linkHref: path('admin_delete_confirm', { id: id })
-                           } %}
-                     {% else %}
-                     &nbsp;[Delete is disabled as there is at least one report]
-                     {% endif %}
-             {% endif %}
+          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+          transDomain: 'admin',
+          linkButtonLabel: 'cancel.label',
+          linkClass: 'button-link',
+          linkHref: path('admin_homepage')
+          } %}
+          {# only admin are allowed to delete users (except themselves when logged) #}
+          {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
+              {% if reportsCount == 0 %}
+                  {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                  transDomain: 'admin',
+                  linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
+                  linkClass: 'button-link',
+                  linkHref: path('admin_delete_confirm', { id: id })
+                  } %}
+              {% else %}
+                  &nbsp;[Delete is disabled as there is at least one report]
+              {% endif %}
+          {% endif %}
       {% endif %}
   {% endif %}
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
