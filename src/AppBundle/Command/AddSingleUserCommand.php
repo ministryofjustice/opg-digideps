@@ -24,6 +24,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->addOption('lastname', null, InputOption::VALUE_REQUIRED)
             ->addOption('role', null, InputOption::VALUE_REQUIRED)
             ->addOption('password', null, InputOption::VALUE_REQUIRED)
+            ->addOption('enable-odr', null, InputOption::VALUE_NONE)
         ;
     }
 
@@ -35,6 +36,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             'roleId' => $input->getOption('role'),
             'password' => $input->getOption('password'),
             'email' => $input->getArgument('email'),
+            'odrEnabled' => $input->getOption('enable-odr'),
         ];
         if (count(array_filter($data)) !== count($data)) {
             throw new \RuntimeException('Missing params');
@@ -46,7 +48,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
     /**
      * @param OutputInterface $output
      * @param string          $email
-     * @param array           $data   keys: firstname lastname roleId password
+     * @param array           $data   keys: firstname lastname roleId password odrEnabled
      */
     protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
@@ -75,7 +77,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->setEmail($email)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setRole($role);
+            ->setRole($role)
+            ->setOdrEnabled(!empty($data['odrEnabled']))
+        ;
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
