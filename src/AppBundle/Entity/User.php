@@ -807,6 +807,8 @@ class User implements UserInterface
     public function setOdrEnabled($odrEnabled)
     {
         $this->odrEnabled = $odrEnabled;
+
+        return $this;
     }
 
 }
