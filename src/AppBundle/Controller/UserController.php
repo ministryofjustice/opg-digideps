@@ -332,5 +332,9 @@ class UserController extends RestController
         if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new \DateTime($data['token_date']));
         }
+
+        if (array_key_exists('odr_enabled', $data)) {
+            $user->setOdrEnabled($data['odr_enabled']);
+        }
     }
 }
