@@ -6,11 +6,7 @@
 {% block stepTitle %}{{ 'stepTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')%}
-         {{ progress_bar('registration_admin', 2) }}
-    {% else %}
-         {{ progress_bar('registration', 2) }}
-    {% endif %}
+    {{ progress_bar_registration(app.user, 'user_details') }}
 {% endblock %}
 
 {% block validationSummary %}

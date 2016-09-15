@@ -2,6 +2,7 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Entity\User;
 use Mockery as m;
 
 class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
@@ -9,7 +10,7 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->object = new \AppBundle\Twig\ComponentsExtension($this->translator, []);
+        $this->object = new \AppBundle\Twig\ComponentsExtension($this->translator);
     }
 
     public static function accordionLinksProvider()
@@ -166,4 +167,27 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expected, $f($input));
     }
+
+    public static function progressBarRegistrationProvider()
+    {
+        $user = m::mock(User::class);
+        $user->shouldReceive('getRole')->andReturn(['ROLE_ADMIN']);
+
+        return [
+            [],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function progressBarRegistrationTest()
+    {
+        $user = m::mock(User::class);
+        $user->shouldReceive('getRole')->andReturn(['role'=>'ROLE_ADMIN']);
+        $f = $this->object->getFunctions()['progress_bar_registration']->getCallable();
+
+        $this->markTestIncomplete('need to mock environemnt to test');
+    }
+
 }

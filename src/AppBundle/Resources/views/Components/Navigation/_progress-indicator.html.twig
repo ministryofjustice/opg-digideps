@@ -1,12 +1,12 @@
 <!--Component: progress-indicator-->
-{% if progressSteps is defined %}
-    <ol class="progress">
-        {% for step in progressSteps %}
-            <li class="{{ step.class }}">
-                <div class="progress__step {{ step.class }}">
-                    <span class="progress__label">{{ step.label | trans }}</span>
-                </div>
-            </li>
-        {% endfor %}
-    </ol>
-{% endif %}
+<ol class="progress">
+    {% for stepId, stepOptions in progressSteps %}
+        <li class="{{ stepOptions.class }}">
+            <div class="progress__step {{ stepOptions.class }}">
+                <span class="progress__label">
+                    {{ ('registrationProgressBar.' ~ stepId ~ '.label') | trans({}, 'common') }}
+                </span>
+            </div>
+        </li>
+    {% endfor %}
+</ol>

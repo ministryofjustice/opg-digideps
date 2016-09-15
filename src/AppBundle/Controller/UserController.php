@@ -104,7 +104,7 @@ class UserController extends AbstractController
         return $this->render($template, [
             'token' => $token,
             'form' => $form->createView(),
-            'userRole' => $user->getRole()['role'],
+            'user' => $user,
         ]);
     }
 

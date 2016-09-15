@@ -6,11 +6,7 @@
 {% block title %}{{ 'h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {% if userRole in ['ROLE_ADMIN', 'ROLE_AD'] %}
-        {{ progress_bar('registration_admin', 1) }}
-    {% else %}
-        {{ progress_bar('registration', 1) }}
-    {% endif %}
+        {{ progress_bar_registration(user, 'password') }}
 {% endblock %}
 
 {% block validationSummary %}
