@@ -8,17 +8,13 @@
     {% endif %}
 {% endif %}
 
-{% if showCancel is not defined %}
-    {% set showCancel = true %}
-{% endif %}
+{% set showCancel = showCancel is defined  ? showCancel : true %}
 
-{% set deleteLink = '#' %}
 {% if deleteLink is not defined %}
     {# default value is deprecated. Always specify one when using this template  #}
     {% set deleteLink = path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })%}
 {% endif %}
 
-{% set listLink = '#' %}
 {% if  listLink is not defined%}
     {# default value is deprecated. Always specify one when using this template #}
     {% set listLink = path(section ~ 's', {'reportId': report.id})%}
