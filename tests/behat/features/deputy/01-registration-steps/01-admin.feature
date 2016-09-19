@@ -50,4 +50,17 @@ Feature: deputy / user / add user
         And I save the page as "admin-deputy-added"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
-   
+    @odr
+    Scenario: add deputy user
+        Given emails are sent from "admin" area
+        And I reset the email log
+        And I load the application status from "init"
+        And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # assert form OK
+        When I create a new "ODR-enabled" "Lay Deputy" user "John ODR" "Doe ODR" with email "behat-user-odr@publicguardian.gsi.gov.uk"
+        Then I should see "behat-user-odr@publicguardian.gsi.gov.uk" in the "users" region
+        And I should see "yes" in the "behat-user-odrpublicguardiangsigovuk-odr-enabled" region
+        And I save the page as "admin-deputy-added"
+        And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
+
+

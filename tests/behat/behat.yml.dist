@@ -26,6 +26,14 @@ default:
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
 
+        deputyodr:
+            description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@odr"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+
         components:
             description: Tests related to textareas
             paths:    [ %paths.base%/features/components ]

@@ -98,7 +98,7 @@
         <td>{{ user.lastname }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role.name }} {% if app.user.id == user.id %} (currenty logged){% endif %}</td>
-        <td>{{ user.odrEnabled ? 'yes' : '-' }}</td>
+        <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">{{ user.odrEnabled ? 'yes' : '-' }}</td>
         <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
       </tr>
     {% endfor %}
