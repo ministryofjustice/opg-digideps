@@ -97,7 +97,7 @@ Feature:  provide feedback
         Given I am not logged in
         And emails are sent from "admin" area
         And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
-        When I create a new "Lay Deputy" user "Feedback" "Sender" with email "behat-feedback-sender@publicguardian.gsi.gov.uk"
+        When I create a new "ODR-disabled" "Lay Deputy" user "Feedback" "Sender" with email "behat-feedback-sender@publicguardian.gsi.gov.uk"
         And I activate the user with password "Abcd1234"
         #Given I am logged in as "behat-feedback-sender@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/feedback"

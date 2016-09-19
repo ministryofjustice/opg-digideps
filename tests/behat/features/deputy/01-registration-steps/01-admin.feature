@@ -27,7 +27,7 @@ Feature: deputy / user / add user
         #When I go to "/admin"
         Then I am on admin page "/admin"
 
-    @deputy    
+    @deputy
     Scenario: add deputy user
         Given emails are sent from "admin" area
         And I reset the email log
@@ -38,12 +38,13 @@ Feature: deputy / user / add user
             | admin_firstname | 1 |
             | admin_lastname | 2 |
             | admin_roleId | 2 |
+        And I uncheck "admin_odrEnabled"
         And I press "admin_save"
         Then the form should be invalid
         And I save the page as "admin-deputy-add-error1"
         And I should not see "invalidEmail" in the "users" region
         # assert form OK
-        When I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
+        When I create a new "ODR-disabled" "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And I save the page as "admin-deputy-added"

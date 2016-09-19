@@ -6,7 +6,7 @@ Feature: Safeguarding Data entry
       And I load the application status from "init" 
       And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-      When I create a new "Lay Deputy" user "Wilma" "Smith" with email "behat-safe-entry@publicguardian.gsi.gov.uk"
+      When I create a new "ODR-disabled" "Lay Deputy" user "Wilma" "Smith" with email "behat-safe-entry@publicguardian.gsi.gov.uk"
       And I activate the user with password "Abcd1234"
       And I set the user details to:
           | name | John | Doe | | | |

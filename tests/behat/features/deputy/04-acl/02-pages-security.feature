@@ -11,7 +11,7 @@ Feature: deputy / acl / security on pages
       And I reset the email log
       Given I load the application status from "report-submit-pre"
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
-      When I create a new "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk"
+      When I create a new "ODR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk"
       And I activate the user with password "Abcd1234"
       And I set the user details to:
           | name | Malicious | User | | | |
