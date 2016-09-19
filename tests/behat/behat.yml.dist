@@ -4,6 +4,12 @@ default:
     autoload:
         '': %paths.base%/bootstrap
     suites:
+        prechecks:
+            description: Pre checks and init
+            paths:    [ %paths.base%/features/prechecks ]
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+
         deputy:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
