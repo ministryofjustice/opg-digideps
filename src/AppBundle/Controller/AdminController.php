@@ -106,7 +106,7 @@ class AdminController extends AbstractController
 
             if ($form->isValid()) {
                 $updateUser = $form->getData();
-                $this->getRestClient()->put('user/'.$user->getId(), $updateUser);
+                $this->getRestClient()->put('user/'.$user->getId(), $updateUser, ['admin_add_user']);
 
                 $request->getSession()->getFlashBag()->add('action', 'action.message');
 
