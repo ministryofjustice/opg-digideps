@@ -51,7 +51,7 @@ Feature: deputy / user / add user
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
     @odr
-    Scenario: add deputy user
+    Scenario: add deputy user (odr)
         Given emails are sent from "admin" area
         And I reset the email log
         And I load the application status from "init"

@@ -89,7 +89,21 @@ Feature: deputy / user / add client and report
             | client_postcode | NG1 2HT  |
             | client_country | GB |
             | client_phone | 0123456789  |
-       
+
+    @odr
+    Scenario: add client (odr)
+        Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should be on "client/add"
+        And I save the page as "deputy-step3"
+        # right values
+        When I set the client details to:
+            | name | John | Green ODR |  | | |
+            | caseNumber | 12345ABC | | | | |
+            | courtDate | 1 | 1 | 2016 | | |
+            | allowedCourtOrderTypes_0 | 2 | | | | |
+            | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
+            | phone | 0123456789  | | | | |
+
 
     @deputy    
     Scenario: create report
