@@ -31,6 +31,6 @@ class StateBenefitType extends AbstractType
 
     public function getName()
     {
-        return 'odr_income_';
+        return 'odr_income_state_benefits';
     }
 }
