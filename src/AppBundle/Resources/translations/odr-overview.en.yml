@@ -35,7 +35,7 @@ actions:
     subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
     edit: "Edit actions"
     start: "Start actions"
-accounts:
+finance:
     subSectionTitle: "Finances"
     subSectionDescription: "Enter details of all income and spending in the reporting period"
     edit: "Edit finances"
