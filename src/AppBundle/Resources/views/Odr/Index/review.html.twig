@@ -17,7 +17,7 @@
         {% if odrStatus.isReadyToSubmit %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship record',
+            'previousLabel': 'Edit Opening deputyship report',
             'nextLink': path("odr_declaration"),
             'nextLabel': 'Sign and submit',
             'position': 'top'
@@ -25,7 +25,7 @@
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship record',
+            'previousLabel': 'Edit Opening deputyship report',
             'position': 'top'
             } %}
         {% endif %}
@@ -42,7 +42,7 @@
             {% if odrStatus.isReadyToSubmit  %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("odr_overview" , {'odrId': odr.id }),
-                'previousLabel': 'Edit Opening deputyship record',
+                'previousLabel': 'Edit Opening deputyship report',
                 'nextLink': path("odr_declaration"),
                 'nextLabel': 'Sign and submit',
                 'position': 'bottom'
@@ -50,7 +50,7 @@
             {% else  %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("odr_overview" , {'odrId': odr.id }),
-                'previousLabel': 'Edit Opening deputyship record',
+                'previousLabel': 'Edit Opening deputyship report',
                 'position': 'bottom'
                 } %}
             {% endif %}
