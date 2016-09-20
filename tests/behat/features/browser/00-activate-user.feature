@@ -10,7 +10,7 @@ Feature: Browser - add and activate user
             | login_password  | Abcd1234 |
         Then I click on "login"
         And I am on admin page "/admin"
-        Then I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
+        Then I create a new "ODR-disabled" "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
 
     @browser
     Scenario: browser - view the homepage and login page

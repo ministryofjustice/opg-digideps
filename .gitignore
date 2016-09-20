@@ -14,7 +14,6 @@ app/cache/*
 app/config/.parameters.yml*
 app/config/parameters.yml
 app/logs/*
-behat.yml
 bower_downloads/*
 components/*
 composer.phar
@@ -22,7 +21,6 @@ misc/tmp/*
 nbproject
 node_modules/*
 npm-debug.log
-tests/behat/behat.yml
 vendor/*
 web/assets
 web/bundles/*
