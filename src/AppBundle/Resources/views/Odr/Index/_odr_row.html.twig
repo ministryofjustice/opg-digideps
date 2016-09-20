@@ -16,6 +16,6 @@
 	    <p class="text-secondary">{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}</p>
     </div>
     <div class="card-actions">
-	    <a href="{{ path('odr_overview') }}" class="button right">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+	    <a href="{{ path('odr_overview') }}" class="button right behat-link-odr-start">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
     </div>
 </div>
