@@ -16,7 +16,7 @@ reportSubmissionConfirmation:
     subject: Complete the deputy report - New deputy report ready
     fromName: Office of the Public Guardian
 odrSubmissionConfirmation:
-    subject: Complete the deputy report - Opening deputyship Report submitted
+    subject: Complete the deputy report - Opening deputyship report submitted
     fromName: Office of the Public Guardian
 resetPassword:
     subject: Deputy report - reset your password
