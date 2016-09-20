@@ -437,8 +437,8 @@ odr:
   expenses:
       paidForAnything:
          notBlank: Choose yes or no
-         single expense:
-         invalidvalue: Enter the amount of the expense in numbers
+      singleExpense:
+         notNumeric: Enter the amount of the expense in numbers
   action:
     actionGiveGiftsToClient:
       notBlank: Choose yes or no

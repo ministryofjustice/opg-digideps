@@ -15,7 +15,12 @@ class ExpenseSingleType extends AbstractType
                  ->add('explanation', 'text', [
                      'required' => true,
                  ])
-                 ->add('amount', 'number');
+                ->add('amount', 'number', [
+                    'precision' => 2,
+                    'grouping' => true,
+                    //'error_bubbling' => true,  // keep (and show) the error (Default behaviour). if true, error is los
+                    'invalid_message' => 'odr.expenses.singleExpense.notNumeric',
+                ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
