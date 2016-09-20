@@ -315,12 +315,10 @@ odr:
       notBlank: Select one option
   agreedBehalfDeputyExplanation:
       notBlank: Give us more information about why you are not signing on everyone's behalf
-  hasDebts:
-      notBlank: Choose yes or no
-      mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
-  hasDebts:
-      notBlank: Choose yes or no
-      mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
+
+  #hasDebts:
+  #    notBlank: Choose yes or no
+  #    mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
   submissionExceptions:
       due: Opening deputy report not due
       submitted: Opening deputy report not submitted
@@ -366,15 +364,17 @@ odr:
           notBlank: Enter the account balance on the date shown on your court order
           type: The account balance must be in numbers
           outOfRange: The balance must be less than £10,000,000,000
-      moneyInOut:
-          amount:
-            notNumeric: Use numbers only to enter the amount
-            minMessage: The amount must be more than £{{ limit }}
-            maxMessage: The amount must be less than £10,000,000,000
-            missingWhenDetailsFilled: Enter the total amount or remove the details
-          moreDetails:
-            empty: You must give us more information about this amount
+      #moneyInOut:
+      #    amount:
+      #      notNumeric: Use numbers only to enter the amount
+      #      minMessage: The amount must be more than £{{ limit }}
+      #      maxMessage: The amount must be less than £10,000,000,000
+      #      missingWhenDetailsFilled: Enter the total amount or remove the details
+      #    moreDetails:
+      #      empty: You must give us more information about this amount
   debt:
+      notBlank: Choose yes or no
+      mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
       amount:
         notNumeric: Use numbers only to enter the amount
         minMessage: The amount must be more than £{{ limit }}

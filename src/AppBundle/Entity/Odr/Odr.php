@@ -72,7 +72,7 @@ class Odr
      * @JMS\Type("string")
      * @JMS\Groups({"debts"})
      *
-     * @Assert\NotBlank(message="odr.hasDebts.notBlank", groups={"debts"})
+     * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
      *
      * @var string
      */
@@ -371,7 +371,7 @@ class Odr
     public function debtsValid(ExecutionContextInterface $context)
     {
         if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
-            $context->addViolation('odr.hasDebts.mustHaveAtLeastOneDebt');
+            $context->addViolation('odr.debt.mustHaveAtLeastOneDebt');
         }
     }
 
