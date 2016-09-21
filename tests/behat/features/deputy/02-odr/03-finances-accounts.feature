@@ -78,7 +78,7 @@ Feature: odr / finance accounts
       | account_sortCode_sort_code_part_1 | 12 |
       | account_sortCode_sort_code_part_2 | 34 |
       | account_sortCode_sort_code_part_3 | 56 |
-      | account_balanceOnCourtOrderDate  | 1,150 |
+      | account_balanceOnCourtOrderDate  | 1,158 |
     And I press "account_save"
     Then I should not see a "#account_isClosed" element
       # check values are saved
@@ -96,7 +96,8 @@ Feature: odr / finance accounts
  @odr
   Scenario: odr  add another account, and delete it
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-   And I click on "odr-start, edit-finances, finance-banks"
+    And I click on "odr-start, edit-finances, finance-banks"
+    And I save the page as "odr-accounts-empty"
     And I follow "add-account"
     And I fill in the following:
       | account_bank    | temp |
@@ -114,14 +115,4 @@ Feature: odr / finance accounts
     When I click on "account-9999"
     And I click on "delete-button"
     Then I should not see the "account-9999" link
-
-#  @odr
-#  Scenario: add another account (8888)
-#    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I add the following bank account:
-#      | bank    | temp  | | |
-#      | accountNumber | 8888 | | |
-#      | accountType | isa | | |
-#      | sortCode | 11 | 22 | 33 |
-#      | openingBalance  | 0 | | |
-#      | closingBalance  | 0 | | |
+    And I save the page as "odr-accounts-one-added-one-deleted"
