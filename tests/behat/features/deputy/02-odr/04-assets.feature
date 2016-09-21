@@ -3,7 +3,7 @@ Feature: odr / assets
   @odr
   Scenario: ODR add asset vechicle
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-assets, debts-tab"
+    And I click on "odr-start, edit-assets, assets-tab"
     And I save the page as "odr-assets-empty"
     # wrong form
     When I follow "add-assets-button"
@@ -51,7 +51,7 @@ Feature: odr / assets
   @odr
   Scenario: ODR add, edit, delete asset
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-assets, debts-tab"
+    And I click on "odr-start, edit-assets, assets-tab"
     When I follow "add-assets-button"
     # asset title
     And I press "odr_asset_title_next"
@@ -89,7 +89,7 @@ Feature: odr / assets
   @odr
   Scenario: ODR add asset property
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-assets, debts-tab"
+    And I click on "odr-start, edit-assets, assets-tab"
       # wrong form
     When I follow "add-assets-button"
     And I fill in the following:
