@@ -11,7 +11,7 @@ Feature: admin / admin
           | action | login |
         Given I am on admin page "/"
         Then I should be on "/admin/"
-        And I create a new "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
+        And I create a new "ODR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
         #Then the response status code should be 200
         And I should see "OPG Administrator" in the "users" region
