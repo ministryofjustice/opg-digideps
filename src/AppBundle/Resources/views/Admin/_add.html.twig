@@ -19,7 +19,7 @@
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
-  
+
   {% if action is defined %}
       {% if action == 'edit' %}
              {% include 'AppBundle:Components/Link:_link-button.html.twig' with {

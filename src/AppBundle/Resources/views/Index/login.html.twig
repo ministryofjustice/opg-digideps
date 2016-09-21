@@ -1,5 +1,5 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% trans_default_domain "login" %}
+{% trans_default_domain "signin" %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
@@ -20,7 +20,7 @@
 
 {% block validationSummary %}
     {{ form_errors_list(form) }}
-    
+
     {% if error is defined %}
         <div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1" class="behat-region-header-errors">
             <h1 class="heading-small error-summary-heading" id="error-summary-heading">There are some problems on this page</h1>
@@ -39,11 +39,11 @@
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
+    {{ form_submit(form.login,'signin', {'buttonClass': 'behat-link-login'}) }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
-    
+
     <a class="below-form-link behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
 
 {% endblock %}

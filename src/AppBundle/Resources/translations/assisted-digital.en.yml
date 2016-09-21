@@ -3,6 +3,6 @@ email:
     hint:
 password:
     label: Password
-login:
-    label: Log in as user
+signin:
+    label: Sign in as user
     invalidMessage: You've entered an invalid email or password. Please try again.

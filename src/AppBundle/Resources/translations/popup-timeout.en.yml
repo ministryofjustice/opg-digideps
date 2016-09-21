@@ -4,7 +4,7 @@ component:
 # %loggedOutIn% = number of minutes the user will be logged out within
   firstLine: |
         You have been inactive for %inactiveFor% minutes and will be automatically
-        logged out in %loggedOutIn% minutes.
+        signed out in %loggedOutIn% minutes.
   secondLine: Click 'OK' to stay signed in and continue with your report.
   controls:
     okButton:

@@ -10,7 +10,7 @@ createaccount: Create an account now
 whatyouneed: What you'll need to sign up to the deputy service
 whatyouneedlist: "* the case number. Every letter from us will have your case number; look for 'OPG reference' * your email address * your client's last name"
 ialready: I already have a deputy account
-signtoaccess: Log in to access your existing account
+signtoaccess: Sign in to access your existing account
 makesure: "Make sure you've got:"
 makelist: "*your financial records (for example bank statements or spreadsheets) * your record of any decisions you've made for the client * your record of anyone you've contacted for the client"
 before: Before you begin
@@ -19,4 +19,4 @@ morethanone: More than one deputy?
 wemaystill: We may still need to contact you
 yourpriv: Your privacy
 youandclient: "You' and the 'client'"
-signin: Log in
+signin: Sign in

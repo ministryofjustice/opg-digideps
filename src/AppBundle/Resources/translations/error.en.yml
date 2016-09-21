@@ -5,4 +5,4 @@ generic:
 404:
   title: Page not found
   description: If you entered a web address please check it was correct.
-returnToHomePage: Create an account or log in
+returnToHomePage: Create an account or sign in

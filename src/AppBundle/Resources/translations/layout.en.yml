@@ -1,7 +1,7 @@
 welcomeMessage: Hello %name%, welcome to the site
 adminArea: Users
 assistedDigitalArea: OPG assisted digital
-logout: Log out
+logout: Sign out
 Invalid credentials.: Enter a valid username and password
 nav:
     userDetails: Your details
