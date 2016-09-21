@@ -65,7 +65,6 @@ Feature: odr / visits care
       | odr_visits_care_howIsCareFunded_0                 | client_pays_for_all |
       | odr_visits_care_whoIsDoingTheCaring               | Fred Jones          |
       | odr_visits_care_doesClientHaveACarePlan_0         | yes                 |
-      | odr_visits_care_whenWasCarePlanLastReviewed_day   | 31                  |
       | odr_visits_care_whenWasCarePlanLastReviewed_month | 12                  |
       | odr_visits_care_whenWasCarePlanLastReviewed_year  | 2014                |
     And I press "odr_visits_care_save"
@@ -82,6 +81,5 @@ Feature: odr / visits care
       | odr_visits_care_howIsCareFunded_0                 | client_pays_for_all |
       | odr_visits_care_whoIsDoingTheCaring               | Fred Jones          |
       | odr_visits_care_doesClientHaveACarePlan_0         | yes                 |
-      | odr_visits_care_whenWasCarePlanLastReviewed_day   | 31                  |
       | odr_visits_care_whenWasCarePlanLastReviewed_month | 12                  |
       | odr_visits_care_whenWasCarePlanLastReviewed_year  | 2014                |
