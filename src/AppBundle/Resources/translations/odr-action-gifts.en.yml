@@ -12,7 +12,7 @@ nav: Gifts
 
 form:
   actionGiveGiftsToClient:
-    label: Are you intending to give any gifts on behalf of %client%
+    label: Are you intending to give any gifts on behalf of %client%?
   actionGiveGiftsToClientDetails:
     label: Please tell us more about the gifts you intend to make
   save:
