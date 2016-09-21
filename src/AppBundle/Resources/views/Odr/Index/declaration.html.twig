@@ -43,9 +43,9 @@
                 {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
             </div>
 
-            <nav id="bottom-button-bar">
+            <div class="form-group button-bar">
                 {{ form_submit(form.save,'save') }}
-            </nav>
+            </div>
 
             {{ form_end(form) }}
 
@@ -62,10 +62,10 @@
                 });
             </script>
 
-            <p class="balance-warning page-section-warning">
+            <div class="page-section-warning push--top flush--bottom hard--bottom">
                 <span class="icon icon__notification"></span>
-                <span class="page-section-description left-margin-big">{{ 'unableToEditAfterSubmission' | trans()  }}</span>
-            </p>
+                <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
+            </div>
 
         </div>
         <!-- end left-content -->
