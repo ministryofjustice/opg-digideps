@@ -10,34 +10,32 @@
 
 {% block pageContent %}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans(clientTrans) }}</h1>
-    </div>
-
-
     <div id="pagebody">
         <div id="pagebody-left-content">
 
+            <div id="page-section-title-container" class="page-section-title-container">
+                <h1>{{ 'page.pageSectionTitle' | trans(clientTrans) }}</h1>
+            </div>
+
             <div id="header-report-submit" class="hero">
-                <h2 class="heading">{{ 'reportSubmitted' | trans }}</h2>
+                <h2 class="heading">
+                    <span class="icon icon-tick-white"></span>
+                    {{ 'reportSubmitted' | trans }}
+                </h2>
             </div>
 
             <p class="">{{ 'weHaveSentEmail' | trans }}</p>
 
-            <hr>
-
             <!-- what happens next -->
-            <p class="page-section-description">{{ 'whatHappensNext.title' | trans }}</p>
+            <h3 class="heading-medium page-section-description">{{ 'whatHappensNext.title' | trans }}</h3>
             <p>{{ 'whatHappensNext.body1' | trans }}</p>
             <p>{{ 'whatHappensNext.body2' | trans }}</p>
-            <a href="{{ path('odr_index') }}" class="button">
-                {{ 'whatHappensNext.returnButton' | trans }}
-            </a>
-
-            <hr>
+            <p>
+                <a href="{{ path('odr_index') }}" class="button">{{ 'whatHappensNext.returnButton' | trans }}</a>
+            </p>
 
             <!-- Give us feedback -->
-            <p class="page-section-description">{{ 'giveUsFeedback.title' | trans }}</p>
+            <h3 class="heading-medium page-section-description">{{ 'giveUsFeedback.title' | trans }}</h3>
             <p>{{ 'giveUsFeedback.body1' | trans }}</p>
             <p>{{ 'giveUsFeedback.body2' | trans({
                     '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y" target="_blank">',
@@ -47,6 +45,7 @@
         </div>
 
         <div id="pagebody-right-content">
+            <p id="helpline" class="push-half--bottom">Helpline<br>0115 934 2700</p>
             {% include 'AppBundle:Odr/Index:_status.html.twig' with {
             showReviewButton: false
             } %}

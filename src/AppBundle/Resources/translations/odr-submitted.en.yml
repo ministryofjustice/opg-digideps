@@ -5,7 +5,7 @@ page:
 reportSubmitted: Report submitted
 weHaveSentEmail: We have sent you a confirmation email
 whatHappensNext:
-  title: What happens next
+  title: What happens next?
   body1: |
     When it's time for you to complete the next report, we will send you a reminder.
     You can make a start on it at any time.
@@ -18,7 +18,7 @@ giveUsFeedback:
     Feedback is vital in helping us to improve the services we offer to deputies and attorneys.
   body2: |
     The survey is voluntary. We'll only ever use your personal information for the
-    purposes of this research. %linkStart%Deputiship satisfaction survey%linkEnd%.
+    purposes of this research. %linkStart%Deputyship satisfaction survey%linkEnd%.
   #yourReportWillBeSent: "Your report has been sent to OPG. You'll get an email shortly to let you know we've received it."
   #weWillSendReminder: "We'll send you a reminder when it's time for you to complete the next report. You can make a start on it at any time from now on."
   #downloadLink: View report

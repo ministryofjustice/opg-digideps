@@ -14,12 +14,12 @@
                 <div class="label">Submitted:</div>
                 <div class="value">{{ odr.submitDate | date("j F Y") }}</div>
             </div>
-            <div>
+            <p class="flush--bottom">
                 <a href="{{ path('odr_pdf') }}">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
-            </div>
-            <div>
+            </p>
+            <p>
                 <a href="{{ path('odr_review') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
-            </div>
+            </p>
         {% else %}
             <div class="labelvalue">
                 <div class="label">Progress:</div>

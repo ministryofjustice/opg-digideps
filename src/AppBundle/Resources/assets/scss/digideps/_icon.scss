@@ -22,3 +22,9 @@
     margin-right: 10px;
     background-size: contain;
 }
+
+.icon-tick-white {
+    @include icon(icon-tick-white, 40, 33, 'images/icons');
+    margin-right: 10px;
+    background-size: contain;
+}
