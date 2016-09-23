@@ -1,66 +1,59 @@
 .session-timeout {
-  z-index: 9999;
+	z-index: 9999;
 
-  visibility: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
+	visibility: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
 
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 
-  &-dialog {
+	&-dialog {
 
-    @include core-19();
+		@include core-19();
 
-    width: 480px;
+		width: 480px;
 
-    border: 10px solid $black;
-    background-color: $white;
-    opacity: 1;
+		border: 10px solid $black;
+		background-color: $white;
+		opacity: 1;
 
-    margin: 100px auto 0;
-    padding: 0 30px 30px 30px;
+		margin: 100px auto 0;
+		padding: 0 30px 30px 30px;
 
-    .page-section-title {
-      font-size: 30px;
+		.page-section-title {
+			font-size: 30px;
 
-      margin-bottom: 20px;
-    }
+			margin-bottom: 20px;
+		}
 
-    .page-section-description {
+		.page-section-description {
 
-      margin-bottom: 20px;
-      width: 100%;
+			margin-bottom: 20px;
+			width: 100%;
 
-      .page-section-description {
-        margin-bottom: 20px;
-      }
+			.page-section-description {
+				margin-bottom: 20px;
+			}
 
-    }
+		}
 
-    .button {
-      margin-right: 20px;
-    }
+		.button {
+			margin-right: 20px;
+		}
+	}
 
-  }
-
-  &-underlay {
-    z-index: 9999;
-
-    visibility: hidden;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;    // This is also updated in JS to the px value
-
-    color: $white;
-    background-color: $black;
-    opacity: .3;
-
-  }
-
+	&-underlay {
+		z-index: 9999;
+		visibility: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;    // This is also updated in JS to the px value
+		color: $white;
+		background-color: $black;
+		opacity: .3;
+	}
 }
