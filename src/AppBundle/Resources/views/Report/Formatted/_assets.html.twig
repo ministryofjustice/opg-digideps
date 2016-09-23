@@ -1,7 +1,7 @@
 {% if assets | length > 0 or report.noAssetToAdd == true %}
     <div class="section" id="assets-section">
         <h2 class="section-heading">Client's assets</h2>
-    
+
         {% if report.assets | length == 0 %}
             <div class="box contact-item no-contact">
                 <div class="form-group right-label">
@@ -22,14 +22,14 @@
                     </li>
                 {% endfor %}
 
-                <li class="box total">
+                <li class="box">
                     <div class="labelvalue inline">
                         <div class="label">Assets Total Value</div>
                         <div class="value" id="assetsTotal">&pound;{{ report.assetsTotalValue | money_format }}</div>
                     </div>
                 </li>
             </ul>
-        
+
         {% endif %}
     </div>
 {% endif %}
