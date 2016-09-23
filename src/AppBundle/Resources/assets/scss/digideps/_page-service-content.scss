@@ -1,24 +1,24 @@
 .page-service-content {
 
-  &.sign-in-page {
+    &.sign-in-page {
 
-    &--manual-signout {
-      .page-section-title {
-        margin-top: 40px;
-      }
+        &--manual-signout {
+            .page-section-title {
+                margin-top: 40px;
+            }
+
+        }
 
     }
 
-  }
+    &.my-client {
 
-  &.my-client {
+        .in-page-form + .in-page-form {
+            .sub-section-description {
+                margin-bottom: 10px;
+            }
+        }
 
-    .in-page-form + .in-page-form {
-      .sub-section-description {
-        margin-bottom: 10px;
-      }
     }
-
-  }
 
 }

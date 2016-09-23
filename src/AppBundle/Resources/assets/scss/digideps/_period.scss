@@ -6,11 +6,11 @@
     margin: 30px 0 30px 0;
     border-top: 1px solid $grey-3;
     border-bottom: 1px solid $grey-3;
-    
+
     @include media($min-width: 641px, $max-width: 768px) {
         padding: 10px 0 10px 0;
     }
-    
+
     #report-period {
         float: left;
 
@@ -30,5 +30,5 @@
         }
 
     }
-    
+
 }

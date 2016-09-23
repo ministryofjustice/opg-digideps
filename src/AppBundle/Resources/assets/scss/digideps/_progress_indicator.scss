@@ -26,7 +26,7 @@ ol.progress {
     @include ie-lte(7) {
         display: none;
     }
-    
+
     li {
         display: table-cell;
         height: 53px;
@@ -50,9 +50,9 @@ ol.progress {
                 }
 
             }
-            
+
             &::before {
-                
+
                 @include border-radius(100%);
 
                 position: absolute;
@@ -71,7 +71,7 @@ ol.progress {
                 line-height: 1.5;
                 text-align: center;
                 background-color: $grey-3;
-                
+
                 @include media(mobile) {
                     margin-left: 4px;
                 }
@@ -79,21 +79,21 @@ ol.progress {
                 @include ie(8) {
                     background: none;
                 }
-                
+
             }
-            
+
         }
-        
+
         .progress__label {
             display: inline-block;
-            
+
             margin: {
                 left: 2.474em;
             }
-            
+
             font-size: .792em;
             text-align: left;
-            
+
             @include media(mobile) {
                 @include visuallyhide;
                 width: 0;
@@ -106,48 +106,48 @@ ol.progress {
                 overflow: visible;
             }
         }
-        
+
         a.progress__label {
-        
+
             text-decoration: underline;
-        
+
             &:hover {
                 text-decoration: none;
             }
-        
+
         }
-        
-        span, 
+
+        span,
         a {
             color: $grey-1;
         }
-        
+
         &.progress--active {
             background: $light-blue url("images/progress-chevron.png") right 50% no-repeat;
-            
+
             .progress__step,
             .progress__label {
                 margin-right: $spacingforchevron;
             }
-            
+
             .progress__step::before {
                 color: $light-blue;
                 background-color: $white;
-                
+
                 @include ie(8) {
                     color: $white;
                     background: none;
                 }
-            
+
             }
-            
+
             .progress__label {
                 display: inline-block;
                 width: auto;
                 margin-left: 2.105em;
                 color: $white;
                 text-indent: 0;
-            
+
                 @include media(tablet) {
                     margin-left: 2.474em;
                 }
@@ -155,42 +155,42 @@ ol.progress {
                 @include media($max_width: 320px) {
                     @include visuallyhide;
                 }
-            
+
             }
         }
-        
+
         &.progress--active:last-child {
             background-image: none;
         }
-        
+
         &.progress--completed {
-        
-            span, 
+
+            span,
             a {
                 color: $turquoise;
             }
-            
+
             .progress__step::before {
                 color: $white;
                 text-indent: -9999px;
                 background: $turquoise url("images/progress-tick.png") center 3px no-repeat;
             }
-            
+
         }
-        
+
         &.progress--previous {
             // allows left part of chevron to scale
             background: url("images/progress-chevron-end.png") right 50% no-repeat;
-            
+
             .progress__step {
                 margin-right: $spacingforchevron;
             }
-            
+
         }
-        
+
         &:last-child .progress__step {
             margin-right: $spacingforchevron;
         }
-        
+
     }
 }

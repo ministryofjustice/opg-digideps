@@ -3,7 +3,7 @@
     margin-top: 60px;
 
     &.no-margin-top {
-        margin-top: 0px;
+        margin-top: 0;
     }
 
     .sections {
@@ -136,7 +136,7 @@
                     }
 
                 }
-                
+
                 &.hidden {
                     display: none;
                 }

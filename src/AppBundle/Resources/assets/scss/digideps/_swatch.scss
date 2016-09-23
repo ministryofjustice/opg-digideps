@@ -1,6 +1,6 @@
 .swatch {
     @include border-radius(100%);
-    
+
     width: 60px;
     height: 60px;
 
@@ -10,7 +10,7 @@
         margin-right: $gutter-half;
         margin-bottom: $gutter-half;
     }
-    
+
     @include media(tablet) {
         margin: 0 auto $gutter-half auto;
     }
@@ -71,11 +71,11 @@ $palette: (
     @each $color in $palette {
         $color-name: nth($color, 1);
         $color-var: nth($color, 2);
-        
+
         .swatch-#{$color-name} {
             background-color: $color-var;
         }
-    
+
     }
 
 }

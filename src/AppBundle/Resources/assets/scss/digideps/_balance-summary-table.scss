@@ -1,22 +1,22 @@
 table.money-table {
-    
+
     margin: 30px 0 30px 0;
-    
+
     td {
         padding: 14px 25px 10px 25px;
-        
+
         &.value,
         &.right {
             text-align: right;
         }
-        
+
     }
 
-    
+
     tr.solid-row {
-        
+
         background: $grey-3;
-        
+
         td.title {
             @include core-19();
             color: $black;
@@ -26,7 +26,7 @@ table.money-table {
             @include core-24();
             color: $black;
         }
-        
+
     }
 
     tr.split-row {
@@ -61,32 +61,32 @@ table.money-table {
 
             &.orange {
                 border-color: $orange;
-                
+
                 td.title {
                     color: $black;
                 }
-                
+
                 td.value {
                     background: $orange;
                     color: $black;
                     border-bottom-color: $orange;
                 }
-                
+
             }
 
             &.black {
                 border-color: $black;
-                
+
                 td.title {
                     color: $black;
                 }
-                
+
                 td.value {
                     background: $black;
                     color: $white;
                     border-bottom-color: $black;
                 }
-                
+
             }
 
 
@@ -94,39 +94,39 @@ table.money-table {
     }
 
 
-    
+
     tr.medium-bottom-margin {
         margin-bottom: 20px;
     }
-    
+
     tr.large-bottom-margin {
         margin-bottom: 30px;
     }
-    
+
     tr.spacer {
         td {
             padding: 15px 25px 15px 25px;
             border: 0;
         }
     }
-    
+
     tr.borderless {
         td {
             border: 0;
         }
     }
-    
+
 }
 
 
 .balance-warning.page-section-warning {
-    
+
     width: 95%;
-    
+
     .page-section-description {
         display: block;
         margin-bottom: 0;
-        
+
         &.left-margin {
             margin-left: 40px;
         }
@@ -134,7 +134,7 @@ table.money-table {
         &.left-margin-big {
             margin-left: 50px;
         }
-        
+
         &.big {
             font-size: 1.15em;
         }

@@ -12,11 +12,11 @@
     &[data-status="saved"] {
         background: top left url("images/icons/savetick.png") no-repeat;
         background-size: 35px 29px;
-        
+
         @include media(mobile) {
-            background-size: 26.5px 22px;    
+            background-size: 26.5px 22px;
         }
-        
+
         @include device-pixel-ratio() {
             background-image: url("images/icons/savetick_2x.png");
         }
@@ -25,11 +25,11 @@
     &[data-status="saving"] {
         background: top left url("images/icons/savespin.png") no-repeat;
         background-size: 24px 26px;
-        
+
         @include media(mobile) {
             background-size: 20px 22px;
         }
-        
+
         @include device-pixel-ratio() {
             background-image: url("images/icons/savespin_2x.png");
         }

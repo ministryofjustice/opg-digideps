@@ -41,8 +41,9 @@
         .grey {
             background: $grey-3;
         }
+
         .reverse {
-            background: #000;
+            background: $black;
             color: $white;
         }
 
@@ -52,7 +53,7 @@
 
             .account-closed {
                 border-radius: 5px;
-                border: 2px solid rgb(74, 74, 74);
+                border: 2px solid $tundora;
                 font-size: 1em;
                 padding: 2px;
             }
@@ -68,6 +69,7 @@
                 text-align: left;
             }
         }
+
         tr td,
         tr th {
             border-bottom: 1px solid $border-colour;

@@ -37,7 +37,7 @@ $small: 12;
     @include core-14();
     box-sizing: border-box;
     overflow: hidden;
-    color: #000000;
+    color: $black;
     max-width: 595px;
     margin: 0 auto;
 
@@ -46,19 +46,23 @@ $small: 12;
         padding: 45px 0 0 10px;
         margin: 10px 0 40px 0;
         width: 200px;
-        border-left: 3px solid #000000;
+        border-left: 3px solid $black;
     }
 
-    h2, h3 {
+    h2,
+    h3 {
         margin: 0 0 20px 0;
     }
 
     h1 {
-        @include bold-48();
         width: 60%;
+
+        @include bold-48();
     }
+
     h2 {
         clear: both;
+
         @include bold-24();
     }
 
@@ -113,13 +117,14 @@ $small: 12;
         .balancing-item {
             position: relative;
         }
+
         .box-right {
             box-sizing: border-box;
             position: absolute;
             top: 0;
             right: 0;
 
-            color: #000;
+            color: $black;
             padding: 12px 0 0 0;
             display: inline;
 
@@ -128,9 +133,10 @@ $small: 12;
             vertical-align: middle;
 
         }
+
         .transaction {
             @extend %contain-floats;
-            background: #cdcfcd;
+            background: $fieldsetbg;
             margin-bottom: 10px;
             border-bottom: none;
             padding: 5px;
@@ -139,9 +145,11 @@ $small: 12;
             .transaction-label {
                 width: 63%;
             }
+
             .transaction-value {
                 width: 35%;
             }
+
             .sub-label {
                 display: block;
             }
@@ -152,8 +160,8 @@ $small: 12;
             @include inline-block();
             padding: 2px 10px;
             width: 110px;
-            background: #ffffff none repeat scroll 0% 0%;
-            color: #454572;
+            background: $white none repeat scroll 0% 0%;
+            color: $east-bay;
         }
     }
 
@@ -166,7 +174,8 @@ $small: 12;
         margin: 10px 0 10px 0;
     }
 
-    #account-summary, #moneyIn-transactions {
+    #account-summary,
+    #moneyIn-transactions {
         page-break-after: always;
     }
 
@@ -181,8 +190,8 @@ $small: 12;
     .cleared {
         clear: both;
     }
-    
-    table td.noborder{
+
+    table td.noborder {
         border-bottom: none;
     }
 }

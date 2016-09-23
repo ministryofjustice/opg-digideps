@@ -6,21 +6,21 @@
     .value {
         @include bold-19();
     }
-    
+
     &.right-inline {
-        
+
         text-align: right;
-        
-        .label, 
+
+        .label,
         .value {
             display: inline;
         }
-        
+
         .value {
             margin-left: 20px;
             padding-right: 5px;
         }
-        
+
     }
 
     &.transaction {
