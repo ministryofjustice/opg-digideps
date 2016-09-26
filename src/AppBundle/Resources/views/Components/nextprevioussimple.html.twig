@@ -6,14 +6,14 @@
     <ul class="group">
         {% if previousLink is defined %}
             <li class="previous">
-                <a title="Navigate to previous" rel="prev" href="{{ previousLink }}">
+                <a title="Navigate to previous" rel="prev" href="{{ previousLink }}" class="{{ prevAdditionalClass | default('') }}">
                     <span class="pagination-label">{{ previousLabel }}</span>
                 </a>
             </li>
         {% endif %}
         {% if nextLink is defined %}
             <li class="next">
-                <a title="Navigate to next" rel="next" href="{{ nextLink }}">
+                <a title="Navigate to next" rel="next" href="{{ nextLink }}"  class="{{ nextAdditionalClass | default('') }}">
                     <span class="pagination-label">{{ nextLabel }}</span>
                 </a>
             </li>
