@@ -1,6 +1,26 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 {% block pageTitle %}ODR{% endblock %}
 
+{% macro nextPrevSubmitButtons(odr, odrStatus, position) %}
+    {% if odr.submitted == false %}
+        {% if odrStatus.isReadyToSubmit %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit Opening deputyship report',
+            'nextLink': path("odr_declaration"),
+            'nextLabel': 'Sign and submit',
+            'position': position,
+            } %}
+        {% else  %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit Opening deputyship report',
+            'position': position,
+            } %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
 {% block pageContent %}
 
     {% if odr.submitted == true %}
@@ -13,23 +33,7 @@
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>Review Opening deputyship report</h1>
     </div>
-    {% if odr.submitted == false %}
-        {% if odrStatus.isReadyToSubmit %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship report',
-            'nextLink': path("odr_declaration"),
-            'nextLabel': 'Sign and submit',
-            'position': 'top'
-            } %}
-        {% else  %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship report',
-            'position': 'top'
-            } %}
-        {% endif %}
-    {% endif %}
+    {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top') }}
     <a name="pageBody"></a>
     
     <div id="page-body">
@@ -38,23 +42,7 @@
     </div>
 
     <div id="body-footer-nav">
-        {% if odr.submitted == false %}
-            {% if odrStatus.isReadyToSubmit  %}
-                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-                'previousLink': path("odr_overview" , {'odrId': odr.id }),
-                'previousLabel': 'Edit Opening deputyship report',
-                'nextLink': path("odr_declaration"),
-                'nextLabel': 'Sign and submit',
-                'position': 'bottom'
-                } %}
-            {% else  %}
-                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-                'previousLink': path("odr_overview" , {'odrId': odr.id }),
-                'previousLabel': 'Edit Opening deputyship report',
-                'position': 'bottom'
-                } %}
-            {% endif %}
-        {% endif %}
+        {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'bottom') }}
     </div>
 
     <script>
