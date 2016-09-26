@@ -24,7 +24,6 @@
             transOptions: {'%separator%': '<br/><br/>'}
             } %}
 
-
             {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
             {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
@@ -49,6 +48,11 @@
 
             {{ form_end(form) }}
 
+            <div class="page-section-warning push--top flush--bottom hard--bottom">
+                <span class="icon icon__notification"></span>
+                <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
+            </div>
+
             <script type="text/javascript">
                 $(document).ready(function () {
                     new GOVUK.SelectionButtons(":checkbox");
@@ -61,11 +65,6 @@
                     });
                 });
             </script>
-
-            <div class="page-section-warning push--top flush--bottom hard--bottom">
-                <span class="icon icon__notification"></span>
-                <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
-            </div>
 
         </div>
         <!-- end left-content -->

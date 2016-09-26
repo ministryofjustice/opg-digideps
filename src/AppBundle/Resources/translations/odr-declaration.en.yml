@@ -1,6 +1,6 @@
 page:
   htmlTitle: "Deputy report - deputy's declaration | GOV.UK"
-  pageSectionTitle: "Your court order"
+  pageSectionTitle: "Deputy's declaration"
   pageSectionDescription: |
         I confirm the information I have given in this report is true and
         correct to the best of my knowledge and belief.
@@ -26,7 +26,7 @@ agreedBehalfDeputy:
   more_deputies_behalf: "There is more than one deputy, and I'm signing on everyone's behalf"
   more_deputies_not_behalf: "There is more than one deputy, but I'm not signing on everyone's behalf"
 agreedBehalfDeputyExplanation:
-  label: "Tell us why." 
+  label: "Tell us why."
 save:
   label: "Submit report"
 status: Status
