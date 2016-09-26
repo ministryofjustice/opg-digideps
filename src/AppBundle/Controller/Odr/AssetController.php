@@ -23,6 +23,9 @@ class AssetController extends AbstractController
     public function listAction(Request $request, $odrId)
     {
         $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        if ($odr->getSubmitted()) {
+            throw new \RuntimeException('Odr already submitted and not editable.');
+        }
         $assets = $odr->getAssets();
 
         return [
