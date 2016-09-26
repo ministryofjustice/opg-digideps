@@ -156,8 +156,8 @@ class UserController extends RestController
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
-        } else if ($what == 'case_number') {
-            $client = $this->getRepository('Client')->findOneBy(['caseNumber'=>$filter]);
+        } elseif ($what == 'case_number') {
+            $client = $this->getRepository('Client')->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
             }
@@ -165,7 +165,7 @@ class UserController extends RestController
                 throw new \RuntimeException('Client has not users', 404);
             }
             $user = $client->getUsers()[0];
-        } else if ($what == 'user_id') {
+        } elseif ($what == 'user_id') {
             $user = $this->getRepository('User')->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
@@ -189,7 +189,8 @@ class UserController extends RestController
     }
 
     /**
-     * Delete user with clients
+     * Delete user with clients.
+     *
      * @Route("/{id}")
      * @Method({"DELETE"})
      * 
@@ -330,6 +331,10 @@ class UserController extends RestController
 
         if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+
+        if (array_key_exists('odr_enabled', $data)) {
+            $user->setOdrEnabled($data['odr_enabled']);
         }
     }
 }

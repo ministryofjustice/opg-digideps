@@ -58,6 +58,24 @@ class Fixtures
     }
 
     /**
+     * @param EntityDir\Client $client
+     * @param array $settersMap
+     * @return EntityDir\Odr\Odr
+     */
+    public function createOdr(EntityDir\Client $client, array $settersMap = [])
+    {
+        $odr = new EntityDir\Odr\Odr($client);
+
+        foreach ($settersMap as $k => $v) {
+            $odr->$k($v);
+        }
+
+        $this->em->persist($odr);
+
+        return $odr;
+    }
+
+    /**
      * @return EntityDir\Report
      */
     public function createReport(EntityDir\Client $client, array $settersMap = [])
@@ -106,6 +124,26 @@ class Fixtures
     }
 
     /**
+     * @return EntityDir\Odr\Account
+     */
+    public function createOdrAccount(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $ret = new EntityDir\Odr\Account();
+        $ret->setOdr($odr);
+        $ret->setAccountNumber('1234')
+            ->setBank('hsbc')
+            ->setSortCode('101010');
+
+        foreach ($settersMap as $k => $v) {
+            $ret->$k($v);
+        }
+
+        $this->em->persist($ret);
+
+        return $ret;
+    }
+
+    /**
      * @return EntityDir\Contact
      */
     public function createContact(EntityDir\Report $report, array $settersMap = [])
@@ -140,12 +178,47 @@ class Fixtures
     }
 
     /**
+     * @param EntityDir\Odr\Odr $odr
+     * @param array $settersMap
+     * @return EntityDir\Odr\Safeguarding
+     */
+    public function createOdrVisitsCare(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $vc = new EntityDir\Odr\VisitsCare();
+        $vc->setOdr($odr);
+        $vc->setDoYouLiveWithClient('yes');
+
+        foreach ($settersMap as $k => $v) {
+            $vc->$k($v);
+        }
+        $this->em->persist($vc);
+
+        return $vc;
+    }
+
+    /**
      * @return EntityDir\Asset
      */
     public function createAsset($type, EntityDir\Report $report, array $settersMap = [])
     {
         $asset = EntityDir\Asset::factory($type);
         $asset->setReport($report);
+
+        foreach ($settersMap as $k => $v) {
+            $asset->$k($v);
+        }
+        $this->em->persist($asset);
+
+        return $asset;
+    }
+
+    /**
+     * @return EntityDir\Odr\Asset
+     */
+    public function createOdrAsset($type, EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $asset = EntityDir\Odr\Asset::factory($type);
+        $asset->setOdr($odr);
 
         foreach ($settersMap as $k => $v) {
             $asset->$k($v);

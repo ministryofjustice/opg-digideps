@@ -16,7 +16,8 @@ class Client
 {
     /**
      * @var int
-     * 
+     *
+     * @JMS\Groups({"related","basic", "client", "client-id"})
      * @JMS\Type("integer")
      * @JMS\Groups({"client"})
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -44,6 +45,13 @@ class Client
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
+
+    /**
+     * @JMS\Groups({"basic", "odr", "odr_id"})
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
+     **/
+    private $odr;
 
     /**
      * @JMS\Type("string")
@@ -507,6 +515,22 @@ class Client
         }
 
         return $reportIds;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOdr()
+    {
+        return $this->odr;
+    }
+
+    /**
+     * @param mixed $odr
+     */
+    public function setOdr($odr)
+    {
+        $this->odr = $odr;
     }
 
     /**

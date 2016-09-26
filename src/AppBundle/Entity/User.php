@@ -220,6 +220,15 @@ class User implements UserInterface
     private $deputyNo;
 
     /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user", "user-login"})
+     *
+     * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
+     */
+    private $odrEnabled;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -728,6 +737,8 @@ class User implements UserInterface
     }
 
     /**
+     * Return Id of the client (if it has details)
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"user-login"})
      * @JMS\Type("integer")
@@ -735,7 +746,9 @@ class User implements UserInterface
      */
     public function getIdOfClientWithDetails()
     {
-        return $this->getFirstClient() ? $this->getFirstClient()->hasDetails() : null;
+        return $this->getFirstClient() && $this->getFirstClient()->hasDetails()
+            ? $this->getFirstClient()->getId()
+            : null;
     }
 
     /**
@@ -779,4 +792,23 @@ class User implements UserInterface
 
         return $clients->first();
     }
+
+    /**
+     * @return boolean
+     */
+    public function getOdrEnabled()
+    {
+        return $this->odrEnabled;
+    }
+
+    /**
+     * @param boolean $odrEnabled
+     */
+    public function setOdrEnabled($odrEnabled)
+    {
+        $this->odrEnabled = $odrEnabled;
+
+        return $this;
+    }
+
 }

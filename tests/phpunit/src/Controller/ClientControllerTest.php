@@ -100,7 +100,7 @@ class ClientControllerTest extends AbstractTestController
         $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
-        // TODO assert other fields
+        $this->assertInstanceOf('AppBundle\Entity\Odr\Odr', $client->getOdr());
     }
 
     public function testupsertPut()

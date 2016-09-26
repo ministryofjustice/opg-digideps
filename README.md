@@ -47,9 +47,21 @@ Client secret is required for those.
 * 499 wrong credentials at login (after many failed requests)
 * 500 generic error due to internal exception (e.g. db offline)
 
+## Endpoint conventions
+
+Example with `account` (type) and `odr`(parent type) entities
+
+ * Get account records (odr ID=1): `GET /odr/1/account`
+ * Add account to Odr with ID=1: `POST /odr/1/account`
+ * Get account with id=2:  `GET /odr/account/2`
+ * Edit account with id=2: `PUT /odr/account/2`
+ * Delete account with id=2: `DELETE /odr/account/2`
+
+
 ## Notes about JMS groups
 For an entity named `Abc`, use the group `abc` for the properties (except the relationships).
 
 Same with entity `Xyz` where properties have the JMS group `xyz`.
 
 If `Abc` has a relationship 1:N with `Xyz`, then add the group `xyz` to the 
+>>>>>>> 1134a413138f8cdf37e6340bbb5926006a52e58a

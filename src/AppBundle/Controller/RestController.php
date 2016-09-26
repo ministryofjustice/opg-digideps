@@ -138,6 +138,16 @@ abstract class RestController extends Controller
     }
 
     /**
+     * @param Report $report
+     */
+    protected function denyAccessIfOdrDoesNotBelongToUser(EntityDir\Odr\Odr $odr)
+    {
+        if (!in_array($this->getUser()->getId(), $odr->getClient()->getUserIds())) {
+            throw $this->createAccessDeniedException('Odr does not belong to user');
+        }
+    }
+
+    /**
      * @param Client $client
      */
     protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
