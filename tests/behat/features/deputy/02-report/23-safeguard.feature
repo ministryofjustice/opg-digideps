@@ -4,7 +4,7 @@ Feature: Safeguarding Data entry
     Scenario: data entry - Setup the test user
       Given emails are sent from "admin" area
       And I load the application status from "init" 
-      And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
+      And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
       When I create a new "ODR-disabled" "Lay Deputy" user "Wilma" "Smith" with email "behat-safe-entry@publicguardian.gsi.gov.uk"
       And I activate the user with password "Abcd1234"

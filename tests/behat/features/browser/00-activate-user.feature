@@ -6,7 +6,7 @@ Feature: Browser - add and activate user
         And I reset the email log
         Given I am on admin login page
         When I fill in the following:
-            | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         Then I click on "login"
         And I am on admin page "/admin"

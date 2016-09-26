@@ -14,7 +14,7 @@ Feature: deputy / user / add user
         And I save the page as "admin-login-error1"
         # test user email in caps
         When I fill in the following:
-            | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I click on "login"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
