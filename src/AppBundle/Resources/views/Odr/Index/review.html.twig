@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 {% block pageTitle %}ODR{% endblock %}
 
-{% macro nextPrevSubmitButtons(odr, odrStatus, position) %}
+{% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
     {% if odr.submitted == false %}
         {% if odrStatus.isReadyToSubmit %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
@@ -10,6 +10,7 @@
             'nextLink': path("odr_declaration"),
             'nextLabel': 'Sign and submit',
             'position': position,
+            'nextAdditionalClass': nextAdditionalClass,
             } %}
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
@@ -33,7 +34,7 @@
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>Review Opening deputyship report</h1>
     </div>
-    {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top') }}
+    {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
     <a name="pageBody"></a>
     
     <div id="page-body">

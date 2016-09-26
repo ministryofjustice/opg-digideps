@@ -34,7 +34,7 @@
         path('report_overview', {'reportId': reportActive.id})
         : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
         <div class="card-actions">
-            <a href="{{ link }}" class="button">{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
         </div>
     </div>
 {% else %}

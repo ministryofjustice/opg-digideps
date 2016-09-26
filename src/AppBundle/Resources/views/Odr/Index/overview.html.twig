@@ -20,7 +20,7 @@
         {% if odrStatus.isReadyToSubmit %}
             <div id="header-report-submit" class="hero">
                 <h2 class="heading">{{ 'odrReady' | trans }}</h2>
-                <div class="message"><a class="button-grey submit-link" href="{{ path('odr_review') }}">{{ 'signAndSubmit' | trans() }}</a></div>
+                <div class="message"><a class="button-grey submit-link behat-link-odr-submit" href="{{ path('odr_review') }}">{{ 'signAndSubmit' | trans() }}</a></div>
             </div>
         {% endif %}
 
