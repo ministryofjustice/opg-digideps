@@ -19,7 +19,7 @@ trait EmailTrait
     /**
      * @Given emails are sent from ":area" area
      */
-    public function givenEmaislAreSentFrom($area)
+    public function givenEmailsAreSentFrom($area)
     {
         $this->visitBehatLink('email-reset');
 
