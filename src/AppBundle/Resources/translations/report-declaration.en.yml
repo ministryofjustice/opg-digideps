@@ -26,7 +26,7 @@ agreedBehalfDeputy:
   more_deputies_behalf: "There is more than one deputy, and I'm signing on everyone's behalf"
   more_deputies_not_behalf: "There is more than one deputy, but I'm not signing on everyone's behalf"
 agreedBehalfDeputyExplanation:
-  label: "Tell us why." 
+  label: "Tell us why."
 save:
   label: "Submit report"
 status: Status
@@ -35,3 +35,5 @@ deputyName: Deputy name
 deputyAgreed: Deputy agreed
 partlyAgreed: Not agreed by all deputies
 partAgreedReason: Reason
+
+unableToEditAfterSubmission: You will be unable to edit this report after you submit
