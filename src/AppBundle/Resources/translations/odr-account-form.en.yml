@@ -1,0 +1,34 @@
+page:
+  htmlTitle: "Opening deputyship report - bank accounts | GOV.UK"
+  pageSectionTitle: "Finances: %client%'s accounts"
+
+accountForm:
+  bank:
+    label: Bank or building society name
+  meta:
+    label: Additional information (optional)
+  accountNumber:
+    label: Last 4 digits of the account number
+    preInput: "* * * *"
+  sortCode:
+    legend: Branch sort code
+  accountType:
+    label: Account type
+  balanceOnCourtOrderDate:
+    label: How much was in the account on %cotDate%?
+
+save:
+  label: Save
+cancel:
+  label: Cancel
+delete:
+  label: Delete
+  message: Are you sure that you want to delete this account?
+
+banks:
+  add:
+    pageSectionTitle: Add account
+    pageSectionDescription: Give us details about %client%’s account
+  edit:
+    pageSectionTitle: Edit account
+    pageSectionDescription: Give us details about %client%’s account

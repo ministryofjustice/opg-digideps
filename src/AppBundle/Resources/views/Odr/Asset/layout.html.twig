@@ -1,0 +1,16 @@
+{# Layout to extend for decisions subpages (decisioon CRUD + mental capacity so far) #}
+{% extends 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans({}, translationDomain) }}{% endblock %}
+{% block bodyClasses %}{{ parent() }} js-odr-assets-input{% endblock %}
+{% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain) }}{% endblock %}
+
+{% block backLinktop %}{% endblock %}
+
+{% block leftcontent %}
+    {% set route = app.request.attributes.get('_route') %}
+    <nav id="account-sub-nav">
+        <a href="{{ path('odr-assets', {'odrId': odr.id}) }}" class="{{ ('asset' in route) ? 'active':'' }} behat-link-assets-tab">{{ 'navLink' | trans({}, 'odr-assets') }}</a>
+        <a href="{{ path('odr-debts', {'odrId': odr.id}) }}" class="{{ ('debt' in route) ? 'active':'' }} behat-link-debts-tab">{{ 'navLink' | trans({}, 'odr-debts') }}</a>
+         </nav>
+{% endblock %}

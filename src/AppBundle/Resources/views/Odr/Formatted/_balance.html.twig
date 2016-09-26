@@ -1,0 +1,84 @@
+<div class="section" id="balance">
+
+    <h2 class="section-heading">
+        <span class="section-number">Section 9</span>
+        Balancing the accounts
+    </h2>
+
+    <ul class="balancing">
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Sum of opening balances for the reporting period
+                <span class="sub-label">(as shown on bank statement)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-opening-balance amount">{{ odr.accountsOpeningBalanceTotal | money_format }}</span>
+            </div>
+            <div class="box-right">Box 1</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Total money paid in from all the accounts
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-total-in amount">{{ odr.moneyInTotal | money_format }}</span>
+            </div>
+            <div class="box-right">Box 2</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Sub-total 1
+                <span class="sub-label">(box 1 plus box 2)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-sub-total amount">{{ ( odr.accountsOpeningBalanceTotal + odr.moneyInTotal) | money_format }}</span>
+            </div>
+            <div class="box-right">Box 3</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Total money paid out from all the accounts
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-total-out amount">{{ odr.moneyOutTotal | money_format }}</span>
+            </div>
+            <div class="box-right">Box 4</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Sub-total 2
+                <span class="sub-label">(box 3 minus box 4)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-sub-total-2 amount">{{ odr.calculatedBalance | money_format }}</span>
+            </div>
+            <div class="box-right">Box 5</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Closing balance for reporting period
+                <span class="sub-label">(as shown on bank statement)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">&pound;</span>
+                <span class="balancing-closing-balance amount">{{ odr.accountsClosingBalanceTotal | money_format }}</span>
+            </div>
+            <div class="box-right">Box 6</div>
+        </li>
+    </ul>
+
+    <fieldset class="">
+        <div class="form-group form-group-vertical">
+            <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you've
+                rounded up or down any amounts or you have used a different date on the bank statement).
+            </div>
+            <div class="value textarea">{% if not odr.getTotalsMatch %}{{ odr.balanceMismatchExplanation }}{% endif %}</div>
+        </div>
+    </fieldset>
+
+</div>

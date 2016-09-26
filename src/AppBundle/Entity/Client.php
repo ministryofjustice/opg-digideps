@@ -48,6 +48,13 @@ class Client
     private $reports;
 
     /**
+     * @var Odr\Odr
+     *
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     */
+    private $odr;
+
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
      * 
@@ -228,6 +235,24 @@ class Client
     public function setReports($reports)
     {
         $this->reports = $reports;
+
+        return $this;
+    }
+
+    /**
+     * @return Odr\Odr
+     */
+    public function getOdr()
+    {
+        return $this->odr;
+    }
+
+    /**
+     * @param Odr\Odr $odr
+     */
+    public function setOdr($odr)
+    {
+        $this->odr = $odr;
 
         return $this;
     }

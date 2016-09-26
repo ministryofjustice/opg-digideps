@@ -1,0 +1,22 @@
+page:
+  htmlTitle: "Opening deputyship report - Expenses | GOV.UK"
+  pageSectionTitle: "Finances: Your expenses"
+  pageDescription: |
+    Check the '%linkStart%How to be a deputy (SD3)%linkEnd%' leaflet for guidance on what you can and can't claim for.
+
+nav:
+  expenses: Deputy expenses
+
+form:
+  paidForAnything:
+    label: Did you pay for anything for %client% before you were given your court order ?
+  expenses:
+    explanation:
+      label: Describe the expense
+    amount:
+      label: Amount
+    addAnother:
+      label: Add another expense
+
+  save:
+      label: Save

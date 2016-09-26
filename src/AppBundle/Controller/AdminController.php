@@ -89,7 +89,7 @@ class AdminController extends AbstractController
 
         try {
             $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report']);
-        } catch (\Exception $e)  {
+        } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
             ]);
@@ -106,11 +106,11 @@ class AdminController extends AbstractController
 
             if ($form->isValid()) {
                 $updateUser = $form->getData();
-                $this->getRestClient()->put('user/'.$user->getId(), $updateUser);
+                $this->getRestClient()->put('user/'.$user->getId(), $updateUser, ['admin_add_user']);
 
                 $request->getSession()->getFlashBag()->add('action', 'action.message');
 
-                $this->redirect($this->generateUrl('admin_editUser', ['what'=>'user_id', 'filter' => $user->getId()]));
+                $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
             }
         }
 
@@ -148,7 +148,7 @@ class AdminController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User' , ['user', 'role', 'client', 'report']);
+        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
 
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 

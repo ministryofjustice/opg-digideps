@@ -1,0 +1,17 @@
+page:
+  htmlTitle: "Opening deputyship report - Property | GOV.UK"
+  pageSectionTitle: "Actions you plan to take: property"
+  pageDescription: Changes to %client%'s property(ies)
+
+nav: Property
+
+form:
+  actionPropertyMaintenance:
+      label: Are there plans for maintenance or alterations to any property owned by %client% ?
+  actionPropertySellingRent:
+      label: Are you planning to sell or rent any property owned by %client% ?
+  actionPropertyBuy:
+      label: Are you planning to buy a property for %client% ?
+
+  save:
+      label: Save

@@ -1,0 +1,36 @@
+{% if disableedit is defined and disableedit == true %}
+    {% set allowEdit = false %}
+{% else %}
+    {% set allowEdit = true %}
+{% endif %}
+
+{% set linkToSubSection = linkToSubSection | default('javascript:alert(\'not implemented\')') %}
+
+<div id="{{ subSection }}-sub-section" class="descriptive-list-item">
+    {% if allowEdit == true %}
+    <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
+        {% endif %}
+
+        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
+        <span class="status {{ state }}">{{ ('labels.' ~ state) | trans({}, 'overview') }}</span>
+
+    <span  class="{{ editLinkClass | default('edit-link') }}
+            {% if allowEdit == false %}disabled{% endif %}"
+           {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %}
+    >
+        {% if state == 'not-started' %}
+            {{ (subSection ~ '.start') | trans({}, translationDomain) }}
+        {% else %}
+            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        {% endif %}
+    </span>
+
+        {%  if description is defined and description %}
+            <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+        {%  endif %}
+
+
+        {% if allowEdit == true %}
+    </a>
+    {% endif %}
+</div>

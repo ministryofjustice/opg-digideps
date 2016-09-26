@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% block pageTitle %}ODR{% endblock %}
+
+{% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
+    {% if odr.submitted == false %}
+        {% if odrStatus.isReadyToSubmit %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit Opening deputyship report',
+            'nextLink': path("odr_declaration"),
+            'nextLabel': 'Sign and submit',
+            'position': position,
+            'nextAdditionalClass': nextAdditionalClass,
+            } %}
+        {% else  %}
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLabel': 'Edit Opening deputyship report',
+            'position': position,
+            } %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% block pageContent %}
+
+    {% if odr.submitted == true %}
+        <nav id="back-bar">
+            <a id="overview-button" href="{{ path('homepage') }}">Return to Homepage</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
+    {% endif %}
+    
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>Review Opening deputyship report</h1>
+    </div>
+    {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
+    <a name="pageBody"></a>
+    
+    <div id="page-body">
+        <a class="pdflink" href="{{ path('odr_pdf') }}">Download as PDF</a>
+        {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
+    </div>
+
+    <div id="body-footer-nav">
+        {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'bottom') }}
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('.pdflink'));
+        });
+    </script>
+{% endblock %}

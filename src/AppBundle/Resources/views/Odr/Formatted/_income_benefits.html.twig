@@ -1,0 +1,96 @@
+<div class="section" id="income-benefits-section">
+    <h2 class="section-heading">Income and Finance</h2>
+
+    <h3 class="fieldset-outer-title">State benefits</h3>
+    <div class="box contact-item no-contact">
+        {% for st in odr.stateBenefits %}
+            <div class=" right-label labelvalue">
+                <div class="checkbox">{{ st.present ? 'X' : '&nbsp;' }}</div>
+                <label>{{ ('stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
+                {% if st.hasMoreDetails and st.moreDetails %}
+                    <div class=" textarea">
+                        {{ st.moreDetails | nl2br }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="dont-break">
+        <h3 class="fieldset-outer-title">Pensions and other income</h3>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Does the client receive a state pension?
+                </div>
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.receiveStatePension == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if  odr.receiveStatePension == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Does the client receive any other regular income?
+                </div>
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.receiveOtherIncome == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if  odr.receiveOtherIncome == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+            {% if odr.receiveOtherIncome == 'yes' %}
+            <div class="form-group form-group-vertical">
+                <div class="question">More details</div>
+                <div class="value textarea">{{ odr.receiveOtherIncomeDetails | nl2br }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dont-break">
+        <h3 class="fieldset-outer-title">Damages</h3>
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">Are you expecting any compensation awards or damages to be paid to the client
+                </div>
+
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox" data-checkbox="">{% if odr.expectCompensationDamages == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="">{% if  odr.expectCompensationDamages == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+            {% if odr.expectCompensationDamages == 'yes' %}
+                <div class="form-group form-group-vertical">
+                    <div class="question">More details</div>
+                    <div class="value textarea">{{ odr.expectCompensationDamages | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h3 class="fieldset-outer-title">One off</h3>
+    <div class="box contact-item no-contact">
+        {% for st in odr.oneOff %}
+            <div class=" right-label labelvalue">
+                <div class="checkbox">{{ st.present ? 'X' : '&nbsp;' }}</div>
+                <label>{{ ('oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+

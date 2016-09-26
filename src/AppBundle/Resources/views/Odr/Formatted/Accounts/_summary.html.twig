@@ -1,0 +1,36 @@
+<div id="account-summary" class="summary-container">
+    <h3 class="heading">Summary</h3>
+    <div>
+        <h4 class="heading">Accounts summary</h4>
+        <table class="money">
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th class="grey" scope="col">Balance on court order date ({{ odr.client.courtDate | date('j M Y') }})</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for account in odr.bankAccounts %}
+                <tr>
+                    <td>
+                        <div class="account-name">
+                            {{ account.bank }} {{ account.accountTypeText }}
+                        </div>
+                        <div class="account-number">****{{ account.accountNumber }}
+                            {% if account.requiresBankNameAndSortCode and account.sortCode %}
+                               , {{ account.sortCode | split('', 2) | join('-') }}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="numeric grey">&pound;{{ account.balanceOnCourtOrderDate | money_format }}</td>
+                </tr>
+            {% endfor %}
+                <tr class="totals">
+                    <td>&nbsp;</td>
+                    <td class="numeric reverse">&pound;{{ odr.balanceOnCourtOrderDateTotal | money_format}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

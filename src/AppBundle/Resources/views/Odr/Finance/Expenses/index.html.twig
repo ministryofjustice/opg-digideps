@@ -1,0 +1,145 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+    {% set translationDomain = "odr-expenses" %}
+    {% trans_default_domain translationDomain %}
+
+    {% set clientTrans = {'%client%': odr.client.firstname} %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans(clientTrans) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Finance:left-nav.html.twig' %}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        {{ form_errors_list(form) }}
+
+        <h3 class="heading-small">
+            {{ 'page.pageDescription' | trans({
+                '%client%': odr.client.firstname,
+                '%linkStart%': '<a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf" target="_blank">',
+                '%linkEnd%': '</a>',
+            }, translationDomain )  | raw }}</h3>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
+
+        <div class="">
+            {{ form_checkbox_group(form.paidForAnything, 'form.paidForAnything', {
+                'fieldSetClass' : 'inline paid-anything',
+                'legendClass' : 'form-label',
+                'legendText' : 'form.paidForAnything.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+            <div id="expenses-wrapper" class="form-section">
+                <div class="expense-rows" >
+                    {% do form.expenses.setRendered %}
+                    {% for singleExpenseForm in form.expenses %}
+                        <fieldset class="expense-row">
+                            {{ form_input(singleExpenseForm.explanation, 'form.expenses.explanation', {
+                                'formGroupClass': 'explanation',
+                            }) }}
+                            {{ form_input(singleExpenseForm.amount, 'form.expenses.amount', {
+                                'inputClass': 'expense-amount',
+                                'formGroupClass': 'amount',
+                            }) }}
+                           <div class="remove">
+                             <a href="#" class="expense_remove_link">Remove</a>
+                           </div>
+                        </fieldset>
+                    {% endfor %}
+
+                    <fieldset class="expense-row expense-row-template hidden">
+                        {{ form_input(form.expenses.vars.prototype.explanation, 'form.expenses.explanation', {
+                            'formGroupClass': 'explanation',
+                        }) }}
+                        {{ form_input(form.expenses.vars.prototype.amount, 'form.expenses.amount', {
+                            'inputClass': 'expense-amount',
+                            'formGroupClass': 'amount',
+                        }) }}
+                        <div class="remove">
+                            <a href="#" class="expense_remove_link">Remove</a>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group hidden" id="js-expense-controls">
+                    <a href="#" id="expenses-add-link" class="add-expense-link">
+                        {{ 'form.expenses.addAnother.label' |trans }}
+                    </a>
+                    <div class="total">Total: £<span class="expense_total">0</span></div>
+                </div>
+                <div class="form-group" id="nojs-expense-controls">
+                    <p class="form-hint">After having saved, a new empty row will appear.</p>
+                </div>
+             </div>
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script>
+            $(document).ready(function () {
+                new opg.RadioHide({
+                    radio: '.paid-anything input[type=radio]',
+                    content: '#expenses-wrapper',
+                    showWithValue: 'yes'
+                });
+
+                // total calculator
+                var totalCalculator = new opg.TotalCalculator({
+                    'wrapperSelector': '#expenses-wrapper',
+                    'amountSelector':  '.expense-amount',
+                    'totalSelector' : '.expense_total',
+                });
+
+                // add link: add rows and update totals
+                $('#expenses-add-link').click(function(e) {
+                    e.preventDefault();
+                    var expenseRowTemplate = $('.expense-rows .expense-row-template')
+                            .clone()
+                            .removeClass('expense-row-template')
+                            .removeClass('hidden');
+
+                    var index = $('.expense-rows .expense-row').length;
+                    expenseRowTemplate.find('input').each(function(i, e) {
+                        var el = $(e);
+                        el.attr('name',  el.attr('name').replace(/__name__/g, index)  );
+                        el.attr('id',  el.attr('id').replace(/__name__/g, index)  );
+                    });
+
+                    $('#expenses-wrapper .expense-rows').append(expenseRowTemplate);
+                });
+
+                // remove link
+                $('#expenses-wrapper').on('click', '.expense_remove_link', function(e) {
+                    e.preventDefault();
+                    $(e.target).parents('.expense-row').remove();
+                    totalCalculator.updateTotal();
+                });
+
+                $('#js-expense-controls').removeClass('hidden');
+                $('#nojs-expense-controls').addClass('hidden');
+
+
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'nextLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'nextLabel': 'Income and benefits',
+        } %}
+    {% endblock %}
+
+
+{% endembed %}

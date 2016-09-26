@@ -1,0 +1,35 @@
+{% embed 'AppBundle:Odr/Finance/IncomeBenefits:_category.html.twig' with {
+categoryKey: categoryKey,
+} %}
+    {% set translationDomain = "odr-income-benefits" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block detail %}
+        <p class="page-section-description">
+            {{ (categoryKey ~ '.description') | trans(clientTrans, translationDomain)}}
+        </p>
+        <p class="form-hint ">
+            {{ (categoryKey ~ '.hint') | trans(clientTrans, translationDomain)}}
+        </p>
+
+        {% for sbSingleForm in formElements %}
+            <fieldset class="">
+                {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
+                {{ form_checkbox(sbSingleForm.present, '', {
+                    'inputClass' : '',
+                    'labelText': labelText,
+                    'formGroupClass': 'form-group-compound'
+                }) }}
+                {{ form_row(sbSingleForm.typeId) }} {#hidden#}
+                {% if sbSingleForm.moreDetails is defined %}
+                    {{ form_input(sbSingleForm.moreDetails, '', {
+                        'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(clientTrans),
+                        'formGroupClass': '',
+                        'inputClass': 'expanding '
+                    }) }}
+                {% endif %}
+
+            </fieldset>
+        {% endfor %}
+    {% endblock %}
+{% endembed %}

@@ -46,10 +46,6 @@ form {
                 height: 7em;
             }
 
-            .form-control__select {
-                width: 100%;
-            }
-
             .form-control__postcode {
                 width: 22%;
             }
@@ -82,10 +78,6 @@ form {
                     width: 63%;
                 }
 
-                .form-control__select {
-                    width: 100%;
-                }
-
                 .form-control__postcode,
                 .form-control__number {
                     width: 25%;
@@ -115,7 +107,7 @@ form {
 }
 
 .form-group {
-    float: none; // Only flat left if within a form container.
+    float: none;// Only flat left if within a form container.
     form & {
         float: left;
     }
@@ -194,20 +186,6 @@ form {
         }
     }
 
-}
-
-.form-control__select-container {
-    width: auto;
-    display: inline-block;
-    background-color: $panel-colour;
-    border: 1px solid $black;
-}
-
-.form-control__select {
-    border: 0;
-    width: 100%;
-    -webkit-appearance: menulist;
-    opacity: .6;
 }
 
 .form-control.form-control__postcode {

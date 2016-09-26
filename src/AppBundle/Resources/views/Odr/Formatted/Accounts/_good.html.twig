@@ -1,0 +1,17 @@
+<div id="balance">
+
+    <div class="hero">
+        <h2 class="heading">Accounts balanced</h2>
+    </div>
+
+    <div class="hero half-width first">
+        <div class="message">Total money in and money out:</div>
+        <div class="total">&pound;{{ odr.calculatedBalance | money_format }}</div>
+    </div>
+    
+    <div class="hero half-width">
+        <div class="message">Total balance from all bank accounts:</div>
+        <div class="total">&pound;{{ odr.accountsClosingBalanceTotal | money_format }}</div>
+    </div>
+    
+</div>

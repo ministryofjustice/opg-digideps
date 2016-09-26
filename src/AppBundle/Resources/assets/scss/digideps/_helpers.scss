@@ -1,12 +1,79 @@
+// =======================================================
+// HELPERS
+
+// scss-lint:disable SpaceBeforeBrace, SpaceAfterPropertyColon
+// Special formatting here
+
+// Negating spacing
+// Remove margins
+.flush          { margin:       0 !important; }
+.flush--top     { margin-top:   0 !important; }
+.flush--right   { margin-right: 0 !important; }
+.flush--bottom  { margin-bottom:0 !important; }
+.flush--left    { margin-left:  0 !important; }
+.flush--ends    { margin-top:   0 !important; margin-bottom: 0 !important; }
+.flush--sides   { margin-right: 0 !important; margin-left:  0 !important; }
+
+// Remove paddings
+.hard           { padding:       0 !important; }
+.hard--top      { padding-top:   0 !important; }
+.hard--right    { padding-right: 0 !important; }
+.hard--bottom   { padding-bottom:0 !important; }
+.hard--left     { padding-left:  0 !important; }
+.hard--ends     { padding-top:   0 !important; padding-bottom:0 !important; }
+.hard--sides    { padding-right: 0 !important; padding-left:  0 !important; }
+
+// Adding spacing
+// Add margins
+.push           { margin:       $gutter !important; }
+.push--top      { margin-top:   $gutter !important; }
+.push--right    { margin-right: $gutter !important; }
+.push--bottom   { margin-bottom:$gutter !important; }
+.push--left     { margin-left:  $gutter !important; }
+.push--ends     { margin-top:   $gutter !important; margin-bottom:$gutter !important; }
+.push--sides    { margin-right: $gutter !important; margin-left:  $gutter !important; }
+
+.push-half          { margin:       $gutter-half !important; }
+.push-half--top     { margin-top:   $gutter-half !important; }
+.push-half--right   { margin-right: $gutter-half !important; }
+.push-half--bottom  { margin-bottom:$gutter-half !important; }
+.push-half--left    { margin-left:  $gutter-half !important; }
+.push-half--ends    { margin-top:   $gutter-half !important; margin-bottom:$gutter-half !important; }
+.push-half--sides   { margin-right: $gutter-half !important; margin-left:  $gutter-half !important; }
+
+// Add padding
+.soft           { padding:       $gutter !important; }
+.soft--top      { padding-top:   $gutter !important; }
+.soft--right    { padding-right: $gutter !important; }
+.soft--bottom   { padding-bottom:$gutter !important; }
+.soft--left     { padding-left:  $gutter !important; }
+.soft--ends     { padding-top:   $gutter !important; padding-bottom:$gutter !important; }
+.soft--sides    { padding-right: $gutter !important; padding-left:  $gutter !important; }
+
+.soft-half          { padding:       $gutter-half !important; }
+.soft-half--top     { padding-top:   $gutter-half !important; }
+.soft-half--right   { padding-right: $gutter-half !important; }
+.soft-half--bottom  { padding-bottom:$gutter-half !important; }
+.soft-half--left    { padding-left:  $gutter-half !important; }
+.soft-half--ends    { padding-top:   $gutter-half !important; padding-bottom:$gutter-half !important; }
+.soft-half--sides   { padding-right: $gutter-half !important; padding-left:  $gutter-half !important; }
+
+// Text alignment
+.text--left     { text-align: left   !important; }
+.text--center   { text-align: center !important; }
+.text--right    { text-align: right  !important; }
+
+// scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
+
 #content .visuallyhidden {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
 }
 
 .no-wrap {
@@ -15,4 +82,12 @@
 
 .proper-case {
     text-transform: capitalize;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
 }

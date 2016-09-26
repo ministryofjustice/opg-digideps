@@ -1,0 +1,13 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% extends 'AppBundle:Odr/Asset:layout.html.twig' %}
+
+{% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'previousLabel': 'Income and benefits',
+        'nextLink': path("odr-debts" , {'odrId': odr.id }),
+        'nextLabel': 'Debts'
+        } %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% set translationDomain = "odr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+
+<div class="section {{ sectionClass | default('') }}" id="section{{ categoryKey }}">
+    <div class="summary" id="">
+        <div class="title">{{ (categoryKey ~ '.label')  | trans(clientTrans) | raw }}</div>
+        <div class="sub-total">{{ odr.incomeBenefitsSectionStatus(categoryKey) }}</div>
+    </div>
+    <div class="detail no-border-top">
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' }}) }}
+        {{ form_errors_list(form) }}
+        {% block detail %}
+        {% endblock %}
+        <div class="save-bar button-bar">
+            {{ form_submit(form.save, categoryKey ~ '.save', { 'buttonClass': '' }) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>

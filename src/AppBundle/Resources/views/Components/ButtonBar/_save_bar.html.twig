@@ -8,9 +8,18 @@
     {% endif %}
 {% endif %}
 
-{% if showCancel is not defined %}
-    {% set showCancel = true %}
+{% set showCancel = showCancel is defined  ? showCancel : true %}
+
+{% if deleteLink is not defined and showDelete %}
+    {# default value is deprecated. Always specify one when using this template  #}
+    {% set deleteLink = path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })%}
 {% endif %}
+
+{% if  listLink is not defined and showCancel %}
+    {# default value is deprecated. Always specify one when using this template #}
+    {% set listLink = path(section ~ 's', {'reportId': report.id})%}
+{% endif %}
+
 
 <div id="save-{{ section }}" class="save-section">
     
@@ -36,7 +45,7 @@
             linkButtonLabel: 'delete.label',
             linkClass: 'delete-button button-warning behat-link-delete',
             linkId: 'delete-button',
-            linkHref: path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })
+            linkHref: deleteLink
             } %}
         {% endif %}
     </div>
@@ -49,7 +58,7 @@
                 linkButtonLabel: 'delete.label',
                 linkClass: 'button-warning behat-link-delete-confirm',
                 linkId: 'delete-confirm-button',
-                linkHref: path('delete_' ~ section, {'reportId': report.id, 'id': form.vars.value.id })
+                linkHref: deleteLink
             } %}
             
             {% if showCancel == true %}
@@ -57,7 +66,7 @@
                     transDomain: translationDomain,
                     linkButtonLabel: 'cancel.label',
                     linkClass: 'button-link cancel-link',
-                    linkHref: path(section ~ 's', {'reportId': report.id})
+                    linkHref: listLink
                 } %}
             {% endif %}
         </div>

@@ -1,0 +1,19 @@
+<div id="closing-summary">
+    <h3>Totals summarised</h3>
+    <div class="transaction">
+        <div class="label">Opening balance</div>
+        <div class="value">&pound;{{ odr.accountsOpeningBalanceTotal | money_format }}</div>
+    </div>
+    <div class="transaction">
+        <div class="label">Total for all money in:</div>
+        <div class="value">&pound;{{ odr.moneyInTotal | money_format}}</div>
+    </div>
+    <div class="transaction">
+        <div class="label">Total money out:</div>
+        <div class="value">&pound;{{ odr.moneyOutTotal | money_format}}</div>
+    </div>
+    <div class="transaction total">
+        <div class="label">Balance after income and expenditure:</div>
+        <div class="value">&pound;{{ odr.calculatedBalance | money_format}}</div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{% if transfers | length > 0 %}
+    <div id="money-transfers" class="section">
+        <h2 class="section-heading sub-title" id="working-out-title">Money transfers</h2>
+
+        <table id="money-transfers-table">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Transferred from</th>
+                    <th>Transferred to</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transfer in transfers %}
+                    <tr>
+                        <td>Transfer {{ loop.index }}</td>
+                        <td>
+                            {% set currentBank = transfer.accountFrom %}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
+                        </td>
+                        <td>
+                             {% set currentBank = transfer.accountTo %}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
+                        </td>
+                        <td>&pound;{{ transfer.amount | money_format }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

@@ -12,15 +12,25 @@ trait UserTrait
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
      * 
-     * @When I create a new :role user :firstname :lastname with email :email
+     * @When I create a new :odrType :role user :firstname :lastname with email :email
      */
-    public function iCreateTheUserWithEmail($role, $firstname, $lastname, $email)
+    public function iCreateTheUserWithEmail($odrType, $role, $firstname, $lastname, $email)
     {
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
         $this->fillField('admin_lastname', $lastname);
         $roleId = self::$roleNameToRoleId[strtolower($role)];
         $this->fillField('admin_roleId', $roleId);
+        switch($odrType) {
+            case 'ODR-enabled':
+                $this->checkOption('admin_odrEnabled');
+                break;
+            case 'ODR-disabled':
+                $this->uncheckOption('admin_odrEnabled');
+                break;
+            default:
+                throw new \RuntimeException("$odrType not a valid ODR type");
+        }
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);

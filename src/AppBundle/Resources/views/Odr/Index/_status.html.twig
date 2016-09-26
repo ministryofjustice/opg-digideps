@@ -1,0 +1,36 @@
+{% set translationDomain = "odr-overview" %}
+{% trans_default_domain translationDomain %}
+
+{% set showReviewButton = showReviewButton is defined ? showReviewButton : true %}
+
+<div id="report-status" class="{{ odrStatus.status }}">
+
+    {% if showReviewButton %}
+        <a class="button-grey heading heading-large" href="{{ path('odr_review') }}">Review report</a>
+    {% endif %}
+    <div class="labelsvalues">
+        {% if odr.getSubmitted %}
+            <div class="labelvalue">
+                <div class="label">Submitted:</div>
+                <div class="value">{{ odr.submitDate | date("j F Y") }}</div>
+            </div>
+            <p class="flush--bottom">
+                <a href="{{ path('odr_pdf') }}">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
+            </p>
+            <p>
+                <a href="{{ path('odr_review') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
+            </p>
+        {% else %}
+            <div class="labelvalue">
+                <div class="label">Progress:</div>
+                <div class="value">{{ odrStatus.remainingSections | length }} {{ 'sectionsRemaining' | trans() }}</div>
+            </div>
+
+            <div class="labelvalue">
+                <div class="label">Status:</div>
+                <div class="value">{{ ('status.' ~ odrStatus.status) | trans() }}</div>
+            </div>
+        {% endif %}
+    </div>
+
+</div>

@@ -78,16 +78,14 @@ class Redirector
     /**
      * @return string
      */
-    public function getFirstPageAfterLogin($enabledLastAccessedUrl = true)
+    public function getFirstPageAfterLogin()
     {
         $user = $this->getLoggedUser();
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return $this->getAdminHomepage();
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
-            return $this->getLayDeputyHomepage($user, $enabledLastAccessedUrl);
-        } elseif ($this->security->isGranted('ROLE_AD')) {
-            return $this->getAdHomepage($user, $enabledLastAccessedUrl);
+            return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
         }
@@ -102,35 +100,36 @@ class Redirector
     }
 
     /**
-     * @return string URL
-     */
-    private function getAdHomepage()
-    {
-        return $this->router->generate('ad_homepage');
-    }
-
-    /**
      * @return array [route, options]
      */
-    private function getLayDeputyHomepage($user, $enabledLastAccessedUrl)
+    private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
     {
         if (!$user->hasDetails()) {
             return $this->router->generate('user_details');
         }
 
+        // redirect to add_client if client is not added
         $clientId = $user->getIdOfClientWithDetails();
         if (!$clientId) {
             return $this->router->generate('client_add');
         }
 
-        if (0 == $user->getNumberOfReports()) {
-            return $this->router->generate('report_create', ['clientId' => $clientId]);
-        }
-
+        // last accessed url
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
         }
 
+        // ODR enabled => redirect to ODR index
+        if ($user->isOdrEnabled()) {
+            return $this->router->generate('odr_index');
+        }
+
+        // redirect to create report if report is not created
+        if (0 == $user->getNumberOfReports()) {
+            return $this->router->generate('report_create', ['clientId' => $clientId]);
+        }
+
+        // if there is an active report, redirect to its overview page
         if ($activeReportId = $user->getActiveReportId()) {
             return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
         }

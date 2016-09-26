@@ -1,0 +1,83 @@
+<div class="section" id="deputy-client-information-section">
+    <h2 class="section-heading">Deputy and client information</h2>
+    <div class="box" id="case-number">
+        <dl class="labelvalue inline">
+            <dt class="label">Case number</dt>
+            <dd class="value" id="caseNumber">{{ client.getCaseNumber }}</dd>
+        </dl>
+    </div>
+
+    {#<div class="box" id="report-dates">#}
+        {#<h3>Reporting period</h3>#}
+
+        {#<dl class="labelvalue half-width first" id="report-start-date">#}
+            {#<dt class="label">Start date</dt>#}
+            {#<dd class="value">{{ odr.startDate | date("d / m / Y") }}</dd>#}
+        {#</dl>#}
+
+        {#<dl class="labelvalue half-width">#}
+            {#<dt class="label">End date</dt>#}
+            {#<dd class="value">{{ odr.endDate | date("d / m / Y") }}</dd>#}
+        {#</dl>#}
+
+    {#</div>#}
+
+    <div class="box">
+        <div id="deputy-details-subsection" class="half-width first">
+            <h3>Deputy details</h3>
+
+            <dl class="labelvalue">
+
+                <dt class="label">First names</dt>
+                <dd class="value">{{deputy.firstname}}</dd>
+
+                <dt class="label">Last name</dt>
+                <dd class="value">{{deputy.lastname}}</dd>
+
+                <dt class="label">Address</dt>
+                <dd class="value textarea address-value">
+                    {{ deputy.address1 }}<br/>
+                    {{ deputy.address2 }}<br/>
+                    {{ deputy.address3 }}<br/>
+                    {{ deputy.addressPostcode }}
+                </dd>
+
+                <dt class="label">Telephone number</dt>
+                <dd class="value">
+                    {{deputy.phoneMain}}
+                    {% if (deputy.phoneAlternative is defined) %}
+                        <br />{{deputy.phoneAlternative}}
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>
+        <div id="client-details-subsection" class="half-width">
+            <h3>Client details</h3>
+
+            <dl class="labelvalue">
+                <dt class="label">First names</dt>
+                <dd class="value">{{ client.firstname }}</dd>
+
+                <dt class="label">Last name</dt>
+                <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
+
+                <dt class="label">Address</dt>
+                <dd class="value textarea address-value">
+                    {{ client.address }}<br/>
+                    {{ client.address2 }}<br/>
+                    {{ client.county }}<br/>
+                    {{ client.postcode }}
+                </dd>
+
+                <dt class="label">Telephone number</dt>
+                <dd class="value">{{client.phone}}</dd>
+            </dl>
+        </div>
+        <dl class="labelvalue cleared">
+            <dt class="label">Email (optional)</dt>
+            <dd class="value">{{deputy.email}}</dd>
+        </dl>
+    </div>
+
+
+</div>

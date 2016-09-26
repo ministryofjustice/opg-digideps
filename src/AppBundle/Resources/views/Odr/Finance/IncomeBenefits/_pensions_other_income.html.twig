@@ -1,0 +1,36 @@
+{% embed 'AppBundle:Odr/Finance/IncomeBenefits:_category.html.twig' with {
+categoryKey: 'pensionsOtherIncome',
+} %}
+    {% set translationDomain = "odr-income-benefits" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block detail %}
+        {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label',
+            'legendText' : 'pensionsOtherIncome.receiveStatePension.label' | trans(clientTrans, translationDomain),
+            'hintText' : 'pensionsOtherIncome.receiveStatePension.hint' | trans(clientTrans, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
+            'fieldSetClass' : 'inline receive-other-income',
+            'legendClass' : 'form-label',
+            'legendText' : 'pensionsOtherIncome.receiveOtherIncome.label' | trans(clientTrans, translationDomain),
+            'hintText' : 'pensionsOtherIncome.receiveOtherIncome.hint' | trans(clientTrans, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="receive-other-income-details" class="hidden-detail">
+            {{ form_input(form.receiveOtherIncomeDetails, 'pensionsOtherIncome.receiveOtherIncomeDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+    {% endblock %}
+{% endembed %}

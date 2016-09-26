@@ -1,0 +1,48 @@
+page:
+  title: Your reports
+  htmlTitle: Opening deputyship report - Your reports | GOV.UK
+
+
+odr:
+  notStarted:
+    status: NOT STARTED
+    instructions: You only need to complete this report once.
+    buttonLabel: Start now
+  notFinished:
+    status: NOT FINISHED
+    instructions: You only need to complete this report once
+    buttonLabel: Continue
+  readyToSubmit:
+    status: READY TO SUBMIT
+    instructions: You only need to complete this report once.
+    buttonLabel: Continue
+
+report:
+  due: "Due: "
+  notAvailable:
+    status: NOT AVAILABLE
+    instructions: This report will become available once the opening deputyship report is complete.
+  notStarted:
+    status: NOT STARTED
+    buttonLabel: Start now
+  notFinished:
+    status: NOT FINISHED
+    buttonLabel: Continue
+
+history:
+  title: History of report submission (%number%)
+  header:
+    reportType: Report type
+    reportingPeriod: Reporting period
+    submissionDate: Submission date
+  reports:
+    title: Property and finance report
+    download: Download
+    view: View
+  odr:
+   title: Opening deputyship report
+   reportingPeriod: Start of deputyship
+   download: Download
+   view: View
+
+

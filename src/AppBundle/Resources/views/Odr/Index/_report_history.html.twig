@@ -1,0 +1,58 @@
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="heading-medium">{{ 'history.title' | trans({'%number%': 1 + reports | length}) }}</h2>
+
+<table class="behat-region-reports-history">
+    <thead>
+        <tr>
+            <th>{{ 'history.header.reportType' | trans }}</th>
+            <th>{{ 'history.header.reportingPeriod' | trans }}</th>
+            <th>{{ 'history.header.submissionDate' | trans }}</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for report in reports %}
+        <tr>
+            <td>
+                <a href="{{ path('report_review', {reportId: report.id}) }}">
+                    {{ 'history.reports.title' | trans }}
+                </a>
+            </td>
+            <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+            <td>{{ report.submitDate | date("j M Y") }}</td>
+            <td>
+                <a href="{{ path('report_pdf', {reportId: report.id}) }}">
+                    {{ 'history.reports.download' | trans }}
+                </a>
+            </td>
+            <td class="text--right hard--right">
+                <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary">
+                    {{ 'history.reports.view' | trans }}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td>
+            <a href="{{ path('odr_review') }}">
+                {{ 'history.odr.title' | trans }}
+            </a>
+        </td>
+        <td>{{ 'history.odr.reportingPeriod' | trans }}</td>
+        <td>{{ odr.submitDate | date("j M Y") }}</td>
+        <td>
+            <a href="{{ path('odr_pdf') }}">
+                {{ 'history.odr.download' | trans }}
+            </a>
+        </td>
+        <td class="text--right hard--right">
+            <a href="{{ path('odr_review') }}" class="button-secondary">
+                {{ 'history.odr.view' | trans }}
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -43,6 +43,7 @@ class AddUserType extends AbstractType
                     'empty_value' => $this->roleIdEmptyValue,
                     'disabled' => $this->roleIdDisabled,
                   ))
+                ->add('odrEnabled', 'checkbox')
                  ->add('save', 'submit');
     }
 

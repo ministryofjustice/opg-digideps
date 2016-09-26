@@ -2,8 +2,9 @@
 
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
-    minifyCss = require('gulp-minify-css'),
+    uglifycss = require('gulp-uglifycss'),
     importCss = require('gulp-import-css'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
@@ -37,7 +38,19 @@ gulp.task('clean', () => {
 
 // Build all style related files for all browsers and copy
 // related images and font files along with them
-gulp.task('sass', [
+// DEBUG MODE: No minification
+gulp.task('sass.debug', [
+    'sass.debug.application',
+    'sass.application-ie7',
+    'sass.application-ie8',
+    'sass.application-print',
+    'sass.images',
+    'sass.fonts']);
+
+// Build all style related files for all browsers and copy
+// related images and font files along with them
+// PRODUCTION: Lint and minification
+gulp.task('sass.prod', [
     'lint.sass',
     'sass.application',
     'sass.application-ie7',
@@ -46,13 +59,26 @@ gulp.task('sass', [
     'sass.images',
     'sass.fonts']);
 
+// Compile the sass for the main styles for the site into a .css file
+// Sourcemaps created as well
+gulp.task('sass.debug.application', () => {
+
+    return gulp.src(config.sassSrc + '/application.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass(config.sass))
+        .pipe(importCss())
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
+
+});
+
 // Compile the sass for the main styles for the site into a minified .css file
 gulp.task('sass.application', () => {
 
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -63,7 +89,7 @@ gulp.task('sass.application-ie7', () => {
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -84,7 +110,7 @@ gulp.task('sass.application-print', () => {
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(importCss())
-        .pipe(minifyCss())
+        .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -152,7 +178,7 @@ gulp.task('vendor', function () {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// Check that the sass complies with simple rules for it's creation to encourage good code.
+// Check that the sass complies with simple rules for its creation to encourage good code.
 gulp.task('lint.sass', function() {
     return gulp.src('src/AppBundle/Resources/assets/scss/**/*.scss')
         .pipe(scsslint());
@@ -165,11 +191,12 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default'));
 });
 // Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
-    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
+gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
+    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
+    gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
     gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
 });
 
 // Build all assets in production ready mode.
-gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor']);
+gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'images', 'js.prod', 'js.ie', 'vendor']);

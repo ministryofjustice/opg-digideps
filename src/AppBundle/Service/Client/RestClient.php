@@ -190,9 +190,9 @@ class RestClient
     }
 
     /**
-     * @param string              $endpoint e.g. /user
-     * @param string|object|array $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array               $jmsGroups  deserialise_groups
+     * @param string              $endpoint  e.g. /user
+     * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array               $jmsGroups deserialise_groups
      * 
      * @return string response body
      */
@@ -207,9 +207,9 @@ class RestClient
     }
 
     /**
-     * @param string        $endpoint e.g. /user
-     * @param string|object $mixed    HTTP body. json_encoded string or entity (that will JMS-serialised)
-     * @param array         $jmsGroups  deserialise_groups
+     * @param string        $endpoint  e.g. /user
+     * @param string|object $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param array         $jmsGroups deserialise_groups
      * 
      * @return string response body
      */
@@ -288,7 +288,6 @@ class RestClient
             throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
-
     /**
      * Performs HTTP client call
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
@@ -418,6 +417,7 @@ class RestClient
      */
     private function toJson($mixed, array $options = [])
     {
+        $ret = $mixed;
         if (is_object($mixed)) {
             $context = \JMS\Serializer\SerializationContext::create()
                 ->setSerializeNull(true);
@@ -426,12 +426,16 @@ class RestClient
                 $context->setGroups($options['deserialise_groups']);
             }
 
-            return $this->serialiser->serialize($mixed, 'json', $context);
+            if (!empty($options['deserialise_groups'])) {
+                $context->setGroups($options['deserialise_groups']);
+            }
+
+            $ret = $this->serialiser->serialize($mixed, 'json', $context);
         } elseif (is_array($mixed)) {
-            return $this->serialiser->serialize($mixed, 'json');
+            $ret = $this->serialiser->serialize($mixed, 'json');
         }
 
-        return $mixed;
+        return $ret;
     }
 
     /**

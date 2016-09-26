@@ -1,0 +1,35 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block pageContent %}
+
+    <nav id="back-bar">
+        <a id="overview-button" href="{{ path('odr_overview') }}">Return to overview</a>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </nav>
+
+
+    <div id="page-section-title-wrapper" class="page-section-title-wrapper">
+        <div id="page-section-title-container" class="page-section-title-container">
+            <h1>{% block title %}{% endblock %}</h1>
+            <span class="info">{% block info %} {% endblock %}</span>
+        </div>
+    </div>
+    
+    <div class="left-nav-container">
+        <div class="row">
+            <div class="left-nav">
+                {% block leftcontent %}{% endblock %}
+            </div>
+            <div class="right-content">
+                {% block maincontent %}{% endblock %}
+                <div id="body-footer-nav">{% block pageBodyFooterNav %}{% endblock %}</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            new GOVUK.StickyHeader('#page-section-title-wrapper');
+        });
+    </script>
+{% endblock %}

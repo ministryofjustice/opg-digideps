@@ -1,0 +1,58 @@
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="heading-large header">
+    <span class="icon icon-property"></span>
+    <span class="icon icon-finance"></span>
+    Property and finance
+</h2>
+
+{% if odr.submitted %}
+    {#
+    # CLICKABLE REPORT
+    #}
+    {% set status = reportActive ? 'notFinished' : 'notStarted' %}
+    {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
+    <div class="card card-plain">
+        <span class="status status-corner {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        <div class="card-body">
+            <p>
+                {% if reportActive %}
+                    {{ reportActive.startDate | date("jS F Y") }} -
+                    {{ reportActive.endDate | date("jS F Y") }}
+                {% endif %}
+            </p>
+            <p class="text-secondary soft-half--top">
+                {% if reportActive %}
+                    {{ ('report.due') | trans }}
+                    {{ reportActive.getDueDate() | date("jS F Y") }}
+                {% endif %}
+            </p>
+        </div>
+        {% set link = reportActive ?
+        path('report_overview', {'reportId': reportActive.id})
+        : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+        <div class="card-actions">
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+        </div>
+    </div>
+{% else %}
+    {#
+     # REPORT NOT ACTIVE
+     #}
+    {% set status = 'notAvailable' %}
+    <div class="card card-plain disabled">
+        <span class="status status-corner not-available">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+        <div class="card-body soft-half--top">
+            <p>{{ ('report.' ~ status ~ '.instructions') | trans }}</p>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+
+

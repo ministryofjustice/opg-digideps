@@ -1,0 +1,21 @@
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="heading-large header">
+	<span class="icon icon-property"></span>
+	<span class="icon icon-finance"></span>
+	Opening deputyship report
+</h2>
+
+{% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'incomplete' %}
+
+<div class="card card-plain last">
+    <span class="status status-corner {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
+    <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+    <div class="card-body soft-half--top">
+	    <p class="text-secondary">{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans }}</p>
+    </div>
+    <div class="card-actions">
+	    <a href="{{ path('odr_overview') }}" class="button right behat-link-odr-start">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+    </div>
+</div>

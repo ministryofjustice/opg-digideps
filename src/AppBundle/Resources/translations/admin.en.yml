@@ -11,6 +11,8 @@ roleId:
   label: Role
   hint: ''
   defaultOption: Please select ...
+odrEnabled:
+  label: Enable ODR for this user
 submit:
   label: Submit
 cancel:

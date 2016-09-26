@@ -1,0 +1,26 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+
+    {% set translationDomain = "odr-account-form" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Finance:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% set formId = "account_add_form" %}
+    
+    {% block maincontent %}
+        
+        <h3 class="heading-medium-large">{{ ('banks.' ~ type ~ '.pageSectionTitle') | trans }}</h3>
+        <p class="page-section-description">{{ ('banks.' ~ type ~ '.pageSectionDescription') | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+        
+        {% include 'AppBundle:Odr/Finance/BankAccounts:_account_form.html.twig' %}
+        
+    {% endblock %}
+
+{% endembed %}

@@ -1,0 +1,87 @@
+{% embed 'AppBundle:Layouts:odr_left_nav.html.twig' %}
+
+    {% set translationDomain = "odr-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}
+        {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
+    {% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Odr/Finance:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}</h3>
+        <p class="page-section-description">
+          {{ 'banks.pageSectionDescription' | trans({
+            '%client%': odr.client.firstname,
+          }, translationDomain)}}</p>
+
+        {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
+            {% block list %}
+
+                {% if odr.bankAccounts is not empty %}
+                    {% for account in odr.bankAccounts %}
+                        {% include 'AppBundle:Odr/Finance/BankAccounts:bank-list-item.html.twig' with {
+                            account: account,
+                            odr: odr
+                        }%}
+                    {% endfor %}
+                {% else %}
+                    <div>
+                        <span class="icon icon__notification_yellow_small"></span>
+                        <span class="page-section-description left-margin">
+                            {{ 'banks.accountMissingWarning' | trans({}, translationDomain)}}
+                        </span>
+                    </div>
+                {% endif %}
+                <li class="card-item">
+                    <a href="{{ path('odr_upsert_bank_account' , {'odrId': odr.id}) }}" class="card add" id="add-account">Add account</a>
+                    <div class="meta-data"></div>
+                </li>
+            {% endblock %}
+
+        {% endembed %}
+
+        {% if odr.bankAccounts is not empty %}
+
+            <dl class="labelvalue right-inline transaction big-value">
+                <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
+                </dd>
+                <dd class="value">
+                    £ {{ odr.bankAccountsBalanceTotal | money_format }}
+                </dd>
+            </dl>
+
+
+          {% endif %}
+
+
+          <script type="text/javascript">
+              $(document).ready(function() {
+                  $('.help-item').each(function(index,item) {
+                      opg.accordian({
+                          target:item,
+                          open: false
+                      });
+                  });
+              });
+          </script>
+
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("odr-income-benefits" , {'odrId': odr.id }),
+        'previousLabel': 'Income and benefits',
+        'nextLink': path("odr-assets" , {'odrId': odr.id }),
+        'nextLabel': 'Assets and debts'
+        } %}
+    {% endblock %}
+
+
+{% endembed %}

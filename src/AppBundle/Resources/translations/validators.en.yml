@@ -7,16 +7,16 @@ user:
     doesNotMatch: Email does not match
   firstname:
     notBlank: Enter your first name
-    minLength: Your first name must be at least {{ limit }} characters long
-    maxLength: Your first name can't be longer than {{ limit }} characters
+    minLength: Your first name must be at least {{ limit }} letters long
+    maxLength: Your first name can't be longer than {{ limit }} letters
   lastname:
     notBlank: Enter your last name
-    minLength: Your last name must be at least {{ limit }} characters long
-    maxLength: Your last name can't be longer than {{ limit }} characters
+    minLength: Your last name must be at least {{ limit }} letters long
+    maxLength: Your last name can't be longer than {{ limit }} letters
   password:
       notBlank: You can't leave this blank: please enter a password
-      minLength: Your password must have at least {{ limit }} characters
-      maxLength: The password can't be longer than {{ limit }} characters
+      minLength: Your password must have at least {{ limit }} letters
+      maxLength: The password can't be longer than {{ limit }} letters
       noLowerCaseChars: Your password must have at least one lowercase letter
       noUpperCaseChars: Your password must have at least one capital letter
       noNumber: Your password must have at least one number
@@ -24,15 +24,15 @@ user:
       notBlank: You must specify a role for the user
   address1:
     notBlank: Enter your address
-    maxLength: Your address name can't be longer than {{ limit }} characters
+    maxLength: Your address name can't be longer than {{ limit }} letters
   address2:
     notBlank: Enter your address
   address3:
     notBlank: Enter your address
   addressPostcode:
     notBlank: Enter your postcode
-    minLength: The postcode must be at least {{ limit }} characters long
-    maxLength: The postcode can't be longer than {{ limit }} characters
+    minLength: The postcode must be at least {{ limit }} letters long
+    maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   phoneMain:
@@ -40,11 +40,11 @@ user:
 client:
     firstname:
         notBlank: Enter your client's first name
-        minMessage: The first name must be at least {{ limit }} letters
+        minMessage: The first name must be at least {{ limit }} letters long
         maxMessage: The first name can't be longer than {{ limit }} letters
     lastname:
         notBlank: Enter your client's last name
-        minMessage: The last name must be at least {{ limit }} letters
+        minMessage: The last name must be at least {{ limit }} letters long
         maxMessage: The last name can't be longer than {{ limit }} letters
     caseNumber:
         notBlank: Enter your case number
@@ -55,17 +55,17 @@ client:
         notBlank: Enter the date of your court order
     address:
         notBlank: Enter your client's address
-        maxMessage: The address can't be longer than {{ limit }} characters
+        maxMessage: The address can't be longer than {{ limit }} letters
     county:
-        maxMessage: The county can't be longer than {{ limit }} characters
+        maxMessage: The county can't be longer than {{ limit }} letters
     allowedCourtOrderTypes:
         notBlank: |
             Property and finance deputy? Select property and affairs.
             We’re working on a service for people with health and welfare orders, but it’s not available yet.
     postcode:
         notBlank: Enter your client's postcode
-        minMessage: The postcode must be at least {{ limit }} characters
-        maxMessage: The postcode can't be longer than {{ limit }} characters
+        minMessage: The postcode must be at least {{ limit }} letters long
+        maxMessage: The postcode can't be longer than {{ limit }} letters
 report:
     startDate:
         notBlank: Enter the date when your reporting period starts
@@ -75,16 +75,11 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
-#    courtOrderTypeId:
-#        notBlank: You must select either Property and Affairs or Personal Welfare
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
         reviewedAndChecked: Report not reviewed and checked
         readyForSubmission: Report not ready for submission
-#    allagreed:
-#        notBlank: Value is required and can’t be empty
-#        reason: You must tell us if all deputies agree
     agree: If you want to submit your report, you must agree to the declaration
     agreedBehalfDeputy:
         notBlank: You must select one option
@@ -108,12 +103,12 @@ login:
 contact:
     name:
         notBlank: Enter the contact's first and last name
-        minMessage: The name must be at least {{ limit }} letters
+        minMessage: The name must be at least {{ limit }} letters long
         maxMessage: The name can't be longer than {{ limit }} letters
     address:
         maxMessage: The address can't be longer than {{ limit }} letters
     postcode:
-        maxMessage: The postcode can't be longer than {{ limit }} characters
+        maxMessage: The postcode can't be longer than {{ limit }} letters
     relationship:
         notBlank: Enter the contact's relationship to the client
         minMessage: This description is too short
@@ -138,46 +133,46 @@ decision:
         notBlank: Enter a reason here
 account:
     bank:
-        notBlank: Enter the bank or building society name
-        minMessage: The bank or building society name must be at least {{ limit }} characters long
+        notBlank: You need to enter the bank or building society name
+        minMessage: The bank or building society name must be at least {{ limit }} letters long
         maxMessage: The bank or building society name can't be longer than {{ limit }} letters
     accountType:
-          notBlank: Choose a type of account
+          notBlank: You need to choose a type of account
           maxMessage: The account type can't be longer than {{ limit }} letters
     sortCode:
-        notBlank: Enter the sort code
+        notBlank: You need to enter the sort code
         type: The sort code must be in numbers
         length: The sort code must be {{ limit }} numbers long
     accountNumber:
-        notBlank: Enter the last 4 numbers of the account number
+        notBlank: You need to enter the last 4 numbers of the account number
         type: The account number must be in numbers
-        length: Enter the last 4 digits of the account number
+        length: You need to enter the last 4 digits of the account number
     openingBalance:
-        notBlank: You must enter an opening balance
+        notBlank: You need to enter an opening balance
         type: The opening balance must be in numbers
         outOfRange: The opening balance must be less than £10,000,000,000
     closingBalance:
-        notBlank: You must enter a closing balance
+        notBlank: You need to enter a closing balance
         type: Enter a valid closing balance
-        outOfRange: Enter a valid closing balance
+        outOfRange: You need to enter a valid closing balance
     isJointAccount:
-        notBlank: Choose Yes or No
+        notBlank: Please choose yes or no
     moneyInOut:
         amount:
-          notNumeric: Use numbers only to enter the amount
+          notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000
-          missingWhenDetailsFilled: Enter the total amount or remove the details
+          missingWhenDetailsFilled: Please enter the total amount or remove the details
         moreDetails:
-          empty: You must give us more information about this amount
+          empty: Please give us some more information about this amount
 transfer:
     accountFrom:
-        notBlank: You must enter a closing balance
+        notBlank: You need to enter a closing balance
     accountTo:
-        notBlank: You must enter a closing balance
+        notBlank: You need to enter a closing balance
     amount:
-          notBlank: Enter the amount
-          notNumeric: Enter a valid amount
+          notBlank: You need to enter the amount
+          notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000
 asset:
@@ -206,7 +201,7 @@ asset:
             maxMessage: The county can't be longer than 75 letters
         postcode:
             notBlank: Enter the postcode
-            maxMessage: The postcode can't be longer than {{ limit }} characters
+            maxMessage: The postcode can't be longer than {{ limit }} letters
         occupants:
             notBlank: Tell us who lives at the property
             maxMessage: Your answer can't be longer than 500 letters
@@ -228,12 +223,9 @@ asset:
         isRentedOut:
             notBlank: You must say whether the property is rented out
         rentIncomeMonth:
-            notBlank: Enter the monthly rental income
-            type: Enter an amount in numbers
+            type: Please use numbers only to enter the amount
             notBlank: Enter monthly income from renting this property
-            notBlank: Enter the value of the rental income
-            type: Enter the rental income in numbers
-            outOfRange: The value must be less than £10,000,000,000
+            outOfRange: The value must be less than £1,000,000,000
         rentAgreementEndDate:
             notBlank: Enter a date for the end of the rental agreement
         value:
@@ -242,7 +234,7 @@ asset:
             outOfRange: The value of the property must be less than £100,000,000,000
 debt:
     amount:
-      notNumeric: Enter a valid value (e.g. 1,040.55)
+      notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive
       maxMessage: The amount must be less than £100,000,000,000
     moreDetails:
@@ -289,15 +281,16 @@ safeguarding:
         invalidMessage: Enter the date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
         notBlank: Choose Yes or No
+
 action:
     doYouExpectFinancialDecisions:
-        notBlank: Choose Yes or No
+        notBlank: Choose yes or no
     doYouExpectFinancialDecisionsDetails:
-        notBlank: Tell us about any decisions or actions you may have to take
+        notBlank: Please tell us more about any decisions or actions you may have to take
     doYouHaveConcerns:
-        notBlank: Choose Yes or No
+        notBlank: Choose yes or no
     doYouHaveConcernsDetails:
-        notBlank: Tell us about any concerns you have
+        notBlank: Please tell us more about any concerns you may have
 mentalCapacity:
     hasCapacityChanged:
         notBlank: Select one option
@@ -307,3 +300,157 @@ mentalCapacity:
 feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option
+
+odr:
+  agree: In order to submit your opening deputy report, you must agree to the statement above
+  agreedBehalfDeputy:
+      notBlank: Select one option
+  agreedBehalfDeputyExplanation:
+      notBlank: Give us more information about why you are not signing on everyone's behalf
+  submissionExceptions:
+      due: Opening deputy report not due
+      submitted: Opening deputy report not submitted
+      reviewedAndChecked: Opening deputy report not reviewed and checked
+      readyForSubmission: Opening deputy report not ready for submission
+  visitsCare:
+      planMoveNewResidence:
+          notBlank: Choose yes or no
+      planMoveNewResidenceDetails:
+          notBlank: Give us more information about any plans to move your client to a new residence
+      doYouLiveWithClient:
+          notBlank: Choose yes or no
+      howOftenDoYouContactClient:
+          notBlank: Give us more information about how often you are in touch with your client and how you make sure their needs are met
+      doesClientReceivePaidCare:
+          notBlank: Choose yes or no
+      howIsCareFunded:
+          notBlank: Select one of the options below
+      whoIsDoingTheCaring:
+          notBlank: Give us more information about who is caring for your client
+      whenWasCarePlanLastReviewed:
+          notBlank: Enter the last review date of your client's care plan
+          invalidMessage: Enter a valid date in this format: MM/YYYY
+      doesClientHaveACarePlan:
+          notBlank: Choose yes or no
+  account:
+      bank:
+          notBlank: Enter the bank or building society name
+          minMessage: The bank or building society name must be at least {{ limit }} letters long
+          maxMessage: The bank or building society name can't be longer than {{ limit }} letters
+      accountType:
+            notBlank: Choose a type of account
+            maxMessage: The account type can't be longer than {{ limit }} letters
+      sortCode:
+          notBlank: Enter the sort code
+          type: The sort code must be in numbers
+          length: The sort code must be {{ limit }} numbers long
+      accountNumber:
+          notBlank: Enter the last 4 digits of the account number
+          type: The account number must be in numbers
+          length: Enter the last 4 digits of the account number
+      balanceOnCourtOrderDate:
+          notBlank: Enter the account balance on the date shown on your court order
+          type: The account balance must be in numbers
+          outOfRange: The balance must be less than £10,000,000,000
+  debt:
+      notBlank: Choose yes or no
+      mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
+      amount:
+        notNumeric: Use numbers only to enter the amount
+        minMessage: The amount must be more than £{{ limit }}
+        maxMessage: The amount must be less than £100,000,000,000
+      moreDetails:
+        notEmpty: You must give us more information about this amount
+      atLeastOne: You must add at least one debt
+  asset:
+      title:
+          notBlank: Choose the type of asset from the list
+          maxMessage: The asset name can't be longer than {{ limit }} letters
+      value:
+          notBlank: Enter the value of this asset
+          type: The value of the asset must be in numbers
+          outOfRange: The amount must be less than £10,000,000,000
+      description:
+          notBlank: Enter a description of this asset
+          length: This description is too short, please give us more information
+      date:
+          notBlank: Enter the date the asset was valued
+          date: Enter a valid date in this format: DD/MM/YYYY
+      no_assets:
+          notBlank: Tell us if your client has no assets to add
+      property:
+          address:
+              notBlank: Give us the address of your client's property
+              maxMessage: The address can't be longer than 200 letters
+          address2:
+              maxMessage: The address can't be longer than 200 letters
+          county:
+              maxMessage: The county can't be longer than 75 letters
+          postcode:
+              notBlank: Enter the postcode of your client's property
+              maxMessage: The postcode can't be longer than {{ limit }} characters
+          occupants:
+              notBlank: Give us more information about who lives at the property
+              maxMessage: Your answer can't be longer than 500 letters
+          owned:
+              notBlank: Select one of the options below
+          ownedPercentage:
+              notBlank: You must tell us what your client's share of the property is
+              type: Enter a number between 1 and 99 for the property share
+          isSubjectToEquityRelease:
+              notBlank: Choose yes or no
+          hasMortgage:
+              notBlank: Choose yes or no
+          mortgageOutstandingAmount:
+              notBlank: Tell us how much is left to pay on the mortgage
+              type: Enter the outstanding mortgage amount in numbers
+              outOfRange: The amount must be less than £100,000,000,000
+          hasCharges:
+              notBlank: Choose yes or no
+          isRentedOut:
+              notBlank: Choose yes or no
+          rentIncomeMonth:
+              type: Please use numbers only to enter the amount
+              notBlank: Enter monthly income from renting this property
+              outOfRange: The value must be less than £10,000,000,000
+          rentAgreementEndDate:
+              notBlank: Enter a date for the end of the rental agreement
+          value:
+              notBlank: Give us an estimate of the value of your client's property
+              type: Enter the value of the property in numbers
+              outOfRange: The value of the property must be less than £100,000,000,000
+  incomeBenefit:
+      receiveStatePension:
+          notBlank: Choose yes or no
+      receiveOtherIncome:
+          notBlank: Choose yes or no
+      receiveOtherIncomeDetails:
+          notBlank: Give us more information about any other income received
+      expectCompensationDamages:
+          notBlank: Choose yes or no
+      expectCompensationDamagesDetails:
+          notBlank: Give us more information about damages or compensation you're expecting
+      present:
+          notBlank: Please tick this box as more information are given
+      moreDetails:
+          notBlank: Please give us some more information
+  expenses:
+      paidForAnything:
+         notBlank: Choose yes or no
+      singleExpense:
+         notNumeric: Enter the amount of the expense in numbers
+  action:
+    actionGiveGiftsToClient:
+      notBlank: Choose yes or no
+    actionGiveGiftsToClientDetails:
+      notBlank: Give us more information about any gifts you plan to make on behalf of your client
+    actionMoreInfo:
+      notBlank: Choose yes or no
+    actionMoreInfoDetails:
+      notBlank: Tell us more about any questions or concerns you may have about your deputyship
+    actionPropertyMaintenance:
+      notBlank: Choose yes or no
+    actionPropertySellingRent:
+      notBlank: Choose yes or no
+    actionPropertyBuy:
+      notBlank: Choose yes or no

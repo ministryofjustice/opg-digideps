@@ -1,0 +1,27 @@
+{% embed 'AppBundle:Odr/Finance/IncomeBenefits:_category.html.twig' with {
+categoryKey: 'damages',
+} %}
+    {% set translationDomain = "odr-income-benefits" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block detail %}
+        <legend class="hidden">expectCompensationDamages</legend>
+        {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
+            'fieldSetClass' : 'inline expect-compensation-damages',
+            'legendClass' : 'form-label',
+            'legendText' : 'damages.expectCompensationDamages.label' | trans(clientTrans, translationDomain),
+            'hintText' : 'damages.expectCompensationDamages.hint' | trans(clientTrans, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        <div id="expect-compensation-damages-details" class="hidden-detail">
+            {{ form_input(form.expectCompensationDamagesDetails, 'damages.expectCompensationDamagesDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+    {% endblock %}
+{% endembed %}

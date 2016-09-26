@@ -87,7 +87,7 @@ abstract class Asset
      *
      * @param string $title
      *
-     * @return Asset
+     * @return static
      */
     public function setTitle($title)
     {
@@ -106,9 +106,16 @@ abstract class Asset
         return $this->title;
     }
 
+    /**
+     * @param $value
+     *
+     * @return static
+     */
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
     }
 
     public function getValue()
@@ -116,6 +123,11 @@ abstract class Asset
         return $this->value;
     }
 
+    /**
+     * @param $valuationDate
+     *
+     * @return static
+     */
     public function setValuationDate($valuationDate)
     {
         $this->valuationDate = $valuationDate;

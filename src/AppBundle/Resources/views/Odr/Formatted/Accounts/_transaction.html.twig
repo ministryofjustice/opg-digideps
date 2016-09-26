@@ -1,0 +1,12 @@
+{% set translationDomain = "report-transactions" %}
+{% trans_default_domain translationDomain %}
+
+<li class="transaction {% if transaction.amountsTotal == 0 %}{{ transaction.amountsTotal }} disable{% endif %}">
+    <div class="label">{{ ('form.entries.' ~ transaction.id ~ '.label') | trans }}</div>
+    <div class="value">&pound;{{ transaction.amountsTotal | money_format }}</div>
+    {% if transaction.moreDetails %}
+        <div class="description">
+            {{ transaction.moreDetails | nl2br }}
+        </div>
+    {% endif %}
+</li>

@@ -220,6 +220,14 @@ class User implements AdvancedUserInterface
     private $lastLoggedIn;
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"admin_add_user"})
+     *
+     * @var bool
+     */
+    private $odrEnabled;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -681,4 +689,22 @@ class User implements AdvancedUserInterface
 
         return false;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isOdrEnabled()
+    {
+        return $this->odrEnabled;
+    }
+
+    /**
+     * @param boolean $odrEnabled
+     */
+    public function setOdrEnabled($odrEnabled)
+    {
+        $this->odrEnabled = $odrEnabled;
+    }
+
+
 }

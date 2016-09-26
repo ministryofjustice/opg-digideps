@@ -1,0 +1,9 @@
+{% extends 'AppBundle:Odr/Asset:list-items/_template.html.twig' %}
+
+{% block firstColumn %}
+    Asset:
+{% endblock %}
+
+{% block secondColumn %}
+    {{  asset.description }} &nbsp; | &nbsp; £{{ asset.value | money_format }}
+{% endblock %}

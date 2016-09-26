@@ -1,0 +1,30 @@
+{% set translationDomain = "odr-accounts" %}
+{% trans_default_domain translationDomain %}
+
+{% embed "AppBundle:Components/Listing:_card_item.html.twig" with {
+    additionalClass: 'behat-region-account-' ~ account.accountNumber
+} %}
+    {% block card %}
+        <div class="account card-title">
+              {{ account.bank }}  {{ account.accountTypeText }}
+        </div>
+        <dl class="labelvalue">
+            <dt class="label">{{ 'banks.accountNumber' | trans({}, translationDomain) }}:</dt>
+            <dd class="value">****{{ account.accountNumber }}</dd>
+           {% if account.requiresBankNameAndSortCode %}
+                <dt class="label">{{ 'banks.sortCode' | trans({}, translationDomain) }}:</dt>
+                <dd class="value">{{ account.sortCode }}</dd>
+            {% endif %}
+        </dl>
+    {% endblock %}
+    {% block meta %}
+        <dl class="labelvalue">
+            <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ odr.client.courtDate ? (odr.client.courtDate | date("j M Y")) : '-' }}:</dt>
+            <dd class="value">£{{ account.balanceOnCourtOrderDate | money_format }}
+            </dd>
+
+        </dl>
+        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('odr_upsert_bank_account' , {'odrId': odr.id, 'id': account.id}) }}">Edit this account</a>
+
+    {% endblock %}
+{% endembed %}

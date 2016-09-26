@@ -1,0 +1,17 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+<div class="descriptive-list-item">
+    <div class="column first">
+        {% block firstColumn %}
+        {% endblock %}
+    </div>
+    <div class="column second">
+        {% block secondColumn %}
+        {% endblock %}
+    </div>
+    <div class="column third" >
+        <a href="{{ url('odr-delete-asset', { 'odrId': odr.id, 'id': asset.id }) }}" class="behat-link-remove-asset-{{ asset.behatIdentifier | behat_namify }}" >Remove</a><br/>
+        <a href="{{ url('odr-asset-edit', { 'odrId': odr.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}" class="behat-link-asset-{{ asset.behatIdentifier | behat_namify }}" >Edit</a>
+    </div>
+</div>

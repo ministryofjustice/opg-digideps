@@ -1,0 +1,5 @@
+<nav id="account-sub-nav">
+    <a href="{{ path('odr-action-gifts' , {'odrId': odr.id}) }}" class="{% if subsection == 'gifts' %}active{% endif %} behat-link-action-gifts">{{ 'nav' | trans({}, "odr-action-gifts") }}</a>
+    <a href="{{ path('odr-action-property' , {'odrId': odr.id}) }}" class="{% if subsection == 'property' %}active{% endif %} behat-link-action-property">{{ 'nav' | trans({}, "odr-action-property") }}</a>
+    <a href="{{ path('odr-action-info' , {'odrId': odr.id}) }}" class="{% if subsection == 'info' %}active{% endif %} behat-link-action-info">{{ 'nav' | trans({}, "odr-action-info") }}</a>
+</nav>

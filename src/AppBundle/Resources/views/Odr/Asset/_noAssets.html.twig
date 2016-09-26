@@ -1,0 +1,22 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+<div class="report-list-separator"></div>
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form  behat-region-no-assets-selected' } }) }}
+
+    <p class="page-section-description ">{{ 'no_assets.description'| trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    {{ form_checkbox(form.noAssetToAdd,'no_assets', { 
+        'labelClass': 'required',
+        'labelText': 'no_assets.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+    }) }}
+
+    {{ form_submit(form.saveNoAsset,'save') }}
+
+{{ form_end(form) }}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        new GOVUK.SelectionButtons(":checkbox");
+    });
+</script>

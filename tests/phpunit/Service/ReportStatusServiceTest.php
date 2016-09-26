@@ -26,7 +26,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getReasonForNoDecisions' => null,
                 'getSafeguarding' => null,
                 'getAction' => null,
-                'getAction' => null,
                 'getMentalCapacity' => null,
                 'hasMoneyIn' => false,
                 'hasMoneyOut' => false,

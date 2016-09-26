@@ -1,0 +1,19 @@
+<div id="working-out">
+    <h2 class="section-heading sub-title" id="working-out-title">Working out</h2>
+    
+    <h3>Money in</h3>
+    {% include 'AppBundle:Odr/Formatted/Accounts:_categories.html.twig' with {
+    'type': 'in',
+    'moneyType': 'moneyIn',
+    'transactions': odr.transactionsIn,
+    'total':  odr.getMoneyInTotal
+    }%}
+    
+    <h3>Money out</h3>
+    {% include 'AppBundle:Odr/Formatted/Accounts:_categories.html.twig' with {
+    'type': 'out',
+    'moneyType': 'moneyOut',
+    'transactions': odr.transactionsOut,
+    'total':  odr.getMoneyOutTotal
+    }%}
+</div>

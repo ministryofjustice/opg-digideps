@@ -1,0 +1,16 @@
+page:
+  htmlTitle: "Opening deputyship report - Further information | GOV.UK"
+  pageSectionTitle: "Actions you plan to take: further information"
+  pageDescription: Further information relating to your deputyship
+
+nav: Further information
+
+form:
+  actionMoreInfo:
+      label: Is there anything else you'd like to tell us ?
+      hint: If you have any questions or concerns about your deputyship, let us know and we'll aim to get in touch.
+  actionMoreInfoDetails:
+      label: Please give us as much detail as possible
+
+  save:
+      label: Save

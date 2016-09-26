@@ -1,0 +1,60 @@
+{% set translationDomain = "odr-account-form" %}
+
+{{ form_errors_list(form) }}
+
+{{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
+
+    {{ form_input(form.accountType, 'accountForm.accountType') }}
+    {{ form_input(form.bank, 'accountForm.bank') }}
+
+    {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
+        'inputClass' : 'account-number'
+    }) }}
+    
+    {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
+        'inputType' : 'Number'
+    }) }}
+
+    {{ form_input(form.balanceOnCourtOrderDate, '', {
+        'labelText': 'accountForm.balanceOnCourtOrderDate.label' | trans({'%cotDate%': odr.client.courtDate | date("j F Y")}, translationDomain),
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'account',
+        deleteLink: form.vars.value.id ? path('odr_delete_bank_account',  {'id':  form.vars.value.id, 'odrId': odr.id}) : null,
+        listLink: path('odr-bank-accounts', {odrId: odr.id}),
+    } %}
+
+    {{ form_end(form) }}
+
+{{ form_end(form) }}
+
+<script>
+    $('input.form-control__number').on('blur', function (event) {
+        GOVUK.formatCurrency(event.target);
+    });
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    
+    // hide sortcode when account type is "cfo" or "postoffice"
+    $('#account_accountType').change(function(event, duration) {
+        var duration = typeof duration !== 'undefined' ? duration : 400;
+        var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
+        if ($(this).val().match(/^(cfo|postoffice)$/)) {
+            bankAndsortCodeBlocks.fadeOut(duration);
+        }else {
+            bankAndsortCodeBlocks.fadeIn(duration);
+        }
+    }).trigger('change', [1]);
+    
+    
+    
+});
+</script>

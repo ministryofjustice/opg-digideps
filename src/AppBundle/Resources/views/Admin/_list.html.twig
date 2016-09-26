@@ -51,6 +51,7 @@
                {% endif %}
         </th>
         <th scope="col">Role</th>
+        <th scope="col">ODR Enabled</th>
         <th scope="col">
             {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'registrationDate') %}
                       <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder })}}#users-list-title">Registration date</a>
@@ -97,6 +98,7 @@
         <td>{{ user.lastname }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role.name }} {% if app.user.id == user.id %} (currenty logged){% endif %}</td>
+        <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">{{ user.odrEnabled ? 'yes' : '-' }}</td>
         <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
       </tr>
     {% endfor %}

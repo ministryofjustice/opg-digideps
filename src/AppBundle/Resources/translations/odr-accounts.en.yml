@@ -1,0 +1,32 @@
+page:
+  htmlTitle: "Opening deputyship report - Bank accounts | GOV.UK"
+  pageSectionTitle: "Finances: %client%'s accounts"
+nav:
+  bankAccounts: Accounts
+
+save:
+  label: Save
+cancel:
+  label: Cancel
+
+banks:
+    nextSection: Money in
+    pageSectionTitle: Saved accounts
+    pageSectionDescription: |
+      Add all the %client%’s bank and building society accounts,
+      including savings accounts and ISAs
+    before: Have you filled in an Opening deputyship report for OPG before?
+    beforeDescription: |
+      You may notice the questions have changed. This is because we
+      need to find out more about how deputies make financial decisions. We’ve made these changes to the paper
+      forms as well.
+    balanceOn: Balance on
+    sortCode: Sort code
+    accountNumber: Account number
+    totalBalance: Total balance from all accounts
+    balanceUnknown: Unknown
+    accountMissingWarning: You must add at least 1 bank account
+    balanceMissingWarning: Balance on %date% is missing
+    balanceMissingWarningBottom: |
+        You will be able to see this total when you have added the balance
+        on the %date% for all %client%'s accounts

@@ -30,9 +30,9 @@ class DeputyProvider implements UserProviderInterface
 
     /**
      * Login passing params to RestClient::login().
-     * 
+     *
      * @param array $credentials
-     * 
+     *
      * @return User
      */
     public function login(array $credentials)
@@ -51,13 +51,13 @@ class DeputyProvider implements UserProviderInterface
                 throw $e;
             }
 
-            throw new UsernameNotFoundException("We can't log you in at this time.", $e->getCode());
+            throw new UsernameNotFoundException("We can't sign you in at this time.", $e->getCode());
         }
     }
 
     /**
      * Finds user by id.
-     * 
+     *
      * @param int $id
      */
     public function loadUserByUsername($id)
@@ -70,7 +70,7 @@ class DeputyProvider implements UserProviderInterface
 
     /**
      * @codeCoverageIgnore
-     * 
+     *
      * @param UserInterface $user
      *
      * @return \AppBundle\Entity\User

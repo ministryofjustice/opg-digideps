@@ -1,0 +1,42 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set translationDomain = "odr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block bodyClasses %}home-odr{% endblock %}
+{% block pageContent %}
+    <header class="page-header">
+        <h2 class="heading-xlarge flush--bottom">{{ 'page.title' | trans }}</h2>
+        <h3 class="heading-medium heading-secondary" >{{ client.firstname }} {{ client.lastname }}</h3>
+    </header>
+
+    <div id="page-body">
+
+        {% if odr.submitted %}
+
+            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+                reportActive: reportActive,
+                odr: odr,
+            } %}
+
+            {% include 'AppBundle:Odr/Index:_report_history.html.twig' with {
+                reports: reportsSubmitted,
+                odr: odr,
+            } %}
+
+        {% else %}
+
+            {% include 'AppBundle:Odr/Index:_odr_row.html.twig' with {
+                reports: reportsSubmitted,
+                odrStatus: odrStatus,
+            } %}
+
+            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+                reportActive: reportActive,
+                odr: odr,
+            } %}
+
+        {% endif %}
+
+    </div>
+{% endblock %}

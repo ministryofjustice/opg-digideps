@@ -1,0 +1,17 @@
+<div class="financial-categories" id="{{ moneyType }}-transactions">
+    {% for categoryId, transactionGroup in odr.groupByCategory(transactions) %}
+        
+        {% include 'AppBundle:Odr/Formatted/Accounts:_category.html.twig' with {
+        'categoryId': categoryId,
+        'transactions': transactionGroup.entries,
+        'total': transactionGroup.amountTotal,
+        'moneyType': moneyType
+        } %}
+
+    {% endfor %}
+    
+    <div class="transaction total">
+        <div class="label">Money {{ type }} total</div>
+        <div class="value">&pound; {{ total | money_format }}</div>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{#<div class="form-section">#}
+    {{ form_input(form.address, 'form.property.address') }}
+
+    {{ form_input(form.address2, 'form.property.address2', {
+        'labelClass': 'hidden'
+    }) }}
+
+    {{ form_input(form.county, 'form.property.county') }}
+
+    {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control__postcode' }) }}
+{#</div>#}
+
+{#<div class="form-section">#}
+    {{ form_input(form.occupants, 'form.property.occupants') }}
+{#</div>#}
+
+{#<div class="form-section">#}
+    {{ form_checkbox_group(form.owned, 'form.property.owned', {
+        'labelParameters': {'%client%': odr.client.firstname},
+        'fieldSetClass' : 'inline owned_radio',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div id="owned_percentage_textarea" class="hidden-detail">
+        {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
+             'inputPrefix' : '%',
+             'inputClass' : 'form-control__number',
+             'labelParameters': {'%client%': odr.client.firstname},
+        }) }}
+    </div>
+{#</div>#}
+
+{#<div class="form-section">        #}
+{{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
+    'fieldSetClass' : 'inline',
+    'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+    ]
+}) }}
+{#</div>#}
+
+{#<div class="form-section">#}
+    {{ form_input(form.value, 'form.property.value', {
+             'inputPrefix' : '£',
+             'inputClass' : 'form-control__number'
+   } ) }}
+{#</div>#}
+
+{#<div class="form-section">#}
+    {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
+        'fieldSetClass' : 'inline has_mortgage_radio',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div id="mortgage_outstanding_amount_textarea" class="hidden-detail">
+        {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        }) }}
+    </div>
+{#</div>#}
+
+{#<div class="form-section">        #}
+    {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
+        'fieldSetClass' : 'inline',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+{#</div>#}
+
+{#<div class="form-section">    #}
+    {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
+        'fieldSetClass' : 'inline is_rented_out_radio',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+
+    <div id="rent_info" class="hidden-detail">
+        {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
+            'showDay': 'false'
+        }) }}
+
+        {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        }) }}
+    </div>
+{#</div>#}
+
+ <script type="text/javascript">
+    $(document).ready(function() {
+        new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+        
+        new opg.RadioHide({
+            radio:'.owned_radio input[type=radio]',
+            content: '#owned_percentage_textarea',
+            hideByDefault: true,
+            showWithValue: 'partly'
+        });
+        
+        new opg.RadioHide({
+            radio:'.has_mortgage_radio input[type=radio]',
+            content: '#mortgage_outstanding_amount_textarea',
+            hideByDefault: true,
+        });
+        
+        new opg.RadioHide({
+            radio:'.is_rented_out_radio input[type=radio]',
+            content: '#rent_info',
+            hideByDefault: true,
+        });
+    });
+</script>
+
+

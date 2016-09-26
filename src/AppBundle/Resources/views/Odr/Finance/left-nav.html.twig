@@ -1,0 +1,5 @@
+<nav id="account-sub-nav">
+    <a href="{{ path('odr-expenses' , {'odrId': odr.id}) }}" class="{% if subsection == 'expenses' %}active{% endif %} behat-link-finance-expenses">{{ 'nav.expenses' | trans({}, "odr-expenses") }}</a>
+    <a href="{{ path('odr-income-benefits' , {'odrId': odr.id}) }}" class="{% if subsection == 'incomeBenefits' %}active{% endif %} behat-link-finance-income-benefits">{{ 'nav.incomeBenefits' | trans({}, "odr-income-benefits") }}</a>
+    <a href="{{ path('odr-bank-accounts' , {'odrId': odr.id}) }}" class="{% if subsection == 'banks' %}active{% endif %} behat-link-finance-banks">{{ 'nav.bankAccounts' | trans({}, "odr-accounts") }}</a>
+</nav>

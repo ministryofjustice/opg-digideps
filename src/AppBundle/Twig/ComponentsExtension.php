@@ -178,9 +178,12 @@ class ComponentsExtension extends \Twig_Extension
     {
         if (in_array($user->getRole()['role'], ['ROLE_ADMIN', 'ROLE_AD'])) {
             $availableStepIds = ['password', 'user_details'];
+        } else if ($user->isOdrEnabled()) {
+            $availableStepIds = ['password', 'user_details', 'client_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details', 'create_report'];
         }
+
         $progressSteps = [];
         $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
         // set classes and labels from translation

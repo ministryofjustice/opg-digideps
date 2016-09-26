@@ -1,0 +1,23 @@
+{% set client = odr.client %}
+{% set isEmailAttachment = true %}
+{% set deputy = app.user %}
+
+<style type="text/css" media="screen, print">
+    {% include 'AppBundle:Css:formatted-report.html.twig' %}
+</style>
+
+<div id="wrapper">
+    <div id="content" class="formatted-report content">
+        <div id="report-header">Office of the Public Guardian</div>
+        <h1>Opening deputyship report</h1>
+        {% include 'AppBundle:Odr/Formatted:_client_information.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_assets.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_debts.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_income_benefits.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_expenses.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_actions.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted/Accounts:_accounts.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_submission_declaration.html.twig' %}
+    </div>
+</div>

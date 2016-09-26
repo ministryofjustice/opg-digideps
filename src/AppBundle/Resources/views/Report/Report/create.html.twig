@@ -5,7 +5,14 @@
 {% block title %}{{ 'createReport.h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {{ progress_bar_registration(app.user, 'create_report') }}
+    {% if app.user.odrEnabled %}
+        <nav id="back-bar">
+            <a id="overview-button" href="{{ path('odr_index') }}">Return to Homepage</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
+    {% else %}
+        {{ progress_bar_registration(app.user, 'create_report') }}
+    {% endif %}
 {% endblock %}
 
 {% block validationSummary %}

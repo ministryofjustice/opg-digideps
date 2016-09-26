@@ -1,0 +1,25 @@
+page:
+  htmlTitle: "Opening deputyship report - Debts | GOV.UK"
+  pageSectionTitle: "Debts"
+  pageSectionDescription: "Don't tell us about amounts left to pay on a mortgage. Go to assets to give us this information."
+  heading: Debts owed by %client%
+
+form:
+  entries:
+    care-fees:
+      label: Care fees (not charged to property)
+    credit-cards:
+      label: Credit cards
+    loans:
+      label: Loans
+    other:
+      label: Other
+      moreInformations: Give us more information about this debt
+    clientHasDebts:
+      label: Does %client% have any debts ?
+      hint: ""
+save:
+  label: Save
+
+navLink: Debts
+

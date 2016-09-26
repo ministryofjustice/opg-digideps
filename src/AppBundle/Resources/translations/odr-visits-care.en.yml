@@ -1,0 +1,45 @@
+page:
+    htmlTitle: "Opening deputyship report - Visits and care | GOV.UK"
+    safeguardInfoSaved: Your changes were saved
+    pageSectionTitle: Visits and care
+    pageSectionDescription: Tell us about %client%'s care and contact with you and other people. We need to know how you check whether %client%'s needs are met. We ask this because OPG has a duty to protect people who don't have the mental capacity to make decisions for themselves.
+    safeguardinfoSaved: Visits and care information has been saved.
+form:
+    contact:
+        subSectionTitle: Contact with %client%
+    save.label: Save
+
+
+everyday: Every day
+once_a_week: At least once a week
+once_a_month: At least once a month
+more_than_twice_a_year: More than twice a year
+once_a_year: Once a year
+less_than_once_a_year: Less than once a year
+client_pays_for_all: They pay for all their own care
+
+
+planMoveNewResidence:
+  label: Are there any plans for %client% to move to a new residence ?
+planMoveNewResidenceDetails:
+  label: Tell us more
+doYouLiveWithClient:
+  label: Do you live with %client%?
+howOftenDoYouContactClient:
+  label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
+doesClientReceivePaidCare:
+  label: Does %client% receive care which is paid for?
+  hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+howIsCareFunded:
+  label: How is the care funded?
+
+client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
+all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
+whoIsDoingTheCaring:
+  label: Who is doing the caring?
+  hint: For example, local authority or private residential care, live-in or visiting care workers, family members
+doesClientHaveACarePlan:
+  label: Does %client% have a care plan?
+whenWasCarePlanLastReviewed:
+    label: When was the care plan last reviewed?
+    hint: (MM/YYYY)

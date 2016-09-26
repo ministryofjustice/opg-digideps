@@ -1,0 +1,26 @@
+// Icons
+// ==========================================================================
+
+// Icon mixin
+@mixin icon($icon-name, $icon-width, $icon-height, $icon-sub-folder:false) {
+
+  width: #{$icon-width}px;
+  height: #{$icon-height}px;
+
+  @if $icon-sub-folder {
+    background-image: url("#{$icon-sub-folder}/#{$icon-name}.png");
+
+    @include device-pixel-ratio() {
+      background-image: url("#{$icon-sub-folder}/#{$icon-name}-2x.png");
+      background-size: 100%;
+    }
+
+  } @else {
+    background-image: url("images/icons/#{$icon-name}.png");
+
+    @include device-pixel-ratio() {
+      background-image: url("#{$icon-name}-2x.png");
+      background-size: 100%;
+    }
+  }
+}

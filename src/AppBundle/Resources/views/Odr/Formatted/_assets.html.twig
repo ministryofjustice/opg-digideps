@@ -1,0 +1,38 @@
+{% set assets = odr.assets %}
+
+{% if assets | length > 0 or odr.noAssetToAdd == true %}
+    <div class="section" id="assets-section">
+        <h2 class="section-heading">Client's assets</h2>
+    
+        {% if odr.assets | length == 0 %}
+            <div class="box contact-item no-contact">
+                <div class="form-group right-label">
+                    <div class="checkbox">X</div>
+                    <label>My client has no assets</label>
+                </div>
+            </div>
+            {% else %}
+            {% set assetsTotalValue = 0 %}
+            <ul class="list" id="assets">
+                {% for type, assets in odr.getAssetsGroupedByTitle %}
+                        <li class="asset-group" data-group="{{ type }}">
+                        {% if type == 'Property' %}
+                            {% include 'AppBundle:Odr/Formatted/Asset:_property.html.twig' %}
+                        {% else %}
+                             {% include 'AppBundle:Odr/Formatted/Asset:_other.html.twig' %}
+                        {% endif%}
+                    </li>
+                {% endfor %}
+        
+                {# total value #}
+                <li class="box total">
+                    <div class="labelvalue inline">
+                        <div class="label">Assets Total Value</div>
+                        <div class="value" id="assetsTotal">&pound;{{ odr.assetsTotalValue | money_format }}</div>
+                    </div>
+                </li>
+            </ul>
+        
+        {% endif %}
+    </div>
+{% endif %}

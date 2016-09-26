@@ -1,0 +1,85 @@
+page:
+  htmlTitle: "Opening deputyship report - Income and benefits | GOV.UK"
+  pageSectionTitle: "Finances: %client%'s income and benefits"
+  pageDescription: |
+    As a deputy, it's important that you review %client%'s finances every year,
+    look after their affairs and explain any decisions you've made.
+    This includes making sure %client% is getting all the benefits they're entitled to.
+nav:
+  incomeBenefits: Income and benefits
+
+stateBenefits:
+  label: State benefits
+  description: Which benefits does %client% receive?
+  hint: Please tick all that apply
+  entries:
+    contributions_based_allowance:
+      label: Contributions based allowance
+    income_support_pension_guarantee_credit:
+      label: Income Support / Pension Guarantee Credit
+    income_related_employment_support_allowance:
+      label: Income-related Employment and Support Allowance
+    income_based_job_seeker_allowance:
+      label: Income-based Job Seeker's Allowance
+    housing_benefit:
+      label: Housing benefit
+    universal_credit:
+      label: Universal Credit
+    severe_disablement_allowance:
+      label: Severe Disablement Allowance
+    disability_living_allowance:
+      label: Disability Living Allowance
+    attendance_allowance:
+      label: Attendance Allowance
+    personal_independence_payment:
+      label: Personal Independence Payment
+    working_child_tax_credits:
+      label: Working and Child tax credits
+    other_benefits:
+      label: Other benefits
+      moreInfo: Please tell us more about these benefits
+  save:
+    label: Save state benefits
+
+pensionsOtherIncome:
+  label: Pensions and other income
+  receiveStatePension:
+    label: Does %client% receive a state pension?
+    hint: " "
+  receiveOtherIncome:
+    label: Does %client% receive any other regular income?
+    hint: For example, private pension, dividends, wages or salary
+  receiveOtherIncomeDetails:
+      label: Tell us more
+  save:
+    label: Save pensions and other income
+
+damages:
+  label: Damages
+  expectCompensationDamages:
+    label: Are you expecting any compensation awards or damages to be paid to %client%?
+    hint: ""
+  expectCompensationDamagesDetails:
+    label: Please tell us more about any damages or compensation awards
+  save:
+      label: Save damages
+
+oneOff:
+  label: One-off
+  description: Which types of one-off payments has %client% received?
+  hint: Please tick all that apply
+  entries:
+    bequest_or_inheritance:
+      label: Bequest or inheritance
+    cash_gift_received:
+      label: Cash gift received
+    refunds:
+      label: Refunds
+    sale_of_an_asset:
+      label: Sale of an asset
+    sale_of_investment:
+      label: Sale of investment
+    sale_of_property:
+      label: Sale of property
+  save:
+    label: Save one-off

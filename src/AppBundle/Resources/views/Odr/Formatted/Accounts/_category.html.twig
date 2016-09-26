@@ -1,0 +1,13 @@
+{% set translationDomain = "odr-transactions" %}
+{% trans_default_domain translationDomain %}
+
+<div class="category">
+    <h3>{{ ('form.categories.' ~ categoryId) | trans({'%client%': client.firstname}, translationDomain) }}</h3>
+    <ul class="transactions">
+        {% for transaction in transactions %}
+            {% include 'AppBundle:Odr/Formatted/Accounts:_transaction.html.twig' with {
+                transaction: transaction
+            } %}
+        {% endfor %}
+    </ul>
+</div>

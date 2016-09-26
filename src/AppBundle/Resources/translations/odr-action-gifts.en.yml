@@ -1,0 +1,19 @@
+page:
+  htmlTitle: "Opening deputyship report - Gifts | GOV.UK"
+  pageSectionTitle: "Actions you plan to take: gifts"
+  pageDescription: |
+    Your court order will say if you can %linkStart%buy gifts or give gifts of money%linkEnd% on
+    behalf of your client, including dontations to charities.
+  pageDescription2: |
+       Gifts must be reasonable - you need to make sure any gifts don't reduce
+       the level of care the person you're deputy for can afford.
+
+nav: Gifts
+
+form:
+  actionGiveGiftsToClient:
+    label: Are you intending to give any gifts on behalf of %client%?
+  actionGiveGiftsToClientDetails:
+    label: Please tell us more about the gifts you intend to make
+  save:
+      label: Save

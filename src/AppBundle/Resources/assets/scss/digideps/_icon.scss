@@ -1,39 +1,30 @@
-span.icon {
+// Icons
+// ==========================================================================
+// Using an extended icon mixin because of file-url issues
 
-  // I'm purposefully forcing icons to be used with span tags, some
-  // implementers like using the i tag, to stand for icon, but we all know
-  // that really that stands for italic which is semantically incorrect.
+.icon__notification {
+    @include icon(icon-notification, 35, 35, 'images/icons');
+}
 
-  // Here's how to use them.
-
-  // 1. Set the container which holds the icon to have a CSS position, possibly :relative.
-  // 2. Insert the SPAN.icon__??? tag and create a new icon block below.
-  // 3. DO NOT SPECIFY ICON POSITIONS IN THIS FILE, PUT THOSE SPECIFICS
-  // IN THE  RELEVANT CSS FILE, e.g. An accordion icon can be used in multiple accordion objects
-  // and the icons location can change so put the positioning CSS in the specific CSS files.
-
-  // Set some defaults
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  display: block;
-  height: 16px;
-  width: 16px;
-  text-indent: -9999em; //In case we have used some text as well */
-
-  &__notification {
-    background-image: url('images/icons/icon-notification.png');
-    background-position: 0 0;
-    width: 35px;
-    height: 35px;
-
-  }
-
-  &__notification_yellow_small {
-    background-image: url('images/icons/icon-notification-yellow-24.png');
-    background-position: 0 0;
-    width: 24px;
-    height: 24px;
+.icon__notification_yellow_small {
+    @include icon(icon-notification-yellow-24, 24, 24, 'images/icons');
     float: left;
     margin: 0 5px;
-  }
+}
+
+.icon-property {
+    @include icon(icon-property, 43, 39, 'images/icons');
+    background-size: contain;
+}
+
+.icon-finance {
+    @include icon(icon-finance, 41, 39, 'images/icons');
+    margin-right: 10px;
+    background-size: contain;
+}
+
+.icon-tick-white {
+    @include icon(icon-tick-white, 40, 33, 'images/icons');
+    margin-right: 10px;
+    background-size: contain;
 }

@@ -4,6 +4,12 @@ default:
     autoload:
         '': %paths.base%/bootstrap
     suites:
+        prechecks:
+            description: Pre checks and init
+            paths:    [ %paths.base%/features/prechecks ]
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+
         deputy:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
@@ -19,6 +25,14 @@ default:
                 tags: "~@javascript"
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
+
+        deputyodr:
+            description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@odr"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
 
         components:
             description: Tests related to textareas

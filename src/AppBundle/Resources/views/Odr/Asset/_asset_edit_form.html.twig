@@ -1,0 +1,28 @@
+{% if form.vars.value.id %}
+    {% set subSectionTitleText = ('page.subSectionTitleEdit' ~ assetToEdit.type) %}
+{% else %}
+    {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+{% endif %}
+
+{{ form_start(editForm, {attr: {novalidate: 'novalidate' } }) }}
+
+    <h3 class="heading-medium">{{ subSectionTitleText | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
+
+    {{ form_input(editForm.value, 'form.newAsset.controls.value', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
+
+    {{ form_input(editForm.description, 'form.newAsset.controls.description') }}
+
+    {{ form_known_date(editForm.valuationDate, 'form.newAsset.controls.valuationDate') }}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'asset',
+        listLink: '#',
+        deleteLink: '#',
+    } %}
+
+
+{{ form_end(editForm) }}

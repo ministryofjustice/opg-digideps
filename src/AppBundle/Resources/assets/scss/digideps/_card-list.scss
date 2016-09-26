@@ -50,8 +50,7 @@
 .card {
     @include border-radius(10px);
     box-sizing: border-box;
-
-    float: left;
+    position: relative;
     background: $light-blue;
     padding: 30px 10px 40px 20px;
     color: $white;
@@ -60,6 +59,14 @@
     .card-title {
         @include core-19();
         margin-bottom: 30px;
+    }
+
+    .card-body {
+        display: inline-block;
+
+        p:last-child {
+            margin-bottom: 0;
+        }
     }
 
     .labelvalue {
@@ -97,6 +104,7 @@
     }
 
     &.add {
+        display: block;
         background: $grey-3 url('images/roundplus.png') center 25px no-repeat;
         background-size: 61px 61px;
         padding: 110px 0 30px 0;
@@ -113,8 +121,30 @@
         background: $grey-1;
     }
 
+    &-plain {
+        @include border-radius(0);
 
+        padding: $gutter-half;
+        border: 1px solid $border-colour;
+        background: $white;
+        color: $black;
 
+        &.last {
+            margin-bottom: $gutter * 2;
+        }
+
+        &.disabled {
+            background-color: $grey-3;
+        }
+    }
+
+    .card-actions {
+        @include media(tablet) {
+            position: absolute;
+            bottom: $gutter-half;
+            right: $gutter-half;
+        }
+    }
 }
 
 

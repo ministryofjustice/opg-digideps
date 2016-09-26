@@ -27,3 +27,20 @@
 b {
     font-weight: bold;
 }
+
+// Subheading
+.heading-secondary {
+    color: $secondary-text-colour;
+}
+
+// Subheading just below a main heading
+.heading-xlarge {
+    + .heading-secondary {
+        margin-top: 10px;
+    }
+}
+
+// Secondary Text
+.text-secondary {
+  color: $secondary-text-colour;
+}

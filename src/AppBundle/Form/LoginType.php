@@ -21,7 +21,7 @@ class LoginType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain' => 'login',
+              'translation_domain' => 'signin',
         ]);
     }
 

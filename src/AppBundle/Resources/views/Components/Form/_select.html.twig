@@ -6,8 +6,6 @@
         <p class="form-hint">{{ hintText }}</p>
     {% endif %}
     {{ form_errors(element) }}
-    <div class="form-control__select-container">
-        {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ ' form-control form-control__select ' ~ inputClass | default('') } }) }}
-    </div>
+    {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') } }) }}
 
 </div>

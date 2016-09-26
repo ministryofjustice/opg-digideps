@@ -1,0 +1,149 @@
+{% embed 'AppBundle:Components/Page:page-odr.html.twig'%}
+
+{% set translationDomain = "odr-visits-care" %}
+{% trans_default_domain translationDomain %}
+
+{% block bodyClasses %}visits-care-page{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+
+{% block pageBody %}
+
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
+        'fieldSetClass' : 'inline plan-move-residence-radio',
+        'legendClass' : 'form-label',
+        'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div id="plan-move-residence-details-textarea">
+        <div class="panel panel-border-narrow">
+            {{ form_input(form.planMoveNewResidenceDetails, 'planMoveNewResidenceDetails', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+    </div>
+
+    {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
+        'fieldSetClass' : 'inline do-you-live-radio',
+        'legendClass' : 'form-label',
+        'legendText' : 'doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div id="visit-questions">
+        <div class="panel panel-border-narrow">
+            {{ form_input(form.howOftenDoYouContactClient, 'howOftenDoYouContactClient', {
+                'labelClass': 'required',
+                'labelParameters': { '%client%': odr.client.firstname },
+                'inputClass': 'expanding'
+            }) }}
+        </div>
+    </div>
+
+    {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
+        'fieldSetClass' : 'inline does-client-receive-care',
+        'legendClass' : 'form-label',
+        'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+
+    <div id="care-questions">
+        <div class="panel panel-border-narrow">
+            {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
+                'fieldSetClass' : 'stacked',
+                'legendClass' : 'form-label',
+                'items': [
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+        </div>
+    </div>
+
+    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+
+    {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
+        'fieldSetClass' : 'inline care-plan',
+        'legendClass' : 'form-label',
+        'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    <div id="care-plan-questions">
+        <div class="panel panel-border-narrow">
+            {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed', {
+                'showDay': 'false'
+            }) }}
+        </div>
+    </div>
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio:'.plan-move-residence-radio input[type=radio]',
+                content: '#plan-move-residence-details-textarea',
+                showWithValue: 'yes'
+            });
+            new opg.RadioHide({
+                radio:'.do-you-live-radio input[type=radio]',
+                content: '#visit-questions',
+                hideOnYes: true
+            });
+            new opg.RadioHide({
+                radio:'.does-client-receive-care input[type=radio]',
+                content: '#care-questions',
+                hideOnYes: false
+            });
+            new opg.RadioHide({
+                radio:'.care-plan input[type=radio]',
+                content: '#care-plan-questions',
+                hideOnYes: false
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block pageBodyFooterNav %}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("odr-debts" , {'odrId': odr.id }),
+    'previousLabel': 'Debts',
+    'nextLink': path("odr-action-gifts", {'odrId': odr.id }),
+    'nextLabel': 'Gifts'
+    } %}
+{% endblock %}
+
+{% endembed %}

@@ -75,6 +75,11 @@ services:
         arguments: [%asset_dropdown%, @translator, "report-assets", "other_assets"]
         tags:
             - { name: form.type, alias: asset_title }
+    app.form.type.odr.assetTitle:
+            class: AppBundle\Form\Odr\Asset\AssetTypeTitle
+            arguments: [%asset_dropdown%, @translator, "odr-assets", "other_assets"]
+            tags:
+                - { name: form.type, alias: odr_asset_title }
     app.form.type.feedback:
         class: AppBundle\Form\FeedbackType
         calls:

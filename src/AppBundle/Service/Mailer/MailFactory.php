@@ -186,6 +186,41 @@ class MailFactory
     }
 
     /**
+     * @param EntityDir\User          $user
+     * @param EntityDir\Report\Report $odr
+     * @param $pdfBinaryContent
+     *
+     * @return ModelDir\Email
+     */
+    public function createOdrEmail(EntityDir\User $user, EntityDir\Odr\Odr $odr, $pdfBinaryContent)
+    {
+        $email = new ModelDir\Email();
+
+        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+
+        $viewParams = [
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+        ];
+
+        $client = $odr->getClient();
+        $attachmentName = sprintf('DigiOdrRep-%s_%s.pdf',
+            $odr->getSubmitDate() ? $odr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $client->getCaseNumber()
+        );
+
+        $email
+            ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
+            ->setFromName($this->translate('odrSubmission.fromName'))
+            ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
+            ->setToName($this->translate('odrSubmission.toName'))
+            ->setSubject($this->translate('odrSubmission.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission.html.twig', $viewParams))
+            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
+
+        return $email;
+    }
+
+    /**
      * @param string $response
      * 
      * @return ModelDir\Email
@@ -209,12 +244,12 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
-     * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report        $newReport
-     *
-     * @return ModelDir\Email
-     */
+ * @param EntityDir\User          $user
+ * @param EntityDir\Report\Report $submittedReport
+ * @param EntityDir\Report        $newReport
+ *
+ * @return ModelDir\Email
+ */
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
@@ -236,6 +271,33 @@ class MailFactory
             ->setSubject($this->translate('reportSubmissionConfirmation.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $viewParams))
             ->setBodyText($this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $viewParams));
+
+        return $email;
+    }
+
+    /**
+     * @param EntityDir\User          $user
+     * @param EntityDir\Odr\Odr       $odr
+     * @param EntityDir\Report        $newReport
+     *
+     * @return ModelDir\Email
+     */
+    public function createOdrSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Odr\Odr $odr)
+    {
+        $email = new ModelDir\Email();
+
+        $viewParams = [
+            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+        ];
+
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromName($this->translate('odrSubmissionConfirmation.fromName'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFirstname())
+            ->setSubject($this->translate('odrSubmissionConfirmation.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission-confirm.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:odr-submission-confirm.text.twig', $viewParams));
 
         return $email;
     }

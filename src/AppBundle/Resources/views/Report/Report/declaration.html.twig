@@ -6,7 +6,7 @@
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} report-declaration js-report-assets-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-    
+
     {% block pageNavigation %}
         {# no navigation bar for declaration #}
     {% endblock %}
@@ -23,7 +23,6 @@
         transOptions: {'%separator%': '<br/><br/>'}
         } %}
 
-
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
@@ -37,16 +36,21 @@
             {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
-        
+
          <div id="agreed-behalf-deputy-explanation-section">
             {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
         </div>
 
-        <nav id="bottom-button-bar">
+        <div id="bottom-button-bar" class="form-group button-bar">
             {{ form_submit(form.save,'save') }}
-        </nav>
-        
+        </div>
+
         {{ form_end(form) }}
+
+        <div class="page-section-warning push--top flush--bottom hard--bottom">
+            <span class="icon icon__notification"></span>
+            <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
+        </div>
 
         <script type="text/javascript">
             $(document).ready(function() {

@@ -1,0 +1,39 @@
+{% embed 'AppBundle:Email:digideps-email-template.html.twig' with {
+turnOnTableBorders: 0,
+outputStyleForInLine: false,
+outputHeaderStyles: true
+} %}
+
+    {% set translationDomain = "email-report-submit-confirm" %}
+    {% trans_default_domain translationDomain %}
+
+
+    {% block emailHTMLHeaderTitle %}
+
+    {% endblock %}
+
+
+    {% block emailHTMLHeader %}{{ parent() }}{% endblock %}
+
+
+    {% block emailHTMLMessage %}
+    <p>Thank you for submitting your Opening deputyship report.</p>
+
+    <p>The Office of the Public Guardian (OPG) are in the process of reviewing your report and we will contact you once this has been done. </p>
+    
+    <p>You can review and download this report. You'll need to sign in and go to Your client to download it as a PDF.</p>
+
+    <p>Sign into the deputy service to start your report:<br/>
+      <a href="{{ homepageUrl }}">{{ homepageUrl }}</a>
+    </p>
+
+<p>Don't worry if you're not ready; we'll remind you when it's time to get started.</p>
+
+        <br/>
+         
+
+    {% endblock %}
+
+    {% block emailHTMLFooter %}{{ parent() }}{% endblock %}
+
+{% endembed %}
