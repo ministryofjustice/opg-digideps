@@ -76,8 +76,6 @@ class OdrFormattedTest extends WebTestCase
         ]);
 
         $this->crawler = new Crawler($this->html);
-
-//        file_put_contents('/app/tests/out.html', $this->html);
     }
 
     private function html($crawler, $expr)
@@ -87,7 +85,7 @@ class OdrFormattedTest extends WebTestCase
 
     public function testLayout()
     {
-        $this->assertEquals('Opening Deputyship Report', $this->html($this->crawler, 'h1'));
+        $this->assertEquals('Opening deputyship report', $this->html($this->crawler, 'h1'));
     }
 
     public function testOdr()
