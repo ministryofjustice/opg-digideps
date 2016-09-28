@@ -17,20 +17,54 @@ outputHeaderStyles: true
 
 
     {% block emailHTMLMessage %}
-    <p>Thank you for submitting your Opening deputyship report.</p>
 
-    <p>The Office of the Public Guardian (OPG) are in the process of reviewing your report and we will contact you once this has been done. </p>
-    
-    <p>You can review and download this report. You'll need to sign in and go to Your client to download it as a PDF.</p>
 
-    <p>Sign into the deputy service to start your report:<br/>
-      <a href="{{ homepageUrl }}">{{ homepageUrl }}</a>
-    </p>
-
-<p>Don't worry if you're not ready; we'll remind you when it's time to get started.</p>
-
+        <p>Dear {{ deputyFirstName }}</p>
         <br/>
-         
+
+        <p>Thank you for submitting your opening deputy report.</p>
+
+        <p>We’re in the process of reviewing your report, and will contact you when this has been done.</p>
+
+        <p>
+            <strong>
+                <a href="{{ pdfLink }}">Download a pdf of your report</a>
+            </strong>
+        </p>
+
+
+        <p>To review and download a copy of the report for your records, sign back into the service</p>
+        <p>
+            <a href="{{ homepageUrl }}">{{ homepageUrl }}</a>
+        </p>
+        <p>Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.</p>
+
+        <p>
+            <strong>What happens next</strong>
+        </p>
+
+        <p>Now that you’ve completed your opening deputy report, you can make use of our
+            annual deputy report service.</p>
+
+        <p> Your annual deputy report falls due on the anniversary of your
+            court order – we’ll send you a reminder nearer the time.</p>
+
+        <p> However, you can use the service year round to keep track
+            of your deputyship decisions and spending.</p>
+
+        <p><a href="{{ homepageUrl }}">Make a start here</a></p>
+
+
+        {#Need help?#}
+
+        {#Call the Office of the Public Guardian on 0300 456 0300 or email us at customerservices@publicguardian.gsi.gov.uk#}
+
+        {#Office of the Public Guardian#}
+
+        {#PO Box 16185, Birmingham B2 2WH#}
+
+        {#This email was automatically generated. Please don't reply to this email address.#}
+
 
     {% endblock %}
 
