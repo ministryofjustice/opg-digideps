@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Report\Report;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -202,5 +203,27 @@ class BehatController extends AbstractController
         }
 
         return new Response($data);
+    }
+
+
+    /**
+     * @Route("/email-viewer/{action}", name="email-viewer")
+     * @Template()
+     */
+    public function emailViewerAction($action)
+    {
+//        $this->securityChecks();
+
+        $emailToView = 'AppBundle:Email:'.$action.'.html.twig';
+
+        return $this->render($emailToView, [
+            'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',
+            'domain' => 'https://complete-deputy-report.service.gov.uk/',
+            'deputyFirstName' => 'Peter White',
+            'pdfLink' => '#',
+            'link' => 'https://complete-deputy-report.service.gov.uk/',
+            'submittedReport' => new Report(),
+            'newReport' => new Report(),
+        ]);
     }
 }
