@@ -24,13 +24,17 @@ class StatsController extends RestController
         //$deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
         // pre-join data to reduce number of queries
         // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
-        $qb = $this->get('em')->createQuery(
-            "SELECT u, c, r, a, role FROM AppBundle\Entity\User u
+        $qb = $this->getEntityManager()->createQuery(
+            "SELECT u, c, role FROM AppBundle\Entity\User u
                 LEFT JOIN u.role role
                 LEFT JOIN u.clients c
-                LEFT JOIN c.reports r
-                LEFT JOIN r.accounts a
-                WHERE role.role = 'ROLE_LAY_DEPUTY'");
+                WHERE role.role = 'ROLE_LAY_DEPUTY' ORDER BY u.id DESC" // 87M
+        );
+
+        if ($maxResults = $request->query->get('limit')) {
+            $qb->setMaxResults($maxResults);
+        }
+
         $users = $qb->getResult();
 
         // alternative without join and lazy-loading
