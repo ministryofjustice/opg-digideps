@@ -29,7 +29,11 @@ class StatsController extends RestController
                 LEFT JOIN u.role role
                 LEFT JOIN u.clients c
                 LEFT JOIN c.reports r
-                WHERE role.role = 'ROLE_LAY_DEPUTY'");
+                WHERE role.role = 'ROLE_LAY_DEPUTY' ORDER BY u.id DESC");
+
+        if ($maxResults = $request->query->get('limit')) {
+            $qb->setMaxResults($maxResults);
+        }
         $users = $qb->getResult();
 
         // alternative without join and lazy-loading
