@@ -31,6 +31,7 @@ class SelfRegisterData
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.email.notBlank")
      * @Assert\Length( max=60, maxMessage="user.email.maxLength" )
+     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false )
      */
     private $email;
 
