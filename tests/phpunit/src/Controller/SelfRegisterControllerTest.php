@@ -33,6 +33,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'lastname' => 'Tolley',
             'email' => 'behat-test@gov.uk',
             'postcode' => 'SW1',
+            'client_firstname' => 'John',
             'client_lastname' => 'Cross-Tolley',
             'case_number' => '12345678',
         ];
@@ -45,6 +46,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Tolley', $selfRegisterData->getLastname());
         $this->assertEquals('behat-test@gov.uk', $selfRegisterData->getEmail());
         $this->assertEquals('SW1', $selfRegisterData->getPostcode());
+        $this->assertEquals('John', $selfRegisterData->getClientFirstname());
         $this->assertEquals('Cross-Tolley', $selfRegisterData->getClientLastname());
         $this->assertEquals('12345678', $selfRegisterData->getCaseNumber());
     }
@@ -93,6 +95,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
                 'email' => 'behat-dontsaveme@uk.gov',
+                'client_firstname' => '',
                 'client_lastname' => '',
                 'case_number' => '12345678',
             ],
@@ -124,6 +127,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'Tolley',
                 'email' => 'gooduser@gov.zzz',
                 'postcode' => 'SW1',
+                'client_firstname' => 'John',
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
@@ -141,6 +145,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         /** @var \AppBundle\Entity\Client $theClient */
         $theClient = $user->getClients()->first();
 
+        $this->assertEquals('John', $theClient->getFirstname());
         $this->assertEquals('Cross-Tolley', $theClient->getLastname());
         $this->assertEquals('12345678', $theClient->getCaseNumber());
     }
@@ -161,6 +166,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'test',
                 'email' => 'gooduser2@gov.zzz',
                 'postcode' => 'SW2',
+                'client_firstname' => 'Cf',
                 'client_lastname' => 'Cl',
                 'case_number' => '12345600',
             ],
@@ -189,6 +195,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'Tolley',
                 'email' => 'gooduser1@gov.zzz',
                 'postcode' => 'SW1',
+                'client_firstname' => 'Jonh',
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678', // already taken !
             ],
