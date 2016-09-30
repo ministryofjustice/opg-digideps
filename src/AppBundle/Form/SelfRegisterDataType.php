@@ -19,6 +19,7 @@ class SelfRegisterDataType extends AbstractType
                 'type' => 'email',
                 'invalid_message' => 'user.email.doesNotMatch',
             ])
+            ->add('clientFirstname', 'text')
             ->add('clientLastname', 'text')
             ->add('caseNumber', 'text')
             ->add('save', 'submit');
