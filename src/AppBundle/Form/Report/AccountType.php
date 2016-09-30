@@ -70,7 +70,10 @@ class AccountType extends AbstractType
                 $validationGroups = ['add_edit'];
 
                 if ($data->requiresBankNameAndSortCode()) {
-                    $validationGroups[] = 'sortcode';
+                    $validationGroups[] = 'sortcode_not_empty';
+                    if ($data->getSortCode()) {
+                        $validationGroups[] = 'sortcode_valid';
+                    }
                     $validationGroups[] = 'bank_name';
                 }
 
