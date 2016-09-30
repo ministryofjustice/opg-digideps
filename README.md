@@ -63,5 +63,11 @@ For an entity named `Abc`, use the group `abc` for the properties (except the re
 
 Same with entity `Xyz` where properties have the JMS group `xyz`.
 
-If `Abc` has a relationship 1:N with `Xyz`, then add the group `xyz` to the 
->>>>>>> 1134a413138f8cdf37e6340bbb5926006a52e58a
+## Coding standards
+
+[PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+
+
+
+
