@@ -58,6 +58,7 @@ class SelfRegisterController extends RestController
             'lastname' => 'setLastname',
             'email' => 'setEmail',
             'postcode' => 'setPostcode',
+            'client_firstname' => 'setClientFirstname',
             'client_lastname' => 'setClientLastname',
             'case_number' => 'setCaseNumber',
         ]);
