@@ -19,7 +19,7 @@
                 '%endDate%': '<span class="no-wrap">' ~ report.endDate | date("j F Y") ~ '</span>',
                 '%paragraphBreak%': '</p><p>',
             }) | raw }}</p>
-        {% include 'AppBundle:Report/BankAccount:transactions.html.twig' with {
+        {% include 'AppBundle:Report/BankAccount:_transactions.html.twig' with {
         transDomain: translationDomain,
         transactionsGrouped: report.groupByCategory(report.transactionsIn),
         transactionsTotal: report.getMoneyInTotal,
