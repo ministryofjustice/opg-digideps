@@ -25,18 +25,18 @@
 {% block pageContent %}
 
     {% if odr.submitted == true %}
-        <nav id="back-bar">
+        <nav class="back-bar">
             <a id="overview-button" href="{{ path('homepage') }}">Return to Homepage</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
-    
+
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>Review Opening deputyship report</h1>
     </div>
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
     <a name="pageBody"></a>
-    
+
     <div id="page-body">
         <a class="pdflink" href="{{ path('odr_pdf') }}">Download as PDF</a>
         {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
