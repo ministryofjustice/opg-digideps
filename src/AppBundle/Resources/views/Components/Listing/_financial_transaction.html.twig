@@ -1,0 +1,13 @@
+{% set translationDomain = "accounts" %}
+{% trans_default_domain translationDomain %}
+
+<li class="transaction">
+    <div class="transaction-label">{{ transaction.type | trans }}</div>
+    <div class="transaction-value">
+        <span class="currency">£</span>
+        <span class="amount">{{ transaction.amount | money_format }}</span>
+    </div>
+    {% if transaction.moreDetails %}
+        <div class="transaction-detail">{{ transaction.moreDetails }}</div>
+    {% endif %}
+</li>

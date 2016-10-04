@@ -1,0 +1,28 @@
+{% set translationDomain = "accounts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="financial-transactions">
+
+    {% if title is defined %}<h3 class="financial-transactions-title heading-medium-large">{{ title | trans }}</h3>{% endif %}
+    <ul class="financial-transactions-list">
+    {% for transaction in transactions %}
+        {% include 'AppBundle:Components/Listing:_financial_transaction.html.twig' with {
+            transaction: transaction
+        } %}
+    {% endfor %}
+    </ul>
+
+    <dl class="financial-transactions-total">
+        <dt class="financial-transactions-total-label">
+            {% if footerTitle is defined %}
+                {{ footerTitle | trans }}
+            {% endif %}
+        </dt>
+        <dd class="financial-transactions-total-value">
+            {% if footerTotalPrefix is defined %}{{ footerTotalPrefix | trans }}{% endif %}
+           £
+            {{ total | money_format }}
+        </dd>
+    </dl>
+
+</div>
