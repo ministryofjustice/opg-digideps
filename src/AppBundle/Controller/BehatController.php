@@ -8,9 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Route("/behat")
- */
 class BehatController extends AbstractController
 {
     private function securityChecks()
@@ -32,7 +29,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/email-get-last")
+     * @Route("/behat/{secret}/email-get-last")
      * @Method({"GET"})
      */
     public function getLastEmailAction()
@@ -63,7 +60,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/email-reset")
+     * @Route("/behat/{secret}/email-reset")
      * @Method({"GET"})
      */
     public function resetAction()
@@ -78,7 +75,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/report/{reportId}/change-report-cot/{cotId}")
+     * @Route("/behat/{secret}/report/{reportId}/change-report-cot/{cotId}")
      * @Method({"GET"})
      */
     public function reportChangeReportCot($reportId, $cotId)
@@ -93,7 +90,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/report/{reportId}/set-sumbmitted/{value}")
+     * @Route("/behat/{secret}/report/{reportId}/set-sumbmitted/{value}")
      * @Method({"GET"})
      */
     public function reportChangeSubmitted($reportId, $value)
@@ -110,7 +107,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/report/{reportId}/change-report-end-date/{dateYmd}")
+     * @Route("/behat/{secret}/report/{reportId}/change-report-end-date/{dateYmd}")
      * @Method({"GET"})
      */
     public function accountChangeReportDate($reportId, $dateYmd)
@@ -125,7 +122,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/delete-behat-users")
+     * @Route("/behat/{secret}/delete-behat-users")
      * @Method({"GET"})
      */
     public function deleteBehatUser()
@@ -138,7 +135,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/delete-behat-data")
+     * @Route("/behat/{secret}/delete-behat-data")
      * @Method({"GET"})
      */
     public function resetBehatData()
@@ -149,7 +146,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/view-audit-log")
+     * @Route("/behat/{secret}/view-audit-log")
      * @Method({"GET"})
      * @Template()
      */
@@ -163,7 +160,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/textarea")
+     * @Route("/behat/textarea")
      */
     public function textAreaTestPage()
     {
@@ -173,7 +170,7 @@ class BehatController extends AbstractController
     /**
      * set token_date and registration_token on the user.
      * 
-     * @Route("/{secret}/user/{email}/token/{token}/token-date/{date}")
+     * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */
     public function userSetToken($email, $token, $date)
@@ -189,7 +186,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/{secret}/check-app-params")
+     * @Route("/behat/{secret}/check-app-params")
      * @Method({"GET"})
      */
     public function checkParamsAction()
@@ -212,8 +209,6 @@ class BehatController extends AbstractController
      */
     public function emailViewerAction($action)
     {
-//        $this->securityChecks();
-
         $emailToView = 'AppBundle:Email:'.$action.'.html.twig';
 
         return $this->render($emailToView, [
