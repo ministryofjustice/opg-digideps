@@ -26,7 +26,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding", "safeguarding-step1"})
      */
     private $doYouLiveWithClient;
 
@@ -34,7 +34,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
+     * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-live-client-no"})
      */
     private $howOftenDoYouContactClient;
 
@@ -42,7 +42,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding", "safeguarding-step2"})
      */
     private $doesClientReceivePaidCare;
 
@@ -50,7 +50,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
+     * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare", "safeguarding-step2"})
      */
     private $howIsCareFunded;
 
@@ -58,7 +58,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding", "safeguarding-step3"})
      */
     private $whoIsDoingTheCaring;
 
@@ -66,7 +66,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding", "safeguarding-step4"})
      */
     private $doesClientHaveACarePlan;
 
@@ -74,8 +74,8 @@ class Safeguarding
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
-     * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
+     * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan", "safeguarding-step4"})
+     * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan", "safeguarding-step4"} )
      */
     private $whenWasCarePlanLastReviewed;
 

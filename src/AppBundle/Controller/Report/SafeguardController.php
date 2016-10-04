@@ -13,19 +13,25 @@ use Symfony\Component\HttpFoundation\Request;
 class SafeguardController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/safeguarding", name="safeguarding")
+     * @Route("/report/{reportId}/safeguarding/edit", name="safeguarding")
      * @Template()
      */
     public function editAction(Request $request, $reportId)
     {
+        $step = $request->get('step', 1);
+
         $report = $this->getReportIfReportNotSubmitted($reportId, ['safeguarding']);
         if ($report->getSafeguarding() == null) {
             $safeguarding = new EntityDir\Report\Safeguarding();
         } else {
             $safeguarding = $report->getSafeguarding();
+//            if ($step==1) {
+//                return $this->redirectToRoute('safeguarding_review', ['reportId' => $reportId]);
+//            }
         }
 
-        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
+
+        $form = $this->createForm(new FormDir\SafeguardingType($step), $safeguarding);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -42,14 +48,32 @@ class SafeguardController extends AbstractController
             //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-safeguarding');
             //$this->get('session')->getFlashBag()->add('action', $t);
 
-            return $this->redirect($this->generateUrl('safeguarding', ['reportId' => $reportId]).'#pageBody');
+            if ($step == 4) {
+                return $this->redirectToRoute('safeguarding_review', ['reportId' => $reportId]);
+            }
+
+            return $this->redirectToRoute('safeguarding', ['reportId' => $reportId, 'step'=>$step + 1]);
         }
 
         $reportStatusService = new ReportStatusService($report);
 
         return['report' => $report,
+                'step' => $step,
                 'reportStatus' => $reportStatusService,
                 'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/safeguarding/review", name="safeguarding_review")
+     * @Template()
+     */
+    public function reviewAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['safeguarding']);
+
+        return[
+            'report' => $report,
         ];
     }
 }

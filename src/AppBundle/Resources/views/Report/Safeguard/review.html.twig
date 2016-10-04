@@ -1,0 +1,46 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+
+{% set translationDomain = "report-safeguarding" %}
+{% trans_default_domain translationDomain %}
+
+{% block bodyClasses %}safeguarding-page{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}Check your answers before saving and finishing{% endblock %}
+
+
+{% block pageBody %}
+
+    <p class="page-section-description"></p>
+
+
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
+
+    <div>
+        <strong>Do you live with the client?  </strong>{{ report.safeguarding.doYouLiveWithClient }}
+        <a href="{{ path('safeguarding', {'reportId': report.id, 'step': 1}) }}">Edit</a><br/>
+        <strong>How often do you contact the client ?  </strong>{{ report.safeguarding.howOftenDoYouContactClient | nl2br }}
+    </div>
+
+    <div>
+        <strong>Does the client receive care which is paid for?  </strong>{{ report.safeguarding.doesClientReceivePaidCare }}
+        <a href="{{ path('safeguarding', {'reportId': report.id, 'step': 2}) }}">Edit</a><br/>
+    </div>
+
+    [...]
+
+
+    <div class="form-group button-bar">
+        <a href="{{ path('report_overview', { 'reportId': report.id }) }}" class="button ">
+            Save and finish
+        </a>
+    </div>
+
+{% endblock %}
+
+{% block pageBodyFooterNav %}
+
+{% endblock %}
+
+{% endembed %}

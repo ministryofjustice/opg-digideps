@@ -24,7 +24,9 @@
 
     <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain)  }}</h3>
 
+    {% if step == 1 %}
     <div class="form-section">
+
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
             'fieldSetClass' : 'inline do-you-live-radio',
             'legendClass' : 'form-label',
@@ -42,7 +44,9 @@
             }) }}
         </div>
     </div>
+    {% endif %}
 
+    {% if step == 2 %}
     <div class="form-section">
 
         {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
@@ -67,9 +71,15 @@
             }) }}
         </div>
     </div>
+    {% endif %}
+
+    {% if step == 3 %}
     <div class="form-section">
         {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
     </div>
+    {% endif %}
+
+    {% if step == 4 %}
     <div class="form-section">
         {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
             'fieldSetClass' : 'inline care-plan',
@@ -87,6 +97,7 @@
             }) }}
         </div>
     </div>
+    {% endif %}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.save') }}
