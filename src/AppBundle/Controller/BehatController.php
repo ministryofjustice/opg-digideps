@@ -224,6 +224,9 @@ class BehatController extends AbstractController
             'link' => 'https://complete-deputy-report.service.gov.uk/',
             'submittedReport' => new Report(),
             'newReport' => new Report(),
+            'response' => [
+                'satisfactionLevel' => 'Satisfied',
+            ],
         ]);
     }
 }
