@@ -13,7 +13,7 @@
 
       {{ form_select(form.title, 'title') }}
 
-      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
+      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'buttonBarClass': 'js-hidden'} %}
         {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
 
         {% if showCancelLink %}
