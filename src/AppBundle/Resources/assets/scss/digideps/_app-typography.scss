@@ -1,18 +1,4 @@
-// Typography - Application specific version
 // ==========================================================================
-// GOV.UK front end toolkit dependencies
-
-.heading-medium-large {
-    @include bold-27();
-
-    margin-top: 0;
-    margin-bottom: em(10, 20);
-
-    @include media(tablet) {
-        margin-top: 0;
-        margin-bottom: em(20, 24);
-    }
-}
 
 #content {
   p {

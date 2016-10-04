@@ -6,7 +6,7 @@
 {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block maincontent %}
-    <h3 class="heading-medium-large">{{ 'page.heading' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
+    <h3 class="heading-medium flush--top">{{ 'page.heading' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
 
     {{ form_errors_list(form) }}
 
@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    
+
 
     {{ form_end(form) }}
 

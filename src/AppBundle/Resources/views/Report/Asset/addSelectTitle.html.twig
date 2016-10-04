@@ -9,7 +9,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
 
-      <h3 class="heading-medium-large">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
+      <h3 class="heading-medium flush--top">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
 
       {{ form_select(form.title, 'title') }}
 
@@ -18,10 +18,10 @@
 
         {% if showCancelLink %}
           {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-          transDomain: translationDomain,
-          linkButtonLabel: 'cancel.label',
-          linkClass: 'button-link',
-          linkHref: path('assets', {'reportId': report.id})
+            transDomain: translationDomain,
+            linkButtonLabel: 'cancel.label',
+            linkClass: 'button-link',
+            linkHref: path('assets', {'reportId': report.id})
           } %}
         {% endif %}
 

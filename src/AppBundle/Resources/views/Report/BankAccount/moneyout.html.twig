@@ -13,7 +13,7 @@
 
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+        <h3 class="heading-medium flush--top">{{ 'moneyOut.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({
                 '%client%': report.client.firstname,
                 '%startDate%': '<span class="no-wrap">' ~ report.startDate | date("j F Y") ~ '</span>',

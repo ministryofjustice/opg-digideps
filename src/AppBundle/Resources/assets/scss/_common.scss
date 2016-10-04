@@ -3,6 +3,7 @@ $path: '/images/';
 
 //GOV.UK EXTENSIONS
 @import "extensions/elements/icons";
+@import "extensions/elements/forms";
 
 // DIGIDEPS
 @import "digideps/colours";
@@ -49,7 +50,6 @@ $path: '/images/';
 @import "digideps/forms/form-date";
 @import "digideps/forms/form-sort-code";
 @import "digideps/example";
-@import "digideps/admin";
 @import "digideps/conditionals2";
 @import "digideps/pagination";
 @import "digideps/leftnav";
