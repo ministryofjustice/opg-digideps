@@ -365,7 +365,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        $html = $this->render('AppBundle:Report:formatted_body.html.twig', array(
+        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', array(
                 'report' => $report,
             ))->getContent();
 
