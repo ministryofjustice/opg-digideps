@@ -7,12 +7,12 @@
 {% block pageContent %}
 
     {% if report.submitted == true %}
-        <nav id="back-bar">
+        <nav class="back-bar">
             <a id="back-to-client" href="{{ path('client_show') }}">Your client</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
-    
+
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
     </div>
@@ -34,7 +34,7 @@
         {% endif %}
     {% endif %}
     <a name="pageBody"></a>
-    
+
     <div id="page-body">
         <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
         {% include 'AppBundle:Report/Formatted:formatted.html.twig' %}

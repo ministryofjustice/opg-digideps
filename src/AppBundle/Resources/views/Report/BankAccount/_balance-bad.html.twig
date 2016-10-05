@@ -7,7 +7,7 @@
     {% set moreless = "less" %}
 {% endif %}
 
-<h3 class="heading-medium-large behat-region-balance-bad">{{ 'balance.bad.pageSectionTitle' | trans }}</h3>
+<h3 class="heading-medium behat-region-balance-bad">{{ 'balance.bad.pageSectionTitle' | trans }}</h3>
 <p class="page-section-description">{{ 'balance.bad.pageSectionDescription' | trans({'%client%': report.client.firstname, '%more%': moreless, '%totalOffset%':  report.totalsOffset | abs | money_format }) }}</p>
 
 <div class="hero orange compact">
@@ -35,7 +35,7 @@
        £{{ report.accountsClosingBalanceTotal | money_format }}
     </div>
 </div>
-    
+
 <div class="hero two-columns orange compact white-text ">
     <div class="left">
         <div class="title text-medium">
@@ -76,9 +76,9 @@
 <p class="balance-warning page-section-warning">
     <span class="icon icon__notification"></span>
     <span class="page-section-description left-margin-big">{{ 'balance.bad.goBack' | trans({
-        '%client%': report.client.firstname, 
-        '%accountsLink%': path('accounts', {'reportId': report.id}), 
-        '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , 
+        '%client%': report.client.firstname,
+        '%accountsLink%': path('accounts', {'reportId': report.id}),
+        '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) ,
         '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}),
         '%paragraphBreak%': '<br/><br/>',
     }) | raw }}</span>
@@ -91,7 +91,7 @@
         'labelText': 'balance.bad.formtitle.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format}),
         'inputClass': 'expanding'
     }) }}
-    
+
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
     transDomain: translationDomain,
     section: 'accounts',

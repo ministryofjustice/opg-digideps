@@ -10,7 +10,7 @@
     {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
         'inputClass' : 'account-number'
     }) }}
-    
+
     {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
         'inputType' : 'Number'
     }) }}
@@ -41,8 +41,8 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    
-    
+
+
     // hide sortcode when account type is "cfo" or "postoffice"
     $('#account_accountType').change(function(event, duration) {
         var duration = typeof duration !== 'undefined' ? duration : 400;
@@ -53,8 +53,8 @@ $(document).ready(function() {
             bankAndsortCodeBlocks.fadeIn(duration);
         }
     }).trigger('change', [1]);
-    
-    
-    
+
+
+
 });
 </script>

@@ -6,7 +6,7 @@
 
 {% block pageNavigation %}
     {% if app.user.odrEnabled %}
-        <nav id="back-bar">
+        <nav class="back-bar">
             <a id="overview-button" href="{{ path('odr_index') }}">Return to Homepage</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
