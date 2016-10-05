@@ -50,7 +50,7 @@ class Safeguarding
      * @JMS\Type("string")
      * @JMS\Groups({"safeguarding"})
      *
-     * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare", "safeguarding-step2"})
+     * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare", "safeguarding-paidCare"})
      */
     private $howIsCareFunded;
 
