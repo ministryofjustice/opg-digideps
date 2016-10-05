@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Resources\views\Safeguard;
+namespace AppBundle\Resources\views\VisitsCare;
 
 use AppBundle\Entity as EntityDir;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -9,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use AppBundle\Form as FormDir;
 use Mockery as m;
 
-class SafeguardTest extends WebTestCase
+class VisitsCareTest extends WebTestCase
 {
     /** @var  \Symfony\Bundle\TwigBundle\TwigEngine */
     private $twig;
@@ -54,7 +54,7 @@ class SafeguardTest extends WebTestCase
                 ->shouldIgnoreMissing(true)
                 ->getMock();
 
-        $form = $this->createForm(new FormDir\VisitsCareType(), $visitsCare);
+        $form = $this->createForm(new FormDir\Report\VisitsCareType(), $visitsCare);
 
         $html = $this->twig->render('AppBundle:Report/Safeguard:edit.html.twig', [
             'report' => $report,
