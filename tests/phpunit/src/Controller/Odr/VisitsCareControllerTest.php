@@ -174,7 +174,7 @@ class VisitsCareControllerTest extends AbstractTestController
         /**
          * @var $visitsCare VisitsCare
          */
-        $visitsCare = self::fixtures()->getRepo('Odr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Odr\Safeguarding */
+        $visitsCare = self::fixtures()->getRepo('Odr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Odr\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals('yes', $visitsCare->getPlanMoveNewResidence());
@@ -219,7 +219,7 @@ class VisitsCareControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo('Safeguarding')->find($id));
+        $this->assertTrue(null === self::fixtures()->clear()->getRepo('VisitsCare')->find($id));
     }
 
     /**

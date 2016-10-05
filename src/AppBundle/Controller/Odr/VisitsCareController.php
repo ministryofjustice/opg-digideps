@@ -93,7 +93,7 @@ class VisitsCareController extends RestController
      * @Route("/odr/visits-care/{id}")
      * @Method({"DELETE"})
      */
-    public function deleteSafeguarding($id)
+    public function deleteVisitsCare($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 

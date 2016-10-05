@@ -11,12 +11,12 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="safeguarding")
  * @ORM\Entity
  */
-class Safeguarding
+class VisitsCare
 {
     /**
      * @var int
      *
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -26,7 +26,7 @@ class Safeguarding
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="safeguarding")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="visitsCare")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
@@ -35,7 +35,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column(name="do_you_live_with_client", type="string", length=4, nullable=true)
      */
     private $doYouLiveWithClient;
@@ -51,7 +51,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
     private $howOftenDoYouContactClient;
@@ -60,7 +60,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
     private $doesClientReceivePaidCare;
@@ -69,7 +69,7 @@ class Safeguarding
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column(name="how_is_care_funded", length=255, type="string", nullable=true)
      */
     private $howIsCareFunded;
@@ -78,7 +78,7 @@ class Safeguarding
      * @var type
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column( name="who_is_doing_the_caring", type="text", nullable=true)
      */
     private $whoIsDoingTheCaring;
@@ -87,7 +87,7 @@ class Safeguarding
      * @var type
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column( name="does_client_have_a_care_plan", type="string", length=4, nullable=true)
      */
     private $doesClientHaveACarePlan;
@@ -96,7 +96,7 @@ class Safeguarding
      * @var date
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      * @ORM\Column(name="when_was_care_plan_last_reviewed", type="date", nullable=true, options={ "default": null })
      */
     private $whenWasCarePlanLastReviewed;
