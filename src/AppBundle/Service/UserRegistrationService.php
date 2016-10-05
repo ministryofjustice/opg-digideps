@@ -141,6 +141,7 @@ class UserRegistrationService
 
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
     {
+        $client->setFirstname($selfRegisterData->getClientFirstname());
         $client->setLastname($selfRegisterData->getClientLastname());
         $client->setCaseNumber($selfRegisterData->getCaseNumber());
     }
