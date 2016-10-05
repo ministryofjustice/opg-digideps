@@ -13,16 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/visits-care", name="safeguarding")
+     * @Route("/report/{reportId}/visits-care", name="visits_care")
      * @Template()
      */
     public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['safeguarding']);
-        if ($report->getSafeguarding() == null) {
-            $visitsCare = new EntityDir\Report\Safeguarding();
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        if ($report->getVisitsCare() == null) {
+            $visitsCare = new EntityDir\Report\VisitsCare();
         } else {
-            $visitsCare = $report->getSafeguarding();
+            $visitsCare = $report->getVisitsCare();
         }
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType(), $visitsCare);
@@ -31,18 +31,15 @@ class VisitsCareController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
-            $data->keepOnlyRelevantSafeguardingData();
+            $data->keepOnlyRelevantVisitsCareData();
 
             if ($visitsCare->getId() == null) {
-                $this->getRestClient()->post('report/safeguarding', $data, ['safeguarding', 'report-id']);
+                $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/safeguarding/'.$visitsCare->getId(), $data, ['safeguarding']);
+                $this->getRestClient()->put('report/visits-care/'.$visitsCare->getId(), $data, ['visits-care']);
             }
 
-            //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-safeguarding');
-            //$this->get('session')->getFlashBag()->add('action', $t);
-
-            return $this->redirect($this->generateUrl('safeguarding', ['reportId' => $reportId]).'#pageBody');
+            return $this->redirect($this->generateUrl('visits_care', ['reportId' => $reportId]).'#pageBody');
         }
 
         $reportStatusService = new ReportStatusService($report);

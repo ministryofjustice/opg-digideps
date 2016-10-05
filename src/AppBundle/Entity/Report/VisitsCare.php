@@ -7,16 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @JMS\XmlRoot("safeguarding")
  * @JMS\ExclusionPolicy("none")
  */
-class Safeguarding
+class VisitsCare
 {
     use HasReportTrait;
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
      * @var int
      */
@@ -24,58 +23,58 @@ class Safeguarding
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care"})
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
+     * @Assert\NotBlank(message="visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-no"})
      */
     private $howOftenDoYouContactClient;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care"})
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
+     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare"})
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care"})
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
+     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care"})
      */
     private $doesClientHaveACarePlan;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
-     * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
+     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-hasCarePlan"})
+     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-hasCarePlan"} )
      */
     private $whenWasCarePlanLastReviewed;
 
@@ -102,7 +101,7 @@ class Safeguarding
      *
      * @param string $doYouLiveWithClient
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
@@ -142,7 +141,7 @@ class Safeguarding
      *
      * @param string $doesClientReceivePaidCare
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
@@ -166,7 +165,7 @@ class Safeguarding
      *
      * @param string $whoIsDoingTheCaring
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
@@ -190,7 +189,7 @@ class Safeguarding
      *
      * @param string $doesClientHaveACarePlan
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {
@@ -214,7 +213,7 @@ class Safeguarding
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
     {
@@ -238,7 +237,7 @@ class Safeguarding
      *
      * @param string $howIsCareFunded
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setHowIsCareFunded($howIsCareFunded)
     {
@@ -263,7 +262,7 @@ class Safeguarding
      *
      * @return bool
      */
-    public function keepOnlyRelevantSafeguardingData()
+    public function keepOnlyRelevantVisitsCareData()
     {
         if ($this->doYouLiveWithClient == 'yes') {
             $this->howOftenDoYouContactClient = null;
@@ -281,12 +280,12 @@ class Safeguarding
     }
 
     /**
-     * checks if report is missing safeguarding
+     * checks if report is missing visits care
      * information.
      *
      * @return bool
      */
-    public function missingSafeguardingInfo()
+    public function missingVisitsCareInfo()
     {
         if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
             return true;

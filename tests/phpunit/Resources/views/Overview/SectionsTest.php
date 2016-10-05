@@ -74,7 +74,7 @@ class SectionsTest extends WebTestCase
     }
 
     /** @test */
-    public function safeguardingSectionDescription()
+    public function visitsCareSectionDescription()
     {
         $this->setupReport();
 
@@ -451,13 +451,13 @@ class SectionsTest extends WebTestCase
     }
 
     /** @test */
-    public function showStartWhenThenIsNoSafeguardingData()
+    public function showStartWhenThenIsNoVisitsCareData()
     {
         $this->setupReport();
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getSafeguardingStatus')->andReturn('notstarted')
+                ->shouldReceive('getVisitsCareStatus')->andReturn('notstarted')
                 ->getMock();
 
         $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
@@ -472,13 +472,13 @@ class SectionsTest extends WebTestCase
     }
 
     /** @test */
-    public function showEditWhenThenIsSafeguardingData()
+    public function showEditWhenThenIsVisitsCareData()
     {
         $this->setupReport();
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getSafeguardingState')->andReturn('done')
+                ->shouldReceive('getVisitsCareState')->andReturn('done')
                 ->getMock();
 
         $html = $this->twig->render('AppBundle:Report/Overview:_sections.html.twig', [
@@ -625,8 +625,8 @@ class SectionsTest extends WebTestCase
                 ->shouldReceive('getDecisionsStatus')->andReturn('1 Decision')
                 ->shouldReceive('getContactsState')->andReturn('done')
                 ->shouldReceive('getContactsStatus')->andReturn('1 Contact')
-                ->shouldReceive('getSafeguardingState')->andReturn('done')
-                ->shouldReceive('getSafeguardingStatus')->andReturn('Complete')
+                ->shouldReceive('getVisitsCareState')->andReturn('done')
+                ->shouldReceive('getVisitsCareStatus')->andReturn('Complete')
                 ->shouldReceive('getAccountsState')->andReturn('done')
                 ->shouldReceive('getAccountsStatus')->andReturn('1 Account')
                 ->shouldReceive('getAssetsState')->andReturn('done')

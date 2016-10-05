@@ -47,7 +47,7 @@ class VisitsCareType extends AbstractType
                 ->add('whenWasCarePlanLastReviewed', 'date', ['widget' => 'text',
                                                              'input' => 'datetime',
                                                              'format' => 'dd-MM-yyyy',
-                                                             'invalid_message' => 'safeguarding.whenWasCarePlanLastReviewed.invalidMessage',
+                                                             'invalid_message' => 'visitscare.whenWasCarePlanLastReviewed.invalidMessage',
                                                           ])
                 ->add('save', 'submit')
 

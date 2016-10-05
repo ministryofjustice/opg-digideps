@@ -257,12 +257,12 @@ trait ReportTrait
     }
 
     /**
-     * @When I fill in the safeguarding form with the following:
+     * @When I fill in the visits and care form with the following:
      */
-    public function iSetTheFollowingSafeguarding(TableNode $table)
+    public function iSetTheFollowingVisitsCare(TableNode $table)
     {
         $this->gotoOverview();
-        $this->clickLink('edit-safeguarding');
+        $this->clickLink('edit-visits-care');
 
         $rows = $table->getRowsHash();
 
@@ -270,7 +270,7 @@ trait ReportTrait
             $this->fillField($key, $value);
         }
 
-        $this->pressButton('safeguarding_save');
+        $this->pressButton('visits_care_save');
     }
 
     /**

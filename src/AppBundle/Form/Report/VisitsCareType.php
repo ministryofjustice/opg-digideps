@@ -41,7 +41,7 @@ class VisitsCareType extends AbstractType
                 ->add('whenWasCarePlanLastReviewed', 'date', ['widget' => 'text',
                                                              'input' => 'datetime',
                                                              'format' => 'dd-MM-yyyy',
-                                                             'invalid_message' => 'safeguarding.whenWasCarePlanLastReviewed.invalidMessage',
+                                                             'invalid_message' => 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage',
                                                           ])
                 ->add('save', 'submit')
 
@@ -68,22 +68,22 @@ class VisitsCareType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-safeguarding',
+            'translation_domain' => 'report-visits-care',
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData();
-                $validationGroups = ['safeguarding'];
+                $validationGroups = ['visits-care'];
 
                 if ($data->getDoYouLiveWithClient() == 'no') {
-                    $validationGroups[] = 'safeguarding-no';
+                    $validationGroups[] = 'visits-care-no';
                 }
 
                 if ($data->getDoesClientHaveACarePlan() == 'yes') {
-                    $validationGroups[] = 'safeguarding-hasCarePlan';
+                    $validationGroups[] = 'visits-care-hasCarePlan';
                 }
 
                 if ($data->getDoesClientReceivePaidCare() == 'yes') {
-                    $validationGroups[] = 'safeguarding-paidCare';
+                    $validationGroups[] = 'visits-care-paidCare';
                 }
 
                 return $validationGroups;
@@ -93,6 +93,6 @@ class VisitsCareType extends AbstractType
 
     public function getName()
     {
-        return 'safeguarding';
+        return 'visits_care';
     }
 }
