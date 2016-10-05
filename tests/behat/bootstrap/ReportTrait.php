@@ -262,7 +262,7 @@ trait ReportTrait
     public function iSetTheFollowingVisitsCare(TableNode $table)
     {
         $this->gotoOverview();
-        $this->clickLink('edit-visits-care');
+        $this->clickLink('edit-visits_care');
 
         $rows = $table->getRowsHash();
 
