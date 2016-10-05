@@ -10,22 +10,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\ReportStatusService;
 use Symfony\Component\HttpFoundation\Request;
 
-class SafeguardController extends AbstractController
+class VisitsCareController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/safeguarding", name="safeguarding")
+     * @Route("/report/{reportId}/visits-care", name="safeguarding")
      * @Template()
      */
     public function editAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['safeguarding']);
         if ($report->getSafeguarding() == null) {
-            $safeguarding = new EntityDir\Report\Safeguarding();
+            $visitsCare = new EntityDir\Report\Safeguarding();
         } else {
-            $safeguarding = $report->getSafeguarding();
+            $visitsCare = $report->getSafeguarding();
         }
 
-        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
+        $form = $this->createForm(new FormDir\Report\VisitsCareType(), $visitsCare);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -33,10 +33,10 @@ class SafeguardController extends AbstractController
             $data->setReport($report);
             $data->keepOnlyRelevantSafeguardingData();
 
-            if ($safeguarding->getId() == null) {
+            if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/safeguarding', $data, ['safeguarding', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/safeguarding/'.$safeguarding->getId(), $data, ['safeguarding']);
+                $this->getRestClient()->put('report/safeguarding/'.$visitsCare->getId(), $data, ['safeguarding']);
             }
 
             //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-safeguarding');
