@@ -12,7 +12,7 @@
 
     {% for account in report.accounts %}
         {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
-            {% set linkToAccount = path('upsert_account', {'reportId': report.id, 'id': account.id }) %}
+            {% set linkToAccount = path('account_upsert', {'reportId': report.id, 'id': account.id }) %}
             <p class="flash flash-news">
                 We moved "{{ account.meta | trim('.') }}" into bank accounts, so we need some extra information:<br/>
                 {% if account.requiresBankNameAndSortCode %}
