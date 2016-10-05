@@ -91,7 +91,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/contacts/{id}/delete", name="delete_contact")
+     * @Route("/report/{reportId}/contacts/{id}/delete", name="contact_delete")
      *
      * @param int $id
      *
@@ -105,7 +105,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/contacts/delete-nonereason", name="delete_nonereason_contacts")
+     * @Route("/report/{reportId}/contacts/delete-nonereason", name="contact_nonereason_delete")
      */
     public function deleteReasonAction($reportId)
     {

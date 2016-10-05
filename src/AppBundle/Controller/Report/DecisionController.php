@@ -27,7 +27,7 @@ class DecisionController extends AbstractController
         $decisions = $report->getDecisions();
 
         if (empty($decisions) && $report->isDue() == false) {
-            return $this->redirect($this->generateUrl('add_decision', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('decision_add', ['reportId' => $reportId]));
         }
 
         return [
@@ -37,7 +37,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/add", name="add_decision")
+     * @Route("/report/{reportId}/decisions/add", name="decision_add")
      * @Template("AppBundle:Report/Decision:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
@@ -65,7 +65,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/{id}/edit", name="edit_decision")
+     * @Route("/report/{reportId}/decisions/{id}/edit", name="decision_edit")
      * @Template("AppBundle:Report/Decision:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id)
@@ -92,7 +92,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/{id}/delete", name="delete_decision")
+     * @Route("/report/{reportId}/decisions/{id}/delete", name="decision_delete")
      *
      * @param int $id
      * 
@@ -106,7 +106,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/delete-nonereason", name="delete_nonereason_decisions")
+     * @Route("/report/{reportId}/decisions/delete-nonereason", name="decision_nonereason_delete")
      */
     public function deleteReasonAction($reportId)
     {
@@ -122,7 +122,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/nonereason", name="edit_decisions_nonereason")
+     * @Route("/report/{reportId}/decisions/nonereason", name="decision_nonereason_edit")
      * @Template("AppBundle:Report/Decision:edit_none_reason.html.twig")
      */
     public function noneReasonAction(Request $request, $reportId)
@@ -151,7 +151,7 @@ class DecisionController extends AbstractController
      */
     public function _noneReasonFormAction(Request $request, $reportId)
     {
-        $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId' => $reportId]);
+        $actionUrl = $this->generateUrl('decision_nonereason_edit', ['reportId' => $reportId]);
         $report = $this->getReportIfReportNotSubmitted($reportId);
         $form = $this->createForm(new FormDir\Report\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);

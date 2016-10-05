@@ -17,7 +17,7 @@
     {% endblock %}
     {% block meta %}
         {{ 'balance.incomplete.accounts.missing' | trans({'%reportEndDate%': (report.endDate | date("j M Y")) }, translationDomain) }}
-        <a class="edit-link" href="{{ path('upsert_account' , {'reportId': report.id, 'id': account.id}) }}">
+        <a class="edit-link" href="{{ path('account_upsert' , {'reportId': report.id, 'id': account.id}) }}">
             {{ 'balance.incomplete.accounts.editLink' | trans({}, translationDomain) }}
         </a>
     {% endblock %}
