@@ -4,7 +4,7 @@
 {% block pageTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    <nav id="back-bar">
+    <nav class="back-bar">
         <a id="overview-button" href="{{ app.request.headers.get('referer') }}">Return to deputy report</a>
         {% include 'AppBundle:Components:_helpline.html.twig' %}
     </nav>
