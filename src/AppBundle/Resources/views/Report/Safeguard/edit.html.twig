@@ -13,7 +13,6 @@
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
     
     {% block validationSummary %}
-        {{ form_errors_list(form) }}
     {% endblock %}
 
     {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
