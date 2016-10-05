@@ -219,7 +219,7 @@ class VisitsCareControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo('VisitsCare')->find($id));
+        $this->assertTrue(null === self::fixtures()->clear()->getRepo('Report\VisitsCare')->find($id));
     }
 
     /**

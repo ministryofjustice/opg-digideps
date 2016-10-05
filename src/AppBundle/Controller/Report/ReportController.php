@@ -28,7 +28,7 @@ class ReportController extends RestController
         $client = $this->findEntityBy('Client', $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $report = new EntityDir\Report();
+        $report = new EntityDir\Report\Report();
         $report->setClient($client);
 
         // add court order type
@@ -64,10 +64,10 @@ class ReportController extends RestController
             ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
-        $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
+        $this->getRepository('Report\Report')->warmUpArrayCacheTransactionTypes();
 
-        $report = $this->findEntityBy('Report', $id);
-        /* @var $report EntityDir\Report */
+        $report = $this->findEntityBy('Report\Report', $id);
+        /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $report;
@@ -81,8 +81,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $currentReport = $this->findEntityBy('Report', $id, 'Report not found');
-        /* @var $currentReport EntityDir\Report */
+        $currentReport = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        /* @var $currentReport EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
         $user = $this->getUser();
         $client = $currentReport->getClient();
@@ -115,7 +115,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         //lets create subsequent year's report
-        $nextYearReport = $this->getRepository('Report')->createNextYearReport($currentReport);
+        $nextYearReport = $this->getRepository('Report\Report')->createNextYearReport($currentReport);
         $this->getEntityManager()->flush($currentReport);
 
         //response to pass back
@@ -130,10 +130,10 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
+        $this->getRepository('Report\Report')->warmUpArrayCacheTransactionTypes();
 
-        $report = $this->findEntityBy('Report', $id, 'Report not found');
-        /* @var $report EntityDir\Report */
+        $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
@@ -149,7 +149,7 @@ class ReportController extends RestController
             // set debts as per "debts" key
             foreach ($data['debts'] as $row) {
                 $debt = $report->getDebtByTypeId($row['debt_type_id']);
-                if (!$debt instanceof EntityDir\Debt) {
+                if (!$debt instanceof EntityDir\Report\Debt) {
                     continue; //not clear when that might happen. kept similar to transaction below
                 }
                 $debt->setAmount($row['amount']);
@@ -165,8 +165,8 @@ class ReportController extends RestController
             }
             foreach ($data[$tk] as $transactionRow) {
                 $t = $report->getTransactionByTypeId($transactionRow['id']);
-                /* @var $t EntityDir\Transaction */
-                if (!$t instanceof EntityDir\Transaction) {
+                /* @var $t EntityDir\Report\Transaction */
+                if (!$t instanceof EntityDir\Report\Transaction) {
                     continue;
                 }
                 $t->setAmounts($transactionRow['amounts'] ?: []);

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity as EntityDir;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -32,7 +32,7 @@ class ReportRepositoryTest extends WebTestCase
             'setEndDate' => new \DateTime('31 December 2014'),
         ]);
 
-        $asset = new EntityDir\AssetOther();
+        $asset = new EntityDir\Report\AssetOther();
         $asset->setReport($report);
         $asset->setTitle('test');
         $asset->setDescription('test');
@@ -55,13 +55,13 @@ class ReportRepositoryTest extends WebTestCase
 
         // call method
 
-        $report = $this->fixtures->getRepo('Report')->find($reportId);
-        $reportId = $this->fixtures->getRepo('Report')->createNextYearReport($report)->getId();
+        $report = $this->fixtures->getRepo('Report\Report')->find($reportId);
+        $reportId = $this->fixtures->getRepo('Report\Report')->createNextYearReport($report)->getId();
 
         // re-clear fixtures
         $this->fixtures->clear();
 
-        $newReport = $this->fixtures->getRepo('Report')->find($reportId);
+        $newReport = $this->fixtures->getRepo('Report\Report')->find($reportId);
 
         $this->assertEquals($newReport->getStartDate()->format('Y-m-d'), '2015-01-01');
         $this->assertEquals($newReport->getEndDate()->format('Y-m-d'), '2015-12-31');

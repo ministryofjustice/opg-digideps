@@ -183,7 +183,7 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $contact = self::fixtures()->getRepo('Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Contact */
+        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
         // TODO assert other fields
@@ -203,7 +203,7 @@ class ContactControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $contact = self::fixtures()->getRepo('Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Contact */
+        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
         // TODO assert other fields
@@ -237,6 +237,6 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Contact')->find(self::$contact1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\Contact')->find(self::$contact1->getId()));
     }
 }

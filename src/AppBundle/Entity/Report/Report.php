@@ -1,7 +1,10 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Client;
+use AppBundle\Entity\CourtOrderType;
+use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Reports.
  *
  * @ORM\Table(name="report")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Report\ReportRepository")
  */
 class Report
 {
@@ -40,35 +43,35 @@ class Report
 
     /**
      * @JMS\Groups({"contact"})
-     * @JMS\Type("array<AppBundle\Entity\Contact>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Contact>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
 
     /**
      * @JMS\Groups({"account"})
-     * @JMS\Type("array<AppBundle\Entity\Account>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Account>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
 
     /**
      * @JMS\Groups({"money-transfer"})
-     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
 
     /**
      * @JMS\Groups({"transaction"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
 
     /**
      * @JMS\Groups({"debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Debt", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -85,36 +88,36 @@ class Report
 
     /**
      * @JMS\Groups({"decision"})
-     * @JMS\Type("array<AppBundle\Entity\Decision>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist"})
      */
     private $decisions;
 
     /**
      * @JMS\Groups({"asset"})
-     * @JMS\Type("array<AppBundle\Entity\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Asset", mappedBy="report", cascade={"persist"})
      */
     private $assets;
 
     /**
      * @JMS\Groups({"visits-care"})
-     * @JMS\Type("AppBundle\Entity\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\VisitsCare",  mappedBy="report", cascade={"persist"})
+     * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist"})
      **/
     private $visitsCare;
 
     /**
      * @JMS\Groups({ "action"})
-     * @JMS\Type("AppBundle\Entity\Action")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Action",  mappedBy="report", cascade={"persist"})
+     * @JMS\Type("AppBundle\Entity\Report\Action")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist"})
      **/
     private $action;
 
     /**
      * @JMS\Groups({ "mental-capacity"})
-     * @JMS\Type("AppBundle\Entity\MentalCapacity")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\MentalCapacity",  mappedBy="report", cascade={"persist"})
+     * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist"})
      **/
     private $mentalCapacity;
 
@@ -737,9 +740,9 @@ class Report
     }
 
     /**
-     * @param \AppBundle\Entity\Action $action
+     * @param \AppBundle\Entity\Report\Action $action
      *
-     * @return \AppBundle\Entity\Report
+     * @return \AppBundle\Entity\Report\Report
      */
     public function setAction(Action $action)
     {
@@ -943,7 +946,7 @@ class Report
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transaction", "transactionsIn"})
-     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_in")
      *
      * @return Transaction[]
@@ -969,7 +972,7 @@ class Report
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transaction", "transactionsOut"})
-     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_out")
      *
      * @return Transaction[]

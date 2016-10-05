@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -115,18 +115,18 @@ class Account
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="accounts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="accounts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="from", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="from", cascade={"remove"})
      */
     private $transfersFrom;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="to", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="to", cascade={"remove"})
      */
     private $transfersTo;
 
@@ -414,7 +414,7 @@ class Account
     /**
      * @param string $isJointAccount yes/no/null
      * 
-     * @return \AppBundle\Entity\Account
+     * @return \AppBundle\Entity\Report\Account
      */
     public function setIsJointAccount($isJointAccount)
     {

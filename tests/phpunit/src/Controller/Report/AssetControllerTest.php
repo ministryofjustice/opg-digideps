@@ -138,8 +138,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\AssetOther */
-        $this->assertInstanceOf('AppBundle\Entity\AssetOther', $asset);
+        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Report\AssetOther */
+        $this->assertInstanceOf('AppBundle\Entity\Report\AssetOther', $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
@@ -176,9 +176,9 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\AssetProperty */
+        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Report\AssetProperty */
 
-        $this->assertInstanceOf('AppBundle\Entity\AssetProperty', $asset);
+        $this->assertInstanceOf('AppBundle\Entity\Report\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51', $asset->getOwnedPercentage());
@@ -226,6 +226,6 @@ class AssetControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Asset')->find(self::$asset1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\Asset')->find(self::$asset1->getId()));
     }
 }

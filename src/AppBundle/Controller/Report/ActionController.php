@@ -18,12 +18,12 @@ class ActionController extends RestController
     public function updateAction(Request $request, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $action = $report->getAction();
         if (!$action) {
-            $action = new EntityDir\Action($report);
+            $action = new EntityDir\Report\Action($report);
             $this->getEntityManager()->persist($action);
         }
 
@@ -45,7 +45,7 @@ class ActionController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $action = $this->findEntityBy('Action', $id, 'Action with id:'.$id.' not found');
+        $action = $this->findEntityBy('Report\Action', $id, 'Action with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -57,11 +57,11 @@ class ActionController extends RestController
 
     /**
      * @param array            $data
-     * @param EntityDir\Action $action
+     * @param EntityDir\Report\Action $action
      * 
-     * @return \AppBundle\Entity\Report $report
+     * @return \AppBundle\Entity\Report\Report $report
      */
-    private function updateEntity(array $data, EntityDir\Action $action)
+    private function updateEntity(array $data, EntityDir\Report\Action $action)
     {
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {
             $action->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);

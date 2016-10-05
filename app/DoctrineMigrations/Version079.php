@@ -51,7 +51,7 @@ class Version079 extends AbstractMigration implements ContainerAwareInterface
             }
 
             if ($submitted > 0 && $unSubmitted===0) { // if there is a submitted one, but no currenct
-                $nextYearReport =  $em->getRepository('AppBundle\Entity\Report')
+                $nextYearReport =  $em->getRepository('AppBundle\Entity\Report\Report')
                     ->createNextYearReport($lastReport);
 
                 echo "created new report for ".$client->getCaseNumber()."\n";

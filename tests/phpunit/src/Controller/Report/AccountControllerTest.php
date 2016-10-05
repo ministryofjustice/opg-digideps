@@ -76,7 +76,7 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
+        $account = self::fixtures()->getRepo('Report\Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Report\Account */
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         $this->assertFalse($account->getIsClosed());
         $this->assertNull($account->getIsJointAccount());
@@ -147,7 +147,7 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->getRepo('Account')->find(self::$account1->getId());
+        $account = self::fixtures()->getRepo('Report\Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertTrue($account->getIsClosed());
         $this->assertEquals('yes', $account->getIsJointAccount());
@@ -180,6 +180,6 @@ class AccountControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Account')->find($account1Id));
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\Account')->find($account1Id));
     }
 }

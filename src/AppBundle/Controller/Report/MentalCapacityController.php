@@ -17,12 +17,12 @@ class MentalCapacityController extends RestController
     public function updateAction(Request $request, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $mc = $report->getMentalCapacity();
         if (!$mc) {
-            $mc = new EntityDir\MentalCapacity($report);
+            $mc = new EntityDir\Report\MentalCapacity($report);
             $this->getEntityManager()->persist($mc);
         }
 
@@ -44,7 +44,7 @@ class MentalCapacityController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $mc = $this->findEntityBy('MentalCapacity', $id, 'MentalCapacity with id:'.$id.' not found');
+        $mc = $this->findEntityBy('Report\MentalCapacity', $id, 'MentalCapacity with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -56,11 +56,11 @@ class MentalCapacityController extends RestController
 
     /**
      * @param array                    $data
-     * @param EntityDir\MentalCapacity $mc
+     * @param EntityDir\Report\MentalCapacity $mc
      * 
-     * @return \AppBundle\Entity\Report $report
+     * @return \AppBundle\Entity\Report\Report $report
      */
-    private function updateEntity(array $data, EntityDir\MentalCapacity $mc)
+    private function updateEntity(array $data, EntityDir\Report\MentalCapacity $mc)
     {
         if (array_key_exists('has_capacity_changed', $data)) {
             $mc->setHasCapacityChanged($data['has_capacity_changed']);

@@ -28,7 +28,7 @@ class BehatController extends RestController
     {
         $this->securityChecks();
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
 
         $data = $this->deserializeBodyContent($request);
 

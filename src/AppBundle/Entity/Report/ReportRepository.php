@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityRepository;
@@ -16,14 +16,14 @@ class ReportRepository extends EntityRepository
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      * 
-     * @param EntityDir\Report $report
+     * @param EntityDir\Report\Report $report
      * 
-     * @return EntityDir\Report
+     * @return EntityDir\Report\Report
      */
-    public function createNextYearReport(EntityDir\Report $report)
+    public function createNextYearReport(EntityDir\Report\Report $report)
     {
         //lets clone the report
-        $newReport = new EntityDir\Report();
+        $newReport = new EntityDir\Report\Report();
         $newReport->setClient($report->getClient());
         $newReport->setCourtOrderType($report->getCourtOrderType());
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
@@ -43,7 +43,7 @@ class ReportRepository extends EntityRepository
         //  opening balance = closing balance 
         //  opening date = closing date 
         foreach ($report->getAccounts() as $account) {
-            $newAccount = new EntityDir\Account();
+            $newAccount = new EntityDir\Report\Account();
             $newAccount->setBank($account->getBank());
             $newAccount->setAccountType($account->getAccountType());
             $newAccount->setSortCode($account->getSortCode());
@@ -77,7 +77,7 @@ class ReportRepository extends EntityRepository
             return $ret;
         }
 
-        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\TransactionType')
+        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\Report\TransactionType')
             ->findBy([], ['displayOrder' => 'ASC']);
 
         foreach ($transactionTypes as $transactionType) {
@@ -121,6 +121,6 @@ class ReportRepository extends EntityRepository
      */
     public function warmUpArrayCacheTransactionTypes()
     {
-        $this->_em->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+        $this->_em->createQuery('SELECT tt FROM  AppBundle\Entity\Report\TransactionType tt')->execute();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Report;
 
-use AppBundle\Entity\MoneyTransfer;
+use AppBundle\Entity\Report\MoneyTransfer;
 use AppBundle\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
@@ -116,7 +116,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $report = self::fixtures()->getRepo('Report')->find(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report\Report */
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);
@@ -148,7 +148,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $t = self::fixtures()->getRepo('MoneyTransfer')->find(self::$transfer1->getId());
+        $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
         $this->assertEquals(124, $t->getAmount());
         $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account1->getId(), $t->getTo()->getId());
@@ -175,7 +175,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $t = self::fixtures()->getRepo('MoneyTransfer')->find(self::$transfer1->getId());
+        $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
         $this->assertTrue(null === $t);
     }
 }

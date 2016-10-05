@@ -18,7 +18,7 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -27,7 +27,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = new EntityDir\MoneyTransfer();
+        $transfer = new EntityDir\Report\MoneyTransfer();
         $transfer->setReport($report);
         $report->setNoTransfersToAdd(null);
         $this->fillEntity($transfer, $data);
@@ -48,7 +48,7 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -57,7 +57,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = $this->findEntityBy('MoneyTransfer', $transferId);
+        $transfer = $this->findEntityBy('Report\MoneyTransfer', $transferId);
         $this->fillEntity($transfer, $data);
 
         $this->persistAndFlush($transfer);
@@ -73,10 +73,10 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $transfer = $this->findEntityBy('MoneyTransfer', $transferId);
+        $transfer = $this->findEntityBy('Report\MoneyTransfer', $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
         $report->setNoTransfersToAdd(null);
@@ -87,11 +87,11 @@ class MoneyTransferController extends RestController
         return [];
     }
 
-    private function fillEntity(EntityDir\MoneyTransfer $transfer, array $data)
+    private function fillEntity(EntityDir\Report\MoneyTransfer $transfer, array $data)
     {
         $transfer
-            ->setFrom($this->findEntityBy('Account', $data['account_from_id']))
-            ->setTo($this->findEntityBy('Account', $data['account_to_id']))
+            ->setFrom($this->findEntityBy('Report\Account', $data['account_from_id']))
+            ->setTo($this->findEntityBy('Report\Account', $data['account_to_id']))
             ->setAmount($data['amount']);
     }
 }

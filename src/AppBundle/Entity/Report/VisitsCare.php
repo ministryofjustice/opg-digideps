@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -26,7 +26,7 @@ class VisitsCare
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="visitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="visitsCare")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;

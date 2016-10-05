@@ -175,7 +175,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $visitsCare = self::fixtures()->getRepo('VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Report\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
@@ -218,7 +218,7 @@ class VisitsCareControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo('VisitsCare')->find($id));
+        $this->assertTrue(null === self::fixtures()->clear()->getRepo('Report\VisitsCare')->find($id));
     }
 
     /**
@@ -240,7 +240,7 @@ class VisitsCareControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $visitsCare = self::fixtures()->getRepo('VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Report\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
         // TODO assert other fields

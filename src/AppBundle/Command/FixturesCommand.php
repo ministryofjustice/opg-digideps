@@ -6,9 +6,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\CourtOrderType;
 use AppBundle\Entity\Role;
-use AppBundle\Entity\TransactionType;
-use AppBundle\Entity\TransactionTypeIn;
-use AppBundle\Entity\TransactionTypeOut;
+use AppBundle\Entity\Report\TransactionType;
+use AppBundle\Entity\Report\TransactionTypeIn;
+use AppBundle\Entity\Report\TransactionTypeOut;
 
 /**
  * @codeCoverageIgnore
@@ -88,7 +88,7 @@ class FixturesCommand extends AddSingleUserCommand
     protected function transactionTypes(OutputInterface $output)
     {
         $em = $this->getContainer()->get('em');
-        $tt = $em->getRepository('AppBundle\Entity\TransactionType');
+        $tt = $em->getRepository('AppBundle\Entity\Report\TransactionType');
         foreach (TransactionType::$fixtures as $row) {
             //id, has_more_details, display_order, category, type
             list($id, $hasMoreDetails, $displayOrder, $category, $type) = $row;

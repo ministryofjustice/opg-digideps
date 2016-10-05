@@ -18,10 +18,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Asset', $assetId);
+        $asset = $this->findEntityBy('Report\Asset', $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -41,12 +41,12 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'type' => 'mustExist',
         ]);
-        $asset = EntityDir\Asset::factory($data['type']);
+        $asset = EntityDir\Report\Asset::factory($data['type']);
         $asset->setReport($report);
 
         $this->updateEntityWithData($asset, $data);
@@ -66,10 +66,10 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Asset', $assetId);
+        $asset = $this->findEntityBy('Report\Asset', $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
@@ -87,10 +87,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Asset', $assetId);
+        $asset = $this->findEntityBy('Report\Asset', $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $report->setNoAssetToAdd(null); // reset asset choice
@@ -101,14 +101,14 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Asset $asset, array $data)
+    private function updateEntityWithData(EntityDir\Report\Asset $asset, array $data)
     {
         // common propertie
         $this->hydrateEntityWithArrayData($asset, $data, [
             'value' => 'setValue',
         ]);
 
-        if ($asset instanceof EntityDir\AssetOther) {
+        if ($asset instanceof EntityDir\Report\AssetOther) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'title' => 'setTitle',
                 'description' => 'setDescription',
@@ -119,7 +119,7 @@ class AssetController extends RestController
             }
         }
 
-        if ($asset instanceof EntityDir\AssetProperty) {
+        if ($asset instanceof EntityDir\Report\AssetProperty) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'address' => 'setAddress',
                 'address2' => 'setAddress2',

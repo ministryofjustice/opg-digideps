@@ -18,14 +18,14 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
            'opening_balance' => 'mustExist',
         ]);
 
-        $account = new EntityDir\Account();
+        $account = new EntityDir\Report\Account();
         $account->setReport($report);
 
         $this->fillAccountData($account, $data);
@@ -43,7 +43,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Account', $id, 'Account not found');
+        $account = $this->findEntityBy('Report\Account', $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -61,7 +61,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/
+        $account = $this->findEntityBy('Report\Account', $id, 'Account not found'); /* @var $account EntityDir\Report\Account*/
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $data = $this->deserializeBodyContent($request);
@@ -85,7 +85,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account */
+        $account = $this->findEntityBy('Report\Account', $id, 'Account not found'); /* @var $account EntityDir\Report\Account */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $this->getEntityManager()->remove($account);
@@ -95,7 +95,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Account $account, array $data)
+    private function fillAccountData(EntityDir\Report\Account $account, array $data)
     {
         //basicdata
         if (array_key_exists('bank', $data)) {

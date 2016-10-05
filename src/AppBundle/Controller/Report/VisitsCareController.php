@@ -21,10 +21,10 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $visitsCare = new EntityDir\VisitsCare();
+        $visitsCare = new EntityDir\Report\VisitsCare();
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report', $data['report_id']);
+        $report = $this->findEntityBy('Report\Report', $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $visitsCare->setReport($report);
@@ -43,7 +43,7 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy('VisitsCare', $id);
+        $visitsCare = $this->findEntityBy('Report\VisitsCare', $id);
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $data = $this->deserializeBodyContent($request);
@@ -64,10 +64,10 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $ret = $this->getRepository('VisitsCare')->findByReport($report);
+        $ret = $this->getRepository('Report\VisitsCare')->findByReport($report);
 
         return $ret;
     }
@@ -86,7 +86,7 @@ class VisitsCareController extends RestController
             ? (array) $request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy('VisitsCare', $id, 'VisitsCare with id:'.$id.' not found');
+        $visitsCare = $this->findEntityBy('Report\VisitsCare', $id, 'VisitsCare with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         return $visitsCare;
@@ -100,7 +100,7 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy('VisitsCare', $id, 'VisitsCare not found');
+        $visitsCare = $this->findEntityBy('Report\VisitsCare', $id, 'VisitsCare not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $this->getEntityManager()->remove($visitsCare);
@@ -111,11 +111,11 @@ class VisitsCareController extends RestController
 
     /**
      * @param array                  $data
-     * @param EntityDir\VisitsCare $visitsCare
+     * @param EntityDir\Report\VisitsCare $visitsCare
      * 
-     * @return \AppBundle\Entity\Report $report
+     * @return \AppBundle\Entity\Report\Report $report
      */
-    private function updateInfo(array $data, EntityDir\VisitsCare $visitsCare)
+    private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare)
     {
         if (array_key_exists('do_you_live_with_client', $data)) {
             $visitsCare->setDoYouLiveWithClient($data['do_you_live_with_client']);

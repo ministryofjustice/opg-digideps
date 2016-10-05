@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -24,7 +24,7 @@ class Transaction
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="transactions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
@@ -34,7 +34,7 @@ class Transaction
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      * @JMS\Exclude
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\TransactionType", fetch="EAGER")
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Report;
 
-use AppBundle\Entity\MentalCapacity;
+use AppBundle\Entity\Report\MentalCapacity;
 use AppBundle\Controller\AbstractTestController;
 
 class MentalCapacityControllerTest extends AbstractTestController
@@ -81,7 +81,7 @@ class MentalCapacityControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
 
@@ -96,7 +96,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
+        $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
     }

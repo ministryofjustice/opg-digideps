@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
-//use AppBundle\Entity\Transaction;
-//use AppBundle\Entity\Account;
+//use AppBundle\Entity\Report\Transaction;
+//use AppBundle\Entity\Report\Account;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {

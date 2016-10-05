@@ -76,7 +76,7 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report
+     * @return EntityDir\Report\Report
      */
     public function createReport(EntityDir\Client $client, array $settersMap = [])
     {
@@ -84,7 +84,7 @@ class Fixtures
         $cot->setName('test');
         $this->em->persist($cot);
 
-        $report = new EntityDir\Report();
+        $report = new EntityDir\Report\Report();
 
         // start/end dates from today for 365 days
         $today = new DateTime();
@@ -104,11 +104,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Account
+     * @return EntityDir\Report\Account
      */
-    public function createAccount(EntityDir\Report $report, array $settersMap = [])
+    public function createAccount(EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $ret = new EntityDir\Account();
+        $ret = new EntityDir\Report\Account();
         $ret->setReport($report);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
@@ -144,11 +144,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Contact
+     * @return EntityDir\Report\Contact
      */
-    public function createContact(EntityDir\Report $report, array $settersMap = [])
+    public function createContact(EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $contact = new EntityDir\Contact();
+        $contact = new EntityDir\Report\Contact();
         $contact->setReport($report);
         $contact->setAddress('address'.time());
 
@@ -161,11 +161,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\VisitsCare
+     * @return EntityDir\Report\VisitsCare
      */
-    public function createVisitsCare(EntityDir\Report $report, array $settersMap = [])
+    public function createVisitsCare(EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $sg = new EntityDir\VisitsCare();
+        $sg = new EntityDir\Report\VisitsCare();
         $sg->setReport($report);
         $sg->setDoYouLiveWithClient('yes');
 
@@ -197,11 +197,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Asset
+     * @return EntityDir\Report\Asset
      */
-    public function createAsset($type, EntityDir\Report $report, array $settersMap = [])
+    public function createAsset($type, EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $asset = EntityDir\Asset::factory($type);
+        $asset = EntityDir\Report\Asset::factory($type);
         $asset->setReport($report);
 
         foreach ($settersMap as $k => $v) {
@@ -229,11 +229,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Decision
+     * @return EntityDir\Report\Decision
      */
-    public function createDecision(EntityDir\Report $report, array $settersMap = [])
+    public function createDecision(EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $decision = new EntityDir\Decision();
+        $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
         $decision->setClientInvolvedBoolean(true);
         $decision->setDescription('description'.time());
@@ -247,16 +247,16 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Transaction
+     * @return EntityDir\Report\Transaction
      */
-    public function createTransaction(EntityDir\Report $report, $type, array $amounts, array $settersMap = [])
+    public function createTransaction(EntityDir\Report\Report $report, $type, array $amounts, array $settersMap = [])
     {
-        $ttype = new EntityDir\TransactionTypeIn();
+        $ttype = new EntityDir\Report\TransactionTypeIn();
         $ttype->setId($type);
         $ttype->setHasMoreDetails(false);
         $ttype->setCategory('cat');
 
-        $transaction = new EntityDir\Transaction($report, $ttype, $amounts);
+        $transaction = new EntityDir\Report\Transaction($report, $ttype, $amounts);
 
         foreach ($settersMap as $k => $v) {
             $transaction->$k($v);

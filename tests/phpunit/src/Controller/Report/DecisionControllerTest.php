@@ -158,7 +158,7 @@ class DecisionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $decision = self::fixtures()->getRepo('Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Decision */
+        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Report\Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
         // TODO assert other fields
@@ -178,7 +178,7 @@ class DecisionControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $decision = self::fixtures()->getRepo('Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Decision */
+        $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Report\Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
         // TODO assert other fields
@@ -212,6 +212,6 @@ class DecisionControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Decision')->find(self::$decision1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\Decision')->find(self::$decision1->getId()));
     }
 }

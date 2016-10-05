@@ -30,7 +30,7 @@ class Version078 extends AbstractMigration implements ContainerAwareInterface
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $em = $this->container->get('em');
-        $reportRepo = $em->getRepository('AppBundle\Entity\Report');
+        $reportRepo = $em->getRepository('AppBundle\Entity\Report\Report');
         $reports = $reportRepo->findAll();
 
         foreach($reports as $report) {

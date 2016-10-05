@@ -82,7 +82,7 @@ class ActionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $action = self::fixtures()->getRepo('Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Action */
+        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
         $this->assertEquals('yes', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('yes', $action->getDoYouHaveConcerns());
@@ -99,7 +99,7 @@ class ActionControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $action = self::fixtures()->getRepo('Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Action */
+        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Report\Action */
         $this->assertEquals('no', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('no', $action->getDoYouHaveConcerns());
