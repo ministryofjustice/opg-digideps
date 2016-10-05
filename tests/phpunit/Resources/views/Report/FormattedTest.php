@@ -146,7 +146,7 @@ class FormattedTest extends WebTestCase
             ->setBalanceMismatchExplanation('money lost')
         ;
 
-        $this->html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
+        $this->html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
