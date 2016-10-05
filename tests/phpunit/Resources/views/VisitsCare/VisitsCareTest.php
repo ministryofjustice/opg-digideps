@@ -56,7 +56,7 @@ class VisitsCareTest extends WebTestCase
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType(), $visitsCare);
 
-        $html = $this->twig->render('AppBundle:Report/Safeguard:edit.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/VisitsCare:edit.html.twig', [
             'report' => $report,
             'form' => $form->createView(),
             'client' => $client,

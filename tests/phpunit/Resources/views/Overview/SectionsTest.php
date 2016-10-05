@@ -84,7 +84,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#safeguarding-sub-section .description');
+        $descriptionElement = $crawler->filter('#visits_care-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -466,7 +466,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
+        $linkElement = $crawler->filter('#visits_care-sub-section .edit-link');
 
         $this->assertContains('Start visits', $linkElement->eq(0)->text());
     }
@@ -487,7 +487,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
+        $linkElement = $crawler->filter('#visits_care-sub-section .edit-link');
 
         $this->assertContains('Edit visits', $linkElement->eq(0)->text());
     }
