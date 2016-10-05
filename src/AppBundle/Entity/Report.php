@@ -98,11 +98,11 @@ class Report
     private $assets;
 
     /**
-     * @JMS\Groups({"safeguarding"})
-     * @JMS\Type("AppBundle\Entity\Safeguarding")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
+     * @JMS\Groups({"visits-care"})
+     * @JMS\Type("AppBundle\Entity\VisitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\VisitsCare",  mappedBy="report", cascade={"persist"})
      **/
-    private $safeguarding;
+    private $visitsCare;
 
     /**
      * @JMS\Groups({ "action"})
@@ -709,25 +709,21 @@ class Report
     }
 
     /**
-     * Get Safeguarding.
-     *
-     * @return Safeguarding
+     * @return VisitsCare
      */
-    public function getSafeguarding()
+    public function getVisitsCare()
     {
-        return $this->safeguarding;
+        return $this->visitsCare;
     }
 
     /**
-     * Set Safeguarding.
-     *
-     * @param Safeguarding $safeguarding
+     * @param VisitsCare $visitsCare
      *
      * @return Report
      */
-    public function setSafeguarding(Safeguarding $safeguarding = null)
+    public function setVisitsCare(VisitsCare $visitsCare = null)
     {
-        $this->safeguarding = $safeguarding;
+        $this->visitsCare = $visitsCare;
 
         return $this;
     }

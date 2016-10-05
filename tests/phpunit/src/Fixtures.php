@@ -161,11 +161,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Safeguarding
+     * @return EntityDir\VisitsCare
      */
-    public function createSafeguarding(EntityDir\Report $report, array $settersMap = [])
+    public function createVisitsCare(EntityDir\Report $report, array $settersMap = [])
     {
-        $sg = new EntityDir\Safeguarding();
+        $sg = new EntityDir\VisitsCare();
         $sg->setReport($report);
         $sg->setDoYouLiveWithClient('yes');
 
@@ -180,7 +180,7 @@ class Fixtures
     /**
      * @param EntityDir\Odr\Odr $odr
      * @param array $settersMap
-     * @return EntityDir\Odr\Safeguarding
+     * @return EntityDir\Odr\VisitsCare
      */
     public function createOdrVisitsCare(EntityDir\Odr\Odr $odr, array $settersMap = [])
     {
