@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\RestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;

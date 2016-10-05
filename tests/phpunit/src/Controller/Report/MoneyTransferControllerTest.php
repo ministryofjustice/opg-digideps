@@ -1,8 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
 use AppBundle\Entity\MoneyTransfer;
+use AppBundle\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
 {

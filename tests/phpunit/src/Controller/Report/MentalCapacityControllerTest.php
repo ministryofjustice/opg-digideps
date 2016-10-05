@@ -1,8 +1,11 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
 
-class ActionControllerTest extends AbstractTestController
+use AppBundle\Entity\MentalCapacity;
+use AppBundle\Controller\AbstractTestController;
+
+class MentalCapacityControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
@@ -50,57 +53,51 @@ class ActionControllerTest extends AbstractTestController
 
     public function testupdateAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/action';
+        $url = '/report/'.self::$report1->getId().'/mental-capacity';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testupdateAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/action';
+        $url2 = '/report/'.self::$report2->getId().'/mental-capacity';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
     public function testupdate()
     {
-        $url = '/report/'.self::$report1->getId().'/action';
+        $url = '/report/'.self::$report1->getId().'/mental-capacity';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'do_you_expect_financial_decisions' => 'yes',
-                'do_you_expect_financial_decisions_details' => 'fdd',
-                'do_you_have_concerns' => 'yes',
-                'do_you_have_concerns_details' => 'cd',
+                'has_capacity_changed' => MentalCapacity::CAPACITY_CHANGED,
+                'has_capacity_changed_details' => 'ccd',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
 
-        $action = self::fixtures()->getRepo('Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Action */
-        $this->assertEquals('yes', $action->getDoYouExpectFinancialDecisions());
-        $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
-        $this->assertEquals('yes', $action->getDoYouHaveConcerns());
-        $this->assertEquals('cd', $action->getDoYouHaveConcernsDetails());
+        $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
+        $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
+        $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
 
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'do_you_expect_financial_decisions' => 'no',
-                'do_you_have_concerns' => 'no',
+                'has_capacity_changed' => MentalCapacity::CAPACITY_STAYED_SAME,
+                'has_capacity_changed_details' => 'should no tbe saved',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $action = self::fixtures()->getRepo('Action')->find($return['data']['id']); /* @var $action \AppBundle\Entity\Action */
-        $this->assertEquals('no', $action->getDoYouExpectFinancialDecisions());
-        $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
-        $this->assertEquals('no', $action->getDoYouHaveConcerns());
-        $this->assertEquals(null, $action->getDoYouHaveConcernsDetails());
+        $mc = self::fixtures()->getRepo('MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\MentalCapacity */
+        $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
+        $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
     }
 }

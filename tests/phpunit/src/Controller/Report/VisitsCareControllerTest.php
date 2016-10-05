@@ -1,6 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Report;
+
+use AppBundle\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
