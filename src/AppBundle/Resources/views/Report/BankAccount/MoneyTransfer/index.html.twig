@@ -21,12 +21,12 @@
         <ul id="transfers" class="card-list behat-region-transfers"    >
             {# transfers #}
             {% for transfer in report.moneyTransfers %}
-                {% include 'AppBundle:Report/MoneyTransfer:row.html.twig'%}
+                {% include 'AppBundle:Report/BankAccount/MoneyTransfer:row.html.twig'%}
             {% endfor %}
 
             {# add one #}
-            {% include 'AppBundle:Report/MoneyTransfer:add-one.html.twig'%}
-            {% include 'AppBundle:Report/MoneyTransfer:add-one-no-js.html.twig'%}
+            {% include 'AppBundle:Report/BankAccount/MoneyTransfer:add-one.html.twig'%}
+            {% include 'AppBundle:Report/BankAccount/MoneyTransfer:add-one-no-js.html.twig'%}
 
             {# noTransfers checkbox option #}
             <li id="no-transfers" class="transfer" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
@@ -41,14 +41,14 @@
         {# partial templates loaded via JS #}
         <div style="display: none">
             <ul class="card-lists"  id="account-cards-selection-ul">
-                {% include 'AppBundle:Report/MoneyTransfer:cards-select.html.twig' with {
+                {% include 'AppBundle:Report/BankAccount/MoneyTransfer:cards-select.html.twig' with {
                     'accounts': report.accounts,
                     'additionalClass': 'not-expandable'
                  }%}
             </ul>
 
             <div id="transfers-add-one">
-                {% include 'AppBundle:Report/MoneyTransfer:add-one.html.twig'%}
+                {% include 'AppBundle:Report/BankAccount/MoneyTransfer:add-one.html.twig'%}
             </div>
         </div>
         

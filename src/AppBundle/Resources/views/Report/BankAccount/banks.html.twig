@@ -102,7 +102,7 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("safeguarding" , {'reportId': report.id }),
+        'previousLink': path("visits_care" , {'reportId': report.id }),
         'previousLabel': 'Visits and care',
         'nextLink': path("transfers" , {'reportId': report.id }),
         'nextLabel': 'Money transfers'

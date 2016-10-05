@@ -265,7 +265,7 @@ sendEmail:
         notBlank: Please supply message for your email
     bodyHtml:
         notBlank: Please supply message for your email
-safeguarding:
+visitsCare:
     doYouLiveWithClient:
         notBlank: Choose Yes or No
     howOftenDoYouContactClient:
