@@ -12,7 +12,7 @@
 
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+        <h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">
           {{ 'banks.pageSectionDescription' | trans({
             '%client%': report.client.firstname,

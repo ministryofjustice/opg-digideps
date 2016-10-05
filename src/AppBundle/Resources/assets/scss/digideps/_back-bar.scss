@@ -1,6 +1,8 @@
-$path: "/images/";
+// ==========================================================================
+// BACK-BAR
+// This is the 'Return to report overview' component
 
-#back-bar {
+.back-bar {
     @include core-19();
     margin: 30px 0 0 0;
 

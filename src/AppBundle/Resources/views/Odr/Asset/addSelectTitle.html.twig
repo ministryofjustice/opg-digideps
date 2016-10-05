@@ -9,11 +9,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
 
-      <h3 class="heading-medium-large">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
+      <h3 class="heading-medium flush--top">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
 
       {{ form_select(form.title, 'title') }}
 
-      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
+      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'buttonBarClass': 'js-hidden'} %}
         {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
 
         {% if showCancelLink %}
