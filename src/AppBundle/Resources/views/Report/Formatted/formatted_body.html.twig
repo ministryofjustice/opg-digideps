@@ -25,9 +25,9 @@
             } %}
         {% endif %}
         {% include 'AppBundle:Report/Formatted:_contacts.html.twig' %}
-        {% if report.safeguarding is not null %}
-            {% include 'AppBundle:Report/Formatted:_safeguarding.html.twig' with {
-                'safeguarding': report.safeguarding
+        {% if report.visitsCare is not null %}
+            {% include 'AppBundle:Report/Formatted:_visits_care.html.twig' with {
+                'visitsCare': report.visitsCare
             } %}
         {% endif %}
 

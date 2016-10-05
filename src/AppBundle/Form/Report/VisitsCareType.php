@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -9,12 +9,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class SafeguardingType extends AbstractType
+class VisitsCareType extends AbstractType
 {
     private $step;
 
     /**
-     * SafeguardingType constructor.
      * @param $step
      */
     public function __construct($step)
@@ -60,7 +59,7 @@ class SafeguardingType extends AbstractType
             $builder->add('whenWasCarePlanLastReviewed', 'date', ['widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
-                'invalid_message' => 'safeguarding.whenWasCarePlanLastReviewed.invalidMessage',
+                'invalid_message' => 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage',
             ]);
         }
         $builder->add('save', 'submit');
@@ -91,22 +90,22 @@ class SafeguardingType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-safeguarding',
+            'translation_domain' => 'report-visits-care',
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData();
-                $validationGroups = ['safeguarding-step' . $this->step];
+                $validationGroups = ['visits-care-step' . $this->step];
 
                 if ($this->step == 1 && $data->getDoYouLiveWithClient() == 'no') {
-                    $validationGroups[] = 'safeguarding-live-client-no';
-                }
-
-                if ($this->step == 4 && $data->getDoesClientHaveACarePlan() == 'yes') {
-                    $validationGroups[] = 'safeguarding-hasCarePlan';
+                    $validationGroups[] = 'visits-care-live-client-no';
                 }
 
                 if ($this->step == 2 && $data->getDoesClientReceivePaidCare() == 'yes') {
-                    $validationGroups[] = 'safeguarding-paidCare';
+                    $validationGroups[] = 'visits-care-paidCare';
+                }
+
+                if ($this->step == 4 && $data->getDoesClientHaveACarePlan() == 'yes') {
+                    $validationGroups[] = 'visits-care-hasCarePlan';
                 }
 
                 return $validationGroups;
@@ -116,6 +115,6 @@ class SafeguardingType extends AbstractType
 
     public function getName()
     {
-        return 'safeguarding';
+        return 'visits_care';
     }
 }

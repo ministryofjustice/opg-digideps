@@ -1,5 +1,5 @@
 {% if odr.visitsCare is not null %}
-    {% set safeguarding = odr.visitsCare %}
+    {% set visitsCare = odr.visitsCare %}
     <div class="section" id="visits-care-section">
         <h2 class="section-heading">Visits and care</h2>
 
@@ -11,19 +11,19 @@
                     <table class="yesno">
                         <tr>
                             <td class="checkbox"
-                                data-checkbox="">{% if safeguarding.planMoveNewResidence == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="">{% if visitsCare.planMoveNewResidence == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">Yes</td>
                             <td class="checkbox"
-                                data-checkbox="">{% if safeguarding.planMoveNewResidence == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="">{% if visitsCare.planMoveNewResidence == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">No</td>
                         </tr>
                     </table>
 
                 </div>
-                {% if safeguarding.planMoveNewResidence == 'yes' %}
+                {% if visitsCare.planMoveNewResidence == 'yes' %}
                     <div class="form-group form-group-vertical">
                         <div class="question">More details</div>
-                        <div class="value textarea">{{ safeguarding.planMoveNewResidenceDetails | nl2br }}</div>
+                        <div class="value textarea">{{ visitsCare.planMoveNewResidenceDetails | nl2br }}</div>
                     </div>
                 {% endif %}
             </div>
@@ -36,21 +36,21 @@
                     <table class="yesno">
                         <tr>
                             <td class="checkbox"
-                                data-checkbox="do-you-live-with-the-client--yes">{% if safeguarding.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="do-you-live-with-the-client--yes">{% if visitsCare.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">Yes</td>
                             <td class="checkbox"
-                                data-checkbox="do-you-live-with-the-client--no">{% if safeguarding.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="do-you-live-with-the-client--no">{% if visitsCare.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">No</td>
                         </tr>
                     </table>
 
                 </div>
-                {% if safeguarding.doYouLiveWithClient == 'no' %}
+                {% if visitsCare.doYouLiveWithClient == 'no' %}
                     <div class="form-group form-group-vertical">
                         <div class="question">How often do you contact the client and how do you make sure others are
                             looking after the client's needs if you can't ?
                         </div>
-                        <div class="value textarea">{{ safeguarding.howOftenDoYouContactClient | nl2br }}</div>
+                        <div class="value textarea">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
                     </div>
                 {% endif %}
             </div>
@@ -64,16 +64,16 @@
                     <table class="yesno">
                         <tr>
                             <td class="checkbox"
-                                data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">{% if safeguarding.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">Yes</td>
                             <td class="checkbox"
-                                data-checkbox="does-the-client-receive-care-which-is-paid-for--no">{% if safeguarding.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                                data-checkbox="does-the-client-receive-care-which-is-paid-for--no">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                             <td class="label">No</td>
                         </tr>
                     </table>
                 </div>
 
-                {% if safeguarding.doesClientReceivePaidCare == 'yes' %}
+                {% if visitsCare.doesClientReceivePaidCare == 'yes' %}
                     <div class="checkboxes horizontal" id="safeguarding-care-funding">
                         <div class="label intro">If yes, how is the care funded?</div>
                         <div class="form-group right-label">
@@ -81,14 +81,14 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox"
-                                             data-checkbox="how-is-care-funded--client-pays-for-all-their-own-care">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}</div>
+                                             data-checkbox="how-is-care-funded--client-pays-for-all-their-own-care">{% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}</div>
                                     </td>
                                     <td class="label">Client pays for all their own care</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div class="checkbox"
-                                             data-checkbox="how-is-care-funded--client-gets-financial-help">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}</div>
+                                             data-checkbox="how-is-care-funded--client-gets-financial-help">{% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}</div>
                                     </td>
                                     <td class="label">Client gets some financial help (for example, from the local
                                         authority or council, or NHS)
@@ -97,7 +97,7 @@
                                 <tr>
                                     <td>
                                         <div class="checkbox"
-                                             data-checkbox="how-is-care-funded--all-care-is-paid-by-someone-else">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}</div>
+                                             data-checkbox="how-is-care-funded--all-care-is-paid-by-someone-else">{% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}</div>
                                     </td>
                                     <td class="label">All care is paid for by someone else (for example, by the local
                                         authority or council, or NHS)
@@ -110,7 +110,7 @@
 
                 <div class="form-group form-group-vertical">
                     <div class="question">Who is doing the caring?</div>
-                    <div class="value textarea">{{ safeguarding.whoIsDoingTheCaring }}</div>
+                    <div class="value textarea">{{ visitsCare.whoIsDoingTheCaring }}</div>
                 </div>
 
             </div>
@@ -119,16 +119,16 @@
         <div class="dont-break">
             <div class="box" id="care-plan-subsection">
                 <div class="question">If there is a care plan, when was it last reviewed?</div>
-                {% if safeguarding.doesClientHaveACarePlan == 'no' %}
+                {% if visitsCare.doesClientHaveACarePlan == 'no' %}
                     <dl class="labelvalue inline">
                         <dd class="checkbox">X</dd>
                         <dt class="label">There is no care plan</dt>
                     </dl>
                 {% endif %}
-                {% if safeguarding.doesClientHaveACarePlan == 'yes' %}
+                {% if visitsCare.doesClientHaveACarePlan == 'yes' %}
                     <dl class="labelvalue">
                         <dt class="label">Review date</dt>
-                        <dd class="value">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</dd>
+                        <dd class="value">{% if visitsCare.doesClientHaveACarePlan == 'yes' %}{{ visitsCare.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</dd>
                     </dl>
                 {% endif %}
             </div>

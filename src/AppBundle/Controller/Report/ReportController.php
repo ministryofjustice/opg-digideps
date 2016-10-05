@@ -25,7 +25,7 @@ class ReportController extends AbstractController
         'contact',
         'debts',
         'decision',
-        'safeguarding',
+        'visits-care',
         'mental-capacity',
         'money-transfer',
         'transaction',

@@ -9,7 +9,7 @@ Feature: deputy / report / edit and test tabs
 #        And I should see a "#edit-contacts" element
 #        But I should not see a "#edit-accounts" element
 #        And I should not see a "#edit-assets" element
-#        And I should see a "#edit-safeguarding" element
+#        And I should see a "#edit-visits_care" element
 
 #    @deputy
 #    Scenario: change report type to "Property and Affairs"

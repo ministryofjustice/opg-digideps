@@ -110,7 +110,7 @@ class AbstractController extends Controller
     /**
      * @param int $reportId
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report\Report
      *
      * @throws \RuntimeException if report is submitted
      */
