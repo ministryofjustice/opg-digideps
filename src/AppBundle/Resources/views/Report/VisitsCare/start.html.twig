@@ -1,0 +1,35 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+
+{% block bodyClasses %}safeguarding-page{% endblock %}
+{% block pageTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+
+
+{% block pageBody %}
+
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
+    </p>
+
+    {% block validationSummary %}
+    {% endblock %}
+
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
+
+    <div class="form-group button-bar">
+        <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
+            {{ 'startPage.startButton' | trans }}
+        </a>
+    </div>
+
+{% endblock %}
+
+{% block pageBodyFooterNav %}
+{% endblock %}
+
+{% endembed %}

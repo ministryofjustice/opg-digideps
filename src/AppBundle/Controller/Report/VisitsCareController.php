@@ -13,23 +13,29 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/visits-care/edit", name="visits_care")
+     * @Route("/report/{reportId}/visits-care/start", name="visits_care")
      * @Template()
      */
-    public function editAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId)
     {
-        $step = $request->get('step', 1);
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if ($report->getVisitsCare() == null) {
-            $visitsCare = new EntityDir\Report\VisitsCare();
-        } else {
-            $visitsCare = $report->getVisitsCare();
-//            if ($step==1) {
-//                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
-//            }
+        if($report->getVisitsCare() != null) {
+            return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
         }
 
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
+     * @Template()
+     */
+    public function stepAction(Request $request, $reportId, $step)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step), $visitsCare);
         $form->handleRequest($request);
@@ -42,22 +48,23 @@ class VisitsCareController extends AbstractController
             if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/visits-care/'.$visitsCare->getId(), $data, ['visits-care']);
+                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
             if ($step == 4) {
                 return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('visits_care', ['reportId' => $reportId, 'step'=>$step + 1]);
+            return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
         }
 
         $reportStatusService = new ReportStatusService($report);
 
-        return['report' => $report,
-                'step' => $step,
-                'reportStatus' => $reportStatusService,
-                'form' => $form->createView(),
+        return [
+            'report' => $report,
+            'step' => $step,
+            'reportStatus' => $reportStatusService,
+            'form' => $form->createView(),
         ];
     }
 
@@ -68,8 +75,12 @@ class VisitsCareController extends AbstractController
     public function reviewAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        if (!$report->getVisitsCare()) {
+            return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
+        }
 
-        return[
+
+        return [
             'report' => $report,
         ];
     }

@@ -1,36 +1,70 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig'%}
 
-    {% set translationDomain = "report-safeguarding" %}
+    {% set translationDomain = "report-visits-care" %}
     {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'reviewPage.htmlTitle' | trans }}{% endblock %}
     {% block title %}Check your answers before saving and finishing{% endblock %}
-
 
     {% block pageBody %}
 
-        <p class="page-section-description"></p>
-
+        <p class="page-section-description">
+            {{ 'reviewPage.pageSectionDescription' | trans(transOptions) }}
+        </p>
 
         {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
         transDomain: translationDomain
         } %}
 
+        {# step 1 #}
         <div>
-            <strong>Do you live with the client?  </strong>{{ report.visitsCare.doYouLiveWithClient }}
-            <a href="{{ path('visits_care', {'reportId': report.id, 'step': 1}) }}">Edit</a><br/>
-            <strong>How often do you contact the client ?  </strong>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}
+            <strong>{{ 'form.doYouLiveWithClient.label' | trans(transOptions) }} </strong>
+            {{ report.visitsCare.doYouLiveWithClient }}
+            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1}) }}">Edit</a><br/>
+        </div>
+        {% if report.visitsCare.doYouLiveWithClient == 'no'%}
+        <div>
+            <strong>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }} </strong>
+            {{ report.visitsCare.howOftenDoYouContactClient | nl2br }}
+        </div>
+        {% endif %}
+
+        {# step 2 #}
+        <div>
+            <strong>{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }} </strong>
+            {{ report.visitsCare.doesClientReceivePaidCare }}
+            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 2}) }}">Edit</a><br/>
+        </div>
+        {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+            <div>
+                <strong>{{ 'form.howIsCareFunded.label' | trans(transOptions) }} </strong>
+                {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+            </div>
+        {% endif %}
+
+        {# step 3 #}
+        <div>
+            <strong>{{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }} </strong>
+            {{ report.visitsCare.whoIsDoingTheCaring }}
+            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 3}) }}">Edit</a><br/>
         </div>
 
+        {# step 4 #}
         <div>
-            <strong>Does the client receive care which is paid for?  </strong>{{ report.visitsCare.doesClientReceivePaidCare }}
-            <a href="{{ path('visits_care', {'reportId': report.id, 'step': 2}) }}">Edit</a><br/>
+            <strong>{{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }} </strong>
+            {{ report.visitsCare.doesClientHaveACarePlan }}
+            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 4}) }}">Edit</a><br/>
         </div>
+        {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+            <div>
+                <strong>{{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }} </strong>
+                {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
+            </div>
+        {% endif %}
 
-        [...]
-
-
+        {# save #}
         <div class="form-group button-bar">
             <a href="{{ path('report_overview', { 'reportId': report.id }) }}" class="button ">
                 Save and finish
