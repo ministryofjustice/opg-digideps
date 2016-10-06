@@ -35,7 +35,7 @@
             linkButtonLabel: deleteLabelPrefix ~ '.label',
             linkId: 'delete-button',
             linkClass: 'delete-button button-warning behat-link-delete',
-            linkHref: path('delete_nonereason_' ~ section ~ 's' , {'reportId': report.id})
+            linkHref: path(section ~ '_nonereason_delete' , {'reportId': report.id})
             } %}
         {% endif %}
     </div>
@@ -48,7 +48,7 @@
             linkButtonLabel: deleteLabelPrefix ~ '.label',
             linkId: 'delete-confirm-button',
             linkClass: 'button-warning behat-link-delete-confirm',
-            linkHref: path('delete_nonereason_' ~ section ~ 's', {'reportId': report.id })
+            linkHref: path(section ~ '_nonereason_delete', {'reportId': report.id })
             } %}
 
             {% if showCancel == true %}
