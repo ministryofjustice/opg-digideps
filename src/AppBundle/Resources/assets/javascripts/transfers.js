@@ -216,7 +216,7 @@ var opg = opg || {};
     Transfers.prototype.isFormValid = function (form) {
         var fromVal = parseInt(form.find('input.account:nth(0)').val());
         var toVal = parseInt(form.find('input.account:nth(1)').val());
-        var amountVal = parseFloat(form.find('input[name=amount]').val());
+        var amountVal = parseFloat(form.find('input[name=amount]').val().replace(/[^\d\.\-\ ]/g, ''));
         return fromVal > 0 && toVal > 0 && amountVal > 0 && form.find('input.account').length === 2;
     };
 
