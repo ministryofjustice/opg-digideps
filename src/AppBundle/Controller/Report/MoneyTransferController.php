@@ -89,9 +89,11 @@ class MoneyTransferController extends RestController
 
     private function fillEntity(EntityDir\Report\MoneyTransfer $transfer, array $data)
     {
+        $amountCleaned = preg_replace('/[^\d\.]+/', '', $data['amount']); // 123,123.34 -> 123123.34
+
         $transfer
             ->setFrom($this->findEntityBy('Report\Account', $data['account_from_id']))
             ->setTo($this->findEntityBy('Report\Account', $data['account_to_id']))
-            ->setAmount($data['amount']);
+            ->setAmount($amountCleaned);
     }
 }

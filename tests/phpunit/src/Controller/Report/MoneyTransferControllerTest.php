@@ -108,7 +108,7 @@ class MoneyTransferControllerTest extends AbstractTestController
             'data' => [
                 'account_from_id' => self::$account1->getId(),
                 'account_to_id' => self::$account2->getId(),
-                'amount' => 123,
+                'amount' => ' 123,345.56 ',
             ],
         ])['data'];
 
@@ -120,7 +120,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);
-        $this->assertEquals(123, $t->getAmount());
+        $this->assertEquals(123345.56, $t->getAmount());
         $this->assertEquals(self::$account1->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
     }
