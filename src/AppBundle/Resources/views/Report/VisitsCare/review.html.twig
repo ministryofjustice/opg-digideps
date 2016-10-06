@@ -6,7 +6,7 @@
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
     {% block pageTitle %}{{ 'reviewPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}Check your answers before saving and finishing{% endblock %}
+    {% block title %}{{ 'reviewPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
 
@@ -136,13 +136,6 @@
             </tbody>
 
         </table>
-
-        {# save #}
-        <div class="form-group button-bar">
-            <a href="{{ path('report_overview', { 'reportId': report.id }) }}" class="button ">
-                Save and finish
-            </a>
-        </div>
 
     {% endblock %}
 
