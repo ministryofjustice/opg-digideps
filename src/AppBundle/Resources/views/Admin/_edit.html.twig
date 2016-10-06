@@ -20,13 +20,9 @@ transDomain: 'admin'
   {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
   {{ form_select(form.roleId,'roleId', { 'labelClass': 'required' }) }}
     {% if reportsCount > 0 %}
-        <fieldset disabled>
-            You can't change this value after a report has been created.
-            {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
-        </fieldset>
-    {% else %}
-        {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
+        Reports already exist for this user. If ODR is enabled, the deputy won't see them until ODR is submitted.
     {% endif %}
+    {{ form_checkbox(form.odrEnabled, 'odrEnabled', { 'labelClass': 'required' }) }}
 
 <h2 class="heading-small">Client</h2>
 {% if firstClient %}
