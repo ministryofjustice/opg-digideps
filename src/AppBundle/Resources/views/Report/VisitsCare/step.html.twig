@@ -10,6 +10,8 @@
 
     {% block pageBody %}
 
+        <a href="{{ backLink }}">{{ 'stepPage.backLink' | trans }}</a>
+
         {% block validationSummary %}
             {{ form_errors_list(form) }}
         {% endblock %}
@@ -125,12 +127,7 @@
     {% endblock %}
 
     {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("contacts" , {'reportId': report.id }),
-        'previousLabel': 'Contacts',
-        'nextLink': path("accounts" , {'reportId': report.id }),
-        'nextLabel': 'Accounts'
-        } %}
+
     {% endblock %}
 
 {% endembed %}

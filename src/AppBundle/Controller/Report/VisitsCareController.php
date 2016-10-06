@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
 {
+    const STEPS = 4;
+
     /**
      * @Route("/report/{reportId}/visits-care/start", name="visits_care")
      * @Template()
@@ -36,6 +38,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
+        $comingFromReviewPage = $request->get('from') === 'review';
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step), $visitsCare);
         $form->handleRequest($request);
@@ -52,20 +55,31 @@ class VisitsCareController extends AbstractController
             }
 
             // return to review if coming from review, or it's the last step
-            if ($step == 4 || $request->get('return')=='review') {
+            if ($comingFromReviewPage) {
                 return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId, 'stepEdited'=>$step]);
+            }
+            if ($step == self::STEPS) {
+                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
             }
 
             return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
         }
 
-        $reportStatusService = new ReportStatusService($report);
+        $backLink = null;
+        if ($comingFromReviewPage) {
+            $backLink = $this->generateUrl('visits_care_review', ['reportId' => $reportId]);
+        } else if ($step == 1) {
+            $backLink = $this->generateUrl('visits_care', ['reportId' => $reportId]);
+        } else { // step > 1
+            $backLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step - 1]);
+        }
 
         return [
             'report' => $report,
             'step' => $step,
-            'reportStatus' => $reportStatusService,
+            'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
+            'backLink' => $backLink,
         ];
     }
 

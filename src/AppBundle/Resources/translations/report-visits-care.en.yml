@@ -11,6 +11,7 @@ startPage:
 stepPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
+  backLink: Back
 
 reviewPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
