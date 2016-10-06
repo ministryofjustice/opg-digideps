@@ -51,8 +51,9 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
-            if ($step == 4) {
-                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
+            // return to review if coming from review, or it's the last step
+            if ($step == 4 || $request->get('return')=='review') {
+                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId, 'stepEdited'=>$step]);
             }
 
             return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
@@ -79,9 +80,9 @@ class VisitsCareController extends AbstractController
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
-
         return [
             'report' => $report,
+            'stepEdited' => $request->get('stepEdited')
         ];
     }
 }
