@@ -1,0 +1,143 @@
+{% extends 'AppBundle:Layouts:moj_template.html.twig' %}
+
+{% trans_default_domain "layout" %}
+
+{% block topOfPage %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ 'stylesheets/application.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <!--[if IE 7]>
+    <link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <!--[if IE 8]>
+    <link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+
+    <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block head %}
+    <meta name="format-detection" content="telephone=no">
+{% endblock %}
+
+{% block pageTitle %}Digideps Page Title{% endblock %}
+
+
+
+{% block bodyClasses %}{% endblock %}
+
+{% block cookieMessage %}
+    <p>
+        GOV.UK uses cookies to make the site simpler.
+        <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a>
+    </p>
+{% endblock %}
+
+
+
+{% block headerClass %}{% endblock %}
+
+{% block insideHeader %}{% endblock %}
+
+{% block proposition_content %}
+    {% if app.user %}
+        <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+    {% endif %}
+    <nav id="proposition-menu">
+        <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
+        {% if app.user %}
+            <ul id="proposition-links">
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
+                {% endif %}
+
+                {% if is_granted('ROLE_AD') %}
+                    <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
+                {% endif %}
+
+
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
+                    <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                {% else %}
+                    <li><a href="{{path('client_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                {% endif %}
+
+                {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.numberOfReports > 0) %}
+                    <li><a href="{{path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
+                {% endif %}
+
+                {% if app.session.get('ad') %}
+                    <li>
+                        <a href="{{path('ad_logout')}}">Terminate deputy session</a>
+                    </li>
+                {% elseif is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or app.user.idOfClientWithDetails %}
+                    <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </nav>
+{% endblock %}
+
+{% block afterHeader %}
+
+    {# To style #}
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice"  style="color: white;background-color: green;">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+
+
+{% block beforeContent %}{% endblock %}
+
+{% block content %}
+    <div class="phase-banner-beta">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><strong><a href="#">Item 3</a></strong></li>
+        </ol>
+    </div>
+    <div class="container {% block contentClass %}{% endblock %}">
+
+        {% block pageContent %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+
+
+{% block footerTop %}{% endblock %}
+
+{% block footerSupportLinks %}
+    <li>
+        <a href="{{path('terms')}}">{% trans %}Terms and Conditions{% endtrans %}</a>
+    </li>
+    <li>
+        <a href="https://www.gov.uk/help/cookies">{{'Cookies' | trans()}}</a>
+    </li>
+{% endblock %}
+
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ 'javascripts/application.js'| assetUrl }}"></script>
+{% endblock %}
+
+{% block bodyEnd %}
+
+    {% block popups %}
+        {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
+    {% endblock %}
+
+{% endblock %}

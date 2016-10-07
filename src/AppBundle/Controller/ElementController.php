@@ -20,6 +20,15 @@ class ElementController extends AbstractController
     }
 
     /**
+     * @Route("/base", name="elements")
+     * @Template("AppBundle:Element:base.html.twig")
+     */
+    public function baseAction()
+    {
+        return [];
+    }
+
+    /**
      * @Route("/layout", name="elements_layout")
      * @Template("AppBundle:Element/layout:layout.html.twig")
      */
