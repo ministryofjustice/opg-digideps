@@ -1,0 +1,50 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-contacts" %}
+    {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block pageTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+
+
+    {% block pageBody %}
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        {#<a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>#}
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section">
+            {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label',
+                'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'addAnotherPage.form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+    {% endblock %}
+
+{% endembed %}

@@ -143,6 +143,8 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoContacts"})
      *
+     * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
+     *
      * @var string
      */
     private $reasonForNoContacts;

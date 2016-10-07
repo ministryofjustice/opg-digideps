@@ -1,30 +1,33 @@
-{% if form.vars.value.id %}
-    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
-{% else %}
-    {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
-{% endif %}
+{#{% if form.vars.value.id %}#}
+    {#{% set subSectionTitleText = 'page.subSectionTitleEdit' %}#}
+{#{% else %}#}
+    {#{% set subSectionTitleText = 'page.subSectionTitleAdd' %}#}
+{#{% endif %}#}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
-    <h3 class="heading-medium">{{ subSectionTitleText | trans({}, translationDomain) }}</h3>
+    {#<h3 class="heading-medium">{{ subSectionTitleText | trans({}, translationDomain) }}</h3>#}
 
     {{ form_errors_list(form) }}
 
-    {{ form_input(form.contactName, 'contactName') }}
-    {{ form_input(form.relationship, 'relationship', {
-        'labelText': 'relationship.label' | trans({'%client%': report.client.firstname}, translationDomain)    
+    {{ form_input(form.contactName, 'form.contactName') }}
+    {{ form_input(form.relationship, 'form.relationship', {
+        'labelText': 'form.relationship.label' | trans({'%client%': report.client.firstname}, translationDomain)
     }) }}
-    {{ form_input(form.explanation, 'explanation', {inputClass: 'expanding'}) }}
-    {{ form_input(form.address, 'address') }}
-    {{ form_input(form.address2, 'address2') }}
-    {{ form_input(form.county, 'county') }}
-    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
-    {{ form_select(form.country, 'country') }}
+    {{ form_input(form.explanation, 'form.explanation', {inputClass: 'expanding'}) }}
+    {{ form_input(form.address, 'form.address') }}
+    {{ form_input(form.address2, 'form.address2') }}
+    {{ form_input(form.county, 'form.county') }}
+    {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control__postcode' }) }}
+    {{ form_select(form.country, 'form.country') }}
 
+    <div class="save-bar button-bar">
+        {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
+    </div>
 
-    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-        transDomain: translationDomain,
-        section: 'contact'
-    } %}
+    {#{% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {#}
+        {#transDomain: translationDomain,#}
+        {#section: 'contact'#}
+    {#} %}#}
 
 {{ form_end(form) }}

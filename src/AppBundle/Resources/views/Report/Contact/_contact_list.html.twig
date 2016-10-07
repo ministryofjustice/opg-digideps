@@ -5,7 +5,7 @@
     {% for contact in contacts %}
         <li itemscope itemtype="http://schema.org/Person" class="report-list__item" id="edit-{{ contact.id }}">
             <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
-                <a id="edit-{{ contact.id }}-link" href="{{ url('edit_contact', { 'reportId': report.id, 'id': contact.id }) }}#pageBody"
+                <a id="edit-{{ contact.id }}-link" href="{{ url('contact_edit', { 'reportId': report.id, 'id': contact.id }) }}#pageBody"
                    class="js-report-list__item-edit-link report-list__item-edit-link behat-link-contact-n{{loop.index}}">{{ 'view_contact.edit'| trans }}</a>
             </div>
             <dl class="report-list__item-fields">

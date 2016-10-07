@@ -3,16 +3,13 @@
     {% set translationDomain = "report-contacts" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+        <a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>
 
         {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
             'translationDomain': translationDomain,

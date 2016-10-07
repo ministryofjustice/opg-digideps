@@ -1,69 +1,121 @@
-save:
-    label: Save
-cancel:
-    label: Cancel
-delete:
-    label: Delete
-    message: "Are you sure that you want to delete this contact?"
-delete-reason:
-    label: Delete
-    message: "Are you sure that you want to delete this reason?"
-contactName:
-    label: Contact name
-    hint: ''
-relationship:
-    label: Relationship to %client%
-    hint: ''
-explanation:
-    label: Reason for contact
-    hint: ''
-address:
-    label: Address (optional)
-    hint: ''
-address2:
-    label: ' '
-    hint: ''
-county:
-    label: ' '
-    hint: ''
-postcode:
-    label: Postcode (optional)
-    hint: ''
-country:
-    label: Country (optional)
-    hint: ''
-    defaultOption: Please select ...
-page:
-    htmlTitle: "Deputy report - contacts | GOV.UK"
-    pageSectionTitle: Contacts
-    pageSectionDescription: Give details of people who helped you make significant decisions as a deputy, such as a GP, solicitor, accountant, family member or care worker.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
-    pageSectionEditInfo: "You can update the details of a contact or delete a contact by using the 'Edit this contact' link below."
-    subSectionTitleAdd : Add a new contact
-    subSectionTitleEdit : Edit this contact
+startPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageSectionTitle: Contacts
+  pageSectionDescription1: |
+    Give details of people who helped you make significant decisions as a deputy, such as a GP,
+    solicitor, accountant, family member or care worker.
+  pageSectionDescription2: |
+    Example: John Smith, accountant, to prepare accounts for the deputy report.
+
+  startButton: Start contacts
+
+existPage:
+  htmlTitle: "Deputy report - add contact | GOV.UK"
+  pageSectionTitle: Contacts
+  form:
+    exist:
+      label: Has anyone helped you make any significant decisions for Sally during this reporting period?
+      hint: For example, this could be a GP, solicitor, accountant, family member or care worker
+    reasonForNoContacts:
+      label: Please give us an explanation
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add contact | GOV.UK"
+  pageSectionTitle: Contacts
+  form:
+    addAnother:
+      label: The contact has been saved. Would you like to add contact asset now?
+      hint: If you prefer, you can come back to this section later to add more contacts
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageSectionTitle: Add a contact
+
+editPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageSectionTitle: Edit contact
+
+listPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageSectionTitle: Contacts
+  addButton: Add a contact
+
 form:
-    controls:
-        addButton:
-            label: Add a contact
-            moreLabel: Add another contact
-no_contact:
-    subSectionDescription: "If you haven't added any contacts, tell us why."
-    fields:
-      noContactReason:
-        label: "Information type"
-        value: "Reason for not adding contacts"
-      editReason:
-        label: "Edit Reason link"
-        value: "Edit this reason"
-    controls:
-      reason:
-        label: "Reason for no contacts"
-pageTitle: "Deputy report - contacts | GOV.UK"
-view_contact:
-    edit: Edit this contact
-    relationship: Relationship to %client%
-    reason: Reason for contact
-    address: Address
-    phone: Work phone
-delete-reason:
-    label: Delete
-    message: "Are you sure that you want to delete this reason?"
+  contactName:
+      label: Contact name
+      hint: ''
+  relationship:
+      label: Relationship to %client%
+      hint: ''
+  explanation:
+      label: Reason for contact
+      hint: ''
+  address:
+      label: Address (optional)
+      hint: ''
+  address2:
+      label: ' '
+      hint: ''
+  county:
+      label: ' '
+      hint: ''
+  postcode:
+      label: Postcode (optional)
+      hint: ''
+  country:
+      label: Country (optional)
+      hint: ''
+      defaultOption: Please select ...
+  save:
+      label: Save and continue
+
+
+#save:
+#    label: Save
+#cancel:
+#    label: Cancel
+#delete:
+#    label: Delete
+#    message: "Are you sure that you want to delete this contact?"
+#delete-reason:
+#    label: Delete
+#    message: "Are you sure that you want to delete this reason?"
+
+#page:
+#    htmlTitle: "Deputy report - contacts | GOV.UK"
+#    pageSectionTitle: Contacts
+#    pageSectionDescription: Give details of people who helped you make significant decisions as a deputy, such as a GP, solicitor, accountant, family member or care worker.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
+#    pageSectionEditInfo: "You can update the details of a contact or delete a contact by using the 'Edit this contact' link below."
+#    subSectionTitleAdd : Add a new contact
+#    subSectionTitleEdit : Edit this contact
+#form:
+#    controls:
+#        addButton:
+#            label: Add a contact
+#            moreLabel: Add another contact
+#no_contact:
+#    subSectionDescription: "If you haven't added any contacts, tell us why."
+#    fields:
+#      noContactReason:
+#        label: "Information type"
+#        value: "Reason for not adding contacts"
+#      editReason:
+#        label: "Edit Reason link"
+#        value: "Edit this reason"
+#    controls:
+#      reason:
+#        label: "Reason for no contacts"
+#pageTitle: "Deputy report - contacts | GOV.UK"
+#view_contact:
+#    edit: Edit this contact
+#    relationship: Relationship to %client%
+#    reason: Reason for contact
+#    address: Address
+#    phone: Work phone
+#delete-reason:
+#    label: Delete
+#    message: "Are you sure that you want to delete this reason?"

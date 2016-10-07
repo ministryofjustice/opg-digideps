@@ -1,0 +1,63 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-contacts" %}
+    {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block pageTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+
+
+    {% block pageBody %}
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        <a href="{{ path('contacts', {'reportId': report.id}) }}">Back</a>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section">
+            {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+                'fieldSetClass' : 'inline contact-exist',
+                'legendClass' : 'form-label',
+                'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+
+            <div id="reasonForNoContacts-textarea" class="hidden-detail">
+                {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
+                    'labelClass': 'required',
+                    'labelParameters': { '%client%': report.client.firstname },
+                    'inputClass': 'expanding'
+                }) }}
+            </div>
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'existPage.form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+                new opg.RadioHide({
+                    radio: '.contact-exist input[type=radio]',
+                    content: '#reasonForNoContacts-textarea',
+                    hideOnYes: true
+                });
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+    {% endblock %}
+
+{% endembed %}

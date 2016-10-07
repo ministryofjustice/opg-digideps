@@ -16,10 +16,6 @@
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-        transDomain: translationDomain
-        } %}
-
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         {% if step == 1 %}

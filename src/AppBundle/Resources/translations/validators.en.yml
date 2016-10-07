@@ -116,10 +116,13 @@ contact:
     explanation:
         notBlank: Enter a reason why you contacted this person
         length: Please explain in a sentence why you chose this person
-    no-contact-reason:
-        notBlank: Enter a reason why you haven't added any contacts
+    noContactsChoice:
+        notBlank: Please specify if anyone helped you make any significant decisions during this reporting period
+    reasonForNoContacts:
+        notBlank: Enter a reason why you don't have any contacts
     phone:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
+    addAnother.notBlank: Please specify if you want to add another contact
 decision:
     description:
         notBlank: You have to enter some details about this decision
