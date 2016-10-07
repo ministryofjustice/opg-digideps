@@ -10,6 +10,8 @@
 
 {% block pageBody %}
 
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
+
     <p class="page-section-description">
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
     </p>
