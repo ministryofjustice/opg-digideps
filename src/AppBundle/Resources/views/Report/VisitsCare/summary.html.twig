@@ -5,18 +5,16 @@
     {% set transOptions = {'%client%': report.client.firstname} %}
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'reviewPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'reviewPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
 
         <p class="page-section-description">
-            {{ 'reviewPage.pageSectionDescription' | trans(transOptions) }}
+            {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
         </p>
 
-        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-        transDomain: translationDomain
-        } %}
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
 
         {# @biggs just to test the implemented behaviour #}
         <style type="text/css">
@@ -50,7 +48,7 @@
                     {{ report.visitsCare.doYouLiveWithClient }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'review'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
             {% if report.visitsCare.doYouLiveWithClient == 'no' %}
@@ -58,7 +56,7 @@
                 <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
                 <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'review'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
             {% endif %}
@@ -74,7 +72,7 @@
                     {{ report.visitsCare.doesClientReceivePaidCare }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'review'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
             {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
@@ -86,7 +84,7 @@
                         {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
                     </td>
                     <td class="change-answer">
-                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'review'}) }}">Edit</a>
+                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
                     </td>
                 </tr>
             {% endif %}
@@ -102,7 +100,7 @@
                     {{ report.visitsCare.whoIsDoingTheCaring }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'review'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
             </tbody>
@@ -117,19 +115,19 @@
                     {{ report.visitsCare.doesClientHaveACarePlan }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'review'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
             {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
                 <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
                     <td>
-                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+                        {{ 'form.whenWasCarePlanLastsummaryed.label' | trans(transOptions) }}
                     </td>
                     <td>
                         {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
                     </td>
                     <td class="change-answer">
-                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'review'}) }}">Edit</a>
+                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
                     </td>
                 </tr>
             {% endif %}

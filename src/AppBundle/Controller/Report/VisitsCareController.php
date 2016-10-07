@@ -22,7 +22,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         if($report->getVisitsCare() != null) {
-            return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
+            return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -38,7 +38,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
-        $comingFromReviewPage = $request->get('from') === 'review';
+        $comingFromSummaryPage = $request->get('from') === 'summary';
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step), $visitsCare);
         $form->handleRequest($request);
@@ -54,20 +54,20 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
-            // return to review if coming from review, or it's the last step
-            if ($comingFromReviewPage) {
-                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId, 'stepEdited'=>$step]);
+            // return to summary if coming from there, or it's the last step
+            if ($comingFromSummaryPage) {
+                return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId, 'stepEdited'=>$step]);
             }
             if ($step == self::STEPS) {
-                return $this->redirectToRoute('visits_care_review', ['reportId' => $reportId]);
+                return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
             }
 
             return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
         }
 
         $backLink = null;
-        if ($comingFromReviewPage) {
-            $backLink = $this->generateUrl('visits_care_review', ['reportId' => $reportId]);
+        if ($comingFromSummaryPage) {
+            $backLink = $this->generateUrl('visits_care_summary', ['reportId' => $reportId]);
         } else if ($step == 1) {
             $backLink = $this->generateUrl('visits_care', ['reportId' => $reportId]);
         } else { // step > 1
@@ -84,10 +84,10 @@ class VisitsCareController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/visits-care/review", name="visits_care_review")
+     * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
      * @Template()
      */
-    public function reviewAction(Request $request, $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         if (!$report->getVisitsCare()) {
