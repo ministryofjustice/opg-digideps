@@ -8,6 +8,15 @@
     {% block pageTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
     {% block title %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
 
+    {% block pageNavigation %}
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Deputy reports</a></li>
+            <li><a href="#">Deputy report overview</a></li>
+        </ol>
+    </div>
+    {% endblock %}
+
 
     {% block pageBody %}
 
@@ -15,26 +24,29 @@
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        <a href="{{ path('contacts', {'reportId': report.id}) }}">Back</a>
+        <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="form-section">
+        <div class="form-section push--bottom">
             {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
                 'fieldSetClass' : 'inline contact-exist',
-                'legendClass' : 'form-label',
+                'legendClass' : 'heading-medium text',
                 'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' }
+                ],
+                'formGroupClass': 'flush--bottom'
             }) }}
 
             <div id="reasonForNoContacts-textarea" class="hidden-detail">
-                {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
-                    'labelClass': 'required',
-                    'labelParameters': { '%client%': report.client.firstname },
-                    'inputClass': 'expanding'
-                }) }}
+                <div class="panel panel-border-narrow">
+                    {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname },
+                        'inputClass': 'expanding'
+                    }) }}
+                </div>
             </div>
         </div>
 

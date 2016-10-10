@@ -7,9 +7,20 @@
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
     {% block title %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
 
+    {% block pageNavigation %}
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Deputy reports</a></li>
+            <li><a href="#">Deputy report overview</a></li>
+        </ol>
+    </div>
+    {% endblock %}
+
     {% block pageBody %}
 
-        <a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>
+        <a href="{{ path('contacts_list', {'reportId': report.id}) }}" class="link-back">Back</a>
+
+        <p class="text">As someone has helped you make decisions for Sally we need to know their details.  Start by adding the first contact for Sally. You can add other contacts later.</p>
 
         {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
         'translationDomain': translationDomain,

@@ -8,13 +8,22 @@
 {% block pageTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block title %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
+{% block pageNavigation %}
+<div class="breadcrumbs">
+    <ol class="group">
+        <li><a href="#">Deputy reports</a></li>
+        <li><a href="#">Deputy report overview</a></li>
+    </ol>
+</div>
+{% endblock %}
+
 
 {% block pageBody %}
 
     {% block validationSummary %}
     {% endblock %}
 
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
 
     <p class="page-section-description">
         {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
@@ -24,7 +33,7 @@
     </p>
 
     <div class="form-group button-bar">
-        <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="button ">
+        <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="button button-start">
             {{ 'startPage.startButton' | trans }}
         </a>
     </div>
