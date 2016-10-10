@@ -11,46 +11,64 @@ use AppBundle\Entity\Report\Account;
 
 class AccountType extends AbstractType
 {
+    private $step;
+
+    /**
+     * @param $step
+     */
+    public function __construct($step)
+    {
+        $this->step = (int)$step;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', 'hidden');
-        $builder->add('accountType', 'choice', [
-            'choices' => Account::$types,
-            'expanded' => false,
-            'empty_value' => 'Please select',
-        ]);
-        $builder->add('bank', 'text', [
-            'required' => false,
-        ]);
-        $builder->add('accountNumber', 'text', ['max_length' => 4]);
-        $builder->add('sortCode', new SortCodeType(), [
-            'error_bubbling' => false,
-            'required' => false,
-        ]);
 
-        $builder->add('openingBalance', 'number', [
-            'precision' => 2,
-            'grouping' => true,
-            'invalid_message' => 'account.openingBalance.type',
+        if ($this->step === 1) {
+            $builder->add('accountType', 'choice', [
+                'choices' => Account::$types,
+                'expanded' => true,
+                'empty_value' => 'Please select',
+            ]);
+        }
 
-        ]);
-        $builder->add('closingBalance', 'number', [
-            'precision' => 2,
-            'grouping' => true,
-            'invalid_message' => 'account.closingBalance.type',
-            'required' => false,
-        ]);
-        $builder->add('isClosed', 'checkbox', [
-            'required' => false,
-        ]);
-        $builder->add('isClosedDisplayed', 'hidden', [
-            'required' => false,
-            'mapped' => false,
-        ]);
-        $builder->add('isJointAccount', 'choice', array(
-            'choices' => ['yes' => 'Yes', 'no' => 'No'],
-            'expanded' => true,
-        ));
+        if ($this->step === 2) {
+            $builder->add('bank', 'text', [
+                'required' => false,
+            ]);
+            $builder->add('accountNumber', 'text', ['max_length' => 4]);
+            $builder->add('sortCode', new SortCodeType(), [
+                'error_bubbling' => false,
+                'required' => false,
+            ]);
+        }
+
+        if ($this->step === 3) {
+            $builder->add('openingBalance', 'number', [
+                'precision' => 2,
+                'grouping' => true,
+                'invalid_message' => 'account.openingBalance.type',
+            ]);
+            $builder->add('closingBalance', 'number', [
+                'precision' => 2,
+                'grouping' => true,
+                'invalid_message' => 'account.closingBalance.type',
+                'required' => false,
+            ]);
+            $builder->add('isClosed', 'checkbox', [
+                'required' => false,
+            ]);
+            $builder->add('isJointAccount', 'choice', array(
+                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+            ));
+        }
+
+//        $builder->add('isClosedDisplayed', 'hidden', [
+//            'required' => false,
+//            'mapped' => false,
+//        ]);
 
         $builder->add('save', 'submit');
     }
@@ -67,12 +85,27 @@ class AccountType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData(); /* @var $data \AppBundle\Entity\Report\Account */
-                $validationGroups = ['add_edit'];
 
-                if ($data->requiresBankNameAndSortCode()) {
-                    $validationGroups[] = 'sortcode';
-                    $validationGroups[] = 'bank_name';
+                $validationGroups = [];
+
+                if ($this->step === 1) {
+                    $validationGroups = ['bank-account-type'];
                 }
+
+                if ($this->step === 2) {
+                    $validationGroups = ['bank-account-name', 'bank-account-number', 'bank-account-sortcode'];
+                }
+
+                if ($this->step === 3) {
+
+                }
+
+                //                $validationGroups = ['add_edit'];
+//
+//                if ($data->requiresBankNameAndSortCode()) {
+//                    $validationGroups[] = 'sortcode';
+//                    $validationGroups[] = 'bank_name';
+//                }
 
                 return $validationGroups;
             },

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
-    const STEPS = 1;
+    const STEPS = 3;
 
     /**
      * @Route("/report/{reportId}/accounts/start", name="bank_accounts")
@@ -39,33 +39,69 @@ class BankAccountController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
+        $dataFromUrl = $request->get('data') ?: [];
+        $dataToPassToNextStep = $dataFromUrl;
+
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
         $comingFromSummaryPage = $request->get('from') === 'summary';
 
         $account = new EntityDir\Report\Account();
         $account->setReport($report);
+        // set data from URL
+        $account->setAccountType($dataFromUrl['type']);
+        $account->setBank($dataFromUrl['bank']);
+        $account->setAccountNumber($dataFromUrl['number']);
+        $account->setSortCode($dataFromUrl['sort-code']);
+        $account->setIsJointAccount($dataFromUrl['is-joint']);
+        $account->setOpeningBalance($dataFromUrl['closing-balance']);
+        $account->setClosingBalance($dataFromUrl['opening-balance']);
 
         $form = $this->createForm(new FormDir\Report\AccountType($step), $account);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-            $data = $form->getData();
+//            $data = $form->getData();
             // if closing balance is set to non-zero values, un-close the account
-            if (!$data->isClosingBalanceZero()) {
+            /*if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);
+            }*/
+
+            if ($step == 1) {
+                $dataToPassToNextStep['type'] = $account->getAccountType();
             }
 
-            $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
+            if ($step == 2) {
+                $dataToPassToNextStep['bank'] = $account->getBank();
+                $dataToPassToNextStep['number'] = $account->getAccountNumber();
+                $dataToPassToNextStep['sort-code'] = $account->getSortCode();
+            }
+
+            if ($step == 3) {
+                $dataToPassToNextStep['is-joint'] = $account->getIsJointAccount();
+                $dataToPassToNextStep['closing-balance'] = $account->getOpeningBalance();
+                $dataToPassToNextStep['opening-balance'] = $account->getClosingBalance();
+                //TODO
+                // think about generic function to save/load from string into the model
+            }
 
             // return to summary if coming from there, or it's the last step
             if ($comingFromSummaryPage) {
                 return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId, 'stepEdited' => $step]);
             }
             if ($step == self::STEPS) {
+                echo "<pre>";
+                \Doctrine\Common\Util\Debug::dump('save time !', 4);
+                die;
+                $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
                 return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => $step + 1]);
+            return $this->redirectToRoute('bank_accounts_step', [
+                'account' => $account,
+                'reportId' => $reportId,
+                'step' => $step + 1,
+                'data' => $dataToPassToNextStep
+            ]);
         }
 
         $backLink = null;
@@ -74,10 +110,13 @@ class BankAccountController extends AbstractController
         } else if ($step == 1) {
             $backLink = $this->generateUrl('bank_accounts', ['reportId' => $reportId]);
         } else { // step > 1
-            $backLink = $this->generateUrl('bank_accounts_step', ['reportId' => $reportId, 'step' => $step - 1]);
+            // TODO
+            $backLink = $this->generateUrl('bank_accounts_step', ['reportId' => $reportId, 'step' => $step - 1, 'data' => $dataFromUrl]);
         }
 
+
         return [
+            'account' => $account,
             'report' => $report,
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
@@ -120,12 +159,12 @@ class BankAccountController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id)
     {
-         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
 
         if (!$report->hasAccountWithId($id)) {
-                throw new \RuntimeException('Account not found.');
-            }
-        $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
+            throw new \RuntimeException('Account not found.');
+        }
+        $account = $this->getRestClient()->get('report/account/' . $id, 'Report\\Account');
 
         $form = $this->createForm(new FormDir\Report\AccountType(), $account);
         $form->handleRequest($request);
@@ -136,7 +175,7 @@ class BankAccountController extends AbstractController
             if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);
             }
-            $this->getRestClient()->put('/account/'.$id, $account, ['account']);
+            $this->getRestClient()->put('/account/' . $id, $account, ['account']);
 
             return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
         }

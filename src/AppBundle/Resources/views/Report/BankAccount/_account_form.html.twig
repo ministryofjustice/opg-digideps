@@ -4,30 +4,48 @@
 
 {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
-    {{ form_input(form.accountType, 'accountForm.accountType') }}
+    {% if step == 1 %}
+        {{ form_checkbox_group(form.accountType, 'accountForm.accountType', {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label',
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            ]
+        }) }}
+    {% endif %}
+
+{% if step == 2 %}
     {{ form_input(form.bank, 'accountForm.bank') }}
 
     {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
         'inputClass' : 'account-number'
     }) }}
-    
+
     {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
         'inputType' : 'Number'
     }) }}
-    
-    <fiedset>
-        <legend class="hidden">Joint account</legend>
-        {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
-            'fieldSetClass' : 'inline',
-            'legendText' : 'accountForm.isJointAccount.label' | trans({}, translationDomain),
-            'legendClass' : 'form-label',
-            'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-            ]
-        }) }}
+{% endif %}
+
+{% if step == 3 %}
+<fiedset>
+    <legend class="hidden">Joint account</legend>
+    {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
+        'fieldSetClass' : 'inline',
+        'legendText' : 'accountForm.isJointAccount.label' | trans({}, translationDomain),
+        'legendClass' : 'form-label',
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
     </fieldset>
-    
+
     {{ form_input(form.openingBalance, '', {
         'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
         'inputPrefix' : '£',
@@ -42,6 +60,7 @@
     {{ form_checkbox(form.isClosed,'accountForm.isClosed', {
         'labelClass': 'required',
     }) }}
+    {% endif %}
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
     transDomain: translationDomain,
@@ -50,31 +69,30 @@
 
     {{ form_end(form) }}
 
-{{ form_end(form) }}
+    {{ dump(account) }}
 
-<script>
-    $('input.form-control__number').on('blur', function (event) {
-        GOVUK.formatCurrency(event.target);
-    });
-</script>
+    <script>
+        $('input.form-control__number').on('blur', function (event) {
+            GOVUK.formatCurrency(event.target);
+        });
+    </script>
 
 
-<script type="text/javascript">
-$(document).ready(function() {
-    
-    
-    // hide sortcode when account type is "cfo" or "postoffice"
-    $('#account_accountType').change(function(event, duration) {
-        var duration = typeof duration !== 'undefined' ? duration : 400;
-        var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
-        if ($(this).val().match(/^(cfo|postoffice)$/)) {
-            bankAndsortCodeBlocks.fadeOut(duration);
-        }else {
-            bankAndsortCodeBlocks.fadeIn(duration);
-        }
-    }).trigger('change', [1]);
-    
-    
-    
-});
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            // hide sortcode when account type is "cfo" or "postoffice"
+            $('#account_accountType').change(function (event, duration) {
+                var duration = typeof duration !== 'undefined' ? duration : 400;
+                var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
+                if ($(this).val().match(/^(cfo|postoffice)$/)) {
+                    bankAndsortCodeBlocks.fadeOut(duration);
+                } else {
+                    bankAndsortCodeBlocks.fadeIn(duration);
+                }
+            }).trigger('change', [1]);
+
+
+        });
+    </script>

@@ -18,12 +18,12 @@ class VisitsCareType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = $step;
+        $this->step = (int)$step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->step == 1) {
+        if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
@@ -31,7 +31,7 @@ class VisitsCareType extends AbstractType
             $builder->add('howOftenDoYouContactClient', 'textarea');
         }
 
-        if ($this->step == 2) {
+        if ($this->step === 2) {
             $builder->add('doesClientReceivePaidCare', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
@@ -46,11 +46,11 @@ class VisitsCareType extends AbstractType
         }
 
 
-        if ($this->step == 3) {
+        if ($this->step === 3) {
             $builder->add('whoIsDoingTheCaring', 'textarea');
         }
 
-        if ($this->step == 4) {
+        if ($this->step === 4) {
             $builder->add('doesClientHaveACarePlan', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
