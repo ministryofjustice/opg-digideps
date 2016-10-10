@@ -15,6 +15,21 @@ use Symfony\Component\HttpFoundation\Request;
 class BankAccountController extends AbstractController
 {
     /**
+     * @Route("/temp/{reportId}", name="accounts")
+     *
+     * @param int     $reportId
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function accountsAction(Request $request, $reportId)
+    {
+        return $this->redirectToRoute('accounts_moneyin', ['reportId'=>$reportId]);
+        // placeholder to have overview clickable. remove when
+        // sections are taken out from subsections
+    }
+
+    /**
      * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
      *
      * @param int     $reportId
@@ -100,7 +115,7 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts", name="accounts")
+     * @Route("/report/{reportId}/accounts", name="bankAccounts")
      *
      * @param int $reportId
      * @Template()
@@ -171,7 +186,7 @@ class BankAccountController extends AbstractController
                 return $this->redirect($this->generateUrl('account_upsert', ['reportId' => $reportId, 'id' => $id, 'show-is-closed' => 'yes']).'#form-group-account_sortCode');
             }
 
-            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('bankAccounts', ['reportId' => $reportId]));
         }
 
         return [
@@ -201,7 +216,7 @@ class BankAccountController extends AbstractController
             $this->getRestClient()->delete("/account/{$id}");
         }
 
-        return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('bankAccounts', ['reportId' => $reportId]));
     }
 
     /**

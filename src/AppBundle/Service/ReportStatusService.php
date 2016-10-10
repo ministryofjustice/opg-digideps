@@ -54,6 +54,16 @@ class ReportStatusService
     }
 
     /** @return string */
+    public function getBankAccountsState()
+    {
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
+
+    /** @return string */
     public function getAccountsState()
     {
         $missingAccounts = empty($this->report->getAccounts());
@@ -162,6 +172,7 @@ class ReportStatusService
 
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
+                'bankAccounts' => $this->getBankAccountsState(),
                 'accounts' => $this->getAccountsState(),
                 'assets' => $this->getAssetsState(),
             ];

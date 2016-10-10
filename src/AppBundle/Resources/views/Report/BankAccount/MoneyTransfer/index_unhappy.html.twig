@@ -18,7 +18,7 @@
         <p class="page-section-description}}">
             As {{ report.client.firstname }} has only one account, you don't have to complete this section. Does
             {{ report.client.firstname }} have other current accounts? If so, go back to
-            <a href="{{ path('accounts' , {'reportId': report.id}) }}">Bank accounts</a> and add
+            <a href="{{ path('bankAccounts' , {'reportId': report.id}) }}">Bank accounts</a> and add
             these accounts there
         </p>
 
@@ -27,7 +27,7 @@
                 <h3 class="heading heading-medium">More than one account?</h3>
             </div>
             <div>
-                <a href="{{ path('accounts' , {'reportId': report.id}) }}" class="button btn-big">
+                <a href="{{ path('bankAccounts' , {'reportId': report.id}) }}" class="button btn-big">
                     {{ 'unhappy.add.label' | transchoice(nOfAccounts) }}
                 </a>
             </div>

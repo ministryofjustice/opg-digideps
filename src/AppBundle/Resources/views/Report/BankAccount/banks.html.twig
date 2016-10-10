@@ -1,17 +1,13 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
 
     {% set translationDomain = "report-accounts" %}
     {% trans_default_domain translationDomain %}
 
+    {% block bodyClasses %}safeguarding-page{% endblock %}
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.bankAccounts' | trans({}, "report-accounts") }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-    {% block leftcontent %}
-        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
-    {% endblock %}
-
-    {% block maincontent %}
-
+    {% block pageBody %}
         <h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">
           {{ 'banks.pageSectionDescription' | trans({
