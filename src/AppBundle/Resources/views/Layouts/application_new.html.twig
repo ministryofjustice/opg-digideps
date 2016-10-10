@@ -108,6 +108,12 @@
             <li><strong><a href="#">Item 3</a></strong></li>
         </ol>
     </div>
+    <div class="helpline">
+        <p>Helpline<br/>0115 934 2700</p>
+    </div>
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
     <div class="{% block contentClass %}{% endblock %}">
 
         {% block pageContent %}
