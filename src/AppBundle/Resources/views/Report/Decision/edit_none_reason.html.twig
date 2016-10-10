@@ -25,7 +25,7 @@
         } %}
 
     <div class="report-list-separator"> </div>
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form ' } }) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
             transDomain: translationDomain,

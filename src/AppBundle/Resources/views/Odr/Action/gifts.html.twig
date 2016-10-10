@@ -29,7 +29,7 @@
                 '%client%': odr.client.firstname,
             }, translationDomain )  | raw }}</p>
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate', 'class': 'no-data-form' }}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
         {{ form_checkbox_group(form.actionGiveGiftsToClient, 'form.actionGiveGiftsToClient', {
             'fieldSetClass' : 'inline give-gifts-client',
