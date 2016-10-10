@@ -45,7 +45,7 @@
                     {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.doYouLiveWithClient }}
+                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
@@ -69,7 +69,7 @@
                     {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.doesClientReceivePaidCare }}
+                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
@@ -97,7 +97,7 @@
                     {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.whoIsDoingTheCaring }}
+                    {{ report.visitsCare.whoIsDoingTheCaring | capitalize }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
