@@ -2,17 +2,8 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
-{% if (showNav is not defined) %}
-{%     set showNav = true %}
-{% endif %}
-
-{% if (showHelp is not defined) %}
-{%     set showHelp = true %}
-{% endif %}
-
-
 {% block pageContent %}
-    
+
     <a name="pageBody"></a>
 
     {% block pageNavigation %}
@@ -20,12 +11,12 @@
             'report': report
         } %}
     {% endblock %}
-    
+
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>{% block title %}{% endblock %}</h1>
     </div>
 
-    
+
     <div id="page-body">
         <div id="pagebody-left-content">
            {% block pageBody %}{% endblock %}

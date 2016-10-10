@@ -7,10 +7,18 @@
 {% block pageTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block title %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
+{% block pageNavigation %}
+<div class="breadcrumbs">
+    <ol class="group">
+        <li><a href="#">Deputy reports</a></li>
+        <li><a href="#">Opening deputy report overview</a></li>
+    </ol>
+</div>
+{% endblock %}
 
 {% block pageBody %}
 
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
 
     <p class="page-section-description">
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
@@ -24,7 +32,7 @@
     } %}
 
     <div class="form-group button-bar">
-        <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
+        <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start">
             {{ 'startPage.startButton' | trans }}
         </a>
     </div>
