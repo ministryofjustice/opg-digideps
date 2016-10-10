@@ -8,7 +8,7 @@
 
     {% if report.submitted == true %}
         <nav class="back-bar">
-            <a id="back-to-client" href="{{ path('client_show') }}">Your client</a>
+            <a id="back-to-client" href="{{ path('client_show') }}" class="link-return">Your client</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
