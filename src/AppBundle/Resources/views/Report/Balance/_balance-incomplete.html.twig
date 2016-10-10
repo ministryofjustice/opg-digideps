@@ -10,9 +10,9 @@
 
 {% if not report.hasAccounts %}
     <div class="descriptive-list-item">
-        <a href="{{ path('bankAccounts', {'reportId': report.id}) }}">
+        <a href="{{ path('bank_accounts', {'reportId': report.id}) }}">
             <h3 class="heading heading-medium">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
-        <span class="edit-link" href="{{ path('bankAccounts', {'reportId': report.id}) }}" style="float: right">
+        <span class="edit-link" href="{{ path('bank_accounts', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.noAccounts.addLink' | trans }}
         </span>
             <p class="description">
