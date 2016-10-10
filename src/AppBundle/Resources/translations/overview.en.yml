@@ -43,10 +43,10 @@ bankAccounts:
     edit: "Edit bank accounts"
     start: "Start bank accounts"
 accounts:
-    subSectionTitle: "Accounts"
+    subSectionTitle: "Money Transactions, transfers and balance"
     subSectionDescription: "Add details of all income and spending in the reporting period"
-    edit: "Edit accounts"
-    start: "Start accounts"
+    edit: "Edit money"
+    start: "Start money"
 transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Tell us about money you've moved between %client%'s accounts"

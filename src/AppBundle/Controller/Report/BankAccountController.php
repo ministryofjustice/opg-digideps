@@ -29,33 +29,6 @@ class BankAccountController extends AbstractController
         // sections are taken out from subsections
     }
 
-
-    /**
-     * @Route("/report/{reportId}/accounts/balance", name="accounts_balance")
-     *
-     * @param int $reportId
-     * @Template()
-     *
-     * @return array
-     */
-    public function balanceAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'transaction']);
-        $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $this->getRestClient()->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
-        }
-
-        return [
-            'report' => $report,
-            'form' => $form->createView(),
-            'subsection' => 'balance',
-        ];
-    }
-
     /**
      * @Route("/report/{reportId}/accounts", name="bankAccounts")
      *
