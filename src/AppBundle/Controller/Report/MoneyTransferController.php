@@ -24,7 +24,7 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
         if (($nofAccounts = count($report->getAccounts())) < 2) {
-            return $this->render('AppBundle:Report/BankAccount/MoneyTransfer:index_unhappy.html.twig', [
+            return $this->render('AppBundle:Report/MoneyTransfer:index_unhappy.html.twig', [
                     'report' => $report,
                     'subsection' => 'transfers',
                     'nOfAccounts' => $nofAccounts,
@@ -41,7 +41,7 @@ class MoneyTransferController extends AbstractController
             return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
         }
 
-        return $this->render('AppBundle:Report/BankAccount/MoneyTransfer:index.html.twig', [
+        return $this->render('AppBundle:Report/MoneyTransfer:index.html.twig', [
                 'report' => $report,
                 'subsection' => 'transfers',
                 'form' => $form->createView(),
@@ -62,7 +62,7 @@ class MoneyTransferController extends AbstractController
     /**
      * Sub controller action called when the no transfers form is embedded in another page.
      *
-     * @Template("AppBundle:Report/BankAccount/MoneyTransfer:_noTransfers.html.twig")
+     * @Template("AppBundle:Report/MoneyTransfer:_noTransfers.html.twig")
      */
     public function _noTransfersPartialAction(Request $request, $reportId)
     {
