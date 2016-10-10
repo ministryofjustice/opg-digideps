@@ -83,8 +83,9 @@
 
         {% if step == 3 %}
             <div class="form-section push--bottom">
+                <h3 class="heading-medium flush--top">Who is doing the caring?</h3>
                 {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
-                    'labelClass': 'this-does-nothing',
+                    'labelClass': 'visuallyhidden',
                     'inputClass': 'expanding',
                     'formGroupClass': 'flush--bottom'
                 }) }}
