@@ -77,7 +77,7 @@
     <span class="icon icon__notification"></span>
     <span class="page-section-description left-margin-big">{{ 'balance.bad.goBack' | trans({
         '%client%': report.client.firstname,
-        '%accountsLink%': path('accounts', {'reportId': report.id}),
+        '%accountsLink%': path('bank_accounts', {'reportId': report.id}),
         '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) ,
         '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}),
         '%paragraphBreak%': '<br/><br/>',

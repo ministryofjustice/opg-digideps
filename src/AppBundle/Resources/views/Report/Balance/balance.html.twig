@@ -12,11 +12,11 @@
     
     {% block maincontent %}
         {% if report.isMissingMoneyOrAccountsOrClosingBalance() %}
-            {% include 'AppBundle:Report/BankAccount:_balance-incomplete.html.twig'%}
+            {% include 'AppBundle:Report/Balance:_balance-incomplete.html.twig'%}
         {% elseif report.isTotalsMatch %}
-            {% include 'AppBundle:Report/BankAccount:_balance-good.html.twig'%}
+            {% include 'AppBundle:Report/Balance:_balance-good.html.twig'%}
         {% else %}
-            {% include 'AppBundle:Report/BankAccount:_balance-bad.html.twig'%}
+            {% include 'AppBundle:Report/Balance:_balance-bad.html.twig'%}
         {% endif %}
     {% endblock %}
 

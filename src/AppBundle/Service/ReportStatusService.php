@@ -46,11 +46,29 @@ class ReportStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        if (!$this->report->getVisitsCare() || $this->report->getVisitsCare()->missingVisitsCareInfo()) {
+        $vc = $this->report->getVisitsCare();
+        if (!$vc) {
             return self::STATE_NOT_STARTED;
-        } else {
+        }
+
+        if ($vc->getDoYouLiveWithClient()
+        && $vc->getDoesClientReceivePaidCare()
+        && $vc->getWhoIsDoingTheCaring()
+        && $vc->getDoesClientHaveACarePlan()) {
             return self::STATE_DONE;
         }
+
+        return self::STATE_INCOMPLETE;
+    }
+
+    /** @return string */
+    public function getBankAccountsState()
+    {
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
     }
 
     /** @return string */
@@ -162,6 +180,7 @@ class ReportStatusService
 
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
+                'bankAccounts' => $this->getBankAccountsState(),
                 'accounts' => $this->getAccountsState(),
                 'assets' => $this->getAssetsState(),
             ];

@@ -1,0 +1,44 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-bank-accounts" %}
+    {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block pageTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+
+
+    {% block pageBody %}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
+
+        <p class="page-section-description">
+            {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
+        </p>
+        <p class="page-section-description">
+            {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
+        </p>
+        <p class="page-section-description">
+            {{ 'startPage.pageSectionDescription3' | trans(transOptions) }}
+        </p>
+
+        {% block validationSummary %}
+        {% endblock %}
+
+        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+        transDomain: translationDomain
+        } %}
+
+        <div class="form-group button-bar">
+            <a href="{{ path('bank_accounts_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
+                {{ 'startPage.startButton' | trans }}
+            </a>
+        </div>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+    {% endblock %}
+
+{% endembed %}

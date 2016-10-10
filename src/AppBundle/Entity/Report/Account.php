@@ -34,25 +34,26 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank_name"})
-     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank_name"})
-     * 
-     * @JMS\Groups({"account"})
-     * 
-     * @var string
-     */
-    private $bank;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"add_edit"})
-     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"add_edit"})
+     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"bank-account-type"})
+     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"bank-account-type"})
      *
      * @JMS\Groups({"account"})
      *
      * @var string
      */
     private $accountType;
+
+
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank-account-name"})
+     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank-account-name"})
+     *
+     * @JMS\Groups({"account"})
+     *
+     * @var string
+     */
+    private $bank;
 
     /**
      * @JMS\Type("string")
@@ -63,25 +64,27 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"sortcode"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"sortcode"})
-     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"sortcode"})
+     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"bank-account-number"})
+     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"bank-account-number"})
+     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
+     * @JMS\Groups({"account"})
+     *
+     * @var string
+     */
+    private $accountNumber;
+
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"bank-account-sortcode"})
+     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"bank-account-sortcode"})
+     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"bank-account-sortcode"})
      * @JMS\Groups({"account"})
      * 
      * @var string
      */
     private $sortCode;
 
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"add_edit"})
-     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"add_edit"})
-     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"add_edit"})
-     * @JMS\Groups({"account"})
-     * 
-     * @var string
-     */
-    private $accountNumber;
+
 
     /**
      * @JMS\Type("string")

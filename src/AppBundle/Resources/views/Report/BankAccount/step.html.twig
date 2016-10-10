@@ -1,0 +1,37 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-bank-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block pageTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
+
+    {% block pageNavigation %}
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Deputy reports</a></li>
+            <li><a href="#">Opening deputy report overview</a></li>
+        </ol>
+    </div>
+    {% endblock %}
+
+
+    {% block pageBody %}
+
+        <a href="{{ backLink }}" class="link-back push--bottom">{{ 'stepPage.backLink' | trans }}</a>
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
+
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+
+    {% endblock %}
+
+{% endembed %}

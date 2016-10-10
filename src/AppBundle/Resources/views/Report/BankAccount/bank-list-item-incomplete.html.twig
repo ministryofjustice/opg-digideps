@@ -1,4 +1,4 @@
-{% set translationDomain = "report-accounts" %}
+{% set translationDomain = "report-bank-accounts" %}
 {% trans_default_domain translationDomain %}
 
 {% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
@@ -17,7 +17,7 @@
     {% endblock %}
     {% block meta %}
         {{ 'balance.incomplete.accounts.missing' | trans({'%reportEndDate%': (report.endDate | date("j M Y")) }, translationDomain) }}
-        <a class="edit-link" href="{{ path('account_upsert' , {'reportId': report.id, 'id': account.id}) }}">
+        <a class="edit-link" href="{{ path('bank_account_edit' , {'reportId': report.id, 'id': account.id}) }}">
             {{ 'balance.incomplete.accounts.editLink' | trans({}, translationDomain) }}
         </a>
     {% endblock %}

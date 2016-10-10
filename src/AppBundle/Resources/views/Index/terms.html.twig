@@ -5,7 +5,7 @@
 
 {% block pageNavigation %}
     <nav class="back-bar">
-        <a id="overview-button" href="{{ app.request.headers.get('referer') }}">Return to deputy report</a>
+        <a id="overview-button" href="{{ app.request.headers.get('referer') }}" class="link-return">Return to deputy report</a>
         {% include 'AppBundle:Components:_helpline.html.twig' %}
     </nav>
 {% endblock %}
