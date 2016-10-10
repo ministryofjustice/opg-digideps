@@ -27,3 +27,23 @@ b {
     color: $yellow;
     font-weight: bold;
 }
+
+// Check your answers (from govuk prototype)
+.check-your-answers {
+
+  td {
+    @include core-19;
+    vertical-align: top;
+  }
+
+  .change-answer {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 0;
+  }
+
+  td:first-child {
+  	width: 50%;
+  }
+
+}

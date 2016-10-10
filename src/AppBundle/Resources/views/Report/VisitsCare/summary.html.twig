@@ -8,37 +8,26 @@
     {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
     {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
+    {% block pageNavigation %}
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Deputy reports</a></li>
+            <li><a href="#">Deputy report overview</a></li>
+        </ol>
+    </div>
+    {% endblock %}
+
+    {# ID killing for layout #}
+    {% block leftContentId %}{% endblock %}
+
     {% block pageBody %}
 
-        <p class="page-section-description">
+        <p class="page-section-description text-secondary">
             {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
         </p>
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
-
-        {# @biggs just to test the implemented behaviour #}
-        <style type="text/css">
-            table.check-your-answers tr.edited {
-                background-color: khaki;
-            }
-        </style>
-
         {# @biggs https://www.gov.uk/service-manual/user-centred-design/resources/patterns  #}
-        <table class="check-your-answers">
-            {# in GSD, but not on Kevin's design#}
-            {#<thead>#}
-            {#<tr>#}
-                {#<th colspan="2">#}
-                    {#<h2 class="heading-medium">#}
-                        {#Visits and care#}
-                    {#</h2>#}
-                {#</th>#}
-                {#<th>#}
-                {#</th>#}
-            {#</tr>#}
-            {#</thead>#}
-
-            {# step 1 #}
+        <table class="check-your-answers push--bottom">
             <tbody>
             <tr class="{{ (stepEdited == 1) ? 'edited' : '' }}">
                 <td>
@@ -134,6 +123,8 @@
             </tbody>
 
         </table>
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
 
     {% endblock %}
 
