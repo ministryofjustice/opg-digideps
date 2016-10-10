@@ -41,7 +41,7 @@
             <h2 class="heading">{{ 'heading.finances' | trans() }}</h2>
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'bankAccounts',
+                subSection: 'bank_accounts',
                 report: report,
                 state: reportStatus.bankAccountsState,
                 warning: true,

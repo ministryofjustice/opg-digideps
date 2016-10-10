@@ -37,7 +37,7 @@ actions:
     subSectionDescription: "Tell us about any major changes in the next reporting period"
     edit: "Edit actions"
     start: "Start actions"
-bankAccounts:
+bank_accounts:
     subSectionTitle: "Bank accounts"
     subSectionDescription: "Add %client%'s building society and savings accounts"
     edit: "Edit bank accounts"

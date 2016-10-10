@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,72 +15,120 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
+    const STEPS = 1;
+
     /**
-     * @Route("/temp/{reportId}", name="accounts")
-     *
-     * @param int     $reportId
-     * @param Request $request
-     *
-     * @return array
+     * @Route("/report/{reportId}/accounts/start", name="bank_accounts")
+     * @Template()
      */
-    public function accountsAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId)
     {
-        return $this->redirectToRoute('accounts_moneyin', ['reportId'=>$reportId]);
-        // placeholder to have overview clickable. remove when
-        // sections are taken out from subsections
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        if (count($report->getAccounts())) {
+            return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
     }
 
     /**
-     * @Route("/report/{reportId}/accounts", name="bankAccounts")
+     * @Route("/report/{reportId}/accounts/step/{step}", name="bank_accounts_step")
+     * @Template()
+     */
+    public function stepAction(Request $request, $reportId, $step)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $comingFromSummaryPage = $request->get('from') === 'summary';
+
+        $account = new EntityDir\Report\Account();
+        $account->setReport($report);
+
+        $form = $this->createForm(new FormDir\Report\AccountType($step), $account);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            $data = $form->getData();
+            // if closing balance is set to non-zero values, un-close the account
+            if (!$data->isClosingBalanceZero()) {
+                $data->setIsClosed(false);
+            }
+
+            $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
+
+            // return to summary if coming from there, or it's the last step
+            if ($comingFromSummaryPage) {
+                return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId, 'stepEdited' => $step]);
+            }
+            if ($step == self::STEPS) {
+                return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            }
+
+            return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => $step + 1]);
+        }
+
+        $backLink = null;
+        if ($comingFromSummaryPage) {
+            $backLink = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
+        } else if ($step == 1) {
+            $backLink = $this->generateUrl('bank_accounts', ['reportId' => $reportId]);
+        } else { // step > 1
+            $backLink = $this->generateUrl('bank_accounts_step', ['reportId' => $reportId, 'step' => $step - 1]);
+        }
+
+        return [
+            'report' => $report,
+            'step' => $step,
+            'reportStatus' => new ReportStatusService($report),
+            'form' => $form->createView(),
+            'backLink' => $backLink,
+        ];
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/accounts", name="bank_accounts_summary")
      *
      * @param int $reportId
      * @Template()
      *
      * @return array
      */
-    public function banksAction($reportId)
+    public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        if (count($report->getAccounts()) === 0) {
+            return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
+        }
 
         return [
             'report' => $report,
-            'subsection' => 'banks',
         ];
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="account_upsert", defaults={ "id" = null })
-     * 
+     * @Route("/report/{reportId}/accounts/banks/edit/{id}", name="bank_account_edit", defaults={ "id" = null })
+     *
      * @param Request $request
-     * @param int     $reportId
-     * @param int     $id       account Id
-     * 
+     * @param int $reportId
+     * @param int $id account Id
+     *
      * @Template()
      *
      * @return array
      */
-    public function upsertAction(Request $request, $reportId, $id = null)
+    public function editAction(Request $request, $reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
-        $type = $id ? 'edit' : 'add';
-        $showMigrationWarning = false;
+         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
 
-        if ($type === 'edit') {
-            if (!$report->hasAccountWithId($id)) {
+        if (!$report->hasAccountWithId($id)) {
                 throw new \RuntimeException('Account not found.');
             }
-            $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
-            // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
-            $showMigrationWarning = $account->hasMissingInformation();
-        } else {
-            $account = new EntityDir\Report\Account();
-            $account->setReport($report);
-        }
-        // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
-        $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
+        $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
+
         $form = $this->createForm(new FormDir\Report\AccountType(), $account);
         $form->handleRequest($request);
-
         if ($form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
@@ -87,31 +136,15 @@ class BankAccountController extends AbstractController
             if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);
             }
-            if ($type === 'edit') {
-                $this->getRestClient()->put('/account/'.$id, $account, ['account']);
-            } else {
-                $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, ['account']);
-                $id = $addedAccount['id'];
-            }
+            $this->getRestClient()->put('/account/'.$id, $account, ['account']);
 
-            // if the balance is zero, and the isClosed checkbox is not shown, redirect to the edit page with the checkbox visible
-            if ($data->isClosingBalanceZero() &&
-                !$showIsClosed // avoid loops    
-            ) {
-                return $this->redirect($this->generateUrl('account_upsert', ['reportId' => $reportId, 'id' => $id, 'show-is-closed' => 'yes']).'#form-group-account_sortCode');
-            }
-
-            return $this->redirect($this->generateUrl('bankAccounts', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
         }
 
         return [
             'report' => $report,
-            'subsection' => 'banks',
             'form' => $form->createView(),
-            'type' => $type,
-            'showMigrationWarning' => $showMigrationWarning,
             'account' => $account,
-            'showIsClosed' => $showIsClosed == 'yes',
         ];
     }
 
@@ -131,6 +164,6 @@ class BankAccountController extends AbstractController
             $this->getRestClient()->delete("/account/{$id}");
         }
 
-        return $this->redirect($this->generateUrl('bankAccounts', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('bank_accounts', ['reportId' => $reportId]));
     }
 }

@@ -1,26 +1,16 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig'%}
 
-    {% set translationDomain = "report-accounts" %}
+    {% set translationDomain = "report-bank-accounts" %}
     {% trans_default_domain translationDomain %}
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-        <h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+        {#<h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>#}
         <p class="page-section-description">
-          {{ 'banks.pageSectionDescription' | trans({
-            '%client%': report.client.firstname,
-            '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) ,
-            '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}),
-            '%balanceLink%': path('accounts_balance' , {'reportId': report.id}),
-          }, translationDomain) | raw }}</p>
-
-        <section class="help-item">
-          <h3 class="summary heading-medium">{{ 'banks.before' | trans }}</h3>
-          <p class="content page-section-description">{{ 'banks.beforeDescription' | trans }}</p>
-        </section>
+          {{ 'summaryPage.pageSectionDescription' | trans() }}</p>
 
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
@@ -41,7 +31,7 @@
                     </div>
                 {% endif %}
                 <li class="card-item">
-                    <a href="{{ path('account_upsert' , {'reportId': report.id}) }}" class="card add" id="add-account">Add account</a>
+                    <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}" class="card add" id="add-account">Add account</a>
                     <div class="meta-data"></div>
                 </li>
             {% endblock %}
