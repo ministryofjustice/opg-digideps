@@ -10,18 +10,10 @@
 
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
 
-    <p class="page-section-description">
+    <p class="text">
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
     </p>
 
-    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-          transDomain: translationDomain
-    } %}
-
-    <div class="form-group button-bar">
-        <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start">
-            {{ 'startPage.startButton' | trans }}
-        </a>
-    </div>
+    <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start">{{ 'startPage.startButton' | trans }}</a>
 
 {% endblock %}
