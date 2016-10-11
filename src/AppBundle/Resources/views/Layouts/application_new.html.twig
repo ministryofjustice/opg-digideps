@@ -117,9 +117,11 @@
         {% endif %}
     {% endblock %}
 
-    <div class="helpline">
-        <p>Helpline<br/>0115 934 2700</p>
-    </div>
+    {% if helpline %}
+        <div class="helpline">
+            <p>Helpline<br/>0115 934 2700</p>
+        </div>
+    {% endif %}
 
     <h1 class="heading-xlarge">
         {% block pageTitle %} Deputy report {% endblock %}
