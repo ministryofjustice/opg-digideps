@@ -110,7 +110,7 @@
             {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
                 <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
                     <td>
-                        {{ 'form.whenWasCarePlanLastsummaryed.label' | trans(transOptions) }}
+                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
                     </td>
                     <td>
                         {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
