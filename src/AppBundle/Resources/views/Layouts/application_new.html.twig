@@ -112,7 +112,9 @@
     </div>
 
     {% block validationSummary %}
-        {{ form_errors_list(form) }}
+        {% if form is defined %}
+            {{ form_errors_list(form) }}
+        {% endif %}
     {% endblock %}
 
     <div class="helpline">
