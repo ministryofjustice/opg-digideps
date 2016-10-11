@@ -20,8 +20,6 @@
 
 {% block htmlTitle %}Deputy Report{% endblock %}
 
-
-
 {% block bodyClasses %}{% endblock %}
 
 {% block cookieMessage %}
@@ -103,13 +101,15 @@
         </p>
     </div>
 
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Item 1</a></li>
-            <li><a href="#">Item 2</a></li>
-            <li><strong><a href="#">Item 3</a></strong></li>
-        </ol>
-    </div>
+    {% if breadcrumbs %}
+        <div class="breadcrumbs">
+            <ol class="group">
+                <li><a href="#">Item 1</a></li>
+                <li><a href="#">Item 2</a></li>
+                <li><strong><a href="#">Item 3</a></strong></li>
+            </ol>
+        </div>
+    {% endif %}
 
     {% block validationSummary %}
         {% if form is defined %}

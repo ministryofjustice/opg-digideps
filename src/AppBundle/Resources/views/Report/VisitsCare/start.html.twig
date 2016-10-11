@@ -6,6 +6,8 @@
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
+{% set breadcrumbs = true %}
+
 {% block pageContent %}
 
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
