@@ -3,9 +3,8 @@
 {% set translationDomain = "odr-declaration" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} report-overview report-declaration js-report-assets-input{% endblock %}
-
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
     <div id="pagebody">

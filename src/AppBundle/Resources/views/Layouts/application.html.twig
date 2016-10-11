@@ -18,7 +18,7 @@
     <meta name="format-detection" content="telephone=no">
 {% endblock %}
 
-{% block pageTitle %}Digideps Page Title{% endblock %}
+{% block htmlTitle %}Digideps Page Title{% endblock %}
 
 
 
@@ -56,7 +56,7 @@
                     <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
                 {% endif %}
 
-                
+
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
                     <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% else %}

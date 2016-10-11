@@ -2,8 +2,8 @@
     {% set translationDomain = "report-further-information" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} report-declaration js-report-assets-input{% endblock %}
 
     {% block pageNavigation %}
@@ -11,11 +11,11 @@
     {% endblock %}
 
     {% block pageBody %}
-            
+
         {% if action == 'edit' %}
           {% include 'AppBundle:Report/Report:_furtherInformationEdit.html.twig' %}
         {% endif %}
-        
+
         {% if action == 'view' %}
           {% include 'AppBundle:Report/Report:_furtherInformationView.html.twig' %}
         {% endif %}

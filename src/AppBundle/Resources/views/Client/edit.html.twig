@@ -4,8 +4,8 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 {% block bodyClasses %}client-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
@@ -58,7 +58,7 @@
             linkClass: 'button-link',
             linkHref: path('client_show')
         } %}
-        
+
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
         {{ form_end(form) }}

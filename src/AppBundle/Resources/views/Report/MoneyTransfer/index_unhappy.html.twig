@@ -3,9 +3,9 @@
     {% set translationDomain = "report-transfers" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block leftcontent %}
         {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}

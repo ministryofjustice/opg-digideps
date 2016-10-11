@@ -4,8 +4,8 @@
 
     {% set clientTrans = {'%client%': odr.client.firstname} %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}
         {{ 'page.pageSectionTitle' | trans(clientTrans) }}
     {% endblock %}
 

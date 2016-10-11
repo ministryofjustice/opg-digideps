@@ -4,8 +4,8 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 {% block bodyClasses %}client-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
@@ -43,7 +43,7 @@
                     <div itemprop="addressCountry">{{ client.country | country_name }}</div>
                 {% endif %}
             </dd>
-            
+
             <dt class="item-label">{{ 'clientDetails.courtDate' | trans }}</dt>
             <dd class="item-value behat-region-case-number">{{ client.courtDate | date("d/m/Y") }}</dd>
         </dl>

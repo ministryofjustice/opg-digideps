@@ -1,8 +1,8 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "feedback" %}
 
+{% block htmlTitle %}Textarea Test Page{% endblock %}
 {% block pageTitle %}Textarea Test Page{% endblock %}
-{% block title %}Textarea Test Page{% endblock %}
 
 {% block pageHeader %}
     {{ parent() }}
@@ -14,23 +14,23 @@
 
 
     <form class="in-page-form">
-    
+
         <div class="form-group">
             <label class="form-label visuallyhidden required" for="reason_for_no_contact_reason">This is a test</label>
             <textarea id="test-textarea" name="test" required="required" class="form-control expanding">
             </textarea>
         </div>
-    
-    
+
+
         <div class="form-group">
             <label class="form-label visuallyhidden required" for="reason_for_no_contact_reason">This is a test</label>
             <textarea id="test-textarea-long" name="test" required="required" class="form-control expanding">
-                lorem ipsum thingy bob what lorem ipsum thingy bob what 
+                lorem ipsum thingy bob what lorem ipsum thingy bob what
                     lorem ipsum thingy bob what lorem ipsum thingy bob what
                     lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob whatlorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what lorem ipsum thingy bob what
             </textarea>
         </div>
-    
+
     </form>
 
 

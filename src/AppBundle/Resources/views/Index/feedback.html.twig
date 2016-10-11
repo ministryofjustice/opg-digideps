@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "feedback" %}
 
-{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     <nav class="back-bar">
@@ -10,7 +10,7 @@
     </nav>
 {% endblock %}
 
-{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
 {% block pageHeader %}
     {{ parent() }}

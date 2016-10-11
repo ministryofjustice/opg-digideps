@@ -2,7 +2,7 @@
 {% set translationDomain = "home" %}
     {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block bodyClasses %}home{% endblock %}
 {% block pageContent %}
     <header class="page-header">
@@ -12,7 +12,7 @@
 
     <div id="page-body">
         <p class="page-section-description">{{ 'intro' | trans }}</p>
-        
+
         <div id="create-section" class="split-section">
             <div>
                 <h2>{{ 'iwanttocreate' | trans }}</h2>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="sign-in-section" class="split-section">
             <div>
                 <h2>{{ 'ialready' |trans }}</h2>
@@ -39,13 +39,13 @@
                 <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
             </div>
         </div>
-        
+
         <h2>{{ 'makesure' | trans }}</h2>
         {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
             transDomain: translationDomain,
             pageSectionList: 'makelist'
         } %}
-        
+
     </div>
 
     <script type="text/javascript">
@@ -58,5 +58,5 @@
             });
         });
     </script>
-    
+
 {% endblock %}

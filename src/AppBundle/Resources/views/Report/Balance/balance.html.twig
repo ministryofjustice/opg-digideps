@@ -3,13 +3,13 @@
     {% set translationDomain = "report-accounts" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}{% endblock %}
 
     {% block leftcontent %}
         {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
     {% endblock %}
-    
+
     {% block maincontent %}
         {% if report.isMissingMoneyOrAccountsOrClosingBalance() %}
             {% include 'AppBundle:Report/Balance:_balance-incomplete.html.twig'%}

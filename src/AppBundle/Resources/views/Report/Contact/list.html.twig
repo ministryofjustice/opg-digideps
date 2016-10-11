@@ -4,9 +4,9 @@
     {% trans_default_domain translationDomain %}
     {% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'listPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'listPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
 

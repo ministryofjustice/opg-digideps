@@ -3,9 +3,8 @@
     {% trans_default_domain translationDomain %}
 
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} report-declaration js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
         {# no navigation bar for declaration #}

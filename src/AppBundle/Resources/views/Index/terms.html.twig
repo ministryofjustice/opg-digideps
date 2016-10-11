@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "common" %}
 
-{% block pageTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     <nav class="back-bar">
@@ -10,7 +10,7 @@
     </nav>
 {% endblock %}
 
-{% block title %}{{ 'Terms And Conditions' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'Terms And Conditions' | trans }}{% endblock %}
 
 {% block pageHeader %}
     {{ parent() }}

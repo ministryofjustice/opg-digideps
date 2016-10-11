@@ -4,8 +4,8 @@
 {% trans_default_domain translationDomain %}
 
 {% block bodyClasses %}action-page{% endblock %}
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 
 {% block pageBody %}
@@ -17,7 +17,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section"> 
+    <div class="form-section">
       <fiedset>
         <legend class="hidden">Future financial decisions</legend>
         {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
@@ -39,8 +39,8 @@
         </div>
     </fieldset>
     </div>
-        
-    <div class="form-section">     
+
+    <div class="form-section">
     <fieldset>
         <legend class="hidden">Concerns for future</legend>
         {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
@@ -62,7 +62,7 @@
         </div>
     </fieldset>
     </div>
-        
+
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.save') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

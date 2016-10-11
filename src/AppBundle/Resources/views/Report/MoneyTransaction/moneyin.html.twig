@@ -3,8 +3,8 @@
     {% set translationDomain = "report-accounts" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyIn' | trans({}, "report-accounts") }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyIn' | trans({}, "report-accounts") }}{% endblock %}
     {% block info %}<span id="save-status"></span>{% endblock %}
     {% block leftcontent %}
         {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}

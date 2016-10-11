@@ -1,10 +1,10 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "signin" %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
 
-{% block title %}
+{% block pageTitle %}
     {% if isAdmin %}
         {{ 'admin.pageTitle' | trans }}
     {% else %}
