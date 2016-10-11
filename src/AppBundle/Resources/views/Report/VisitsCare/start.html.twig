@@ -1,4 +1,4 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
 {% set translationDomain = "report-visits-care" %}
 {% trans_default_domain translationDomain %}
@@ -6,25 +6,13 @@
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% block pageNavigation %}
-<div class="breadcrumbs">
-    <ol class="group">
-        <li><a href="#">Deputy reports</a></li>
-        <li><a href="#">Deputy report overview</a></li>
-    </ol>
-</div>
-{% endblock %}
-
-{% block pageBody %}
+{% block pageContent %}
 
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
 
     <p class="page-section-description">
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
     </p>
-
-    {% block validationSummary %}
-    {% endblock %}
 
     {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
           transDomain: translationDomain
@@ -37,8 +25,3 @@
     </div>
 
 {% endblock %}
-
-{% block pageBodyFooterNav %}
-{% endblock %}
-
-{% endembed %}
