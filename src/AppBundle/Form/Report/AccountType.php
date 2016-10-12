@@ -2,12 +2,16 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Entity\Report\Account;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class AccountType extends AbstractType
 {
@@ -39,9 +43,18 @@ class AccountType extends AbstractType
             ]);
             $builder->add('accountNumber', 'text', ['max_length' => 4]);
             $builder->add('sortCode', new SortCodeType(), [
-                'error_bubbling' => false,
-                'required' => false,
-            ]);
+            'error_bubbling' => false,
+            'required' => false,
+            'constraints' => new Chain([
+                'constraints' => [
+                    new NotBlank(['message'=>'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
+                    new Type(['type' => 'numeric', 'message'=>'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
+                    new Length(['min'=>6, 'max'=>6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
+                ],
+                'stopOnError' => true,
+                'groups' => ['bank-account-sortcode'],
+            ]),
+        ]);
         }
 
         if ($this->step === 3) {

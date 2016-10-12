@@ -75,9 +75,6 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"bank-account-sortcode"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"bank-account-sortcode"})
-     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"bank-account-sortcode"})
      * @JMS\Groups({"account"})
      * 
      * @var string
