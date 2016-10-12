@@ -147,7 +147,7 @@ class BankAccountController extends AbstractController
         }
         // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
         $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
-        $form = $this->createForm(new FormDir\Report\AccountType(), $account);
+        $form = $this->createForm(new FormDir\Report\BankAccountType(), $account);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
