@@ -22,6 +22,12 @@ class BankAccount
         'other' => 'Other',
     ];
 
+    private static $typesRequiringSortCode = [
+        'postoffice',
+        'cfo',
+        'other_no_sortcode'
+    ];
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"bank-account"})
@@ -242,6 +248,6 @@ class BankAccount
      */
     public function requiresBankNameAndSortCode()
     {
-        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
+        return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
     }
 }
