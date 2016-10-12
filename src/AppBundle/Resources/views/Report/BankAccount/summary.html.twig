@@ -33,7 +33,8 @@
 
 <ul id="bank-account-list" class="card-list behat-region-list-accounts">
     {% for account in report.accounts %}
-    <li><hr/>
+    <li>
+        <hr/>
         <ul>
             <li>
                 {{ account.bank }} ({{ account.accountTypeText }})
@@ -65,9 +66,13 @@
             </li>
             <li>
                 <a class="edit-link behat-link-account-{{ account.accountNumber }}"
-                   href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">Edit
-                    this
-                    account</a>
+                   href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
+                    Edit
+                </a>
+                <a class="edit-link behat-link-account-{{ account.accountNumber }}"
+                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
+                    Delete
+                </a>
             </li>
             </li>
             {% endfor %}

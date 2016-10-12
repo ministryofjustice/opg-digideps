@@ -18,7 +18,7 @@ class BankAccountController extends AbstractController
     const STEPS = 3;
 
     /**
-     * @Route("/report/{reportId}/accounts/start", name="bank_accounts")
+     * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
@@ -34,7 +34,7 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/account/step{step}/{accountId}", name="bank_account_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_account_step", requirements={"step":"\d+"})
      * @Template()
      */
     public function stepAction(Request $request, $reportId, $step, $accountId = null)
@@ -132,7 +132,7 @@ class BankAccountController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/accounts", name="bank_accounts_summary")
+     * @Route("/report/{reportId}/bank-accounts", name="bank_accounts_summary")
      *
      * @param int $reportId
      * @Template()
@@ -152,21 +152,21 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/{id}/delete", name="account_delete")
+     * @Route("/report/{reportId}/bank-account/{accountId}/delete", name="bank_account_delete")
      *
      * @param int $reportId
-     * @param int $id
+     * @param int $accountId
      *
      * @return RedirectResponse
      */
-    public function deleteAction($reportId, $id)
+    public function deleteAction($reportId, $accountId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
 
-        if ($report->hasAccountWithId($id)) {
-            $this->getRestClient()->delete("/account/{$id}");
+        if ($report->hasAccountWithId($accountId)) {
+            $this->getRestClient()->delete("/account/{$accountId}");
         }
 
-        return $this->redirect($this->generateUrl('bank_accounts', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
     }
 }
