@@ -81,10 +81,11 @@ class AccountType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-account-form',
+            'translation_domain' => 'report-bank-accounts',
             'validation_groups' => function (FormInterface $form) {
 
-                $data = $form->getData(); /* @var $data \AppBundle\Entity\Report\Account */
+                $data = $form->getData();
+                /* @var $data \AppBundle\Entity\Report\Account */
 
                 $validationGroups = [];
 
@@ -93,19 +94,20 @@ class AccountType extends AbstractType
                 }
 
                 if ($this->step === 2) {
-                    $validationGroups = ['bank-account-name', 'bank-account-number', 'bank-account-sortcode'];
+                    $validationGroups = ['bank-account-number'];
+                    if ($data->requiresBankNameAndSortCode()) {
+                        $validationGroups[] = 'bank-account-name';
+                        $validationGroups[] = 'bank-account-sortcode';
+                    }
                 }
 
                 if ($this->step === 3) {
-
+                    $validationGroups = [
+                        'bank-account-is-joint',
+                        'bank-account-opening-balance',
+                        //'bank-account-closing-balance',
+                    ];
                 }
-
-                //                $validationGroups = ['add_edit'];
-//
-//                if ($data->requiresBankNameAndSortCode()) {
-//                    $validationGroups[] = 'sortcode';
-//                    $validationGroups[] = 'bank_name';
-//                }
 
                 return $validationGroups;
             },

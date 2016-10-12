@@ -1,3 +1,6 @@
+# deprecated.
+# move entries into separate sections
+# bank accounts already moved to report-bank-accounts
 page:
   htmlTitle: "Deputy report - money paid in and out | GOV.UK"
   pageSectionTitle: "Bank or building society accounts"

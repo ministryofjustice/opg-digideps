@@ -34,38 +34,50 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/step/{step}", name="bank_accounts_step")
+     * @Route("/report/{reportId}/account/step{step}/{accountId}", name="bank_account_step", requirements={"step":"\d+"})
      * @Template()
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
+        // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $dataToPassToNextStep = $dataFromUrl;
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
         $comingFromSummaryPage = $request->get('from') === 'summary';
+        $defaultRouteParams = [
+            'reportId' => $reportId,
+            'accountId' => $accountId,
+        ];
 
-        $account = new EntityDir\Report\Account();
-        $account->setReport($report);
-        // set data from URL
-        $account->setAccountType($dataFromUrl['type']);
-        $account->setBank($dataFromUrl['bank']);
-        $account->setAccountNumber($dataFromUrl['number']);
-        $account->setSortCode($dataFromUrl['sort-code']);
-        $account->setIsJointAccount($dataFromUrl['is-joint']);
-        $account->setOpeningBalance($dataFromUrl['closing-balance']);
-        $account->setClosingBalance($dataFromUrl['opening-balance']);
+        // create (add mode) or load account (edit mode)
+        if ($accountId) {
+            $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\Account');
+        } else {
+            $account = new EntityDir\Report\Account();
+            $account->setReport($report);
+        }
 
+
+        // add URL-data into model
+        isset($dataFromUrl['type']) && $account->setAccountType($dataFromUrl['type']);
+        isset($dataFromUrl['bank']) && $account->setBank($dataFromUrl['bank']);
+        isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
+        isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
+        isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
+        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
+        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+
+        // crete and handle form
         $form = $this->createForm(new FormDir\Report\AccountType($step), $account);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-//            $data = $form->getData();
             // if closing balance is set to non-zero values, un-close the account
             /*if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);
             }*/
 
+            // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $dataToPassToNextStep['type'] = $account->getAccountType();
             }
@@ -76,44 +88,37 @@ class BankAccountController extends AbstractController
                 $dataToPassToNextStep['sort-code'] = $account->getSortCode();
             }
 
-            if ($step == 3) {
-                $dataToPassToNextStep['is-joint'] = $account->getIsJointAccount();
-                $dataToPassToNextStep['closing-balance'] = $account->getOpeningBalance();
-                $dataToPassToNextStep['opening-balance'] = $account->getClosingBalance();
-                //TODO
-                // think about generic function to save/load from string into the model
+            // last step: save
+            if ($step == self::STEPS) {
+                if ($accountId) {
+                    $this->getRestClient()->put('/account/' . $accountId, $account, ['account']);
+                } else {
+                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
+                }
             }
+
 
             // return to summary if coming from there, or it's the last step
-            if ($comingFromSummaryPage) {
-                return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId, 'stepEdited' => $step]);
-            }
-            if ($step == self::STEPS) {
-                echo "<pre>";
-                \Doctrine\Common\Util\Debug::dump('save time !', 4);
-                die;
-                $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
-                return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            if ($step == self::STEPS || $comingFromSummaryPage) {
+                return $this->redirectToRoute('bank_accounts_summary', ['stepEdited' => $step] + $defaultRouteParams);
             }
 
-            return $this->redirectToRoute('bank_accounts_step', [
-                'account' => $account,
-                'reportId' => $reportId,
-                'step' => $step + 1,
-                'data' => $dataToPassToNextStep
-            ]);
+            return $this->redirectToRoute('bank_account_step', [
+                    'step' => $step + 1,
+                    'data' => $dataToPassToNextStep
+                ] + $defaultRouteParams);
         }
 
+        // generate backlink
         $backLink = null;
-        if ($comingFromSummaryPage) {
-            $backLink = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
+        if ($comingFromSummaryPage || $step == self::STEPS) {
+            $backLink = $this->generateUrl('bank_accounts_summary', $defaultRouteParams);
         } else if ($step == 1) {
-            $backLink = $this->generateUrl('bank_accounts', ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('bank_accounts', $defaultRouteParams);
         } else { // step > 1
             // TODO
-            $backLink = $this->generateUrl('bank_accounts_step', ['reportId' => $reportId, 'step' => $step - 1, 'data' => $dataFromUrl]);
+            $backLink = $this->generateUrl('bank_account_step', ['step' => $step - 1, 'data' => $dataFromUrl] + $defaultRouteParams);
         }
-
 
         return [
             'account' => $account,
@@ -143,47 +148,6 @@ class BankAccountController extends AbstractController
 
         return [
             'report' => $report,
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/accounts/banks/edit/{id}", name="bank_account_edit", defaults={ "id" = null })
-     *
-     * @param Request $request
-     * @param int $reportId
-     * @param int $id account Id
-     *
-     * @Template()
-     *
-     * @return array
-     */
-    public function editAction(Request $request, $reportId, $id)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
-
-        if (!$report->hasAccountWithId($id)) {
-            throw new \RuntimeException('Account not found.');
-        }
-        $account = $this->getRestClient()->get('report/account/' . $id, 'Report\\Account');
-
-        $form = $this->createForm(new FormDir\Report\AccountType(), $account);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $data->setReport($report);
-            // if closing balance is set to non-zero values, un-close the account
-            if (!$data->isClosingBalanceZero()) {
-                $data->setIsClosed(false);
-            }
-            $this->getRestClient()->put('/account/' . $id, $account, ['account']);
-
-            return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
-        }
-
-        return [
-            'report' => $report,
-            'form' => $form->createView(),
-            'account' => $account,
         ];
     }
 

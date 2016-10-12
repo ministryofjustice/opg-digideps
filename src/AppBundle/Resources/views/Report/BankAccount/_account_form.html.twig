@@ -1,11 +1,9 @@
-{% set translationDomain = "report-account-form" %}
-
-{{ form_errors_list(form) }}
+{% set translationDomain = "report-bank-accounts" %}
 
 {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        {{ form_checkbox_group(form.accountType, 'accountForm.accountType', {
+        {{ form_checkbox_group(form.accountType, 'form.accountType', {
             'fieldSetClass' : 'inline',
             'legendClass' : 'form-label',
             'items': [
@@ -21,15 +19,24 @@
     {% endif %}
 
 {% if step == 2 %}
-    {{ form_input(form.bank, 'accountForm.bank') }}
 
-    {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
+    {% if account.requiresBankNameAndSortCode %}
+        {{ form_input(form.bank, 'form.bank') }}
+    {% else %}
+        {% do form.bank.setRendered %}
+    {% endif %}
+
+    {{ form_input(form.accountNumber, 'form.accountNumber', {
         'inputClass' : 'account-number'
     }) }}
 
-    {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
-        'inputType' : 'Number'
-    }) }}
+    {% if account.requiresBankNameAndSortCode %}
+        {{ form_sort_code(form.sortCode, 'form.sortCode', {
+            'inputType' : 'Number'
+        }) }}
+    {% else %}
+        {% do form.sortCode.setRendered %}
+    {% endif %}
 {% endif %}
 
 {% if step == 3 %}
@@ -37,7 +44,7 @@
     <legend class="hidden">Joint account</legend>
     {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
         'fieldSetClass' : 'inline',
-        'legendText' : 'accountForm.isJointAccount.label' | trans({}, translationDomain),
+        'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
         'legendClass' : 'form-label',
         'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
@@ -47,29 +54,26 @@
     </fieldset>
 
     {{ form_input(form.openingBalance, '', {
-        'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
+        'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     } ) }}
-    {{ form_input(form.closingBalance, 'accountForm.closingBalance', {
-        'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+    {{ form_input(form.closingBalance, 'form.closingBalance', {
+        'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     } ) }}
 
-    {{ form_checkbox(form.isClosed,'accountForm.isClosed', {
+    {{ form_checkbox(form.isClosed,'form.isClosed', {
         'labelClass': 'required',
     }) }}
     {% endif %}
 
-    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-    transDomain: translationDomain,
-    section: 'account'
-    } %}
+    <div class="save-bar button-bar">
+        {{ form_submit(form.save,'form.save', { 'buttonClass': '' }) }}
+    </div>
 
     {{ form_end(form) }}
-
-    {{ dump(account) }}
 
     <script>
         $('input.form-control__number').on('blur', function (event) {
