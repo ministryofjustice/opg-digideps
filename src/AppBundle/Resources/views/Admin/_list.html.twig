@@ -1,6 +1,6 @@
 <div class="behat-region-users user-list">
 
-    <h1 class="form-title heading-medium-large" id="users-list-title">
+    <h1 class="form-title heading-medium" id="users-list-title">
         User list
     </h1>
 
@@ -74,7 +74,7 @@
     <div style="float: right">
         {{ userCount }} users in total.
         {% if userCount > limit %}
-            Go to page 
+            Go to page
             {% set pages = range(0, userCount, limit) %}
             {% for currentOffset in pages %}
                 {% if currentOffset == offset %}

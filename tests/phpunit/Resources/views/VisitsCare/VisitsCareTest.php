@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Resources\views\Safeguard;
+namespace AppBundle\Resources\views\VisitsCare;
 
 use AppBundle\Entity as EntityDir;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -9,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use AppBundle\Form as FormDir;
 use Mockery as m;
 
-class SafeguardTest extends WebTestCase
+class VisitsCareTest extends WebTestCase
 {
     /** @var  \Symfony\Bundle\TwigBundle\TwigEngine */
     private $twig;
@@ -25,7 +25,7 @@ class SafeguardTest extends WebTestCase
         $this->twig = $this->container->get('templating');
 
         $request = new Request();
-        $request->create('/report/1/safeguarding');
+        $request->create('/report/1/visits-care');
         $this->container->enterScope('request');
         $this->container->set('request', $request, 'request');
         $this->container->get('request_stack')->push(Request::createFromGlobals());
@@ -38,25 +38,25 @@ class SafeguardTest extends WebTestCase
     }
 
     /** @test */
-    public function showContinueWhenSafeguardingSaved()
+    public function showContinueWhenVisitsCareSaved()
     {
-        $safeguarding = new EntityDir\Report\Safeguarding();
+        $visitsCare = new EntityDir\Report\VisitsCare();
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('isDue')->andReturn(false)
-                ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
+                ->shouldReceive('getVisitsCare')->andReturn($visitsCare)
                 ->getMock();
 
         $client = m::mock('AppBundle\Entity\Client')
                 ->shouldIgnoreMissing(true)
                 ->getMock();
 
-        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
+        $form = $this->createForm(new FormDir\Report\VisitsCareType(), $visitsCare);
 
-        $html = $this->twig->render('AppBundle:Report/Safeguard:edit.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/VisitsCare:edit.html.twig', [
             'report' => $report,
             'form' => $form->createView(),
             'client' => $client,

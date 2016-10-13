@@ -16,6 +16,7 @@ Feature: User Self Registration
             | self_registration_email_first     |  |
             | self_registration_email_second     |  |
             | self_registration_postcode  |  |
+            | self_registration_clientFirstname |  |
             | self_registration_clientLastname |  |
             | self_registration_caseNumber     |   |
         And I press "self_registration_save"
@@ -24,6 +25,7 @@ Feature: User Self Registration
             | self_registration_firstname |
             | self_registration_lastname  |
             | self_registration_email_first     |
+            | self_registration_clientFirstname |
             | self_registration_clientLastname |
             | self_registration_caseNumber     |
         #
@@ -33,9 +35,10 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email_first     | aaa@invaliddomain.comm |
-            | self_registration_email_second     | aaa@invaliddomain.comm |
+            | self_registration_email_first     | aaa@invaliddomain |
+            | self_registration_email_second     | aaa@invaliddomain |
             | self_registration_postcode  |  |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
@@ -52,6 +55,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_email_second     | behat-zac.tolley-diff@digital.justice.gov.uk |
             | self_registration_postcode  |  |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
@@ -68,6 +72,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_email_second     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  |  |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
@@ -117,6 +122,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley-new@digital.justice.gov.uk |
             | self_registration_email_second     | behat-zac.tolley-new@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross-Tolley  |
             # add case number already used
             | self_registration_caseNumber     | 11112222      |
@@ -133,6 +139,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_email_second    | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF2 |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross-Tolley2  |
             | self_registration_caseNumber     | 11113333      |
         And I press "self_registration_save"
@@ -144,6 +151,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_email_second     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
@@ -165,6 +173,7 @@ Feature: User Self Registration
             | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_email_second     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
+            | self_registration_clientFirstname | John  |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"

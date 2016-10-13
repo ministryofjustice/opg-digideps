@@ -1,9 +1,0 @@
-{% set questionLabel = question ~ '.label' %}
-{% if options is not defined %}
-{%   set options = {} %}
-{% endif %}
-
-<div class="question-and-answer" id="{{question | escape('css')}}">
-    <div class="question">{{questionLabel | trans(options, translationDomain)}}</div>
-    <div class="answer">{{answer | trans(options, translationDomain)}}</div>
-</div>

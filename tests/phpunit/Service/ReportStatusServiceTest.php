@@ -24,7 +24,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getContacts' => null,
                 'getReasonForNoContacts' => null,
                 'getReasonForNoDecisions' => null,
-                'getSafeguarding' => null,
+                'getVisitsCare' => null,
                 'getAction' => null,
                 'getMentalCapacity' => null,
                 'hasMoneyIn' => false,
@@ -85,33 +85,33 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getContactsState());
     }
 
-    public function safeguardingProvider()
+    public function visitsCareProvider()
     {
-        $safegOk = m::mock(\AppBundle\Entity\Report\Safeguarding::class, [
-            'missingSafeguardingInfo' => false,
+        $visitsCareOk = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
+            'missingVisitsCareInfo' => false,
         ]);
 
-        $safegErr = m::mock(\AppBundle\Entity\Report\Safeguarding::class, [
-            'missingSafeguardingInfo' => true,
+        $visitsCareErr = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
+            'missingVisitsCareInfo' => true,
         ]);
 
         return [
             // not started
             [[], StatusService::STATE_NOT_STARTED],
-            [['getSafeguarding' => $safegErr], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $visitsCareErr], StatusService::STATE_NOT_STARTED],
             // done
-            [['getSafeguarding' => $safegOk], StatusService::STATE_DONE],
+            [['getVisitsCare' => $visitsCareOk], StatusService::STATE_DONE],
         ];
     }
 
     /**
      * @test
-     * @dataProvider safeguardingProvider
+     * @dataProvider visitsCareProvider
      */
-    public function safeguarding($mocks, $state)
+    public function visitsCare($mocks, $state)
     {
         $object = $this->getReportMocked($mocks);
-        $this->assertEquals($state, $object->getSafeguardingState());
+        $this->assertEquals($state, $object->getVisitsCareState());
     }
 
     public function accountProvider()
@@ -232,7 +232,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $expected = [
             'decisions' => 'not-started',
             'contacts' => 'not-started',
-            'safeguarding' => 'not-started',
+            'visitsCare' => 'not-started',
             'actions' => 'not-started',
             'accounts' => 'not-started',
             'assets' => 'not-started',
@@ -248,7 +248,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             // create using last DONE section of each provider
             [array_pop($this->decisionsProvider())[0], 'decisions'],
             [array_pop($this->contactsProvider())[0], 'contacts'],
-            [array_pop($this->safeguardingProvider())[0], 'safeguarding'],
+            [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             [array_pop($this->accountProvider())[0], 'accounts'],
             [array_pop($this->assetsDebtsProvider())[0], 'assets'],
             [array_pop($this->actionsProvider())[0], 'actions'],
@@ -274,7 +274,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getReportMocked(
             array_pop($this->decisionsProvider())[0]
             + array_pop($this->contactsProvider())[0]
-            + array_pop($this->safeguardingProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
             + array_pop($this->accountProvider())[0]
             + array_pop($this->assetsDebtsProvider())[0]
             + array_pop($this->actionsProvider())[0]

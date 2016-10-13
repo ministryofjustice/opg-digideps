@@ -4,7 +4,7 @@
 {% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    <nav id="back-bar">
+    <nav class="back-bar">
         <a id="overview-button" href="{{ path('homepage') }}">Back to deputy report</a>
         {% include 'AppBundle:Components:_helpline.html.twig' %}
     </nav>
@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block validationSummary %}
-    
+
 {% endblock %}
 
 
@@ -41,7 +41,7 @@
                 {'labelClass': 'block-label' },
             ]
         }) }}
-        
+
         {{ form_checkbox_group(form.help, 'help', {
 
             'fieldSetClass' : 'vertical',
@@ -69,15 +69,13 @@
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
             {{ form_submit(form.save,'send') }}
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-        
+
 
     {{ form_end(form) }}
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('.radio-vertical-group').each(function(index, element) {
-                new opg.RadioGroup(element);
-            });
+
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
             new opg.RadioHide({
                 radio:'.email-yes-no input[type=radio]',

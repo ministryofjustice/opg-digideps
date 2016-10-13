@@ -28,11 +28,11 @@
         <h2 class="heading">{{ 'heading.careAndWelfare' | trans() }}</h2>
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'safeguarding',
+            subSection: 'visits_care',
             report: report,
             info: true,
             description: true,
-            state: reportStatus.safeguardingState,
+            state: reportStatus.visitsCareState,
         } %}
     </li>
 

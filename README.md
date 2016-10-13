@@ -57,3 +57,8 @@ With special thanks to [BrowserStack](https://www.browserstack.com) for providin
 A brief note about dependencies. First, although we use node 4.x when building containers we also specify NPM version 3. This version of NPM has a number of important improvements over NPM version 2 which is bundled with node 4, the main one being directory structure.
 
 Dependencies are veersioned to avoid accidently breaking the build. From time to time new review those dependencies to see if a valid new version is available, the chief of these should be [govuk-elements-sass](https://www.npmjs.com/package/govuk-elements-sass)
+
+
+## Coding standards
+
+[PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)

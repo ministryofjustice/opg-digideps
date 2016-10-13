@@ -10,14 +10,14 @@
 {% endblock %}
 
 {% block pageBody %}
-   <h1 class="form-title heading-medium-large">
+   <h1 class="form-title heading-medium">
      Delete user
   </h1>
-    
+
     Are you sure that you want to delete the user <span style="font-weight: bolder"> {{user.getFullname()}} </span> ?
-    
+
  {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
- 
+
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                transDomain: 'admin',
                linkButtonLabel: 'yes.label',
@@ -31,7 +31,7 @@
                linkClass: 'button-secondary',
                linkHref: path('admin_editUser', { what: 'user_id', filter: user.id })
                } %}
-               
+
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
 {% endblock %}

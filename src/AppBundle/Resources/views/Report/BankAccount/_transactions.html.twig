@@ -21,7 +21,7 @@
                         {#access the element via ID, set from the model therefore matching#}
                         {{ form_row(formTransactions[id].id) }}
                         {{ form_row(formTransactions[id].type) }}
-                        
+
                         {% for a in formTransactions[id].amounts %}
                             {% set labelText =  loop.index == 1 ? ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions') : '' %}
                             {{ form_input(a, 'form.entries.' ~ transaction.id, {
@@ -79,7 +79,7 @@
             preprocessor: GOVUK.moneyInOuPreprocessor
         });
         $('form.expanding-transaction-table button[type="submit"]').hide();
-        
+
         $('.add-transaction').removeClass('hidden');
 
         $('input.transaction-value').on('blur', function (event) {

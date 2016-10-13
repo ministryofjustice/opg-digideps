@@ -28,7 +28,7 @@ class Report
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"safeguarding"})
+     * @JMS\Groups({"visits-care"})
      *
      * @var int
      */
@@ -119,11 +119,11 @@ class Report
     private $decisions;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Report\Safeguarding")
+     * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
      *
-     * @var Safeguarding
+     * @var VisitsCare
      */
-    private $safeguarding;
+    private $visitsCare;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Action")
@@ -779,19 +779,19 @@ class Report
     }
 
     /**
-     * @return \AppBundle\Entity\Report\Safeguarding
+     * @return \AppBundle\Entity\Report\VisitsCare
      */
-    public function getSafeguarding()
+    public function getVisitsCare()
     {
-        return $this->safeguarding;
+        return $this->visitsCare;
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Safeguarding $safeguarding
+     * @param \AppBundle\Entity\Report\VisitsCare $visitsCare
      */
-    public function setSafeguarding($safeguarding)
+    public function setVisitsCare($visitsCare)
     {
-        $this->safeguarding = $safeguarding;
+        $this->visitsCare = $visitsCare;
     }
 
     public function getAction()

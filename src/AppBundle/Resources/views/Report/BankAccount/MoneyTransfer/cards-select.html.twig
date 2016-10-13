@@ -1,0 +1,5 @@
+{% for account in accounts %}
+    {% include 'AppBundle:Report/BankAccount/MoneyTransfer:card.html.twig' with {
+       'account': account
+    }%}
+{% endfor %}

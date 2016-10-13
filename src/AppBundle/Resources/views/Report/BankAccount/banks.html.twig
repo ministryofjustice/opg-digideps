@@ -12,7 +12,7 @@
 
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+        <h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">
           {{ 'banks.pageSectionDescription' | trans({
             '%client%': report.client.firstname,
@@ -45,7 +45,7 @@
                     </div>
                 {% endif %}
                 <li class="card-item">
-                    <a href="{{ path('upsert_account' , {'reportId': report.id}) }}" class="card add" id="add-account">Add account</a>
+                    <a href="{{ path('account_upsert' , {'reportId': report.id}) }}" class="card add" id="add-account">Add account</a>
                     <div class="meta-data"></div>
                 </li>
             {% endblock %}
@@ -102,7 +102,7 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("safeguarding" , {'reportId': report.id }),
+        'previousLink': path("visits_care" , {'reportId': report.id }),
         'previousLabel': 'Visits and care',
         'nextLink': path("transfers" , {'reportId': report.id }),
         'nextLabel': 'Money transfers'

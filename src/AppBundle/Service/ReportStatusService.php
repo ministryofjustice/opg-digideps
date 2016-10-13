@@ -44,9 +44,9 @@ class ReportStatusService
     }
 
     /** @return string */
-    public function getSafeguardingState()
+    public function getVisitsCareState()
     {
-        if (!$this->report->getSafeguarding() || $this->report->getSafeguarding()->missingSafeguardingInfo()) {
+        if (!$this->report->getVisitsCare() || $this->report->getVisitsCare()->missingVisitsCareInfo()) {
             return self::STATE_NOT_STARTED;
         } else {
             return self::STATE_DONE;
@@ -156,7 +156,7 @@ class ReportStatusService
         $states = [
             'decisions' => $this->getDecisionsState(),
             'contacts' => $this->getContactsState(),
-            'safeguarding' => $this->getSafeguardingState(),
+            'visitsCare' => $this->getVisitsCareState(),
             'actions' => $this->getActionsState(),
         ];
 
