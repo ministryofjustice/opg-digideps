@@ -204,6 +204,9 @@ class BehatController extends AbstractController
 
 
     /**
+     * Display emails into a webpage
+     * Login is required
+     *
      * @Route("/email-viewer/{action}", name="email-viewer")
      * @Template()
      */

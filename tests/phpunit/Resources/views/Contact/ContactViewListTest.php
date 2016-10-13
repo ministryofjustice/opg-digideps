@@ -62,7 +62,7 @@ class ContactViewListTest extends WebTestCase
         $this->assertEquals('Mental capacity', $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
-        $this->assertEquals('/report/1/safeguarding', $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals('/report/1/visits-care', $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
         $this->assertEquals('Visits and care', $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
     }
 
@@ -91,7 +91,7 @@ class ContactViewListTest extends WebTestCase
         $this->assertEquals('Mental capacity', $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
-        $this->assertEquals('/report/1/safeguarding', $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals('/report/1/visits-care', $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
         $this->assertEquals('Visits and care', $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
     }
 

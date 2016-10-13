@@ -23,6 +23,13 @@ class Account
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
         'other' => 'Other',
+        'other_no_sortcode' => 'Other without sort code',
+    ];
+
+    private static $typesRequiringSortCode = [
+        'postoffice',
+        'cfo',
+        'other_no_sortcode'
     ];
 
     /**
@@ -63,9 +70,6 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"sortcode"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"sortcode"})
-     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"sortcode"})
      * @JMS\Groups({"account"})
      * 
      * @var string
@@ -301,7 +305,7 @@ class Account
      */
     public function requiresBankNameAndSortCode()
     {
-        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
+        return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
     }
 
     /**

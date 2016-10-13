@@ -118,7 +118,7 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="upsert_account", defaults={ "id" = null })
+     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="account_upsert", defaults={ "id" = null })
      * 
      * @param Request $request
      * @param int     $reportId
@@ -147,7 +147,7 @@ class BankAccountController extends AbstractController
         }
         // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
         $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
-        $form = $this->createForm(new FormDir\Report\AccountType(), $account);
+        $form = $this->createForm(new FormDir\Report\BankAccountType(), $account);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -168,7 +168,7 @@ class BankAccountController extends AbstractController
             if ($data->isClosingBalanceZero() &&
                 !$showIsClosed // avoid loops    
             ) {
-                return $this->redirect($this->generateUrl('upsert_account', ['reportId' => $reportId, 'id' => $id, 'show-is-closed' => 'yes']).'#form-group-account_sortCode');
+                return $this->redirect($this->generateUrl('account_upsert', ['reportId' => $reportId, 'id' => $id, 'show-is-closed' => 'yes']).'#form-group-account_sortCode');
             }
 
             return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
@@ -186,7 +186,7 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/{id}/delete", name="delete_account")
+     * @Route("/report/{reportId}/accounts/banks/{id}/delete", name="account_delete")
      *
      * @param int $reportId
      * @param int $id

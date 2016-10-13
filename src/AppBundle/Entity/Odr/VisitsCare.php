@@ -137,7 +137,7 @@ class VisitsCare
      *
      * @param string $doYouLiveWithClient
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
@@ -177,7 +177,7 @@ class VisitsCare
      *
      * @param string $doesClientReceivePaidCare
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
@@ -201,7 +201,7 @@ class VisitsCare
      *
      * @param string $whoIsDoingTheCaring
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
@@ -225,7 +225,7 @@ class VisitsCare
      *
      * @param string $doesClientHaveACarePlan
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {
@@ -249,7 +249,7 @@ class VisitsCare
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
     {
@@ -273,7 +273,7 @@ class VisitsCare
      *
      * @param string $howIsCareFunded
      *
-     * @return Safeguarding
+     * @return VisitsCare
      */
     public function setHowIsCareFunded($howIsCareFunded)
     {

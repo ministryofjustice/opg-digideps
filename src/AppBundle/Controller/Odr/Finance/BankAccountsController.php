@@ -90,7 +90,7 @@ class BankAccountsController extends AbstractController
     }
 
     /**
-     * @Route("/odr/{odrId}/finance/banks/{id}/delete", name="odr_delete_bank_account")
+     * @Route("/odr/{odrId}/finance/banks/{id}/delete", name="odr_bank_account_delete")
      *
      * @param int $odrId
      * @param int $id

@@ -24,7 +24,7 @@
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
         transDomain: translationDomain,
         section: 'account',
-        deleteLink: form.vars.value.id ? path('odr_delete_bank_account',  {'id':  form.vars.value.id, 'odrId': odr.id}) : null,
+        deleteLink: form.vars.value.id ? path('odr_bank_account_delete',  {'id':  form.vars.value.id, 'odrId': odr.id}) : null,
         listLink: path('odr-bank-accounts', {odrId: odr.id}),
     } %}
 
@@ -43,11 +43,11 @@
 $(document).ready(function() {
 
 
-    // hide sortcode when account type is "cfo" or "postoffice"
+    // hide sortcode when account type is "cfo" or "postoffice" or "other_no_sortcode"
     $('#account_accountType').change(function(event, duration) {
         var duration = typeof duration !== 'undefined' ? duration : 400;
         var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
-        if ($(this).val().match(/^(cfo|postoffice)$/)) {
+        if ($(this).val().match(/^(cfo|postoffice|other_no_sortcode)$/)) {
             bankAndsortCodeBlocks.fadeOut(duration);
         }else {
             bankAndsortCodeBlocks.fadeIn(duration);
