@@ -3,7 +3,9 @@
 
 {% block htmlTitle %}Digideps Base Page{% endblock %}
 
-{% set breadcrumbs = true %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs() }}
+{% endblock %}
 
 {% block pageContent %}
     <p>base</p>

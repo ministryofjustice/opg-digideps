@@ -6,7 +6,9 @@
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% set breadcrumbs = true %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs() }}
+{% endblock %}
 
 {% block pageContent %}
 
