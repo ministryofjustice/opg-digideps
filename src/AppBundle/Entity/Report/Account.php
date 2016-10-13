@@ -29,6 +29,11 @@ class Account
         'other_no_sortcode' => 'Other without sort code',
     ];
 
+    /**
+     * Keep in sync with client.
+     *
+     * @JMS\Exclude
+     */
     private static $typesRequiringSortCode = [
         'postoffice',
         'cfo',
