@@ -1,5 +1,8 @@
 .helpline {
-    float: right;
+    position: absolute;
+    top: 50px;
+    right: 20px;
+
     p {
         @include bold-19();
         display: inline-block;

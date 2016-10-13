@@ -111,17 +111,15 @@
         </div>
     {% endif %}
 
+    <div class="helpline">
+        <p>Helpline<br/>0115 934 2700</p>
+    </div>
+
     {% block validationSummary %}
         {% if form is defined %}
             {{ form_errors_list(form) }}
         {% endif %}
     {% endblock %}
-
-    {% if helpline %}
-        <div class="helpline">
-            <p>Helpline<br/>0115 934 2700</p>
-        </div>
-    {% endif %}
 
     <h1 class="heading-xlarge">
         {% block pageTitle %} Deputy report {% endblock %}
