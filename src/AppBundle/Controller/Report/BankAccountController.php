@@ -68,7 +68,7 @@ class BankAccountController extends AbstractController
         isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\AccountType($step), $account);
+        $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
