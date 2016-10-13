@@ -23,6 +23,13 @@ class Account
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
         'other' => 'Other',
+        'other_no_sortcode' => 'Other without sort code',
+    ];
+
+    private static $typesRequiringSortCode = [
+        'postoffice',
+        'cfo',
+        'other_no_sortcode'
     ];
 
     /**
@@ -298,7 +305,7 @@ class Account
      */
     public function requiresBankNameAndSortCode()
     {
-        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
+        return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
     }
 
     /**
