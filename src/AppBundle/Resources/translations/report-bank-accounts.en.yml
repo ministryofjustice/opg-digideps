@@ -9,7 +9,6 @@ startPage:
     accounts, and her savings accounts and ISAs.
   pageSectionDescription3: |
     We will also need to know the balance of each account.
-
   startButton: Start accounts
 
 stepPage:
@@ -22,5 +21,40 @@ summaryPage:
   pageSectionTitle: Your account has been saved
   pageSectionDescription: |
     We've listed your answers below. Check they're correct and edit them where necessary.
+  item:
+    balanceOn: Balance on
+    sortCode: Sort code
+    accountNumber: Account number
+    #totalBalance: Total balance from all accounts
+    balanceUnknown: Unknown
+    accountMissingWarning: You must add at least 1 bank account
+    balanceMissingWarning: Balance on %date% is missing
+    balanceMissingWarningBottom: |
+      You will be able to see this total when you have added the balance
+      on the %date% for all %client%'s accounts
 
 form:
+  bank:
+    label: Bank or building society name
+  meta:
+    label: Additional information (optional)
+  accountNumber:
+    label: Last 4 digits of the account number
+    preInput: "* * * *"
+  sortCode:
+    legend: Branch sort code
+  accountType:
+    label: Account type
+  openingBalance:
+    label: How much was in the account on %startDate%?
+  closingBalance:
+    label: How much was in the account on %endDate%?
+  isClosed:
+    label: I have closed this account
+  isJointAccount:
+    label: Is this a joint account ?
+    hint: " "
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel

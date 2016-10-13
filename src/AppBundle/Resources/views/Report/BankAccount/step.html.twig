@@ -8,14 +8,13 @@
     {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Opening deputy report overview</a></li>
-        </ol>
-    </div>
+        <div class="breadcrumbs">
+            <ol class="group">
+                <li><a href="#">Deputy reports</a></li>
+                <li><a href="#">Opening deputy report overview</a></li>
+            </ol>
+        </div>
     {% endblock %}
-
 
     {% block pageBody %}
 
@@ -26,7 +25,6 @@
         {% endblock %}
 
         {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
-
 
     {% endblock %}
 

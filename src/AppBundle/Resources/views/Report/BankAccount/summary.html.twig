@@ -1,0 +1,106 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-bank-accounts" %}
+    {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+
+    {% block pageNavigation %}
+        <div class="breadcrumbs">
+            <ol class="group">
+                <li><a href="#">Deputy reports</a></li>
+                <li><a href="#">Deputy report overview</a></li>
+            </ol>
+        </div>
+    {% endblock %}
+
+    {# ID killing for layout #}
+    {% block leftContentId %}{% endblock %}
+
+    {% block pageBody %}
+
+<p class="page-section-description text-secondary">
+    {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
+</p>
+
+{# http://hzaiwi.axshare.com/#g=1&p=accounts_-_check_answers_-_summary #}
+
+<a href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1}) }}"
+   class="" id="add-account">Add account</a>
+
+<ul id="bank-account-list" class="card-list behat-region-list-accounts">
+    {% for account in report.accounts %}
+    <li>
+        <hr/>
+        <ul>
+            <li>
+                {{ account.bank }} ({{ account.accountTypeText }})
+            </li>
+            <li>
+                {{ 'summaryPage.item.accountNumber' | trans({}, translationDomain) }}:
+                ****{{ account.accountNumber }}</li>
+            {% if account.requiresBankNameAndSortCode %}
+                <li>
+                    {{ 'summaryPage.item.sortCode' | trans({}, translationDomain) }}:
+                    {{ account.sortCode }}
+                </li>
+            {% endif %}
+            <li>
+                {{ 'summaryPage.item.balanceOn' | trans({}, translationDomain) }}
+                {{ report.startDate | date("j M Y") }}
+                :
+                £{{ account.openingBalance == null ? '—,-' : (account.openingBalance | money_format) }}
+            </li>
+            <li>
+                {{ 'summaryPage.item.balanceOn' | trans({}, translationDomain) }} {{ report.endDate | date("j M Y") }}
+                :
+
+                {% if account.closingBalance == null %}
+                    {{ 'summaryPage.item.balanceUnknown' | trans({}, translationDomain) }}
+                {% else %}
+                    £{{ account.closingBalance | money_format }}
+                {% endif %}
+            </li>
+            <li>
+                <a class="edit-link behat-link-account-{{ account.accountNumber }}"
+                   href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
+                    Edit
+                </a>
+                <a class="edit-link behat-link-account-{{ account.accountNumber }}"
+                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
+                    Delete
+                </a>
+            </li>
+            </li>
+            {% endfor %}
+        </ul>
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.help-item').each(function (index, item) {
+                    opg.accordian({
+                        target: item,
+                        open: false
+                    });
+                });
+            });
+        </script>
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
+
+        {% endblock %}
+
+        {% block pageBodyFooterNav %}
+            {% include 'AppBundle:Components:nextprevious.html.twig' with {
+            'previousLink': path("contacts" , {'reportId': report.id }),
+            'previousLabel': 'Contacts',
+            'nextLink': path("accounts" , {'reportId': report.id }),
+            'nextLabel': 'Accounts'
+            } %}
+        {% endblock %}
+
+        {% endembed %}

@@ -9,6 +9,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Entity\Account;
+use AppBundle\Validator\Constraints\Chain;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class BankAccountType extends AbstractType
 {
@@ -27,6 +31,15 @@ class BankAccountType extends AbstractType
         $builder->add('sortCode', new SortCodeType(), [
             'error_bubbling' => false,
             'required' => false,
+            'constraints' => new Chain([
+                'constraints' => [
+                    new NotBlank(['groups' => ['sortcode'], 'message'=>'account.sortCode.notBlank']),
+                    new Type(['type' => 'numeric', 'message'=>'account.sortCode.type', 'groups' => ['sortcode']]),
+                    new Length(['min'=>6, 'max'=>6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['sortcode']]),
+                ],
+                'stopOnError' => true,
+                'groups' => ['sortcode'],
+            ]),
         ]);
 
         $builder->add('balanceOnCourtOrderDate', 'number', [

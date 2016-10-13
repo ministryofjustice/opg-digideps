@@ -63,10 +63,6 @@ class BankAccount
      * @JMS\Type("string")
      * @JMS\Groups({"bank-account"})
      *
-     * @Assert\NotBlank( message="odr.account.sortCode.notBlank", groups={"basic", "sortcode"})
-     * @Assert\Type(type="numeric", message="odr.account.sortCode.type", groups={"basic", "sortcode"})
-     * @Assert\Length(min=6, max=6, exactMessage="odr.account.sortCode.length", groups={"basic", "sortcode"})
-     *
      * @var string
      */
     private $sortCode;
