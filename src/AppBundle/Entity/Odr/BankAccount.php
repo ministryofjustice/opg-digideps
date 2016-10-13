@@ -20,6 +20,7 @@ class BankAccount
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
         'other' => 'Other',
+        'other_no_sortcode' => 'Other without sort code',
     ];
 
     private static $typesRequiringSortCode = [
