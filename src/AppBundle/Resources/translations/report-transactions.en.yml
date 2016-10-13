@@ -198,10 +198,10 @@ form:
     tax-payments-to-hmrc:
       label: Tax payments to HMRC
     transfers-out-to-other-accounts:
-      label: Transfers between %client%'s accounts
+      label: Transfers from %client%'s account to other accounts
       moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     cash-withdrawn:
-      label: Cash withdrawn from %client%'s accounts
+      label: Cash withdrawn from %client%'s account
       moreInformations: For each withdrawal enter the date, the amount and what it was for
     anything-else-paid-out:
       label: Anything else paid out
