@@ -1,26 +1,19 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-bank-accounts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-        <div class="breadcrumbs">
-            <ol class="group">
-                <li><a href="#">Deputy reports</a></li>
-                <li><a href="#">Deputy report overview</a></li>
-            </ol>
-        </div>
-    {% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
-    {# ID killing for layout #}
-    {% block leftContentId %}{% endblock %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-    {% block pageBody %}
+{% block pageContent %}
 
 <p class="page-section-description text-secondary">
     {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
@@ -91,16 +84,12 @@
         </script>
 
         <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("contacts" , {'reportId': report.id }),
+        'previousLabel': 'Contacts',
+        'nextLink': path("bank_accounts" , {'reportId': report.id }),
+        'nextLabel': 'Accounts'
+        } %}
 
         {% endblock %}
 
-        {% block pageBodyFooterNav %}
-            {% include 'AppBundle:Components:nextprevious.html.twig' with {
-            'previousLink': path("contacts" , {'reportId': report.id }),
-            'previousLabel': 'Contacts',
-            'nextLink': path("accounts" , {'reportId': report.id }),
-            'nextLabel': 'Accounts'
-            } %}
-        {% endblock %}
-
-        {% endembed %}

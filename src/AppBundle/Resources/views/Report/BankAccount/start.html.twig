@@ -1,44 +1,43 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-bank-accounts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
-    {% block pageBody %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
+{% block pageContent %}
 
-        <p class="page-section-description">
-            {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
-        </p>
-        <p class="page-section-description">
-            {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
-        </p>
-        <p class="page-section-description">
-            {{ 'startPage.pageSectionDescription3' | trans(transOptions) }}
-        </p>
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
 
-        {% block validationSummary %}
-        {% endblock %}
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
+    </p>
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
+    </p>
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription3' | trans(transOptions) }}
+    </p>
 
-        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-        transDomain: translationDomain
-        } %}
-
-        <div class="form-group button-bar">
-            <a href="{{ path('bank_account_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
-                {{ 'startPage.startButton' | trans }}
-            </a>
-        </div>
-
+    {% block validationSummary %}
     {% endblock %}
 
-    {% block pageBodyFooterNav %}
-    {% endblock %}
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+    transDomain: translationDomain
+    } %}
 
-{% endembed %}
+    <div class="form-group button-bar">
+        <a href="{{ path('bank_account_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
+            {{ 'startPage.startButton' | trans }}
+        </a>
+    </div>
+
+{% endblock %}

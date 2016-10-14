@@ -95,6 +95,14 @@
                 list: true,
                 description: true
             } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'debts',
+            report: report,
+            state: reportStatus.debtsState,
+            list: true,
+            description: true
+            } %}
         </li>
     {% endif %}
 

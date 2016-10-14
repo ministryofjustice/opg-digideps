@@ -83,10 +83,15 @@ visits_care:
     edit: "Edit visits"
     start: "Start visits"
 assets:
-    subSectionTitle: "Assets and debts"
+    subSectionTitle: "Assets"
     subSectionDescription: "Add %client%'s property, investments and other valuables"
     edit: "Edit assets"
     start: "Start assets"
+debts:
+    subSectionTitle: "Debts"
+    subSectionDescription: ""
+    edit: "Edit debts"
+    start: "Start debts"
 report_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"

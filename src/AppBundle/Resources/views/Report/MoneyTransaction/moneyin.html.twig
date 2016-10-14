@@ -29,14 +29,12 @@
     formTransactions: form.transactionsIn
     } %}
 
-{% endblock %}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("money_transfers" , {'reportId': report.id }),
+    'previousLabel': 'Money transfers',
+    'nextLink': path("money_out" , {'reportId': report.id }),
+    'nextLabel': 'Money out'
+    } %}
 
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("transfers" , {'reportId': report.id }),
-        'previousLabel': 'Money transfers',
-        'nextLink': path("money_out" , {'reportId': report.id }),
-        'nextLabel': 'Money out'
-        } %}
-    {% endblock %}
+{% endblock %}
 
