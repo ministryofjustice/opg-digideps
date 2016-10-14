@@ -12,9 +12,6 @@ input[type=text]::-ms-clear {
 }
 
 form {
-    padding: 0 3px 0 3px;
-    overflow: hidden;
-
     &.single-texta-area {
         padding-top: 3px;
     }
@@ -95,13 +92,6 @@ form {
 
 }
 
-// .form-section {
-//     @extend %contain-floats;
-//     border-left: 3px solid $grey-2;
-//     padding-left: 15px;
-//     margin-bottom: 40px;
-// }
-
 .form--client-add-report {
     margin: 40px 0 20px 0;
 }
@@ -112,15 +102,10 @@ form {
         float: left;
     }
 
-    .form-control,
     .expanding-wrapper {
         width: 90%;
         max-width: 540px;
         line-height: 1.4;
-    }
-
-    select.form-control {
-        width: 100%;
     }
 
     &.form-inline {
