@@ -117,6 +117,23 @@ class ReportStatusService
         return self::STATE_DONE;
     }
 
+    public function getBalanceState()
+    {
+        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        if ($this->report->isTotalsMatch()) {
+            return self::STATE_DONE; // balance matching => complete
+        }
+
+        if ($this->report->getBalanceMismatchExplanation()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
+
     /** @return string */
     public function getAccountsState()
     {

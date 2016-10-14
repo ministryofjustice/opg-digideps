@@ -5,7 +5,7 @@
 
 {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts_balance" , {'reportId': report.id }),
+        'previousLink': path("balance" , {'reportId': report.id }),
         'previousLabel': 'Balance accounts',
         'nextLink': path("debts" , {'reportId': report.id }),
         'nextLabel': 'Debts'

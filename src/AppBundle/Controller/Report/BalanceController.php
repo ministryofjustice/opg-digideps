@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class BalanceController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/accounts/balance", name="accounts_balance")
+     * @Route("/report/{reportId}/accounts/balance", name="balance")
      *
      * @param int $reportId
      * @Template()

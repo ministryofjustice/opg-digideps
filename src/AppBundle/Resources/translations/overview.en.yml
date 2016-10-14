@@ -62,11 +62,11 @@ money_out:
     subSectionDescription: ""
     edit: "Edit money out"
     start: "Start money out"
-accounts:
-    subSectionTitle: "Money Transactions, transfers and balance"
-    subSectionDescription: "Add details of all income and spending in the reporting period"
-    edit: "Edit money"
-    start: "Start money"
+balance:
+    subSectionTitle: "Balance"
+    subSectionDescription: ""
+    edit: "Edit balance"
+    start: "Start balance"
 transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Tell us about money you've moved between %client%'s accounts"
