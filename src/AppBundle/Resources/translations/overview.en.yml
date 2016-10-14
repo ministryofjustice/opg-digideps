@@ -32,6 +32,11 @@ decisions:
     subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit decisions"
     start: "Start decisions"
+mental_capacity:
+    subSectionTitle: "Mental capacity"
+    subSectionDescription: ""
+    edit: "Edit mental capacity"
+    start: "Start mental capacity"
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "Tell us about any major changes in the next reporting period"

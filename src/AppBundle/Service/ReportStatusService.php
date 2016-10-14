@@ -33,6 +33,16 @@ class ReportStatusService
         }
     }
 
+    public function getMentalCapacityState()
+    {
+        if ($this->report->getMentalCapacity() &&
+            $this->report->getMentalCapacity()->getHasCapacityChanged()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
     /** @return string */
     public function getContactsState()
     {

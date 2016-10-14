@@ -1,11 +1,18 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-mental-capacity" %}
 {% trans_default_domain translationDomain %}
 
-{% extends 'AppBundle:Report/Decision:layout.html.twig'  %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-{% block bodyClasses %}decisions client-capacity{% endblock %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-{% block maincontent %}
+{% block pageContent %}
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({}, translationDomain) }}</p>
     
     {% block validationSummary %}
