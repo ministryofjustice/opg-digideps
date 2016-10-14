@@ -65,11 +65,19 @@
             } %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'accounts',
+                subSection: 'money_in',
                 report: report,
-                state: reportStatus.accountsState,
+                state: reportStatus.moneyInState,
                 warning: true,
                 description: true
+            } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'money_out',
+            report: report,
+            state: reportStatus.moneyOutState,
+            warning: true,
+            description: true
             } %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,

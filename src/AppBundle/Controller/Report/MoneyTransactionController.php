@@ -15,22 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MoneyTransactionController extends AbstractController
 {
     /**
-     * @Route("/temp/{reportId}", name="accounts")
-     *
-     * @param int     $reportId
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function accountsAction(Request $request, $reportId)
-    {
-        return $this->redirectToRoute('accounts_moneyin', ['reportId'=>$reportId]);
-        // placeholder to have overview clickable. remove when
-        // sections are taken out from subsections
-    }
-
-    /**
-     * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
+     * @Route("/report/{reportId}/accounts/moneyin", name="money_in")
      *
      * @param int     $reportId
      * @param Request $request
@@ -47,7 +32,7 @@ class MoneyTransactionController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsIn']);
 
-            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('money_in', ['reportId' => $reportId]));
         }
 
         return [
@@ -59,7 +44,7 @@ class MoneyTransactionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/moneyout", name="accounts_moneyout")
+     * @Route("/report/{reportId}/accounts/moneyout", name="money_out")
      *
      * @param int     $reportId
      * @param Request $request
@@ -77,7 +62,7 @@ class MoneyTransactionController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsOut']);
 
-            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('money_out', ['reportId' => $reportId]));
         }
 
         return [

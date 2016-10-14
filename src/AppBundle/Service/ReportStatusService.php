@@ -93,6 +93,30 @@ class ReportStatusService
         return $valid ? self::STATE_DONE : self::STATE_NOT_STARTED;
     }
 
+    public function getMoneyInState()
+    {
+        if (!$this->report->hasMoneyIn()) {
+            return self::STATE_NOT_STARTED;
+        }
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        return self::STATE_DONE;
+    }
+
+    public function getMoneyOutState()
+    {
+        if (!$this->report->hasMoneyOut()) {
+            return self::STATE_NOT_STARTED;
+        }
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        return self::STATE_DONE;
+    }
+
     /** @return string */
     public function getAccountsState()
     {
@@ -189,8 +213,9 @@ class ReportStatusService
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
-                'moneyTransferState' => $this->getMoneyTransferState(),
-//                'accounts' => $this->getAccountsState(),
+                'moneyTransfers' => $this->getMoneyTransferState(),
+                'moneyIn' => $this->getMoneyInState(),
+                'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),
             ];
         }

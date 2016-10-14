@@ -1,40 +1,42 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-accounts" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyIn' | trans({}, "report-accounts") }}{% endblock %}
-    {% block info %}<span id="save-status"></span>{% endblock %}
-    {% block leftcontent %}
-        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
-    {% endblock %}
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
 
-    {% block maincontent %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-        <h3 class="heading-medium flush--top">{{ 'moneyIn.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
-        <p class="page-section-description">{{ 'moneyIn.pageSectionDescription' | trans({
-                '%client%': report.client.firstname,
-                '%startDate%': '<span class="no-wrap">' ~ report.startDate | date("j F Y") ~ '</span>',
-                '%endDate%': '<span class="no-wrap">' ~ report.endDate | date("j F Y") ~ '</span>',
-                '%paragraphBreak%': '</p><p>',
-            }) | raw }}</p>
-        {% include 'AppBundle:Report/MoneyTransaction:_transactions.html.twig' with {
-        transDomain: translationDomain,
-        transactionsGrouped: report.groupByCategory(report.transactionsIn),
-        transactionsTotal: report.getMoneyInTotal,
-        formTransactions: form.transactionsIn
-        } %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-    {% endblock %}
+{% block pageContent %}
+    <span id="save-status"></span>
+
+    <h3 class="heading-medium flush--top">{{ 'moneyIn.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <p class="page-section-description">{{ 'moneyIn.pageSectionDescription' | trans({
+            '%client%': report.client.firstname,
+            '%startDate%': '<span class="no-wrap">' ~ report.startDate | date("j F Y") ~ '</span>',
+            '%endDate%': '<span class="no-wrap">' ~ report.endDate | date("j F Y") ~ '</span>',
+            '%paragraphBreak%': '</p><p>',
+        }) | raw }}</p>
+    {% include 'AppBundle:Report/MoneyTransaction:_transactions.html.twig' with {
+    transDomain: translationDomain,
+    transactionsGrouped: report.groupByCategory(report.transactionsIn),
+    transactionsTotal: report.getMoneyInTotal,
+    formTransactions: form.transactionsIn
+    } %}
+
+{% endblock %}
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
         'previousLink': path("transfers" , {'reportId': report.id }),
         'previousLabel': 'Money transfers',
-        'nextLink': path("accounts_moneyout" , {'reportId': report.id }),
+        'nextLink': path("money_out" , {'reportId': report.id }),
         'nextLabel': 'Money out'
         } %}
     {% endblock %}
 
-{% endembed %}

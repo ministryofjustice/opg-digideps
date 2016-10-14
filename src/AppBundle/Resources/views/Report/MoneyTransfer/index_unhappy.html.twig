@@ -40,7 +40,7 @@
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
     'previousLink': path("accounts" , {'reportId': report.id }),
     'previousLabel': 'Bank accounts',
-    'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
+    'nextLink': path("money_in" , {'reportId': report.id }),
     'nextLabel': 'Money in'
     } %}
 {% endblock %}

@@ -23,7 +23,7 @@
     {% block pageBodyFooterNav %}
 
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts_moneyout" , {'reportId': report.id }),
+        'previousLink': path("money_out" , {'reportId': report.id }),
         'previousLabel': 'Money out',
         'nextLink': path("assets" , {'reportId': report.id }),
         'nextLabel': 'Assets'

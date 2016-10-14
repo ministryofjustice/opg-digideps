@@ -52,6 +52,16 @@ money_transfers:
     subSectionDescription: ""
     edit: "Edit money transfers"
     start: "Start money transfers"
+money_in:
+    subSectionTitle: "Money in"
+    subSectionDescription: ""
+    edit: "Edit money in"
+    start: "Start money in"
+money_out:
+    subSectionTitle: "Money out"
+    subSectionDescription: ""
+    edit: "Edit money out"
+    start: "Start money out"
 accounts:
     subSectionTitle: "Money Transactions, transfers and balance"
     subSectionDescription: "Add details of all income and spending in the reporting period"
