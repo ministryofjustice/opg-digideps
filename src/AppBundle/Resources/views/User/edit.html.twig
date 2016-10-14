@@ -35,8 +35,6 @@
         {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
     {% endif %}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
@@ -45,8 +43,6 @@
     linkClass: 'button-link',
     linkHref: path('user_show')
     } %}
-
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

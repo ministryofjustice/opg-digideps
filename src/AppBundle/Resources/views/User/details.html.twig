@@ -40,9 +40,7 @@
 
     {% endif %}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

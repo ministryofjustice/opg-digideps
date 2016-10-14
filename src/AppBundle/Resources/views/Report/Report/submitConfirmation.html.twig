@@ -30,23 +30,21 @@
 
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
 
-            {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
+        {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
 
-                'fieldSetClass' : 'vertical',
-                'legendClass' : 'form-label',
-                'legend': 'satisfactionLevel',
-                'items': [
-                    {'labelClass': 'block-label' },
-                    {'labelClass': 'block-label' },
-                    {'labelClass': 'block-label' },
-                    {'labelClass': 'block-label' },
-                    {'labelClass': 'block-label' },
-                ]
-            }) }}
+            'fieldSetClass' : 'vertical',
+            'legendClass' : 'form-label',
+            'legend': 'satisfactionLevel',
+            'items': [
+                {'labelClass': 'block-label' },
+                {'labelClass': 'block-label' },
+                {'labelClass': 'block-label' },
+                {'labelClass': 'block-label' },
+                {'labelClass': 'block-label' },
+            ]
+        }) }}
 
-            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-            {{ form_submit(form.save,'send') }}
-            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        {{ form_submit(form.save,'send') }}
 
         {{ form_end(form) }}
         {# end feedback form #}

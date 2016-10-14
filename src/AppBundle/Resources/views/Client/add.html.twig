@@ -44,10 +44,8 @@
         ]
     }) }}
 
+    {{ form_submit(form.save,'saveAndContinue') }}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'saveAndContinue') }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
     {{ form_end(form) }}
 
     <script type="text/javascript">

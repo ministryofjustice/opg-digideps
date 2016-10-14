@@ -66,9 +66,7 @@
 
         {{ form_input(form.email, 'email') }}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-            {{ form_submit(form.save,'send') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        {{ form_submit(form.save,'send') }}
 
 
     {{ form_end(form) }}

@@ -26,12 +26,8 @@
 
     {{ form_input(form.file, 'csv_upload.form.file', { 'labelClass': 'required' }) }}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.upload, 'csv_upload.form.upload') }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {{ form_submit(form.upload, 'csv_upload.form.upload') }}
 
     {{ form_end(form) }}
-
-
 
 {% endblock %}

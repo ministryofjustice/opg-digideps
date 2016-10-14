@@ -10,34 +10,31 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
 {% block breadcrumbs %}
-  {{ macros.breadcrumbs(report) }}
+	{{ macros.breadcrumbs(report) }}
 {% endblock %}
 
 {% block pageContent %}
-  <div id="assets-maincontent">
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+	<div id="assets-maincontent">
+		<p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
+		{{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
 
-      <h3 class="heading-medium flush--top">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
+		<h3 class="heading-medium flush--top">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>
 
-      {{ form_select(form.title, 'title') }}
+		{{ form_select(form.title, 'title') }}
 
-      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'buttonBarClass': 'js-hidden'} %}
-        {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
+		{{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
 
-        {% if showCancelLink %}
-          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: translationDomain,
-            linkButtonLabel: 'cancel.label',
-            linkClass: 'button-link',
-            linkHref: path('assets', {'reportId': report.id})
-          } %}
-        {% endif %}
+		{% if showCancelLink %}
+			{% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+				transDomain: translationDomain,
+				linkButtonLabel: 'cancel.label',
+				linkClass: 'button-link',
+				linkHref: path('assets', {'reportId': report.id})
+			} %}
+		{% endif %}
 
-      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+		{{ form_end(form) }}
 
-    {{ form_end(form) }}
-
-  </div>
+	</div>
 {% endblock %}

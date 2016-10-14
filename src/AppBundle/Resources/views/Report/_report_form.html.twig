@@ -11,8 +11,6 @@
 
     {{ form_known_date(form.endDate, 'endDate') }}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'saveAndContinue') }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {{ form_submit(form.save,'saveAndContinue') }}
 
 {{ form_end(form) }}

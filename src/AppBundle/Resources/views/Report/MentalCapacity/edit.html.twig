@@ -14,7 +14,7 @@
 
 {% block pageContent %}
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({}, translationDomain) }}</p>
-    
+
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
@@ -43,10 +43,8 @@
         </div>
     </fieldset>
 {#    </div>#}
-        
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
     {{ form_submit(form.save,'form.save') }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
@@ -60,7 +58,7 @@
             });
         });
     </script>
-    
+
 
 {% endblock %}
 

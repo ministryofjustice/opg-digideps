@@ -13,7 +13,7 @@
 
       {{ form_select(form.title, 'title') }}
 
-      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'buttonBarClass': 'js-hidden'} %}
+      <div class="js-hidden">
         {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
 
         {% if showCancelLink %}
@@ -25,7 +25,7 @@
           } %}
         {% endif %}
 
-      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+      </div>
 
     {{ form_end(form) }}
 

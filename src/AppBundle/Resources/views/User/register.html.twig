@@ -30,9 +30,7 @@
         {{ form_input(form.clientLastname,'clientLastname', { 'labelClass': 'required' }) }}
         {{ form_input(form.caseNumber,'caseNumber', { 'labelClass': 'required' }) }}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'save') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

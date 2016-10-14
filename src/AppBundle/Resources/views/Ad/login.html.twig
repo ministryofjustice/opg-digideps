@@ -16,9 +16,7 @@
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.login,'signin', {'buttonClass': 'behat-link-login'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

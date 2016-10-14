@@ -10,7 +10,7 @@
         <div id="page-section-title-container" class="page-section-title-container">
             <h1>{{ 'component.title' | trans }}</h1>
         </div>
-        
+
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'component.firstLine' | trans({
@@ -41,12 +41,8 @@
         #}
 
         <form name="session-timeout-form" action="/logout">
-            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
             <button type="button" name="continue" class="button js-ok-button">OK</button>
             <button type="submit" name="subsmit" class="button-secondary">Sign out</button>
-
-            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
         </form>
 
     </div>

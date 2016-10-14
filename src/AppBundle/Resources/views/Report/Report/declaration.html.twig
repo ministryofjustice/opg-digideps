@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-declaration" %}
 {% trans_default_domain translationDomain %}
 
@@ -40,9 +42,7 @@
         {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
     </div>
 
-    <div class="form-group button-bar">
-        {{ form_submit(form.save,'save') }}
-    </div>
+    {{ form_submit(form.save,'save') }}
 
     {{ form_end(form) }}
 
