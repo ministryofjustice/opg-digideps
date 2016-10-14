@@ -1,9 +1,19 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-{% extends 'AppBundle:Report/Asset:layout-assets.html.twig'  %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
-{% block maincontent %}
+{% block breadcrumbs %}
+  {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
   <div id="assets-maincontent">
     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
@@ -29,35 +39,5 @@
 
     {{ form_end(form) }}
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            var wrapper = $("#assets-maincontent"),
-                assetTitleTitle = $('#asset_title_title'),
-                urlToLoadPattern,
-                urlToLoad,
-                selectedTitle;
-
-            // when the dropdown changes, replace the pagebody-left-content with the result of the next page (add-complete)
-            assetTitleTitle.change(function(event) {
-                selectedTitle = $(event.target).val();
-                if (selectedTitle === '') {
-                    return;
-                }
-
-                urlToLoadPattern = '{{ path('asset_add_complete', {'reportId': report.id, 'title' : '--placeholder--'}) }}';
-                urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
-
-                $.get(urlToLoad, function( html ) {
-                    var $element = $(html);
-
-                    wrapper.text('').append($element);
-                    $element.find('textarea').expanding();
-                    $element.find('input')[0].focus();
-                });
-
-            });
-        });
-    </script>
   </div>
 {% endblock %}

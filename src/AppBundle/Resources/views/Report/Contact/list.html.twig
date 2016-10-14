@@ -1,53 +1,55 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block pageTitle %}{{ 'listPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageBody %}
+{% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'listPage.pageSectionTitle' | trans }}{% endblock %}
 
-        {# http://hzaiwi.axshare.com/#g=1&p=contacts_-_list_of_contacts___save_confirm] #}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        {# seems the same as start.html.twig. move to partial ? #}
-        <p class="page-section-description">
-            {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
-        </p>
-        <p class="page-section-description">
-            {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
-        </p>
+{% block pageContent %}
 
-        <div class="form-group button-bar">
-            <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="button ">
-                {{ 'startPage.startButton' | trans }}
-            </a>
-        </div>
+    {# http://hzaiwi.axshare.com/#g=1&p=contacts_-_list_of_contacts___save_confirm] #}
+
+    {# seems the same as start.html.twig. move to partial ? #}
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
+    </p>
+    <p class="page-section-description">
+        {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
+    </p>
+
+    <div class="form-group button-bar">
+        <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="button ">
+            {{ 'listPage.addButton' | trans }}
+        </a>
+    </div>
 
 
-        List of contacts
-        [ List of contacts ... ]
-        [ "Has anyone helped you make any significant decisions for Sally during this reporting period?"  displayed first  ]
+    List of contacts
+    [ List of contacts ... ]
+    [ "Has anyone helped you make any significant decisions for Sally during this reporting period?"  displayed first  ]
 
-        {% if contacts is not empty %}
-            {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
-            'report': report,
-            'contacts': contacts,
-            'transDomain': translationDomain
-            } %}
-        {% else %}
-            {#{% if report.reasonForNoContacts is not empty %}#}
-                {#{% include 'AppBundle:Report/Contact:_none_reason_description.html.twig' with {'report': report} %}#}
-            {#{% else %}#}
-                {#<div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Report/Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>#}
-            {#{% endif %}#}
-        {% endif %}
+    {% if contacts is not empty %}
+        {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
+        'report': report,
+        'contacts': contacts,
+        'transDomain': translationDomain
+        } %}
+    {% else %}
+        {#{% if report.reasonForNoContacts is not empty %}#}
+        {#{% include 'AppBundle:Report/Contact:_none_reason_description.html.twig' with {'report': report} %}#}
+        {#{% else %}#}
+        {#<div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Report/Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>#}
+        {#{% endif %}#}
+    {% endif %}
 
-    {% endblock %}
+    {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
 
-    {% block pageBodyFooterNav %}
-       {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
-    {% endblock %}
-{% endembed %}
+{% endblock %}

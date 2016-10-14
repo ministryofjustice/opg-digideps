@@ -1,36 +1,28 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
-    </div>
-    {% endblock %}
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
 
-    {% block pageBody %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        <a href="{{ path('contacts_list', {'reportId': report.id}) }}" class="link-back">Back</a>
+{% block pageContent %}
 
-        <p class="text">As someone has helped you make decisions for Sally we need to know their details.  Start by adding the first contact for Sally. You can add other contacts later.</p>
+    <a href="{{ path('contacts_list', {'reportId': report.id}) }}" class="link-back">Back</a>
 
-        {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
-        'translationDomain': translationDomain,
-        'showAddForm': true,
-        'form': form
-        } %}
-    {% endblock %}
+    <p class="text">As someone has helped you make decisions for Sally we need to know their details. Start by adding
+        the first contact for Sally. You can add other contacts later.</p>
 
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
-    {% endblock %}
-
-{% endembed %}
+    {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'showAddForm': true,
+    'form': form
+    } %}
+{% endblock %}

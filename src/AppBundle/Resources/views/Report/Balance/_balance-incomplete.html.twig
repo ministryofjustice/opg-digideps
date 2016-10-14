@@ -36,9 +36,9 @@
 
 {% if not report.hasMoneyIn %}
     <div class="descriptive-list-item">
-        <a href="{{ path('accounts_moneyin', {'reportId': report.id}) }}">
+        <a href="{{ path('money_in', {'reportId': report.id}) }}">
             <h3 class="heading heading-medium">{{ 'balance.incomplete.moneyIn.title' | trans }}</h3>
-        <span class="edit-link" href="{{ path('accounts_moneyin', {'reportId': report.id}) }}" style="float: right">
+        <span class="edit-link" href="{{ path('money_in', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.moneyIn.addLink' | trans }}
         </span>
             <p class="description">
@@ -50,9 +50,9 @@
 
 {% if not report.hasMoneyOut %}
     <div class="descriptive-list-item">
-        <a href="{{ path('accounts_moneyout', {'reportId': report.id}) }}">
+        <a href="{{ path('money_out', {'reportId': report.id}) }}">
             <h3 class="heading heading-medium">{{ 'balance.incomplete.moneyOut.title' | trans }}</h3>
-        <span class="edit-link" href="{{ path('accounts_moneyout', {'reportId': report.id}) }}" style="float: right">
+        <span class="edit-link" href="{{ path('money_out', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.moneyOut.addLink' | trans }}
         </span>
             <p class="description">

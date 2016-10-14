@@ -1,59 +1,49 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
+{% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {#<a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>#}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section">
+        {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label',
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
     </div>
-    {% endblock %}
 
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'addAnotherPage.form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-    {% block pageBody %}
+    {{ form_end(form) }}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+        });
+    </script>
 
-        {#<a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>#}
-
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-        <div class="form-section">
-            {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label',
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
-            }) }}
-        </div>
-
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'addAnotherPage.form.save') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-        {{ form_end(form) }}
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-            });
-        </script>
-
-    {% endblock %}
-
-    {% block pageBodyFooterNav %}
-    {% endblock %}
-
-{% endembed %}
+{% endblock %}

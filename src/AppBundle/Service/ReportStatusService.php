@@ -36,7 +36,8 @@ class ReportStatusService
     public function getMentalCapacityState()
     {
         if ($this->report->getMentalCapacity() &&
-            $this->report->getMentalCapacity()->getHasCapacityChanged()) {
+            $this->report->getMentalCapacity()->getHasCapacityChanged()
+        ) {
             return self::STATE_DONE;
         }
 
@@ -62,9 +63,10 @@ class ReportStatusService
         }
 
         if ($vc->getDoYouLiveWithClient()
-        && $vc->getDoesClientReceivePaidCare()
-        && $vc->getWhoIsDoingTheCaring()
-        && $vc->getDoesClientHaveACarePlan()) {
+            && $vc->getDoesClientReceivePaidCare()
+            && $vc->getWhoIsDoingTheCaring()
+            && $vc->getDoesClientHaveACarePlan()
+        ) {
             return self::STATE_DONE;
         }
 
@@ -81,22 +83,56 @@ class ReportStatusService
         return self::STATE_DONE;
     }
 
-    /** @return string */
-    public function getAccountsState()
+    public function getMoneyTransferState()
     {
-        $missingAccounts = empty($this->report->getAccounts());
-
-        // not started
-        if ($missingAccounts && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
-            return self::STATE_NOT_STARTED;
-        }
-
-        // all done
-        if (!$missingAccounts && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
+        if (count($this->report->getAccounts()) <= 1) {
             return self::STATE_DONE;
         }
 
-        // amber in all the other cases
+        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
+        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
+
+        return $valid ? self::STATE_DONE : self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyInState()
+    {
+        if (!$this->report->hasMoneyIn()) {
+            return self::STATE_NOT_STARTED;
+        }
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        return self::STATE_DONE;
+    }
+
+    public function getMoneyOutState()
+    {
+        if (!$this->report->hasMoneyOut()) {
+            return self::STATE_NOT_STARTED;
+        }
+        if (empty($this->report->getAccounts())) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        return self::STATE_DONE;
+    }
+
+    public function getBalanceState()
+    {
+        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        if ($this->report->isTotalsMatch()) {
+            return self::STATE_DONE; // balance matching => complete
+        }
+
+        if ($this->report->getBalanceMismatchExplanation()) {
+            return self::STATE_DONE;
+        }
+
         return self::STATE_INCOMPLETE;
     }
 
@@ -105,16 +141,29 @@ class ReportStatusService
     {
         $hasAtLeastOneAsset = count($this->report->getAssets()) > 0;
         $noAssetsToAdd = $this->report->getNoAssetToAdd();
-        $hasDebts = $this->report->getHasDebts();
 
-        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd) {
             return self::STATE_NOT_STARTED;
         }
 
-        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($hasAtLeastOneAsset || $noAssetsToAdd) {
+            return self::STATE_DONE;
+        }
 
-        if ($assetsSubSectionComplete && $debtsSectionComplete) {
+        return self::STATE_INCOMPLETE;
+    }
+
+    /** @return string */
+    public function getDebtsState()
+    {
+        $hasDebts = $this->report->getHasDebts();
+
+        if (empty($hasDebts)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($debtsSectionComplete) {
             return self::STATE_DONE;
         }
 
@@ -153,21 +202,6 @@ class ReportStatusService
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    private function missingTransfers()
-    {
-        if (count($this->report->getAccounts()) <= 1) {
-            return false;
-        }
-
-        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
-        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
-
-        return !$valid;
-    }
-
     /** @return bool */
     private function missingBalance()
     {
@@ -183,6 +217,7 @@ class ReportStatusService
     {
         $states = [
             'decisions' => $this->getDecisionsState(),
+            'mentalCapacity' => $this->getMentalCapacityState(),
             'contacts' => $this->getContactsState(),
             'visitsCare' => $this->getVisitsCareState(),
             'actions' => $this->getActionsState(),
@@ -191,8 +226,11 @@ class ReportStatusService
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
-                'accounts' => $this->getAccountsState(),
+                'moneyTransfers' => $this->getMoneyTransferState(),
+                'moneyIn' => $this->getMoneyInState(),
+                'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),
+                'debts' => $this->getDebtsState(),
             ];
         }
 

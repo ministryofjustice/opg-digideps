@@ -1,24 +1,19 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block bodyClasses %}safeguarding-page{% endblock %}
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% block pageNavigation %}
-<div class="breadcrumbs">
-    <ol class="group">
-        <li><a href="#">Deputy reports</a></li>
-        <li><a href="#">Deputy report overview</a></li>
-    </ol>
-</div>
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
 {% endblock %}
 
-
-{% block pageBody %}
+{% block pageContent %}
 
     {% block validationSummary %}
     {% endblock %}
@@ -39,8 +34,3 @@
     </div>
 
 {% endblock %}
-
-{% block pageBodyFooterNav %}
-{% endblock %}
-
-{% endembed %}

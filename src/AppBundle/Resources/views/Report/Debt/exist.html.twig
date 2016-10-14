@@ -1,0 +1,54 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+
+    {% set translationDomain = "report-debts" %}
+    {% trans_default_domain translationDomain %}
+    {% set transOptions = {'%client%': report.client.firstname} %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+
+    {% block pageNavigation %}
+    <div class="breadcrumbs">
+        <ol class="group">
+            <li><a href="#">Deputy reports</a></li>
+            <li><a href="#">Deputy report overview</a></li>
+        </ol>
+    </div>
+    {% endblock %}
+
+
+    {% block pageBody %}
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+                'fieldSetClass' : 'inline contact-exist',
+                'legendClass' : 'heading-medium text',
+                'items': [
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' }
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'existPage.form.save') }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+    {% endblock %}
+
+{% endembed %}

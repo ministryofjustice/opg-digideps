@@ -1,27 +1,25 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-debts" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-{% extends 'AppBundle:Report/Debt:layout-debts.html.twig' %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
-{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-{% block maincontent %}
+{% block pageContent %}
+
     <h3 class="heading-medium flush--top">{{ 'page.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
     {{ form_errors_list(form) }}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
-
-    {{ form_checkbox_group(form.hasDebts, 'hasDebts', {
-        'formGroupClass': 'margin-bottom-reduced',
-        'fieldSetClass' : 'inline client-has-debts',
-        'legendClass' : 'form-label',
-        'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': report.client.firstname}, translationDomain),
-        'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-        ]
-    }) }}
 
     <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
         <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
@@ -58,18 +56,6 @@
         $(document).ready(function () {
             // client has debt radio box hide/show debts list
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-            new opg.RadioHide({
-                radio: '.client-has-debts input[type=radio]',
-                content: '#debts-sections-list',
-                hideOnYes: false
-            });
-
-            // auto save (disable as it removes submit button, needed to save radio choice
-            {#new GOVUK.AutoSave({#}
-                {#form: $('form.debts-form'),#}
-                {#statusElement: $('#save-status'),#}
-                {#url: '{{ path('debts_save_json', {'reportId': report.id}) }}'#}
-            {#});#}
 
             // auto format currencies
             $('input.transaction-value').on('blur', function (event) {
@@ -94,5 +80,12 @@
     } %}
 
     {{ form_end(form) }}
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path('assets' , {'reportId': report.id }),
+    'previousLabel': 'Assets',
+    'nextLink': path("actions" , {'reportId': report.id }),
+    'nextLabel': 'Actions'
+    } %}
 
 {% endblock %}

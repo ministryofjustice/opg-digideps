@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "settings" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block pageContent %}
+    <ul>
+        {% if not is_granted('ROLE_ADMIN') %}
+            <li>
+                <a href="{{ path('client_show') }}"
+                   class="behat-link-client-show">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}</a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="{{ path('user_show') }}"
+               class="behat-link-deputy-show">{{ 'nav.deputy-edit' | trans({}, 'user-account') }}</a></li>
+        <li>
+            <a href="{{ path('user_password_edit') }}"
+               class="behat-link-change-password">{{ 'nav.change-password' | trans({}, 'user-account') }}</a>
+        </li>
+    </ul>
+
+{% endblock %}

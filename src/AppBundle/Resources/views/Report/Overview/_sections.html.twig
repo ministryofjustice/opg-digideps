@@ -57,9 +57,33 @@
             } %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'accounts',
+                subSection: 'money_transfers',
                 report: report,
-                state: reportStatus.accountsState,
+                state: reportStatus.moneyTransferState,
+                warning: true,
+                description: true
+            } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'money_in',
+                report: report,
+                state: reportStatus.moneyInState,
+                warning: true,
+                description: true
+            } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'money_out',
+                report: report,
+                state: reportStatus.moneyOutState,
+                warning: true,
+                description: true
+            } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'balance',
+                report: report,
+                state: reportStatus.balanceState,
                 warning: true,
                 description: true
             } %}
@@ -70,6 +94,14 @@
                 state: reportStatus.assetsState,
                 list: true,
                 description: true
+            } %}
+            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'debts',
+            report: report,
+            state: reportStatus.debtsState,
+            list: true,
+            description: true
             } %}
         </li>
     {% endif %}

@@ -78,8 +78,8 @@
     <span class="page-section-description left-margin-big">{{ 'balance.bad.goBack' | trans({
         '%client%': report.client.firstname,
         '%accountsLink%': path('bank_accounts', {'reportId': report.id}),
-        '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) ,
-        '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}),
+        '%moneyInLink%': path('money_in' , {'reportId': report.id}) ,
+        '%moneyOutLink%': path('money_out' , {'reportId': report.id}),
         '%paragraphBreak%': '<br/><br/>',
     }) | raw }}</span>
 </p>
