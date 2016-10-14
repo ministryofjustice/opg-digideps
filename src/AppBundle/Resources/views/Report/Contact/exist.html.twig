@@ -1,75 +1,65 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
-    </div>
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
     {% endblock %}
 
+    <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
 
-    {% block pageBody %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+            'fieldSetClass' : 'inline contact-exist',
+            'legendClass' : 'heading-medium text',
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ],
+            'formGroupClass': 'flush--bottom'
+        }) }}
 
-        <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
-
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-        <div class="form-section push--bottom">
-            {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
-                'fieldSetClass' : 'inline contact-exist',
-                'legendClass' : 'heading-medium text',
-                'items': [
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' }
-                ],
-                'formGroupClass': 'flush--bottom'
-            }) }}
-
-            <div id="reasonForNoContacts-textarea" class="hidden-detail">
-                <div class="panel panel-border-narrow">
-                    {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
-                        'labelClass': 'required',
-                        'labelParameters': { '%client%': report.client.firstname },
-                        'inputClass': 'expanding'
-                    }) }}
-                </div>
+        <div id="reasonForNoContacts-textarea" class="hidden-detail">
+            <div class="panel panel-border-narrow">
+                {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
+                    'labelClass': 'required',
+                    'labelParameters': { '%client%': report.client.firstname },
+                    'inputClass': 'expanding'
+                }) }}
             </div>
         </div>
+    </div>
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'existPage.form.save') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'existPage.form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-        {{ form_end(form) }}
+    {{ form_end(form) }}
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-                new opg.RadioHide({
-                    radio: '.contact-exist input[type=radio]',
-                    content: '#reasonForNoContacts-textarea',
-                    hideOnYes: true
-                });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio: '.contact-exist input[type=radio]',
+                content: '#reasonForNoContacts-textarea',
+                hideOnYes: true
             });
-        </script>
+        });
+    </script>
 
-    {% endblock %}
-
-    {% block pageBodyFooterNav %}
-    {% endblock %}
-
-{% endembed %}
+{% endblock %}
