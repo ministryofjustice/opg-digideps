@@ -1,10 +1,9 @@
 {% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 
-{% trans_default_domain "admin" %} 
+{% trans_default_domain "admin" %}
 
-{% block pageTitle %}Administration - Upload users{% endblock %}
-{% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}Upload users{% endblock %}
+{% block htmlTitle %}Administration - Upload users{% endblock %}
+{% block pageTitle %}Upload users{% endblock %}
 
 {% block validationSummary %}
     {{ form_errors_list(form) }}
@@ -13,26 +12,26 @@
 {% block pageNavigation %}
 {% endblock %}
 
-{% block pageBody %}   
-    
+{% block pageBody %}
+
     <p class="page-section-description ">
         Number of users in the database: {{currentRecords}}.
     </p>
-    
+
     <p>
         Max upload size: {{ maxUploadSize }}.
     </p>
-    
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-    
+
     {{ form_input(form.file, 'csv_upload.form.file', { 'labelClass': 'required' }) }}
-    
+
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.upload, 'csv_upload.form.upload') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-    
+
     {{ form_end(form) }}
-    
-    
-    
+
+
+
 {% endblock %}

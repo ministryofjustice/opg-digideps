@@ -1,28 +1,34 @@
-p#helpline {
-    @include bold-19();
-    display: inline-block;
-    vertical-align: -webkit-baseline-middle;
-    padding-left: 50px;
-    margin: 7px 0 0 0;
-    background: url("images/icons/phone.png") top left no-repeat;
-    text-align: left;
+.helpline {
+    position: absolute;
+    top: 50px;
+    right: 20px;
 
-    @include media(mobile) {
-        display: none;
-    }
-
-    @include media(tablet) {
-        @include bold-16();
-        padding-left: 33px;
-        background-size: 27px 31px;
-        background-position: 0 3px;
-    }
-
-    @include media(desktop) {
+    p {
         @include bold-19();
+        display: inline-block;
+        vertical-align: -webkit-baseline-middle;
         padding-left: 50px;
-        background-size: 35px 44px;
-        background-position: 0 0;
+        margin: 7px 0 0 0;
+        background: url("images/icons/phone.png") top left no-repeat;
+        text-align: left;
+
+        @include media(mobile) {
+            display: none;
+        }
+
+        @include media(tablet) {
+            @include bold-16();
+            padding-left: 33px;
+            background-size: 27px 31px;
+            background-position: 0 3px;
+        }
+
+        @include media(desktop) {
+            @include bold-19();
+            padding-left: 50px;
+            background-size: 35px 44px;
+            background-position: 0 0;
+        }
     }
 
 }

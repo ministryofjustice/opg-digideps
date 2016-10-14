@@ -1,52 +1,48 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 {% set translationDomain = "home" %}
     {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block bodyClasses %}home{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+
 {% block pageContent %}
-    <header class="page-header">
-        <h1 class="heading-xlarge">{{ 'Complete the deputy report' | trans }}</h1>
 
-    </header>
+    <p class="text">{{ 'intro' | trans }}</p>
 
-    <div id="page-body">
-        <p class="page-section-description">{{ 'intro' | trans }}</p>
-        
-        <div id="create-section" class="split-section">
-            <div>
-                <h2>{{ 'iwanttocreate' | trans }}</h2>
-            </div>
-            <div id="creat-link-section">
-                <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
-                <div id="what-you-need" class="accordian help-item">
-                    <h3 class="summary">{{ 'whatyouneed' |trans }}</h3>
-                    {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
-                        transDomain: translationDomain,
-                        className: 'content list-bullet',
-                        pageSectionList: 'whatyouneedlist'
-                    } %}
-                </div>
+    <div class="grid-row push--top">
+        <div class="column-half">
+            <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
+        </div>
+        <div class="column-half">
+            <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+            <div id="what-you-need" class="accordian help-item push--ends">
+                <h3 class="summary">{{ 'whatyouneed' |trans }}</h3>
+                <ul class="content list list-bullet">
+                    <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                    <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                    <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                </ul>
             </div>
         </div>
-        
-        <div id="sign-in-section" class="split-section">
-            <div>
-                <h2>{{ 'ialready' |trans }}</h2>
-                <p>{{ 'signtoaccess' | trans }}</p>
-            </div>
-            <div>
-                <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
-            </div>
-        </div>
-        
-        <h2>{{ 'makesure' | trans }}</h2>
-        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionList: 'makelist'
-        } %}
-        
     </div>
+
+    <div class="grid-row push-half--top">
+        <div class="column-half">
+            <h2 class="heading-medium flush--top">{{ 'ialready' |trans }}</h2>
+            <p>{{ 'signtoaccess' | trans }}</p>
+        </div>
+        <div class="column-half">
+            <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+        </div>
+    </div>
+
+    <h2 class="heading-medium">{{ 'makesure' | trans }}</h2>
+    <ul class="list list-bullet">
+        <li>{{ 'makeListItem1' | trans }}</li>
+        <li>{{ 'makeListItem2' | trans }}</li>
+        <li>{{ 'makeListItem3' | trans }}</li>
+    </ul>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -58,5 +54,5 @@
             });
         });
     </script>
-    
+
 {% endblock %}

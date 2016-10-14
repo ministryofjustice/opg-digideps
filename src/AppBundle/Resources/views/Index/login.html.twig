@@ -1,49 +1,26 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 {% trans_default_domain "signin" %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
-{% block title %}
+{% block pageTitle %}
     {% if isAdmin %}
         {{ 'admin.pageTitle' | trans }}
     {% else %}
         {{ 'pageTitle' | trans }}
     {% endif %}
 {% endblock %}
-{% block pageHeader %}
-    {{ parent() }}
-{% endblock %}
 
-{% block pageNavigation %}
-{% endblock %}
+{% block pageContent %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-
-    {% if error is defined %}
-        <div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1" class="behat-region-header-errors">
-            <h1 class="heading-small error-summary-heading" id="error-summary-heading">There are some problems on this page</h1>
-            <ul class="error-summary-list">
-                <li>{{ error }}</li>
-            </ul>
-        </div>
-    {% endif %}
-{% endblock %}
-
-
-{% block pageBody %}
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom'}}) }}
 
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
-
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.login,'signin', {'buttonClass': 'behat-link-login'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
-    <a class="below-form-link behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
+    <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
 
 {% endblock %}

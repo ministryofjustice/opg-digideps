@@ -3,8 +3,8 @@
     {% set translationDomain = "odr-account-form" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}
         {{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}
     {% endblock %}
 

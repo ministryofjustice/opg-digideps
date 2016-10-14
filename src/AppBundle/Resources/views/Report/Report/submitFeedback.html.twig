@@ -3,7 +3,7 @@
     {% trans_default_domain translationDomain %}
 
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
 
     {% block pageNavigation %}
@@ -17,7 +17,7 @@
         <p class="page-section-description">{{ 'thanks.more' | trans({
             '[linkStart]': '<a href="' ~ path('feedback') ~ '">',
             '[linkEnd]': '</a>'
-        
+
         }) | raw }}</p>
 
 

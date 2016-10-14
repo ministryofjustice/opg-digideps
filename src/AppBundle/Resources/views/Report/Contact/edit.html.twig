@@ -3,9 +3,9 @@
     {% set translationDomain = "report-contacts" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
 

@@ -3,9 +3,9 @@
     {% trans_default_domain translationDomain %}
 
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
         {# no navigation bar for declaration #}
@@ -26,8 +26,8 @@
         </div>
 
         {# feedback form #}
-        <p class="feedback">{{ 'page.feedback.title' | trans }}</p>    
-            
+        <p class="feedback">{{ 'page.feedback.title' | trans }}</p>
+
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
 
             {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
@@ -48,7 +48,7 @@
             {{ form_submit(form.save,'send') }}
             {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-        {{ form_end(form) }}    
+        {{ form_end(form) }}
         {# end feedback form #}
 
         <div class="link">

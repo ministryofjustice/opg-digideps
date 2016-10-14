@@ -3,11 +3,11 @@
     {% set translationDomain = "report-transfers" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
     {% block info %}<span id="save-status"></span>{% endblock %}
-    
+
     {% block leftcontent %}
         {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
     {% endblock %}
@@ -31,13 +31,13 @@
             {# noTransfers checkbox option #}
             <li id="no-transfers" class="transfer" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
                 {{ render(controller('AppBundle:Report/MoneyTransfer:_noTransfersPartial', {
-                    'reportId': report.id, 
-                    'request': app.request 
+                    'reportId': report.id,
+                    'request': app.request
                 })) }}
             </li>
-            
+
         </ul>
-        
+
         {# partial templates loaded via JS #}
         <div style="display: none">
             <ul class="card-lists"  id="account-cards-selection-ul">
@@ -51,7 +51,7 @@
                 {% include 'AppBundle:Report/MoneyTransfer:add-one.html.twig'%}
             </div>
         </div>
-        
+
         <script>
             $(document).ready(function () {
                 $(document).ready(function() {

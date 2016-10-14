@@ -20,3 +20,7 @@ $item-right-margin: 263px;
 .list-bullet li {
     @include core-19();
 }
+
+#pagebody-left-content {
+    max-width: 960px * .75;
+}

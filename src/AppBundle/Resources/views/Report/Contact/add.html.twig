@@ -3,9 +3,9 @@
     {% set translationDomain = "report-contacts" %}
     {% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
     <div class="breadcrumbs">

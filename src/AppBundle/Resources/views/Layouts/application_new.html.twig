@@ -18,9 +18,7 @@
     <meta name="format-detection" content="telephone=no">
 {% endblock %}
 
-{% block htmlTitle %}Digideps Page Title{% endblock %}
-
-
+{% block htmlTitle %}Deputy Report{% endblock %}
 
 {% block bodyClasses %}{% endblock %}
 
@@ -95,16 +93,35 @@
 {% block beforeContent %}{% endblock %}
 
 {% block content %}
+
     <div class="phase-banner-beta">
         <p>
             <strong class="phase-tag">BETA</strong>
             <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
         </p>
     </div>
-    <div class="container {% block contentClass %}{% endblock %}">
-        {% block pageContent %}
-        {% endblock %}
+
+    {% block breadcrumbs %}{% endblock %}
+
+    <div class="helpline">
+        <p>Helpline<br/>0115 934 2700</p>
     </div>
+
+    {% block validationSummary %}
+        {% if form is defined %}
+            {{ form_errors_list(form) }}
+        {% endif %}
+    {% endblock %}
+
+    <h1 class="heading-xlarge">
+        {% block supportTitleTop %}{% endblock %}
+        {% block pageTitle %} Deputy report {% endblock %}
+        {% block supportTitleBottom %}{% endblock %}
+    </h1>
+
+    {% block pageContent %}
+    {% endblock %}
+
 {% endblock %}
 
 

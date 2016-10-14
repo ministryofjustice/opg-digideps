@@ -2,7 +2,7 @@
 
 
 
-{% block pageTitle %}Digideps Styleguide{% endblock %}
+{% block htmlTitle %}Digideps Styleguide{% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
@@ -10,14 +10,14 @@
 {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
 } %}
-    
+
     <div class="grid-row">
         <header id="page-header" class="column-two-thirds">
             <h1 class="heading-xlarge">
                 <span class="heading-secondary">Digideps Elements</span>
                 Layouts
             </h1>
-            
+
             <p class="lede">
                 Extra layouts used within the site for navigation or content display
             </p>
@@ -43,11 +43,11 @@
             </ul>
         </div>
     </div>
-    
-    
+
+
     {% include 'AppBundle:Element/layout:lefttab.html.twig' %}
     {% include 'AppBundle:Element/layout:descriptivelistitem.html.twig' %}
     {% include 'AppBundle:Element/layout:_cardlist.html.twig' %}
-    
+
     <script src="/prism/prism.js"></script>
 {% endblock %}

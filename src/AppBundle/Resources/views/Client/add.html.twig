@@ -2,9 +2,9 @@
 {% set translationDomain = "registration" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} registration-client-add behat-region-client-add{% endblock %}
-{% block title %}{{ 'addClient.h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
+{% block contentClass %}behat-region-client-add{% endblock %}
+{% block pageTitle %}{{ 'addClient.h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
      {{ progress_bar_registration(app.user, 'client_details') }}

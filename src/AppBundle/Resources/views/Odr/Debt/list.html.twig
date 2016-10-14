@@ -3,7 +3,7 @@
 
 {% extends 'AppBundle:Odr/Debt:layout-debts.html.twig' %}
 
-{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block maincontent %}
     <h3 class="heading-medium flush--top">{{ 'page.heading' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>

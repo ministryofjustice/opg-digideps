@@ -2,14 +2,14 @@
 {% trans_default_domain translationDomain %}
 
 <div class="report-list-separator"> </div>
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form', id:'no-decision-reason-form' } }) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate', id:'no-decision-reason-form' } }) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,
         subSectionDescription: 'no_decision.subSectionDescription',
         iconClass: 'icon icon__notification'
     } %}
-    
+
     {{ form_input(form.reasonForNoDecisions, 'no_decision.controls.reason', {
        'labelClass': 'visuallyhidden',
        'inputClass': 'expanding'

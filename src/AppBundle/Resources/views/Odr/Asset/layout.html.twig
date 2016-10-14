@@ -1,9 +1,9 @@
 {# Layout to extend for decisions subpages (decisioon CRUD + mental capacity so far) #}
 {% extends 'AppBundle:Layouts:odr_left_nav.html.twig' %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans({}, translationDomain) }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans({}, translationDomain) }}{% endblock %}
 {% block bodyClasses %}{{ parent() }} js-odr-assets-input{% endblock %}
-{% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain) }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans({'%client%': odr.client.firstname}, translationDomain) }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 

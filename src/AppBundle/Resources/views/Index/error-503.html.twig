@@ -3,9 +3,9 @@
 {% trans_default_domain translationDomain %}
 
 
-{% block pageTitle %}{{ 'errors.503.page.htmlTitle' | trans }} {% endblock %}
+{% block htmlTitle %}{{ 'errors.503.page.htmlTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} error-page error-page--503{% endblock %}
-{% block title %}{% trans %}errors.503.page.pageSectionTitle{% endtrans %}{% endblock %}
+{% block pageTitle %}{% trans %}errors.503.page.pageSectionTitle{% endtrans %}{% endblock %}
 
 {% block validationSummary %}
     {# {{ form_errors_list(form) }} #}

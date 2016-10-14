@@ -1,5 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% block pageTitle %}ODR{% endblock %}
+{% block htmlTitle %}ODR{% endblock %}
 
 {% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
     {% if odr.submitted == false %}

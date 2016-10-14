@@ -5,8 +5,8 @@
     {% set transOptions = {'%client%': report.client.firstname} %}
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
     <div class="breadcrumbs">

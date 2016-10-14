@@ -1,0 +1,18 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+
+    {% set translationDomain = "report-account-form" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block bodyClasses %}safeguarding-page{% endblock %}
+    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+    {% set formId = "account_add_form" %}
+
+    {% block pageBody %}
+
+        {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
+
+    {% endblock %}
+
+{% endembed %}

@@ -1,151 +1,139 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
-    {% set translationDomain = "report-visits-care" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
-    </div>
-    {% endblock %}
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-    {% block pageBody %}
+{% block pageContent %}
 
-        <a href="{{ backLink }}" class="link-back push--bottom">{{ 'stepPage.backLink' | trans }}</a>
+    <a href="{{ backLink }}" class="link-back push--bottom">{{ 'stepPage.backLink' | trans }}</a>
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {% if step == 1 %}
+        <div class="form-section push--bottom">
 
-        {% if step == 1 %}
-            <div class="form-section push--bottom">
-
-                {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
-                    'fieldSetClass' : 'inline do-you-live-radio',
-                    'legendClass' : 'heading-medium',
-                    'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                    'items': [
-                        {'labelClass': 'block-label', 'elementClass': '' },
-                        {'labelClass': 'block-label', 'elementClass': '' }
-                    ],
-                    'formGroupClass': 'flush--bottom'
-                }) }}
-                <div id="visit-questions">
-                    <div class="panel panel-border-narrow">
-                        {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
-                            'labelClass': 'required',
-                            'labelParameters': { '%client%': report.client.firstname },
-                            'inputClass': 'expanding'
-                        }) }}
-                    </div>
+            {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
+                'fieldSetClass' : 'inline do-you-live-radio',
+                'legendClass' : 'heading-medium',
+                'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                'items': [
+                    {'labelClass': 'block-label' },
+                    {'labelClass': 'block-label' }
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+            <div id="visit-questions">
+                <div class="panel panel-border-narrow">
+                    {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
+                        'labelClass': 'text required',
+                        'labelParameters': { '%client%': report.client.firstname },
+                        'inputClass': 'expanding'
+                    }) }}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% if step == 2 %}
-            <div class="form-section push--bottom">
+    {% if step == 2 %}
+        <div class="form-section push--bottom">
 
-                {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
-                    'fieldSetClass' : 'inline does-client-receive-care',
-                    'legendClass' : 'heading-medium',
-                    'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                    'items': [
-                        {'labelClass': 'block-label', 'elementClass': '' },
-                        {'labelClass': 'block-label', 'elementClass': '' }
-                    ],
-                    'formGroupClass': 'flush--bottom'
-                }) }}
+            {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
+                'fieldSetClass' : 'inline does-client-receive-care',
+                'legendClass' : 'heading-medium',
+                'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                'items': [
+                    {'labelClass': 'block-label'},
+                    {'labelClass': 'block-label'}
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
 
-                <div id="care-questions">
-                    <div class="panel panel-border-narrow">
-                        {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
-                            'legendClass' : 'form-label-bold',
-                            'items': [
-                            {'labelClass': 'block-label', 'elementClass': '' },
-                            {'labelClass': 'block-label', 'elementClass': '' },
-                            {'labelClass': 'block-label', 'elementClass': '' }
-                            ]
-                        }) }}
-                    </div>
+            <div id="care-questions">
+                <div class="panel panel-border-narrow">
+                    {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
+                        'legendClass' : 'form-label-bold',
+                        'items': [
+                        {'labelClass': 'block-label'},
+                        {'labelClass': 'block-label'},
+                        {'labelClass': 'block-label'}
+                        ]
+                    }) }}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% if step == 3 %}
-            <div class="form-section push--bottom">
-                <h3 class="heading-medium flush--top">Who is doing the caring?</h3>
-                {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
-                    'labelClass': 'visuallyhidden',
-                    'inputClass': 'expanding',
-                    'formGroupClass': 'flush--bottom'
-                }) }}
-            </div>
-        {% endif %}
+    {% if step == 3 %}
+        <div class="form-section push--bottom">
+            <h3 class="heading-medium flush--top">Who is doing the caring?</h3>
+            {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
+                'labelClass': 'visuallyhidden',
+                'inputClass': 'expanding',
+                'formGroupClass': 'flush--bottom'
+            }) }}
+        </div>
+    {% endif %}
 
-        {% if step == 4 %}
-            <div class="form-section push--bottom">
-                {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
-                    'fieldSetClass' : 'inline care-plan',
-                    'legendClass' : 'heading-medium',
-                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                    'items': [
-                        {'labelClass': 'block-label', 'elementClass': '' },
-                        {'labelClass': 'block-label', 'elementClass': '' }
-                    ],
-                    'formGroupClass': 'flush--bottom'
-                }) }}
+    {% if step == 4 %}
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
+                'fieldSetClass' : 'inline care-plan',
+                'legendClass' : 'heading-medium',
+                'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                'items': [
+                    {'labelClass': 'block-label'},
+                    {'labelClass': 'block-label'}
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
 
-                <div id="care-plan-questions">
-                    <div class="panel panel-border-narrow">
-                        {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
-                            'showDay': 'false'
-                        }) }}
-                    </div>
+            <div id="care-plan-questions">
+                <div class="panel panel-border-narrow">
+                    {# legendClass is-not-working #}
+                    {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
+                        'legendClass' : 'form-label-bold',
+                        'showDay': 'false'
+                    }) }}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'form.save') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-        {{ form_end(form) }}
+    {{ form_end(form) }}
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-                new opg.RadioHide({
-                    radio: '.do-you-live-radio input[type=radio]',
-                    content: '#visit-questions',
-                    hideOnYes: true
-                });
-                new opg.RadioHide({
-                    radio: '.does-client-receive-care input[type=radio]',
-                    content: '#care-questions',
-                    hideOnYes: false
-                });
-                new opg.RadioHide({
-                    radio: '.care-plan input[type=radio]',
-                    content: '#care-plan-questions',
-                    hideOnYes: false
-                });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio: '.do-you-live-radio input[type=radio]',
+                content: '#visit-questions',
+                hideOnYes: true
             });
-        </script>
+            new opg.RadioHide({
+                radio: '.does-client-receive-care input[type=radio]',
+                content: '#care-questions',
+                hideOnYes: false
+            });
+            new opg.RadioHide({
+                radio: '.care-plan input[type=radio]',
+                content: '#care-plan-questions',
+                hideOnYes: false
+            });
+        });
+    </script>
 
-    {% endblock %}
+{% endblock %}
 
-    {% block pageBodyFooterNav %}
-
-    {% endblock %}
-
-{% endembed %}

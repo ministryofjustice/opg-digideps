@@ -4,8 +4,8 @@
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
 {% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
@@ -14,12 +14,12 @@
 {% endblock %}
 
 {% block maincontent %}
-    
+
     <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
-        
+
         <a href="{{ path('user_edit') }}"
            class="edit-button behat-link-deputy-edit">{{ 'yourDetails.edit'| trans }}</a>
-           
+
        <h2 class="title behat-region-my-details-name" itemprop="name">{{ user.getFullname }}</h2>
 
         <dl class="item-data item-data-fixed behat-region-my-details">
@@ -42,7 +42,7 @@
                     <div itemprop="addressCountry">{{ user.addressCountry | country_name }}</div>
                 {% endif %}
             </dd>
-            
+
             <dt class="item-label">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
             <dd class="item-value behat-region-my-details-phone-main">{{ user.phoneMain }}&nbsp;</dd>
 

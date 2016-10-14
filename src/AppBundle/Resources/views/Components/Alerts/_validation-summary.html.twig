@@ -1,11 +1,11 @@
 {% if ((formErrorMessages | length + formUncaughtErrors | length) > 0) and (error is not defined) %}
-<div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1" class="behat-region-header-errors">
-    <h1 class="heading-small error-summary-heading" id="error-summary-heading">There are some problems on this page</h1>
+<div id="error-summary" class="error-summary text" role="group" aria-labelledby="error-summary-heading" tabindex="-1" class="behat-region-header-errors">
+    <h1 class="heading-medium error-summary-heading" id="error-summary-heading">There are some problems on this page</h1>
     <ul class="error-summary-list">
     {% if formUncaughtErrors %}
         {% for formError in formUncaughtErrors %}
             <li>{{ formError.message }}</li>
-        {% endfor %}    
+        {% endfor %}
     {% endif %}
     {% for formErrorMessage in formErrorMessages %}
         <li><a href="#form-group-{{ formErrorMessage.elementId }}">{{ formErrorMessage.message }}</a></li>

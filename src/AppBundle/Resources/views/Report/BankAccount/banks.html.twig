@@ -4,8 +4,8 @@
     {% trans_default_domain translationDomain %}
 
     {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+    {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
         {#<h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>#}

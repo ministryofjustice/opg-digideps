@@ -1,82 +1,67 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% set translationDomain = "odr-declaration" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} report-overview report-declaration js-report-assets-input{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
 {% block pageContent %}
-    <div id="pagebody">
-        <div id="pagebody-left-content">
-            {% block validationSummary %}
-                {{ form_errors_list(form) }}
-            {% endblock %}
 
-            <div id="page-section-title-container" class="page-section-title-container">
-                <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
-            </div>
+    <div class="text">
 
-            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionDescription: 'page.pageSectionDescription',
-            transOptions: {'%separator%': '<br/><br/>'}
-            } %}
-
-            {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-            {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
-
-            {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
-                'fieldSetClass' : 'inline radio-agreed-behalf-deputy',
-                'legendClass' : 'form-label',
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
-            }) }}
-
-            <div id="agreed-behalf-deputy-explanation-section">
-                {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
-            </div>
-
-            <div class="form-group button-bar">
-                {{ form_submit(form.save,'save') }}
-            </div>
-
-            {{ form_end(form) }}
-
-            <div class="page-section-warning push--top flush--bottom hard--bottom">
-                <span class="icon icon__notification"></span>
-                <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
-            </div>
-
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    new GOVUK.SelectionButtons(":checkbox");
-                    new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-                    new opg.RadioHide({
-                        radio: '.radio-agreed-behalf-deputy input[type=radio]',
-                        content: '#agreed-behalf-deputy-explanation-section',
-                        hideByDefault: true,
-                        showWithValue: 'more_deputies_not_behalf'
-                    });
-                });
-            </script>
-
-        </div>
-        <!-- end left-content -->
-
-        <div id="pagebody-right-content">
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
-        </div>
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription',
+        transOptions: {'%separator%': '<br/><br/>'}
+        } %}
 
     </div>
 
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
 
+    {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
+        'fieldSetClass' : 'radio-agreed-behalf-deputy',
+        'legendClass' : 'form-label',
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
 
+    <div id="agreed-behalf-deputy-explanation-section">
+        {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    </div>
+
+    <div class="form-group button-bar">
+        {{ form_submit(form.save,'save') }}
+    </div>
+
+    {{ form_end(form) }}
+
+    <div class="page-section-warning push--top flush--bottom hard--bottom">
+        <span class="icon icon__notification"></span>
+        <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            new GOVUK.SelectionButtons(":checkbox");
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio: '.radio-agreed-behalf-deputy input[type=radio]',
+                content: '#agreed-behalf-deputy-explanation-section',
+                hideByDefault: true,
+                showWithValue: 'more_deputies_not_behalf'
+            });
+        });
+    </script>
 
 {% endblock %}

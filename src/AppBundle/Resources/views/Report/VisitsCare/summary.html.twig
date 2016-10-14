@@ -1,140 +1,138 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
-    {% set translationDomain = "report-visits-care" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
-    </div>
-    {% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
-    {# ID killing for layout #}
-    {% block leftContentId %}{% endblock %}
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'summaryPage.supportTitle' | trans }}</span>
+{% endblock %}
 
-    {% block pageBody %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        <p class="page-section-description text-secondary">
-            {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
-        </p>
+{% block pageContent %}
 
-        {# @biggs https://www.gov.uk/service-manual/user-centred-design/resources/patterns  #}
-        <table class="check-your-answers push--bottom">
-            <tbody>
-            <tr class="{{ (stepEdited == 1) ? 'edited' : '' }}">
-                <td>
-                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
-                </td>
-            </tr>
-            {% if report.visitsCare.doYouLiveWithClient == 'no' %}
-            <tr class="{{ stepEdited == 1 ? 'edited' : '' }}">
-                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
-                <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
-                <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
-                </td>
-            </tr>
-            {% endif %}
-            </tbody>
+    <p class="text text-secondary">
+        {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
+    </p>
 
-            {# step 2 #}
-            <tbody>
+    {# @biggs https://www.gov.uk/service-manual/user-centred-design/resources/patterns  #}
+    <table class="check-your-answers push--bottom">
+        <tbody>
+        <tr class="{{ (stepEdited == 1) ? 'edited' : '' }}">
+            <td>
+                {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ report.visitsCare.doYouLiveWithClient | capitalize }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if report.visitsCare.doYouLiveWithClient == 'no' %}
+        <tr class="{{ stepEdited == 1 ? 'edited' : '' }}">
+            <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+            <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+
+        {# step 2 #}
+        <tbody>
+        <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
+            <td>
+                {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
             <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
                 <td>
-                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+                    {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
+                    {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
-            {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
-                <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
-                    <td>
-                        {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
-                    </td>
-                    <td>
-                        {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
-                    </td>
-                    <td class="change-answer">
-                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
-                    </td>
-                </tr>
-            {% endif %}
-            </tbody>
+        {% endif %}
+        </tbody>
 
-            {# step 3 #}
-            <tbody>
-            <tr class="{{ (stepEdited == 3) ? 'edited' : '' }}">
-                <td>
-                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ report.visitsCare.whoIsDoingTheCaring  }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
-                </td>
-            </tr>
-            </tbody>
+        {# step 3 #}
+        <tbody>
+        <tr class="{{ (stepEdited == 3) ? 'edited' : '' }}">
+            <td>
+                {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ report.visitsCare.whoIsDoingTheCaring  }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
+            </td>
+        </tr>
+        </tbody>
 
-            {# step 4 #}
-            <tbody>
+        {# step 4 #}
+        <tbody>
+        <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
+            <td>
+                {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ report.visitsCare.doesClientHaveACarePlan | capitalize}}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
             <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
                 <td>
-                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                    {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.doesClientHaveACarePlan | capitalize}}
+                    {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
-            {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
-                <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
-                    <td>
-                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
-                    </td>
-                    <td>
-                        {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
-                    </td>
-                    <td class="change-answer">
-                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
-                    </td>
-                </tr>
-            {% endif %}
-            </tbody>
+        {% endif %}
+        </tbody>
 
-        </table>
+    </table>
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
 
-    {% endblock %}
-
-    {% block pageBodyFooterNav %}
+    <div id="body-footer-nav">
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
         'previousLink': path("contacts" , {'reportId': report.id }),
         'previousLabel': 'Contacts',
         'nextLink': path("accounts" , {'reportId': report.id }),
         'nextLabel': 'Accounts'
         } %}
-    {% endblock %}
+    </div>
 
-{% endembed %}
+{% endblock %}
+
+
+
