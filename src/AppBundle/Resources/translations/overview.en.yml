@@ -47,6 +47,11 @@ bank_accounts:
     subSectionDescription: "Add %client%'s building society and savings accounts"
     edit: "Edit bank accounts"
     start: "Start bank accounts"
+money_transfers:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: ""
+    edit: "Edit money transfers"
+    start: "Start money transfers"
 accounts:
     subSectionTitle: "Money Transactions, transfers and balance"
     subSectionDescription: "Add details of all income and spending in the reporting period"

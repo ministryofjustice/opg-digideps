@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 class MoneyTransferController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/transfers/edit", name="transfers")
+     * @Route("/report/{reportId}/transfers/edit", name="money_transfers")
      *
      * @param int $reportId
      *
      * @return array
      */
-    public function index(Request $request, $reportId)
+    public function edit(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
         if (($nofAccounts = count($report->getAccounts())) < 2) {
@@ -38,10 +38,10 @@ class MoneyTransferController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->post('report/'.$report->getId().'/money-transfers', $form->getData());
 
-            return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 
-        return $this->render('AppBundle:Report/MoneyTransfer:index.html.twig', [
+        return $this->render('AppBundle:Report/MoneyTransfer:edit.html.twig', [
                 'report' => $report,
                 'subsection' => 'transfers',
                 'form' => $form->createView(),
@@ -56,7 +56,7 @@ class MoneyTransferController extends AbstractController
     {
         $this->getRestClient()->delete('report/'.$reportId.'/money-transfers/'.$transferId);
 
-        return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
     }
 
     /**

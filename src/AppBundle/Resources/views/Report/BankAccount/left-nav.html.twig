@@ -1,6 +1,6 @@
 <nav id="account-sub-nav">
     {#<a id="account-banks" href="{{ path('bank_accounts' , {'reportId': report.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>{{ 'nav.bankAccounts' | trans({}, "report-accounts") }}</a>#}
-    <a id="account-transfers" href="{{ path('transfers' , {'reportId': report.id}) }}" {% if subsection == 'transfers' %}class="active"{% endif %}>{{ 'nav.transfers' | trans({}, "report-accounts") }}</a>
+    <a id="account-transfers" href="{{ path('money_transfers' , {'reportId': report.id}) }}" {% if subsection == 'money_transfers' %}class="active"{% endif %}>{{ 'nav.transfers' | trans({}, "report-accounts") }}</a>
     <a id="account-moneyin" href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" {% if subsection == 'moneyin' %}class="active"{% endif %}>{{ 'nav.moneyIn' | trans({}, "report-accounts") }}</a>
     <a id="account-moneyout" href="{{ path('accounts_moneyout' , {'reportId': report.id}) }}" {% if subsection == 'moneyout' %}class="active"{% endif %}>{{ 'nav.moneyOut' | trans({}, "report-accounts") }}</a>
     <a id="account-balance" href="{{ path('accounts_balance' , {'reportId': report.id}) }}" {% if subsection == 'balance' %}class="active"{% endif %}>{{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}</a>

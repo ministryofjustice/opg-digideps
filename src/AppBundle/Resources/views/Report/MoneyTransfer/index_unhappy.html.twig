@@ -1,46 +1,46 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-transfers" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-transfers" %}
+{% trans_default_domain translationDomain %}
 
-    {% block leftcontent %}
-        {% include 'AppBundle:Report/BankAccount:left-nav.html.twig'%}
-    {% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-    {% block maincontent %}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        <h2 class="heading heading-medium">You don't need to complete this section</h2>
+{% block pageContent %}
 
-        <p class="page-section-description}}">
-            As {{ report.client.firstname }} has only one account, you don't have to complete this section. Does
-            {{ report.client.firstname }} have other current accounts? If so, go back to
-            <a href="{{ path('bank_accounts' , {'reportId': report.id}) }}">Bank accounts</a> and add
-            these accounts there
-        </p>
+    <h2 class="heading heading-medium">You don't need to complete this section</h2>
 
-        <div class="grey-nav-block">
-            <div>
-                <h3 class="heading heading-medium">More than one account?</h3>
-            </div>
-            <div>
-                <a href="{{ path('bank_accounts' , {'reportId': report.id}) }}" class="button btn-big">
-                    {{ 'unhappy.add.label' | transchoice(nOfAccounts) }}
-                </a>
-            </div>
+    <p class="page-section-description}}">
+        As {{ report.client.firstname }} has only one account, you don't have to complete this section. Does
+        {{ report.client.firstname }} have other current accounts? If so, go back to
+        <a href="{{ path('bank_accounts' , {'reportId': report.id}) }}">Bank accounts</a> and add
+        these accounts there
+    </p>
+
+    <div class="grey-nav-block">
+        <div>
+            <h3 class="heading heading-medium">More than one account?</h3>
         </div>
+        <div>
+            <a href="{{ path('bank_accounts' , {'reportId': report.id}) }}" class="button btn-big">
+                {{ 'unhappy.add.label' | transchoice(nOfAccounts) }}
+            </a>
+        </div>
+    </div>
 
-    {% endblock %}
+{% endblock %}
 
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts" , {'reportId': report.id }),
-        'previousLabel': 'Bank accounts',
-        'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
-        'nextLabel': 'Money in'
-        } %}
-    {% endblock %}
-{% endembed %}
+{% block pageBodyFooterNav %}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("accounts" , {'reportId': report.id }),
+    'previousLabel': 'Bank accounts',
+    'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
+    'nextLabel': 'Money in'
+    } %}
+{% endblock %}

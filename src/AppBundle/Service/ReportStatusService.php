@@ -81,20 +81,32 @@ class ReportStatusService
         return self::STATE_DONE;
     }
 
+    public function getMoneyTransferState()
+    {
+        if (count($this->report->getAccounts()) <= 1) {
+            return self::STATE_DONE;
+        }
+
+        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
+        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
+
+        return $valid ? self::STATE_DONE : self::STATE_NOT_STARTED;
+    }
+
     /** @return string */
     public function getAccountsState()
     {
-        $missingAccounts = empty($this->report->getAccounts());
-
-        // not started
-        if ($missingAccounts && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
-            return self::STATE_NOT_STARTED;
-        }
-
-        // all done
-        if (!$missingAccounts && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
-            return self::STATE_DONE;
-        }
+//        $missingAccounts = empty($this->report->getAccounts());
+//
+//        // not started
+//        if ($missingAccounts && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
+//            return self::STATE_NOT_STARTED;
+//        }
+//
+//        // all done
+//        if (!$missingAccounts && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
+//            return self::STATE_DONE;
+//        }
 
         // amber in all the other cases
         return self::STATE_INCOMPLETE;
@@ -153,21 +165,6 @@ class ReportStatusService
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    private function missingTransfers()
-    {
-        if (count($this->report->getAccounts()) <= 1) {
-            return false;
-        }
-
-        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
-        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
-
-        return !$valid;
-    }
-
     /** @return bool */
     private function missingBalance()
     {
@@ -192,7 +189,8 @@ class ReportStatusService
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
-                'accounts' => $this->getAccountsState(),
+                'moneyTransferState' => $this->getMoneyTransferState(),
+//                'accounts' => $this->getAccountsState(),
                 'assets' => $this->getAssetsState(),
             ];
         }
