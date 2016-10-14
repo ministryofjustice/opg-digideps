@@ -8,7 +8,7 @@
       {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
     {% endif %}
     {% if (hintText is defined) and (hintText is not empty) %}
-        <p class="form-hint">
+        <p class="form-hint text">
           {{ hintText }}
         </p>
         {% if hintListArray is defined %}
