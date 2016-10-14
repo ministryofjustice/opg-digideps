@@ -1,8 +1,19 @@
-page:
+startPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
   pageSectionTitle: "Debts"
-  pageSectionDescription: "Don't tell us about amounts left to pay on a mortgage. Go to assets to give us this information."
-  heading: Debts owed by %client%
+  pageSectionDescription: |
+    Use this section to tell us about %client%'s debts, for example,
+    care fees, credit cards or loans
+  startButton: Start debts
+
+existPage:
+  htmlTitle: "Deputy report - debts | GOV.UK"
+  pageSectionTitle: Debts
+  form:
+    exist:
+      label: Does %client% has any debts ?
+    save:
+      label: Save and continue
 
 form:
   entries:
