@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Report\Report;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -25,7 +26,13 @@ class ElementController extends AbstractController
      */
     public function baseAction()
     {
-        return [];
+        $report = new Report();
+        $report->setId(1);
+        $report->setCourtOrderTypeId(2);
+
+        return [
+            'report' => $report,
+        ];
     }
 
     /**
