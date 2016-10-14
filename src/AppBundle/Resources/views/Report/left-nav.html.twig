@@ -1,8 +1,3 @@
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
 
-<nav id="account-sub-nav">
-    <a id="report-prop-fin" 
-       href="{{ path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') }) }}"
-       class="active behat-link-prop-finance">{{ 'nav.propFinance' | trans() }}</a>
-</nav>

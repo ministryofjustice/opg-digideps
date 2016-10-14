@@ -1,20 +1,18 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
-{% block htmlTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs('settings') }}
 {% endblock %}
 
-{% block maincontent %}
-
+{% block pageContent %}
     <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
 
         <a href="{{ path('user_edit') }}"
@@ -55,4 +53,3 @@
     </div>
 
 {% endblock %}
-{% endembed %}

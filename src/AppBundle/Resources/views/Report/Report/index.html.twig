@@ -1,22 +1,30 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
-    {% set translationDomain = "report" %}
-    {% trans_default_domain translationDomain %}
-    {% block bodyClasses %}reports-page{% endblock %}
-    {% block htmlTitle %}
-        {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
-    {% endblock %}
-    {% block contentClass %}{{ parent() }} reports-list{% endblock %}
-    {% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-{% block backLinktop %}{% endblock %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:Report:left-nav.html.twig'%}
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+
+ {% block htmlTitle %}
+     {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
+ {% endblock %}
+{% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
+
+{% block bodyClasses %}reports-page{% endblock %} {# copied from old left-nav template #}
+
+{% block breadcrumbs %}
+    {#{{ macros.breadcrumbs('settings') }}#}
 {% endblock %}
 
-{% block maincontent %}
+{% block pageContent %}
+
+    {#<nav id="account-sub-nav">#}
+        {#<a id="report-prop-fin"#}
+           {#href="{{ path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') }) }}"#}
+           {#class="active behat-link-prop-finance">{{ 'nav.propFinance' | trans() }}</a>#}
+    {#</nav>#}
+
+
     {% if reportId %}
          {% if newReportNotification %}
             <p class="flash">{{ newReportNotification }}</p>
@@ -37,6 +45,3 @@
                 } %}
     {% endif %}
 {% endblock %}
-{% endembed %}
-
-{#{% extends 'AppBundle:Components/Page:page-service.html.twig' %}#}

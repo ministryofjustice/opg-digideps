@@ -1,19 +1,18 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}client-page{% endblock %}
+
 {% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 {% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
-
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs('settings') }}
 {% endblock %}
 
-{% block maincontent %}
+{% block pageContent %}
 
     <div id="edit" class="">
 
@@ -65,4 +64,3 @@
     </div>
 
 {% endblock %}
-{% endembed %}

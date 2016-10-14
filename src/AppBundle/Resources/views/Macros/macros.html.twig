@@ -2,8 +2,12 @@
 {% macro breadcrumbs(report) %}
 	<div class="breadcrumbs">
         <ol class="group">
-            <li><a href="{{ path('reports', {'cot': report.courtOrderTypeId}) }}">Deputy Reports</a></li>
-            <li><a href="{{ path('report_overview', {'reportId': report.id}) }}">Deputy report overview</a></li>
-        </ol>
+            <li><a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a></li>
+            {% if report =='settings' %}
+                <li><a href="{{ path('account_settings') }}">Account settings</a></li>
+            {% else %}
+                <li><a href="{{ path('report_overview', {'reportId': report.id}) }}">Deputy report overview</a></li>
+            {% endif %}
+             </ol>
     </div>
 {% endmacro %}
