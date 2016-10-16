@@ -14,9 +14,6 @@
 
 {% block pageBody %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'errors.503.page.pageSectionDescription'
-    } %}
+	<p>{{ 'errors.503.page.pageSectionDescription' | trans }}</p>
 
 {% endblock %}

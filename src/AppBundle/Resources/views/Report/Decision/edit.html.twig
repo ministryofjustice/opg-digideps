@@ -14,10 +14,7 @@
 
 {% block pageContent %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
+    <p class="text">{{ 'page.pageSectionDescription' | trans }}</p>
 
     {% include 'AppBundle:Report/Decision:_decision_form.html.twig' with {
     'translationDomain': translationDomain,
@@ -26,4 +23,3 @@
     } %}
 
 {% endblock %}
-    

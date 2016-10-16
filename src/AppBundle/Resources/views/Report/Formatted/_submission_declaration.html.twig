@@ -8,11 +8,10 @@
         pageSectionTitle: 'page.pageSectionTitle'
     } %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: "report-declaration",
-        pageSectionDescription: 'page.pageSectionDescription',
-        transOptions: {'%separator%': '<br/><br/>'}
-    } %}
+    <p>{{ 'page.descriptionPara01' | trans }}</p>
+    <p>{{ 'page.descriptionPara02' | trans }}</p>
+    <p>{{ 'page.descriptionPara03' | trans }}</p>
+    <p>{{ 'page.descriptionPara04' | trans }}</p>
 
     <div class="item">
         <dl class="labelvalue">

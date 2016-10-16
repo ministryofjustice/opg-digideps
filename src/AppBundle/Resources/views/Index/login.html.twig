@@ -11,7 +11,12 @@
     {% endif %}
 {% endblock %}
 
+
 {% block pageContent %}
+
+    {# Content gets injected here when manually signing out (login-from-logout) #}
+    {% block pageHeader %}
+    {% endblock %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom'}}) }}
 

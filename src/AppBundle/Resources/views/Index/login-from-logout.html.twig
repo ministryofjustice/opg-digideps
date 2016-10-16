@@ -7,14 +7,9 @@
 
 
 {% block pageHeader %}
-    {{ parent() }}
 
     <p class="lede">{{ 'manualLogout.pageSectionTitle' | trans }}</p>
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'manualLogout.pageSectionDescription',
-    additionalClass: 'behat-region-manual-logout-message'
-    } %}
+    <p class="behat-region-manual-logout-message">{{ 'manualLogout.pageSectionDescription' | trans }}</p>
 
 {% endblock %}

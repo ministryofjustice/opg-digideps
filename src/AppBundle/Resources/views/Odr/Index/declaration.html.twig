@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "odr-declaration" %}
 {% trans_default_domain translationDomain %}
 
@@ -7,18 +9,17 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
+    {{ macros.breadcrumbs(odr) }}
 {% endblock %}
 
 {% block pageContent %}
 
     <div class="text">
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription',
-        transOptions: {'%separator%': '<br/><br/>'}
-        } %}
+        <p>{{ 'page.descriptionPara01' | trans }}</p>
+        <p>{{ 'page.descriptionPara02' | trans }}</p>
+        <p>{{ 'page.descriptionPara03' | trans }}</p>
+        <p>{{ 'page.descriptionPara04' | trans }}</p>
 
     </div>
 

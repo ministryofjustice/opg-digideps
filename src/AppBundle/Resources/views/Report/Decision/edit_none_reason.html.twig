@@ -14,16 +14,10 @@
 
 {% block pageContent %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+    <p class="text">{{ 'page.pageSectionDescription' | trans }}</p>
 
     {% if report.decisions %}
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionDescription: 'page.pageSectionEditInfo'
-            } %}
+        <p class="text">{{ 'page.pageSectionEditInfo' | trans }}</p>
     {% endif %}
 
     {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
