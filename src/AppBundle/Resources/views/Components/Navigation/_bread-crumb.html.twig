@@ -1,7 +1,7 @@
 <!--Component: bread-crumb-->
 {% if breadCrumb is defined %}
-    <div id="global-breadcrumb">
-        <ol>
+    <div class="breadcrumbs">
+        <ol class="group">
             {% for step in breadCrumb %}
                 <li class="bread-crumbs">
                     {% if step.href is defined %}
