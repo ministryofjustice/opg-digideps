@@ -3,10 +3,9 @@
 {% if report.submitDate != "" %}
 <div class="box">
 
-    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: "report-declaration",
-        pageSectionTitle: 'page.pageSectionTitle'
-    } %}
+    <h2 class="page-section-title heading-medium flush--top">
+        {{ 'page.pageSectionTitle' | trans }}
+    </h2>
 
     <p>{{ 'page.descriptionPara01' | trans }}</p>
     <p>{{ 'page.descriptionPara02' | trans }}</p>
