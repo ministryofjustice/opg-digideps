@@ -5,8 +5,8 @@
 
 {% block maincontent %}
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
-    <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionEditInfo' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 

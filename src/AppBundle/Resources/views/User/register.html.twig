@@ -10,12 +10,12 @@
 
 {% block pageBody %}
 
-    <p class="page-section-description">{{ 'intro' | trans }}</p>
-    <p class="page-section-description">{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    <p>{{ 'intro' | trans }}</p>
+    <p>{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
 
     <section class="help-item">
       <h3 class="summary heading-medium">{{ 'moreThanOne' | trans }}</h3>
-      <p class="content page-section-description">{{ 'moreThanOneDescription' | trans | raw }}</p>
+      <p class="content">{{ 'moreThanOneDescription' | trans | raw }}</p>
     </section>
 
     {% set formClass = 'registration-form' %}

@@ -5,7 +5,7 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'behat-region-no-assets-selected' } }) }}
 
-    <p class="page-section-description ">{{ 'no_assets.description'| trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p>{{ 'no_assets.description'| trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
     {{ form_checkbox(form.noAssetToAdd,'no_assets', {
         'labelClass': 'required',
         'labelText': 'no_assets.label' | trans({'%client%': odr.client.firstname}, translationDomain)

@@ -15,9 +15,10 @@
 
         <p class="flash">{{ 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
 
-        <p class="page-section-description">{{ 'page.yourReportWillBeSent' | trans }}</p>
-
-        <p class="page-section-description">{{ 'page.weWillSendReminder' | trans }}</p>
+        <div class="text">
+            <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
+            <p>{{ 'page.weWillSendReminder' | trans }}</p>
+        </div>
 
         <div class="link">
             <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">

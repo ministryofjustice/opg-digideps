@@ -5,7 +5,7 @@ categoryKey: categoryKey,
     {% trans_default_domain translationDomain %}
 
     {% block detail %}
-        <p class="page-section-description">
+        <p>
             {{ (categoryKey ~ '.description') | trans(clientTrans, translationDomain)}}
         </p>
         <p class="form-hint ">

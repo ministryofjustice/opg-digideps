@@ -9,7 +9,7 @@
 
     {% block pageBody %}
         {#<h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>#}
-        <p class="page-section-description">
+        <p>
           {{ 'summaryPage.pageSectionDescription' | trans() }}</p>
 
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
@@ -25,7 +25,7 @@
                 {% else %}
                     <div>
                         <span class="icon icon__notification_yellow_small"></span>
-                        <span class="page-section-description left-margin">
+                        <span class="left-margin">
                             {{ 'banks.accountMissingWarning' | trans({}, translationDomain)}}
                         </span>
                     </div>
@@ -61,7 +61,7 @@
              <dl>
                 <div class="balance-warning page-section-warning">
                     <span class="icon icon__notification_yellow_small"></span>
-                    <span class="page-section-description left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
+                    <span class="left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
                         '%date%': report.endDate | date("j M Y"),
                         '%client%': report.client.firstname
                     }, translationDomain) }}</span>

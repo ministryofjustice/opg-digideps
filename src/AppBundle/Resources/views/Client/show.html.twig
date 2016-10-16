@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
 
     <div itemscope itemtype="http://schema.org/Person" class="item client-details">
         <a href="{{ path('client_edit') }}#edit-client"

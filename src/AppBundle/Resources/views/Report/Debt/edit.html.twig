@@ -22,7 +22,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
 
     <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
-        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+        <p>{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
         <div class="section no-border-bottom form-horizontal">
             <div class="detail transactions detail-view">
                 {% for debt in form.debts %}

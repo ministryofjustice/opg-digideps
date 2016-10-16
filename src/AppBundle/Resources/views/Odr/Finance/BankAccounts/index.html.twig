@@ -15,7 +15,7 @@
     {% block maincontent %}
 
         <h3 class="heading-medium">{{ 'banks.pageSectionTitle' | trans({'%client%': odr.client.firstname}) }}</h3>
-        <p class="page-section-description">
+        <p>
           {{ 'banks.pageSectionDescription' | trans({
             '%client%': odr.client.firstname,
           }, translationDomain)}}</p>
@@ -33,7 +33,7 @@
                 {% else %}
                     <div>
                         <span class="icon icon__notification_yellow_small"></span>
-                        <span class="page-section-description left-margin">
+                        <span class="left-margin">
                             {{ 'banks.accountMissingWarning' | trans({}, translationDomain)}}
                         </span>
                     </div>

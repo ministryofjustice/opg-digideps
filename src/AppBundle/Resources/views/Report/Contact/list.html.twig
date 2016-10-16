@@ -17,12 +17,10 @@
 
     {# http://hzaiwi.axshare.com/#g=1&p=contacts_-_list_of_contacts___save_confirm] #}
 
-    <p class="page-section-description">
-        {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
-    </p>
-    <p class="page-section-description">
-        {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
-    </p>
+    <div class="text">
+        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+    </div>
 
     <div class="form-group button-bar">
         <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="button ">

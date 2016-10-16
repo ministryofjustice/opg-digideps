@@ -27,20 +27,24 @@
             <p class="">{{ 'weHaveSentEmail' | trans }}</p>
 
             <!-- what happens next -->
-            <h3 class="heading-medium page-section-description">{{ 'whatHappensNext.title' | trans }}</h3>
-            <p>{{ 'whatHappensNext.body1' | trans }}</p>
-            <p>{{ 'whatHappensNext.body2' | trans }}</p>
+            <h3 class="heading-medium">{{ 'whatHappensNext.title' | trans }}</h3>
+            <div class="text">
+                <p>{{ 'whatHappensNext.body1' | trans }}</p>
+                <p>{{ 'whatHappensNext.body2' | trans }}</p>
+            </div>
             <p>
                 <a href="{{ path('odr_index') }}" class="button behat-link-return-homepage">{{ 'whatHappensNext.returnButton' | trans }}</a>
             </p>
 
             <!-- Give us feedback -->
-            <h3 class="heading-medium page-section-description">{{ 'giveUsFeedback.title' | trans }}</h3>
-            <p>{{ 'giveUsFeedback.body1' | trans }}</p>
-            <p>{{ 'giveUsFeedback.body2' | trans({
-                    '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y" target="_blank">',
-                    '%linkEnd%': '</a>'
-                }) | raw }}</p>
+            <h3 class="heading-medium">{{ 'giveUsFeedback.title' | trans }}</h3>
+            <div class="text">
+                <p>{{ 'giveUsFeedback.body1' | trans }}</p>
+                <p>{{ 'giveUsFeedback.body2' | trans({
+                        '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y" target="_blank">',
+                        '%linkEnd%': '</a>'
+                    }) | raw }}</p>
+            </div>
 
         </div>
 

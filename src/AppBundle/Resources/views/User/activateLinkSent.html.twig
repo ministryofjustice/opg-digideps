@@ -15,15 +15,15 @@
 
 {% block pageBody %}
 
-    <p class="page-section-description">
+    <p>
         {{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}
     </p>
 
-    <p class="page-section-description">
+    <p>
       {{ 'didntReceive' | trans({'%senderEmail%': 'opgdeputyservice@digideps.dsd.io' }) }}
     </p>
 
-     <p class="page-section-description">
+     <p>
       {{ 'stillHavingProblems' | trans() }}
       <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian#org-contacts" target=_blank">{{ 'contactOPG' | trans }}</a>
     </p>

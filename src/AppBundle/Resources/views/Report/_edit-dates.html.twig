@@ -7,7 +7,7 @@
 {% endblock %}
 
 <h3 class="heading-medium">{{ 'page.title'| trans({'%period%': report.period}, translationDomain) }}</h3>
-<p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
+<p>{{ 'page.pageSectionDescription' | trans }}</p>
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
 

@@ -5,7 +5,7 @@
 
 {% block maincontent %}
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
 
     {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
         'odr': odr,

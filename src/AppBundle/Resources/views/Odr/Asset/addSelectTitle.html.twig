@@ -5,7 +5,7 @@
 
 {% block maincontent %}
   <div id="assets-maincontent">
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
 

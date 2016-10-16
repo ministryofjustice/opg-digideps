@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({}, translationDomain) }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans({}, translationDomain) }}</p>
 
     {% block validationSummary %}
         {{ form_errors_list(form) }}

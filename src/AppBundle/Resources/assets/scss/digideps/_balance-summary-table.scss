@@ -123,20 +123,15 @@ table.money-table {
 
     width: 95%;
 
-    .page-section-description {
-        display: block;
-        margin-bottom: 0;
+    .left-margin {
+        margin-left: 40px;
+    }
 
-        &.left-margin {
-            margin-left: 40px;
-        }
+    .left-margin-big {
+        margin-left: 50px;
+    }
 
-        &.left-margin-big {
-            margin-left: 50px;
-        }
-
-        &.big {
-            font-size: 1.15em;
-        }
+    .big {
+        font-size: 1.15em;
     }
 }

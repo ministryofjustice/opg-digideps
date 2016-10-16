@@ -13,10 +13,10 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
+    <p>{{ 'page.pageSectionDescription' | trans }}</p>
 
     {% if report.decisions %}
-        <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans }}</p>
+        <p>{{ 'page.pageSectionEditInfo' | trans }}</p>
     {% else %}
         {% include 'AppBundle:Report/Decision:_decisions_help.html.twig' %}
     {% endif %}
