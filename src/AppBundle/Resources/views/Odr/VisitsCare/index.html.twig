@@ -1,4 +1,4 @@
-{% embed 'AppBundle:Components/Page:page-odr.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
 {% set translationDomain = "odr-visits-care" %}
 {% trans_default_domain translationDomain %}
@@ -8,13 +8,9 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 
-{% block pageBody %}
+{% block pageContent %}
 
     <p>{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
-
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
-    {% endblock %}
 
     {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
           transDomain: translationDomain
@@ -133,15 +129,13 @@
         });
     </script>
 
-{% endblock %}
+    <div id="body-footer-nav">
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+            'previousLink': path("odr-debts" , {'odrId': odr.id }),
+            'previousLabel': 'Debts',
+            'nextLink': path("odr-action-gifts", {'odrId': odr.id }),
+            'nextLabel': 'Gifts'
+        } %}
+    </div>
 
-{% block pageBodyFooterNav %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("odr-debts" , {'odrId': odr.id }),
-    'previousLabel': 'Debts',
-    'nextLink': path("odr-action-gifts", {'odrId': odr.id }),
-    'nextLabel': 'Gifts'
-    } %}
 {% endblock %}
-
-{% endembed %}
