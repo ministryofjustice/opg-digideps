@@ -13,9 +13,7 @@
     <span class="heading-secondary">{{ 'summaryPage.supportTitle' | trans }}</span>
 {% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
@@ -25,118 +23,116 @@
 
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
 
-    {# @biggs https://www.gov.uk/service-manual/user-centred-design/resources/patterns  #}
     <table class="check-your-answers push--bottom">
         <thead>
-            <th>Question</th>
-            <th>Answer</th>
-            <th></th>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-        <tr class="{{ (stepEdited == 1) ? 'edited' : '' }}">
-            <td>
-                {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.visitsCare.doYouLiveWithClient | capitalize }}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
-        {% if report.visitsCare.doYouLiveWithClient == 'no' %}
-        <tr class="{{ stepEdited == 1 ? 'edited' : '' }}">
-            <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
-            <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
-        {% endif %}
+            <tr class="{{ (stepEdited == 1) ? 'edited' : '' }}">
+                <td>
+                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+                </td>
+            </tr>
+            {% if report.visitsCare.doYouLiveWithClient == 'no' %}
+            <tr class="{{ stepEdited == 1 ? 'edited' : '' }}">
+                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+                <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+                </td>
+            </tr>
+            {% endif %}
         </tbody>
 
         {# step 2 #}
         <tbody>
-        <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
-            <td>
-                {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
-        {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
             <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
                 <td>
-                    {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
-        {% endif %}
+            {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+                <tr class="{{ (stepEdited == 2) ? 'edited' : '' }}">
+                    <td>
+                        {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+                    </td>
+                    <td class="change-answer">
+                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
 
         {# step 3 #}
         <tbody>
-        <tr class="{{ (stepEdited == 3) ? 'edited' : '' }}">
-            <td>
-                {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.visitsCare.whoIsDoingTheCaring  }}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
+            <tr class="{{ (stepEdited == 3) ? 'edited' : '' }}">
+                <td>
+                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.whoIsDoingTheCaring  }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
+                </td>
+            </tr>
         </tbody>
 
         {# step 4 #}
         <tbody>
-        <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
-            <td>
-                {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.visitsCare.doesClientHaveACarePlan | capitalize}}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
-        {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
             <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
                 <td>
-                    {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
+                    {{ report.visitsCare.doesClientHaveACarePlan | capitalize}}
                 </td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
                 </td>
             </tr>
-        {% endif %}
+            {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+                <tr class="{{ (stepEdited == 4) ? 'edited' : '' }}">
+                    <td>
+                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
+                    </td>
+                    <td class="change-answer">
+                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
 
     </table>
 
-
-    <div id="body-footer-nav">
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("contacts" , {'reportId': report.id }),
-        'previousLabel': 'Contacts',
-        'nextLink': path("bank_accounts" , {'reportId': report.id }),
-        'nextLabel': 'Bank accounts'
-        } %}
-    </div>
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("bank_accounts" , {'reportId': report.id }),
+    'nextLabel': 'Bank accounts'
+    } %}
 
 {% endblock %}
 
