@@ -147,16 +147,18 @@ class ReportController extends RestController
                 $this->getEntityManager()->flush($debt);
             }
             // set debts as per "debts" key
-            foreach ($data['debts'] as $row) {
-                $debt = $report->getDebtByTypeId($row['debt_type_id']);
-                if (!$debt instanceof EntityDir\Report\Debt) {
-                    continue; //not clear when that might happen. kept similar to transaction below
+            if ($data['has_debts'] == 'yes') {
+                foreach ($data['debts'] as $row) {
+                    $debt = $report->getDebtByTypeId($row['debt_type_id']);
+                    if (!$debt instanceof EntityDir\Report\Debt) {
+                        continue; //not clear when that might happen. kept similar to transaction below
+                    }
+                    $debt->setAmount($row['amount']);
+                    $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
+                    $this->getEntityManager()->flush($debt);
                 }
-                $debt->setAmount($row['amount']);
-                $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
-                $this->getEntityManager()->flush($debt);
-                $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
             }
+            $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
 
         foreach (['transactions_in', 'transactions_out'] as $tk) {
