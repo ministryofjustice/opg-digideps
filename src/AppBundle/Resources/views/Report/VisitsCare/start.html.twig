@@ -8,13 +8,10 @@
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
 
 {% block pageContent %}
-
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
 
     <p class="text">
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}

@@ -17,3 +17,11 @@
         </ol>
     </div>
 {% endmacro %}
+
+{% macro linkBack(report) %}
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back">Back</a>
+{% endmacro %}
+
+{% macro linkBackStep(backLink,stepPage) %}
+    <a href="{{ backLink }}" class="link-back push--bottom">{{ stepPage }}</a>
+{% endmacro %}

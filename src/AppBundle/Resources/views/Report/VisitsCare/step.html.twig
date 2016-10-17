@@ -8,13 +8,12 @@
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
 {% endblock %}
 
 {% block pageContent %}
-
-    <a href="{{ backLink }}" class="link-back push--bottom">{{ 'stepPage.backLink' | trans }}</a>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
