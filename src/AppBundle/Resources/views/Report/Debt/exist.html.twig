@@ -24,7 +24,7 @@
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
+        <a href="{{ path('debts', {'reportId': report.id}) }}" class="link-back">Back</a>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

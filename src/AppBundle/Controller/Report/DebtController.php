@@ -20,7 +20,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
-        if($report->getHasDebts() != null) {
+        if ($report->getHasDebts() != null) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -42,7 +42,7 @@ class DebtController extends AbstractController
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $reportId, $report, ['debt']);
 
-            if ($report->getHasDebts()=='yes') {
+            if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
 
@@ -68,7 +68,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), ['debt']);
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
             return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
         }
@@ -88,12 +88,12 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
-        $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
-        $form->handleRequest($request);
+        if ($report->getHasDebts() == null) {
+            return $this->redirectToRoute('debts', ['reportId' => $reportId]);
+        }
 
         return [
             'report' => $report,
-            'form' => $form->createView(),
         ];
     }
 
