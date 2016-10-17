@@ -29,9 +29,10 @@
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+            {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
                 'fieldSetClass' : 'inline contact-exist',
                 'legendClass' : 'heading-medium text',
+                'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
                 'items': [
                     {'labelClass': 'block-label', 'elementClass': '' },
                     {'labelClass': 'block-label', 'elementClass': '' }

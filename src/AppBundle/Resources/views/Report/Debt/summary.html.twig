@@ -15,7 +15,49 @@
 
 {% block pageContent %}
 
-    {{ dump(report.hasDebts )}}
-    {{ dump(report.debts) }}
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
+
+    <table class="check-your-answers">
+        <tr>
+            <td>
+                {{ 'existPage.form.exist.label' | trans(transOptions) }}
+                {{ report.hasDebts ? 'yes': 'no' }}
+            </td>
+            <td>
+                <a href="{{ path('debts_exist', {'reportId': report.id}) }}">Edit</a>
+            </td>
+        </tr>
+
+    </table>
+
+    <table class="check-your-answers">
+        <thead>
+        <tr>
+            <th>List of debts</th>
+            <th><a href="{{ path('debts_edit', {'reportId': report.id}) }}">Edit</a></th>
+        </tr>
+        </thead>
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for debt in report.debts %}
+            <tr>
+                <td> {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}</td>
+                <td>£ {{ debt.amount }}</td>
+            </tr>
+        {% endfor %}
+        {% set debtOther = report.getDebtById('other') %}
+        {% if debtOther.moreDetails %}
+            <tr>
+                <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
+                <td>{{ debtOther.moreDetails | nl2br }}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
 
 {% endblock %}

@@ -15,6 +15,14 @@ existPage:
     save:
       label: Save and continue
 
+editPage:
+  htmlTitle: "Deputy report - debts | GOV.UK"
+  pageSectionTitle: Debts
+  pageSectionDescription: Please give us more detail about these debts.
+
+summaryPage:
+  moreAbout: more about %client%'s other debts of %amount%
+
 form:
   entries:
     care-fees:

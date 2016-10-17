@@ -35,23 +35,18 @@ class DebtController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
-        // if contacts are already added, skip to next step (=add)
-//        if($report->getHasDebts() != null) {
-//            return $this->redirectToRoute('debt_Start', ['reportId' => $reportId]);
-//        }
-
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['report', 'debt']);
         $form = $this->createForm(new FormDir\Report\DebtsExistType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            switch ($form['exist']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
-                case 'no':
-                    $this->get('restClient')->put('report/' . $reportId, ['has_debts'=>'no', 'debts'=>[]]);
-                    return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
+            $this->get('restClient')->put('report/' . $reportId, $report, ['debt']);
+
+            if ($report->getHasDebts()=='yes') {
+                return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
+
+            return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
         return [

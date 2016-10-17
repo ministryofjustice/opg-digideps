@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbs(report) }}
@@ -15,18 +15,15 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-medium flush--top">{{ 'page.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <h3 class="heading-medium flush--top">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
     {{ form_errors_list(form) }}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
 
-    <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">
-        <p>{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
-        <div class="section no-border-bottom form-horizontal">
-            <div class="detail transactions detail-view">
+    <div id="debts-sections-list">
                 {% for debt in form.debts %}
-                    <div class="transaction {{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
+                    <div class="{{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
                         {{ form_row(debt.debtTypeId) }}
                         {{ form_input(debt.amount, 'amount', {
                             'inputPrefix' : '£',
@@ -44,12 +41,10 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                <div class="sub-total hidden">
-                    Total debts
-                    :£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>
-                </div>
-            </div>
-        </div>
+                {#<div class="sub-total ">#}
+                    {#Total debts#}
+                    {#:£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>#}
+                {#</div>#}
     </div>
 
     <script type="text/javascript">

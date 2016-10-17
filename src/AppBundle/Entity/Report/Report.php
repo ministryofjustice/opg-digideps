@@ -650,6 +650,21 @@ class Report
     }
 
     /**
+     * @param $debtId
+     * @return Debt|null
+     */
+    public function getDebtById($debtId)
+    {
+        foreach ($this->getDebts() as $debt) {
+            if ($debt->getDebtTypeId() == $debtId) {
+                return $debt;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Used in the list view
      * AssetProperty is considered having title "Property"
      * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery".
