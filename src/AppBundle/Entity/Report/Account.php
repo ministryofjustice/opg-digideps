@@ -220,6 +220,10 @@ class Account
     {
         $this->closingBalance = $closingBalance;
 
+        if (!$this->isClosingBalanceZero()) {
+            $this->setIsClosed(false);
+        }
+
         return $this;
     }
 

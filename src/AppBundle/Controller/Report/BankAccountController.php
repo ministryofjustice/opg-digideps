@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
-    const STEPS = 4;
-
     /**
      * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
      * @Template()
@@ -94,8 +92,11 @@ class BankAccountController extends AbstractController
                 $dataToPassToNextStep['opening-balance'] = $account->getClosingBalance();
             }
 
+            // 4th step only if closing balance is equals to 0
+            $isLastStep = $step == 4 || ($step == 3 && !$account->isClosingBalanceZero());
+
             // last step: save
-            if ($step == self::STEPS) {
+            if ($isLastStep) {
                 if ($accountId) {
                     $this->getRestClient()->put('/account/' . $accountId, $account, ['account']);
                 } else {
@@ -103,7 +104,7 @@ class BankAccountController extends AbstractController
                 }
             }
 
-            if ($step == self::STEPS) {
+            if ($isLastStep) {
                 return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
             }
             if ($comingFromSummaryPage) {
