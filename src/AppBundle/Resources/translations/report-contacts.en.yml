@@ -26,7 +26,7 @@ addAnotherPage:
   pageSectionTitle: Contacts
   form:
     addAnother:
-      label: The contact has been saved. Would you like to add contact asset now?
+      label: The contact has been saved. Would you like to add another contact now?
       hint: If you prefer, you can come back to this section later to add more contacts
     save:
        label: Continue
