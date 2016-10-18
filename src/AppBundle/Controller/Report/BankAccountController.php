@@ -64,8 +64,8 @@ class BankAccountController extends AbstractController
         isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
         isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
         isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
-        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
-        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+//        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
+//        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
 
         // crete and handle form
         $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
@@ -86,6 +86,7 @@ class BankAccountController extends AbstractController
                 $dataToPassToNextStep['bank'] = $account->getBank();
                 $dataToPassToNextStep['number'] = $account->getAccountNumber();
                 $dataToPassToNextStep['sort-code'] = $account->getSortCode();
+                $dataToPassToNextStep['is-joint'] = $account->getIsJointAccount();
             }
 
             // last step: save
@@ -96,7 +97,6 @@ class BankAccountController extends AbstractController
                     $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
                 }
             }
-
 
             // return to summary if coming from there, or it's the last step
             if ($step == self::STEPS || $comingFromSummaryPage) {
@@ -111,7 +111,7 @@ class BankAccountController extends AbstractController
 
         // generate backlink
         $backLink = null;
-        if ($comingFromSummaryPage || $step == self::STEPS) {
+        if ($comingFromSummaryPage) {
             $backLink = $this->generateUrl('bank_accounts_summary', $defaultRouteParams);
         } else if ($step == 1) {
             $backLink = $this->generateUrl('bank_accounts', $defaultRouteParams);

@@ -12,15 +12,16 @@
 {% block breadcrumbs %}
     {{ macros.breadcrumbs(report) }}
 {% endblock %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
 
 {% block pageContent %}
 
-        <a href="{{ backLink }}" class="link-back push--bottom">{{ 'stepPage.backLink' | trans }}</a>
-
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
-        {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
-
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
     {% endblock %}
+
+    {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
+
+{% endblock %}

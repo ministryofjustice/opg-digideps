@@ -43,18 +43,22 @@ class BankAccountType extends AbstractType
             ]);
             $builder->add('accountNumber', 'text', ['max_length' => 4]);
             $builder->add('sortCode', new SortCodeType(), [
-            'error_bubbling' => false,
-            'required' => false,
-            'constraints' => new Chain([
-                'constraints' => [
-                    new NotBlank(['message'=>'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
-                    new Type(['type' => 'numeric', 'message'=>'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
-                    new Length(['min'=>6, 'max'=>6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
-                ],
-                'stopOnError' => true,
-                'groups' => ['bank-account-sortcode'],
-            ]),
-        ]);
+                'error_bubbling' => false,
+                'required' => false,
+                'constraints' => new Chain([
+                    'constraints' => [
+                        new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
+                        new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
+                        new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
+                    ],
+                    'stopOnError' => true,
+                    'groups' => ['bank-account-sortcode'],
+                ]),
+            ]);
+            $builder->add('isJointAccount', 'choice', array(
+                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+            ));
         }
 
         if ($this->step === 3) {
@@ -69,13 +73,9 @@ class BankAccountType extends AbstractType
                 'invalid_message' => 'account.closingBalance.type',
                 'required' => false,
             ]);
-            $builder->add('isClosed', 'checkbox', [
-                'required' => false,
-            ]);
-            $builder->add('isJointAccount', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-            ));
+//            $builder->add('isClosed', 'checkbox', [
+//                'required' => false,
+//            ]);
         }
 
 //        $builder->add('isClosedDisplayed', 'hidden', [
