@@ -16,6 +16,16 @@ stepPage:
   pageSectionTitle: Accounts
   backLink: Back
 
+addAnotherPage:
+  htmlTitle: "Deputy report - add another account | GOV.UK"
+  pageSectionTitle: Accounts
+  form:
+    addAnother:
+      label: The account has been saved. Would you like to add account now?
+      hint: If you prefer, you can come back to this section later to add more accounts
+    save:
+       label: Continue
+
 summaryPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Your account has been saved

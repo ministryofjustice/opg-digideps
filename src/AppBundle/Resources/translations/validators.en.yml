@@ -135,6 +135,7 @@ decision:
     no-decision-reason:
         notBlank: Enter a reason here
 account:
+    addAnother.notBlank: Please specify if you want to add another contact
     bank:
         notBlank: You need to enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} letters long

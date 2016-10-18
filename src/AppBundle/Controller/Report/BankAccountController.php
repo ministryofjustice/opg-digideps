@@ -98,8 +98,10 @@ class BankAccountController extends AbstractController
                 }
             }
 
-            // return to summary if coming from there, or it's the last step
-            if ($step == self::STEPS || $comingFromSummaryPage) {
+            if ($step == self::STEPS) {
+                return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
+            }
+            if ($comingFromSummaryPage) {
                 return $this->redirectToRoute('bank_accounts_summary', ['stepEdited' => $step] + $defaultRouteParams);
             }
 
@@ -127,6 +129,32 @@ class BankAccountController extends AbstractController
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
             'backLink' => $backLink,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/bank-accounts/add_another", name="bank_accounts_add_another")
+     * @Template("AppBundle:Report/BankAccount:add_another.html.twig")
+     */
+    public function addAnotherAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
+        $form = $this->createForm(new FormDir\Report\BankAccountAddAnotherType(), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('bank_account_step', ['reportId' => $reportId, 'step' => 1]);
+                case 'no':
+                    return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
         ];
     }
 
