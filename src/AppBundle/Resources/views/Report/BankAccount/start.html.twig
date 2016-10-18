@@ -9,13 +9,11 @@
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
+
 
 {% block pageContent %}
-
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
 
     <p>
         {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
