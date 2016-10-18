@@ -59,11 +59,11 @@ form:
     label: How much was in the account on %startDate%?
   closingBalance:
     label: How much was in the account on %endDate%?
-  isClosed:
-    label: I have closed this account
   isJointAccount:
     label: Is this a joint account ?
     hint: " "
+  isClosed:
+      label: You currently have £0 in this account on %endDate%.  Have you closed this account?
   save:
     label: Save and continue
   cancel:

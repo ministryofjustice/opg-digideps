@@ -73,15 +73,15 @@ class BankAccountType extends AbstractType
                 'invalid_message' => 'account.closingBalance.type',
                 'required' => false,
             ]);
-//            $builder->add('isClosed', 'checkbox', [
-//                'required' => false,
-//            ]);
         }
 
-//        $builder->add('isClosedDisplayed', 'hidden', [
-//            'required' => false,
-//            'mapped' => false,
-//        ]);
+        if ($this->step === 4) {
+            $builder->add('isClosed', 'choice', [
+                'choices' => [true=>'Yes', false=>'No'],
+                'expanded' => true,
+                'empty_value' => 'Please select',
+            ]);
+        }
 
         $builder->add('save', 'submit');
     }

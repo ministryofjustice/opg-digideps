@@ -22,7 +22,7 @@
 {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_check_answers_-_summary #}
 
 <a href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1}) }}"
-   class="" id="add-account">Add account</a>
+   class="button " id="add-account">Add account</a>
 
 <ul id="bank-account-list" class="card-list behat-region-list-accounts">
     {% for account in report.accounts %}
@@ -31,6 +31,27 @@
         <ul>
             <li>
                 {{ account.bank }} ({{ account.accountTypeText }})
+                {# start copied from old template. @biggs ask Kevin how to display these #}
+                {% if account.isClosed %}
+                    <div class="descriptive-list-item no-border">
+                        <span class="status account-closed">ACCOUNT CLOSED</span>
+                    </div>
+                {% endif %}
+                {% if account.hasMissingInformation %}
+                    <div class="descriptive-list-item no-border">
+                        <span class="status account-closed">ACCOUNT INCOMPLETE</span>
+                    </div>
+                {% endif %}
+
+                {% if account.closingBalance == null %}
+                    <div class="warning">
+                        <span class="icon icon__notification_yellow_small"></span>
+                        <p>{{ 'banks.balanceMissingWarning' | trans({
+                                '%date%': report.endDate | date("j M Y")
+                            }, translationDomain)}}</p>
+                    </div>
+                {% endif %}
+                {# end copied from old template #}
             </li>
             <li>
                 {{ 'summaryPage.item.accountNumber' | trans({}, translationDomain) }}:

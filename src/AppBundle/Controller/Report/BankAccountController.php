@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
-    const STEPS = 3;
+    const STEPS = 4;
 
     /**
      * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
@@ -64,8 +64,8 @@ class BankAccountController extends AbstractController
         isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
         isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
         isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
-//        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
-//        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
+        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
 
         // crete and handle form
         $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
@@ -87,6 +87,11 @@ class BankAccountController extends AbstractController
                 $dataToPassToNextStep['number'] = $account->getAccountNumber();
                 $dataToPassToNextStep['sort-code'] = $account->getSortCode();
                 $dataToPassToNextStep['is-joint'] = $account->getIsJointAccount();
+            }
+
+            if ($step == 3) {
+                $dataToPassToNextStep['closing-balance'] = $account->getOpeningBalance();
+                $dataToPassToNextStep['opening-balance'] = $account->getClosingBalance();
             }
 
             // last step: save

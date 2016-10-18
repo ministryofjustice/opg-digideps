@@ -63,10 +63,18 @@
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     } ) }}
+{% endif %}
 
-    {# form_checkbox(form.isClosed,'form.isClosed', {
-        'labelClass': 'required',
-    }) #}
+{% if step == 4 %}
+    {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
+        'fieldSetClass' : 'inline',
+        'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+        'legendClass' : 'form-label',
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
 {% endif %}
 
 <div class="save-bar button-bar">
