@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'summaryCheckPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryCheckPage.pageSectionTitle' | trans }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'summaryPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text text-secondary">
+        {{ 'summaryCheckPage.pageSectionDescription' | trans(transOptions) }}
+    </p>
+
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
+
+    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
+
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("bank_accounts" , {'reportId': report.id }),
+    'nextLabel': 'Bank accounts'
+    } %}
+
+{% endblock %}
+
+
+

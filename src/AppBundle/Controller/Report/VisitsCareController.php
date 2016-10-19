@@ -22,7 +22,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         if($report->getVisitsCare() != null) {
-            return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
+            return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId]);
         }
 
         return [
@@ -56,10 +56,10 @@ class VisitsCareController extends AbstractController
 
             // return to summary if coming from there, or it's the last step
             if ($comingFromSummaryPage) {
-                return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId, 'stepEdited'=>$step]);
+                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId, 'stepEdited'=>$step]);
             }
             if ($step == self::STEPS) {
-                return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
+                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId]);
             }
 
             return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
@@ -67,7 +67,7 @@ class VisitsCareController extends AbstractController
 
         $backLink = null;
         if ($comingFromSummaryPage) {
-            $backLink = $this->generateUrl('visits_care_summary', ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('visits_care_summary_check', ['reportId' => $reportId]);
         } else if ($step == 1) {
             $backLink = $this->generateUrl('visits_care', ['reportId' => $reportId]);
         } else { // step > 1
@@ -84,10 +84,10 @@ class VisitsCareController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
+     * @Route("/report/{reportId}/visits-care/summary-check", name="visits_care_summary_check")
      * @Template()
      */
-    public function summaryAction(Request $request, $reportId)
+    public function summaryCheckAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         if (!$report->getVisitsCare()) {
@@ -97,6 +97,23 @@ class VisitsCareController extends AbstractController
         return [
             'report' => $report,
             'stepEdited' => $request->get('stepEdited')
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/visits-care/summary-overview", name="visits_care_summary_overview")
+     * @Template()
+     */
+    public function summaryOverviewAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        if (!$report->getVisitsCare()) {
+            return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+            'stepEdited' => null,
         ];
     }
 }

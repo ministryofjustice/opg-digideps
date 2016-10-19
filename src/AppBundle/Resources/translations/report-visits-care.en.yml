@@ -1,3 +1,5 @@
+homePage:
+
 startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
@@ -13,12 +15,22 @@ stepPage:
   pageSectionTitle: Visits and care
   backLink: Back
 
-summaryPage:
+summaryCheckPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Your answers have been saved
   supportTitle: Visits and care
   pageSectionDescription: |
     We've listed your answers below. Check they're correct and edit them where necessary.
+
+summaryOverviewPage:
+  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  pageSectionTitle: Visits and care
+  supportTitle: ""
+  pageSectionDescription: |
+    Tell us about Sally's care and contact with
+    you and other people. We need to know how you check whether
+    Sally's needs are met. We ask this because the Office of the Public Guardian
+    has a duty to protect people who don't have the mental capacity to make decisions for themselves
 
 page:
     htmlTitle: "Deputy report - visits and care | GOV.UK"
