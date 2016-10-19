@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
 
 {% block pageContent %}
 
@@ -21,10 +22,9 @@
         {{ 'summaryPage.overview.pageSectionDescription' | trans(transOptions) }}
     </p>
 
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
+    {#<a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>#}
 
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
-
 
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
     'previousLink': path("contacts" , {'reportId': report.id }),
