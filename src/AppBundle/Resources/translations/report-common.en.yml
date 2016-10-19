@@ -14,5 +14,5 @@ report:
           label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"
-next: Next
-previous: Previous
+next: Next section
+previous: Previous section
