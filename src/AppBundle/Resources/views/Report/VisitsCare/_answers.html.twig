@@ -5,7 +5,7 @@
 {% if validator.countMissing() > 0 %}
 <div id="error-summary" class="error-summary text" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
     <h1 class="heading-medium error-summary-heading" id="error-summary-heading">
-        Some answers are missing.  Please answer all the questions.
+        {{ 'summaryPage.validation.pleaseAnswerAllQuestions' | trans }}
     </h1>
 </div>
 {% endif %}
@@ -18,7 +18,7 @@
         <th>
             {% if validator.countMissing() > 0 %}
                 <span class="error-message">
-                {{ 'common.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
+                {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
                 </span>
             {% endif %}
         </th>

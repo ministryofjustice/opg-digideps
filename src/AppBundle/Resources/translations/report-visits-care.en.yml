@@ -1,5 +1,3 @@
-homePage:
-
 startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
@@ -15,30 +13,25 @@ stepPage:
   pageSectionTitle: Visits and care
   backLink: Back
 
-summaryCheckPage:
-  htmlTitle: "Deputy report - visits and care | GOV.UK"
-  pageSectionTitle: Your answers have been saved
-  supportTitle: Visits and care
-  pageSectionDescription: |
-    We've listed your answers below. Check they're correct and edit them where necessary.
-
-summaryOverviewPage:
-  htmlTitle: "Deputy report - visits and care | GOV.UK"
-  pageSectionTitle: Visits and care
-  supportTitle: ""
-  pageSectionDescription: |
-    Tell us about Sally's care and contact with
-    you and other people. We need to know how you check whether
-    Sally's needs are met. We ask this because the Office of the Public Guardian
-    has a duty to protect people who don't have the mental capacity to make decisions for themselves
-
-common:
-  sectionsNeedAnswers: "{1} 1 question needs answering | ]1,Inf] %count% questions need answering"
-
-page:
+summaryPage:
+  validation:
+    pleaseAnswerAllQuestions: Some answers are missing.  Please answer all the questions.
+    sectionsNeedAnswers: "{1} 1 question needs answering | ]1,Inf] %count% questions need answering"
+  overview:
     htmlTitle: "Deputy report - visits and care | GOV.UK"
     pageSectionTitle: Visits and care
-#    pageSectionDescription: Tell us about %client%'s care and contact with you and other people. We need to know how you check whether %client%'s needs are met. We ask this because OPG has a duty to protect people who don't have the mental capacity to make decisions for themselves.
+    supportTitle: ""
+    pageSectionDescription: |
+      Tell us about Sally's care and contact with
+      you and other people. We need to know how you check whether
+      Sally's needs are met. We ask this because the Office of the Public Guardian
+      has a duty to protect people who don't have the mental capacity to make decisions for themselves
+  check:
+    htmlTitle: "Deputy report - visits and care | GOV.UK"
+    pageSectionTitle: Your answers have been saved
+    supportTitle: Visits and care
+    pageSectionDescription: |
+      We've listed your answers below. Check they're correct and edit them where necessary.
 
 form:
   doYouLiveWithClient.label: Do you live with %client%?

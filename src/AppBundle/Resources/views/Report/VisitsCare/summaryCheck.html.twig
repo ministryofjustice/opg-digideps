@@ -6,13 +6,13 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'summaryCheckPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'summaryCheckPage.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.check.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.check.pageSectionTitle' | trans }}{% endblock %}
 
 {% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'summaryCheckPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'summaryPage.check.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -20,7 +20,7 @@
 {% block pageContent %}
 
     <p class="text text-secondary">
-        {{ 'summaryCheckPage.pageSectionDescription' | trans(transOptions) }}
+        {{ 'summaryPage.check.pageSectionDescription' | trans(transOptions) }}
     </p>
 
 

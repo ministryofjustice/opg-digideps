@@ -6,11 +6,11 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'summaryOverviewPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'summaryOverviewPage.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.overview.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.overview.pageSectionTitle' | trans }}{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'summaryOverviewPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'summaryPage.overview.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -18,7 +18,7 @@
 {% block pageContent %}
 
     <p class="text">
-        {{ 'summaryOverviewPage.pageSectionDescription' | trans(transOptions) }}
+        {{ 'summaryPage.overview.pageSectionDescription' | trans(transOptions) }}
     </p>
 
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
