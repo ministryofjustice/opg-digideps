@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\SectionValidator\VisitsCareValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\ReportStatusService;
@@ -96,7 +97,7 @@ class VisitsCareController extends AbstractController
 
         return [
             'report' => $report,
-            'stepEdited' => $request->get('stepEdited')
+            'validator' => new VisitsCareValidator($report->getVisitsCare()),
         ];
     }
 
@@ -113,7 +114,7 @@ class VisitsCareController extends AbstractController
 
         return [
             'report' => $report,
-            'stepEdited' => null,
+            'validator' => new VisitsCareValidator($report->getVisitsCare()),
         ];
     }
 }

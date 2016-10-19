@@ -32,6 +32,9 @@ summaryOverviewPage:
     Sally's needs are met. We ask this because the Office of the Public Guardian
     has a duty to protect people who don't have the mental capacity to make decisions for themselves
 
+common:
+  sectionsNeedAnswers: "{1} 1 question needs answering | ]1,Inf] %count% questions need answering"
+
 page:
     htmlTitle: "Deputy report - visits and care | GOV.UK"
     pageSectionTitle: Visits and care
