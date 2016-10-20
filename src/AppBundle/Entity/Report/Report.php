@@ -1135,6 +1135,9 @@ class Report
     {
         $ret = 0;
         foreach ($this->getAccounts() as $a) {
+            if ($a->getOpeningBalance() === null) {
+                return;
+            }
             $ret += $a->getOpeningBalance();
         }
 
@@ -1172,6 +1175,10 @@ class Report
      */
     public function getCalculatedBalance()
     {
+        if ($this->getAccountsOpeningBalanceTotal() === null) {
+            return null;
+        }
+
         return $this->getAccountsOpeningBalanceTotal()
         + $this->getMoneyInTotal()
         - $this->getMoneyOutTotal();
@@ -1185,6 +1192,10 @@ class Report
      */
     public function getTotalsOffset()
     {
+        if ($this->getCalculatedBalance() === null || $this->getAccountsClosingBalanceTotal() === null) {
+            return null;
+        }
+
         return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
     }
 
@@ -1196,7 +1207,7 @@ class Report
      */
     public function getTotalsMatch()
     {
-        return abs($this->getTotalsOffset()) < 0.2;
+        return $this->getTotalsOffset() !== null && abs($this->getTotalsOffset()) < 0.2;
     }
 
     /**
