@@ -227,4 +227,17 @@ class BehatController extends AbstractController
             ],
         ]);
     }
+
+    /**
+     * Display emails into a webpage
+     * Login is required
+     *
+     * @Route("/reset-report-dev/{reportId}", name="reset-report")
+     */
+    public function resetReportAction($reportId)
+    {
+        $this->getRestClient()->put('report/'.$reportId.'/reset-data-dev', []);
+
+        return $this->redirectToRoute('report_overview', ['reportId'=>$reportId]);
+    }
 }

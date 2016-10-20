@@ -27,4 +27,6 @@
         {%include 'AppBundle:Report/Overview:_status.html.twig' with { report: report } %}
     </div>
 </div>
+
+[<a href="{{ path('reset-report', {'reportId': report.id}) }}">Reset report data (only OTPP dev branch)</a>]
 {% endblock %}
