@@ -32,6 +32,8 @@ class BankAccountController extends AbstractController
     }
 
     /**
+     * //TODO refactor when assets is implemented too
+     *
      * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_account_step", requirements={"step":"\d+"})
      * @Template()
      */
@@ -117,7 +119,7 @@ class BankAccountController extends AbstractController
                 ] + $defaultRouteParams);
         }
 
-        // generate backlink
+        // TODO move to helper when assets is implemented
         $backLink = null;
         if ($comingFromSummaryPage) {
             $backLink = $this->generateUrl('bank_accounts_summary_check', $defaultRouteParams);
