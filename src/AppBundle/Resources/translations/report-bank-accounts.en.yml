@@ -29,6 +29,7 @@ addAnotherPage:
        label: Continue
 
 summaryPage:
+  totalBalance: Total balance on %endDate%: £%amount%
   overview:
     htmlTitle: "Deputy report - Accounts | GOV.UK"
     pageSectionTitle: Accounts

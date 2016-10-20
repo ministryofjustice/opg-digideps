@@ -26,8 +26,6 @@
         {{ 'summaryPage.overview.pageSectionDescription3' | trans(transOptions) }}
     </p>
 
-    {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_check_answers_-_summary #}
-
     <a href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1}) }}"
        class="" id="add-account">Add account</a>
     {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
@@ -47,8 +45,8 @@
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
     'previousLink': path("contacts" , {'reportId': report.id }),
     'previousLabel': 'Contacts',
-    'nextLink': path("bank_accounts" , {'reportId': report.id }),
-    'nextLabel': 'Accounts'
+    'nextLink': path("money_transfers" , {'reportId': report.id }),
+    'nextLabel': 'Money Transfers',
     } %}
 
 {% endblock %}

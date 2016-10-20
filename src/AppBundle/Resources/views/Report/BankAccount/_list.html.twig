@@ -1,22 +1,25 @@
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+
 <h2 class="heading heading-medium">List of accounts</h2>
 
 <table class="behat-region-list-accounts">
     <thead>
-        <tr>
-            <td>Account</td>
-            <td>Balance on {{ report.endDate | date("j M Y") }}</td>
-            <td>Balance on {{ report.startDate | date("j M Y") }}</td>
-            <td></td>
-        </tr>
+    <tr>
+        <td>Account</td>
+        <td>Balance on {{ report.endDate | date("jS F Y") }}</td>
+        <td>Balance on {{ report.startDate | date("jS F Y") }}</td>
+        <td></td>
+    </tr>
     </thead>
     {% for account in report.accounts %}
         <td>
             {% if account.requiresBankNameAndSortCode %}
-            {{ account.bank }}<br/>
+                {{ account.bank }}<br/>
             {% endif %}
             {{ account.accountTypeText }}<br/>
             {% if account.requiresBankNameAndSortCode %}
-            Sort code: {{ account.sortCode }}<br/>
+                Sort code: {{ account.sortCode }}<br/>
             {% endif %}
             Account number: ****{{ account.accountNumber }}
             {% if account.isClosed %} {# //TODO ask Kevin how we display this #}
@@ -24,12 +27,17 @@
                     <span class="status account-closed">ACCOUNT CLOSED</span>
                 </div>
             {% endif %}
+            {% if account.isJointAccount %} {# //TODO ask Kevin how we display this #}
+                <div class="descriptive-list-item no-border">
+                    <span class="status account-">JOINT ACCOUNT</span>
+                </div>
+            {% endif %}
         </td>
         <td>
-            £{{ account.openingBalance == null ? '—,-' : (account.openingBalance | money_format) }}
+            £{{ account.openingBalance | money_format }}
         </td>
         <td>
-            £{{ account.closingBalance | money_format }}
+            £{{ account.closingBalance == null ? ' -,-' : (account.closingBalance | money_format) }}
         </td>
         <td>
             <a class="edit-link behat-link-account-{{ account.accountNumber }}"
@@ -43,6 +51,10 @@
         </td>
         </tr>
     {% endfor %}
-    </tbody>
-
 </table>
+{% if report.accountsClosingBalanceTotal is not null %}
+<p>{{ 'summaryPage.totalBalance' | trans({
+        '%endDate%': report.endDate | date("jS F Y"),
+        '%amount%': report.accountsClosingBalanceTotal,
+    }) }}</p>
+{% endif %}
