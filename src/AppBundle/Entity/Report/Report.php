@@ -1127,7 +1127,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "account"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_opening_balance_total")
      */
