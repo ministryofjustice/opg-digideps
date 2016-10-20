@@ -123,6 +123,29 @@ class ReportController extends RestController
     }
 
     /**
+     * REMOVE THIS WHEN OTPP IS MERGED
+     * @Route("/report/{id}/reset-data-dev")
+     * @Method({"PUT"})
+     */
+    public function resetDataDev(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        /* @var $report EntityDir\Report\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $em = $this->getEntityManager();
+
+        if ($report->getVisitsCare()) {
+            $em->remove($report->getVisitsCare());
+        }
+
+        $em->flush();
+
+    }
+
+    /**
      * @Route("/report/{id}")
      * @Method({"PUT"})
      */
