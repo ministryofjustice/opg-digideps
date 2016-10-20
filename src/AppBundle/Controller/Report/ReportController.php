@@ -145,25 +145,30 @@ class ReportController extends RestController
             $em->remove($report->getMentalCapacity());
         }
 
-        foreach ($report->getDebts() as $e) {
-            $em->remove($e);
+        foreach ($report->getDebts() as $e){
+            $e->setAmount(null);
         }
+        $report->setHasDebts(null);
 
         foreach ($report->getContacts() as $e){
             $em->remove($e);
         }
+        $report->setReasonForNoContacts(null);
 
         foreach ($report->getDecisions() as $e){
             $em->remove($e);
         }
+        $report->setReasonForNoDecisions(null);
 
         foreach ($report->getTransactions() as $e){
-            $em->remove($e);
+            $e->setAmounts(null);
+            $e->setMoreDetails(null);
         }
 
         foreach ($report->getMoneyTransfers() as $e){
             $em->remove($e);
         }
+        $report->setNoTransfersToAdd(false);
 
         foreach ($report->getAccounts() as $e){
             $em->remove($e);
@@ -174,18 +179,7 @@ class ReportController extends RestController
         }
         $report->setNoAssetToAdd(false);
 
-        foreach ($report->getDebts() as $e){
-            $e->setAmount(null);
-        }
-        $report->setHasDebts(null);
-
-
-        $report->setNoTransfersToAdd(false);
-        $report->setReasonForNoContacts(null);
-        $report->setReasonForNoDecisions(null);
-
         $em->flush();
-
     }
 
     /**
