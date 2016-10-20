@@ -1,0 +1,48 @@
+<h2 class="heading heading-medium">List of accounts</h2>
+
+<table class="behat-region-list-accounts">
+    <thead>
+        <tr>
+            <td>Account</td>
+            <td>Balance on {{ report.endDate | date("j M Y") }}</td>
+            <td>Balance on {{ report.startDate | date("j M Y") }}</td>
+            <td></td>
+        </tr>
+    </thead>
+    {% for account in report.accounts %}
+        <td>
+            {% if account.requiresBankNameAndSortCode %}
+            {{ account.bank }}<br/>
+            {% endif %}
+            {{ account.accountTypeText }}<br/>
+            {% if account.requiresBankNameAndSortCode %}
+            Sort code: {{ account.sortCode }}<br/>
+            {% endif %}
+            Account number: ****{{ account.accountNumber }}
+            {% if account.isClosed %} {# //TODO ask Kevin how we display this #}
+                <div class="descriptive-list-item no-border">
+                    <span class="status account-closed">ACCOUNT CLOSED</span>
+                </div>
+            {% endif %}
+        </td>
+        <td>
+            £{{ account.openingBalance == null ? '—,-' : (account.openingBalance | money_format) }}
+        </td>
+        <td>
+            £{{ account.closingBalance | money_format }}
+        </td>
+        <td>
+            <a class="edit-link behat-link-account-{{ account.accountNumber }}"
+               href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
+                Edit
+            </a> |
+            <a class="edit-link behat-link-account-{{ account.accountNumber }}"
+               href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
+                Delete
+            </a>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>

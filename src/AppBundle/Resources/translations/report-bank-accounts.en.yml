@@ -14,6 +14,8 @@ startPage:
 stepPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts
+  pageSectionDescription:
+    step1: Start by adding %client%'s first account; we'll then ask you for the account details. You can go back and add more accounts if you need to.
   backLink: Back
 
 addAnotherPage:
@@ -27,23 +29,32 @@ addAnotherPage:
        label: Continue
 
 summaryPage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageSectionTitle: Your account has been saved
-  pageSectionDescription: |
-    We've listed your answers below. Check they're correct and edit them where necessary.
-  item:
-    balanceOn: Balance on
-    sortCode: Sort code
-    accountNumber: Account number
-    #totalBalance: Total balance from all accounts
-    balanceUnknown: Unknown
-    accountMissingWarning: You must add at least 1 bank account
-    balanceMissingWarning: Balance on %date% is missing
-    balanceMissingWarningBottom: |
-      You will be able to see this total when you have added the balance
-      on the %date% for all %client%'s accounts
+  overview:
+    htmlTitle: "Deputy report - Accounts | GOV.UK"
+    pageSectionTitle: Accounts
+    pageSectionDescription1: An important part of your role as a deputy is to keep a record of the money that comes in and goes out of %client%'s accounts.
+    pageSectionDescription2: Use this section to tell us about all of %client%'s bank and building society accounts, and her savings accounts and ISAs.
+    pageSectionDescription3: We will also need to know the balance of each account.
+  check:
+    htmlTitle: "Deputy report - Accounts | GOV.UK"
+    pageSectionTitle: Your account has been saved
+    pageSectionDescription: |
+      We've listed your answers below. Check they're correct and edit them where necessary.
+#  item:
+#    balanceOn: Balance on
+#    sortCode: Sort code
+#    accountNumber: Account number
+#    #totalBalance: Total balance from all accounts
+#    balanceUnknown: Unknown
+#    accountMissingWarning: You must add at least 1 bank account
+#    balanceMissingWarning: Balance on %date% is missing
+#    balanceMissingWarningBottom: |
+#      You will be able to see this total when you have added the balance
+#      on the %date% for all %client%'s accounts
 
 form:
+  accountType:
+      label: What type of account is it?
   bank:
     label: Bank or building society name
   meta:
@@ -53,8 +64,6 @@ form:
     preInput: "* * * *"
   sortCode:
     legend: Branch sort code
-  accountType:
-    label: Account type
   openingBalance:
     label: How much was in the account on %startDate%?
   closingBalance:

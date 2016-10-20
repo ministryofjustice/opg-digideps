@@ -22,6 +22,12 @@
         {{ form_errors_list(form) }}
     {% endblock %}
 
-    {% include 'AppBundle:Report/BankAccount:_account_form.html.twig' %}
+    {% if step == 1 %}
+        <p>
+            {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
+        </p>
+    {% endif %}
+
+    {% include 'AppBundle:Report/BankAccount:_form.html.twig' %}
 
 {% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'summaryPage.overview.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.overview.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">
+        {{ 'summaryPage.overview.pageSectionDescription1' | trans(transOptions) }}
+    </p>
+
+    <p class="text">
+        {{ 'summaryPage.overview.pageSectionDescription2' | trans(transOptions) }}
+    </p>
+
+    <p class="text">
+        {{ 'summaryPage.overview.pageSectionDescription3' | trans(transOptions) }}
+    </p>
+
+    {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_check_answers_-_summary #}
+
+    <a href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1}) }}"
+       class="" id="add-account">Add account</a>
+    {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.help-item').each(function (index, item) {
+                opg.accordian({
+                    target: item,
+                    open: false
+                });
+            });
+        });
+    </script>
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("bank_accounts" , {'reportId': report.id }),
+    'nextLabel': 'Accounts'
+    } %}
+
+{% endblock %}
+

@@ -23,7 +23,7 @@ class BankAccountController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
         if (count($report->getAccounts())) {
-            return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            return $this->redirectToRoute('bank_accounts_summary_overview', ['reportId' => $reportId]);
         }
 
         return [
@@ -108,7 +108,7 @@ class BankAccountController extends AbstractController
                 return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
             }
             if ($comingFromSummaryPage) {
-                return $this->redirectToRoute('bank_accounts_summary', ['stepEdited' => $step] + $defaultRouteParams);
+                return $this->redirectToRoute('bank_accounts_summary_check', ['stepEdited' => $step] + $defaultRouteParams);
             }
 
             return $this->redirectToRoute('bank_account_step', [
@@ -120,7 +120,7 @@ class BankAccountController extends AbstractController
         // generate backlink
         $backLink = null;
         if ($comingFromSummaryPage) {
-            $backLink = $this->generateUrl('bank_accounts_summary', $defaultRouteParams);
+            $backLink = $this->generateUrl('bank_accounts_summary_check', $defaultRouteParams);
         } else if ($step == 1) {
             $backLink = $this->generateUrl('bank_accounts', $defaultRouteParams);
         } else { // step > 1
@@ -166,14 +166,34 @@ class BankAccountController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/bank-accounts", name="bank_accounts_summary")
+     * @Route("/report/{reportId}/bank-accounts/summary-check", name="bank_accounts_summary_check")
      *
      * @param int $reportId
      * @Template()
      *
      * @return array
      */
-    public function summaryAction($reportId)
+    public function summaryCheckAction($reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        if (count($report->getAccounts()) === 0) {
+            return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/bank-accounts/summary-overview", name="bank_accounts_summary_overview")
+     *
+     * @param int $reportId
+     * @Template()
+     *
+     * @return array
+     */
+    public function summaryOverviewAction($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
         if (count($report->getAccounts()) === 0) {
@@ -201,6 +221,6 @@ class BankAccountController extends AbstractController
             $this->getRestClient()->delete("/account/{$accountId}");
         }
 
-        return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('bank_accounts_summary_overview', ['reportId' => $reportId]));
     }
 }
