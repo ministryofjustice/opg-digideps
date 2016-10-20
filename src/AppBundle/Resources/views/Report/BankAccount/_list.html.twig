@@ -52,9 +52,3 @@
         </tr>
     {% endfor %}
 </table>
-{% if report.accountsClosingBalanceTotal is not null %}
-<p>{{ 'summaryPage.totalBalance' | trans({
-        '%endDate%': report.endDate | date("jS F Y"),
-        '%amount%': report.accountsClosingBalanceTotal,
-    }) }}</p>
-{% endif %}
