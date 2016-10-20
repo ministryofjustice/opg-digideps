@@ -141,6 +141,49 @@ class ReportController extends RestController
             $em->remove($report->getVisitsCare());
         }
 
+        if ($report->getMentalCapacity()) {
+            $em->remove($report->getMentalCapacity());
+        }
+
+        foreach ($report->getDebts() as $e) {
+            $em->remove($e);
+        }
+
+        foreach ($report->getContacts() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getDecisions() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getTransactions() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getMoneyTransfers() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getAccounts() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getAssets() as $e){
+            $em->remove($e);
+        }
+        $report->setNoAssetToAdd(false);
+
+        foreach ($report->getDebts() as $e){
+            $e->setAmount(null);
+        }
+        $report->setHasDebts(null);
+
+
+        $report->setNoTransfersToAdd(false);
+        $report->setReasonForNoContacts(null);
+        $report->setReasonForNoDecisions(null);
+
         $em->flush();
 
     }
