@@ -1,10 +1,12 @@
-// scss-lint:disable UnnecessaryParentReference
+// ==========================================================================
+// PAGE SECTIONS WARNINGS
+// Notification/Alert component
+
 .page-section-warning {
     border-left: 3px solid $grey-2;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
-    width: 65%;
     margin-bottom: 30px;
     position: relative;
     overflow: hidden;
@@ -13,11 +15,16 @@
         float: left;
 
         & + p {
-            float: left;
             margin-top: 6px;
             margin-left: 10px;
+            padding-left: 35px;
         }
 
     }
 
+    @include media(mobile) {
+        #submit-start-at {
+            display: block;
+        }
+    }
 }

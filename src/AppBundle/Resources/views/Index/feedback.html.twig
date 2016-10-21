@@ -23,7 +23,7 @@
 
 {% block pageBody %}
 
-    {% set formClass = 'in-page-form feedback-form' %}
+    {% set formClass = 'feedback-form' %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
         {{ form_input(form.difficulty, 'difficulty') }}

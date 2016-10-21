@@ -13,9 +13,8 @@
         </nav>
     {% endif %}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
-    </div>
+    <h1 class="heading-large">{{ 'page.pageSectionTitle' | trans }}</h1>
+
     {% if report.submitted == false %}
         {% if reportStatus.isReadyToSubmit and report.isDue %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {

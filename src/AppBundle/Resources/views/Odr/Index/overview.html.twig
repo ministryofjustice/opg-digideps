@@ -10,12 +10,10 @@
 <div id="pagebody">
     <div id="pagebody-left-content">
 
-        <header class="page-report-header">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
-                {{ client.fullname }}
-            </h1>
-        </header>
+        <h1 class="heading-xlarge">
+            <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
+            {{ client.fullname }}
+        </h1>
 
         {% if odrStatus.isReadyToSubmit %}
             <div id="header-report-submit" class="hero">

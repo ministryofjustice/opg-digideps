@@ -1,48 +1,28 @@
-{% if vertical is defined and vertical == true %}
-    {% trans_default_domain translationDomain %}
-    <fieldset id="form-group-{{ element.vars.id }}" class="{{ fieldSetClass }} form-group form-group__radiobox-group radio-vertical-group {% if not element.vars.valid %}error {% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+
+    <fieldset class="{{ fieldSetClass }}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
         <p class="form-hint">{{ hintText }}</p>
-        {% if not element.vars.valid %}
-            <ul class="errors">
-                <li class="error-message">{{ form_errors(element) }}</li>
-            </ul>
-        {% endif %}
+        {{  form_errors(element) }}
         {% for key,choiceElement in element %}
-            <div class="form-control radio-vertical">
-                <label for="{{ choiceElement.vars.id }}">{{ choiceElement.vars.label | trans}}</label>
-                <div class="input-wrapper">{{ form_widget(choiceElement) }}</div>
-            </div>
+
+            {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+            {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
+            {% set description = items[key].description is defined ?  items[key].description : null %}
+            {% set disabled = items[key].disabled is defined and items[key].disabled %}
+
+            {% if description is not null %}
+                <p class="form-hint description">{{ description | raw }}</p>
+            {% endif %}
+
+            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
+                {% set attr = {'class': elementClass } %}
+                {% if disabled %}
+                    {% set attr = attr | merge({'disabled': 'disabled'}) %}
+                {% endif %}
+                {{ form_widget(choiceElement, {'attr': attr}) }}
+                {{ choiceElement.vars.label | trans({}, translationDomain)}}
+            </label>
         {% endfor %}
     </fieldset>
-{% else %}
-    <div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
-
-        <fieldset class="{{ fieldSetClass }}">
-            <legend class="{{ legendClass }}">{{ legendText }}</legend>
-            <p class="form-hint">{{ hintText }}</p>
-            {{  form_errors(element) }}
-            {% for key,choiceElement in element %}
-
-                {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
-                {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
-                {% set description = items[key].description is defined ?  items[key].description : null %}
-                {% set disabled = items[key].disabled is defined and items[key].disabled %}
-
-                {% if description is not null %}
-                    <p class="form-hint description">{{ description | raw }}</p>
-                {% endif %}
-                
-                <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
-                    {% set attr = {'class': elementClass } %}
-                    {% if disabled %}
-                        {% set attr = attr | merge({'disabled': 'disabled'}) %}
-                    {% endif %}
-                    {{ form_widget(choiceElement, {'attr': attr}) }}
-                    {{ choiceElement.vars.label | trans({}, translationDomain)}}
-                </label>
-            {% endfor %}
-        </fieldset>
-
-    </div>
-{% endif %}
+</div>

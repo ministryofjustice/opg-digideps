@@ -7,9 +7,7 @@
 <div id="timeoutPopup" data-role="timeout-popup" class="session-timeout js-session-timeout">
     <div class="session-timeout-dialog">
 
-        <div id="page-section-title-container" class="page-section-title-container">
-            <h1>{{ 'component.title' | trans }}</h1>
-        </div>
+        <h1 class="heading-large push-half--top">{{ 'component.title' | trans }}</h1>
 
         <p>{{ 'component.firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
