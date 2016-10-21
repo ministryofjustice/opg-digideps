@@ -10,18 +10,18 @@
 </div>
 {% endif %}
 
+{% if validator.countMissing() > 0 %}
+    <span class="error-message">
+    {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
+    </span>
+{% endif %}
+
 <table class="check-your-answers push--bottom">
     <thead>
     <tr>
         {# @biggs see this for styling http://hzaiwi.axshare.com/#g=1&p=visits_and_care_-_edit___summary #}
-        <th>Your answers for visits and care</th>
-        <th>
-            {% if validator.countMissing() > 0 %}
-                <span class="error-message">
-                {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
-                </span>
-            {% endif %}
-        </th>
+        <th>Question</th>
+        <th>Answer</th>
         <th></th>
     </tr>
     </thead>

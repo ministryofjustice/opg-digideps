@@ -8,6 +8,7 @@
 
 {% block htmlTitle %}{{ 'summaryPage.check.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.check.pageSectionTitle' | trans }}{% endblock %}
+    {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
 
@@ -19,7 +20,7 @@
 
 {% block pageContent %}
 
-    <p class="text text-secondary">
+    <p class="text-secondary">
         {{ 'summaryPage.check.pageSectionDescription' | trans(transOptions) }}
     </p>
 

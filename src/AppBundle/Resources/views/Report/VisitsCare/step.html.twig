@@ -7,6 +7,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 {% block linkBack %}
@@ -22,7 +23,7 @@
 
             {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
                 'fieldSetClass' : 'inline do-you-live-radio',
-                'legendClass' : 'heading-medium',
+                'legendClass' : 'form-label-bold',
                 'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
                 'items': [
                     {'labelClass': 'block-label' },
@@ -47,7 +48,7 @@
 
             {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
                 'fieldSetClass' : 'inline does-client-receive-care',
-                'legendClass' : 'heading-medium',
+                'legendClass' : 'form-label-bold',
                 'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
                 'items': [
                     {'labelClass': 'block-label'},
@@ -73,7 +74,7 @@
 
     {% if step == 3 %}
         <div class="form-section push--bottom">
-            <h3 class="heading-medium flush--top">Who is doing the caring?</h3>
+            <legend class="form-label-bold">Who is doing the caring?</legend>
             {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
                 'labelClass': 'visuallyhidden',
                 'inputClass': 'expanding',
@@ -86,7 +87,7 @@
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
                 'fieldSetClass' : 'inline care-plan',
-                'legendClass' : 'heading-medium',
+                'legendClass' : 'form-label-bold',
                 'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
                 'items': [
                     {'labelClass': 'block-label'},

@@ -115,7 +115,7 @@
     {% endblock %}
 
 
-    <h1 class="heading-xlarge">
+    <h1 class="{% block pageTitleClass %}heading-xlarge{% endblock %}">
         {% block supportTitleTop %}{% endblock %}
         {% block pageTitle %} Deputy report {% endblock %}
         {% block supportTitleBottom %}{% endblock %}
