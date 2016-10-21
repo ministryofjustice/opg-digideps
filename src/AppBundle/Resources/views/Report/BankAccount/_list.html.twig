@@ -22,17 +22,9 @@
             {% if account.requiresBankNameAndSortCode %}
                 Sort code: {{ account.sortCode }}<br/>
             {% endif %}
-            Account number: ****{{ account.accountNumber }}
-            {% if account.isClosed %} {# //TODO ask Kevin how we display this #}
-                <div class="descriptive-list-item no-border">
-                    <span class="status account-closed">ACCOUNT CLOSED</span>
-                </div>
-            {% endif %}
-            {% if account.isJointAccount %} {# //TODO ask Kevin how we display this #}
-                <div class="descriptive-list-item no-border">
-                    <span class="status account-">JOINT ACCOUNT</span>
-                </div>
-            {% endif %}
+            Account number: ****{{ account.accountNumber }}<br/>
+            Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+            Closed: {{ account.isClosed ? 'Yes' : 'No' }}
         </td>
         <td>
             £{{ account.openingBalance | money_format }}
