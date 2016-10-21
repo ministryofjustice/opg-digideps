@@ -1148,7 +1148,7 @@ class Report
      * Return sum of closing balances (if all of them have a value, otherwise returns null).
      * 
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "account"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_closing_balance_total")
      * 
