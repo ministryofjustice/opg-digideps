@@ -156,7 +156,7 @@ class BankAccountController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('bank_account_step', ['reportId' => $reportId, 'step' => 1]);
                 case 'no':
-                    return $this->redirectToRoute('bank_accounts_summary_check', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('bank_accounts_summary_overview', ['reportId' => $reportId]);
             }
         }
 
