@@ -18,10 +18,6 @@
 
 {% block pageContent %}
 
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
-    {% endblock %}
-
     {% if step == 1 %}
         <p>
             {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
