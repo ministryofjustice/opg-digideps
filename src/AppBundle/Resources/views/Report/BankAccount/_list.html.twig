@@ -10,6 +10,7 @@
         <td>Balance on {{ report.endDate | date("jS F Y") }}</td>
         <td>Balance on {{ report.startDate | date("jS F Y") }}</td>
         <td></td>
+        <td></td>
     </tr>
     </thead>
     {% for account in report.accounts %}
@@ -43,7 +44,8 @@
             <a class="edit-link behat-link-account-{{ account.accountNumber }}"
                href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
                 Edit
-            </a> |
+            </a>  </td>
+        <td>
             <a class="edit-link behat-link-account-{{ account.accountNumber }}"
                href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
                 Delete
