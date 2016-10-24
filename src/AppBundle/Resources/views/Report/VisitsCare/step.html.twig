@@ -74,9 +74,8 @@
 
     {% if step == 3 %}
         <div class="form-section push--bottom">
-            <legend class="form-label-bold">Who is doing the caring?</legend>
             {{ form_input(form.whoIsDoingTheCaring,'form.whoIsDoingTheCaring', {
-                'labelClass': 'visuallyhidden',
+                'labelClass': 'form-label-bold',
                 'inputClass': 'expanding',
                 'formGroupClass': 'flush--bottom'
             }) }}
