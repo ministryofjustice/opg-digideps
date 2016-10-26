@@ -57,7 +57,7 @@ class VisitsCareController extends AbstractController
 
             // return to summary if coming from there, or it's the last step
             if ($comingFromSummaryPage) {
-                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId, 'stepEdited'=>$step]);
+                return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId, 'stepEdited'=>$step]);
             }
             if ($step == self::STEPS) {
                 return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId]);
