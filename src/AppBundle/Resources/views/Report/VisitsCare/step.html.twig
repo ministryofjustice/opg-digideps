@@ -20,6 +20,31 @@
     {% if step == 1 %}
         <div class="form-section push--bottom">
 
+            <div id="form-group-visits_care_doYouLiveWithClient" class="form-group form-group__checkbox-group   flush--bottom">
+                <fieldset class="inline">
+                    <legend class="form-label-bold">Do you live with Libby?</legend>
+                    <p class="form-hint text"></p>
+                    <label class="block-label selection-button-radio" for="visits_care_doYouLiveWithClient_2">
+                        <input type="radio" id="visits_care_doYouLiveWithClient_2" name="visits_care[doYouLiveWithClient]" required="required" class="" value="yes">Yes
+                    </label>
+                    <label class="block-label selection-button-radio" for="visits_care_doYouLiveWithClient_3" data-target="extra">
+                        <input type="radio" id="visits_care_doYouLiveWithClient_3" name="visits_care[doYouLiveWithClient]" required="required" class="" value="no">No
+                    </label>
+                    <div class="panel panel-border-narrow js-hidden" id="extra">
+                        {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
+                            'labelClass': 'text required',
+                            'labelParameters': { '%client%': report.client.firstname },
+                            'inputClass': 'expanding'
+                        }) }}
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+
+
+        <div class="form-section push--bottom">
+
             {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
                 'fieldSetClass' : 'inline do-you-live-radio',
                 'legendClass' : 'form-label-bold',
@@ -128,6 +153,11 @@
                 content: '#care-plan-questions',
                 hideOnYes: false
             });
+
+            // Where .block-label uses the data-target attribute
+            // to toggle hidden content
+            var showHideContent = new GOVUK.ShowHideContent()
+            showHideContent.init()
         });
     </script>
 
