@@ -39,7 +39,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
-        $comingFromSummaryPage = $request->get('from') === 'summary';
+        $fromPage = $request->get('from');
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step), $visitsCare);
         $form->handleRequest($request);
@@ -56,8 +56,11 @@ class VisitsCareController extends AbstractController
             }
 
             // return to summary if coming from there, or it's the last step
-            if ($comingFromSummaryPage) {
+            if ($fromPage == 'overview') {
                 return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId, 'stepEdited'=>$step]);
+            }
+            if ($fromPage == 'check') {
+                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId, 'stepEdited'=>$step]);
             }
             if ($step == self::STEPS) {
                 return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId]);
@@ -67,9 +70,11 @@ class VisitsCareController extends AbstractController
         }
 
         $backLink = null;
-        if ($comingFromSummaryPage) {
+        if ($fromPage === 'overview') {
+            $backLink = $this->generateUrl('visits_care_summary_overview', ['reportId' => $reportId]);
+        } else if ($fromPage === 'check') {
             $backLink = $this->generateUrl('visits_care_summary_check', ['reportId' => $reportId]);
-        } else if ($step == 1) {
+        }else if ($step == 1) {
             $backLink = $this->generateUrl('visits_care', ['reportId' => $reportId]);
         } else { // step > 1
             $backLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step - 1]);
