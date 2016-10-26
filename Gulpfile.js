@@ -66,7 +66,6 @@ gulp.task('sass.debug.application', () => {
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sourcemaps.init())
         .pipe(sass(config.sass))
-        .pipe(importCss())
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
@@ -77,7 +76,6 @@ gulp.task('sass.application', () => {
 
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(importCss())
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
@@ -129,8 +127,11 @@ gulp.task('sass.images', () => {
 gulp.task('sass.fonts', () => {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
+});
 
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css')
+// Copy GOVUK template css into
+gulp.task('css-copy', () => {
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
@@ -191,7 +192,7 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default'));
 });
 // Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
+gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'css-copy', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
@@ -199,4 +200,4 @@ gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'images', 'js.debug', 'js.
 });
 
 // Build all assets in production ready mode.
-gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'images', 'js.prod', 'js.ie', 'vendor']);
+gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'images', 'css-copy', 'js.prod', 'js.ie', 'vendor']);
