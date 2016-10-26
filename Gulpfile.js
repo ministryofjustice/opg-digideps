@@ -9,14 +9,13 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     scsslint = require('gulp-scss-lint'),
-    jshint = require('gulp-jshint');
-
-var browserify = require('browserify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-
-var now = new Date().getTime();
+    jshint = require('gulp-jshint'),
+    replace = require('gulp-replace'),
+    browserify = require('browserify'),
+    babelify = require('babelify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+    now = new Date().getTime();
 
 var config = {
     sass: {
@@ -116,13 +115,13 @@ gulp.task('sass.application-print', () => {
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
 gulp.task('sass.images', () => {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+        .pipe(gulp.dest('./web/images'));
 
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
         .pipe(gulp.dest('./web/images'));
 
     gulp.src(config.sassSrc + '/images/**/*')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+        .pipe(gulp.dest('./web/images'));
 });
 gulp.task('sass.fonts', () => {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
@@ -131,8 +130,14 @@ gulp.task('sass.fonts', () => {
 
 // Copy GOVUK template css into
 gulp.task('css-copy', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
+});
+
+gulp.task('replace', () => {
+    gulp.src(config.webAssets + '/stylesheets/govuk-template.css')
+        .pipe(replace('images/', '/images/'))
+        .pipe(gulp.dest(config.webAssets + '/stylesheets/govuk-template.css'));
 });
 
 // Copy non css related images
@@ -192,7 +197,7 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default'));
 });
 // Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'css-copy', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
+gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'css-copy', 'replace', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);

@@ -28,6 +28,7 @@
     "gulp-concat": "*",
     "gulp-import-css": "^0.1.2",
     "gulp-jshint": "^1.11.2",
+    "gulp-replace": "^0.5.4",
     "gulp-sass": "^2.0.4",
     "gulp-scss-lint": "^0.3.6",
     "gulp-sourcemaps": "^1.6.0",
