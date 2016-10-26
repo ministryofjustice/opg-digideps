@@ -14,12 +14,6 @@
 
         <p class="flash">{{ 'thanks.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
 
-        <p class="page-section-description">{{ 'thanks.more' | trans({
-            '[linkStart]': '<a href="' ~ path('feedback') ~ '">',
-            '[linkEnd]': '</a>'
-        
-        }) | raw }}</p>
-
 
         <div class="link">
             <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
