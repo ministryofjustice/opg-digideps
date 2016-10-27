@@ -1,8 +1,6 @@
 $is-ie: true;
 $ie-version: 8;
 
-@import url('../../../../../node_modules/govuk_template_mustache/assets/stylesheets/govuk-template-ie8.css');
-@import url('../../../../../node_modules/govuk_template_mustache/assets/stylesheets/fonts.css');
 @import "common";
 
 #footer .footer-meta .footer-meta-inner ul li:first-child + li {
