@@ -108,6 +108,10 @@
 
     {{ form_submit(form.save,'form.save') }}
 
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link">{{ 'stepPage.skipLink' | trans }}</a>
+    {% endif %}
+
     {{ form_end(form) }}
 
     <script type="text/javascript">

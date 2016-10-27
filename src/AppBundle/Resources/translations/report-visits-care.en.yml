@@ -12,6 +12,7 @@ stepPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   backLink: Back
+  skipLink: Skip this question for now
 
 summaryPage:
   validation:

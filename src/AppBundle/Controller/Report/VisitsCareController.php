@@ -37,6 +37,9 @@ class VisitsCareController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
+        if ($step < 1 || $step > self::STEPS) {
+            return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId]);
+        }
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
@@ -80,12 +83,22 @@ class VisitsCareController extends AbstractController
             $backLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step - 1]);
         }
 
+        $skipLink = null;
+        if (empty($fromPage)) {
+            if ($step == self::STEPS) {
+                $skipLink = $this->generateUrl('visits_care_summary_check', ['reportId' => $reportId, 'from'=>'skip-step']);
+            } else {
+                $skipLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
+            }
+        }
+
         return [
             'report' => $report,
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
             'backLink' => $backLink,
+            'skipLink' => $skipLink,
         ];
     }
 
@@ -95,9 +108,14 @@ class VisitsCareController extends AbstractController
      */
     public function summaryCheckAction(Request $request, $reportId)
     {
+        $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if (!$report->getVisitsCare()) {
+        if (!$report->getVisitsCare() && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
+        }
+
+        if (!$report->getVisitsCare()) { //allow validation with answers all skipped
+            $report->setVisitsCare(new EntityDir\Report\VisitsCare());
         }
 
         return [
