@@ -5,13 +5,20 @@
 {% block topOfPage %}{% endblock %}
 
 {% block stylesheets %}
+    <link href="{{ 'stylesheets/govuk-template.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/fonts.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
     <link href="{{ 'stylesheets/application.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
     <!--[if IE 7]>
-    <link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/govuk-template-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <![endif]-->
     <!--[if IE 8]>
-    <link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/govuk-template-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <![endif]-->
 
     <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
+    <link href="{{ 'stylesheets/govuk-template-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block head %}
@@ -56,7 +63,7 @@
                     <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
                 {% endif %}
 
-                
+
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
                     <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% else %}
