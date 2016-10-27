@@ -195,7 +195,7 @@ class Report
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"report", "transfers"})
+     * @JMS\Groups({"report", "money-transfer"})
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noTransfersToAdd;
