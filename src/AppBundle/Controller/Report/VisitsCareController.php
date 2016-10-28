@@ -5,10 +5,11 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\SectionValidator\VisitsCareValidator;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Service\ReportStatusService;
+use AppBundle\Service\SectionValidator\VisitsCareValidator;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
@@ -22,7 +23,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if($report->getVisitsCare() != null) {
+        if ($report->getVisitsCare() != null) {
             return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId]);
         }
 
@@ -44,13 +45,22 @@ class VisitsCareController extends AbstractController
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
+        /* @var $stepRedirector StepRedirector */
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutePrefix('visits_care_summary_')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setReportId($reportId);
+
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $data->setReport($report);
-            $data->keepOnlyRelevantVisitsCareData();
+            /* @var $data EntityDir\Report\VisitsCare */
+            $data
+                ->setReport($report)
+                ->keepOnlyRelevantVisitsCareData();
 
             if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
@@ -58,47 +68,17 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
-            // return to summary if coming from there, or it's the last step
-            if ($fromPage == 'overview') {
-                return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId, 'stepEdited'=>$step]);
-            }
-            if ($fromPage == 'check') {
-                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId, 'stepEdited'=>$step]);
-            }
-            if ($step == self::STEPS) {
-                return $this->redirectToRoute('visits_care_summary_check', ['reportId' => $reportId]);
-            }
-
-            return $this->redirectToRoute('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
-        $backLink = null;
-        if ($fromPage === 'overview') {
-            $backLink = $this->generateUrl('visits_care_summary_overview', ['reportId' => $reportId]);
-        } else if ($fromPage === 'check') {
-            $backLink = $this->generateUrl('visits_care_summary_check', ['reportId' => $reportId]);
-        }else if ($step == 1) {
-            $backLink = $this->generateUrl('visits_care', ['reportId' => $reportId]);
-        } else { // step > 1
-            $backLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step - 1]);
-        }
-
-        $skipLink = null;
-        if (empty($fromPage)) {
-            if ($step == self::STEPS) {
-                $skipLink = $this->generateUrl('visits_care_summary_check', ['reportId' => $reportId, 'from'=>'skip-step']);
-            } else {
-                $skipLink = $this->generateUrl('visits_care_step', ['reportId' => $reportId, 'step' => $step + 1]);
-            }
-        }
 
         return [
             'report' => $report,
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
-            'backLink' => $backLink,
-            'skipLink' => $skipLink,
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => $stepRedirector->getSkipLink(),
         ];
     }
 
