@@ -138,7 +138,7 @@
                 {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
             </td>
             <td>
-                {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
+                {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
             </td>
             <td class="change-answer">
                 <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': fromPage}) }}">Edit</a>
