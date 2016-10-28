@@ -22,6 +22,8 @@ class LoginType extends AbstractType
     {
         $resolver->setDefaults([
               'translation_domain' => 'signin',
+              'csrf_message' => 'Sorry, there was a problem logging you in at this time. Please try again in a few moments',
+              'csrf_token_id' => 'ddloginform',
         ]);
     }
 
