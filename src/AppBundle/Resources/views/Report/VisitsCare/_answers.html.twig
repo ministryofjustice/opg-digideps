@@ -81,7 +81,7 @@
                 {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
             </td>
             <td>
-                {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+                {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
             </td>
             <td class="change-answer">
                 <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': fromPage}) }}">Edit</a>
@@ -104,7 +104,7 @@
             </td>
         {% endif %}
         <td>
-            {{ report.visitsCare.whoIsDoingTheCaring }}
+            {{ report.visitsCare.whoIsDoingTheCaring | nl2br }}
         </td>
         <td class="change-answer">
             <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': fromPage}) }}">Edit</a>

@@ -44,7 +44,7 @@ class VisitsCareController extends AbstractController
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
-        $form = $this->createForm(new FormDir\Report\VisitsCareType($step), $visitsCare);
+        $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

@@ -3,9 +3,8 @@ startPage:
   pageSectionTitle: Visits and care
   pageSectionDescription: |
     Use this section to tell us about %client%'s care and contact with you and other people.
-    We need to know how you check whether %client%'s needs are met.
-    We ask this because the Office of the Public Guardian has a duty to protect people who
-    don't have the mental capacity to make decisions for themselves.
+    We need to know how you check whether %client%'s needs are met, because the
+    it's OPG's responsibility to make sure you are looking after %client%'s best interests, including her health and welfare.
   startButton: Start visits and care
 
 stepPage:
@@ -23,9 +22,9 @@ summaryPage:
     pageSectionTitle: Visits and care
     supportTitle: ""
     pageSectionDescription: |
-      Tell us about Sally's care and contact with
+      Tell us about %client%'s care and contact with
       you and other people. We need to know how you check whether
-      Sally's needs are met. We ask this because the Office of the Public Guardian
+      %client%'s needs are met. We ask this because the Office of the Public Guardian
       has a duty to protect people who don't have the mental capacity to make decisions for themselves
   check:
     htmlTitle: "Deputy report - visits and care | GOV.UK"
@@ -36,13 +35,25 @@ summaryPage:
 
 form:
   doYouLiveWithClient.label: Do you live with %client%?
-  howOftenDoYouContactClient.label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
-  doesClientReceivePaidCare.label: Does %client% receive care which is paid for?
-  doesClientReceivePaidCare.hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
-  howIsCareFunded.label: How is the care funded?
-  whoIsDoingTheCaring.label: Who is doing the caring?
-  whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers, family members
-  doesClientHaveACarePlan.label: Does %client% have a care plan?
+  howOftenDoYouContactClient.label: |
+    Please tell us how often you have contact with %client% and how you make sure others are looking
+    after %client%'s needs when you're not able to.
+  doesClientReceivePaidCare:
+    label: Does %client% get care that is paid for?
+    hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+  howIsCareFunded:
+    label: How is the care funded?
+    choices:
+      # TODO update with answer to http://hzaiwi.axshare.com/#g=4&p=visits_and_care_-_form_-_how_is_care_funded_1
+      client_pays_for_all: %client% pays for all the care
+      client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
+      all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
+  whoIsDoingTheCaring:
+    label: Who is doing the caring?
+    hint: For example, local authority or private residential care, live-in or visiting care workers, family members
+  doesClientHaveACarePlan:
+    label: Does %client% have a care plan?
+    hint: Local social services may provide a care plan to show how someone's welfare and support needs will be met
   whenWasCarePlanLastReviewed:
       label: When was the care plan last reviewed?
       hint: (MM/YYYY)
@@ -53,7 +64,5 @@ form:
     more_than_twice_a_year: More than twice a year
     once_a_year: Once a year
     less_than_once_a_year: Less than once a year
-    client_pays_for_all: They pay for all their own care
-    client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
-    all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
+
   save.label: Save and continue
