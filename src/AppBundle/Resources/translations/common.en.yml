@@ -18,3 +18,4 @@ registrationProgressBar:
 
 stepPage:
    skipLink: Skip this question for now
+   saveAndContinue: Save and continue
