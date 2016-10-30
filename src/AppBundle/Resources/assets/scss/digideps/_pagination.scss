@@ -97,7 +97,7 @@
 
 
             a::before {
-                background: transparent url('images/arrow-sprite.png') no-repeat -102px -11px;
+                background: transparent url("/images/arrow-sprite.png") no-repeat -102px -11px;
                 margin: -4px -32px 0 0;
                 display: block;
                 float: right;
@@ -117,7 +117,7 @@
             }
 
             a::before {
-                background: transparent url('images/arrow-sprite.png') no-repeat -20px -11px;
+                background: transparent url("/images/arrow-sprite.png") no-repeat -20px -11px;
                 margin: -4px 0 0 -32px;
                 display: block;
                 float: left;
