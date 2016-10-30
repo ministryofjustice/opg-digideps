@@ -171,26 +171,6 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/feedback", name="feedback")
-     */
-    public function feedbackAction()
-    {
-        $form = $this->createForm('feedback', new ModelDir\Feedback());
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
-            $this->getMailSender()->send($feedbackEmail, ['html']);
-
-            return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
-        }
-
-        return $this->render('AppBundle:Index:feedback.html.twig', ['form' => $form->createView()]);
-    }
-
-    /**
      * @Route("/terms", name="terms")
      */
     public function termsAction()

@@ -9,11 +9,16 @@
     <link href="{{ 'stylesheets/fonts.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
     <link href="{{ 'stylesheets/application.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
     <!--[if IE 7]>
-    <link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/govuk-template-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <![endif]-->
     <!--[if IE 8]>
-    <link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/govuk-template-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <![endif]-->
 
     <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
+    <link href="{{ 'stylesheets/govuk-template-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block head %}
@@ -100,7 +105,7 @@
     <div class="phase-banner-beta">
         <p>
             <strong class="phase-tag">BETA</strong>
-            <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
+            <span>This is a new service – your <a href="https://www.surveymonkey.co.uk/r/H2ZH57Y">feedback</a> will help us to improve it.</span>
         </p>
     </div>
     <div class="container {% block contentClass %}{% endblock %}">
