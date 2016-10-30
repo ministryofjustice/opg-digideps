@@ -108,16 +108,11 @@ gulp.task('sass.application-print', () => {
 
 });
 
-// Copy govuk template css to stylesheets
+// Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
 gulp.task('copy-css', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-gulp.task('replace', () => {
-    gulp.src(config.webAssets + '/stylesheets/govuk-template.css')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
         .pipe(replace('images/', '/images/'))
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/govuk-template.css'));
+        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
