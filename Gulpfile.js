@@ -5,7 +5,6 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
     uglifycss = require('gulp-uglifycss'),
-    importCss = require('gulp-import-css'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     scsslint = require('gulp-scss-lint'),
@@ -85,7 +84,6 @@ gulp.task('sass.application-ie7', () => {
 
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(importCss())
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
@@ -96,7 +94,6 @@ gulp.task('sass.application-ie8', () => {
 
     return gulp.src(config.sassSrc + '/application-ie8.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(importCss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
@@ -106,10 +103,21 @@ gulp.task('sass.application-print', () => {
 
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(importCss())
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
+});
+
+// Copy govuk template css to stylesheets
+gulp.task('copy-css', () => {
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*')
+        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
+});
+
+gulp.task('replace', () => {
+    gulp.src(config.webAssets + '/stylesheets/govuk-template.css')
+        .pipe(replace('images/', '/images/'))
+        .pipe(gulp.dest(config.webAssets + '/stylesheets/govuk-template.css'));
 });
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
@@ -126,18 +134,6 @@ gulp.task('sass.images', () => {
 gulp.task('sass.fonts', () => {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
-});
-
-// Copy GOVUK template css into
-gulp.task('css-copy', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-gulp.task('replace', () => {
-    gulp.src(config.webAssets + '/stylesheets/govuk-template.css')
-        .pipe(replace('images/', '/images/'))
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/govuk-template.css'));
 });
 
 // Copy non css related images
@@ -197,7 +193,7 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default'));
 });
 // Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'css-copy', 'replace', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
+gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'copy-css', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass.debug']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
@@ -205,4 +201,4 @@ gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'css-copy', 'replace', 'im
 });
 
 // Build all assets in production ready mode.
-gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'images', 'css-copy', 'js.prod', 'js.ie', 'vendor']);
+gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'copy-css', 'images', 'js.prod', 'js.ie', 'vendor']);

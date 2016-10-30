@@ -8,17 +8,33 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class VisitsCareType extends AbstractType
 {
+    /**
+     * @var int
+     */
     private $step;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string
+     */
+    private $clientFirstName;
 
     /**
      * @param $step
      */
-    public function __construct($step)
+    public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
         $this->step = (int)$step;
+        $this->translator = $translator;
+        $this->clientFirstName = $clientFirstName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,9 +54,11 @@ class VisitsCareType extends AbstractType
             ));
 
             $builder->add('howIsCareFunded', 'choice', array(
-                'choices' => ['client_pays_for_all' => 'They pay for all their own care',
-                    'client_gets_financial_help' => 'They get some financial help (for example, from the local authority or NHS)',
-                    'all_care_is_paid_by_someone_else' => 'All is care paid for by someone else (for example, by the local authority or NHS)',],
+                'choices' => [
+                    'client_pays_for_all' => $this->translate('form.howIsCareFunded.choices.client_pays_for_all'),
+                    'client_gets_financial_help' => $this->translate('form.howIsCareFunded.choices.client_gets_financial_help'),
+                    'all_care_is_paid_by_someone_else' => $this->translate('form.howIsCareFunded.choices.all_care_is_paid_by_someone_else'),
+                ],
                 'expanded' => true,
             ));
         }
@@ -85,6 +103,11 @@ class VisitsCareType extends AbstractType
 
             $event->setData($data);
         });
+    }
+
+    private function translate($key)
+    {
+        return $this->translator->trans($key, ['%client%'=>$this->clientFirstName], 'report-visits-care');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

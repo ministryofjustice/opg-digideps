@@ -15,3 +15,7 @@ registrationProgressBar:
         label: Add your client's details
     create_report:
         label: Create a report
+
+stepPage:
+   skipLink: Skip this question for now
+   saveAndContinue: Save and continue

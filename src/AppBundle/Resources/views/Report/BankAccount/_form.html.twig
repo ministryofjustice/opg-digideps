@@ -78,7 +78,7 @@
 {% endif %}
 
 <div class="save-bar button-bar">
-    {{ form_submit(form.save,'form.save', { 'buttonClass': '' }) }}
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
 </div>
 
 {{ form_end(form) }}
