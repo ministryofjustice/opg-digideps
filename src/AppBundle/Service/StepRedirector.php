@@ -17,14 +17,46 @@ class StepRedirector
      */
     protected $router;
 
+    /**
+     * @var string
+     */
     private $routeStartPage;
+
+    /**
+     * @var string
+     */
     private $routeSummaryOverview;
+    /**
+     * @var string
+     */
     private $routeSummaryCheck;
+    /**
+     * @var string
+     */
     private $routeStep;
+
+    /**
+     * @var array
+     */
+    private $routeBaseParams;
+
+    /**
+     * @var string
+     */
     private $fromPage;
+    /**
+     * @var string
+     */
     private $currentStep;
+    /**
+     * @var string
+     */
     private $totalSteps;
-    private $reportId;
+
+    /**
+     * @var array
+     */
+    private $stepUrlAdditionalParams;
 
     /**
      * StepRedirector constructor.
@@ -68,7 +100,7 @@ class StepRedirector
      */
     public function setCurrentStep($currentStep)
     {
-        $this->currentStep = $currentStep;
+        $this->currentStep = (int)$currentStep;
         return $this;
     }
 
@@ -77,16 +109,28 @@ class StepRedirector
      */
     public function setTotalSteps($totalSteps)
     {
-        $this->totalSteps = $totalSteps;
+        $this->totalSteps = (int)$totalSteps;
         return $this;
     }
 
     /**
-     * @param mixed $reportId
+     * @param array $routeBaseParams
+     * @return StepRedirector
      */
-    public function setReportId($reportId)
+    public function setRouteBaseParams(array $routeBaseParams)
     {
-        $this->reportId = $reportId;
+        $this->routeBaseParams = $routeBaseParams;
+        return $this;
+    }
+
+
+    /**
+     * @param mixed $stepUrlAdditionalParams
+     * @return StepRedirector
+     */
+    public function setStepUrlAdditionalParams(array $stepUrlAdditionalParams)
+    {
+        $this->stepUrlAdditionalParams = $stepUrlAdditionalParams;
         return $this;
     }
 
@@ -94,31 +138,36 @@ class StepRedirector
     public function getRedirectLinkAfterSaving()
     {
         // return to summary if coming from there, or it's the last step
-        if ($this->fromPage == 'overview') {
-            return $this->router->generate($this->routeSummaryOverview, ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
+        if ($this->fromPage === 'overview') {
+            return $this->generateUrl($this->routeSummaryOverview, [
+                'stepEdited' => $this->currentStep
+            ]);
         }
-        if ($this->fromPage == 'check') {
-            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
+        if ($this->fromPage === 'check') {
+            return $this->generateUrl($this->routeSummaryCheck, [
+                'stepEdited' => $this->currentStep
+            ]);
         }
-        if ($this->currentStep == $this->totalSteps) {
-            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId]);
+        if ($this->currentStep === $this->totalSteps) {
+            return $this->generateUrl($this->routeSummaryCheck);
         }
 
-        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
+        return $this->generateUrl($this->routeStep, [
+                'step' => $this->currentStep + 1,
+            ] + $this->stepUrlAdditionalParams);
     }
 
     public function getBackLink()
     {
-        $backLink = null;
         if ($this->fromPage === 'overview') {
-            return $this->router->generate($this->routeSummaryOverview, ['reportId' => $this->reportId]);
+            return $this->generateUrl($this->routeSummaryOverview);
         } else if ($this->fromPage === 'check') {
-            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId]);
+            return $this->generateUrl($this->routeSummaryCheck);
         } else if ($this->currentStep == 1) {
-            return $this->router->generate($this->routeStartPage, ['reportId' => $this->reportId]);
+            return $this->generateUrl($this->routeStartPage);
         }
 
-        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep - 1]);
+        return $this->generateUrl($this->routeStep, ['step' => $this->currentStep - 1]);
     }
 
     public function getSkipLink()
@@ -127,10 +176,20 @@ class StepRedirector
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {
-            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId, 'from' => 'skip-step']);
+            return $this->generateUrl($this->routeSummaryCheck, [
+                'from' => 'skip-step'
+            ]);
         }
-        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
+
+        return $this->generateUrl($this->routeStep, [
+            'step' => $this->currentStep + 1
+        ]);
     }
 
+
+    private function generateUrl($route, array $params = [])
+    {
+        return $this->router->generate($route, $this->routeBaseParams + $params);
+    }
 
 }

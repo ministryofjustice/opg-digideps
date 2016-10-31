@@ -50,7 +50,7 @@ class VisitsCareController extends AbstractController
             ->setRoutePrefix('visits_care')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
-            ->setReportId($reportId);
+            ->setRouteBaseParams(['reportId'=>$reportId]);
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
         $form->handleRequest($request);
