@@ -1,7 +1,7 @@
 /*jshint browser: true */
 (function () {
     "use strict";
-    
+
     var root = this,
         $ = root.jQuery,
         body = $('body'),
@@ -15,7 +15,7 @@
         this.addEventHandlers();
         this.fieldFocused = false;
     };
-    
+
     StickyHeader.prototype.addEventHandlers = function () {
         if (mobileSafari) {
             this.blurHandler = this.getInputBlurEventHandler();
@@ -52,7 +52,7 @@
     StickyHeader.prototype.handleWindowScroll = function () {
         if (window.pageYOffset >= this.top) {
             body.addClass('fixed');
-            
+
             // Mobile safari hides fixed elements when the keyboard is shown so use
             // absolute instead.
             if (mobileSafari && this.fieldFocused) {
@@ -64,7 +64,7 @@
             } else {
                 this.wrapper.attr('style','');
             }
-            
+
         } else {
             body.removeClass('fixed');
             if (mobileSafari) {
