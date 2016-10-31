@@ -50,7 +50,7 @@ Feature: odr / report submit
             | odr_declaration_agreedBehalfDeputyExplanation |  |
         And I press "odr_declaration_save"
         Then the form should be valid
-        And the URL should match "/odr/submitted"
+        And the URL should match "/odr/\d+/submitted"
         And I save the page as "odr-submit-submitted"
         And the response status code should be 200
         # return to homepage

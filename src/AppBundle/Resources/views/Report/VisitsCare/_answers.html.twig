@@ -3,148 +3,159 @@
 {% set transOptions = {'%client%': report.client.firstname} %}
 
 {% if validator.countMissing() > 0 %}
-<div id="error-summary" class="error-summary text" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
+<div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
     <h1 class="heading-medium error-summary-heading" id="error-summary-heading">
         {{ 'summaryPage.validation.pleaseAnswerAllQuestions' | trans }}
     </h1>
+    <span class="error-message">
+        {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
+    </span>
 </div>
 {% endif %}
 
 {% if validator.countMissing() > 0 %}
-    <span class="error-message">
-    {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
-    </span>
+
 {% endif %}
 
 <table class="check-your-answers push--bottom">
     <thead>
-    <tr>
-        {# @biggs see this for styling http://hzaiwi.axshare.com/#g=1&p=visits_and_care_-_edit___summary #}
-        <th>Question</th>
-        <th>Answer</th>
-        <th></th>
-    </tr>
+        <tr>
+            {# @biggs see this for styling http://hzaiwi.axshare.com/#g=1&p=visits_and_care_-_edit___summary #}
+            <th class="border--thicker">Question</th>
+            <th class="border--thicker">Answer</th>
+            <th class="border--thicker"></th>
+        </tr>
     </thead>
     <tbody>
-    <tr>
-        {% if validator.missing('doYouLiveWithClient') %}
-            <td class="error">
-                {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
-            </td>
-        {% endif %}
-        <td>
-            {{ report.visitsCare.doYouLiveWithClient | capitalize }}
-        </td>
-        <td class="change-answer">
-            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
-        </td>
-    </tr>
-    {% if report.visitsCare.doYouLiveWithClient == 'no' %}
         <tr>
-            <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
-            <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+            {% if validator.missing('doYouLiveWithClient') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
+                </td>
+            {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': fromPage}) }}">Edit</a>
             </td>
         </tr>
-    {% endif %}
-    </tbody>
-
-    {# step 2 #}
-    <tbody>
-    <tr>
-        {% if validator.missing('doesClientReceivePaidCare') %}
-            <td class="error">
-                {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
-            </td>
+        {% if report.visitsCare.doYouLiveWithClient == 'no' %}
+            <tr>
+                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+                <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': fromPage}) }}">Edit</a>
+                </td>
+            </tr>
         {% endif %}
-        <td>
-            {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
-        </td>
-        <td class="change-answer">
-            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
-        </td>
-    </tr>
-    {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+
+        {# step 2 #}
         <tr>
-            <td>
-                {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ ('form.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
-            </td>
+            {% if validator.missing('doesClientReceivePaidCare') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
+                </td>
+            {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': fromPage}) }}">Edit</a>
             </td>
         </tr>
-    {% endif %}
-    </tbody>
-
-    {# step 3 #}
-    <tbody>
-    <tr>
-        {% if validator.missing('whoIsDoingTheCaring') %}
-            <td class="error">
-                {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
-            </td>
+        {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+            <tr>
+                <td>
+                    {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': fromPage}) }}">Edit</a>
+                </td>
+            </tr>
         {% endif %}
-        <td>
-            {{ report.visitsCare.whoIsDoingTheCaring }}
-        </td>
-        <td class="change-answer">
-            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
-        </td>
-    </tr>
-    </tbody>
 
-    {# step 4 #}
-    <tbody>
-    <tr>
-        {% if validator.missing('doesClientHaveACarePlan') %}
-            <td class="error">
-                {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
-            </td>
-        {% endif %}
-        <td>
-            {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
-        </td>
-        <td class="change-answer">
-            <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
-        </td>
-    </tr>
-    {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+        {# step 3 #}
         <tr>
-            <td>
-                {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.visitsCare.whenWasCarePlanLastReviewed | date('M Y') }}
-            </td>
+            {% if validator.missing('whoIsDoingTheCaring') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.whoIsDoingTheCaring | nl2br }}
+                </td>
+            {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': fromPage}) }}">Edit</a>
             </td>
         </tr>
-    {% endif %}
+
+        {# step 4 #}
+        <tr>
+            {% if validator.missing('doesClientHaveACarePlan') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': fromPage}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+            <tr>
+                <td>
+                    {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': fromPage}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
     </tbody>
 
 </table>

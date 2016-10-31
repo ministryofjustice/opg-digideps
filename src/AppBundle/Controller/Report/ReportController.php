@@ -269,7 +269,7 @@ class ReportController extends AbstractController
 
         // check status
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.submitted', [], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
@@ -304,7 +304,7 @@ class ReportController extends AbstractController
 
         // check status
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.submitted', [], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
         return [
