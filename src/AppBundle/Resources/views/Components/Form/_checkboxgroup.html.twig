@@ -10,12 +10,15 @@
             {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
             {% set description = items[key].description is defined ?  items[key].description : null %}
             {% set disabled = items[key].disabled is defined and items[key].disabled %}
+            {% set labelDataTarget = items[key].dataTarget is defined ? items[key].dataTarget : null %}
 
             {% if description is not null %}
                 <p class="form-hint description">{{ description | raw }}</p>
             {% endif %}
 
-            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
+            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}"
+              {% if labelDataTarget %} data-target="{{ labelDataTarget }}" {% endif %}
+            >
                 {% set attr = {'class': elementClass } %}
                 {% if disabled %}
                     {% set attr = attr | merge({'disabled': 'disabled'}) %}
