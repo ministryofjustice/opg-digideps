@@ -22,9 +22,9 @@
         {{ 'summaryPage.check.pageSectionDescription' | trans(transOptions) }}
     </p>
 
-
-
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
+    <p class="text--right">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
+    </p>
 
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' with {'fromPage': 'check'} %}
 
