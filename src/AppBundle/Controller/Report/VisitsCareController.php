@@ -47,7 +47,7 @@ class VisitsCareController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutePrefix('visits_care_summary_')
+            ->setRoutePrefix('visits_care')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
             ->setReportId($reportId);

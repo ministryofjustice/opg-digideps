@@ -17,6 +17,7 @@ class StepRedirector
      */
     protected $router;
 
+    private $routeStartPage;
     private $routeSummaryOverview;
     private $routeSummaryCheck;
     private $routeStep;
@@ -41,9 +42,10 @@ class StepRedirector
      */
     public function setRoutePrefix($routePrefix)
     {
-        $this->routeSummaryCheck = $routePrefix . 'check';
-        $this->routeSummaryOverview = $routePrefix . 'overview';
-        $this->routeStep = $routePrefix . 'step';
+        $this->routeStartPage = rtrim($routePrefix, '_');
+        $this->routeSummaryCheck = rtrim($routePrefix, '_') . '_summary_check';
+        $this->routeSummaryOverview = rtrim($routePrefix, '_') . '_summary_overview';
+        $this->routeStep = rtrim($routePrefix, '_') . '_step';
 
         return $this;
     }
@@ -93,30 +95,30 @@ class StepRedirector
     {
         // return to summary if coming from there, or it's the last step
         if ($this->fromPage == 'overview') {
-            return $this->router->generate('visits_care_summary_overview', ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
+            return $this->router->generate($this->routeSummaryOverview, ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
         }
         if ($this->fromPage == 'check') {
-            return $this->router->generate('visits_care_summary_check', ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
+            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId, 'stepEdited' => $this->currentStep]);
         }
         if ($this->currentStep == $this->totalSteps) {
-            return $this->router->generate('visits_care_summary_check', ['reportId' => $this->reportId]);
+            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId]);
         }
 
-        return $this->router->generate('visits_care_step', ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
+        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
     }
 
     public function getBackLink()
     {
         $backLink = null;
         if ($this->fromPage === 'overview') {
-            return $this->router->generate('visits_care_summary_overview', ['reportId' => $this->reportId]);
+            return $this->router->generate($this->routeSummaryOverview, ['reportId' => $this->reportId]);
         } else if ($this->fromPage === 'check') {
-            return $this->router->generate('visits_care_summary_check', ['reportId' => $this->reportId]);
+            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId]);
         } else if ($this->currentStep == 1) {
-            return $this->router->generate('visits_care', ['reportId' => $this->reportId]);
+            return $this->router->generate($this->routeStartPage, ['reportId' => $this->reportId]);
         }
 
-        return $this->router->generate('visits_care_step', ['reportId' => $this->reportId, 'step' => $this->currentStep - 1]);
+        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep - 1]);
     }
 
     public function getSkipLink()
@@ -125,9 +127,9 @@ class StepRedirector
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {
-            return $this->router->generate('visits_care_summary_check', ['reportId' => $this->reportId, 'from' => 'skip-step']);
+            return $this->router->generate($this->routeSummaryCheck, ['reportId' => $this->reportId, 'from' => 'skip-step']);
         }
-        return $this->router->generate('visits_care_step', ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
+        return $this->router->generate($this->routeStep, ['reportId' => $this->reportId, 'step' => $this->currentStep + 1]);
     }
 
 
