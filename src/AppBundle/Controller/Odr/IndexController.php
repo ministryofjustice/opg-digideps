@@ -192,7 +192,7 @@ class IndexController extends AbstractController
             $reportConfirmEmail = $this->getMailFactory()->createOdrSubmissionConfirmationEmail($this->getUser(), $odr);
             $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
-            return $this->redirect($this->generateUrl('odr_submit_confirmation'));
+            return $this->redirect($this->generateUrl('odr_submit_confirmation', ['odrId'=>$odr->getId()]));
         }
 
         return [
@@ -205,13 +205,16 @@ class IndexController extends AbstractController
     /**
      * Page displaying the report has been submitted.
      *
-     * @Route("/odr/submitted", name="odr_submit_confirmation")
+     * @Route("/odr/{odrId}/submitted", name="odr_submit_confirmation")
      * @Template()
      */
-    public function submitConfirmationAction(Request $request)
+    public function submitConfirmationAction(Request $request, $odrId)
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
+        if ($odr->getId() != $odrId) {
+            throw new \RuntimeException('Not authorised to access this Report');
+        }
         $odr->setClient($client);
 
         if (!$odr->getSubmitted()) {

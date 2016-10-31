@@ -467,7 +467,7 @@ class Report
     }
 
     /**
-     * @return int $client
+     * @return Client
      */
     public function getClient()
     {

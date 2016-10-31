@@ -131,7 +131,11 @@
         </div>
     {% endif %}
 
-    {{ form_submit(form.save,'form.save') }}
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
 
     {{ form_end(form) }}
 
