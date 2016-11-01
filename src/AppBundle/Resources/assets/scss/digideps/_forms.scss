@@ -7,11 +7,6 @@ input[type=text]::-ms-clear {
     display: none;
 }
 
-// TODO had to override after having added alphagovk repo. change for all block-labels ?
-.inline .block-label {
-    margin-bottom: 10px;
-}
-
 form {
     &.single-texta-area {
         padding-top: 3px;
@@ -140,6 +135,10 @@ form {
 .form-group__checkbox-group {
     margin-left: 2px;
 
+    // @deprecated
+    // @refactor
+    // Only used on client add where a hint description is
+    // forced between radio inputs in a group
     .vertical {
         .description {
             float: left;
@@ -162,14 +161,6 @@ form {
             margin-top: 30px;
         }
 
-    }
-
-    .horizontal {
-
-        .block-label {
-            clear: none;
-            margin-right: 20px;
-        }
     }
 
 }
