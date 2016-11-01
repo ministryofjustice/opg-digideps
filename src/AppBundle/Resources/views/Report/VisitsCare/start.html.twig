@@ -17,6 +17,6 @@
         {{ 'startPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}
     </p>
 
-    <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start">{{ 'startPage.startButton' | trans }}</a>
+    <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
 {% endblock %}
