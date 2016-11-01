@@ -59,6 +59,20 @@ Feature: deputy / report / visits and care
             | visits_care_doesClientReceivePaidCare_0 | yes |
             | visits_care_howIsCareFunded_0 | client_pays_for_all |
         Then I click on "step-skip"
+        # step 3 empty
+        When I press "visits_care_save"
+        Then the following fields should have an error:
+            | visits_care_whoIsDoingTheCaring |
+        # step 3 correct
+        When I fill in the following:
+            | visits_care_whoIsDoingTheCaring | the brother |
+        And I press "visits_care_save"
+        Then the form should be valid
+        # go back, check content, skip
+        When I click on "step-back"
+        Then the following fields should have the corresponding values:
+            | visits_care_whoIsDoingTheCaring | the brother |
+        Then I click on "step-skip"
 
 #    @deputy
 #    Scenario: provide visits and care info
