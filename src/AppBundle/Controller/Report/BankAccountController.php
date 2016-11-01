@@ -6,15 +6,16 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class BankAccountController extends AbstractController
 {
+    const STEPS = 4;
+
     /**
      * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
      * @Template()
@@ -34,20 +35,28 @@ class BankAccountController extends AbstractController
     /**
      * //TODO refactor when assets is implemented too
      *
-     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_account_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
      * @Template()
      */
     public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
+        if ($step < 1 || $step > self::STEPS) {
+            return $this->redirectToRoute('bank_accounts_summary_overview', ['reportId' => $reportId]);
+        }
+
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
-        $dataToPassToNextStep = $dataFromUrl;
+        $stepUrlData = $dataFromUrl;
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
-        $comingFromSummaryPage = $request->get('from') === 'summary';
-        $defaultRouteParams = [
-            'reportId' => $reportId,
-            'accountId' => $accountId,
-        ];
+        $fromPage = $request->get('from');
+
+        /* @var $stepRedirector StepRedirector */
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutePrefix('bank_accounts_')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setRouteBaseParams(['reportId'=>$reportId, 'accountId' => $accountId]);
+
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
@@ -56,7 +65,6 @@ class BankAccountController extends AbstractController
             $account = new EntityDir\Report\Account();
             $account->setReport($report);
         }
-
 
         // add URL-data into model
         isset($dataFromUrl['type']) && $account->setAccountType($dataFromUrl['type']);
@@ -79,23 +87,24 @@ class BankAccountController extends AbstractController
 
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                $dataToPassToNextStep['type'] = $account->getAccountType();
+                $stepUrlData['type'] = $account->getAccountType();
             }
 
             if ($step == 2) {
-                $dataToPassToNextStep['bank'] = $account->getBank();
-                $dataToPassToNextStep['number'] = $account->getAccountNumber();
-                $dataToPassToNextStep['sort-code'] = $account->getSortCode();
-                $dataToPassToNextStep['is-joint'] = $account->getIsJointAccount();
+                $stepUrlData['bank'] = $account->getBank();
+                $stepUrlData['number'] = $account->getAccountNumber();
+                $stepUrlData['sort-code'] = $account->getSortCode();
+                $stepUrlData['is-joint'] = $account->getIsJointAccount();
             }
 
             if ($step == 3) {
-                $dataToPassToNextStep['closing-balance'] = $account->getOpeningBalance();
-                $dataToPassToNextStep['opening-balance'] = $account->getClosingBalance();
+                $stepUrlData['closing-balance'] = $account->getOpeningBalance();
+                $stepUrlData['opening-balance'] = $account->getClosingBalance();
             }
 
             // 4th step only if closing balance is equals to 0
-            $isLastStep = $step == 4 || ($step == 3 && !$account->isClosingBalanceZero());
+            $isLastStep = $step == self::STEPS
+                || ($step == (self::STEPS - 1) && !$account->isClosingBalanceZero());
 
             // last step: save
             if ($isLastStep) {
@@ -109,25 +118,12 @@ class BankAccountController extends AbstractController
             if ($isLastStep) {
                 return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
             }
-            if ($comingFromSummaryPage) {
-                return $this->redirectToRoute('bank_accounts_summary_check', ['stepEdited' => $step] + $defaultRouteParams);
-            }
 
-            return $this->redirectToRoute('bank_account_step', [
-                    'step' => $step + 1,
-                    'data' => $dataToPassToNextStep
-                ] + $defaultRouteParams);
-        }
+            $stepRedirector->setStepUrlAdditionalParams([
+                'data' => $stepUrlData
+            ]);
 
-        // TODO move to helper when assets is implemented
-        $backLink = null;
-        if ($comingFromSummaryPage) {
-            $backLink = $this->generateUrl('bank_accounts_summary_check', $defaultRouteParams);
-        } else if ($step == 1) {
-            $backLink = $this->generateUrl('bank_accounts', $defaultRouteParams);
-        } else { // step > 1
-            // TODO
-            $backLink = $this->generateUrl('bank_account_step', ['step' => $step - 1, 'data' => $dataFromUrl] + $defaultRouteParams);
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
@@ -136,7 +132,8 @@ class BankAccountController extends AbstractController
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
-            'backLink' => $backLink,
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => null,
         ];
     }
 
@@ -154,7 +151,7 @@ class BankAccountController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('bank_account_step', ['reportId' => $reportId, 'step' => 1]);
+                    return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
                 case 'no':
                     return $this->redirectToRoute('bank_accounts_summary_overview', ['reportId' => $reportId]);
             }

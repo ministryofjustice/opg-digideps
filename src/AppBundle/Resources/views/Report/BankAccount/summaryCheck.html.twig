@@ -20,7 +20,7 @@
 
     {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_check_answers_-_summary #}
 
-    <a href="{{ path('bank_account_step' , {'reportId': report.id, 'step': 1}) }}"
+    <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}"
        class="" id="add-account">Add account</a>
     {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
 

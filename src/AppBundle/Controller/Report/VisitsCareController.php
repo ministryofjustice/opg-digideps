@@ -47,10 +47,10 @@ class VisitsCareController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutePrefix('visits_care_summary_')
+            ->setRoutePrefix('visits_care')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
-            ->setReportId($reportId);
+            ->setRouteBaseParams(['reportId'=>$reportId]);
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
         $form->handleRequest($request);

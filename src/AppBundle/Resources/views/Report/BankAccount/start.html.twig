@@ -10,32 +10,21 @@
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
-{% block linkBack %}{{ macros.linkBack(report) }}{% endblock %}
-
 
 {% block pageContent %}
 
-    <p>
+    <p class="text">
         {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
     </p>
-    <p>
+    <p class="text">
         {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
     </p>
-    <p>
+    <p class="text">
         {{ 'startPage.pageSectionDescription3' | trans(transOptions) }}
     </p>
 
-    {% block validationSummary %}
-    {% endblock %}
-
-    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-    transDomain: translationDomain
-    } %}
-
-    <div class="form-group button-bar">
-        <a href="{{ path('bank_account_step', { 'reportId': report.id, 'step': 1 }) }}" class="button ">
-            {{ 'startPage.startButton' | trans }}
-        </a>
-    </div>
+    <a href="{{ path('bank_accounts_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start">
+        {{ 'startPage.startButton' | trans }}
+    </a>
 
 {% endblock %}
