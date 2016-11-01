@@ -3,7 +3,7 @@ Feature: deputy / report / mental capacity
     @deputy
     Scenario: mental capacity add 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-decisions, mental-capacity"
+        And I click on "reports,report-2016-open, edit-mental_capacity"
         # submit empty form
         And I press "mental_capacity_save"
         Then the following fields should have an error:
@@ -26,7 +26,7 @@ Feature: deputy / report / mental capacity
     @deputy
     Scenario: mental capacity check previously added info and edit 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-decisions, mental-capacity"
+        And I click on "reports,report-2016-open, edit-mental_capacity"
         # check values
         Then the following fields should have the corresponding values:
             | mental_capacity_hasCapacityChanged_0      | changed |
