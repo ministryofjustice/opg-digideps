@@ -68,7 +68,10 @@ Feature: deputy / report / edit and test tabs
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
-        And I should see a "#edit-accounts" element
+        And I should see a "#edit-bank_accounts" element
+        And I should see a "#edit-money_transfers" element
+        And I should see a "#edit-money_in" element
+        And I should see a "#edit-money_out" element
         And I should see a "#edit-assets" element
 
     @deputy
