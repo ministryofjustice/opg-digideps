@@ -3,7 +3,7 @@ Feature: deputy / report / decisions
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-decisions, decisions"
+        And I click on "reports,report-2016-open, edit-decisions"
         And I save the page as "report-decision-empty"
         # form errors
         When I follow "add-decisions-button"
@@ -24,6 +24,7 @@ Feature: deputy / report / decisions
         # add decision
         Then the "decision_description" field is expandable
         And the "decision_clientInvolvedDetails" field is expandable
+        And I click on "reports,report-2016-open, edit-decisions"
         And I add the following decisions:
             | description | clientInvolved | clientInvolvedDetails |
             | 2 beds | yes | the client was able to decide at 90% |

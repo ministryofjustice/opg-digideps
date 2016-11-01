@@ -146,11 +146,12 @@ trait ReportTrait
 
     private function gotoOverview()
     {
-        $overviewButton = $this->getSession()->getPage()->find('css', '#overview-button');
-
-        if (isset($overviewButton)) {
-            $overviewButton->click();
-        }
+        $this->clickOnBehatLink('breadcrumbs-report-overview');
+//        $overviewButton = $this->getSession()->getPage()->find('css', '#breadcrumbs-report-overview');
+//
+//        if (isset($overviewButton)) {
+//            $overviewButton->click();
+//        }
     }
 
     /**
@@ -194,7 +195,7 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
-            $this->clickOnBehatLink('edit-decisions, decisions');
+            $this->clickOnBehatLink('edit-decisions');
 
             if (1 === count($this->getSession()->getPage()->findAll('css', '#add-decisions-button'))) {
                 $this->clickLink('add-decisions-button');
