@@ -8,6 +8,7 @@ use AppBundle\Model as ModelDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -43,7 +44,6 @@ class IndexController extends AbstractController
         ]);
         $form->handleRequest($request);
         $vars = [
-            'form' => $form->createView(),
             'isAdmin' => $this->container->getParameter('env') === 'admin',
         ];
 
@@ -57,14 +57,18 @@ class IndexController extends AbstractController
 
                 if ($e->getCode() == 423) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'login');
+                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
                 if ($e->getCode() == 499) {
                     // too-many-attempts warning. captcha ?
                 }
 
-                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $error]);
+                $form->addError(new FormError($error));
+
+                return $this->render('AppBundle:Index:login.html.twig', [
+                        'form' => $form->createView(),
+                    ] + $vars);
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
@@ -96,10 +100,12 @@ class IndexController extends AbstractController
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
-            ], 'login');
+            ], 'signin');
         }
 
-        return $this->render('AppBundle:Index:login.html.twig', $vars);
+        return $this->render('AppBundle:Index:login.html.twig', [
+                'form' => $form->createView()
+            ] + $vars);
     }
 
     /**
