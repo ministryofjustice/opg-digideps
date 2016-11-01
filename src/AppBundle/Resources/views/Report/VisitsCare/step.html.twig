@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
@@ -19,23 +19,25 @@
 
     {% if step == 1 %}
         <div class="form-section push--bottom">
-
-            {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
-                'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'items': [
+            <div class="form-group form-group__checkbox-group {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
                     {'labelClass': 'block-label' },
                     {'labelClass': 'block-label', 'dataTarget': 'how-often-contact-client-wrapper' }
-                ],
-                'formGroupClass': 'flush--bottom'
-            }) }}
-            <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
-                {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
-                    'labelClass': 'text required',
-                    'labelParameters': { '%client%': report.client.firstname },
-                    'inputClass': 'expanding'
+                    ],
+                    'formGroupClass': 'flush--bottom'
                 }) }}
+                <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
+                        'labelClass': 'text required',
+                        'labelParameters': { '%client%': report.client.firstname },
+                        'inputClass': 'expanding'
+                    }) }}
+                </div>
             </div>
         </div>
     {% endif %}
@@ -43,26 +45,29 @@
     {% if step == 2 %}
         <div class="form-section push--bottom">
 
-            {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
-                'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'items': [
+            <div class="form-group form-group__checkbox-group {% if not form.doesClientReceivePaidCare.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
                     {'labelClass': 'block-label', 'dataTarget': 'how-care-funded-wrapper' },
                     {'labelClass': 'block-label'}
-                ],
-                'formGroupClass': 'flush--bottom'
-            }) }}
-
-            <div id="how-care-funded-wrapper" class="panel panel-border-narrow js-hidden">
-                {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
-                    'legendClass' : 'form-label-bold',
-                    'items': [
-                    {'labelClass': 'block-label'},
-                    {'labelClass': 'block-label'},
-                    {'labelClass': 'block-label'}
-                    ]
+                    ],
+                    'formGroupClass': 'flush--bottom'
                 }) }}
+
+                <div id="how-care-funded-wrapper" class="panel panel-border-narrow js-hidden">
+                    {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
+                        'legendClass' : 'form-label-bold',
+                        'items': [
+                        {'labelClass': 'block-label'},
+                        {'labelClass': 'block-label'},
+                        {'labelClass': 'block-label'}
+                        ]
+                    }) }}
+                </div>
             </div>
         </div>
     {% endif %}
@@ -79,23 +84,26 @@
 
     {% if step == 4 %}
         <div class="form-section push--bottom">
-            {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
-                'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'items': [
+            <div class="form-group form-group__checkbox-group {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
                     {'labelClass': 'block-label', 'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
                     {'labelClass': 'block-label'}
-                ],
-                'formGroupClass': 'flush--bottom'
-            }) }}
-
-            <div id="when-care-plan-last-reviewed-wrapper" class="panel panel-border-narrow  js-hidden">
-                {# legendClass is-not-working #}
-                {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
-                    'legendClass' : 'form-label-bold',
-                    'showDay': 'false'
+                    ],
+                    'formGroupClass': 'flush--bottom'
                 }) }}
+
+                <div id="when-care-plan-last-reviewed-wrapper" class="panel panel-border-narrow  js-hidden">
+                    {# legendClass is-not-working #}
+                    {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
+                        'legendClass' : 'form-label-bold',
+                        'showDay': 'false'
+                    }) }}
+                </div>
             </div>
         </div>
     {% endif %}

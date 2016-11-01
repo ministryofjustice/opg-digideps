@@ -1,4 +1,6 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+{% if useFormGroup %}
+    <div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+{% endif %}
 
     <fieldset class="{{ fieldSetClass }}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
@@ -28,4 +30,7 @@
             </label>
         {% endfor %}
     </fieldset>
-</div>
+
+{% if useFormGroup %}
+    </div>
+{% endif %}
