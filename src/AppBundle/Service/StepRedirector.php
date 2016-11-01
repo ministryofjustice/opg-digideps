@@ -65,6 +65,7 @@ class StepRedirector
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
+        $this->stepUrlAdditionalParams = [];
     }
 
 
