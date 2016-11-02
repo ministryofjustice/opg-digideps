@@ -3,9 +3,8 @@ Feature: deputy / report / account transactions
     @deputy
     Scenario: money in 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-accounts"
-        And I follow "account-moneyin"
-        # check no data was previously saved 
+        And I click on "reports,report-2016-open, edit-money_in"
+        # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_transactionsIn_0_amounts_0        |  |
             | transactions_transactionsIn_26_amounts_0       |  |
@@ -26,7 +25,7 @@ Feature: deputy / report / account transactions
         And I press "transactions_save"
         Then the form should be valid
         # reload page
-        And I follow "account-moneyin"
+        When I click on "reports,report-2016-open, edit-money_in"
         # assert value saved
         And the following fields should have the corresponding values:
             | transactions_transactionsIn_0_amounts_0       | 1,250.00 |
@@ -38,10 +37,8 @@ Feature: deputy / report / account transactions
     @deputy
     Scenario: money out 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open"
-        And I follow "edit-accounts"
-        And I follow "account-moneyout"
-        # check no data was previously saved 
+        And I click on "reports,report-2016-open, edit-money_out"
+        # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_transactionsOut_0_amounts_0        |  |
             | transactions_transactionsOut_11_amounts_0       |  |
@@ -66,7 +63,7 @@ Feature: deputy / report / account transactions
         And I press "transactions_save"
         Then the form should be valid
         # reload page
-        And I follow "account-moneyout"
+        When I click on "reports,report-2016-open, edit-money_out"
         # assert value saved
         And the following fields should have the corresponding values:
             | transactions_transactionsOut_0_amounts_0       | 1,250.00 |
