@@ -78,7 +78,6 @@ Feature: deputy / report / visits and care
         Then the following fields should have an error:
             | visits_care_doesClientHaveACarePlan_0 |
             | visits_care_doesClientHaveACarePlan_1 |
-            | visits_care_whenWasCarePlanLastReviewed_day |
             | visits_care_whenWasCarePlanLastReviewed_month |
             | visits_care_whenWasCarePlanLastReviewed_year |
         # step 4 missing details
@@ -86,19 +85,17 @@ Feature: deputy / report / visits and care
             | visits_care_doesClientHaveACarePlan_0 | yes |
         And I press "visits_care_save"
         Then the following fields should have an error:
-            | visits_care_whenWasCarePlanLastReviewed_day |
             | visits_care_whenWasCarePlanLastReviewed_month |
             | visits_care_whenWasCarePlanLastReviewed_year |
         # step 4 correct
         When I fill in the following:
             | visits_care_doesClientHaveACarePlan_0 | yes |
-            | visits_care_whenWasCarePlanLastReviewed_day |  |
             | visits_care_whenWasCarePlanLastReviewed_month | 12 |
             | visits_care_whenWasCarePlanLastReviewed_year | 2015 |
         And I press "visits_care_save"
         Then the form should be valid
         # Summary overview
-        
+
 
 
 #    @deputy
