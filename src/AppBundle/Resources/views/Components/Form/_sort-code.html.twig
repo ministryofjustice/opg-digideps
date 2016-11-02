@@ -5,17 +5,17 @@
             {{ form_errors(element) }}
             <div class="form-group">
                 {{ form_label(element.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control', 'min': '10', 'max': '99' } }) }}
+                {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control'} }) }}
             </div>
             <div class="separator">-</div>
             <div class="form-group">
                 {{ form_label(element.sort_code_part_2,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_2', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_2, {'attr': {'class': 'sort-code-part form-control', 'min': '10', 'max': '99'} }) }}
+                {{ form_widget(element.sort_code_part_2, {'attr': {'class': 'sort-code-part form-control'} }) }}
             </div>
             <div class="separator">-</div>
             <div class="form-group">
                 {{ form_label(element.sort_code_part_3,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_3', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_3, { 'attr': { 'class': 'sort-code-part form-control', 'min': '10', 'max': '99'} }) }}
+                {{ form_widget(element.sort_code_part_3, { 'attr': { 'class': 'sort-code-part form-control'} }) }}
             </div>
         </div>
     </fieldset>

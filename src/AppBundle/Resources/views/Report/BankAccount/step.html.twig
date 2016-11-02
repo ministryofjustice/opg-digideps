@@ -31,13 +31,13 @@
             'fieldSetClass' : '',
             'legendClass' : 'form-label-bold',
             'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
@@ -65,8 +65,8 @@
             'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
             'legendClass' : 'form-label',
             'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
@@ -88,10 +88,10 @@
         {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
             'fieldSetClass' : 'inline',
             'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
-            'legendClass' : 'form-label',
+            'legendClass' : 'form-label text',
             'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
@@ -107,9 +107,9 @@
     <script>
         $(document).ready(function () {
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-        });
-        $('input.form-control__number').on('blur', function (event) {
-            GOVUK.formatCurrency(event.target);
+            $('input.form-control__number').on('blur', function (event) {
+                GOVUK.formatCurrency(event.target);
+            });
         });
     </script>
 
