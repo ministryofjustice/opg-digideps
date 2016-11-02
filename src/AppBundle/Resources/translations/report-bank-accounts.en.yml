@@ -13,7 +13,8 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageSectionTitle: Accounts
+  pageSectionTitle: Add an account
+  supportTitle: Accounts
   pageSectionDescription:
     step1: Start by adding %client%'s first account; we'll then ask you for the account details. You can go back and add more accounts if you need to.
   backLink: Back

@@ -8,10 +8,12 @@
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
 {% endblock %}
+
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
 {% endblock %}
@@ -26,8 +28,8 @@
         </p>
 
         {{ form_checkbox_group(form.accountType, 'form.accountType', {
-            'fieldSetClass' : 'inline',
-            'legendClass' : 'form-label',
+            'fieldSetClass' : '',
+            'legendClass' : 'form-label-bold',
             'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
@@ -53,25 +55,20 @@
         }) }}
 
         {% if account.requiresBankNameAndSortCode %}
-            {{ form_sort_code(form.sortCode, 'form.sortCode', {
-                'inputType' : 'Number'
-            }) }}
+            {{ form_sort_code(form.sortCode, 'form.sortCode') }}
         {% else %}
             {% do form.sortCode.setRendered %}
         {% endif %}
 
-        <fieldset>
-            <legend class="hidden">Joint account</legend>
-            {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
-                'fieldSetClass' : 'inline',
-                'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
-                'legendClass' : 'form-label',
-                'items': [
+        {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
+            'fieldSetClass' : 'inline',
+            'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
+            'legendClass' : 'form-label',
+            'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
                 {'labelClass': 'block-label', 'elementClass': '' }
-                ]
-            }) }}
-        </fieldset>
+            ]
+        }) }}
     {% endif %}
 
     {% if step == 3 %}
@@ -108,6 +105,9 @@
     {{ form_end(form) }}
 
     <script>
+        $(document).ready(function () {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+        });
         $('input.form-control__number').on('blur', function (event) {
             GOVUK.formatCurrency(event.target);
         });

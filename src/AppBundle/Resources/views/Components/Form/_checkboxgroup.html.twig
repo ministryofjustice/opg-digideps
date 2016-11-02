@@ -4,7 +4,9 @@
 
     <fieldset class="{{ fieldSetClass }}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
-        <p class="form-hint text">{{ hintText }}</p>
+        {% if hintText is not null %}
+            <p class="form-hint text">{{ hintText }}</p>
+        {% endif %}
         {{  form_errors(element) }}
         {% for key,choiceElement in element %}
 
