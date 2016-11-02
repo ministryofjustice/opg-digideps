@@ -91,7 +91,6 @@ Feature: deputy / report / asset with variations
             | asset_ownedPercentage |
             | asset_mortgageOutstandingAmount |
             | asset_rentIncomeMonth |
-            | asset_rentAgreementEndDate_day |
             | asset_rentAgreementEndDate_month |
             | asset_rentAgreementEndDate_year |
         # no errors
