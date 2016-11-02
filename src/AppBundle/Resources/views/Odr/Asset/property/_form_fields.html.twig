@@ -101,21 +101,19 @@
 
  <script type="text/javascript">
     $(document).ready(function() {
-        new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-        
         new opg.RadioHide({
             radio:'.owned_radio input[type=radio]',
             content: '#owned_percentage_textarea',
             hideByDefault: true,
             showWithValue: 'partly'
         });
-        
+
         new opg.RadioHide({
             radio:'.has_mortgage_radio input[type=radio]',
             content: '#mortgage_outstanding_amount_textarea',
             hideByDefault: true,
         });
-        
+
         new opg.RadioHide({
             radio:'.is_rented_out_radio input[type=radio]',
             content: '#rent_info',

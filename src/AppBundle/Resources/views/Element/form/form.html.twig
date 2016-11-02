@@ -209,6 +209,7 @@
         </div>
     </div>
     <div class="example" id="radio-example">
+        <form action="">
       <fieldset class="radio-with-hidden form-group">
         <legend class="form-label">Do you expect to make any significant decisions on behalf of the client in the next 12 months?</legend>
         <p class="form-hint">For example, the client moving to other accommodation, buying or selling property or making adaptations
@@ -232,10 +233,10 @@
           </label>
         </div>
       </fieldset>
+      </form>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {
-        new GOVUK.SelectionButtons('.radio-buttons :radio');
         new opg.RadioHide({
             radio: '#radio-example input[type=radio]',
             content: '#radio-example .hidden-section',

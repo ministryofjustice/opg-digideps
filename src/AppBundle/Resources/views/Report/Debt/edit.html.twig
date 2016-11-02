@@ -49,9 +49,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            // client has debt radio box hide/show debts list
-            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-
             // auto format currencies
             $('input.transaction-value').on('blur', function (event) {
                 GOVUK.formatCurrency(event.target);

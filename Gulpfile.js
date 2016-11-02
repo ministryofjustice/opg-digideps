@@ -146,7 +146,8 @@ gulp.task('js.prod', ['lint.js'], () => {
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
-            config.jsSrc + '/*.js'])
+            config.jsSrc + '/modules/*.js',
+            config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
         .pipe(uglify())
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
@@ -160,7 +161,8 @@ gulp.task('js.debug', function () {
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
-            config.jsSrc + '/*.js'])
+            config.jsSrc + '/modules/*.js',
+            config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });

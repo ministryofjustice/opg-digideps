@@ -28,16 +28,15 @@
         </p>
 
         {{ form_checkbox_group(form.accountType, 'form.accountType', {
-            'fieldSetClass' : '',
             'legendClass' : 'form-label-bold',
             'items': [
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'}
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
@@ -90,8 +89,8 @@
             'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
             'legendClass' : 'form-label text',
             'items': [
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'}
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
@@ -105,11 +104,8 @@
     {{ form_end(form) }}
 
     <script>
-        $(document).ready(function () {
-            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-            $('input.form-control__number').on('blur', function (event) {
-                GOVUK.formatCurrency(event.target);
-            });
+        $('input.form-control__number').on('blur', function (event) {
+            GOVUK.formatCurrency(event.target);
         });
     </script>
 
