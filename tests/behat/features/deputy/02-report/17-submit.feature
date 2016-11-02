@@ -1,4 +1,4 @@
-#Feature: deputy / report / submit
+Feature: deputy / report / submit
 #
 #    @deputy
 #    Scenario: report declaration page
@@ -15,12 +15,12 @@
 #        Then the URL should match "/report/\d+/declaration"
 #        And I save the page as "report-submit-declaration"
 #
-#    @deputy
-#    Scenario: report submission
+    @deputy
+    Scenario: report submission
 #        Given emails are sent from "deputy" area
 #        And I reset the email log
 #        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        And I save the application status into "report-submit-pre"
+        And I save the application status into "report-submit-pre"
 #        # assert after login I'm redirected to report page
 #        Then the URL should match "/report/\d+/overview"
 #        # assert I cannot access the submitted page directly

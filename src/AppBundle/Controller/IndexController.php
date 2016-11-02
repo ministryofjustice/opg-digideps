@@ -95,7 +95,9 @@ class IndexController extends AbstractController
 
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
+            return $this->render('AppBundle:Index:login-from-logout.html.twig', [
+                    'form' => $form->createView()
+                ] + $vars);
         } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
