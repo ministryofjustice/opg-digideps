@@ -32,7 +32,6 @@ Feature: odr / visits care
       | odr_visits_care_howIsCareFunded_0                 |
       | odr_visits_care_howIsCareFunded_1                 |
       | odr_visits_care_howIsCareFunded_2                 |
-      | odr_visits_care_whenWasCarePlanLastReviewed_day   |
       | odr_visits_care_whenWasCarePlanLastReviewed_month |
       | odr_visits_care_whenWasCarePlanLastReviewed_year  |
     # ok (simple version, no textareas)

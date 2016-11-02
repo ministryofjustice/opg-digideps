@@ -132,7 +132,6 @@ Feature: odr / assets
       | odr_asset_ownedPercentage            |
       | odr_asset_mortgageOutstandingAmount  |
       | odr_asset_rentIncomeMonth            |
-      | odr_asset_rentAgreementEndDate_day   |
       | odr_asset_rentAgreementEndDate_month |
       | odr_asset_rentAgreementEndDate_year  |
       # no errors
