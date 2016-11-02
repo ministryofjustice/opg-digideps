@@ -115,6 +115,7 @@ class Account
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"account"})
+     * @Assert\NotBlank(message="account.isClosed.notBlank", groups={"bank-account-is-closed"})
      *
      * @var bool
      */
