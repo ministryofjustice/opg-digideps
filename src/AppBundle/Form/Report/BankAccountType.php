@@ -121,6 +121,12 @@ class BankAccountType extends AbstractType
                     ];
                 }
 
+                if ($this->step === 4) {
+                    $validationGroups = [
+                        'bank-account-is-closed',
+                    ];
+                }
+
                 return $validationGroups;
             },
         ]);

@@ -161,6 +161,8 @@ account:
         outOfRange: You need to enter a valid closing balance
     isJointAccount:
         notBlank: Please choose yes or no
+    isClosed:
+        notBlank: Please choose yes or no
     moneyInOut:
         amount:
           notNumeric: Please use numbers only to enter the amount
