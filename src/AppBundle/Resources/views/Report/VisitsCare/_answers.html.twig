@@ -29,7 +29,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="behat-region-live-with-client">
             {% if validator.missing('doYouLiveWithClient') %}
                 <td>
                     <span class="error">
@@ -48,11 +48,11 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': fromPage}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': fromPage}) }}" class="behat-link-live-with-client-edit">Edit</a>
             </td>
         </tr>
         {% if report.visitsCare.doYouLiveWithClient == 'no' %}
-            <tr>
+            <tr class="behat-region-how-often-contact-client">
                 <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
                 <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
@@ -62,7 +62,7 @@
         {% endif %}
 
         {# step 2 #}
-        <tr>
+        <tr class="behat-region-does-client-receive-paid-care">
             {% if validator.missing('doesClientReceivePaidCare') %}
                 <td>
                     <span class="error">
@@ -85,7 +85,7 @@
             </td>
         </tr>
         {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
-            <tr>
+            <tr class="behat-region-how-is-care-funded">
                 <td>
                     {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
                 </td>
@@ -99,7 +99,7 @@
         {% endif %}
 
         {# step 3 #}
-        <tr>
+        <tr class="behat-region-who-is-doing-caring">
             {% if validator.missing('whoIsDoingTheCaring') %}
                 <td>
                     <span class="error">
@@ -123,7 +123,7 @@
         </tr>
 
         {# step 4 #}
-        <tr>
+        <tr class="behat-region-client-has-care-plan">
             {% if validator.missing('doesClientHaveACarePlan') %}
                 <td>
                     <span class="error">
@@ -146,7 +146,7 @@
             </td>
         </tr>
         {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
-            <tr>
+            <tr class="behat-region-care-plan-last-reviewed">
                 <td>
                     {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
                 </td>

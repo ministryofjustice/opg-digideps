@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 
 /**
  * @method Behat\Mink\WebAssert assertSession
@@ -73,6 +74,19 @@ trait RegionTrait
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
+
+
+    /**
+     * @Then each text should be present in the corresponding region:
+     */
+    public function eachTextShouldBePresentCorrespondingRegion(TableNode $fields)
+    {
+        foreach ($fields->getRowsHash() as $text => $region) {
+            $this->iShouldSeeInTheRegion($text, $region);
+        }
+    }
+
+
     /**
      * @Then I should see :text in :section section
      */
@@ -121,15 +135,6 @@ trait RegionTrait
         $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
-    /**
-     * @Then I should see each of the following in the :region region:
-     */
-    public function iShouldSeeTheFollowingInTheRegion($region, PyStringNode $pieces)
-    {
-        foreach ($pieces->getStrings() as $text) {
-            $this->iShouldSeeInTheRegion($text, $region);
-        }
-    }
 
     public static function behatElementToCssSelector($element, $type)
     {
