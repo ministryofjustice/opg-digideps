@@ -45,7 +45,6 @@ pensionsOtherIncome:
   label: Pensions and other income
   receiveStatePension:
     label: Does %client% receive a state pension?
-    hint: " "
   receiveOtherIncome:
     label: Does %client% receive any other regular income?
     hint: For example, private pension, dividends, wages or salary

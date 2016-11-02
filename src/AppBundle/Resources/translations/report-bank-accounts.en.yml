@@ -72,7 +72,6 @@ form:
     label: How much was in the account on %endDate%?
   isJointAccount:
     label: Is this a joint account ?
-    hint: " "
   isClosed:
       label: You currently have £0 in this account on %endDate%.  Have you closed this account?
   save:
