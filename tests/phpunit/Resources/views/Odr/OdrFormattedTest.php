@@ -2,18 +2,12 @@
 
 namespace AppBundle\Resources\views\Odr;
 
-use AppBundle\Entity\Account;
-use AppBundle\Entity\Action;
-use AppBundle\Entity\AssetOther;
-use AppBundle\Entity\AssetProperty;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Debt;
-use AppBundle\Entity\Decision;
-use AppBundle\Entity\MoneyTransfer;
+use AppBundle\Entity\Odr\AssetOther;
+use AppBundle\Entity\Odr\AssetProperty;
 use AppBundle\Entity\Odr\BankAccount;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Odr\VisitsCare;
-use AppBundle\Entity\Transaction;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -21,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
+/**
+ * //TODO add more coverage
+ */
 class OdrFormattedTest extends WebTestCase
 {
     /**
@@ -63,11 +60,21 @@ class OdrFormattedTest extends WebTestCase
         $this->account1->setBank('barclays');
         $this->account2 = new BankAccount();
 
+        $this->asset1 = new AssetOther();
+        $this->asset1->setId(1)->setTitle('Artwork')->setDescription('monna lisa');
+        $this->asset2 = new AssetOther();
+        $this->asset2->setId(2)->setTitle('Antiques')->setDescription('chest of drawers');
+        $this->assetProp = new AssetProperty();
+        $this->assetProp->setAddress('plat house')->setPostcode('ha1')->setId(3)->setOwned(AssetProperty::OWNED_FULLY)->setValue(500000);
+        $this->assetProp2 = new AssetProperty();
+        $this->assetProp2->setAddress('victoria rd')->setPostcode('sw1')->setid(4)->setValue(100000)->setOwned(AssetProperty::OWNED_PARTLY)->setOwnedPercentage(60);
+
         $this->odr = new Odr();
         $this->odr
             ->setClient($this->client)
             ->setVisitsCare($this->visitsCare)
             ->setBankAccounts([$this->account1, $this->account2])
+            ->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2])
         ;
 
         $this->html = $this->twig->render('AppBundle:Odr/Formatted:formatted.html.twig', [
@@ -76,6 +83,8 @@ class OdrFormattedTest extends WebTestCase
         ]);
 
         $this->crawler = new Crawler($this->html);
+
+//        file_put_contents('/app/tests/odr.html', $this->html);
     }
 
     private function html($crawler, $expr)
@@ -103,9 +112,18 @@ class OdrFormattedTest extends WebTestCase
         $this->assertContains('Jones', $this->html($this->crawler, '#client-details-subsection'));
     }
 
-    public function testAccount()
+    public function testBankAccount()
     {
         $this->assertContains('barclays', $this->html($this->crawler, '#account-summary'));
+    }
+
+    public function testAssets()
+    {
+        $this->assertContains('monna lisa', $this->html($this->crawler, '#assets-section'));
+        $this->assertContains('chest of drawers', $this->html($this->crawler, '#assets-section'));
+        $this->assertContains('plat house', $this->html($this->crawler, '#assets-section'));
+        $this->assertContains('sw1', $this->html($this->crawler, '#assets-section'));
+        $this->assertContains('£560,000.00', $this->html($this->crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
     }
 
 

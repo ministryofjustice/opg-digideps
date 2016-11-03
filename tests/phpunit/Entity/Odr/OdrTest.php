@@ -51,4 +51,14 @@ class OdrTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('done', $this->odr->incomeBenefitsStatus());
         
     }
+
+    public function testGetAssetsTotalValue()
+    {
+        $this->odr->setAssets([
+            m::mock(AssetOther::class, ['getValueTotal'=>1]),
+            m::mock(AssetProperty::class, ['getValueTotal'=>2]),
+        ]);
+
+        $this->assertEquals(3, $this->odr->getAssetsTotalValue());
+    }
 }
