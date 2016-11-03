@@ -26,7 +26,7 @@
                             {% set labelText =  loop.index == 1 ? ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions') : '' %}
                             {{ form_input(a, 'form.entries.' ~ transaction.id, {
                                 'inputPrefix' : '£',
-                                'inputClass' : 'form-control__number transaction-value',
+                                'inputClass' : 'form-control__number transaction-value js-format-currency',
                                 'labelText': labelText,
                                 'formGroupClass': formGroupClass ~ ' form-group-value'
                             }) }}
@@ -81,10 +81,6 @@
         $('form.expanding-transaction-table button[type="submit"]').hide();
 
         $('.add-transaction').removeClass('hidden');
-
-        $('input.transaction-value').on('blur', function (event) {
-            GOVUK.formatCurrency(event.target);
-        });
 
         GOVUK.accountTransactionExpander();
     });

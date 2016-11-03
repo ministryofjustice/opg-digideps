@@ -18,7 +18,7 @@
     {{ form_input(form.balanceOnCourtOrderDate, '', {
         'labelText': 'accountForm.balanceOnCourtOrderDate.label' | trans({'%cotDate%': odr.client.courtDate | date("j F Y")}, translationDomain),
         'inputPrefix' : '£',
-        'inputClass' : 'form-control__number'
+        'inputClass' : 'form-control__number js-format-currency'
     } ) }}
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
@@ -31,13 +31,6 @@
     {{ form_end(form) }}
 
 {{ form_end(form) }}
-
-<script>
-    $('input.form-control__number').on('blur', function (event) {
-        GOVUK.formatCurrency(event.target);
-    });
-</script>
-
 
 <script type="text/javascript">
 $(document).ready(function() {

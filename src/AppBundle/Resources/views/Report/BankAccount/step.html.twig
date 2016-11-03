@@ -74,12 +74,12 @@
         {{ form_input(form.openingBalance, '', {
             'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("jS F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
+            'inputClass' : 'form-control--short js-format-currency'
         } ) }}
         {{ form_input(form.closingBalance, 'form.closingBalance', {
             'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
+            'inputClass' : 'form-control--short js-format-currency'
         } ) }}
     {% endif %}
 
@@ -102,11 +102,5 @@
     {% endif %}
 
     {{ form_end(form) }}
-
-    <script>
-        $('input.form-control__number').on('blur', function (event) {
-            GOVUK.formatCurrency(event.target);
-        });
-    </script>
 
 {% endblock %}

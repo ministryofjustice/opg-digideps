@@ -32,7 +32,7 @@
                         {{ form_row(debt.debtTypeId) }}
                         {{ form_input(debt.amount, 'amount', {
                             'inputPrefix' : '£',
-                            'inputClass' : 'form-control__number transaction-value',
+                            'inputClass' : 'form-control__number transaction-value js-format-currency',
                             'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                             'formGroupClass': ' form-group-value'
                         }) }}
@@ -69,11 +69,6 @@
                 {#statusElement: $('#save-status'),#}
                 {#url: '{{ path('debts_save_json', {'odrId': odr.id}) }}'#}
             {#});#}
-
-            // auto format currencies
-            $('input.transaction-value').on('blur', function (event) {
-                GOVUK.formatCurrency(event.target);
-            });
 
             new GOVUK.ExpandingMoreDetails('.expand-more-details');
         });
