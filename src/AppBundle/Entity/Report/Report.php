@@ -610,7 +610,7 @@ class Report
     }
 
     /**
-     * @return array $assets
+     * @return Asset[]
      */
     public function getAssets()
     {
@@ -626,7 +626,7 @@ class Report
     {
         $ret = 0;
         foreach ($this->getAssets() as $asset) {
-            $ret += $asset->getValue();
+            $ret += $asset->getValueTotal();
         }
 
         return $ret;
