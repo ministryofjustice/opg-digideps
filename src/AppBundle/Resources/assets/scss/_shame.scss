@@ -50,5 +50,5 @@ b {
 
 // Thicker borders on table headers
 .border--thicker {
-  border-bottom-width: 10px;
+  border-bottom: 10px solid $border-colour;
 }
