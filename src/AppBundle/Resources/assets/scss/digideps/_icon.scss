@@ -28,3 +28,17 @@
     margin-right: 10px;
     background-size: contain;
 }
+
+.icon-plus {
+    @include icon(icon-plus, 24, 24, 'icons');
+    margin-right: 3px;
+    background-size: contain;
+}
+
+//adjusting icon within a link
+.icon {
+    a & {
+        position: relative;
+        top: 5px;
+    }
+}

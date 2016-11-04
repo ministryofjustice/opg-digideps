@@ -58,6 +58,9 @@
 .soft-half--ends    { padding-top:   $gutter-half !important; padding-bottom:$gutter-half !important; }
 .soft-half--sides   { padding-right: $gutter-half !important; padding-left:  $gutter-half !important; }
 
+// Move elements (experimental)
+.move-quarter--up { position: relative; top: -$gutter-one-quarter; }
+
 // Text alignment
 .text--left     { text-align: left   !important; }
 .text--center   { text-align: center !important; }

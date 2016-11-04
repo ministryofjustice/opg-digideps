@@ -2,12 +2,16 @@
 {% trans_default_domain translationDomain %}
 
 <div class="border--thicker">
-    <div class="grid-row">
+    <div class="grid-row push--top">
         <div class="column-half">
             <h2 class="heading-medium flush--ends">List of accounts</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}" class="" id="add-account">Add account</a>
+            <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}"
+                class="bold-small move-quarter--up" id="add-account">
+                <span class="icon icon-plus"></span>
+                Add account
+            </a>
         </div>
     </div>
 </div>
@@ -53,7 +57,7 @@
                 </a>
                 <a class="behat-link-account-{{ account.accountNumber }}"
                    href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
-                    Delete
+                    Remove
                 </a>
             </td>
         </tr>
