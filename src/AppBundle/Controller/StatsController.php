@@ -30,4 +30,22 @@ class StatsController extends RestController
 
         return $ret;
     }
+
+    /**
+     * @Route("/users.csv")
+     * @Method({"GET"})
+     */
+    public function usersCsv(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+
+        $file = '/tmp/stats.csv';
+
+        // recreate if older than 30 secs
+        if (abs(filemtime($file) - time()) > 30) {
+            exec("/usr/bin/php /app/app/console digideps:stats.csv $file");
+        }
+
+        echo file_get_contents($file);
+    }
 }

@@ -16,6 +16,7 @@ class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
     {
         $this
             ->setName('digideps:stats.csv')
+            ->addArgument('file')
             ->setDescription('Get CSV of stats ')
         ;
     }
@@ -24,8 +25,17 @@ class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
     {
         $statsService = $this->getContainer()->get('statsService'); /* @var $statsService StatsService */
 
-        $csv = $statsService->getRecordsCsv();
+        $file = $input->getArgument('file');
+        if (!$file) {
+            throw new \RuntimeException('specify a file name');
+        }
 
-        $output->writeln($csv);
+        $ret = file_put_contents($file, $statsService->getRecordsCsv());
+
+        if (!$ret) {
+            throw new \RuntimeException("cannot write into $file");
+        }
+
+        $output->writeln("$ret bytes written into $file");
     }
 }

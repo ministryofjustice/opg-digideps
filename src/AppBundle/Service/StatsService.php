@@ -85,7 +85,7 @@ class StatsService
     /**
      * @param integer $maxResults
      *
-     * @return array
+     * @return string
      */
     public function getRecordsCsv($maxResults = null)
     {
