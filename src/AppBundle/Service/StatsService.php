@@ -87,7 +87,7 @@ class StatsService
      *
      * @return array
      */
-    public function getRecordsCsv($maxResults)
+    public function getRecordsCsv($maxResults = null)
     {
         $records = $this->getRecords($maxResults);
 
