@@ -123,7 +123,7 @@ gulp.task('sass.images', () => {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
         .pipe(gulp.dest('./web/images'));
 
-    gulp.src(config.sassSrc + '/images/**/*')
+    gulp.src(config.imgSrc + '/**/*')
         .pipe(gulp.dest('./web/images'));
 });
 gulp.task('sass.fonts', () => {
