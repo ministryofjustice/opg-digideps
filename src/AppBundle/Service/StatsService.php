@@ -27,7 +27,7 @@ class StatsService
     {
         //$deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
         // pre-join data to reduce number of queries
-        // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
+//         $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
         $qb = $this->em->createQuery(
             "SELECT u, c, role FROM AppBundle\Entity\User u
                 LEFT JOIN u.role role
@@ -80,5 +80,24 @@ class StatsService
         }
 
         return $ret;
+    }
+
+    /**
+     * @param integer $maxResults
+     *
+     * @return array
+     */
+    public function getRecordsCsv($maxResults)
+    {
+        $records = $this->getRecords($maxResults);
+
+        $out = fopen('php://memory', 'w');
+        fputcsv($out, array_keys($records[0]));
+        foreach ($records as $row) {
+            fputcsv($out, $row);
+        }
+        rewind($out);
+
+        return stream_get_contents($out);
     }
 }
