@@ -3,8 +3,8 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Traits\HasOdrTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @JMS\Discriminator(field = "type", map = {
@@ -55,11 +55,11 @@ abstract class Asset
      * @Assert\NotBlank(message="odr.asset.value.notBlank")
      * @Assert\Type( type="numeric", message="odr.asset.value.type")
      * @Assert\Range(max=100000000000, maxMessage = "odr.asset.value.outOfRange")
-     * 
+     *
      * @Assert\NotBlank(message="odr.asset.property.value.notBlank", groups={"property"})
      * @Assert\Type( type="numeric", message="odr.asset.property.value.type", groups={"property"})
      * @Assert\Range(max=10000000000, maxMessage = "odr.asset.property.value.outOfRange", groups={"property"})
-     * 
+     *
      * @JMS\Type("string")
      */
     private $value;
@@ -118,7 +118,18 @@ abstract class Asset
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getValueTotal()
     {
         return $this->value;
     }
