@@ -1,0 +1,33 @@
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+
+{% trans_default_domain "admin" %}
+
+{% block pageTitle %}Administration - Upload users{% endblock %}
+{% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}Upload users{% endblock %}
+
+{% block validationSummary %}
+{% endblock %}
+
+{% block pageNavigation %}
+{% endblock %}
+
+{% block pageBody %}
+
+    <h1 class="heading-medium">Deputy's analysis</h1>
+
+    <p class="text" id="loading">Please wait ...</p>
+    <p class="text hidden" id="done">
+        Data is being generated, Click here to <a href="{{ path('admin_stats_csv', {'timestamp': timestamp}) }}">download</a>
+    </p>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout(function(){
+                $('#loading').addClass('hidden');
+                $('#done').removeClass('hidden');
+            }, 10000);
+        });
+    </script>
+
+{% endblock %}

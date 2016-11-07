@@ -223,19 +223,25 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/stats.csv", name="admin_stats_csv")
+     * @Route("/stats/csv-download/{timestamp}", name="admin_stats_csv")
      * @Template
      */
-    public function statsCsvAction(Request $request)
+    public function statsCsvAction(Request $request, $timestamp)
     {
+        try {
+            $rawCsv = $this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
+        } catch (\RuntimeException $e) {
+            return $this->render('AppBundle:Admin:stats-wait.html.twig', [
+                'timestamp' => $timestamp
+            ]);
+        }
+
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
         $response->headers->set('Content-type', 'application/octet-stream');
         $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
         $response->sendHeaders();
-
-        $rawCsv = $this->getRestClient()->get('stats/users.csv', 'raw');
         $response->setContent($rawCsv);
 
         return $response;
