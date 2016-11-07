@@ -68,6 +68,13 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
+            if ($fromPage)  {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Record edited'
+                );
+            }
+
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
