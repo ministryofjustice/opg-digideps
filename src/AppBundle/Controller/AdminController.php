@@ -228,8 +228,6 @@ class AdminController extends AbstractController
      */
     public function statsCsvAction(Request $request)
     {
-        $data = $this->getRestClient()->get('stats/users', 'array');
-
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
@@ -237,16 +235,9 @@ class AdminController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
         $response->sendHeaders();
 
-        // array to CSV
-        $out = fopen('php://memory', 'w');
-        fputcsv($out, array_keys($data[0]));
-        foreach ($data as $row) {
-            fputcsv($out, $row);
-        }
-        rewind($out);
-        $response->setContent(stream_get_contents($out));
+        $rawCsv = $this->getRestClient()->get('stats/users.csv', 'raw');
+        $response->setContent($rawCsv);
 
         return $response;
-
     }
 }
