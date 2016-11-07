@@ -57,7 +57,7 @@ class IndexController extends AbstractController
 
                 if ($e->getCode() == 423) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'login');
+                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
                 if ($e->getCode() == 499) {
@@ -96,7 +96,7 @@ class IndexController extends AbstractController
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->container->getParameter('session_expire_seconds')),
-            ], 'login');
+            ], 'signin');
         }
 
         return $this->render('AppBundle:Index:login.html.twig', $vars);
