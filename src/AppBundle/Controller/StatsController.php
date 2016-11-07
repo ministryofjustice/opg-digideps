@@ -19,7 +19,6 @@ class StatsController extends RestController
      */
     public function users(Request $request)
     {
-        $ret = [];
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
         $stats = $this->get('statsService'); /* @var $stats StatsService */
@@ -30,17 +29,5 @@ class StatsController extends RestController
         });
 
         return $ret;
-    }
-
-    /**
-     * @param $sql
-     *
-     * @return array
-     */
-    private function getQueryResults($sql)
-    {
-        $connection = $this->get('em')->getConnection();
-
-        return $connection->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
