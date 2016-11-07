@@ -12,6 +12,24 @@
     overflow: hidden;
     background: rgba($turquoise, .1) url("/images/icons/tick.png") 10px 13px no-repeat;
 
+    &.version1 {
+        width: 100%;
+        padding: $gutter-half 0;
+        background: $turquoise;
+        color: $white;
+        border: none;
+        text-align: center;
+    }
+
+    .remove {
+        position: absolute;
+        right: 6px;
+        top: 8px;
+        font-size: 16px;
+        text-decoration: none;
+        color: $white;
+    }
+
     &.flash-news {
         box-sizing: border-box;
         background: $newsbg url("/images/icons/info.png") 10px 10px no-repeat;

@@ -79,17 +79,7 @@
     </nav>
 {% endblock %}
 
-{% block afterHeader %}
-
-    {# To style #}
-    {% for flashMessage in app.session.flashbag.get('notice') %}
-        <div class="flash-notice"  style="color: white;background-color: green;">
-            {{ flashMessage }}
-        </div>
-    {% endfor %}
-
-{% endblock %}
-
+{% block afterHeader %}{% endblock %}
 
 {% block beforeContent %}{% endblock %}
 
@@ -114,6 +104,17 @@
         {% if form is defined %}
             {{ form_errors_list(form) }}
         {% endif %}
+    {% endblock %}
+
+    {% block notification %}
+        {# To style #}
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <p class="flash version1 heading-large">
+                {{ flashMessage }}
+                <a href="#" class="remove js-remove">X</a>
+            </p>
+        {% endfor %}
+
     {% endblock %}
 
 

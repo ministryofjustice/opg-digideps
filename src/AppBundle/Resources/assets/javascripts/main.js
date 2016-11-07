@@ -11,4 +11,10 @@ $(document).ready(function() {
 	$('.js-format-currency').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
     });
+
+    // Removal of parent element (used on prototype of OTPP notification)
+    // Refactor
+    $('.js-remove').click(function(){
+    	$(this).parent().remove();
+    });
 });
