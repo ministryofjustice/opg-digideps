@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity as EntityDir;
 use AppBundle\Service\StatsService;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity as EntityDir;
 
 /**
  * @Route("/stats")
@@ -21,7 +21,8 @@ class StatsController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $stats = $this->get('statsService'); /* @var $stats StatsService */
+        $stats = $this->get('statsService');
+        /* @var $stats StatsService */
         $ret = $stats->getRecords($request->query->get('limit'));
 
         $this->get('kernel.listener.responseConverter')->addContextModifier(function ($context) {
@@ -32,20 +33,21 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("/users.csv")
+     * @Route("/users/csv/{timestamp}")
      * @Method({"GET"})
      */
-    public function usersCsv(Request $request)
+    public function usersCsv(Request $request, $timestamp)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $file = '/tmp/stats.csv';
+        $file = '/tmp/stats' . $timestamp . '.csv';
 
-        // recreate if older than 30 secs
-        if (abs(filemtime($file) - time()) > 30) {
-            exec("/usr/bin/php /app/app/console digideps:stats.csv $file");
+        if (file_exists($file)) {
+            echo file_get_contents($file);
+            die;
         }
 
-        echo file_get_contents($file);
+        exec("/usr/bin/php /app/app/console digideps:stats.csv $file &> /dev/null &");
+        echo 'done';
     }
 }

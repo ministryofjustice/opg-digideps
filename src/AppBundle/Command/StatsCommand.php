@@ -30,7 +30,8 @@ class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
             throw new \RuntimeException('specify a file name');
         }
 
-        $ret = file_put_contents($file, $statsService->getRecordsCsv());
+        $data = $statsService->getRecordsCsv();
+        $ret = file_put_contents($file, $data);
 
         if (!$ret) {
             throw new \RuntimeException("cannot write into $file");
