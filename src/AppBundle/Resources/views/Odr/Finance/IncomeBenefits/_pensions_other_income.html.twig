@@ -28,8 +28,7 @@ categoryKey: 'pensionsOtherIncome',
         <div id="receive-other-income-details" class="hidden-detail">
             {{ form_input(form.receiveOtherIncomeDetails, 'pensionsOtherIncome.receiveOtherIncomeDetails', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     {% endblock %}

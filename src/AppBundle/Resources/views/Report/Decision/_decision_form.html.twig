@@ -10,7 +10,7 @@
 
     {{ form_errors_list(form) }}
 
-    {{ form_input(form.description,'description', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
 
     {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
         'fieldSetClass' : 'inline',
@@ -22,13 +22,12 @@
             {'labelClass': 'block-label', 'elementClass': '' }]
     }) }}
 
-    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 
-        'labelClass': 'required', 
-        'inputClass': 'expanding',
+    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', {
+        'labelClass': 'required',
         'hintText': 'clientInvolvedDetails.hint'| trans({'%client%': report.client.firstname}, translationDomain)
     }) }}
-    
-        
+
+
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
         transDomain: translationDomain,
         section: 'decision'

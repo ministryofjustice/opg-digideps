@@ -33,8 +33,7 @@
     <p>{{ 'no_decision.subSectionDescription' | trans }}</p>
 
     {{ form_input(form.reasonForNoDecisions, 'no_decision.controls.reason', {
-                'labelClass': 'visuallyhidden',
-                'inputClass': 'expanding'
+                'labelClass': 'visuallyhidden'
             }) }}
 
     {% include 'AppBundle:Components/ButtonBar:_save_reason_bar.html.twig' with {
