@@ -16,6 +16,9 @@ registrationProgressBar:
     create_report:
         label: Create a report
 
+existsPage:
+  backLink: Back
+
 stepPage:
    skipLink: Skip this question for now
    saveAndContinue: Save and continue

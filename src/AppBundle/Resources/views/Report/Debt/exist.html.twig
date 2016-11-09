@@ -1,53 +1,41 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-debts" %}
-    {% trans_default_domain translationDomain %}
-    {% set transOptions = {'%client%': report.client.firstname} %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageNavigation %}
-    <div class="breadcrumbs">
-        <ol class="group">
-            <li><a href="#">Deputy reports</a></li>
-            <li><a href="#">Deputy report overview</a></li>
-        </ol>
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
+            'fieldSetClass' : 'inline contact-exist',
+            'legendClass' : 'heading-medium text',
+            'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ],
+            'formGroupClass': 'flush--bottom'
+        }) }}
     </div>
-    {% endblock %}
 
+    {{ form_submit(form.save,'existPage.form.save') }}
 
-    {% block pageBody %}
+    {{ form_end(form) }}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
-        <a href="{{ path('debts', {'reportId': report.id}) }}" class="link-back">Back</a>
-
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-        <div class="form-section push--bottom">
-            {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
-                'fieldSetClass' : 'inline contact-exist',
-                'legendClass' : 'heading-medium text',
-                'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
-                'items': [
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' }
-                ],
-                'formGroupClass': 'flush--bottom'
-            }) }}
-        </div>
-
-        {{ form_submit(form.save,'existPage.form.save') }}
-
-        {{ form_end(form) }}
-
-    {% endblock %}
-
-    {% block pageBodyFooterNav %}
-    {% endblock %}
-
-{% endembed %}
+{% endblock %}

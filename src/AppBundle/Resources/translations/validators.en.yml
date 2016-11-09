@@ -239,6 +239,8 @@ asset:
             type: Enter the value of this property in numbers
             outOfRange: The value of the property must be less than £100,000,000,000
 debt:
+    noDebtsChoice:
+       notBlank: Choose Yes or No
     amount:
       notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive

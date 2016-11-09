@@ -15,8 +15,6 @@
 
 {% block pageContent %}
 
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}">Back</a>
-
     <p>
         {{ 'startPage.pageSectionDescription' | trans(transOptions) }}
     </p>
@@ -24,10 +22,6 @@
     {% block validationSummary %}
     {% endblock %}
 
-    <div class="form-group button-bar">
-        <a href="{{ path('debts_exist', { 'reportId': report.id}) }}" class="button ">
-            {{ 'startPage.startButton' | trans }}
-        </a>
-    </div>
+    <a href="{{ path('debts_exist', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
 {% endblock %}

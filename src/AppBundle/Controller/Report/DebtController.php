@@ -50,6 +50,7 @@ class DebtController extends AbstractController
         }
 
         return [
+            'backLink' => $this->generateUrl('debts', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];

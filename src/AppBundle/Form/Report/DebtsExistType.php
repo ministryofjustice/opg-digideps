@@ -16,7 +16,7 @@ class DebtsExistType extends AbstractType
             ->add('hasDebts', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'xxx', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'debt.noDebtsChoice.notBlank', 'groups' => ['exist']])],
             ))
 //            ->add('reasonForNoContacts', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
