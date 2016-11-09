@@ -15,6 +15,9 @@ services:
     user.selfRegistration:
         class: AppBundle\Service\UserRegistrationService
         arguments: [@doctrine.orm.entity_manager]
+    statsService:
+          class: AppBundle\Service\StatsService
+          arguments: [@doctrine.orm.entity_manager]
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
