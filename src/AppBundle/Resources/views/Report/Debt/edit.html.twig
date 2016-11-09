@@ -13,6 +13,10 @@
     {{ macros.breadcrumbs(report) }}
 {% endblock %}
 
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
 {% block pageContent %}
 
     <h3 class="heading-medium flush--top">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>

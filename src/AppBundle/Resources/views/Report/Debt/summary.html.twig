@@ -24,7 +24,7 @@
                 {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
             </td>
             <td>
-                <a href="{{ path('debts_exist', {'reportId': report.id}) }}">Edit</a>
+                <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
             </td>
         </tr>
 
@@ -35,7 +35,7 @@
             <thead>
             <tr>
                 <th>List of debts</th>
-                <th><a href="{{ path('debts_edit', {'reportId': report.id}) }}">Edit</a></th>
+                <th><a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a></th>
             </tr>
             </thead>
             <thead>
