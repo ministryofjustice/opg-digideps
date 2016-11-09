@@ -1,6 +1,4 @@
-{#
-deprecated.
-#}{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
@@ -8,25 +6,19 @@ deprecated.
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'summaryPage.check.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'summaryPage.check.pageSectionTitle' | trans }}{% endblock %}
-    {% block pageTitleClass %}heading-large{% endblock %}
-
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'summaryPage.check.supportTitle' | trans }}</span>
-{% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
-    <p class="text-secondary">
-        {{ 'summaryPage.check.pageSectionDescription' | trans(transOptions) }}
+    <p class="text">
+        {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
     </p>
 
-    <p class="text--right">
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}">Return to Report Overview</a>
-    </p>
+    {#<a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>#}
 
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 

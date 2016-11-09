@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         if ($report->getVisitsCare() != null) {
-            return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId]);
+            return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -39,7 +39,7 @@ class VisitsCareController extends AbstractController
     public function stepAction(Request $request, $reportId, $step)
     {
         if ($step < 1 || $step > self::STEPS) {
-            return $this->redirectToRoute('visits_care_summary_overview', ['reportId' => $reportId]);
+            return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
@@ -68,7 +68,7 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
             }
 
-            if ($fromPage)  {
+            if ($fromPage == 'summary')  {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Record edited'
@@ -90,10 +90,10 @@ class VisitsCareController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/visits-care/summary-check", name="visits_care_summary_check")
+     * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
      * @Template()
      */
-    public function summaryCheckAction(Request $request, $reportId)
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
@@ -103,23 +103,6 @@ class VisitsCareController extends AbstractController
 
         if (!$report->getVisitsCare()) { //allow validation with answers all skipped
             $report->setVisitsCare(new EntityDir\Report\VisitsCare());
-        }
-
-        return [
-            'report' => $report,
-            'validator' => new VisitsCareValidator($report->getVisitsCare()),
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/visits-care/summary-overview", name="visits_care_summary_overview")
-     * @Template()
-     */
-    public function summaryOverviewAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if (!$report->getVisitsCare()) {
-            return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
         return [

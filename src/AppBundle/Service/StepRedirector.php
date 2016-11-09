@@ -25,11 +25,8 @@ class StepRedirector
     /**
      * @var string
      */
-    private $routeSummaryOverview;
-    /**
-     * @var string
-     */
-    private $routeSummaryCheck;
+    private $routeSummary;
+
     /**
      * @var string
      */
@@ -76,8 +73,7 @@ class StepRedirector
     public function setRoutePrefix($routePrefix)
     {
         $this->routeStartPage = rtrim($routePrefix, '_');
-        $this->routeSummaryCheck = rtrim($routePrefix, '_') . '_summary_check';
-        $this->routeSummaryOverview = rtrim($routePrefix, '_') . '_summary_overview';
+        $this->routeSummary = rtrim($routePrefix, '_') . '_summary';
         $this->routeStep = rtrim($routePrefix, '_') . '_step';
 
         return $this;
@@ -139,18 +135,13 @@ class StepRedirector
     public function getRedirectLinkAfterSaving()
     {
         // return to summary if coming from there, or it's the last step
-        if ($this->fromPage === 'overview') {
-            return $this->generateUrl($this->routeSummaryOverview, [
-                'stepEdited' => $this->currentStep
-            ]);
-        }
-        if ($this->fromPage === 'check') {
-            return $this->generateUrl($this->routeSummaryCheck, [
+        if ($this->fromPage === 'summary') {
+            return $this->generateUrl($this->routeSummary, [
                 'stepEdited' => $this->currentStep
             ]);
         }
         if ($this->currentStep === $this->totalSteps) {
-            return $this->generateUrl($this->routeSummaryCheck);
+            return $this->generateUrl($this->routeSummary);
         }
 
         return $this->generateUrl($this->routeStep, [
@@ -160,10 +151,8 @@ class StepRedirector
 
     public function getBackLink()
     {
-        if ($this->fromPage === 'overview') {
-            return $this->generateUrl($this->routeSummaryOverview);
-        } else if ($this->fromPage === 'check') {
-            return $this->generateUrl($this->routeSummaryCheck);
+        if ($this->fromPage === 'summary') {
+            return $this->generateUrl($this->routeSummary);
         } else if ($this->currentStep == 1) {
             return $this->generateUrl($this->routeStartPage);
         }
@@ -177,7 +166,7 @@ class StepRedirector
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {
-            return $this->generateUrl($this->routeSummaryCheck, [
+            return $this->generateUrl($this->routeSummary, [
                 'from' => 'skip-step'
             ]);
         }
