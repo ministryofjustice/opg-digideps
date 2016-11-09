@@ -15,8 +15,25 @@
 {% block pageContent %}
 
     <p class="text">
-        {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}
+        {# {{ 'summaryPage.pageSectionDescription' | trans(transOptions) }} #}
+        In this section, we ask you about Sally's care and contact with you and other people.
     </p>
+
+    <h2 class="heading-small">We’ve listed your saved answers below.</h2>
+
+    <p class="text">Check they're correct and edit them where necessary.</p>
+
+    {# Show first time around if you've skipped any questions #}
+    <div class="page-section-warning text" id="cannot-submit-warning">
+        <span class="icon icon__notification"></span>
+        <p>Don’t worry if you’ve had to skip some questions. We’ll remind you to complete them next time you log in.</p>
+    </div>
+
+    {# Show when returning and you have skipped questions #}
+    <div class="page-section-warning text" id="cannot-submit-warning">
+        <span class="icon icon__notification"></span>
+        <p>Can you answer the missing questions? You won’t be able to submit your opening deputy report until it’s complete.</p>
+    </div>
 
     {#<a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>#}
 
