@@ -118,7 +118,18 @@ abstract class Asset
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getValueTotal()
     {
         return $this->value;
     }

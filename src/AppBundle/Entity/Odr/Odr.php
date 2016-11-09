@@ -196,6 +196,8 @@ class Odr
     public function setBankAccounts($bankAccounts)
     {
         $this->bankAccounts = $bankAccounts;
+
+        return $this;
     }
 
     /**
@@ -388,7 +390,7 @@ class Odr
     }
 
     /**
-     * @return array $assets
+     * @return Asset[]
      */
     public function getAssets()
     {
@@ -479,7 +481,7 @@ class Odr
     {
         $ret = 0;
         foreach ($this->getAssets() as $asset) {
-            $ret += $asset->getValue();
+            $ret += $asset->getValueTotal();
         }
 
         return $ret;

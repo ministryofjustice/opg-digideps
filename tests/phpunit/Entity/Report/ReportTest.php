@@ -42,27 +42,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider getCountValidTotalsProvider
-     * @test
-     */
-    public function getCountValidTotals(array $moneyIn, array $moneyOut, $expected)
-    {
-        $this->markTestSkipped('copied from accountest. replicate logic with new transations');
-        $mi = [];
-        foreach ($moneyIn as $id => $amount) {
-            $mi[] = new AccountTransaction($id, $amount);
-        }
-        $this->account->setMoneyIn($mi);
 
-        $mo = [];
-        foreach ($moneyOut as $id => $amount) {
-            $mo[] = new AccountTransaction($id, $amount);
-        }
-        $this->account->setMoneyOut($mo);
-
-        $this->assertEquals($expected, $this->account->getCountValidTotals());
-    }
 
     /** @test */
     public function hasMoneyInWhenThereIsMoneyIn()
@@ -163,5 +143,15 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ['+1 month', false],
             ['+1 year', false],
         ];
+    }
+
+    public function testGetAssetsTotalValue()
+    {
+        $this->report->setAssets([
+            m::mock(AssetOther::class, ['getValueTotal'=>1]),
+            m::mock(AssetProperty::class, ['getValueTotal'=>2]),
+        ]);
+
+        $this->assertEquals(3, $this->report->getAssetsTotalValue());
     }
 }

@@ -77,7 +77,7 @@ class AdController extends AbstractController
 
                 if ($e->getCode() == 423) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'login');
+                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'signin');
                 }
 
                 if ($e->getCode() == 499) {
