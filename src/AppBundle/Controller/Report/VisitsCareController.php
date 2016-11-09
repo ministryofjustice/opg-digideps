@@ -106,6 +106,7 @@ class VisitsCareController extends AbstractController
         }
 
         return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'validator' => new VisitsCareValidator($report->getVisitsCare()),
         ];

@@ -141,7 +141,7 @@ class StepRedirector
             ]);
         }
         if ($this->currentStep === $this->totalSteps) {
-            return $this->generateUrl($this->routeSummary);
+            return $this->generateUrl($this->routeSummary, ['from'=>'last-step']);
         }
 
         return $this->generateUrl($this->routeStep, [
