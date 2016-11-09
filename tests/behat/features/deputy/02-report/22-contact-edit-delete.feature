@@ -53,7 +53,6 @@ Feature: deputy / report / edit user contact
 #      And I follow "edit-contacts"
 #      And I save the page as "report-no-contact-empty"
 #      # add explanation
-#      Then the "reason_for_no_contact_reasonForNoContacts" field is expandable
 #      # empty form throws error
 #      When I fill in "reason_for_no_contact_reasonForNoContacts" with ""
 #      And I press "reason_for_no_contact_save"

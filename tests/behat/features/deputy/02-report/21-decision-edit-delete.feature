@@ -43,8 +43,6 @@ Feature:deputy / report / edit decision
       And I click on "reports, report-2016, edit-decisions"
       And I click on "decision-3-beds, delete-button"
       And I save the page as "report-no-decision-empty"
-      # add explanation
-      Then the reason_for_no_decision_reasonForNoDecisions field is expandable
       # empty form throws error
       When I fill in "reason_for_no_decision_reasonForNoDecisions" with ""
       And I press "reason_for_no_decision_save"

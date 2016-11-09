@@ -22,8 +22,6 @@ Feature: deputy / report / decisions
         And I press "decision_save"
         And the form should be invalid
         # add decision
-        Then the "decision_description" field is expandable
-        And the "decision_clientInvolvedDetails" field is expandable
         And I click on "reports,report-2016-open, edit-decisions"
         And I add the following decisions:
             | description | clientInvolved | clientInvolvedDetails |

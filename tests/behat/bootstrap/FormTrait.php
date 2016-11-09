@@ -88,18 +88,6 @@ trait FormTrait
         }
     }
 
-    /**
-     * @Then the :arg1 field should be expandable
-     * @Then the :arg1 field is expandable
-     */
-    public function expandableField($arg1)
-    {
-        $element = $this->getSession()->getPage()->find('css', 'textarea#'.$arg1.'.expanding');
-
-        if (!$element) {
-            throw new \RuntimeException('Cannot find an expanding textarea with that id: '.$arg1);
-        }
-    }
 
     /**
      * @Then /^I click on the first decision$/
