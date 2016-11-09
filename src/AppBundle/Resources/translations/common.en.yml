@@ -19,3 +19,10 @@ registrationProgressBar:
 stepPage:
    skipLink: Skip this question for now
    saveAndContinue: Save and continue
+
+summaryPage:
+   pageContent:
+     weHaveListed: We've listed your saved answers below.
+     checkCorrect: Check they're correct and edit them where necessary.
+     remindComplete: Don’t worry if you’ve had to skip some questions. We’ll remind you to complete them next time you log in.
+     canYouAnswer: Can you answer the missing questions? You won’t be able to submit your opening deputy report until it’s complete.

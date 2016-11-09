@@ -19,7 +19,8 @@ summaryPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   supportTitle: ""
-  pageSectionDescription: I'm the new summary page. edit me !
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
 
 
 # deprecated (old summary check and overview pages). delete when new summary page is implemented
