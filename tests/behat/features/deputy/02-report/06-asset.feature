@@ -34,7 +34,6 @@ Feature: deputy / report / asset with variations
             | asset_valuationDate_month |
             | asset_valuationDate_year |
         # first asset (empty date)
-        Then the "asset_description" field should be expandable
         When I add the following assets:
           | title        | value       |  description        | valuationDate |
           | Artwork    | 250000.00   |  Impressionist painting  |               |
