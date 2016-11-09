@@ -110,26 +110,4 @@ class DebtController extends AbstractController
             'report' => $report,
         ];
     }
-
-    /**
-     * @Route("/report/{reportId}/debts", name="debts_save_json")
-     * @Method("PUT")
-     */
-//    public function debtSaveJsonAction(Request $request, $reportId)
-//    {
-//        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
-//        $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $this->get('restClient')->put('report/'.$report->getId(), $form->getData(), ['debt']);
-//
-//            return JsonResponse(['success' => true]);
-//        }
-//
-//        return JsonResponse([
-//            'false' => true,
-//            'message' => (String) $form->getErrors(),
-//        ]);
-//    }
 }
