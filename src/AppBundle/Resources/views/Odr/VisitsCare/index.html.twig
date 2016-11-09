@@ -31,8 +31,7 @@
         <div class="panel panel-border-narrow">
             {{ form_input(form.planMoveNewResidenceDetails, 'planMoveNewResidenceDetails', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     </div>
@@ -50,8 +49,7 @@
         <div class="panel panel-border-narrow">
             {{ form_input(form.howOftenDoYouContactClient, 'howOftenDoYouContactClient', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     </div>
@@ -80,7 +78,7 @@
         </div>
     </div>
 
-    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required' }) }}
 
     {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
         'fieldSetClass' : 'inline care-plan',

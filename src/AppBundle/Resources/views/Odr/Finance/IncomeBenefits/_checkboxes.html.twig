@@ -24,8 +24,7 @@ categoryKey: categoryKey,
                 {% if sbSingleForm.moreDetails is defined %}
                     {{ form_input(sbSingleForm.moreDetails, '', {
                         'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(clientTrans),
-                        'formGroupClass': '',
-                        'inputClass': 'expanding '
+                        'formGroupClass': ''
                     }) }}
                 {% endif %}
 

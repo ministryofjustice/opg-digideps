@@ -88,8 +88,7 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.balanceMismatchExplanation, 'balance.bad.formtitle', {
-        'labelText': 'balance.bad.formtitle.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format}),
-        'inputClass': 'expanding'
+        'labelText': 'balance.bad.formtitle.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format})
     }) }}
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {

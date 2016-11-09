@@ -40,7 +40,7 @@
                             {{ form_input(formTransactions[id].moreDetails, '', {
                                 'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans({'%client%': report.client.firstname}, 'report-transactions'),
                                 'formGroupClass': 'form-group-combo-description',
-                                'inputClass': 'expanding transaction-more-details'
+                                'inputClass': 'transaction-more-details'
                             }) }}
                         {% endif %}
 

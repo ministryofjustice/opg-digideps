@@ -19,8 +19,7 @@ categoryKey: 'damages',
         <div id="expect-compensation-damages-details" class="hidden-detail">
             {{ form_input(form.expectCompensationDamagesDetails, 'damages.expectCompensationDamagesDetails', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     {% endblock %}
