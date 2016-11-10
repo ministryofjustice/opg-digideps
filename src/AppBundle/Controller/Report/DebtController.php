@@ -38,11 +38,9 @@ class DebtController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['report', 'debt']);
         $form = $this->createForm(new FormDir\Report\DebtsExistType(), $report);
         $form->handleRequest($request);
-        $fromPage = $request->get('from');
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $reportId, $report, ['debt']);
-
             if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
@@ -51,7 +49,7 @@ class DebtController extends AbstractController
         }
 
         $backLink = $this->generateUrl('debts', ['reportId'=>$reportId]);
-        if ($fromPage == 'summary') {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('debts_summary', ['reportId'=>$reportId]);
         }
 

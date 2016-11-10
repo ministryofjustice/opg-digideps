@@ -24,8 +24,8 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
 
-        if (count($report->getContacts()) > 0) {
-            return $this->redirectToRoute('contacts_list', ['reportId' => $reportId]);
+        if (count($report->getContacts()) > 0 || !empty($report->getReasonForNoContacts())) {
+            return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -40,25 +40,29 @@ class ContactController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
-        // if contacts are already added, skip to next step (=add)
-        if (count($report->getContacts()) > 0) {
-            return $this->redirectToRoute('contact_add', ['reportId' => $reportId]);
-        }
-
         $form = $this->createForm(new FormDir\Report\ContactExistType(), $report);
         $form->handleRequest($request);
+        if ($report->getReasonForNoContacts()) {
+            $form->get('exist')->setData('no');
+        }
 
         if ($form->isValid()) {
             switch ($form['exist']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contact_edit', ['reportId' => $reportId]);
                 case 'no':
                     $this->get('restClient')->put('report/' . $reportId, $report, ['reasonForNoContacts']);
-                    return $this->redirectToRoute('contacts_list', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
             }
         }
 
+        $backLink = $this->generateUrl('contacts', ['reportId'=>$reportId]);
+        if ( $request->get('from') == 'summary') {
+            $backLink = $this->generateUrl('contacts_summary', ['reportId'=>$reportId]);
+        }
+
         return [
+            'backLink' => $backLink,
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -71,8 +75,8 @@ class ContactController extends AbstractController
     public function addAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId);
+            $contact = new EntityDir\Report\Contact();
 
-        $contact = new EntityDir\Report\Contact();
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
         $form->handleRequest($request);
 
@@ -81,9 +85,38 @@ class ContactController extends AbstractController
             $data->setReport($report);
 
             // update contact. The API will also delete reason for no contact
-            $this->getRestClient()->post('report/contact', $data, ['contact', 'report-id']);
+                $this->getRestClient()->post('report/contact', $data, ['contact', 'report-id']);
+                return $this->redirect($this->generateUrl('contact_add_another', ['reportId' => $reportId]));
 
-            return $this->redirect($this->generateUrl('contact_add_another', ['reportId' => $reportId]));
+
+        }
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contact_edit")
+     * @Template("AppBundle:Report/Contact:add.html.twig")
+     */
+    public function editAction(Request $request, $reportId, $contactId = null)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
+        $contact->setReport($report);
+
+        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $data->setReport($report);
+
+            $this->getRestClient()->put('report/contact', $data);
+            return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
+
         }
 
         return [
@@ -106,9 +139,9 @@ class ContactController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contact_edit', ['reportId' => $reportId]);
                 case 'no':
-                    return $this->redirectToRoute('contacts_list', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
             }
         }
 
@@ -120,14 +153,14 @@ class ContactController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/contacts/list", name="contacts_list")
+     * @Route("/report/{reportId}/contacts/list", name="contacts_summary")
      * @Template()
      *
      * @param int $reportId
      *
      * @return array
      */
-    public function listAction($reportId)
+    public function summaryAction($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
         $contacts = $report->getContacts();
@@ -138,33 +171,6 @@ class ContactController extends AbstractController
         ];
     }
 
-
-    /**
-     * @Route("/report/{reportId}/contacts/{id}/edit", name="contact_edit")
-     * @Template("AppBundle:Report/Contact:edit.html.twig")
-     */
-    public function editAction(Request $request, $reportId, $id)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
-
-        $contact = $this->getRestClient()->get('report/contact/' . $id, 'Report\\Contact');
-        $contact->setReport($report);
-
-        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $this->getRestClient()->put('report/contact', $data);
-
-            return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
 
     /**
      * @Route("/report/{reportId}/contacts/{id}/delete", name="contact_delete")
@@ -179,66 +185,4 @@ class ContactController extends AbstractController
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
     }
-
-    /**
-     * @Route("/report/{reportId}/contacts/delete-nonereason", name="contact_nonereason_delete")
-     */
-//    public function deleteReasonAction($reportId)
-//    {
-//        //just do some checks to make sure user is allowed to update this report
-//        $report = $this->getReport($reportId);
-//
-//        if (!empty($report)) {
-//            $report->setReasonForNoContacts(null);
-//            $this->get('restClient')->put('report/'.$report->getId(), $report, ['reasonForNoContacts']);
-//        }
-//
-//        return $this->redirect($this->generateUrl('contacts', ['reportId' => $report->getId()]));
-//    }
-
-    /**
-     * @Route("/report/{reportId}/contacts/nonereason", name="contact_edits_nonereason")
-     * @Template("AppBundle:Report/Contact:edit_none_reason.html.twig")
-     */
-//    public function noneReasonAction(Request $request, $reportId)
-//    {
-//        $report = $this->getReportIfReportNotSubmitted($reportId);
-//
-//        $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report);
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $data = $form->getData();
-//            $this->get('restClient')->put('report/'.$reportId, $data, ['reasonForNoContacts']);
-//
-//            return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
-//        }
-//
-//        return [
-//            'form' => $form->createView(),
-//            'report' => $report,
-//        ];
-//    }
-
-    /**
-     * Sub controller action called when the no contact form is embedded in another page.
-     *
-     * @Template("AppBundle:Report\Contact:_none_reason_form.html.twig")
-     */
-//    public function _noneReasonFormAction(Request $request, $reportId)
-//    {
-//        $actionUrl = $this->generateUrl('contact_edits_nonereason', ['reportId' => $reportId]);
-//        $report = $this->getReportIfReportNotSubmitted($reportId);
-//        $form = $this->createForm(new FormDir\Report\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
-//        $form->handleRequest($request);
-//
-//        if ($form->isValid()) {
-//            $this->get('restClient')->put('report/'.$reportId, $form->getData(), ['reasonForNoContacts']);
-//        }
-//
-//        return [
-//            'form' => $form->createView(),
-//            'report' => $report,
-//        ];
-//    }
 }

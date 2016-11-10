@@ -28,7 +28,10 @@
         </a>
     </div>
 
-
+    {% if report.reasonForNoContacts %}
+        <p>Reason for no contacts: {{ report.reasonForNoContacts }}
+            [<a href="{{ path('contacts_exist', { 'reportId': report.id}) }}">edit</a>]</p>
+    {% endif %}
     List of contacts
     [ List of contacts ... ]
     [ "Has anyone helped you make any significant decisions for Sally during this reporting period?"  displayed first  ]

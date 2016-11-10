@@ -9,7 +9,7 @@
 
     {% block pageBody %}
 
-        <a href="{{ path('contacts_list', {'reportId': report.id}) }}">Back</a>
+        <a href="{{ path('contacts_summary', {'reportId': report.id}) }}">Back</a>
 
         {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
             'translationDomain': translationDomain,
