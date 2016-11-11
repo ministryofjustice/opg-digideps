@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'listPage.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbs(report) }}
@@ -24,7 +24,7 @@
 
     <div class="form-group button-bar">
         <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="button ">
-            {{ 'listPage.addButton' | trans }}
+            {{ 'summaryPage.addButton' | trans }}
         </a>
     </div>
 
@@ -32,14 +32,10 @@
         <p>Reason for no contacts: {{ report.reasonForNoContacts }}
             [<a href="{{ path('contacts_exist', { 'reportId': report.id}) }}">edit</a>]</p>
     {% endif %}
-    List of contacts
-    [ List of contacts ... ]
-    [ "Has anyone helped you make any significant decisions for Sally during this reporting period?"  displayed first  ]
 
-    {% if contacts is not empty %}
+    {% if report.contacts is not empty %}
         {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
         'report': report,
-        'contacts': contacts,
         'transDomain': translationDomain
         } %}
     {% else %}

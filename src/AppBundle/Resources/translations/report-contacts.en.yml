@@ -39,10 +39,13 @@ editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageSectionTitle: Edit contact
 
-listPage:
+summaryPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageSectionTitle: Contacts
   addButton: Add a contact
+  edit: Edit
+  relationship: Relationship to %client%
+  reasonForContact: Reason for contact
 
 form:
   contactName:

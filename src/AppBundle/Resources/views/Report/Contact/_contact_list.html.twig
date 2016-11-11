@@ -1,48 +1,43 @@
+{% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 
+{#
 
-<ul id="contact-list" class="behat-region-list-contacts report-list report-list--contacts">
-    {% for contact in contacts %}
-        <li itemscope itemtype="http://schema.org/Person" class="report-list__item" id="edit-{{ contact.id }}">
-            <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
-                <a id="edit-{{ contact.id }}-link" href="{{ url('contact_edit', { 'reportId': report.id, 'id': contact.id }) }}#pageBody"
-                   class="js-report-list__item-edit-link report-list__item-edit-link behat-link-contact-n{{loop.index}}">{{ 'view_contact.edit'| trans }}</a>
-            </div>
-            <dl class="report-list__item-fields">
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term">{{ 'view_contact.relationship' | trans({'%client%': report.client.firstname}, translationDomain) }}</dt>
-                    <dd class="report-list__item-fields-description">{{ contact.relationship }}</dd>
-                </div>
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'view_contact.reason' | trans }}</dt>
-                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ contact.explanation }}</dd>
-                </div>
-                {# display address row only if either address or postcode is set #}
-                {%  if contact.address or contact.postcode %}
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term">{{ 'view_contact.address' | trans }}</dt>
-                    <dd class="report-list__item-fields-description" itemprop="address" itemscope
-                        itemtype="http://schema.org/PostalAddress">
-                        {% if contact.address %}
-                            <div itemprop="streetAddress">{{ contact.address }}</div>
-                        {% endif %}
-                        {% if contact.address2 %}
-                            <div itemprop="addressLocality">{{ contact.address2 }}</div>
-                        {% endif %}
-                        {% if contact.county %}
-                            <div itemprop="addressRegion">{{ contact.county }}</div>
-                        {% endif %}
-                        {% if contact.postcode %}
-                            <div itemprop="postalCode">{{ contact.postcode }}</div>
-                        {% endif %}
-                        {% if contact.country %}
-                            <div itemprop="addressCountry">{{ contact.country | country_name }}</div>
-                        {% endif %}
-                    </dd>
-                </div>
-                {% endif %}
-            </dl>
+@Biggs I've just added quick HTML to present info, start from scratch using the protype
+http://hzaiwi.axshare.com/#g=1&p=contacts_-_summary_check
+it doesn't look updated, it should look like bank accounts list
 
-        </li>
+you can skip translations, I'll move text into them later
+note: there is a freetext question when clicking "no" at the "Exist" step, not in the prototype
+
+#}
+
+<hr>
+{# "exist" question #}
+{{ 'existPage.form.exist.label' | trans(transOptions)  }}
+
+{% if report.contacts | length > 0 %}
+    Yes <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
+{% else %}
+    Yes <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
+    <hr/>
+    Reason for no contacts:
+    <p>{{ report.reasonForNoContacts }}</p>
+{% endif %}
+
+<hr/>
+
+{% if report.contacts | length > 0 %}
+    <h2>List of Contacts....</h2>
+    {% for contact in report.contacts %}
+        <hr />
+        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody"
+           class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
+        {{ contact.contactName }}
+        {{ contact.relationship }}
+        {{ contact.address }} {{ contact.address2 }}
+        {{ contact.county }}
+        {{ contact.postcode }}
+        {{ contact.country | country_name }}
     {% endfor %}
-</ul>
+{% endif %}

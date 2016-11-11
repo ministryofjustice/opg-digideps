@@ -1,25 +1,30 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageBody %}
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
 
-        <a href="{{ path('contacts_summary', {'reportId': report.id}) }}">Back</a>
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
 
-        {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
-            'translationDomain': translationDomain,
-            'showAddForm': true,
-            'form': form
-        } %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
 
-    {% endblock %}
+{% block pageContent %}
 
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
-    {% endblock %}
-{% endembed %}
+    <p class="text">As someone has helped you make decisions for Sally we need to know their details. Start by adding
+        the first contact for Sally. You can add other contacts later.</p>
+
+    {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'showAddForm': true,
+    'form': form
+    } %}
+{% endblock %}

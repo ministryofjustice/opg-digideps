@@ -19,6 +19,9 @@ registrationProgressBar:
 existsPage:
   backLink: Back
 
+addPage:
+  backLink: Back
+
 editPage:
   backLink: Back
 

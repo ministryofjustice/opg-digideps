@@ -13,9 +13,11 @@
     {{ macros.breadcrumbs(report) }}
 {% endblock %}
 
-{% block pageContent %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'addPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
 
-    <a href="{{ path('contacts_summary', {'reportId': report.id}) }}" class="link-back">Back</a>
+{% block pageContent %}
 
     <p class="text">As someone has helped you make decisions for Sally we need to know their details. Start by adding
         the first contact for Sally. You can add other contacts later.</p>

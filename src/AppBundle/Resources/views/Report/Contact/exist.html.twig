@@ -13,13 +13,15 @@
     {{ macros.breadcrumbs(report) }}
 {% endblock %}
 
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
 {% block pageContent %}
 
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
-
-    <a href="{{ path('contacts', {'reportId': report.id}) }}" class="link-back">Back</a>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
