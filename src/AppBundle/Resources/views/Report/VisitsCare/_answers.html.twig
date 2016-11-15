@@ -2,25 +2,9 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% if validator.countMissing() > 0 %}
-<div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
-    <h1 class="heading-medium error-summary-heading" id="error-summary-heading">
-        {{ 'summaryPage.validation.pleaseAnswerAllQuestions' | trans }}
-    </h1>
-    <span class="error-message">
-        {{ 'summaryPage.validation.sectionsNeedAnswers' | transchoice(validator.countMissing()) }}
-    </span>
-</div>
-{% endif %}
-
-{% if validator.countMissing() > 0 %}
-
-{% endif %}
-
 <table class="check-your-answers push--bottom">
     <thead>
         <tr>
-            {# @biggs see this for styling http://hzaiwi.axshare.com/#g=1&p=visits_and_care_-_edit___summary #}
             <th class="border--thicker">Question</th>
             <th class="border--thicker">Answer</th>
             <th class="border--thicker">

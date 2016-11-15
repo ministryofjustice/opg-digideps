@@ -23,18 +23,22 @@
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {% if report.visitsCare.missingVisitsCareInfo() and comingFromLastStep%}
-        <div class="page-section-warning text" id="cannot-submit-warning">
+        <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
             <span class="icon icon__notification"></span>
             <p>{{ 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common') }}</p>
         </div>
     {% endif %}
 
     {% if report.visitsCare.missingVisitsCareInfo() and not comingFromLastStep%}
-    <div class="page-section-warning text" id="cannot-submit-warning">
+    <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
         <span class="icon icon__notification"></span>
         <p>{{ 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common') }}</p>
     </div>
     {% endif %}
+
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
+    </p>
 
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 
