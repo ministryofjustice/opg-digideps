@@ -11,7 +11,7 @@
 
     var ExpandingMoreDetails = function (containerSelector) {
         var container = $(containerSelector);
-        var inputBox = container.find('input.transaction-value');
+        var inputBox = container.find('.js-more-info');
         var textareaGroup = container.find('textarea.transaction-more-details').parents('.form-group');
 
         // more details

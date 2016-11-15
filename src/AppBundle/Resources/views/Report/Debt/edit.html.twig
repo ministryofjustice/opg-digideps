@@ -8,10 +8,7 @@
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
-
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
@@ -19,37 +16,33 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-medium flush--top">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
-    {{ form_errors_list(form) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'debts-form' }}) }}
+    {% for debt in form.debts %}
+        <div class="{{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
+            {{ form_row(debt.debtTypeId) }}
+            {{ form_input(debt.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control__number js-more-info js-format-currency',
+                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                'formGroupClass': ' form-group-value'
+            }) }}
 
-    <div id="debts-sections-list">
-                {% for debt in form.debts %}
-                    <div class="{{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
-                        {{ form_row(debt.debtTypeId) }}
-                        {{ form_input(debt.amount, 'amount', {
-                            'inputPrefix' : '£',
-                            'inputClass' : 'form-control__number transaction-value js-format-currency',
-                            'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
-                            'formGroupClass': ' form-group-value'
-                        }) }}
-
-                        {% if debt.moreDetails is defined %}
-                            {{ form_input(debt.moreDetails, 'moreDetails', {
-                                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                                'formGroupClass': 'form-group-combo-description',
-                                'inputClass': ' transaction-more-details'
-                            }) }}
-                        {% endif %}
-                    </div>
-                {% endfor %}
-                {#<div class="sub-total ">#}
-                    {#Total debts#}
-                    {#:£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>#}
-                {#</div>#}
-    </div>
+            {% if debt.moreDetails is defined %}
+                {{ form_input(debt.moreDetails, 'moreDetails', {
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                    'formGroupClass': 'panel panel-border-narrow form-group-combo-description',
+                    'inputClass': ' transaction-more-details'
+                }) }}
+            {% endif %}
+        </div>
+    {% endfor %}
+    {#<div class="sub-total ">#}
+        {#Total debts#}
+        {#:£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>#}
+    {#</div>#}
 
     <script type="text/javascript">
         $(document).ready(function () {

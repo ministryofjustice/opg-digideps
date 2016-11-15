@@ -1,6 +1,6 @@
 
 {% macro breadcrumbs(report) %}
-	<div class="breadcrumbs">
+	<div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
                 <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
@@ -23,5 +23,5 @@
 {% endmacro %}
 
 {% macro linkBackStep(backLink,stepPage) %}
-    <a href="{{ backLink }}" class="link-back push--bottom behat-link-step-back">{{ stepPage }}</a>
+    <a href="{{ backLink }}" class="link-back behat-link-step-back">{{ stepPage }}</a>
 {% endmacro %}

@@ -8,10 +8,7 @@
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
-
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
@@ -24,11 +21,11 @@
     <div class="form-section push--bottom">
         {{ form_checkbox_group(form.hasDebts, 'existPage.form.exist', {
             'fieldSetClass' : 'inline contact-exist',
-            'legendClass' : 'heading-medium text',
+            'legendClass' : 'form-label-bold text',
             'legendText' : 'existPage.form.exist.label' | trans(transOptions, translationDomain),
             'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'}
             ],
             'formGroupClass': 'flush--bottom'
         }) }}

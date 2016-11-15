@@ -11,14 +11,14 @@ existPage:
   pageSectionTitle: Debts
   form:
     exist:
-      label: Does %client% has any debts ?
+      label: Does %client% have any debts ?
     save:
       label: Save and continue
 
 editPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
   pageSectionTitle: Debts
-  pageSectionDescription: Please give us more detail about these debts.
+  pageSectionDescription: Please tell us more about %client%'s debts.
 
 summaryPage:
   moreAbout: more about %client%'s other debts of %amount%
@@ -26,7 +26,7 @@ summaryPage:
 form:
   entries:
     care-fees:
-      label: Care fees (not charged to property)
+      label: Outstanding care home fees
     credit-cards:
       label: Credit cards
     loans:
