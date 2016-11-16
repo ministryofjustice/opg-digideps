@@ -1,5 +1,5 @@
 page:
-  htmlTitle: "Opening deputyship report - Assets | GOV.UK"
+  htmlTitle: "New deputyship report - Assets | GOV.UK"
   pageSectionTitle: "%client%'s assets"
   pageSectionDescription: "Add details of any property, valuables or investments that %client% owns."
   pageSectionWarning: ""
@@ -7,7 +7,7 @@ page:
   subSectionAssetComplete:
     other: "Add an asset: %title%"
     property: Add a property
-  subSectionTitleEdit: 
+  subSectionTitleEdit:
     other: "Edit this asset"
     property: Edit this property
 form:
@@ -52,7 +52,7 @@ form:
       label: What is the rental income each month?
 
 navLink: Assets
-           
+
 title:
     label: What sort of asset is it?
     hint: ""
@@ -68,7 +68,7 @@ valuationDate:
     label: Valuation date
 next:
     label: Next
-editLink: 
+editLink:
     other: "Edit this asset"
     property: "Edit this property"
 

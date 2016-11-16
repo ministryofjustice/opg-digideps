@@ -1,6 +1,6 @@
 page:
   title: Your reports
-  htmlTitle: Opening deputyship report - Your reports | GOV.UK
+  htmlTitle: New deputyship report - Your reports | GOV.UK
 
 
 odr:
@@ -40,7 +40,7 @@ history:
     download: Download
     view: View
   odr:
-   title: Opening deputyship report
+   title: New deputyship report
    reportingPeriod: Start of deputyship
    download: Download
    view: View
