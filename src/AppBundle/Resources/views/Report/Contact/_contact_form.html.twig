@@ -1,4 +1,4 @@
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {{ form_input(form.contactName, 'form.contactName') }}
     {{ form_input(form.relationship, 'form.relationship', {
@@ -11,8 +11,6 @@
     {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control__postcode' }) }}
     {{ form_select(form.country, 'form.country') }}
 
-    <div class="save-bar button-bar">
-        {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
-    </div>
+    {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
 
 {{ form_end(form) }}

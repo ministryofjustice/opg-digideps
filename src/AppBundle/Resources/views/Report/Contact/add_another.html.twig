@@ -8,27 +8,22 @@
 
 {% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
-    {#<a href="{{ path('contacts_summary', {'reportId': report.id}) }}">Back</a>#}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section">
-        {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
-            'fieldSetClass' : 'inline',
-            'legendClass' : 'form-label',
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
-        }) }}
-    </div>
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label-bold',
+        'items': [
+        {'labelClass': 'block-label'},
+        {'labelClass': 'block-label'}
+        ]
+    }) }}
 
     {{ form_submit(form.save,'addAnotherPage.form.save') }}
 

@@ -14,7 +14,7 @@ existPage:
   pageSectionTitle: Contacts
   form:
     exist:
-      label: Has anyone helped you make any significant decisions for Sally during this reporting period?
+      label: Has anyone helped you make any significant decisions for %client% during this reporting period?
       hint: For example, this could be a GP, solicitor, accountant, family member or care worker
     reasonForNoContacts:
       label: Please give us an explanation
@@ -34,6 +34,10 @@ addAnotherPage:
 addPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageSectionTitle: Add a contact
+  supportTitle: Contacts
+  pageSectionDescription: |
+    As someone has helped you make decisions for %client% we need to know their details.
+    Start by adding the first contact for %client%. You can add other contacts later.
 
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
@@ -44,7 +48,7 @@ summaryPage:
   pageSectionTitle: Contacts
   addButton: Add a contact
   edit: Edit
-  relationship: Relationship to %client%
+  relationship: Their relationship to %client%
   reasonForContact: Reason for contact
 
 form:
@@ -52,7 +56,7 @@ form:
       label: Contact name
       hint: ''
   relationship:
-      label: Relationship to %client%
+      label: Their relationship to %client%
       hint: ''
   explanation:
       label: Reason for contact

@@ -8,10 +8,7 @@
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
-
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
@@ -19,32 +16,33 @@
 
 {% block pageContent %}
 
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
-    {% endblock %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <div class="form-section push--bottom">
-        {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
-            'fieldSetClass' : 'inline contact-exist',
-            'legendClass' : 'heading-medium text',
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ],
-            'formGroupClass': 'flush--bottom'
-        }) }}
-
-        <div id="reasonForNoContacts-textarea" class="hidden-detail">
-            <div class="panel panel-border-narrow">
-                {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
-                    'labelClass': 'required',
-                    'labelParameters': { '%client%': report.client.firstname }
+        <div class="form-section push--bottom">
+            {# @Elvis
+                Need to implement .error here like on visits and care step 1:
+                {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}
+            #}
+            <div class="form-group flush--bottom">
+                {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold text',
+                    'items': [
+                    {'labelClass': 'block-label'},
+                    {'labelClass': 'block-label', 'dataTarget': 'reason-for-no-contact'}
+                    ],
+                    'formGroupClass': 'flush--bottom'
                 }) }}
+
+                <div id="reason-for-no-contact" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
             </div>
         </div>
-    </div>
 
     {{ form_submit(form.save,'existPage.form.save') }}
 
@@ -52,11 +50,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            new opg.RadioHide({
-                radio: '.contact-exist input[type=radio]',
-                content: '#reasonForNoContacts-textarea',
-                hideOnYes: true
-            });
+            var showHideContent = new GOVUK.ShowHideContent();
+            showHideContent.init();
         });
     </script>
 

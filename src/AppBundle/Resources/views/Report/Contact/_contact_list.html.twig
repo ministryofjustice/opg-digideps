@@ -12,23 +12,63 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
 
 #}
 
-<hr>
-{# "exist" question #}
-{{ 'existPage.form.exist.label' | trans(transOptions)  }}
+<table class="check-your-answers push-double--bottom">
+    <thead>
+        <tr>
+            <th class="border--thicker">Question</th>
+            <th class="border--thicker">Answer</th>
+            <th class="border--thicker">
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {{ 'existPage.form.exist.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {% if report.contacts | length > 0 %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+                {# {{ report.hasDebts == 'yes' ? 'Yes': 'No' }} #}
+            </td>
+            <td class="change-answer">
+                <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.reasonForNoContacts %}
+            <tr>
+                <td>Reason for no contacts</td>
+                <td>{{ report.reasonForNoContacts }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
 
 {% if report.contacts | length > 0 %}
-    Yes <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
-{% else %}
-    Yes <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
-    <hr/>
-    Reason for no contacts:
-    <p>{{ report.reasonForNoContacts }}</p>
+    <div class="border--thicker">
+        <div class="grid-row">
+            <div class="column-half">
+                <h2 class="heading-medium flush--ends">List of contacts</h2>
+            </div>
+            <div class="column-half text--right">
+                <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </a>
+            </div>
+        </div>
+    </div>
 {% endif %}
 
-<hr/>
-
 {% if report.contacts | length > 0 %}
-    <h2>List of Contacts....</h2>
+
     {% for contact in report.contacts %}
         <hr />
         <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody"
