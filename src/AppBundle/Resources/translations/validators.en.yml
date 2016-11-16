@@ -302,7 +302,7 @@ feedbackAfterReport:
         notEmpty: Please selection an option
 
 odr:
-  agree: In order to submit your opening deputy report, you must agree to the statement above
+  agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
       notBlank: Select one option
   agreedBehalfDeputyExplanation:
