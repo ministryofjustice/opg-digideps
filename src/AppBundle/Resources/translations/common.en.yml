@@ -3,7 +3,7 @@ lastLoggedIn:
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
   hoursAgo: "{1} about one hour ago | ]1,Inf] about %count% hours ago"
   exactDate: "%date%"
-  
+
 back.label: Back to deputy report
 
 registrationProgressBar:
@@ -34,4 +34,4 @@ summaryPage:
      weHaveListed: We've listed your saved answers below.
      checkCorrect: Check they're correct and edit them where necessary.
      remindComplete: Don’t worry if you’ve had to skip some questions. We’ll remind you to complete them next time you log in.
-     canYouAnswer: Can you answer the missing questions? You won’t be able to submit your opening deputy report until it’s complete.
+     canYouAnswer: Can you answer the missing questions? You won’t be able to submit your new deputy report until it’s complete.
