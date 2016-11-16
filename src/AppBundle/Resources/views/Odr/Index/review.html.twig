@@ -6,7 +6,7 @@
         {% if odrStatus.isReadyToSubmit %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship report',
+            'previousLabel': 'Edit new deputy report',
             'nextLink': path("odr_declaration"),
             'nextLabel': 'Sign and submit',
             'position': position,
@@ -15,7 +15,7 @@
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit Opening deputyship report',
+            'previousLabel': 'Edit new deputy report',
             'position': position,
             } %}
         {% endif %}
@@ -31,7 +31,7 @@
         </nav>
     {% endif %}
 
-    <h1 class="heading-large">Review Opening deputyship report</h1>
+    <h1 class="heading-large">Review new deputy report</h1>
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
     <a name="pageBody"></a>

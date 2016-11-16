@@ -310,16 +310,16 @@ feedbackAfterReport:
         notEmpty: Please selection an option
 
 odr:
-  agree: In order to submit your opening deputy report, you must agree to the statement above
+  agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
       notBlank: Select one option
   agreedBehalfDeputyExplanation:
       notBlank: Give us more information about why you are not signing on everyone's behalf
   submissionExceptions:
-      due: Opening deputy report not due
-      submitted: Opening deputy report not submitted
-      reviewedAndChecked: Opening deputy report not reviewed and checked
-      readyForSubmission: Opening deputy report not ready for submission
+      due: New deputy report not due
+      submitted: New deputy report not submitted
+      reviewedAndChecked: New deputy report not reviewed and checked
+      readyForSubmission: New deputy report not ready for submission
   visitsCare:
       planMoveNewResidence:
           notBlank: Choose yes or no
