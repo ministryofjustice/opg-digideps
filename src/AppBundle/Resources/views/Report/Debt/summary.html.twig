@@ -8,58 +8,118 @@
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right">Return to Report Overview</a>
+    <p class="text">
+         {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
+    </p>
 
-    <table class="check-your-answers">
-        <tr>
-            <td>
-                {{ 'existPage.form.exist.label' | trans(transOptions) }}
-                {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
-            </td>
-            <td>
-                <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
-            </td>
-        </tr>
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
+    </p>
+
+    <table class="check-your-answers push-double--bottom">
+        <thead>
+            <tr>
+                <th class="border--thicker">Question</th>
+                <th class="border--thicker">Answer</th>
+                <th class="border--thicker">
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {{ 'existPage.form.exist.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
+                </td>
+            </tr>
+        </tbody>
 
     </table>
 
     {% if report.hasDebts == 'yes' %}
+
+        <div class="border--thicker">
+            <div class="grid-row">
+                <div class="column-half">
+                    <h2 class="heading-medium flush--ends">List of debts</h2>
+                </div>
+                <div class="column-half text--right">
+                    <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small">Edit</a>
+                </div>
+            </div>
+        </div>
+
         <table class="check-your-answers">
             <thead>
-            <tr>
-                <th>List of debts</th>
-                <th><a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a></th>
-            </tr>
-            </thead>
-            <thead>
-            <tr>
-                <th>Description</th>
-                <th>Amount</th>
-            </tr>
+                <tr>
+                    <th>Description</th>
+                    <th class="numeric">Amount</th>
+                </tr>
             </thead>
             <tbody>
             {% for debt in report.debts %}
                 <tr>
                     <td> {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}</td>
-                    <td>£ {{ debt.amount }}</td>
+                    <td class="numeric-small">£{{ debt.amount }}</td>
                 </tr>
             {% endfor %}
-            {% set debtOther = report.getDebtById('other') %}
-            {% if debtOther.moreDetails %}
-                <tr>
-                    <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
-                    <td>{{ debtOther.moreDetails | nl2br }}</td>
-                </tr>
-            {% endif %}
+            <tr>
+                <td class="no-border">
+                    <span class="bold-small">Total amount</span>
+                </td>
+                <td class="no-border text--right">
+                    <span class="bold-small">£7,800.00</span>
+                </td>
+            </tr>
             </tbody>
         </table>
+
+        {% set debtOther = report.getDebtById('other') %}
+        {% if debtOther.moreDetails %}
+            <table class="check-your-answers push--top">
+                <thead>
+                    <tr>
+                        <th class="border--thicker">Question</th>
+                        <th class="border--thicker">Answer</th>
+                        <th class="border--thicker">
+                            <span class="visuallyhidden">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
+                        <td>{{ debtOther.moreDetails | nl2br }}</td>
+                        <td class="change-answer">
+                            <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
     {% endif %}
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("assets" , {'reportId': report.id }),
+    'previousLabel': 'Assets',
+    'nextLink': path("actions" , {'reportId': report.id }),
+    'nextLabel': 'Actions'
+    } %}
 
 {% endblock %}

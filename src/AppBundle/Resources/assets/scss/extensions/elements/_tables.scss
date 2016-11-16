@@ -1,0 +1,14 @@
+// Tables
+// ==========================================================================
+
+table {
+
+  // Allow a qualifying element, only table data cells should use tabular numbers
+  // scss-lint:disable QualifyingElement
+
+  // A 19px numeric option. Using -small for typographic consistency
+  td.numeric-small {
+  	@include core-19($tabular-numbers: true);
+  	text-align: right;
+  }
+}
