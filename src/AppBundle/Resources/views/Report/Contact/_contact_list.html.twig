@@ -68,16 +68,41 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
 {% endif %}
 
 {% if report.contacts | length > 0 %}
+    <table class="check-your-answers">
+        <thead>
+            <tr>
+                <th>Contact</th>
+                <th>Relationship</th>
+                <th>Reason for contact</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in report.contacts %}
+                <tr>
+                    <td>
+                        {{ contact.contactName }}<br/>
+                        <p class="font-xsmall flush--ends">
+                            {{ contact.address }}<br>
+                            {{ contact.address2 }}<br>
+                            {{ contact.county }}<br>
+                            {{ contact.postcode }}<br>
+                            {{ contact.country | country_name }}
+                        </p>
+                    </td>
+                    <td>
+                        {{ contact.relationship }}
+                    </td>
+                    <td></td>
+                    <td class="change-answer soft-half--left hard--right">
+                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="push-half--right behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="#">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    {% for contact in report.contacts %}
-        <hr />
-        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody"
-           class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
-        {{ contact.contactName }}
-        {{ contact.relationship }}
-        {{ contact.address }} {{ contact.address2 }}
-        {{ contact.county }}
-        {{ contact.postcode }}
-        {{ contact.country | country_name }}
-    {% endfor %}
 {% endif %}
