@@ -17,51 +17,25 @@ outputHeaderStyles: true
 
 
     {% block emailHTMLMessage %}
+    <p>Thank you for submitting your report for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.</p>
 
+    <p>The Office of the Public Guardian (OPG) are in the process of reviewing your report and we will contact you once this has been done. </p>
 
-      <p>Dear {{ deputyFirstName }}</p>
-       <br>
+    <p>You can review and download this report. You'll need to sign in and go to Your client to download it as a PDF.</p>
 
-
-    <p><strong>Thank you for submitting your annual deputy report</strong> for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.</p>
-
-    <p>We’re in the process of reviewing your report, and will contact you when this has been done. </p>
-     <br>
-
-     <p><strong>Download a pdf of your report
-            </strong>
-        </p>
-
-    <p>To view and download a copy of the report for your records,
-            <a href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.
-        <p>
-        <br>
-
-  <strong>What happens next</strong>
-
-    <p>If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
-
-    <p>Sign in to <a href="{{ www.gov.uk/deputyreport }}">www.gov.uk/deputyreport</a> to keep track of your deputyship decisions and spending throughout the year.</p>
-
-
+    <p>Sign into the deputy service:<br/>
+        <a href="{{ link }}">{{ link }}</a>
     </p>
 
-<p>We’ll send you a reminder about your next report nearer the due date (the anniversary of your court order).</p>
+    <p>If you're ready, you can start your report for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}. </p>
+
+    <p>Sign into the deputy service to start your next report:<br/>
+      <a href="{{ link }}">{{ link }}</a>
+    </p>
+
+<p>Don't worry if you're not ready; we'll remind you when it's time to get started.</p>
 
         <br/>
-
-        <p><strong>Need help?</p></strong>
-
-<p>This is an automated email, so please don’t reply to this address.</p>
-
-<p><strong>To contact us</strong>, email the Office of the Public Guardian at deputyshipservice@publicguardian.gsi.gov.uk, or call us on 0115 934 2700.</p>
-
-<p><strong>Sent to you by the Office of the Public Guardian</strong>
-<br> PO Box 16185
-<br> Birmingham B2 2WH
-<br> <a href="www.gov.uk/deputyreport">www.gov.uk/deputyreport</a></p>
-
-
 
 
     {% endblock %}
