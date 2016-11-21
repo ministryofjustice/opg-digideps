@@ -23,20 +23,10 @@
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
     </p>
 
-
-
-    {% if report.contacts is not empty %}
-        {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
-        'report': report,
-        'transDomain': translationDomain
-        } %}
-    {% else %}
-        {#{% if report.reasonForNoContacts is not empty %}#}
-        {#{% include 'AppBundle:Report/Contact:_none_reason_description.html.twig' with {'report': report} %}#}
-        {#{% else %}#}
-        {#<div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Report/Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>#}
-        {#{% endif %}#}
-    {% endif %}
+    {% include 'AppBundle:Report/Contact:_contact_list.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
 
     {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
 

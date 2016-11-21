@@ -25,18 +25,17 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
     <tbody>
         <tr>
             <td>
-                {{ 'existPage.form.exist.label' | trans(transOptions)  }}
+                {{ 'existPage.form.hasContacts.label' | trans(transOptions)  }}
             </td>
             <td>
-                {% if report.contacts | length > 0 %}
+                {% if report.hasContacts %}
                     Yes
                 {% else %}
                     No
                 {% endif %}
-                {# {{ report.hasDebts == 'yes' ? 'Yes': 'No' }} #}
             </td>
             <td class="change-answer">
-                <a href="{{ url('contacts_exist', { 'reportId': report.id }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ url('contacts_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
         {% if report.reasonForNoContacts %}
@@ -44,7 +43,7 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
                 <td>Reason for no contacts</td>
                 <td>{{ report.reasonForNoContacts }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}">{{ 'summaryPage.edit'| trans }}</a>
+                    <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}">{{ 'summaryPage.edit'| trans }}</a>
                 </td>
             </tr>
         {% endif %}

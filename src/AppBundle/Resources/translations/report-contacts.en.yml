@@ -13,7 +13,7 @@ existPage:
   htmlTitle: "Deputy report - add contact | GOV.UK"
   pageSectionTitle: Contacts
   form:
-    exist:
+    hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
       hint: For example, this could be a GP, solicitor, accountant, family member or care worker
     reasonForNoContacts:

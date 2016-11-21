@@ -43,12 +43,8 @@ class ContactController extends AbstractController
         $form = $this->createForm(new FormDir\Report\ContactExistType(), $report);
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() && $report->getReasonForNoContacts()) {
-            $form->get('exist')->setData('no');
-        }
-
         if ($form->isValid()) {
-            switch ($form['exist']->getData()) {
+            switch ($form['hasContacts']->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('contact_add', ['reportId' => $reportId]);
                 case 'no':
@@ -164,7 +160,7 @@ class ContactController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/contacts/list", name="contacts_summary")
+     * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
      * @Template()
      *
      * @param int $reportId

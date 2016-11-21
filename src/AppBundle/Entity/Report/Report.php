@@ -755,6 +755,17 @@ class Report
         return $today >= $reportDueOn;
     }
 
+    public function hasContacts()
+    {
+        return $this->getReasonForNoContacts() ? 'no' : 'yes';
+    }
+
+    public function setHasContacts($value)
+    {
+        // necessary to simplify form logic
+        return null;
+    }
+
     /**
      * @param string $reasonForNoContacts
      *

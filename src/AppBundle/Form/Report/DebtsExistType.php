@@ -18,7 +18,6 @@ class DebtsExistType extends AbstractType
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'debt.noDebtsChoice.notBlank', 'groups' => ['exist']])],
             ))
-//            ->add('reasonForNoContacts', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

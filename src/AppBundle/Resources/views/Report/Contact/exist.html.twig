@@ -24,7 +24,7 @@
                 {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}
             #}
             <div class="form-group flush--bottom">
-                {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
+                {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': { '%client%': report.client.firstname },
