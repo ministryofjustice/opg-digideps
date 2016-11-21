@@ -1,7 +1,7 @@
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 
-<table class="check-your-answers push-double--bottom">
+<table class="check-your-answers columns-2 push-double--bottom">
     <thead>
         <tr>
             <th class="border--thicker">Question</th>
@@ -52,7 +52,7 @@
 {% endif %}
 
 {% if report.contacts | length > 0 %}
-    <table class="check-your-answers">
+    <table class="check-your-answers columns-3">
         <thead>
             <tr>
                 <th>Contact</th>
@@ -66,23 +66,35 @@
         <tbody>
             {% for contact in report.contacts %}
                 <tr>
-                    <td>
+                    <td class="width-fifth">
                         {{ contact.contactName }}<br/>
                         <p class="font-xsmall flush--ends">
-                            {{ contact.address }}<br>
-                            {{ contact.address2 }}<br>
-                            {{ contact.county }}<br>
-                            {{ contact.postcode }}<br>
-                            {{ contact.country | country_name }}
+                            {% if contact.address %}
+                                {{ contact.address }}<br/>
+                            {% endif %}
+                            {% if contact.address2 %}
+                                {{ contact.address2 }}<br/>
+                            {% endif %}
+                            {% if contact.county %}
+                                {{ contact.county }}<br/>
+                            {% endif %}
+                            {% if contact.postcode %}
+                                {{ contact.postcode }}<br/>
+                            {% endif %}
+                            {% if contact.country %}
+                                {{ contact.country | country_name }}<br/>
+                            {% endif %}
                         </p>
                     </td>
-                    <td>
+                    <td class="width-fifth">
                         {{ contact.relationship }}
                     </td>
-                    <td></td>
-                    <td class="change-answer soft-half--left hard--right">
-                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="push-half--right behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}">Remove</a>
+                    <td>
+                        {{ contact.explanation }}
+                    </td>
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left">Remove</a>
                     </td>
                 </tr>
             {% endfor %}

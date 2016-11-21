@@ -39,6 +39,18 @@ b {
 
   }
 
+  .width-fifth {
+    width: $full-width / 5;
+  }
+
+  .width-sixth {
+    width: $full-width / 6;
+  }
+
+  .width-eighth {
+    width: $full-width / 8;
+  }
+
   td {
     @include core-19;
     vertical-align: top;
