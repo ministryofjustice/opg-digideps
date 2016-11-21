@@ -13,9 +13,6 @@ stepPage:
   backLink: Back
 
 summaryPage:
-  validation:
-    pleaseAnswerAllQuestions: Some answers are missing.  Please answer all the questions.
-    sectionsNeedAnswers: "{1} 1 question needs answering | ]1,Inf] %count% questions need answering"
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   supportTitle: ""
