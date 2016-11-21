@@ -178,15 +178,20 @@ class ContactController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/contacts/{id}/delete", name="contact_delete")
+     * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contact_delete")
      *
      * @param int $id
      *
      * @return RedirectResponse
      */
-    public function deleteAction($reportId, $id)
+    public function deleteAction(Request $request, $reportId, $contactId)
     {
-        $this->getRestClient()->delete("/report/contact/{$id}");
+        $this->getRestClient()->delete("/report/contact/{$contactId}");
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Contact deleted'
+        );
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
     }

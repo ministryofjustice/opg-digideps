@@ -97,7 +97,7 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
                     <td></td>
                     <td class="change-answer soft-half--left hard--right">
                         <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="push-half--right behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="#">Remove</a>
+                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
