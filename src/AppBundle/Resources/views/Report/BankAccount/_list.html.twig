@@ -16,12 +16,12 @@
     </div>
 </div>
 
-<table class="behat-region-list-accounts">
+<table class="check-your-answers behat-region-list-accounts">
     <thead>
         <tr>
             <th>Account</th>
-            <th class="text--right">Balance on {{ report.endDate | date("jS F Y") }}</th>
             <th class="text--right">Balance on {{ report.startDate | date("jS F Y") }}</th>
+            <th class="text--right">Balance on {{ report.endDate | date("jS F Y") }}</th>
             <th>
                 <span class="visuallyhidden">Actions</span>
             </th>
@@ -50,7 +50,7 @@
             <td class="numeric">
                 £{{ account.closingBalance == null ? ' -,-' : (account.closingBalance | money_format) }}
             </td>
-            <td class="soft-half--left hard--right">
+            <td class="change-answer soft-half--left hard--right">
                 <a class="push-half--right behat-link-account-{{ account.accountNumber }}"
                    href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
                     Edit
