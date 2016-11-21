@@ -75,7 +75,7 @@
             {% for debt in report.debts %}
                 <tr>
                     <td> {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}</td>
-                    <td class="numeric-small">£{{ debt.amount }}</td>
+                    <td class="numeric-small">£{{ debt.amount | money_format }}</td>
                 </tr>
             {% endfor %}
             <tr>
