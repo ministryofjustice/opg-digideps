@@ -19,11 +19,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            {# @Elvis
-                Need to implement .error here like on visits and care step 1:
-                {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}
-            #}
-            <div class="form-group flush--bottom">
+            <div class="form-group flush--bottom {% if not form.hasContacts.vars.valid %}error{% endif %}">
                 {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
