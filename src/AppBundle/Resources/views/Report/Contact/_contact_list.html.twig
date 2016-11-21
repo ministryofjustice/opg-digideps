@@ -41,7 +41,7 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
         {% if report.reasonForNoContacts %}
             <tr>
                 <td>Reason for no contacts</td>
-                <td>{{ report.reasonForNoContacts }}</td>
+                <td>{{ report.reasonForNoContacts | nl2br }}</td>
                 <td class="change-answer">
                     <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}">{{ 'summaryPage.edit'| trans }}</a>
                 </td>
