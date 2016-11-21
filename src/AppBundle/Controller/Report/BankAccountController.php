@@ -191,9 +191,14 @@ class BankAccountController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($reportId, $accountId)
+    public function deleteAction(Request $request, $reportId, $accountId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Bank account deleted'
+        );
 
         if ($report->hasAccountWithId($accountId)) {
             $this->getRestClient()->delete("/account/{$accountId}");
