@@ -1,17 +1,6 @@
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 
-{#
-
-@Biggs I've just added quick HTML to present info, start from scratch using the protype
-http://hzaiwi.axshare.com/#g=1&p=contacts_-_summary_check
-it doesn't look updated, it should look like bank accounts list
-
-you can skip translations, I'll move text into them later
-note: there is a freetext question when clicking "no" at the "Exist" step, not in the prototype
-
-#}
-
 <table class="check-your-answers push-double--bottom">
     <thead>
         <tr>
@@ -28,11 +17,7 @@ note: there is a freetext question when clicking "no" at the "Exist" step, not i
                 {{ 'existPage.form.hasContacts.label' | trans(transOptions)  }}
             </td>
             <td>
-                {% if report.hasContacts %}
-                    Yes
-                {% else %}
-                    No
-                {% endif %}
+                {{ report.hasContacts | capitalize }}
             </td>
             <td class="change-answer">
                 <a href="{{ url('contacts_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>

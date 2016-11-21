@@ -132,7 +132,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contact_edit")
-     * @Template("AppBundle:Report/Contact:add.html.twig")
+     * @Template("AppBundle:Report/Contact:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $contactId)
     {
@@ -153,6 +153,7 @@ class ContactController extends AbstractController
         }
 
         return [
+            'backLink' => $this->generateUrl('contacts_summary', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];

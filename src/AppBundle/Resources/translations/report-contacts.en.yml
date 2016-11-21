@@ -41,6 +41,7 @@ addPage:
 
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
+  supportTitle: Contacts
   pageSectionTitle: Edit contact
 
 summaryPage:

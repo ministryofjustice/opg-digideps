@@ -9,8 +9,8 @@
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block linkBack %}
@@ -18,9 +18,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
-    <p class="text">As someone has helped you make decisions for Sally we need to know their details. Start by adding
-        the first contact for Sally. You can add other contacts later.</p>
 
     {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
     'translationDomain': translationDomain,
