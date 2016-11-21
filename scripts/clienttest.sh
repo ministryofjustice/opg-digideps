@@ -9,10 +9,10 @@ mkdir -p /var/log/app
 
 cd /app
 /sbin/setuser app mkdir -p /tmp/behat
-export PGHOST=postgres
-export PGPASSWORD=api
-export PGDATABASE=api
-export PGUSER=api
+export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
+export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
+export PGDATABASE=${API_DATABASE_NAME:=api}
+export PGUSER=${API_DATABASE_USERNAME:=api}
 rm -rf app/cache/*
 # deprecated
 suitename=${1:-deputy}
@@ -30,7 +30,7 @@ else
 fi
 # end deprecated
 
-export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"selenium2\" : { \"wd_host\" : \"$WD_HOST\" }, \"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}" 
+export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"selenium2\" : { \"wd_host\" : \"$WD_HOST\" }, \"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 echo BEHAT_PARAMS
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=deputy --profile=${PROFILE} --stop-on-failure
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=deputyodr --profile=${PROFILE} --stop-on-failure
+/sbin/setuser app bin/behat --config=${behatConfigFile} --suite=deputy --profile=${PROFILE:=headless} --stop-on-failure
+/sbin/setuser app bin/behat --config=${behatConfigFile} --suite=deputyodr --profile=${PROFILE:=headless} --stop-on-failure
