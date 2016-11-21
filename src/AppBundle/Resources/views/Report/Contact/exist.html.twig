@@ -27,6 +27,7 @@
                 {{ form_checkbox_group(form.exist, 'existPage.form.exist', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
+                    'labelParameters': { '%client%': report.client.firstname },
                     'legendClass' : 'form-label-bold text',
                     'items': [
                     {'labelClass': 'block-label'},

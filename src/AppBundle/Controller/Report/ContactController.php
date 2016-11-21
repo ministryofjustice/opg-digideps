@@ -174,7 +174,6 @@ class ContactController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
-        $contacts = $report->getContacts();
 
         return [
             'report' => $report,
