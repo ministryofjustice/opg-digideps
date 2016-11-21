@@ -71,7 +71,8 @@ class ContactController extends RestController
             $this->validateArray($contactData, [
                 'id' => 'mustExist',
             ]);
-            $contact = $this->findEntityBy('Report\Contact', $contactData['id']);
+            $contact = $this->findEntityBy('Report\Contact', $contactData['id']); /* @var $contact EntityDir\Report\Contact */
+            $report = $contact->getReport();
             $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         }
 
@@ -97,6 +98,10 @@ class ContactController extends RestController
             ->setLastedit(new \DateTime());
 
         $this->persistAndFlush($contact);
+
+        // remove reason for no contacts
+        $report->setReasonForNoContacts(null);
+        $this->persistAndFlush($report);
 
         return ['id' => $contact->getId()];
     }
