@@ -757,6 +757,10 @@ class Report
 
     public function hasContacts()
     {
+        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null){
+            return null;
+        }
+
         return $this->getReasonForNoContacts() ? 'no' : 'yes';
     }
 
