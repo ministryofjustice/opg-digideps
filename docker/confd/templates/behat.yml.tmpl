@@ -1,0 +1,175 @@
+default:
+    autoload:
+        '': %paths.base%/bootstrap
+    suites:
+
+        prechecks:
+            description: Pre checks and init
+            paths:    [ %paths.base%/features/prechecks ]
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ end }}
+
+        deputy:
+            description: End to end journey for Lay deputy user
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@deputy&&~@javascript"
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ end }}
+
+        admin:
+            description: End to end journey for Admin user
+            paths:    [ %paths.base%/features/admin ]
+            filters:
+                tags: "~@javascript"
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, autoDbSnapshot: true }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", autoDbSnapshot: true }]
+            {{ end }}
+
+        deputyodr:
+            description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+            tags: "@odr"
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+            {{ end }}
+
+        components:
+            description: Tests related to textareas
+            paths:    [ %paths.base%/features/components ]
+            mink_session: default
+            contexts: [ DigidepsBehat\FeatureContext ]
+
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            goutte: ~
+            default_session: goutte
+
+chrome:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: Chrome
+                    browserVersion: 48
+                    os: Windows
+                    os_version: 10
+
+
+safari:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: Safari
+                    browserVersion: 8.0
+                    os: OS X
+                    os_version: Yosemite
+
+firefox:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: Firefox
+                    browserVersion: 37.0
+                    os: Windows
+                    os_version: 7
+
+ie7:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 7.0
+                    os: Windows
+                    os_version: XP
+
+ie8:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 8.0
+                    os: Windows
+                    os_version: 7
+
+ie9:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 9.0
+                    os: Windows
+                    os_version: 7
+
+ie10:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 10.0
+                    os: Windows
+                    os_version: 8
+
+ie11:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 11.0
+                    os: Windows
+                    os_version: 8.1
+firefoxlocal:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: selenium2
+            selenium2: ~
+
+headless:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            goutte: ~
+        {{ if exists "/frontend/nonadmin/host" }}
+            base_url: {{ getv "/frontend/nonadmin/host" }}
+        {{ else }}
+            base_url: "http://digideps-client.local/"
+        {{ end }}
+
