@@ -3,12 +3,11 @@ set -e
 #let's configure environment
 run-parts /etc/my_init.d
 chown app:app /tmp/behat
+chown app:app /tmp
 
 # create log dir locally failing sometimes)
 mkdir -p /var/log/app
-# Allow the app user to write to this folder
-setfacl -m u:app:rwx /var/log/app
-setfacl -m u:app:rwx /tmp
+chown app:app /var/log/app
 
 cd /app
 /sbin/setuser app mkdir -p /tmp/behat
