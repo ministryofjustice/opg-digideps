@@ -1,21 +1,18 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% set translationDomain = "registration" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
-{% block contentClass %}behat-region-client-add{% endblock %}
 {% block pageTitle %}{{ 'addClient.h1Title' | trans }}{% endblock %}
 
-{% block pageNavigation %}
+{% block progressBar %}
      {{ progress_bar_registration(app.user, 'client_details') }}
 {% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block helpline %}{% endblock %}
 
-
-{% block pageBody %}
+{% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:Components/Form:_form-title.html.twig' with {

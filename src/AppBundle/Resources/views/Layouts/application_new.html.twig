@@ -96,15 +96,20 @@
 
     {% block linkBack %}{% endblock %}
 
+    {% block helpline %}
     <div class="helpline">
         <h3>Helpline<br/>0115 934 2700</h3>
     </div>
+    {% endblock %}
+
+    {% block progressBar %}{% endblock %}
 
     {% block validationSummary %}
         {% if form is defined %}
             {{ form_errors_list(form) }}
         {% endif %}
     {% endblock %}
+
 
     {% block notification %}
         {# To style #}

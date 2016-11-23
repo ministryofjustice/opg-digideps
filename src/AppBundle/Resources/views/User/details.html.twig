@@ -1,19 +1,17 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "user-details" %}
 
 {% block htmlTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'h1Title' | trans }}{% endblock %}
-{% block stepTitle %}{{ 'stepTitle' | trans }}{% endblock %}
 
-{% block pageNavigation %}
+{% block progressBar %}
     {{ progress_bar_registration(app.user, 'user_details') }}
 {% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block helpline %}{% endblock %}
 
-{% block pageBody %}
+{% block pageContent %}
 
     <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
 

@@ -1,21 +1,20 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "register" %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block pageContent %}
 
-{% block pageBody %}
-
-    <p>{{ 'intro' | trans }}</p>
-    <p>{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    <div class="text">
+        <p>{{ 'intro' | trans }}</p>
+        <p>{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    </div>
 
     <section class="help-item">
       <h3 class="summary heading-medium">{{ 'moreThanOne' | trans }}</h3>
-      <p class="content">{{ 'moreThanOneDescription' | trans | raw }}</p>
+      <p class="content text">{{ 'moreThanOneDescription' | trans | raw }}</p>
     </section>
 
     {% set formClass = 'registration-form' %}
