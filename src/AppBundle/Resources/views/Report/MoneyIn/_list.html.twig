@@ -4,63 +4,17 @@
 <div class="border--thicker">
     <div class="grid-row push--top">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of accounts</h2>
+            <h2 class="heading-medium flush--ends">List of items of income</h2>
         </div>
         <div class="column-half text--right">
             <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
                 class="bold-small move-quarter--up">
                 <span class="icon icon-plus"></span>
-                Add account
+                Add transaction
             </a>
         </div>
     </div>
 </div>
 
-<table class="check-your-answers behat-region-list-accounts">
-    <thead>
-        <tr>
-            <th>Account</th>
-            <th class="text--right">Balance on {{ report.startDate | date("jS F Y") }}</th>
-            <th class="text--right">Balance on {{ report.endDate | date("jS F Y") }}</th>
-            <th>
-                <span class="visuallyhidden">Actions</span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for account in report.accounts %}
-        <tr>
-            <td>
-                {% if account.requiresBankNameAndSortCode %}
-                    {{ account.bank }}<br/>
-                {% endif %}
-                <p class="font-xsmall flush--ends">
-                    {{ account.accountTypeText }}<br/>
-                    {% if account.requiresBankNameAndSortCode %}
-                        Sort code: {{ account.sortCode }}<br/>
-                    {% endif %}
-                    Account number: ****{{ account.accountNumber }}<br/>
-                    Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
-                    Closed: {{ account.isClosed ? 'Yes' : 'No' }}
-                </p>
-            </td>
-            <td class="numeric">
-                £{{ account.openingBalance | money_format }}
-            </td>
-            <td class="numeric">
-                £{{ account.closingBalance == null ? ' -,-' : (account.closingBalance | money_format) }}
-            </td>
-            <td class="change-answer soft-half--left hard--right">
-                <a class="push-half--right behat-link-account-{{ account.accountNumber }}"
-                   href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
-                    Edit
-                </a>
-                <a class="behat-link-account-{{ account.accountNumber }}"
-                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
-                    Remove
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+[...]
+{# http://hzaiwi.axshare.com/#g=1&p=accounts_-_money_in_-_summary_overview #}

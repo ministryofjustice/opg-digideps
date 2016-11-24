@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
+use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyInController extends AbstractController
 {
-    const STEPS = 4;
+    const STEPS = 3;
 
     /**
      * @Route("/report/{reportId}/money-in/start", name="money_in")
@@ -36,10 +37,10 @@ class MoneyInController extends AbstractController
     /**
      * //TODO refactor when assets is implemented too
      *
-     * @Route("/report/{reportId}/money-in/step{step}/{accountId}", name="money_in_step", requirements={"step":"\d+"})
+     * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template()
      */
-    public function stepAction(Request $request, $reportId, $step, $accountId = null)
+    public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
         if ($step < 1 || $step > self::STEPS) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -48,7 +49,7 @@ class MoneyInController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transaction']);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -56,68 +57,49 @@ class MoneyInController extends AbstractController
             ->setRoutePrefix('money_in_')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
-            ->setRouteBaseParams(['reportId'=>$reportId, 'accountId' => $accountId]);
+            ->setRouteBaseParams(['reportId'=>$reportId, 'transactionId' => $transactionId]);
 
 
-        // create (add mode) or load account (edit mode)
-        if ($accountId) {
-            $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\Account');
+        // create (add mode) or load transaction (edit mode)
+        if ($transactionId) {
+            $transaction = $this->getRestClient()->get('report/transaction/' . $transactionId, 'Report\\Account');
         } else {
-            $account = new EntityDir\Report\Account();
-            $account->setReport($report);
+            $transaction = new EntityDir\Report\Transaction();
         }
 
         // add URL-data into model
-        isset($dataFromUrl['type']) && $account->setAccountType($dataFromUrl['type']);
-        isset($dataFromUrl['bank']) && $account->setBank($dataFromUrl['bank']);
-        isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
-        isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
-        isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
-        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
-        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        isset($dataFromUrl['type']) && $transaction->setType($dataFromUrl['type']);
+        //TODO fix going forward in step keping params
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl
+        ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step), $transaction);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-            // if closing balance is set to non-zero values, un-close the account
-            /*if (!$data->isClosingBalanceZero()) {
-                $data->setIsClosed(false);
-            }*/
-
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                $stepUrlData['type'] = $account->getAccountType();
+                $stepUrlData['category'] = $transaction->getCategory();
             }
 
             if ($step == 2) {
-                $stepUrlData['bank'] = $account->getBank();
-                $stepUrlData['number'] = $account->getAccountNumber();
-                $stepUrlData['sort-code'] = $account->getSortCode();
-                $stepUrlData['is-joint'] = $account->getIsJointAccount();
+                $stepUrlData['type'] = $transaction->getType();
             }
-
-            if ($step == 3) {
-                $stepUrlData['closing-balance'] = $account->getOpeningBalance();
-                $stepUrlData['opening-balance'] = $account->getClosingBalance();
-            }
-
-            // 4th step only if closing balance is equals to 0
-            $isLastStep = $step == self::STEPS
-                || ($step == (self::STEPS - 1) && !$account->isClosingBalanceZero());
 
             // last step: save
-            if ($isLastStep) {
-                if ($accountId) {
-                    $this->getRestClient()->put('/account/' . $accountId, $account, ['account']);
+            if ($step == self::STEPS) {
+                if ($transactionId) {
+                    //TODO
+//                    $this->getRestClient()->put('/transaction/' . $transactionId, $transaction, ['transaction']);
+                    //back to summary
                 } else {
-                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
+                    //TODO
+                    //$this->getRestClient()->post('report/' . $reportId . '/transaction', $transaction, ['transaction']);
+                    return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
-            }
-
-            if ($isLastStep) {
-                return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
@@ -128,7 +110,7 @@ class MoneyInController extends AbstractController
         }
 
         return [
-            'account' => $account,
+            'transaction' => $transaction,
             'report' => $report,
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
@@ -140,13 +122,13 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
-     * @Template("AppBundle:Report/BankAccount:add_another.html.twig")
+     * @Template()
      */
     public function addAnotherAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\BankAccountAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -174,9 +156,10 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
-        if (count($report->getAccounts()) === 0) {
-            return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['TODO']);
+        if (!$report->hasMoneyIn()) {
+            //TODO enable when save is implemented
+            //return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
 
         return [
@@ -185,26 +168,27 @@ class MoneyInController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-in/{accountId}/delete", name="bank_account_delete")
+     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="bank_account_delete")
      *
      * @param int $reportId
-     * @param int $accountId
+     * @param int $transactionId
      *
      * @return RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $accountId)
+    public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Bank account deleted'
-        );
-
-        if ($report->hasAccountWithId($accountId)) {
-            $this->getRestClient()->delete("/account/{$accountId}");
-        }
-
-        return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
+//        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+//
+//        $request->getSession()->getFlashBag()->add(
+//            'notice',
+//            'Bank account deleted'
+//        );
+//
+//        if ($report->hasAccountWithId($transactionId)) {
+//            $this->getRestClient()->delete("/account/{$transactionId}");
+//        }
+//
+//        return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
     }
 }

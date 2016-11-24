@@ -27,8 +27,9 @@
             {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
 
-        {{ form_checkbox_group(form.accountType, 'form.accountType', {
+        {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
+            'legendText' : 'form.category.legend' | trans(),
             'items': [
                 {'labelClass': 'block-label'},
                 {'labelClass': 'block-label'},
@@ -42,57 +43,31 @@
     {% endif %}
 
     {% if step == 2 %}
-
-        {% if account.requiresBankNameAndSortCode %}
-            {{ form_input(form.bank, 'form.bank') }}
-        {% else %}
-            {% do form.bank.setRendered %}
-        {% endif %}
-
-        {{ form_input(form.accountNumber, 'form.accountNumber', {
-            'inputClass' : 'account-number'
-        }) }}
-
-        {% if account.requiresBankNameAndSortCode %}
-            {{ form_sort_code(form.sortCode, 'form.sortCode') }}
-        {% else %}
-            {% do form.sortCode.setRendered %}
-        {% endif %}
-
-        {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
-            'fieldSetClass' : 'inline',
-            'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
-            'legendClass' : 'form-label',
+        {{ form_checkbox_group(form.type, 'form.type', {
+            'legendClass' : 'form-label-bold',
+            'legendText' : 'form.type.legend' | trans(),
             'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'}
             ]
         }) }}
     {% endif %}
 
     {% if step == 3 %}
-        {{ form_input(form.openingBalance, '', {
-            'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("jS F Y")}, translationDomain),
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control--short js-format-currency'
-        } ) }}
-        {{ form_input(form.closingBalance, 'form.closingBalance', {
-            'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control--short js-format-currency'
-        } ) }}
-    {% endif %}
+        {{ form_input(form.moreDetails, 'form.moreDetails') }}
 
-    {% if step == 4 %}
-        {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
-            'fieldSetClass' : 'inline',
-            'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
-            'legendClass' : 'form-label text',
-            'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
-            ]
+        {{ form_input(form.amounts, 'form.amounts', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number transaction-value',
         }) }}
+
+        {{ form_known_date(form.createdAt, 'form.createdAt') }}
+
     {% endif %}
 
     {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}

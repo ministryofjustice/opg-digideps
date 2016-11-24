@@ -157,7 +157,9 @@ class StepRedirector
             return $this->generateUrl($this->routeStartPage);
         }
 
-        return $this->generateUrl($this->routeStep, ['step' => $this->currentStep - 1]);
+        return $this->generateUrl($this->routeStep, [
+            'step' => $this->currentStep - 1
+            ] + $this->stepUrlAdditionalParams);
     }
 
     public function getSkipLink()
