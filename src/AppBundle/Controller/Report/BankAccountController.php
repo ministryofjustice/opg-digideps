@@ -74,6 +74,9 @@ class BankAccountController extends AbstractController
         isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
         isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
         isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl
+        ]);
 
         // crete and handle form
         $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
