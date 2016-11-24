@@ -1,0 +1,83 @@
+startPage:
+  htmlTitle: "Deputy report - Money in | GOV.UK"
+  pageSectionTitle: Money in
+  pageSectionDescription1: |
+    Tell us about money paid into %client%'s accounts between [TODO] and [TODO].
+  pageSectionDescription2: |
+   You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.
+  pageSectionDescription3: |
+    Be sure to enter each individual source of income into one category only, so we don’t count them twice when we do the calculation
+  startButton: Start money in
+
+stepPage:
+  htmlTitle: "Deputy report - Money in | GOV.UK"
+  pageSectionTitle: Add an item of income
+  supportTitle: Money in
+  pageSectionDescription:
+    step1: You can add one or more items of income and come back to complete the section later.
+  backLink: Back
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add another account | GOV.UK"
+  pageSectionTitle: Accounts
+  form:
+    addAnother:
+      label: The account has been saved. Would you like to add another account now?
+      hint: If you prefer, you can come back to this section later to add more accounts
+    save:
+       label: Continue
+
+summaryPage:
+  totalBalance: Total balance on %endDate%: £%amount%
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageSectionTitle: Accounts
+  pageSectionDescription1: An important part of your role as a deputy is to keep a record of the money that comes in and goes out of %client%'s accounts.
+  pageSectionDescription2: Use this section to tell us about all of %client%'s bank and building society accounts, and her savings accounts and ISAs.
+  pageSectionDescription3: We will also need to know the balance of each account.
+#  overview:
+#    htmlTitle: "Deputy report - Accounts | GOV.UK"
+#    pageSectionTitle: Accounts
+#    pageSectionDescription1: An important part of your role as a deputy is to keep a record of the money that comes in and goes out of %client%'s accounts.
+#    pageSectionDescription2: Use this section to tell us about all of %client%'s bank and building society accounts, and her savings accounts and ISAs.
+#    pageSectionDescription3: We will also need to know the balance of each account.
+#  check:
+#    htmlTitle: "Deputy report - Accounts | GOV.UK"
+#    pageSectionTitle: Your account has been saved
+#    pageSectionDescription: |
+#      We've listed your answers below. Check they're correct and edit them where necessary.
+#  item:
+#    balanceOn: Balance on
+#    sortCode: Sort code
+#    accountNumber: Account number
+#    #totalBalance: Total balance from all accounts
+#    balanceUnknown: Unknown
+#    accountMissingWarning: You must add at least 1 bank account
+#    balanceMissingWarning: Balance on %date% is missing
+#    balanceMissingWarningBottom: |
+#      You will be able to see this total when you have added the balance
+#      on the %date% for all %client%'s accounts
+
+form:
+  accountType:
+      label: What type of account is it?
+  bank:
+    label: Bank or building society name
+  meta:
+    label: Additional information (optional)
+  accountNumber:
+    label: Last 4 digits of the account number
+    preInput: "* * * *"
+  sortCode:
+    legend: Branch sort code
+  openingBalance:
+    label: How much was in the account on %startDate%?
+  closingBalance:
+    label: How much was in the account on %endDate%?
+  isJointAccount:
+    label: Is this a joint account ?
+  isClosed:
+      label: You currently have £0 in this account on %endDate%.  Have you closed this account?
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel

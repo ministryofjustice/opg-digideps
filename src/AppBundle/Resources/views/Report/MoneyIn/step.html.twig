@@ -1,0 +1,106 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-in" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
+
+    {% if step == 1 %}
+        <p class="text">
+            {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
+        </p>
+
+        {{ form_checkbox_group(form.accountType, 'form.accountType', {
+            'legendClass' : 'form-label-bold',
+            'items': [
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
+            ]
+        }) }}
+    {% endif %}
+
+    {% if step == 2 %}
+
+        {% if account.requiresBankNameAndSortCode %}
+            {{ form_input(form.bank, 'form.bank') }}
+        {% else %}
+            {% do form.bank.setRendered %}
+        {% endif %}
+
+        {{ form_input(form.accountNumber, 'form.accountNumber', {
+            'inputClass' : 'account-number'
+        }) }}
+
+        {% if account.requiresBankNameAndSortCode %}
+            {{ form_sort_code(form.sortCode, 'form.sortCode') }}
+        {% else %}
+            {% do form.sortCode.setRendered %}
+        {% endif %}
+
+        {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
+            'fieldSetClass' : 'inline',
+            'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
+            'legendClass' : 'form-label',
+            'items': [
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
+            ]
+        }) }}
+    {% endif %}
+
+    {% if step == 3 %}
+        {{ form_input(form.openingBalance, '', {
+            'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("jS F Y")}, translationDomain),
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control--short js-format-currency'
+        } ) }}
+        {{ form_input(form.closingBalance, 'form.closingBalance', {
+            'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control--short js-format-currency'
+        } ) }}
+    {% endif %}
+
+    {% if step == 4 %}
+        {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
+            'fieldSetClass' : 'inline',
+            'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
+            'legendClass' : 'form-label text',
+            'items': [
+                {'labelClass': 'block-label'},
+                {'labelClass': 'block-label'}
+            ]
+        }) }}
+    {% endif %}
+
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

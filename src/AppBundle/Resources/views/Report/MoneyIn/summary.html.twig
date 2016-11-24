@@ -1,0 +1,33 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-in" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'summaryPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'summaryPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p>{{ 'summaryPage.pageSectionDescription3' | trans(transOptions) }}</p>
+    </div>
+
+    {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("money_transfers" , {'reportId': report.id }),
+    'nextLabel': 'Money Transfers',
+    } %}
+
+{% endblock %}

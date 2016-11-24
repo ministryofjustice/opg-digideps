@@ -71,14 +71,14 @@
                 warning: true,
                 description: true
             } %}
-            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'money_out',
-                report: report,
-                state: reportStatus.moneyOutState,
-                warning: true,
-                description: true
-            } %}
+            {#{% include 'AppBundle:Report/Overview:_subsection.html.twig' with {#}
+                {#transDomain: translationDomain,#}
+                {#subSection: 'money_out',#}
+                {#report: report,#}
+                {#state: reportStatus.moneyOutState,#}
+                {#warning: true,#}
+                {#description: true#}
+            {#} %}#}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'balance',

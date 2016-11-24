@@ -1,0 +1,25 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-in" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.pageSectionDescription3' | trans(transOptions) }}</p>
+    </div>
+
+    <a href="{{ path('money_in_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}
