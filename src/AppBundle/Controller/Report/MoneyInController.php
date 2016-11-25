@@ -69,7 +69,7 @@ class MoneyInController extends AbstractController
 
         // add URL-data into model
         isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
-        isset($dataFromUrl['type']) && $transaction->setType($dataFromUrl['type']);
+        isset($dataFromUrl['id']) && $transaction->setId($dataFromUrl['id']);
         //TODO fix going forward in step keping params
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
@@ -86,20 +86,13 @@ class MoneyInController extends AbstractController
             }
 
             if ($step == 2) {
-                $stepUrlData['type'] = $transaction->getType();
+                $stepUrlData['id'] = $transaction->getId();
             }
 
             // last step: save
             if ($step == self::STEPS) {
-                if ($transactionId) {
-                    //TODO
-//                    $this->getRestClient()->put('/transaction/' . $transactionId, $transaction, ['transaction']);
-                    //back to summary
-                } else {
-                    //TODO
-                    //$this->getRestClient()->post('report/' . $reportId . '/transaction', $transaction, ['transaction']);
-                    return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
-                }
+                $this->getRestClient()->put('/report/'.$reportId.'/money-transaction', $transaction, ['transactionsIn']);
+                return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
@@ -156,7 +149,7 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['TODO']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
         if (!$report->hasMoneyIn()) {
             //TODO enable when save is implemented
             //return $this->redirectToRoute('money_in', ['reportId' => $reportId]);

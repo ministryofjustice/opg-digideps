@@ -42,7 +42,7 @@ class MoneyTransactionType extends AbstractType
         }
 
         if ($this->step === 2) {
-            $builder->add('type', 'choice', [
+            $builder->add('id', 'choice', [
                 'choices' => [
                     //TODO from translations
                     'income-from-property-rental'=>'Income from property rental',

@@ -43,7 +43,7 @@
     {% endif %}
 
     {% if step == 2 %}
-        {{ form_checkbox_group(form.type, 'form.type', {
+        {{ form_checkbox_group(form.id, 'form.id', {
             'legendClass' : 'form-label-bold',
             'legendText' : 'form.type.legend' | trans(),
             'items': [

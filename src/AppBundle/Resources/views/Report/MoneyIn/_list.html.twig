@@ -16,5 +16,14 @@
     </div>
 </div>
 
+
+{# debug #}
+<ul>
+{% for t in  report.transactionsIn%}
+    <li>{{ t.id }} | {{ t.category }} | {{ t.type }} |{{ t.amounts | join(' - ') }} | {{ t.moreDetails }} | </li>
+{% endfor %}
+</ul>
+
+
 [...]
 {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_money_in_-_summary_overview #}
