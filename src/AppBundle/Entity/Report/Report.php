@@ -1052,6 +1052,30 @@ class Report
         return $this;
     }
 
+    public function getTransactionCategories(array $transactions)
+    {
+        $ret = [];
+        foreach ($transactions as $id => $transaction) {
+            $ret[$transaction->getCategory()] = 'form.category.entries.' . $transaction->getCategory();
+        }
+        $ret = array_unique($ret);
+
+        return $ret;
+    }
+
+    public function getTransactionIds(array $transactions, $category)
+    {
+        $ret = [];
+        foreach ($transactions as $id => $transaction) {
+            if ($category == $transaction->getCategory()) {
+                $ret[$transaction->getId()] = 'form.id.entries.' . $transaction->getId() . '.label';
+            }
+        }
+        $ret = array_unique($ret);
+
+        return $ret;
+    }
+
     /**
      * @param Transaction[] $transactions
      *

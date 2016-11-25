@@ -49,7 +49,7 @@ class MoneyInController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transaction']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -76,7 +76,9 @@ class MoneyInController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step), $transaction);
+        $categories = $report->getTransactionCategories($report->getTransactionsIn());
+        $ids = $transaction->getCategory() ? $report->getTransactionIds($report->getTransactionsIn(), $transaction->getCategory()) : [];
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step, $categories, $ids), $transaction);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -91,7 +93,7 @@ class MoneyInController extends AbstractController
 
             // last step: save
             if ($step == self::STEPS) {
-                $this->getRestClient()->put('/report/'.$reportId.'/money-transaction', $transaction, ['transactionsIn']);
+                $this->getRestClient()->put('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
                 return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
             }
 

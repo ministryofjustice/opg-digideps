@@ -4,10 +4,19 @@
 
 {% set translationDomain = "report-money-in" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% set categoryText = ('form.category.entries.' ~ transaction.category) | trans %}
+{% set idText = ('form.id.entries.' ~ transaction.id ~ '.label') | trans %}
+{% set transOptions = {'%client%': report.client.firstname, '%category%': categoryText, '%idText%': idText} %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}
+    {% if step == 1 %}
+        {{ 'stepPage.pageSectionTitle' | trans(transOptions) }}
+    {% else %}
+        {{ 'stepPage.pageSectionTitleWithCategory' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
@@ -26,7 +35,6 @@
         <p class="text">
             {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
-
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
             'legendText' : 'form.category.legend' | trans(),
@@ -43,9 +51,10 @@
     {% endif %}
 
     {% if step == 2 %}
+        {# biggs the list is dynamic, can we apply block-label globally ? #}
         {{ form_checkbox_group(form.id, 'form.id', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.type.legend' | trans(),
+            'legendText' : 'form.id.legend' | trans({'%category%': categoryText}),
             'items': [
             {'labelClass': 'block-label'},
             {'labelClass': 'block-label'},
@@ -53,13 +62,31 @@
             {'labelClass': 'block-label'},
             {'labelClass': 'block-label'},
             {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'}
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
+            {'labelClass': 'block-label'},
             ]
         }) }}
     {% endif %}
 
     {% if step == 3 %}
-        {{ form_input(form.moreDetails, 'form.moreDetails') }}
+        {{ form_input(form.moreDetails, 'form.moreDetails', {
+            'labelParameters' : transOptions
+        }) }}
 
         {{ form_input(form.amounts, 'form.amounts', {
             'inputPrefix' : '£',

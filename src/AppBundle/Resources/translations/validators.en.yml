@@ -173,6 +173,14 @@ account:
           empty: Please give us some more information about this amount
 moneyIn:
   addAnother.notBlank: Please specify if you want to add another item of income
+  form:
+    category:
+      notBlank: Please choose one option
+    id:
+      notBlank: Please choose one option
+    amounts:
+      notBlank: Please specify an amount
+      type: Enter a valid amount
 
 transfer:
     accountFrom:

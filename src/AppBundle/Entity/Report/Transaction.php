@@ -13,12 +13,16 @@ class Transaction
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction"})
+     * @Assert\NotBlank(message="moneyIn.form.id.notBlank", groups={"transaction-in-id"})
+     * @Assert\NotBlank(message="moneyOut.form.id.notBlank", groups={"transaction-in-id"})
      */
     private $id;
 
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="moneyIn.form.category.notBlank", groups={"transaction-in-category"})
+     * @Assert\NotBlank(message="moneyOut.form.category.notBlank", groups={"transaction-out-category"})
      */
     private $category;
 
@@ -31,7 +35,10 @@ class Transaction
      * @var array
      * 
      * @JMS\Type("array<string>")
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction"})
+     *
+     * @Assert\NotBlank(message="moneyIn.form.amounts.notBlank", groups={"transaction-in-amounts"})
+     * @Assert\NotBlank(message="moneyOut.form.amounts.notBlank", groups={"transaction-out-amounts"})
      */
     private $amounts;
 
@@ -44,14 +51,13 @@ class Transaction
 
     /**
      * @var string
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\Type("boolean")
      */
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Groups({"transaction"})
      * @JMS\Type("string")
      */
     private $moreDetails;
