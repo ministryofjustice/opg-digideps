@@ -37,16 +37,7 @@
         </p>
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.legend' | trans(),
-            'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
-            ]
+            'legendText' : 'form.category.legend' | trans()
         }) }}
     {% endif %}
 
@@ -54,32 +45,7 @@
         {# biggs the list is dynamic, can we apply block-label globally ? #}
         {{ form_checkbox_group(form.id, 'form.id', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.id.legend' | trans({'%category%': categoryText}),
-            'items': [
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            {'labelClass': 'block-label'},
-            ]
+            'legendText' : 'form.id.legend' | trans({'%category%': categoryText})
         }) }}
     {% endif %}
 

@@ -10,7 +10,7 @@
             <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
                 class="bold-small move-quarter--up">
                 <span class="icon icon-plus"></span>
-                Add transaction
+                Add item of income
             </a>
         </div>
     </div>
@@ -18,14 +18,34 @@
 
 
 {# debug #}
-<ul>
-{% for t in  report.transactionsIn%}
-    {% if t.amounts.0 > 0 %}
-    <li>{{ t.id }} | {{ t.category }} | {{ t.type }} |{{ t.amounts | join(' - ') }} | {{ t.moreDetails }} | </li>
-    {% endif %}
-{% endfor %}
-</ul>
-
-
-[...]
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+        <tr>
+            <th>Subcategory</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th class="text--right">Amount</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for t in  report.transactionsIn%}
+        {% if t.amounts.0 > 0 %}
+        {# t.id, t.type, #}
+        <tr>
+            <td>{{ t.category }}</td>
+            <td>{{ t.moreDetails }}</td>
+            <td></td>
+            <td>{{ t.amounts | join(' - ') }}</td>
+            <td class="change-answer soft-half--left hard--right">
+                <a class="push-half--right behat-link-account-??" href="#">Edit</a>
+                <a class="behat-link-account-??" href="#">Remove</a>
+            </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
 {# http://hzaiwi.axshare.com/#g=1&p=accounts_-_money_in_-_summary_overview #}

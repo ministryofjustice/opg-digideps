@@ -66,9 +66,10 @@ form:
   amounts:
       label: Amount
   createdAt:
-    label: What date did this money come in
+    label: What date did this money come in? (optional)
+    hint: "(DD/MM/YYYY)"
   moreDetails:
-    label: Description of %idText%
+    label: Description of %idText% (optional)
   id:
     legend: What type of %category% is it?
     entries:
