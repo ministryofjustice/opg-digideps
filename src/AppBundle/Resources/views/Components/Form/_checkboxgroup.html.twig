@@ -10,7 +10,7 @@
         {{  form_errors(element) }}
         {% for key,choiceElement in element %}
 
-            {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+            {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}
             {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
             {% set description = items[key].description is defined ?  items[key].description : null %}
             {% set disabled = items[key].disabled is defined and items[key].disabled %}
@@ -20,7 +20,7 @@
                 <p class="form-hint description">{{ description | raw }}</p>
             {% endif %}
 
-            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}"
+            <label class="block-label {{ labelClass }}" for="{{ choiceElement.vars.id }}"
               {% if labelDataTarget %} data-target="{{ labelDataTarget }}" {% endif %}
             >
                 {% set attr = {'class': elementClass } %}
