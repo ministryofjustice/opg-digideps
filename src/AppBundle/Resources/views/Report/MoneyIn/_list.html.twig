@@ -20,7 +20,9 @@
 {# debug #}
 <ul>
 {% for t in  report.transactionsIn%}
+    {% if t.amounts.0 > 0 %}
     <li>{{ t.id }} | {{ t.category }} | {{ t.type }} |{{ t.amounts | join(' - ') }} | {{ t.moreDetails }} | </li>
+    {% endif %}
 {% endfor %}
 </ul>
 

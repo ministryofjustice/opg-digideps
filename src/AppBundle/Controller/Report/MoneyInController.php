@@ -24,7 +24,7 @@ class MoneyInController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
         if ($report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -151,8 +151,7 @@ class MoneyInController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
         if (!$report->hasMoneyIn()) {
-            //TODO enable when save is implemented
-            //return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
+            return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
 
         return [
