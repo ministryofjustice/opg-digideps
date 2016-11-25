@@ -21,6 +21,10 @@
         <p>{{ 'summaryPage.pageSectionDescription3' | trans(transOptions) }}</p>
     </div>
 
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
     {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
 
     {% include 'AppBundle:Components:nextprevious.html.twig' with {

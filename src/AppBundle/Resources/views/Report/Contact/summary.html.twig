@@ -19,6 +19,10 @@
         <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
     </div>
 
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
     <p class="text--right flush--bottom">
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
     </p>
