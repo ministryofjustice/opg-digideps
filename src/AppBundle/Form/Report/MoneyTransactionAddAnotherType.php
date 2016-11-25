@@ -25,7 +25,7 @@ class MoneyTransactionAddAnotherType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-money-in',
+            'translation_domain' => 'report-money-transaction',
         ]);
     }
 

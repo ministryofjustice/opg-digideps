@@ -82,8 +82,8 @@ class MoneyTransactionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-money-in',
-            'choice_translation_domain' => 'report-money-in',
+            'translation_domain' => 'report-money-transaction',
+            'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData();

@@ -10,13 +10,13 @@ startPage:
   startButton: Start money in
 
 stepPage:
-  htmlTitle: "Deputy report - Money in | GOV.UK"
-  pageSectionTitle: Add an item of income
-  pageSectionTitleWithCategory: Add an item of income: %category%
-  supportTitle: Money in
-  pageSectionDescription:
-    step1: You can add one or more items of income and come back to complete the section later.
-  backLink: Back
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    supportTitle: Money in
+    pageSectionTitle: Add an item of income
+    pageSectionTitleWithCategory: Add an item of income: %category%
+    pageSectionDescription:
+       step1: You can add one or more items and come back to complete the section later.
 
 addAnotherPage:
   htmlTitle: "Deputy report - Add another item of income| GOV.UK"
@@ -29,16 +29,17 @@ addAnotherPage:
        label: Continue
 
 summaryPage:
-  htmlTitle: "Deputy report - Money in | GOV.UK"
-  pageSectionTitle: Money in
-  pageSectionDescription1: |
-    Tell us about money paid into %client%'s accounts between [TODO] and [TODO].
-  pageSectionDescription2: |
-    You can enter a total for each type of income,
-    or you can enter individual amounts and we'll add them up for you.
-  pageSectionDescription3: |
-    Be sure to enter each individual source of income into one category only,
-    so we don’t count them twice when we do the calculation.
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageSectionTitle: Money in
+    pageSectionDescription1: |
+      Tell us about money paid into %client%'s accounts between [TODO] and [TODO].
+    pageSectionDescription2: |
+      You can enter a total for each type of income,
+      or you can enter individual amounts and we'll add them up for you.
+    pageSectionDescription3: |
+      Be sure to enter each individual source of income into one category only,
+      so we don’t count them twice when we do the calculation.
 
 form:
   category:
@@ -62,6 +63,12 @@ form:
       debt-and-charges: Debts and charges
       moving-money: Moving money
       moneyout-other: Other
+  amounts:
+      label: Amount
+  createdAt:
+    label: What date did this money come in
+  moreDetails:
+    label: Description of %idText%
   id:
     legend: What type of %category% is it?
     entries:
@@ -252,9 +259,4 @@ form:
       anything-else-paid-out:
         label: Anything else paid out
         moreInformations: Give us more information
-  amounts:
-    label: Amount
-  createdAt:
-    label: What date did this money come in
-  moreDetails:
-    label: Description of %idText%
+

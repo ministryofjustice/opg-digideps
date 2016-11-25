@@ -2,29 +2,29 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "report-money-in" %}
+{% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
 {% set categoryText = ('form.category.entries.' ~ transaction.category) | trans %}
 {% set idText = ('form.id.entries.' ~ transaction.id ~ '.label') | trans %}
 {% set transOptions = {'%client%': report.client.firstname, '%category%': categoryText, '%idText%': idText} %}
 
-{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {% if step == 1 %}
-        {{ 'stepPage.pageSectionTitle' | trans(transOptions) }}
+        {{ 'stepPage.moneyIn.pageSectionTitle' | trans(transOptions) }}
     {% else %}
-        {{ 'stepPage.pageSectionTitleWithCategory' | trans(transOptions) }}
+        {{ 'stepPage.moneyIn.pageSectionTitleWithCategory' | trans(transOptions) }}
     {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'stepPage.moneyIn.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
@@ -33,7 +33,7 @@
 
     {% if step == 1 %}
         <p class="text">
-            {{ 'stepPage.pageSectionDescription.step1' | trans(transOptions) }}
+            {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
@@ -98,10 +98,6 @@
     {% endif %}
 
     {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
-
-    {% if skipLink %}
-        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
-    {% endif %}
 
     {{ form_end(form) }}
 

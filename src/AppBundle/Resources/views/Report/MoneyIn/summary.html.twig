@@ -2,13 +2,13 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "report-money-in" %}
+{% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
 
-{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ 'summaryPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyIn.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -16,9 +16,9 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'summaryPage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'summaryPage.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p>{{ 'summaryPage.pageSectionDescription3' | trans(transOptions) }}</p>
+        <p>{{ 'summaryPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'summaryPage.moneyIn.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p>{{ 'summaryPage.moneyIn.pageSectionDescription3' | trans(transOptions) }}</p>
     </div>
 
     {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}
