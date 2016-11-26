@@ -20,11 +20,7 @@
 {#<div class="form-section">#}
     {{ form_checkbox_group(form.owned, 'form.property.owned', {
         'labelParameters': {'%client%': report.client.firstname},
-        'fieldSetClass' : 'inline owned_radio',
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'fieldSetClass' : 'inline owned_radio'
     }) }}
     <div id="owned_percentage_textarea" class="hidden-detail">
         {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
@@ -37,11 +33,7 @@
 
 {#<div class="form-section">        #}
 {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
-    'fieldSetClass' : 'inline',
-    'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-    ]
+    'fieldSetClass' : 'inline'
 }) }}
 {#</div>#}
 
@@ -54,11 +46,7 @@
 
 {#<div class="form-section">#}
     {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
-        'fieldSetClass' : 'inline has_mortgage_radio',
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'fieldSetClass' : 'inline has_mortgage_radio'
     }) }}
     <div id="mortgage_outstanding_amount_textarea" class="hidden-detail">
         {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
@@ -70,21 +58,13 @@
 
 {#<div class="form-section">        #}
     {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
-        'fieldSetClass' : 'inline',
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'fieldSetClass' : 'inline'
     }) }}
 {#</div>#}
 
 {#<div class="form-section">    #}
     {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
-        'fieldSetClass' : 'inline is_rented_out_radio',
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'fieldSetClass' : 'inline is_rented_out_radio'
     }) }}
 
     <div id="rent_info" class="hidden-detail">

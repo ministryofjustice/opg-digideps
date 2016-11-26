@@ -16,11 +16,7 @@
         'formGroupClass': 'margin-bottom-reduced',
         'fieldSetClass' : 'inline client-has-debts',
         'legendClass' : 'form-label',
-        'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'form.entries.clientHasDebts.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
 
     <div class="sections hidden-detail expanding-transaction-table no-margin-top" id="debts-sections-list">

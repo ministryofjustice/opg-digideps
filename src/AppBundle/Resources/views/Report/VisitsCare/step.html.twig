@@ -27,8 +27,8 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {'labelClass': 'block-label' },
-                    {'labelClass': 'block-label', 'dataTarget': 'how-often-contact-client-wrapper' }
+                    {},
+                    {'dataTarget': 'how-often-contact-client-wrapper' }
                     ]
                 }) }}
 
@@ -52,19 +52,14 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {'labelClass': 'block-label', 'dataTarget': 'how-care-funded-wrapper' },
-                    {'labelClass': 'block-label'}
+                    {'dataTarget': 'how-care-funded-wrapper' },
+                    {}
                     ]
                 }) }}
 
                 <div id="how-care-funded-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
-                        'legendClass' : 'form-label-bold',
-                        'items': [
-                        {'labelClass': 'block-label'},
-                        {'labelClass': 'block-label'},
-                        {'labelClass': 'block-label'}
-                        ]
+                        'legendClass' : 'form-label-bold'
                     }) }}
                 </div>
             </div>
@@ -90,8 +85,8 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {'labelClass': 'block-label', 'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
-                    {'labelClass': 'block-label'}
+                    {'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
+                    {}
                     ]
                 }) }}
 

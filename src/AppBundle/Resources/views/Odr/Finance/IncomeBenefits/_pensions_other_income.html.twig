@@ -9,21 +9,13 @@ categoryKey: 'pensionsOtherIncome',
             'fieldSetClass' : 'inline',
             'legendClass' : 'form-label',
             'legendText' : 'pensionsOtherIncome.receiveStatePension.label' | trans(clientTrans, translationDomain),
-            'hintText' : 'pensionsOtherIncome.receiveStatePension.hint' | trans(clientTrans, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'hintText' : 'pensionsOtherIncome.receiveStatePension.hint' | trans(clientTrans, translationDomain)
         }) }}
         {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
             'fieldSetClass' : 'inline receive-other-income',
             'legendClass' : 'form-label',
             'legendText' : 'pensionsOtherIncome.receiveOtherIncome.label' | trans(clientTrans, translationDomain),
-            'hintText' : 'pensionsOtherIncome.receiveOtherIncome.hint' | trans(clientTrans, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'hintText' : 'pensionsOtherIncome.receiveOtherIncome.hint' | trans(clientTrans, translationDomain)
         }) }}
         <div id="receive-other-income-details" class="hidden-detail">
             {{ form_input(form.receiveOtherIncomeDetails, 'pensionsOtherIncome.receiveOtherIncomeDetails', {

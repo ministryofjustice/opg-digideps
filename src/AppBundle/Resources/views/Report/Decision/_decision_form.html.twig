@@ -16,10 +16,7 @@
         'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
         'legendText' : 'clientInvolvedBoolean.legend' | trans({'%client%': report.client.firstname}, translationDomain),
-        'hintText' : 'clientInvolvedBoolean.hint' | trans({'%client%': report.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }]
+        'hintText' : 'clientInvolvedBoolean.hint' | trans({'%client%': report.client.firstname}, translationDomain)
     }) }}
 
     {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', {

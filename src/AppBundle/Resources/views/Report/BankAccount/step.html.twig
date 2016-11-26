@@ -28,16 +28,7 @@
         </p>
 
         {{ form_checkbox_group(form.accountType, 'form.accountType', {
-            'legendClass' : 'form-label-bold',
-            'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
-            ]
+            'legendClass' : 'form-label-bold'
         }) }}
     {% endif %}
 
@@ -62,11 +53,7 @@
         {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
             'fieldSetClass' : 'inline',
             'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
-            'legendClass' : 'form-label',
-            'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
-            ]
+            'legendClass' : 'form-label'
         }) }}
     {% endif %}
 
@@ -87,11 +74,7 @@
         {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
             'fieldSetClass' : 'inline',
             'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
-            'legendClass' : 'form-label text',
-            'items': [
-                {'labelClass': 'block-label'},
-                {'labelClass': 'block-label'}
-            ]
+            'legendClass' : 'form-label text'
         }) }}
     {% endif %}
 

@@ -34,11 +34,7 @@
         {{ form_checkbox_group(form.actionGiveGiftsToClient, 'form.actionGiveGiftsToClient', {
             'fieldSetClass' : 'inline give-gifts-client',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionGiveGiftsToClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'legendText' : 'form.actionGiveGiftsToClient.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
         <div id="give-gifts-client-wrapper" class="form-section">
             {{ form_input(form.actionGiveGiftsToClientDetails, 'form.actionGiveGiftsToClientDetails', {

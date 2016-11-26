@@ -24,11 +24,7 @@
             'fieldSetClass' : 'inline expect-financial-dec-radio',
             'legendClass' : 'form-label',
             'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
-            'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
-            'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain)
         }) }}
         <div id="financial-decisions-textarea" class="hidden-detail">
           {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
@@ -46,11 +42,7 @@
             'fieldSetClass' : 'inline do-you-have-actions-radio',
             'legendClass' : 'form-label',
             'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
-            'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
-            'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain)
         }) }}
         <div id="actions-details-textarea">
             {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {

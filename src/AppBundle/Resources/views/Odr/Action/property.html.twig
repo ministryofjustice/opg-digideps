@@ -29,31 +29,19 @@
         {{ form_checkbox_group(form.actionPropertyMaintenance, 'form.actionPropertyMaintenance', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertyMaintenance.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'legendText' : 'form.actionPropertyMaintenance.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
 
         {{ form_checkbox_group(form.actionPropertySellingRent, 'form.actionPropertySellingRent', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
 
         {{ form_checkbox_group(form.actionPropertyBuy, 'form.actionPropertyBuy', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertyBuy.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'legendText' : 'form.actionPropertyBuy.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
 
         {{ form_submit(form.save,'form.save') }}

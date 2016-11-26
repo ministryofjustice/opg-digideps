@@ -21,11 +21,7 @@
     {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
         'fieldSetClass' : 'inline plan-move-residence-radio',
         'legendClass' : 'form-label',
-        'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="plan-move-residence-details-textarea">
         <div class="panel panel-border-narrow">
@@ -39,11 +35,7 @@
     {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
         'fieldSetClass' : 'inline do-you-live-radio',
         'legendClass' : 'form-label',
-        'legendText' : 'doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="visit-questions">
         <div class="panel panel-border-narrow">
@@ -57,23 +49,14 @@
     {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
         'fieldSetClass' : 'inline does-client-receive-care',
         'legendClass' : 'form-label',
-        'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
 
     <div id="care-questions">
         <div class="panel panel-border-narrow">
             {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
                 'fieldSetClass' : 'stacked',
-                'legendClass' : 'form-label',
-                'items': [
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+                'legendClass' : 'form-label'
             }) }}
         </div>
     </div>
@@ -83,11 +66,7 @@
     {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
         'fieldSetClass' : 'inline care-plan',
         'legendClass' : 'form-label',
-        'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="care-plan-questions">
         <div class="panel panel-border-narrow">

@@ -28,11 +28,7 @@
             'fieldSetClass' : 'inline has-capacity-changed',
             'legendClass' : 'form-label',
             'legendText' : 'form.hasCapacityChanged.label' | trans({'%client%': report.client.firstname}, translationDomain),
-            'hintText' : 'form.hasCapacityChanged.hint' | trans({'%client%': report.client.firstname}, translationDomain),
-            'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'hintText' : 'form.hasCapacityChanged.hint' | trans({'%client%': report.client.firstname}, translationDomain)
         }) }}
         <div id="has-capacity-changed-details-textarea" class="hidden-detail">
           {{ form_input(form.hasCapacityChangedDetails, 'form.hasCapacityChangedDetails', {

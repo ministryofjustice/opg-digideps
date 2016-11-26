@@ -29,11 +29,7 @@
         {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
             'fieldSetClass' : 'inline more-info-group',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionMoreInfo.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-            'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-            ]
+            'legendText' : 'form.actionMoreInfo.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
         <div id="more-info-wrapper" class="form-section">
             {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {

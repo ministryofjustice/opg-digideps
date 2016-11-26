@@ -32,17 +32,9 @@
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
 
         {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
-
             'fieldSetClass' : 'vertical',
             'legendClass' : 'form-label',
-            'legend': 'satisfactionLevel',
-            'items': [
-                {'labelClass': 'block-label' },
-                {'labelClass': 'block-label' },
-                {'labelClass': 'block-label' },
-                {'labelClass': 'block-label' },
-                {'labelClass': 'block-label' },
-            ]
+            'legend': 'satisfactionLevel'
         }) }}
 
         {{ form_submit(form.save,'send') }}

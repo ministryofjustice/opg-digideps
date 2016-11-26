@@ -42,7 +42,6 @@
     {% endif %}
 
     {% if step == 2 %}
-        {# biggs the list is dynamic, can we apply block-label globally ? #}
         {{ form_checkbox_group(form.id, 'form.id', {
             'legendClass' : 'form-label-bold',
             'legendText' : 'form.id.legend' | trans({'%category%': categoryText})

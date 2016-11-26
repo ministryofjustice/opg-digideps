@@ -30,11 +30,7 @@
             {{ form_checkbox_group(form.paidForAnything, 'form.paidForAnything', {
                 'fieldSetClass' : 'inline paid-anything',
                 'legendClass' : 'form-label',
-                'legendText' : 'form.paidForAnything.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+                'legendText' : 'form.paidForAnything.label' | trans({'%client%': odr.client.firstname}, translationDomain)
             }) }}
             <div id="expenses-wrapper" class="form-section">
                 <div class="expense-rows" >
