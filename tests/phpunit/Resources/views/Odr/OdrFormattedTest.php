@@ -94,7 +94,7 @@ class OdrFormattedTest extends WebTestCase
 
     public function testLayout()
     {
-        $this->assertEquals('Opening deputyship report', $this->html($this->crawler, 'h1'));
+        $this->assertEquals('New deputy report', $this->html($this->crawler, 'h1'));
     }
 
     public function testOdr()

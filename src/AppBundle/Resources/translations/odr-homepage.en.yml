@@ -1,6 +1,6 @@
 page:
   title: Your reports
-  htmlTitle: Opening deputyship report - Your reports | GOV.UK
+  htmlTitle: New deputy report - Your reports | GOV.UK
 
 
 odr:
@@ -21,7 +21,7 @@ report:
   due: "Due: "
   notAvailable:
     status: NOT AVAILABLE
-    instructions: This report will become available once the opening deputyship report is complete.
+    instructions: This report will become available once the new deputy report is complete.
   notStarted:
     status: NOT STARTED
     buttonLabel: Start now
@@ -40,7 +40,7 @@ history:
     download: Download
     view: View
   odr:
-   title: Opening deputyship report
+   title: New deputy report
    reportingPeriod: Start of deputyship
    download: Download
    view: View
