@@ -4,71 +4,50 @@ outputStyleForInLine: false,
 outputHeaderStyles: true
 } %}
 
-    {% set translationDomain = "email-report-submit-confirm" %}
-    {% trans_default_domain translationDomain %}
+{% set translationDomain = "email-report-submit-confirm" %}
+{% trans_default_domain translationDomain %}
 
 
-    {% block emailHTMLHeaderTitle %}
+{% block emailHTMLHeaderTitle %}
 
-    {% endblock %}
-
-
-    {% block emailHTMLHeader %}{{ parent() }}{% endblock %}
+{% endblock %}
 
 
-    {% block emailHTMLMessage %}
+{% block emailHTMLHeader %}{{ parent() }}{% endblock %}
 
+{% block emailHTMLMessage %}
 
-        <p>Dear {{ deputyFirstName }}</p>
-        <br/>
+    <p>Dear {{ deputyFirstName }}</p>
+    <br/>
 
-        <p><strong>Thank you for submitting your new deputy report</strong></p>
+    <p><strong>Thank you for submitting your new deputy report</strong></p>
 
-        <p>We’re in the process of reviewing your report, and will contact you when this has been done.</p>
-         <br>
+    <p>We’re in the process of reviewing your report, and will contact you when this has been done.</p>
+    <br/>
 
-        <p><strong>
+    <p>
+        <strong>Download a pdf of your report</strong>
+    </p>
 
-                Download a pdf of your report
-            </strong>
-        </p>
+    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the new deputy report service</a>. Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.
+    </p>
+    <br/>
 
-        <p>To view and download a copy of the report for your records,
-            <a href="{{ homepageUrl }}">sign back into the new deputy report service</a>. Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.
-        <p>
-        <br>
-            <strong>What happens next</strong>
-        </p>
+    <p>
+        <strong>What happens next</strong>
+    </p>
 
-        <p>Now that you’ve completed your new deputy report, you can make use of our
-            annual deputy report service.</p>
+    <p>Now that you’ve completed your new deputy report, you can make use of our annual deputy report service.</p>
 
-        <p> Your annual deputy report falls due on the anniversary of your
-            court order – we’ll send you a reminder nearer the time.</p>
+    <p>Your annual deputy report falls due on the anniversary of your court order – we’ll send you a reminder nearer the time.</p>
 
-        <p> However, you can use the service year round to keep track
-            of your deputyship decisions and spending.</p>
+    <p>However, you can use the service year round to keep track of your deputyship decisions and spending.</p>
 
-        <p>Make a start at <a href="www.gov.uk/deputyreport">www.gov.uk/deputyreport</a></p>
-        <br>
+    <p>Make a start at <a href="http://www.gov.uk/deputyreport">www.gov.uk/deputyreport</a></p>
+    <br/>
 
+{% endblock %}
 
-<p><strong>Need help?</p></strong>
-
-<p>This is an automated email, so please don’t reply to this address.</p>
-
-<p><strong>To contact us</strong>, email the Office of the Public Guardian at deputyshipservice@publicguardian.gsi.gov.uk, or call us on 0115 934 2700.</p>
-
-<p><strong>Sent to you by the Office of the Public Guardian</strong>
-<br> PO Box 16185
-<br> Birmingham B2 2WH
-<br> <a href="www.gov.uk/deputyreport">www.gov.uk/deputyreport</a></p>
-
-
-
-
-    {% endblock %}
-
-    {% block emailHTMLFooter %}{{ parent() }}{% endblock %}
+{% block emailHTMLFooter %}{{ parent() }}{% endblock %}
 
 {% endembed %}
