@@ -4,7 +4,6 @@
 
 This app is the client used by deputy to submit their report to OPG.
 
-
 Complete the deputy report is composed by
  - [Client](https://github.com/ministryofjustice/opg-digi-deps-client)
  - [API](https://github.com/ministryofjustice/opg-digi-deps-client)
@@ -13,6 +12,7 @@ Complete the deputy report is composed by
 
 ## Frameworks and languages
 
+- PHP 5.6
 - Symfony 2.8
 - Behat 3
 - PHPUnit 4
