@@ -1,53 +1,48 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
-<div class="border--thicker">
-    <div class="grid-row push--top">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of items of income</h2>
-        </div>
-        <div class="column-half text--right">
-            <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
-                class="bold-small move-quarter--up">
-                <span class="icon icon-plus"></span>
-                Add item of income
-            </a>
-        </div>
+<div class="grid-row push--top">
+    <div class="column-half">
+        <h2 class="heading-medium flush--ends">List of items of income</h2>
+    </div>
+    <div class="column-half text--right">
+        <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
+            class="bold-small move-quarter--up">
+            <span class="icon icon-plus"></span>
+            Add item of income
+        </a>
     </div>
 </div>
 
+{% for categoryId, category in report.groupByCategory(report.validTransactions(report.transactionsIn)) %}
+
+<h3 class="heading-medium">{{ ('form.category.entries.' ~ categoryId) | trans }}</h3>
+
 <table class="check-your-answers behat-region-list-accounts">
-    {% for categoryId, category in report.groupByCategory(report.validTransactions(report.transactionsIn)) %}
-        <thead>
-            {# temp. change me me #}
-            <tr class="border--thicker">
-                <th colspan="4">
-                    {{ ('form.category.entries.' ~ categoryId) | trans }}
-                </th>
-            </tr>
-            <tr>
-                <th></th>
-                <th>Description</th>
-                <th class="text--right">Amount</th>
-                <th>
-                    <span class="visuallyhidden">Actions</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for t in category.entries %}
-            <tr>
-                <td>{{ ('form.id.entries.' ~ t.id ~ '.label') | trans }}</td>
-                <td>{{ t.moreDetails | nl2br }}</td>
-                <td>£ {{ t.amounts | join(' - ') | money_format }}</td>
-                <td class="change-answer soft-half--left hard--right">
-                    <a class="push-half--right behat-link-account-??"
-                       href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>
-                    <a class="behat-link-account-??" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th class="numeric">Amount</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for t in category.entries %}
+        <tr>
+            <td class="width-fifth">{{ ('form.id.entries.' ~ t.id ~ '.label') | trans }}</td>
+            <td>{{ t.moreDetails | nl2br }}</td>
+            <td class="numeric-small width-eighth">£{{ t.amounts | join(' - ') | money_format }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-account-??"
+                   href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>
+                <a class="behat-link-account-?? push-half--left" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
+            </td>
+        </tr>
     {% endfor %}
+    </tbody>
 </table>
-{# http://hzaiwi.axshare.com/#g=1&p=accounts_-_money_in_-_summary_overview #}
+
+{% endfor %}

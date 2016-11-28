@@ -4,9 +4,9 @@
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
         <tr>
-            <th class="border--thicker">Question</th>
-            <th class="border--thicker">Answer</th>
-            <th class="border--thicker">
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
                 <span class="visuallyhidden">Actions</span>
             </th>
         </tr>
@@ -36,17 +36,15 @@
 </table>
 
 {% if report.contacts | length > 0 %}
-    <div class="border--thicker">
-        <div class="grid-row">
-            <div class="column-half">
-                <h2 class="heading-medium flush--ends">List of contacts</h2>
-            </div>
-            <div class="column-half text--right">
-                <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
-                </a>
-            </div>
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of contacts</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
         </div>
     </div>
 {% endif %}

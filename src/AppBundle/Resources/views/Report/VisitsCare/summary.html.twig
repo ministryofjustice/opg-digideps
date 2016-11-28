@@ -6,22 +6,26 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
+{# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
+    {# Introduction text #}
     <p class="text">
          {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
     </p>
 
+    {# Check answers text #}
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
+    {# Missing questions alerts #}
     {% if report.visitsCare.missingVisitsCareInfo() and comingFromLastStep%}
         <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
             <span class="icon icon__notification"></span>
@@ -36,12 +40,15 @@
     </div>
     {% endif %}
 
+    {# Return to overview link #}
     <p class="text--right flush--bottom">
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
     </p>
 
+    {# Questions and answers table #}
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 
+    {# Pagination #}
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
     'previousLink': path("contacts" , {'reportId': report.id }),
     'previousLabel': 'Contacts',

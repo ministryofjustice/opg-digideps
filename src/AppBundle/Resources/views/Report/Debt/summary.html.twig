@@ -6,32 +6,37 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
+{# Page Titles #}
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
+    {# Introduction text #}
     <p class="text">
          {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
     </p>
 
+    {# Check answers text #}
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
+    {# Return to overview link #}
     <p class="text--right flush--bottom">
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
     </p>
 
+    {# Questions and answers table #}
     <table class="check-your-answers columns-2 push-double--bottom">
         <thead>
             <tr>
-                <th class="border--thicker">Question</th>
-                <th class="border--thicker">Answer</th>
-                <th class="border--thicker">
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
             </tr>
@@ -53,17 +58,17 @@
 
     {% if report.hasDebts == 'yes' %}
 
-        <div class="border--thicker">
-            <div class="grid-row">
-                <div class="column-half">
-                    <h2 class="heading-medium flush--ends">List of debts</h2>
-                </div>
-                <div class="column-half text--right">
-                    <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small">Edit</a>
-                </div>
+        {# Items list heading #}
+        <div class="grid-row">
+            <div class="column-half">
+                <h2 class="heading-medium flush--ends">List of debts</h2>
+            </div>
+            <div class="column-half text--right">
+                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small">Edit</a>
             </div>
         </div>
 
+        {# Items list table #}
         <table class="check-your-answers columns-2">
             <thead>
                 <tr>
@@ -91,12 +96,14 @@
 
         {% set debtOther = report.getDebtById('other') %}
         {% if debtOther.moreDetails %}
+
+            {# Questions and answers table #}
             <table class="check-your-answers push--top">
                 <thead>
                     <tr>
-                        <th class="border--thicker">Question</th>
-                        <th class="border--thicker">Answer</th>
-                        <th class="border--thicker">
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>
                             <span class="visuallyhidden">Actions</span>
                         </th>
                     </tr>
@@ -114,6 +121,7 @@
         {% endif %}
     {% endif %}
 
+    {# Pagination #}
     {% include 'AppBundle:Components:nextprevious.html.twig' with {
     'previousLink': path("assets" , {'reportId': report.id }),
     'previousLabel': 'Assets',
