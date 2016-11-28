@@ -35,12 +35,13 @@ class Version092 extends AbstractMigration
 
         $i = 0;
         foreach ($oldTrans as $trans) {
+            $i++;
             $newRecords = $this->convertOldToNew($trans);
             //print_r([$trans, $newRecords]);
             foreach ($newRecords as $nr) {
                 $this->connection->insert('money_transaction', $nr);
-                if ($i % 100 == 0) {
-                    echo ".";
+                if (($i % 1000) == 0) {
+                    echo "$i ";
                     $this->connection->commit();
                     $this->connection->beginTransaction();
                 }
