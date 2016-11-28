@@ -15,6 +15,8 @@ class Version092 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        ini_set('memory_limit', '1024M');
+
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
@@ -28,13 +30,14 @@ class Version092 extends AbstractMigration
         WHERE t.amounts is not null
         ';
         $oldTrans = $this->connection->fetchAll($sql);
-        echo count($oldTrans)." to migrate: ";
+        echo count($oldTrans) . " to migrate: ";
         $this->connection->beginTransaction();
 
         $i = 0;
-        foreach($oldTrans as $trans) {
+        foreach ($oldTrans as $trans) {
             $newRecords = $this->convertOldToNew($trans);
-            foreach($newRecords as $nr) {
+            //print_r([$trans, $newRecords]);
+            foreach ($newRecords as $nr) {
                 $this->connection->insert('money_transaction', $nr);
                 if ($i % 100 == 0) {
                     echo ".";
@@ -50,12 +53,12 @@ class Version092 extends AbstractMigration
     {
         $amounts = explode(',', $old['amounts']);
         $ret = [];
-        foreach($amounts as $amount) {
+        foreach ($amounts as $amount) {
             $ret[] = [
                 'report_id' => $old['report_id'],
                 'category' => $old['category'],
                 'amount' => $amount,
-                'description' => $old['description'],
+                'description' => trim($old['description'], "\n\t. "),
             ];
         }
 
@@ -68,6 +71,9 @@ class Version092 extends AbstractMigration
     public function down(Schema $schema)
     {
         // this down() migration is auto-generated, please modify it to your needs
+
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('delete from money_transaction');
     }
 }
