@@ -97,26 +97,20 @@ class ReportStatusService
 
     public function getMoneyInState()
     {
-        if (!$this->report->hasMoneyIn()) {
-            return self::STATE_NOT_STARTED;
-        }
-        if (empty($this->report->getAccounts())) {
-            return self::STATE_INCOMPLETE;
+        if ($this->report->hasMoneyIn()) {
+            return self::STATE_DONE;
         }
 
-        return self::STATE_DONE;
+        return self::STATE_NOT_STARTED;
     }
 
     public function getMoneyOutState()
     {
-        if (!$this->report->hasMoneyOut()) {
-            return self::STATE_NOT_STARTED;
-        }
-        if (empty($this->report->getAccounts())) {
-            return self::STATE_INCOMPLETE;
+        if ($this->report->hasMoneyOut()) {
+            return self::STATE_DONE;
         }
 
-        return self::STATE_DONE;
+        return self::STATE_NOT_STARTED;
     }
 
     public function getBalanceState()
