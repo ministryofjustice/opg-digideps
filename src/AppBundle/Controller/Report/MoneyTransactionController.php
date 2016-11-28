@@ -12,9 +12,9 @@ class MoneyTransactionController extends RestController
 {
     /**
      * @Route("/report/{reportId}/money-transaction")
-     * @Method({"PUT"})
+     * @Method({"POST"})
      */
-    public function editMoneyTransactionAction(Request $request, $reportId)
+    public function addMoneyTransactionAction(Request $request, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
@@ -22,27 +22,53 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
-           'id' => 'notEmpty',
-           'amounts' => 'notEmpty',
+           'category' => 'notEmpty',
+           'amount' => 'notEmpty',
         ]);
 
-        $t = $report->getTransactionByTypeId($data['id']);
-        /* @var $t EntityDir\Report\Transaction */
-        if (!$t instanceof EntityDir\Report\Transaction) {
-            throw new \InvalidArgumentException('');
+        $t = new EntityDir\Report\MoneyTransaction($report);
+        $t->setCategory($data['category']);
+        $t->setAmount($data['amount']);
+        if (array_key_exists('description', $data)) {
+            $t->setDescription($data['description']);
         }
-        $t->setAmounts($data['amounts'] ?: []);
-        if (array_key_exists('more_details', $data)) {
-            $t->setMoreDetails($data['more_details']);
-        }
-        $this->getEntityManager()->flush($t);
         $t->setReport($report);
+        $this->getEntityManager()->persist($t);
+        $this->getEntityManager()->flush($t);
 
         $this->persistAndFlush($t);
 
         $this->setJmsSerialiserGroups(['transaction']);
 
-        return $t->getId();
+        return $t;
+    }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/{transactionId}")
+     * @Method({"PUT"})
+     */
+    public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report\Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $t = $this->findEntityBy('Report\MoneyTransaction', $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
+
+        // set data
+        $data = $this->deserializeBodyContent($request);
+        if (isset($data['description'])) {
+            $t->setDescription($data['description']);
+        }
+        if (isset($data['amount'])) {
+            $t->setAmount($data['amount']);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return $t;
     }
 
     /**
@@ -56,15 +82,12 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $report->getTransactionByTypeId($transactionId);
-        /* @var $t EntityDir\Report\Transaction */
-        if (!$t instanceof EntityDir\Report\Transaction) {
-            throw new \InvalidArgumentException('');
-        }
-        $t->setAmounts(null);
-        $t->setMoreDetails(null);
-        $this->persistAndFlush($t);
+        $t = $this->findEntityBy('Report\MoneyTransaction', $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
+        $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        return $t->getId();
+        $this->getEntityManager()->remove($t);
+        $this->getEntityManager()->flush();
+
+        return [];
     }
 }

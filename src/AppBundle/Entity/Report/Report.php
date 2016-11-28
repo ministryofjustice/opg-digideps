@@ -63,11 +63,18 @@ class Report
     private $moneyTransfers;
 
     /**
-     * @JMS\Groups({"transaction"})
+     * @deprecated REMOVE WHEN OTPP is merged and migrated
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
+
+    /**
+     * @JMS\Groups({"transaction"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $moneyTransactions;
 
     /**
      * @JMS\Groups({"debt"})
@@ -278,6 +285,7 @@ class Report
         $this->contacts = new ArrayCollection();
         $this->accounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
+        $this->moneyTransactions = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->decisions = new ArrayCollection();
@@ -942,58 +950,115 @@ class Report
     }
 
     /**
-     * Virtual JMS property with IN transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transaction", "transactionsIn"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_in")
+     * @JMS\Groups({"transactionsIn"})
      *
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getTransactionsIn()
     {
-        $ret = [];
-
-        foreach ($this->transactions as $t) {
-            if ($t->getTransactionType() instanceof TransactionTypeIn) {
-                $ret[] = $t;
-            }
-        }
-        uasort($ret, function ($t1, $t2) {
-            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+        return $this->moneyTransactions->filter(function($t) {
+            return $t->getType() == 'in';
         });
-
-        return $ret;
     }
 
     /**
-     * Virtual JMS property with OUT transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transaction", "transactionsOut"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_out")
+     * @JMS\Groups({"transactionsOut"})
      *
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getTransactionsOut()
     {
-        $ret = [];
-
-        foreach ($this->transactions as $t) {
-            if ($t->getTransactionType() instanceof TransactionTypeOut) {
-                $ret[] = $t;
-            }
-        }
-        uasort($ret, function ($t1, $t2) {
-            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+        return $this->moneyTransactions->filter(function($t) {
+            return $t->getType() == 'out';
         });
-
-        return $ret;
     }
 
     /**
+     * @return MoneyTransaction[]
+     */
+    public function getMoneyTransactions()
+    {
+        return $this->moneyTransactions;
+    }
+
+    /**
+     * @param mixed $moneyTransactions
+     */
+    public function setMoneyTransactions($moneyTransactions)
+    {
+        $this->moneyTransactions = $moneyTransactions;
+    }
+
+    /**
+     * @param mixed $moneyTransactions
+     */
+    public function addMoneyTransaction(MoneyTransaction $t)
+    {
+        if (!$this->moneyTransactions->contains($t)) {
+            $this->moneyTransactions->add($t);
+        }
+    }
+
+//    /**
+//     * Virtual JMS property with IN transaction.
+//     *
+//     * @JMS\VirtualProperty
+//     * @JMS\Groups({"transaction", "transactionsIn"})
+//     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
+//     * @JMS\SerializedName("transactions_in")
+//     *
+//     * @return Transaction[]
+//     */
+//    public function getTransactionsIn()
+//    {
+//        $ret = [];
+//
+//        foreach ($this->transactions as $t) {
+//            if ($t->getTransactionType() instanceof TransactionTypeIn) {
+//                $ret[] = $t;
+//            }
+//        }
+//        uasort($ret, function ($t1, $t2) {
+//            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+//        });
+//
+//        return $ret;
+//    }
+//
+//    /**
+//     * Virtual JMS property with OUT transaction.
+//     *
+//     * @JMS\VirtualProperty
+//     * @JMS\Groups({"transaction", "transactionsOut"})
+//     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
+//     * @JMS\SerializedName("transactions_out")
+//     *
+//     * @return Transaction[]
+//     */
+//    public function getTransactionsOut()
+//    {
+//        $ret = [];
+//
+//        foreach ($this->transactions as $t) {
+//            if ($t->getTransactionType() instanceof TransactionTypeOut) {
+//                $ret[] = $t;
+//            }
+//        }
+//        uasort($ret, function ($t1, $t2) {
+//            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+//        });
+//
+//        return $ret;
+//    }
+
+    /**
+     * @deprecated
      * @param Transaction $transaction
      */
     public function addTransaction(Transaction $transaction)
@@ -1004,6 +1069,8 @@ class Report
 
         return $this;
     }
+
+
 
     /**
      * @param mixed $debts
@@ -1102,8 +1169,10 @@ class Report
     public function getMoneyInTotal()
     {
         $ret = 0;
-        foreach ($this->getTransactionsIn() as $t) {
-            $ret += $t->getAmountsTotal();
+        foreach ($this->getMoneyTransactions() as $t) {
+            if ($t->getType() == 'in') {
+                $ret += $t->getAmount();
+            }
         }
 
         return $ret;
@@ -1118,8 +1187,10 @@ class Report
     public function getMoneyOutTotal()
     {
         $ret = 0;
-        foreach ($this->getTransactionsOut() as $t) {
-            $ret +=  $t->getAmountsTotal();
+        foreach ($this->getMoneyTransactions() as $t) {
+            if ($t->getType() == 'out') {
+                $ret += $t->getAmount();
+            }
         }
 
         return $ret;

@@ -13,9 +13,10 @@ class DoctrineListener
         $entityManager = $args->getEntityManager();
 
         // add empty transactions to report at creation time
-        if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
-            $entityManager->getRepository('AppBundle\Entity\Report\Report')->addTransactionsToReportIfMissing($entity);
-        }
+//        if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
+//            // @deprecated REMOVE WHEN OTPP is merged and migrated
+//            $entityManager->getRepository('AppBundle\Entity\Report\Report')->addTransactionsToReportIfMissing($entity);
+//        }
 
         // add empty debts to report at creation time
         if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {

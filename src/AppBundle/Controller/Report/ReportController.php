@@ -160,9 +160,8 @@ class ReportController extends RestController
         }
         $report->setReasonForNoDecisions(null);
 
-        foreach ($report->getTransactions() as $e){
-            $e->setAmounts(null);
-            $e->setMoreDetails(null);
+        foreach ($report->getMoneyTransactions() as $e){
+            $em->remove($e);
         }
 
         foreach ($report->getMoneyTransfers() as $e){
