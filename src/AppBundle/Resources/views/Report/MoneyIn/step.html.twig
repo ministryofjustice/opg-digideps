@@ -55,7 +55,7 @@
 
         {{ form_input(form.amounts, 'form.amounts', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number transaction-value',
+            'inputClass' : 'form-control__number js-format-currency'
         }) }}
 
         {{ form_known_date(form.createdAt, 'form.createdAt') }}
