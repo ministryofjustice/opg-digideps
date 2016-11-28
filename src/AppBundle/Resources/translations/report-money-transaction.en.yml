@@ -69,9 +69,12 @@ form:
     label: What date did this money come in? (optional)
     hint: "(DD/MM/YYYY)"
   description:
-    label: Description of %idText% (optional)
+    mandatory:
+      label: Description of %category%
+    optional:
+      label: Description of %category% (optional)
   category:
-    legend: What type of %category% is it?
+    legend: What type of %group% is it?
     entries:
       # money in and out
       dividends:

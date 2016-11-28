@@ -71,35 +71,31 @@ class MoneyInController extends AbstractController
         // add URL-data into model
         isset($dataFromUrl['group']) && $transaction->setGroup($dataFromUrl['group']);
         isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
-        //TODO fix going forward in step keping params
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step, $transaction->getGroup()), $transaction);
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionType(
+            $step, $transaction->getGroup(), $transaction->getCategory()
+        ), $transaction);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['group'] = $transaction->getGroup();
-            }
-
-            if ($step == 2) {
+            } else if ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
-            }
-
-            // last step: save
-            if ($step == self::STEPS) {
-                if ($transactionId) {
+            } else if ($step == self::STEPS) {
+                if ($transactionId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Entry edited'
                     );
                     $this->getRestClient()->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
-                } else {
+                } else { // add
                     $this->getRestClient()->post('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }

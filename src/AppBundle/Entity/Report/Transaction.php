@@ -126,6 +126,9 @@ class Transaction
     /**
      * @var string
      * @JMS\Groups({"transaction"})
+     *
+     * @Assert\NotBlank(message="moneyIn.form.description.notBlank", groups={"transaction-in-description"})
+     *
      * @JMS\Type("string")
      */
     private $description;

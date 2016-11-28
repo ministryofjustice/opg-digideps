@@ -18,11 +18,13 @@ class MoneyTransactionType extends AbstractType
 {
     private $step;
     private $selectedGroup;
+    private $selectedCategory;
 
-    public function __construct($step, $selectedGroup)
+    public function __construct($step, $selectedGroup, $selectedCategory = null)
     {
         $this->step = (int)$step;
         $this->selectedGroup = $selectedGroup;
+        $this->selectedCategory = $selectedCategory;
     }
 
     private function getGroups()
@@ -51,6 +53,19 @@ class MoneyTransactionType extends AbstractType
         return $ret;
     }
 
+    /**
+     * @return boolean
+     */
+    private function isDescriptionMandatory()
+    {
+        foreach(Transaction::$categories as $cat){
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            if ($categoryId == $this->selectedCategory) {
+                return $hasDetails;
+            }
+        }
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', 'hidden');
@@ -70,7 +85,9 @@ class MoneyTransactionType extends AbstractType
         }
 
         if ($this->step === 3) {
-            $builder->add('description', 'textarea');
+            $builder->add('description', 'textarea', [
+                'required' => $this->isDescriptionMandatory(),
+            ]);
 //            $builder->add('amount', 'collection', [
 //                'entry_type' => 'number',
 //                'allow_add' => true, //allow new fields added with JS
@@ -86,7 +103,7 @@ class MoneyTransactionType extends AbstractType
                 'precision' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                'invalid_message' => 'moneyIn.form.amounts.type',
+                'invalid_message' => 'moneyIn.form.amount.type',
             ]);
 
 //            $builder->add('createdAt', 'date', ['widget' => 'text',
@@ -111,22 +128,22 @@ class MoneyTransactionType extends AbstractType
             'translation_domain' => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Report\Transaction */
 
                 $validationGroups = [];
 
                 if ($this->step === 1) {
-                    $validationGroups = ['transaction-in-group'];
+                    $validationGroups[] = 'transaction-in-group';
                 }
-
                 if ($this->step === 2) {
-                    $validationGroups = ['transaction-in-category'];
+                    $validationGroups[] = 'transaction-in-category';
                 }
-
                 if ($this->step === 3) {
-                    $validationGroups = ['transaction-in-amount'];
+                    $validationGroups[] = 'transaction-in-amount';
+                    if ($this->isDescriptionMandatory()) {
+                        $validationGroups[] = 'transaction-in-description';
+                    }
                 }
 
                 return $validationGroups;

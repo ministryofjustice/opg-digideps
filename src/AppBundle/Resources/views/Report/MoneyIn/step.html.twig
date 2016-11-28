@@ -5,9 +5,9 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
-{% set categoryText = ('form.group.entries.' ~ transaction.group) | trans %}
-{% set idText = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
-{% set transOptions = {'%client%': report.client.firstname, '%category%': categoryText, '%idText%': idText} %}
+{% set groupString = ('form.group.entries.' ~ transaction.group) | trans %}
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
+{% set transOptions = {'%client%': report.client.firstname, '%group%': groupString, '%category%': categoryString} %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
@@ -28,7 +28,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
@@ -37,19 +36,19 @@
         </p>
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.legend' | trans()
+            'legendText' : 'form.group.legend' | trans(transOptions)
         }) }}
     {% endif %}
 
     {% if step == 2 %}
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.legend' | trans({'%category%': categoryText})
+            'legendText' : 'form.category.legend' | trans(transOptions)
         }) }}
     {% endif %}
 
     {% if step == 3 %}
-        {{ form_input(form.description, 'form.description', {
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
             'labelParameters' : transOptions
         }) }}
 
