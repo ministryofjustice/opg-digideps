@@ -53,10 +53,15 @@
             'labelParameters' : transOptions
         }) }}
 
-        {{ form_input(form.amounts, 'form.amounts', {
+        {{ form_input(form.amounts.0, 'form.amounts', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number js-format-currency'
+            'inputClass' : 'form-control__number js-format-currency',
+            'formGroupClass': ' form-group-value'
         }) }}
+
+
+
+
 
         {{ form_known_date(form.createdAt, 'form.createdAt') }}
 
