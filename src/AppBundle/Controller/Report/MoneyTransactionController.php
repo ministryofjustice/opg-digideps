@@ -44,4 +44,27 @@ class MoneyTransactionController extends RestController
 
         return $t->getId();
     }
+
+    /**
+     * @Route("/report/{reportId}/money-transaction/{transactionId}")
+     * @Method({"DELETE"})
+     */
+    public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report\Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $t = $report->getTransactionByTypeId($transactionId);
+        /* @var $t EntityDir\Report\Transaction */
+        if (!$t instanceof EntityDir\Report\Transaction) {
+            throw new \InvalidArgumentException('');
+        }
+        $t->setAmounts(null);
+        $t->setMoreDetails(null);
+        $this->persistAndFlush($t);
+
+        return $t->getId();
+    }
 }
