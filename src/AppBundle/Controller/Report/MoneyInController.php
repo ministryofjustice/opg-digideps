@@ -92,7 +92,11 @@ class MoneyInController extends AbstractController
 
             // last step: save
             if ($step == self::STEPS) {
-                if ($transactionId){
+                if ($transactionId) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Entry edited'
+                    );
                     $this->getRestClient()->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else {
@@ -183,6 +187,11 @@ class MoneyInController extends AbstractController
             throw new \RuntimeException('Transaction not found');
         }
         $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/' . $transactionId);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Entry deleted'
+        );
 
         return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
     }
