@@ -43,7 +43,7 @@
                 <td class="change-answer soft-half--left hard--right">
                     <a class="push-half--right behat-link-account-??"
                        href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>
-                    <a class="behat-link-account-??" href="#">Remove</a>
+                    <a class="behat-link-account-??" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
                 </td>
             </tr>
         {% endfor %}

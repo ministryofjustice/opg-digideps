@@ -168,7 +168,7 @@ class MoneyInController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="")
+     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
      *
      * @param int $reportId
      * @param int $transactionId
@@ -177,18 +177,15 @@ class MoneyInController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
+        $transaction = array_filter($report->getTransactionsIn(), function($t) use ($transactionId) {
+            return $t->getId() == $transactionId;
+        });
+        if (!$transaction) {
+            throw new \RuntimeException('Transaction not found');
+        }
+        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/' . $transactionId);
 
-//        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
-//
-//        $request->getSession()->getFlashBag()->add(
-//            'notice',
-//            'Bank account deleted'
-//        );
-//
-//        if ($report->hasAccountWithId($transactionId)) {
-//            $this->getRestClient()->delete("/account/{$transactionId}");
-//        }
-//
-//        return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
+        return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
     }
 }
