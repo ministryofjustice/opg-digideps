@@ -93,7 +93,7 @@ class MoneyInController extends AbstractController
             // last step: save
             if ($step == self::STEPS) {
                 if ($transactionId){
-                    //TODO put
+                    $this->getRestClient()->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else {
                     $this->getRestClient()->post('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
