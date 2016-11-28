@@ -29,6 +29,8 @@ class ReportController extends AbstractController
         'mental-capacity',
         'money-transfer',
         'transaction',
+        'transactionsIn',
+        'transactionsOut',
     ];
 
     /**
