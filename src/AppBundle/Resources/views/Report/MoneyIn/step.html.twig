@@ -5,8 +5,8 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
-{% set categoryText = ('form.category.entries.' ~ transaction.category) | trans %}
-{% set idText = ('form.id.entries.' ~ transaction.id ~ '.label') | trans %}
+{% set categoryText = ('form.group.entries.' ~ transaction.group) | trans %}
+{% set idText = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
 {% set transOptions = {'%client%': report.client.firstname, '%category%': categoryText, '%idText%': idText} %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
@@ -35,25 +35,25 @@
         <p class="text">
             {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
-        {{ form_checkbox_group(form.category, 'form.category', {
+        {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.legend' | trans()
+            'legendText' : 'form.group.legend' | trans()
         }) }}
     {% endif %}
 
     {% if step == 2 %}
-        {{ form_checkbox_group(form.id, 'form.id', {
+        {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.id.legend' | trans({'%category%': categoryText})
+            'legendText' : 'form.category.legend' | trans({'%category%': categoryText})
         }) }}
     {% endif %}
 
     {% if step == 3 %}
-        {{ form_input(form.moreDetails, 'form.moreDetails', {
+        {{ form_input(form.description, 'form.description', {
             'labelParameters' : transOptions
         }) }}
 
-        {{ form_input(form.amounts.0, 'form.amounts', {
+        {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number js-format-currency',
             'formGroupClass': ' form-group-value'

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Transaction;
 use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,53 +17,78 @@ use Symfony\Component\Validator\Constraints\Type;
 class MoneyTransactionType extends AbstractType
 {
     private $step;
-    private $categories;
-    private $ids;
+    private $selectedGroup;
 
-    /**
-     * MoneyTransactionType constructor.
-     * @param $step
-     * @param $categories
-     * @param $ids
-     */
-    public function __construct($step, $categories, $ids)
+    public function __construct($step, $selectedGroup)
     {
         $this->step = (int)$step;
-        $this->categories = $categories;
-        $this->ids = $ids;
+        $this->selectedGroup = $selectedGroup;
     }
 
+    private function getGroups()
+    {
+        $ret = [];
+
+        foreach(Transaction::$categories as $cat){
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            $ret[$groupId] = 'form.group.entries.' . $groupId;
+        }
+
+        return array_unique($ret);
+    }
+
+    private function getCategories()
+    {
+        $ret = [];
+
+        foreach(Transaction::$categories as $cat){
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            if ($groupId == $this->selectedGroup) {
+                $ret[$categoryId] = 'form.category.entries.' . $categoryId . '.label';
+            }
+        }
+
+        return $ret;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
-            $builder->add('category', 'choice', [
-                'choices' =>  $this->categories,
+            $builder->add('group', 'choice', [
+                'choices' =>  $this->getGroups(),
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 2) {
-            $builder->add('id', 'choice', [
-                'choices' => $this->ids,
+            $builder->add('category', 'choice', [
+                'choices' =>  $this->getCategories(),
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 3) {
-            $builder->add('moreDetails', 'textarea');
-            $builder->add('amounts', 'collection', [
-                'entry_type' => 'number',
-                'allow_add' => true, //allow new fields added with JS
-                'entry_options' => [
-                    'error_bubbling' => false,
-                    'precision' => 2,
-                    'grouping' => true,
-                    'invalid_message' => 'moneyIn.form.amounts.type',
-                ],
+            $builder->add('description', 'textarea');
+//            $builder->add('amount', 'collection', [
+//                'entry_type' => 'number',
+//                'allow_add' => true, //allow new fields added with JS
+//                'entry_options' => [
+//                    'error_bubbling' => false,
+//                    'precision' => 2,
+//                    'grouping' => true,
+//                    'invalid_message' => 'moneyIn.form.amounts.type',
+//                ],
+//            ]);
+
+            $builder->add('amount', 'number', [
+                'precision' => 2,
+                'grouping' => true,
+                'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
+                'invalid_message' => 'moneyIn.form.amounts.type',
             ]);
+
 //            $builder->add('createdAt', 'date', ['widget' => 'text',
 //                'mapped' => false, // Not in the model
 //                'input' => 'datetime',
@@ -92,15 +118,15 @@ class MoneyTransactionType extends AbstractType
                 $validationGroups = [];
 
                 if ($this->step === 1) {
-                    $validationGroups = ['transaction-in-category'];
+                    $validationGroups = ['transaction-in-group'];
                 }
 
                 if ($this->step === 2) {
-                    $validationGroups = ['transaction-in-id'];
+                    $validationGroups = ['transaction-in-category'];
                 }
 
                 if ($this->step === 3) {
-                    $validationGroups = ['transaction-in-amounts'];
+                    $validationGroups = ['transaction-in-amount'];
                 }
 
                 return $validationGroups;

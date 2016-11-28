@@ -42,7 +42,7 @@ summaryPage:
       so we don’t count them twice when we do the calculation.
 
 form:
-  category:
+  group:
     legend: What category does the item of income come under?
     entries:
       # money in
@@ -56,21 +56,21 @@ form:
       household-bills: Household bills
       accommodation: Accommodation
       care-and-medical: Care and medical
-      client-expenses: %client%'s expenses
+      client-expenses: Client's expenses
       fees: Fees
       major-purchases: Major purchases
       spending-on-other-people: Spending on other people
       debt-and-charges: Debts and charges
       moving-money: Moving money
       moneyout-other: Other
-  amounts:
+  amount:
       label: Amount
   createdAt:
     label: What date did this money come in? (optional)
     hint: "(DD/MM/YYYY)"
-  moreDetails:
+  description:
     label: Description of %idText% (optional)
-  id:
+  category:
     legend: What type of %category% is it?
     entries:
       # money in and out
