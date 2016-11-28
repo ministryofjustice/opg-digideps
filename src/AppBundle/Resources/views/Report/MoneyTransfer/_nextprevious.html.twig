@@ -1,0 +1,6 @@
+{% include 'AppBundle:Components:nextprevious.html.twig' with {
+'previousLink': path("mental_capacity" , {'reportId': report.id }),
+'previousLabel': 'Mental capacity',
+'nextLink': path("visits_care" , {'reportId': report.id }),
+'nextLabel': 'Visits and care'
+} %}

@@ -1,0 +1,42 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Introduction text #}
+    <div class="text">
+        <p>{{ 'startPage.pageSectionDescription' | trans(transOptions) }}</p>
+    </div>
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    {# Return to overview link #}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">Return to Report Overview</a>
+    </p>
+
+    {# Items list #}
+    {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report/MoneyTransfer:_nextprevious.html.twig' %}
+
+{% endblock %}

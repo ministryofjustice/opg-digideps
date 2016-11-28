@@ -1,0 +1,102 @@
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.noTransfersToAdd ? 'No' : 'Yes' }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.reasonForNoContacts %}
+            <tr>
+                <td>Reason for no transfers</td>
+                <td>{{ report.reasonForNoContacts | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('money_transfers_exist', { 'reportId': report.id, 'from': 'summary'}) }}">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% if report.contacts | length > 0 %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of money_transfers</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('money_transfer_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% if report.contacts | length > 0 %}
+    <table class="check-your-answers columns-3">
+        <thead>
+            <tr>
+                <th>Contact</th>
+                <th>Relationship</th>
+                <th>Reason for contact</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in report.contacts %}
+                <tr>
+                    <td class="width-fifth">
+                        {{ contact.contactName }}<br/>
+                        <p class="font-xsmall flush--ends">
+                            {% if contact.address %}
+                                {{ contact.address }}<br/>
+                            {% endif %}
+                            {% if contact.address2 %}
+                                {{ contact.address2 }}<br/>
+                            {% endif %}
+                            {% if contact.county %}
+                                {{ contact.county }}<br/>
+                            {% endif %}
+                            {% if contact.postcode %}
+                                {{ contact.postcode }}<br/>
+                            {% endif %}
+                            {% if contact.country %}
+                                {{ contact.country | country_name }}<br/>
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="width-fifth">
+                        {{ contact.relationship }}
+                    </td>
+                    <td>
+                        {{ contact.explanation }}
+                    </td>
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

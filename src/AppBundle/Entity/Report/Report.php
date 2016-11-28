@@ -167,6 +167,7 @@ class Report
 
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"money-transfers-no-transfers"})
      *
      * @var bool
      */

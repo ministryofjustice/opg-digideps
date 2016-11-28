@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.noTransfersToAdd.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': { '%client%': report.client.firstname },
+                    'legendClass' : 'form-label-bold text',
+                    'formGroupClass': 'flush--bottom'
+                }) }}
+            </div>
+        </div>
+
+    {{ form_submit(form.save,'existPage.form.save') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
