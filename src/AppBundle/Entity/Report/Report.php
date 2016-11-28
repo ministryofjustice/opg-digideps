@@ -1162,7 +1162,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"transactionsIn"})
      * @JMS\Type("double")
      * @JMS\SerializedName("money_in_total")
      */
@@ -1180,7 +1180,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"transactionsOut"})
      * @JMS\Type("double")
      * @JMS\SerializedName("money_out_total")
      */
