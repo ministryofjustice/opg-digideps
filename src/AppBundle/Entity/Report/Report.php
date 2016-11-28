@@ -1103,17 +1103,17 @@ class Report
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
-    public function groupByCategory(array $transactions)
+    public function groupByGroup(array $transactions)
     {
         $ret = [];
 
         foreach ($transactions as $id => $transaction) {
-            $cat = $transaction->getCategory();
-            if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
+            $group = $transaction->getGroup();
+            if (!isset($ret[$group])) {
+                $ret[$group] = ['entries' => [], 'amountTotal' => 0];
             }
-            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $transaction->getAmountsTotal();
+            $ret[$group]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
+            $ret[$group]['amountTotal'] += $transaction->getAmount();
         }
 
         return $ret;
@@ -1270,9 +1270,7 @@ class Report
      */
     public function hasMoneyIn()
     {
-        return count(array_filter($this->getTransactionsIn() ?: [], function ($t) {
-            return count(array_filter($t->getAmounts())) > 0;
-        })) > 0;
+        return count($this->getTransactionsIn()) > 0;
     }
 
     /**
@@ -1280,9 +1278,7 @@ class Report
      */
     public function hasMoneyOut()
     {
-        return count(array_filter($this->getTransactionsOut() ?: [], function ($t) {
-             return count(array_filter($t->getAmounts())) > 0;
-        })) > 0;
+        return count($this->getTransactionsOut()) > 0;
     }
 
     /**

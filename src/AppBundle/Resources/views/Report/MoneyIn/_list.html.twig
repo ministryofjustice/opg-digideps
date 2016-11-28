@@ -14,9 +14,9 @@
     </div>
 </div>
 
-{% for categoryId, category in report.groupByCategory(report.validTransactions(report.transactionsIn)) %}
+{% for groupId, groupData in report.groupByGroup(report.transactionsIn) %}
 
-<h3 class="heading-medium">{{ ('form.category.entries.' ~ categoryId) | trans }}</h3>
+<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans }}</h3>
 
 <table class="check-your-answers behat-region-list-accounts">
     <thead>
@@ -30,11 +30,11 @@
         </tr>
     </thead>
     <tbody>
-    {% for t in category.entries %}
+    {% for t in groupData.entries %}
         <tr>
-            <td class="width-fifth">{{ ('form.id.entries.' ~ t.id ~ '.label') | trans }}</td>
-            <td>{{ t.moreDetails | nl2br }}</td>
-            <td class="numeric-small width-eighth">£{{ t.amounts | join(' - ') | money_format }}</td>
+            <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans }}</td>
+            <td>{{ t.description | nl2br }}</td>
+            <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-account-??"
                    href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>

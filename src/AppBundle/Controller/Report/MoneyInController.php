@@ -69,36 +69,38 @@ class MoneyInController extends AbstractController
         }
 
         // add URL-data into model
+        isset($dataFromUrl['group']) && $transaction->setGroup($dataFromUrl['group']);
         isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
-        isset($dataFromUrl['id']) && $transaction->setId($dataFromUrl['id']);
         //TODO fix going forward in step keping params
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
         ]);
 
         // crete and handle form
-        $categories = $report->getTransactionCategories($report->getTransactionsIn());
-        $ids = $transaction->getCategory() ? $report->getTransactionIds($report->getTransactionsIn(), $transaction->getCategory()) : [];
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step, $categories, $ids), $transaction);
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionType($step, $transaction->getGroup()), $transaction);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                $stepUrlData['category'] = $transaction->getCategory();
+                $stepUrlData['group'] = $transaction->getGroup();
             }
 
             if ($step == 2) {
-                $stepUrlData['id'] = $transaction->getId();
+                $stepUrlData['category'] = $transaction->getCategory();
             }
 
             // last step: save
             if ($step == self::STEPS) {
-                $this->getRestClient()->put('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
-
-                if ($transactionId){
+                if ($transactionId) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Entry edited'
+                    );
+                    $this->getRestClient()->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else {
+                    $this->getRestClient()->post('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }
@@ -157,7 +159,7 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
         if (!$report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
@@ -185,6 +187,11 @@ class MoneyInController extends AbstractController
             throw new \RuntimeException('Transaction not found');
         }
         $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/' . $transactionId);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Entry deleted'
+        );
 
         return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
     }
