@@ -35,7 +35,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
-     * @Template("AppBundle:Report/Contact:exist.html.twig")
+     * @Template()
      */
     public function existAction(Request $request, $reportId)
     {
