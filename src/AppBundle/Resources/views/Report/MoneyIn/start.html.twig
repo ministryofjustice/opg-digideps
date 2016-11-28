@@ -4,7 +4,11 @@
 
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {
+    '%client%': report.client.firstname,
+    '%startDate%': report.startDate | date("jS F Y"),
+    '%endDate%': report.endDate | date("jS F Y")
+} %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}

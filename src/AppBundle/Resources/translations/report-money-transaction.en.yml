@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - Money in | GOV.UK"
   pageSectionTitle: Money in
   pageSectionDescription1: |
-    Tell us about money paid into %client%'s accounts between [TODO] and [TODO].
+    Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
   pageSectionDescription2: |
    You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.
   pageSectionDescription3: |
