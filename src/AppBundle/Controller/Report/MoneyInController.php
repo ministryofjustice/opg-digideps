@@ -35,8 +35,6 @@ class MoneyInController extends AbstractController
     }
 
     /**
-     * //TODO refactor when assets is implemented too
-     *
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
      * @Template()
      */
@@ -62,7 +60,10 @@ class MoneyInController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
-            $transaction = $this->getRestClient()->get('report/transaction/' . $transactionId, 'Report\\Account');
+            $transaction = array_filter($report->getTransactionsIn(), function($t) use ($transactionId) {
+                return $t->getId() == $transactionId;
+            });
+            $transaction = array_shift($transaction);
         } else {
             $transaction = new EntityDir\Report\Transaction();
         }
@@ -94,7 +95,12 @@ class MoneyInController extends AbstractController
             // last step: save
             if ($step == self::STEPS) {
                 $this->getRestClient()->put('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
-                return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
+
+                if ($transactionId){
+                    return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
+                } else {
+                    return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
+                }
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
@@ -162,7 +168,7 @@ class MoneyInController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="bank_account_delete")
+     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="")
      *
      * @param int $reportId
      * @param int $transactionId

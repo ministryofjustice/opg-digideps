@@ -63,12 +63,12 @@ class MoneyTransactionType extends AbstractType
                     'invalid_message' => 'moneyIn.form.amounts.type',
                 ],
             ]);
-            $builder->add('createdAt', 'date', ['widget' => 'text',
-                'mapped' => false, // Not in the model
-                'input' => 'datetime',
-                'format' => 'dd-MM-yyyy',
-                'invalid_message' => 'Enter a valid date',
-            ]);
+//            $builder->add('createdAt', 'date', ['widget' => 'text',
+//                'mapped' => false, // Not in the model
+//                'input' => 'datetime',
+//                'format' => 'dd-MM-yyyy',
+//                'invalid_message' => 'Enter a valid date',
+//            ]);
         }
 
         $builder->add('save', 'submit');

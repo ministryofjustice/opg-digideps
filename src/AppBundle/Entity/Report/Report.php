@@ -1025,6 +1025,28 @@ class Report
     }
 
     /**
+     * //TODO improve this
+     * @return Transaction[]
+     */
+    public function getValidTransactions($transactions)
+    {
+        return array_filter($transactions, function($t){
+            return $t->getAmounts()[0] > 0;
+        });
+    }
+
+    /**
+     * //TODO improve this
+     * @return Transaction[]
+     */
+    public function getTransactionsInWithId($id)
+    {
+        return array_filter($transactions, function($t) use ($id) {
+            return $t->getId() == $id;
+        });
+    }
+
+    /**
      * @param Transaction[] $transactionsIn
      */
     public function setTransactionsIn($transactionsIn)
