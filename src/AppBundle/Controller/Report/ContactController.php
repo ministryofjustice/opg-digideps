@@ -70,7 +70,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add", name="contact_add")
-     * @Template("AppBundle:Report/Contact:add.html.twig")
+     * @Template()
      */
     public function addAction(Request $request, $reportId)
     {
@@ -105,7 +105,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contact_add_another")
-     * @Template("AppBundle:Report/Contact:add_another.html.twig")
+     * @Template()
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -132,7 +132,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contact_edit")
-     * @Template("AppBundle:Report/Contact:edit.html.twig")
+     * @Template()
      */
     public function editAction(Request $request, $reportId, $contactId)
     {
