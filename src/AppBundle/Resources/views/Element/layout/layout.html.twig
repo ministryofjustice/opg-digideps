@@ -1,28 +1,20 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% block htmlTitle %}Layouts - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Layouts{% endblock %}
 
+{% block helpline %}{% endblock %}
 
-{% block htmlTitle %}Digideps Styleguide{% endblock %}
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-{% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-} %}
-
-    <div class="grid-row">
-        <header id="page-header" class="column-two-thirds">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">Digideps Elements</span>
-                Layouts
-            </h1>
-
-            <p class="lede">
-                Extra layouts used within the site for navigation or content display
-            </p>
-        </header>
-    </div>
+    <p class="lede text">Extra layouts used within the site for navigation or content display</p>
 
     <div class="grid-row">
         <div class="column-two-thirds">

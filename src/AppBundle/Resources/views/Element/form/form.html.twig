@@ -1,26 +1,21 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-{% block htmlTitle %}Digideps Styleguide{% endblock %}
+{% block htmlTitle %}Form elements - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Form elements{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
     <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-    } %}
+    <p class="lede text">Enhanced form controls created for specific kids of data.</p>
 
-    <div class="grid-row">
-        <header id="page-header" class="column-two-thirds">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">Digideps Elements</span>
-                Form Elements
-            </h1>
-
-            <p class="lede">
-                Enhanced form controls created for specific kids of data.
-            </p>
-        </header>
-    </div>
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-small heading-contents">Contents:</h2>

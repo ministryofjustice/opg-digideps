@@ -1,15 +1,18 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% block htmlTitle %}Headings - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Headings{% endblock %}
 
+{% block helpline %}{% endblock %}
 
-{% block htmlTitle %}Digideps Styleguide{% endblock %}
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+        breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
-
-{% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-breadCrumb: breadCrumb
-} %}
 
 <!-- Section Title -->
 <div class="grid-row">
