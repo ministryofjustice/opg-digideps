@@ -47,7 +47,7 @@
                 <span class="bold-small">Total amount</span>
             </td>
             <td class="text--right">
-                <span class="bold-small">£100.00</span>
+                <span class="bold-small">£{{ groupData.amountTotal | money_format }}</span>
             </td>
             <td></td>
         </tr>
@@ -63,7 +63,7 @@
             <span class="heading-medium">Total money in:</span>
         </td>
         <td class="numeric-small width-eighth">
-            <span class="heading-medium">£300.00</span>
+            <span class="heading-medium">£{{ report.moneyInTotal | money_format }}</span>
         </td>
         <td class="width-sixth"></td>
     </tr>
