@@ -1,32 +1,41 @@
 startPage:
-  htmlTitle: "Deputy report - Money in | GOV.UK"
-  pageSectionTitle: Money in
-  pageSectionDescription1: |
-    Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
-  pageSectionDescription2: |
-   You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.
-  pageSectionDescription3: |
-    Be sure to enter each individual source of income into one category only, so we don’t count them twice when we do the calculation
-  startButton: Start money in
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageSectionTitle: Money in
+    pageSectionDescription1: |
+      Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+    pageSectionDescription2: |
+     You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.
+    pageSectionDescription3: |
+      Be sure to enter each individual source of income into one category only, so we don’t count them twice when we do the calculation
+    startButton: Start money in
 
 stepPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     supportTitle: Money in
     pageSectionTitle: Add an item of income
-    pageSectionTitleWithCategory: Add an item of income: %category%
+    pageSectionTitleWithCategory: Add an item of income: %group%
     pageSectionDescription:
        step1: You can add one or more items and come back to complete the section later.
+  moneyOut:
+      htmlTitle: "Deputy report - Money out | GOV.UK"
+      supportTitle: Money in
+      pageSectionTitle: Add an item of income
+      pageSectionTitleWithCategory: Add an item of income: %group%
+      pageSectionDescription:
+         step1: You can add one or more items and come back to complete the section later.
 
 addAnotherPage:
-  htmlTitle: "Deputy report - Add another item of income| GOV.UK"
-  pageSectionTitle: Add another item of income
-  form:
-    addAnother:
-      label: The item of income has been saved. Would you like to add another item of income now?
-      hint: If you prefer, you can come back to this section later to add more expenses
-    save:
-       label: Continue
+  moneyIn:
+    htmlTitle: "Deputy report - Add another item | GOV.UK"
+    pageSectionTitle: Add another item
+    form:
+      addAnother:
+        label: The item has been saved. Would you like to add another item now?
+        hint: If you prefer, you can come back to this section later to add more expenses
+      save:
+         label: Continue
 
 summaryPage:
   moneyIn:
@@ -65,9 +74,9 @@ form:
       moneyout-other: Other
   amount:
       label: Amount
-  createdAt:
-    label: What date did this money come in? (optional)
-    hint: "(DD/MM/YYYY)"
+#  createdAt:
+#    label: What date did this money come in? (optional)
+#    hint: "(DD/MM/YYYY)"
   description:
     mandatory:
       label: Description of %category%

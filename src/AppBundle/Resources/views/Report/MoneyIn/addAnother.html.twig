@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'addAnotherPage.moneyIn.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.moneyIn.pageSectionTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -16,12 +16,12 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.moneyIn.form.addAnother', {
         'fieldSetClass' : 'inline',
         'legendClass' : 'form-label-bold text'
     }) }}
 
-    {{ form_submit(form.save,'addAnotherPage.form.save') }}
+    {{ form_submit(form.save,'addAnotherPage.moneyIn.form.save') }}
 
     {{ form_end(form) }}
 
