@@ -26,10 +26,6 @@ class DecisionController extends AbstractController
 
         $decisions = $report->getDecisions();
 
-        if (empty($decisions) && $report->isDue() == false) {
-            return $this->redirect($this->generateUrl('decision_add', ['reportId' => $reportId]));
-        }
-
         return [
             'decisions' => $decisions,
             'report' => $report,
