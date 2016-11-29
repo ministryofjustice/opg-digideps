@@ -41,7 +41,12 @@ class MoneyTransferType extends AbstractType
         }
         if ($this->step == 2) {
             $builder
-                ->add('amount', 'text');
+                ->add('amount', 'number', [
+                    'precision' => 2,
+                    'grouping' => true,
+                    'error_bubbling' => false,
+                    'invalid_message' => 'transfer.amount.notNumeric',
+                ]);
         }
 
         $builder
