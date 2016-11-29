@@ -95,7 +95,7 @@ summaryPage:
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
-    moneyOut.legend: What category does the expense come under
+    moneyOut.legend: What category does the expense come under?
     entries:
       # money in
       income-and-earnings: Income from investments
