@@ -97,7 +97,7 @@ class Transaction
         ['loans', false, '690', 'debt-and-charges', 'out'],
         ['tax-payments-to-hmrc', false, '700', 'debt-and-charges', 'out'],
         ['debt-and-charges-other', true, '710', 'debt-and-charges', 'out'],
-        
+
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
         ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
         ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],

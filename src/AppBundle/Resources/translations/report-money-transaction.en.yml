@@ -32,7 +32,7 @@ addAnotherPage:
     pageSectionTitle: Add another item
     form:
       addAnother:
-        label: The item has been saved. Would you like to add another item now?
+        label: The item of income has been saved. Would you like to add another item of income now?
         hint: If you prefer, you can come back to this section later to add more expenses
       save:
          label: Continue
