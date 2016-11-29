@@ -28,7 +28,7 @@ class MoneyTransactionAddAnotherType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'money'.ucfirst($this->type).'.addAnother.notBlank'])],
+                'constraints' => [new NotBlank(['message' => 'moneyTransaction.addAnother.notBlank'])],
             ))
             ->add('save', 'submit', ['label' => 'save.label']);
     }

@@ -5,10 +5,26 @@ startPage:
     pageSectionDescription1: |
       Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
-     You can enter a total for each type of income, or you can enter individual amounts and we'll add them up for you.
+      You can enter a total for each type of income, or you can enter
+      individual amounts and we'll add them up for you.
     pageSectionDescription3: |
-      Be sure to enter each individual source of income into one category only, so we don’t count them twice when we do the calculation
+      Be sure to enter each individual source of income into one category only,
+      so we don’t count them twice when we do the calculation
     startButton: Start money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money in
+    pageSectionDescription1: |
+      Tell us about money you have spent on %client%'s day-to-day living
+      and welfare costs between %startDate% and %endDate%.
+    pageSectionDescription2: |
+      You can enter a total for each type of expense, or you can enter
+      individual amounts and we'll add them up for you.
+    pageSectionDescription3: |
+      Be sure to enter each individual expense into one category only,
+      so we don’t count them twice when we do the calculation.
+    startButton: Start money out
+
 
 stepPage:
   moneyIn:
@@ -20,15 +36,15 @@ stepPage:
        step1: You can add one or more items and come back to complete the section later.
   moneyOut:
       htmlTitle: "Deputy report - Money out | GOV.UK"
-      supportTitle: Money in
-      pageSectionTitle: Add an item of income
-      pageSectionTitleWithCategory: Add an item of income: %group%
+      supportTitle: Money out
+      pageSectionTitle: Add an expense
+      pageSectionTitleWithCategory: Add an expense: %group%
       pageSectionDescription:
-         step1: You can add one or more items and come back to complete the section later.
+         step1: You can add one or more items of expense and come back to complete the section later.
 
 addAnotherPage:
   moneyIn:
-    htmlTitle: "Deputy report - Add another item | GOV.UK"
+    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
     pageSectionTitle: Add another item
     form:
       addAnother:
@@ -36,11 +52,22 @@ addAnotherPage:
         hint: If you prefer, you can come back to this section later to add more expenses
       save:
          label: Continue
+  moneyOut:
+    htmlTitle: "Deputy report - Add another expense | GOV.UK"
+    pageSectionTitle: Add an expense
+    form:
+      addAnother:
+        label: The expense has been saved. Would you like to add another expense now?
+        hint: If you prefer, you can come back to this section later to add more expenses
+      save:
+         label: Continue
+
 
 summaryPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
+    # similar to start page, but expecting to evolve differently
     pageSectionDescription1: |
       Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
@@ -49,10 +76,26 @@ summaryPage:
     pageSectionDescription3: |
       Be sure to enter each individual source of income into one category only,
       so we don’t count them twice when we do the calculation.
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money out
+    # similar to start page, but expecting to evolve differently
+    pageSectionDescription1: |
+      Tell us about money you have spent on %client%'s day-to-day living
+      and welfare costs between %startDate% and %endDate%.
+    pageSectionDescription2: |
+      You can enter a total for each type of expense, or you can enter
+      individual amounts and we'll add them up for you.
+    pageSectionDescription3: |
+      Be sure to enter each individual expense into one category only,
+      so we don’t count them twice when we do the calculation.
+
+
 
 form:
   group:
-    legend: What category does the item of income come under?
+    moneyIn.legend: What category does the item of income come under?
+    moneyOut.legend: What category does the expense come under
     entries:
       # money in
       income-and-earnings: Income from investments

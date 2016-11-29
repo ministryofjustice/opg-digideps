@@ -9,18 +9,18 @@
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
 {% set transOptions = {'%client%': report.client.firstname, '%group%': groupString, '%category%': categoryString} %}
 
-{% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {% if step == 1 %}
-        {{ 'stepPage.moneyIn.pageSectionTitle' | trans(transOptions) }}
+        {{ 'stepPage.moneyOut.pageSectionTitle' | trans(transOptions) }}
     {% else %}
-        {{ 'stepPage.moneyIn.pageSectionTitleWithCategory' | trans(transOptions) }}
+        {{ 'stepPage.moneyOut.pageSectionTitleWithCategory' | trans(transOptions) }}
     {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'stepPage.moneyIn.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'stepPage.moneyOut.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block linkBack %}
@@ -32,11 +32,11 @@
 
     {% if step == 1 %}
         <p class="text">
-            {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
+            {{ 'stepPage.moneyOut.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.moneyIn.legend' | trans(transOptions)
+            'legendText' : 'form.group.moneyOut.legend' | trans(transOptions)
         }) }}
     {% endif %}
 

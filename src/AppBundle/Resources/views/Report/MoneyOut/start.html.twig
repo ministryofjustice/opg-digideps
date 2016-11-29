@@ -1,0 +1,29 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname,
+    '%startDate%': report.startDate | date("jS M Y"),
+    '%endDate%': report.endDate | date("jS M Y")
+} %}
+
+{% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.moneyOut.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.moneyOut.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans(transOptions) }}</p>
+    </div>
+
+    <a href="{{ path('money_out_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.moneyOut.startButton' | trans }}</a>
+
+{% endblock %}

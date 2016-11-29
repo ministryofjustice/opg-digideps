@@ -171,8 +171,8 @@ account:
 #          missingWhenDetailsFilled: Please enter the total amount or remove the details
 #        moreDetails:
 #          empty: Please give us some more information about this amount
-moneyIn:
-  addAnother.notBlank: Please specify if you want to add another item of income
+moneyTransaction:
+  addAnother.notBlank: Please choose one option
   form:
     category:
       notBlank: Please choose one option

@@ -112,14 +112,14 @@ class Transaction
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="moneyIn.form.category.notBlank", groups={"transaction-in-group"})
+     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-in-group"})
      */
     private $group;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
-     * @Assert\NotBlank(message="moneyIn.form.category.notBlank", groups={"transaction-in-category"})
+     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-in-category"})
      */
     private $category;
 
@@ -134,7 +134,7 @@ class Transaction
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
      *
-     * @Assert\NotBlank(message="moneyIn.form.amount.notBlank", groups={"transaction-in-amount"})
+     * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-in-amount"})
      */
     private $amount;
 
@@ -142,7 +142,7 @@ class Transaction
      * @var string
      * @JMS\Groups({"transaction"})
      *
-     * @Assert\NotBlank(message="moneyIn.form.description.notBlank", groups={"transaction-in-description"})
+     * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-in-description"})
      *
      * @JMS\Type("string")
      */
