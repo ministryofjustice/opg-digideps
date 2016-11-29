@@ -32,7 +32,8 @@
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number js-format-currency',
-            'labelParameters': { '%fromAccountName%': transfer.accountFrom.accountTypeText, '%toAccountName%': 123 }
+            'labelClass' : 'text',
+            'labelParameters': { '%fromAccountName%': transfer.accountFrom.accountTypeText, '%toAccountName%': transfer.accountTo.accountTypeText }
         }) }}
     {% endif %}
 
