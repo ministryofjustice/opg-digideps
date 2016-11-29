@@ -46,4 +46,4 @@ form:
   accountTo:
     label: Which account did you transfer money to?
   amount:
-    label: How much money was transferred from to ?
+    label: How much money was transferred from %fromAccountName% to %toAccountName% ?

@@ -29,10 +29,10 @@
     {% endif %}
 
     {% if step == 2 %}
-
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number transaction-value',
+            'labelParameters': { '%fromAccountName%': transfer.accountFrom.accountTypeText, '%toAccountName%': 123 }
         }) }}
     {% endif %}
 

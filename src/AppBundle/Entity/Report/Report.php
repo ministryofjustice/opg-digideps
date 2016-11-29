@@ -516,6 +516,18 @@ class Report
     }
 
     /**
+     * @return Account
+     */
+    public function getAccountWithId($id)
+    {
+        foreach($this->accounts as $account) {
+            if ($account->getId() == $id) {
+                return $account;
+            }
+        }
+    }
+
+    /**
      * @return MoneyTransfer[]
      */
     public function getMoneyTransfers()
