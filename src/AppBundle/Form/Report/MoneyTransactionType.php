@@ -17,12 +17,21 @@ use Symfony\Component\Validator\Constraints\Type;
 class MoneyTransactionType extends AbstractType
 {
     private $step;
+    private $type;
     private $selectedGroup;
     private $selectedCategory;
 
-    public function __construct($step, $selectedGroup, $selectedCategory = null)
+    /**
+     * MoneyTransactionType constructor.
+     * @param integer $step
+     * @param $type in|out
+     * @param string $selectedGroup
+     * @param null|string $selectedCategory
+     */
+    public function __construct($step, $type, $selectedGroup, $selectedCategory = null)
     {
         $this->step = (int)$step;
+        $this->type = $type;
         $this->selectedGroup = $selectedGroup;
         $this->selectedCategory = $selectedCategory;
     }
@@ -33,7 +42,9 @@ class MoneyTransactionType extends AbstractType
 
         foreach(Transaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
-            $ret[$groupId] = 'form.group.entries.' . $groupId;
+            if ($type == $this->type) {
+                $ret[$groupId] = 'form.group.entries.' . $groupId;
+            }
         }
 
         return array_unique($ret);
