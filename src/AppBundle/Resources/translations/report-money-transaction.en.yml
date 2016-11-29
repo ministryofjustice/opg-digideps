@@ -120,7 +120,7 @@ form:
       universal-credit:
         label: Universal Credit
       personal-pension:
-        label: Personal pension
+        label: Private pension
       state-pension:
         label: State Pension
       compensation-or-damages-award:

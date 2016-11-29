@@ -15,6 +15,7 @@ class Transaction
      */
     public static $categories = [
         // id | hasMoreDetails | order | category | in/out
+        //income-and-earnings
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
@@ -86,7 +87,7 @@ class Transaction
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
         ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
         ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],
-        ['other-incomes', true, '65', 'income-and-earnings', 'in'],
+
     ];
 
     /**
