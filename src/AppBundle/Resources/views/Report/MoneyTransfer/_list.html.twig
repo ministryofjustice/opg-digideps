@@ -50,12 +50,12 @@
 {% endif %}
 
 {% if report.moneyTransfers | length > 0 %}
-    <table class="check-your-answers columns-3">
+    <table class="check-your-answers">
         <thead>
             <tr>
                 <th>Transferred from</th>
                 <th>Transferred to</th>
-                <th>Amount</th>
+                <th class="text--right">Amount</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
@@ -64,23 +64,26 @@
         <tbody>
             {% for transfer in report.moneyTransfers %}
                 <tr>
-                    <td class="width-fifth">
+                    <td class="width-quarter">
                         {% set account = transfer.accountFrom %}
                         {{ account.accountTypeText }}<br/>
-                        Sort code: {{ account.sortCode }}<br/>
-                        Account number: ****{{ account.accountNumber }}<br/>
-                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
-
+                        <p class="font-xsmall flush--ends">
+                            Sort code: {{ account.sortCode }}<br/>
+                            Account number: ****{{ account.accountNumber }}<br/>
+                            Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                        </p>
                     </td>
-                    <td class="width-fifth">
+                    <td class="width-quarter">
                         {% set account = transfer.accountTo %}
                         {{ account.accountTypeText }}<br/>
-                        Sort code: {{ account.sortCode }}<br/>
-                        Account number: ****{{ account.accountNumber }}<br/>
-                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                        <p class="font-xsmall flush--ends">
+                            Sort code: {{ account.sortCode }}<br/>
+                            Account number: ****{{ account.accountNumber }}<br/>
+                            Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                        </p>
                     </td>
-                    <td>
-                        {{ transfer.amount | money_format }}
+                    <td class="numeric-small">
+                        £{{ transfer.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
                         <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-transfer-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
