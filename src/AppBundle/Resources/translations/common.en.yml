@@ -36,3 +36,4 @@ summaryPage:
      checkCorrect: Check they're correct and edit them where necessary.
      remindComplete: Don’t worry if you’ve had to skip some questions. We’ll remind you to complete them next time you log in.
      canYouAnswer: Can you answer the missing questions? You won’t be able to submit your new deputy report until it’s complete.
+     returnToReport: Return to report overview

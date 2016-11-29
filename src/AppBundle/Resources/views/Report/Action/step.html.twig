@@ -18,50 +18,54 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <div class="form-section">
-            <fiedset>
-                <legend class="hidden">Future financial decisions</legend>
+        <div class="form-section push--bottom">
+
+            <div class="form-group flush--bottom {# {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %} #}">
                 {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
-                    'fieldSetClass' : 'inline expect-financial-dec-radio',
-                    'legendClass' : 'form-label',
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {'dataTarget': 'financial-decisions-textarea' },
-                    {},
+                        {'dataTarget': 'financial-decisions-textarea' },
+                        {},
                     ]
                 }) }}
+
                 <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
                         'labelClass': 'required',
                         'labelParameters': { '%client%': report.client.firstname }
                     }) }}
                 </div>
-                </fieldset>
+            </div>
         </div>
     {% endif %}
 
     {% if step == 2 %}
-        <div class="form-section">
-            <fieldset>
-                <legend class="hidden">Concerns for future</legend>
+        <div class="form-section push--bottom">
+
+            <div class="form-group flush--bottom {# {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %} #}">
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
-                    'fieldSetClass' : 'inline do-you-have-actions-radio',
-                    'legendClass' : 'form-label',
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {'dataTarget': 'actions-details-textarea' },
-                    {},
+                        {'dataTarget': 'actions-details-textarea' },
+                        {},
                     ]
                 }) }}
+
                 <div id="actions-details-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
                         'labelClass': 'required',
                         'labelParameters': { '%client%': report.client.firstname }
                     }) }}
                 </div>
-            </fieldset>
+            </div>
         </div>
     {% endif %}
 
