@@ -1,0 +1,84 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <div class="form-section">
+            <fiedset>
+                <legend class="hidden">Future financial decisions</legend>
+                {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
+                    'fieldSetClass' : 'inline expect-financial-dec-radio',
+                    'legendClass' : 'form-label',
+                    'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
+                    {'dataTarget': 'financial-decisions-textarea' },
+                    {},
+                    ]
+                }) }}
+                <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+                </fieldset>
+        </div>
+    {% endif %}
+
+    {% if step == 2 %}
+        <div class="form-section">
+            <fieldset>
+                <legend class="hidden">Concerns for future</legend>
+                {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
+                    'fieldSetClass' : 'inline do-you-have-actions-radio',
+                    'legendClass' : 'form-label',
+                    'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
+                    {'dataTarget': 'actions-details-textarea' },
+                    {},
+                    ]
+                }) }}
+                <div id="actions-details-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+            </fieldset>
+        </div>
+    {% endif %}
+
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var showHideContent = new GOVUK.ShowHideContent();
+            showHideContent.init();
+        });
+    </script>
+
+{% endblock %}
+

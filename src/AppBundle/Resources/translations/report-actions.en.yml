@@ -1,0 +1,44 @@
+startPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageSectionTitle: Actions you plan to take
+  pageSectionDescription1: |
+    Tell us about any concerns you may have now, and changes you think may happen in the next reporting period.
+  pageSectionDescription2: |
+    We’ll read what you’ve written and get in touch if we can help.
+  startButton: Start actions
+
+stepPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageSectionTitle: Actions you plan to take
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageSectionTitle: Actions you plan to take
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+
+form:
+  save:
+      label: Save
+  doYouExpectFinancialDecisions:
+      label: |
+          Do you expect to make any significant financial decisions on
+          behalf of %client% in the next 12 months?
+      hint: |
+          For example, moving to other accommodation,
+          buying or selling property or making adaptations to %client%'s home,
+          changing investments, taking funds out of the Courts Funds Office,
+          seeking NHS continuing care funding, making large gifts
+          (such as a 21st birthday present for a relative)
+  doYouExpectFinancialDecisionsDetails:
+      label: Tell us more
+  doYouHaveConcerns:
+      label: Do you have any concerns about your deputyship?
+      hint: |
+          For example, paying care home fees if %client%’s money runs low,
+          managing %client%’s property, making gifts, other family members’ involvement
+          with %client%’s funds, what expenses you can claim
+  doYouHaveConcernsDetails:
+      label: Tell us more
