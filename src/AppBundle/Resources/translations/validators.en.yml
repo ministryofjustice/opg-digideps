@@ -186,14 +186,16 @@ moneyIn:
 
 transfer:
     accountFrom:
-        notBlank: You need to enter a closing balance
+        notBlank: Please choose the account you transfer money from
     accountTo:
-        notBlank: You need to enter a closing balance
+        notBlank: Please choose the account you transfer money to
     amount:
           notBlank: You need to enter the amount
           notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000
+    addAnother.notBlank: Please specify if you want to add another transfer
+
 asset:
     title:
         notBlank: Choose the type of asset from the list

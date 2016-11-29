@@ -35,13 +35,13 @@
     </tbody>
 </table>
 
-{% if report.contacts | length > 0 %}
+{% if report.moneyTransfers | length > 0 %}
     <div class="grid-row">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of money_transfers</h2>
+            <h2 class="heading-medium flush--ends">List of money transfers</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('money_transfer_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+            <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -49,50 +49,42 @@
     </div>
 {% endif %}
 
-{% if report.contacts | length > 0 %}
+{% if report.moneyTransfers | length > 0 %}
     <table class="check-your-answers columns-3">
         <thead>
             <tr>
-                <th>Contact</th>
-                <th>Relationship</th>
-                <th>Reason for contact</th>
+                <th>Transferred from</th>
+                <th>Transferred to</th>
+                <th>Amount</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
             </tr>
         </thead>
         <tbody>
-            {% for contact in report.contacts %}
+            {% for transfer in report.moneyTransfers %}
                 <tr>
                     <td class="width-fifth">
-                        {{ contact.contactName }}<br/>
-                        <p class="font-xsmall flush--ends">
-                            {% if contact.address %}
-                                {{ contact.address }}<br/>
-                            {% endif %}
-                            {% if contact.address2 %}
-                                {{ contact.address2 }}<br/>
-                            {% endif %}
-                            {% if contact.county %}
-                                {{ contact.county }}<br/>
-                            {% endif %}
-                            {% if contact.postcode %}
-                                {{ contact.postcode }}<br/>
-                            {% endif %}
-                            {% if contact.country %}
-                                {{ contact.country | country_name }}<br/>
-                            {% endif %}
-                        </p>
+                        {% set account = transfer.accountFrom %}
+                        {{ account.accountTypeText }}<br/>
+                        Sort code: {{ account.sortCode }}<br/>
+                        Account number: ****{{ account.accountNumber }}<br/>
+                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+
                     </td>
                     <td class="width-fifth">
-                        {{ contact.relationship }}
+                        {% set account = transfer.accountTo %}
+                        {{ account.accountTypeText }}<br/>
+                        Sort code: {{ account.sortCode }}<br/>
+                        Account number: ****{{ account.accountNumber }}<br/>
+                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
                     </td>
                     <td>
-                        {{ contact.explanation }}
+                        {{ transfer.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left">Remove</a>
+                        <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-transfer-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left">Remove</a>
                     </td>
                 </tr>
             {% endfor %}

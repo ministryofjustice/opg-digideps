@@ -27,17 +27,10 @@ addAnotherPage:
     save:
        label: Continue
 
-addPage:
-  htmlTitle: "Deputy report - add transfers | GOV.UK"
-  pageSectionTitle: Add a transfer
+stepPage:
+  htmlTitle: "Deputy report - Money transfer | GOV.UK"
   supportTitle: Money transfers
-  pageSectionDescription: |
-    xxxxxx
-
-editPage:
-  htmlTitle: "Deputy report - edit money transfer | GOV.UK"
-  supportTitle: Money transfers
-  pageSectionTitle: Edit transfer
+  pageSectionTitle: Add a money transfer
 
 summaryPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
@@ -48,77 +41,9 @@ summaryPage:
 #  reasonForContact: Reason for contact
 
 form:
-  contactName:
-      label: Contact name
-      hint: ''
-  relationship:
-      label: Their relationship to %client%
-      hint: ''
-  explanation:
-      label: Reason for contact
-      hint: ''
-  address:
-      label: Address (optional)
-      hint: ''
-  address2:
-      label: ' '
-      hint: ''
-  county:
-      label: ' '
-      hint: ''
-  postcode:
-      label: Postcode (optional)
-      hint: ''
-  country:
-      label: Country (optional)
-      hint: ''
-      defaultOption: Please select ...
-  save:
-      label: Save and continue
-
-
-#save:
-#    label: Save
-#cancel:
-#    label: Cancel
-#delete:
-#    label: Delete
-#    message: "Are you sure that you want to delete this contact?"
-#delete-reason:
-#    label: Delete
-#    message: "Are you sure that you want to delete this reason?"
-
-#page:
-#    htmlTitle: "Deputy report - contacts | GOV.UK"
-#    pageSectionTitle: Contacts
-#    pageSectionDescription: Give details of people who helped you make significant decisions as a deputy, such as a GP, solicitor, accountant, family member or care worker.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
-#    pageSectionEditInfo: "You can update the details of a contact or delete a contact by using the 'Edit this contact' link below."
-#    subSectionTitleAdd : Add a new contact
-#    subSectionTitleEdit : Edit this contact
-#form:
-#    controls:
-#        addButton:
-#            label: Add a contact
-#            moreLabel: Add another contact
-#no_contact:
-#    subSectionDescription: "If you haven't added any contacts, tell us why."
-#    fields:
-#      noContactReason:
-#        label: "Information type"
-#        value: "Reason for not adding contacts"
-#      editReason:
-#        label: "Edit Reason link"
-#        value: "Edit this reason"
-#    controls:
-#      reason:
-#        label: "Reason for no contacts"
-#pageTitle: "Deputy report - contacts | GOV.UK"
-#view_contact:
-#    edit: Edit this contact
-#    relationship: Relationship to %client%
-#    reason: Reason for contact
-#    address: Address
-#    phone: Work phone
-#delete-reason:
-#    label: Delete
-#    message: "Are you sure that you want to delete this reason?"
+  accountFrom:
+    label: Which account did you transfer money from?
+  accountTo:
+    label: Which account did you transfer money to?
+  amount:
+    label: How much money was transferred from to ?

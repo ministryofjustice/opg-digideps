@@ -19,9 +19,11 @@ class MoneyTransfer
 
     /**
      * @var string
-     * @Assert\NotBlank(message="transfer.amount.notBlank")
-     * @Assert\Range(min=0, max=10000000000, minMessage = "transfer.amount.minMessage", maxMessage = "transfer.amount.maxMessage")
+     * @Assert\NotBlank(message="transfer.amount.notBlank", groups={"money-transfer-amount"})
+     * @Assert\Range(min=0, max=10000000000, minMessage = "transfer.amount.minMessage", maxMessage = "transfer.amount.maxMessage", groups={"money-transfer-amount"})
+     *
      * @JMS\Type("string")
+     * @JMS\Groups({"money-transfer"})
      */
     private $amount;
 
@@ -34,7 +36,9 @@ class MoneyTransfer
 
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank(message="transfer.accountFrom.notBlank")
+     * @JMS\Groups({"money-transfer"})
+     *
+     * @Assert\NotBlank(message="transfer.accountFrom.notBlank", groups={"money-transfer-account-from"})
      */
     private $accountFromId;
 
@@ -47,7 +51,9 @@ class MoneyTransfer
 
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank(message="transfer.accountTo.notBlank")
+     * @JMS\Groups({"money-transfer"})
+     *
+     * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
      */
     private $accountToId;
 
@@ -125,33 +131,36 @@ class MoneyTransfer
         return $this;
     }
 
-    public function setAccountFromId($accountFromId)
-    {
-        $this->accountFromId = $accountFromId;
-
-        // for JMS serialization
-        $from = new Account();
-        $from->setId($accountFromId);
-        $this->setAccountFrom($from);
-    }
-
-    public function setAccountToId($accountToId)
-    {
-        $this->accountToId = $accountToId;
-
-        // for JMS serialization
-        $to = new Account();
-        $to->setId($accountToId);
-        $this->setAccountTo($to);
-    }
-
+    /**
+     * @return mixed
+     */
     public function getAccountFromId()
     {
         return $this->accountFromId;
     }
 
+    /**
+     * @param mixed $accountFromId
+     */
+    public function setAccountFromId($accountFromId)
+    {
+        $this->accountFromId = $accountFromId;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAccountToId()
     {
         return $this->accountToId;
     }
+
+    /**
+     * @param mixed $accountToId
+     */
+    public function setAccountToId($accountToId)
+    {
+        $this->accountToId = $accountToId;
+    }
+
 }
