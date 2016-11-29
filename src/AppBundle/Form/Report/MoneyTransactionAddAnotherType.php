@@ -10,6 +10,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MoneyTransactionAddAnotherType extends AbstractType
 {
+    private $type;
+
+    /**
+     * @param $type in|out
+     */
+    public function __construct($type)
+    {
+        $this->type = $type;
+    }
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -17,7 +28,7 @@ class MoneyTransactionAddAnotherType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'moneyIn.addAnother.notBlank'])],
+                'constraints' => [new NotBlank(['message' => 'money'.ucfirst($this->type).'.addAnother.notBlank'])],
             ))
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -31,6 +42,6 @@ class MoneyTransactionAddAnotherType extends AbstractType
 
     public function getName()
     {
-        return 'report_money_in_add_another';
+        return 'report_money_'. $this->type .'_add_another';
     }
 }
