@@ -21,8 +21,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getMoneyInTotal());
 
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), [1])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), [2])));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('dividends')->setAmount(1));
 
         $this->assertEquals(3, $this->report->getMoneyInTotal());
     }
@@ -31,8 +32,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
 
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [1])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [2])));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('mortgage')->setAmount(1));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('mortgage')->setAmount(1));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(1));
 
         $this->assertEquals(3, $this->report->getMoneyOutTotal());
     }
@@ -70,10 +72,10 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $this->report->getCalculatedBalance());
 
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), [20])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), [20])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [15])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [15])));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20)); //in
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20));//in
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15));//out
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15));//out
         $calculatedBalance = 1 + 20 + 20 - 15 - 15;
 
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
@@ -86,14 +88,14 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
         $this->report->addAccount((new Account())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), [1500])));
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [400])));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1500));//in
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(400));//out
 
         $this->assertEquals(100, $this->report->getTotalsOffset());
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), [100])));
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(100));//out
 
         $this->assertEquals(0, 1000 + 1500 - 400 - 100 - 2000);
         $this->assertEquals(0, $this->report->getTotalsOffset());
