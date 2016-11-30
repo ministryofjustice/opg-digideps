@@ -284,6 +284,10 @@ class ReportController extends RestController
             $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
         }
 
+        if (array_key_exists('metadata', $data)) {
+            $report->setMetadata($data['metadata']);
+        }
+
         $this->getEntityManager()->flush($report);
 
         return ['id' => $report->getId()];

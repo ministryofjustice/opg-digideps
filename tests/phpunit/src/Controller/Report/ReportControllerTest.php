@@ -261,6 +261,7 @@ class ReportControllerTest extends AbstractTestController
 //                    ['id' => 'accommodation-other', 'amounts' => [24.50], 'more_details' => 'extra service charge'],
 //                ],
                 'balance_mismatch_explanation' => 'bme',
+                'metadata' => 'md',
             ],
         ]);
 
@@ -275,6 +276,7 @@ class ReportControllerTest extends AbstractTestController
 //        $this->assertTrue(count($data['transactions_out']) > 40);
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
+        $this->assertEquals('md', $data['metadata']);
 
         // assert transactions_in
 //        $t = array_shift(array_filter($data['transactions_in'], function ($e) { return $e['id'] === 'dividends'; }));
