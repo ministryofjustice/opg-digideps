@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends AbstractController
 {
     const STEPS = 4;
-    const SECTION_ID = 'visitsCare';
+    //const SECTION_ID = 'visitsCare';
 
     /**
      * @Route("/report/{reportId}/visits-care/start", name="visits_care")
@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if ($report->getVisitsCare() != null || $report->isSectionStarted(self::SECTION_ID)) {
+        if ($report->getVisitsCare() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 

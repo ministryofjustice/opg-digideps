@@ -140,13 +140,13 @@ class AbstractController extends Controller
         return $this->get('mailSender');
     }
 
-    /**
-     * @param Report\Report $report
-     * @param $sectionId
-     */
-    protected function flagSectionStarted(Report\Report $report, $sectionId)
-    {
-        $report->setSectionStarted($sectionId);
-        $this->getRestClient()->put('report/'.$report->getId(), $report, ['report-metadata']);
-    }
+//    /**
+//     * @param Report\Report $report
+//     * @param $sectionId
+//     */
+//    protected function flagSectionStarted(Report\Report $report, $sectionId)
+//    {
+//        $report->setSectionStarted($sectionId);
+//        $this->getRestClient()->put('report/'.$report->getId(), $report, ['report-metadata']);
+//    }
 }

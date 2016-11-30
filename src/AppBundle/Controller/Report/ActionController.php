@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ActionController extends AbstractController
 {
     const STEPS = 2;
-    const SECTION_ID = 'actions';
+    //const SECTION_ID = 'actions';
 
     /**
      * @Route("/report/{reportId}/actions/start", name="actions")
@@ -24,7 +24,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
-        if ($report->getAction() != null || $report->isSectionStarted(self::SECTION_ID)) {
+        if ($report->getAction() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
