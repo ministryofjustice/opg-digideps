@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyTransaction
 {
     /**
-     * Added via digideps:fixtures command.
+     * Keep in sync with client
      *
      * @JMS\Exclude
      */
@@ -22,6 +22,7 @@ class MoneyTransaction
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
         ['salary-or-wages', false, '60', 'income-and-earnings', 'in'],
+        ['other-incomes', true, '65', 'income-and-earnings', 'in'],
         ['attendance-allowance', false, '70', 'state-benefits', 'in'],
         ['disability-living-allowance', false, '80', 'state-benefits', 'in'],
         ['employment-support-allowance', false, '90', 'state-benefits', 'in'],
@@ -89,7 +90,7 @@ class MoneyTransaction
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
         ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
         ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],
-        ['other-incomes', true, '65', 'income-and-earnings', 'in'],
+
     ];
 
     /**
