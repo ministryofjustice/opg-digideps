@@ -65,55 +65,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function hasMoneyInWhenThereIsNoMoneyIn()
     {
-        $transaction1 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([null])
-            ->getMock();
-
-        $transaction2 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([null])
-            ->getMock();
-
-        $this->report->setTransactionsIn([$transaction1, $transaction2]);
-
+        $this->report->setTransactionsIn([]);
         $this->assertEquals(false, $this->report->hasMoneyIn());
-    }
 
-    /** @test */
-    public function hasMoneyOutWhenThereIsMoneyOut()
-    {
-        $transaction1 = m::mock('AppBundle\Entity\Transaction')
+        $transaction1 = m::mock(MoneyTransfer::class)
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([100])
             ->getMock();
 
-        $transaction2 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([null])
-            ->getMock();
+        $this->report->setTransactionsIn([$transaction1]);
 
-        $this->report->setTransactionsOut([$transaction1, $transaction2]);
-
-        $this->assertEquals(true, $this->report->hasMoneyOut());
-    }
-
-    /** @test */
-    public function hasMoneyOutWhenThereIsNoMoneyOut()
-    {
-        $transaction1 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([null])
-            ->getMock();
-
-        $transaction2 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAmounts')->andReturn([null])
-            ->getMock();
-
-        $this->report->setTransactionsOut([$transaction1, $transaction2]);
-
-        $this->assertEquals(false, $this->report->hasMoneyOut());
+        $this->assertEquals(true, $this->report->hasMoneyIn());
     }
 
     public function getCountValidTotalsProvider()
