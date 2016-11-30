@@ -19,8 +19,7 @@
 
     {% if step == 1 %}
         <div class="form-section push--bottom">
-
-            <div class="form-group flush--bottom {# {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %} #}">
+            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}error{% endif %}">
                 {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -46,7 +45,7 @@
     {% if step == 2 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {# {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %} #}">
+            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}error{% endif %}">
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
