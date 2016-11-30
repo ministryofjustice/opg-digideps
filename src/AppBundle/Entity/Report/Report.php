@@ -329,6 +329,14 @@ class Report
     private $debtsTotalAmount;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-metadata"})
+     *
+     * @var decimal
+     */
+    private $metadata;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1422,4 +1430,35 @@ class Report
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }
+
+    public function isSectionStarted($sectionId)
+    {
+        $metadataDecoded = json_decode($this->metadata, true);
+
+        return !empty($metadataDecoded['sections'][$sectionId]['started']);
+    }
+
+    public function setSectionStarted($sectionId)
+    {
+        $metadataDecoded = json_decode($this->metadata, true);
+        $metadataDecoded['sections'][$sectionId]['started'] = true;
+        $this->metadata = json_encode($metadataDecoded);
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param decimal $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
 }
