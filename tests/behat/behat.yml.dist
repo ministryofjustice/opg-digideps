@@ -14,7 +14,7 @@ default:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
             filters:
-                tags: "@deputy&&~@javascript"
+                tags: "@deputy&&~@javascript&&~@failing_on_production"
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
@@ -141,7 +141,7 @@ firefoxlocal:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: selenium2
             selenium2: ~
-            
+
 headless:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
