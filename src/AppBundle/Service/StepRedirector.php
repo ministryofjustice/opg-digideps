@@ -152,7 +152,7 @@ class StepRedirector
     public function getBackLink()
     {
         if ($this->fromPage === 'summary') {
-            return $this->generateUrl($this->routeSummary);
+            return $this->generateUrl($this->routeSummary, ['from'=>'skip-step']);
         } else if ($this->currentStep == 1) {
             return $this->generateUrl($this->routeStartPage);
         }

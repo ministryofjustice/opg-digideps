@@ -92,6 +92,9 @@ class ActionController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
         //$this->flagSectionStarted($report, self::SECTION_ID);
+        if (!$report->getAction() && $fromPage != 'skip-step') {
+            return $this->redirectToRoute('actions', ['reportId' => $reportId]);
+        }
 
         if (!$report->getAction()) { //allow validation with answers all skipped
             $report->setAction(new EntityDir\Report\Action());

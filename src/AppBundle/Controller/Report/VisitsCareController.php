@@ -100,6 +100,9 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
         //$this->flagSectionStarted($report, self::SECTION_ID);
+        if (!$report->getVisitsCare() && $fromPage != 'skip-step') {
+            return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
+        }
 
         if (!$report->getVisitsCare()) { //allow validation with answers all skipped
             $report->setVisitsCare(new EntityDir\Report\VisitsCare());
