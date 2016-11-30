@@ -28,18 +28,6 @@ class Version078 extends AbstractMigration implements ContainerAwareInterface
 
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $em = $this->container->get('em');
-        $reportRepo = $em->getRepository('AppBundle\Entity\Report\Report');
-        $reports = $reportRepo->findAll();
-
-        foreach($reports as $report) {
-            if ($reportRepo->addDebtsToReportIfMissing($report)) {
-                $em->flush();
-                echo "Added debts to report {$report->getId()}\n";
-            }
-
-        }
     }
 
     /**
