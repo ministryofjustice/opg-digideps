@@ -41,7 +41,7 @@ class Client
     private $users;
 
     /**
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"client-reports"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist"})
      */
