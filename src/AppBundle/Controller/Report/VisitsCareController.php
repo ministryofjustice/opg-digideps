@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        if ($report->getVisitsCare() || $report->isSectionStarted(self::SECTION_ID)) {
+        if ($report->getVisitsCare() != null || $report->isSectionStarted(self::SECTION_ID)) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -44,7 +44,6 @@ class VisitsCareController extends AbstractController
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
-        $this->flagSectionStarted($report, self::SECTION_ID);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
@@ -100,6 +99,7 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        //$this->flagSectionStarted($report, self::SECTION_ID);
 
         if (!$report->getVisitsCare()) { //allow validation with answers all skipped
             $report->setVisitsCare(new EntityDir\Report\VisitsCare());

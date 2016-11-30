@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\SectionValidator\ActionsValidator;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ActionController extends AbstractController
 {
     const STEPS = 2;
+    const SECTION_ID = 'actions';
 
     /**
      * @Route("/report/{reportId}/actions/start", name="actions")
@@ -22,7 +24,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
-        if ($report->getAction() != null) {
+        if ($report->getAction() != null || $report->isSectionStarted(self::SECTION_ID)) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
@@ -89,9 +91,7 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
-        if (!$report->getAction() && $fromPage != 'skip-step') {
-            return $this->redirectToRoute('actions', ['reportId' => $reportId]);
-        }
+        //$this->flagSectionStarted($report, self::SECTION_ID);
 
         if (!$report->getAction()) { //allow validation with answers all skipped
             $report->setAction(new EntityDir\Report\Action());
