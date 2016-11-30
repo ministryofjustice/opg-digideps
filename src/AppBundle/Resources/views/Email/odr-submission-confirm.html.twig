@@ -18,21 +18,18 @@ outputHeaderStyles: true
 {% block emailHTMLMessage %}
 
     <p>Dear {{ deputyFirstName }}</p>
-    <br/>
+   <br>
 
     <p><strong>Thank you for submitting your new deputy report</strong></p>
-
+    
     <p>We’re in the process of reviewing your report, and will contact you when this has been done.</p>
-    <br/>
-
     <p>
         <strong>Download a pdf of your report</strong>
     </p>
 
-    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the new deputy report service</a>. Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.
+    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the new deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
     </p>
-    <br/>
-
+   
     <p>
         <strong>What happens next</strong>
     </p>
@@ -43,7 +40,7 @@ outputHeaderStyles: true
 
     <p>However, you can use the service year round to keep track of your deputyship decisions and spending.</p>
 
-    <p>Make a start at <a href="http://www.gov.uk/deputyreport">www.gov.uk/deputyreport</a></p>
+    <p>Make a start at <a href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a></p>
     <br/>
 
 {% endblock %}

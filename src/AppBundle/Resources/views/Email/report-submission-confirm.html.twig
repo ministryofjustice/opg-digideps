@@ -23,21 +23,20 @@ outputHeaderStyles: true
     </p>
 
     <p>We’re in the process of reviewing your report, and will contact you when this has been done. </p>
-    <br/>
-
+    
      <p><strong>Download a pdf of your report</strong></p>
 
-    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your client’ page, where you’ll find a link to a pdf of your report.
+    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
     </p>
-    <br/>
+    
 
     <p><strong>What happens next</strong></p>
 
     <p>If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
 
-    <p>Sign in to <a href="http://www.gov.uk/deputyreport">www.gov.uk/deputyreport</a> to keep track of your deputyship decisions and spending throughout the year.</p>
+    <p>Sign in to <a href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
 
-    <p>We’ll send you a reminder about your next report nearer the due date (the anniversary of your court order).</p>
+    <p>We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
     <br/>
 
 {% endblock %}
