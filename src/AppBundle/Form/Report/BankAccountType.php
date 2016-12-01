@@ -2,13 +2,13 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Account;
+use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Entity\Report\Account;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -31,8 +31,8 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('accountType', 'choice', [
-                'choices' => Account::$types,
-                'expanded' => true,
+                'choices'     => Account::$types,
+                'expanded'    => true,
                 'empty_value' => 'Please select',
             ]);
         }
@@ -44,41 +44,41 @@ class BankAccountType extends AbstractType
             $builder->add('accountNumber', 'text', ['max_length' => 4]);
             $builder->add('sortCode', new SortCodeType(), [
                 'error_bubbling' => false,
-                'required' => false,
-                'constraints' => new Chain([
+                'required'       => false,
+                'constraints'    => new Chain([
                     'constraints' => [
                         new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
                         new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
                         new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
                     ],
                     'stopOnError' => true,
-                    'groups' => ['bank-account-sortcode'],
+                    'groups'      => ['bank-account-sortcode'],
                 ]),
             ]);
-            $builder->add('isJointAccount', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+            $builder->add('isJointAccount', 'choice', [
+                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
         }
 
         if ($this->step === 3) {
             $builder->add('openingBalance', 'number', [
-                'precision' => 2,
-                'grouping' => true,
+                'precision'       => 2,
+                'grouping'        => true,
                 'invalid_message' => 'account.openingBalance.type',
             ]);
             $builder->add('closingBalance', 'number', [
-                'precision' => 2,
-                'grouping' => true,
+                'precision'       => 2,
+                'grouping'        => true,
                 'invalid_message' => 'account.closingBalance.type',
-                'required' => false,
+                'required'        => false,
             ]);
         }
 
         if ($this->step === 4) {
             $builder->add('isClosed', 'choice', [
-                'choices' => [true=>'Yes', false=>'No'],
-                'expanded' => true,
+                'choices'     => [true => 'Yes', false => 'No'],
+                'expanded'    => true,
                 'empty_value' => 'Please select',
             ]);
         }
@@ -95,38 +95,17 @@ class BankAccountType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
-            'validation_groups' => function (FormInterface $form) {
+            'validation_groups'  => function (FormInterface $form) {
+                $requiresBankNameAndSortCode = $form->getData()->requiresBankNameAndSortCode();
 
-                $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Report\Account */
-
-                $validationGroups = [];
-
-                if ($this->step === 1) {
-                    $validationGroups = ['bank-account-type'];
-                }
-
-                if ($this->step === 2) {
-                    $validationGroups = ['bank-account-number', 'bank-account-is-joint'];
-                    if ($data->requiresBankNameAndSortCode()) {
-                        $validationGroups[] = 'bank-account-name';
-                        $validationGroups[] = 'bank-account-sortcode';
-                    }
-                }
-
-                if ($this->step === 3) {
-                    $validationGroups = [
-                        'bank-account-opening-balance',
-                    ];
-                }
-
-                if ($this->step === 4) {
-                    $validationGroups = [
-                        'bank-account-is-closed',
-                    ];
-                }
-
-                return $validationGroups;
+                return [
+                    1 => ['bank-account-type'],
+                    2 => $requiresBankNameAndSortCode ?
+                        ['bank-account-name', 'bank-account-sortcode', 'bank-account-number', 'bank-account-is-joint']
+                        : ['bank-account-number', 'bank-account-is-joint'],
+                    3 => ['bank-account-opening-balance'],
+                    4 => 'bank-account-is-closed',
+                ][$this->step];
             },
         ]);
     }
