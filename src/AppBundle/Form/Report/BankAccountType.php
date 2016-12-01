@@ -107,9 +107,8 @@ class BankAccountType extends AbstractType
                 }
 
                 if ($this->step === 2) {
-                    $validationGroups = ['bank-account-number'];
+                    $validationGroups = ['bank-account-number', 'bank-account-is-joint'];
                     if ($data->requiresBankNameAndSortCode()) {
-                        $validationGroups[] = 'bank-account-is-joint';
                         $validationGroups[] = 'bank-account-name';
                         $validationGroups[] = 'bank-account-sortcode';
                     }
