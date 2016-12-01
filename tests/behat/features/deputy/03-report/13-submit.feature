@@ -16,6 +16,7 @@ Feature: deputy / report / submit
         And I save the page as "report-submit-declaration"
 
     @deputy
+    @failing_on_production
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I reset the email log
@@ -72,7 +73,6 @@ Feature: deputy / report / submit
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
         And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
-
 
     @deputy
     Scenario: assert 2nd year report has been created
