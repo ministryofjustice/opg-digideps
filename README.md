@@ -30,9 +30,9 @@ If installed locally, use scripts under `/scripts` to recreate db and add initia
 via    `/auth/login`: (
 needs Client token header and credentials, responds with AuthToken to send for subsequent requests).
 
-Some endpoints are open in the firewall for special functionalities without being logged. 
+Some endpoints are open in the firewall for special functionalities without being logged.
 Client secret is required for those.
-    
+
 
 ## API return codes
 * 404 not found
@@ -66,6 +66,10 @@ Same with entity `Xyz` where properties have the JMS group `xyz`.
 ## Coding standards
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+## License
+
+The OPG Digideps API is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
 
 
 
