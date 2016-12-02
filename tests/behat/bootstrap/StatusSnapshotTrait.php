@@ -13,7 +13,7 @@ trait StatusSnapshotTrait
     public static function iSaveTheApplicationStatusInto($status)
     {
         $sqlFile = self::getSnapshotPath($status);
-        exec('pg_dump '.self::$dbName." -N pg_catalog --clean --inserts > {$sqlFile}");
+        exec('pg_dump ' . self::$dbName . ' -n ' . self::$dbName . " --clean --inserts | sed '/EXTENSION/d' > {$sqlFile}");
     }
 
     /**
