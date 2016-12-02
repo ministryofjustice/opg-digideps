@@ -16,7 +16,7 @@ Feature: deputy / report / submit
         And I save the page as "report-submit-declaration"
 
     @deputy
-    @failing_on_production
+    @failing_on_aws
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I reset the email log

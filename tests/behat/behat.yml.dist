@@ -14,7 +14,7 @@ default:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
             filters:
-                tags: "@deputy&&~@javascript&&~@failing_on_production"
+                tags: "@deputy&&~@javascript&&~@failing_on_aws"
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
@@ -22,7 +22,7 @@ default:
             description: End to end journey for Admin user
             paths:    [ %paths.base%/features/admin ]
             filters:
-                tags: "~@javascript"
+                tags: "~@javascript&&~@failing_on_aws"
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
@@ -30,7 +30,7 @@ default:
             description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
             paths:    [ %paths.base%/features/deputy ]
             filters:
-                tags: "@odr"
+                tags: "@odr&&~@failing_on_aws"
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
