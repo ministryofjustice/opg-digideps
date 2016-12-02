@@ -62,3 +62,7 @@ Dependencies are veersioned to avoid accidently breaking the build. From time to
 ## Coding standards
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+## License
+
+The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
