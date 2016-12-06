@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +26,7 @@ class MoneyTransferController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer']);
-
+        $report = $this->getReportByIdWithChecks($reportId);
         if (count($report->getMoneyTransfers()) > 0 || $report->getNoTransfersToAdd()) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
@@ -42,7 +42,7 @@ class MoneyTransferController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer']);
+        $report = $this->getReportByIdWithChecks($reportId);
         $form = $this->createForm(new FormDir\Report\MoneyTransferExistType(), $report);
         $form->handleRequest($request);
 
@@ -82,8 +82,7 @@ class MoneyTransferController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer', 'account']);
-
+        $report = $this->getReportByIdWithChecks($reportId);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -166,7 +165,7 @@ class MoneyTransferController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportByIdWithChecks($reportId);
 
         $form = $this->createForm(new FormDir\Report\MoneyTransferAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -196,7 +195,7 @@ class MoneyTransferController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer', 'account']);
+        $report = $this->getReportByIdWithChecks($reportId);
         if (count($report->getMoneyTransfers()) == 0 && $report->getNoTransfersToAdd() === null) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
@@ -225,4 +224,15 @@ class MoneyTransferController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
     }
+
+    private function getReportByIdWithChecks($reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer', 'account']);
+        if (count($report->getAccounts()) < 2) {
+            throw new DisplayableException('You must have at least 2 bank accounts to fill in this section');
+        }
+
+        return $report;
+    }
+
 }
