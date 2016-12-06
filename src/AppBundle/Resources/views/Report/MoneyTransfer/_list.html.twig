@@ -23,15 +23,6 @@
                 <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
-        {% if report.reasonForNoContacts %}
-            <tr>
-                <td>Reason for no transfers</td>
-                <td>{{ report.reasonForNoContacts | nl2br }}</td>
-                <td class="change-answer">
-                    <a href="{{ path('money_transfers_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
-                </td>
-            </tr>
-        {% endif %}
     </tbody>
 </table>
 
