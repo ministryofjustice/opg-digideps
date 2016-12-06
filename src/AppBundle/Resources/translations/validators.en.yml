@@ -199,6 +199,7 @@ transfer:
 
 
 asset:
+    exist.notBlank: Please choose an option
     title:
         notBlank: Choose the type of asset from the list
         maxMessage: The asset name can't be longer than {{ limit }} letters
