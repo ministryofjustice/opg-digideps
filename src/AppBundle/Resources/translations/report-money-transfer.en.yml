@@ -13,7 +13,7 @@ existPage:
   pageSectionTitle: Money transfers
   form:
     noTransfersToAdd:
-      label: Have you made any money transfers between Sally's accounts in this reporting period?
+      label: Have you made any money transfers between %client%'s accounts in this reporting period?
     save:
       label: Save and continue
 
