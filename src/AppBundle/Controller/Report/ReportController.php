@@ -176,6 +176,11 @@ class ReportController extends RestController
         foreach ($report->getAssets() as $e){
             $em->remove($e);
         }
+
+        if ($report->getAction()){
+            $em->remove($report->getAction());
+        }
+
         $report->setNoAssetToAdd(false);
 
         $em->flush();
