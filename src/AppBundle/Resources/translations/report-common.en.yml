@@ -14,5 +14,19 @@ report:
           label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"
-next: Next section
-previous: Previous section
+
+prevNextLinks:
+  next: Next section
+  previous: Previous section
+  sections:
+    decisions: Decisions
+    mentalCapacity: Mental capacity
+    contacts: Contacs
+    visitsCare: Visits and care
+    bankAccounts: Bank Accounts
+    moneyIn: Money In
+    moneyOut: Money Out
+    assets: Assets
+    debts: Debts
+    actions: Actions
+

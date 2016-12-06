@@ -1,102 +1,35 @@
-{#
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+{# keep order in the overview section #}
+{% set prevNextConfig = {
+1: {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
+2: {'section':'mentalCapacity', 'link': path('mental_capacity', {'reportId': report.id})},
+3: {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
+4: {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+5: {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
+6: {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
+7: {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
+8: {'section':'assets', 'link': path('assets', {'reportId': report.id})},
+9: {'section':'debts', 'link': path('debts', {'reportId': report.id})},
+10: {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+} %}
 
-TODO: refactor avoid repeating links and labels
-order should stay in a single config object
-
-{{ macros.reportSectionPrevNext(report, <section>) }}
-
-#}
-{% if section=='bankAccounts' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': reportId }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("money_transfers" , {'reportId': reportId }),
-    'nextLabel': 'Money Transfers',
-    } %}
-{% endif %}
-
-{% if section=='actions' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': reportId }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("bank_accounts" , {'reportId': reportId }),
-    'nextLabel': 'Bank accounts'
-    } %}
-{% endif %}
-
-{% if section == 'assets' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("balance" , {'reportId': reportId }),
-    'previousLabel': 'Balance accounts',
-    'nextLink': path("debts" , {'reportId': reportId }),
-    'nextLabel': 'Debts'
-    } %}
-{% endif %}
-
-{% if section == 'balance' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("money_out" , {'reportId': reportId }),
-    'previousLabel': 'Money out',
-    'nextLink': path("assets" , {'reportId': reportId }),
-    'nextLabel': 'Assets'
-    } %}
-{% endif %}
-
-{% if section == 'contacts' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("mental_capacity" , {'reportId': reportId }),
-    'previousLabel': 'Mental capacity',
-    'nextLink': path("visits_care" , {'reportId': reportId }),
-    'nextLabel': 'Visits and care'
-    } %}
-{% endif %}
-
-{% if section == 'debts' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("assets" , {'reportId': reportId }),
-    'previousLabel': 'Assets',
-    'nextLink': path("actions" , {'reportId': reportId }),
-    'nextLabel': 'Actions'
-    } %}
-{% endif %}
-
-{% if section == 'moneyTransfers' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': reportId }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("money_transfers" , {'reportId': reportId }),
-    'nextLabel': 'Money Transfers',
-    } %}
-{% endif %}
-
-{% if section == 'moneyOut' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': reportId }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("money_transfers" , {'reportId': reportId }),
-    'nextLabel': 'Money Transfers',
-    } %}
-{% endif %}
-
-{% if section == 'mentalCapacity' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("mental_capacity" , {'reportId': reportId }),
-    'previousLabel': 'Mental capacity',
-    'nextLink': path("visits_care" , {'reportId': reportId }),
-    'nextLabel': 'Visits and care'
-    } %}
-{% endif %}
-
-{% if section == 'visitsCare' %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': reportId }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("bank_accounts" , {'reportId': reportId }),
-    'nextLabel': 'Bank accounts'
-    } %}
-{% endif %}
-
-{% if section == 'moneyIn' %}
-
-{% endif %}
+{% for k,s in prevNextConfig %}
+    {% if s.section == section %}
+        {% set templateOptions = {} %}
+        {% if prevNextConfig[k-1] is defined %}
+            {% set templateOptions = templateOptions | merge({
+            'previousLink': prevNextConfig[k-1].link,
+            'previousLabel': ('prevNextLinks.sections.' ~ prevNextConfig[k-1].section) | trans,
+            }) %}
+        {% endif %}
+        {% if prevNextConfig[k+1] is defined %}
+            {% set templateOptions = templateOptions | merge({
+            'nextLink': prevNextConfig[k+1].link,
+            'nextLabel': ('prevNextLinks.sections.' ~ prevNextConfig[k+1].section) | trans,
+            }) %}
+        {% endif %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with templateOptions %}
+    {% endif %}
+{% endfor %}
 
