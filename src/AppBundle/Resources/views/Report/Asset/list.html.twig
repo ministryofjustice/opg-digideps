@@ -41,7 +41,7 @@
         {{ render(controller('AppBundle:Report/Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
     {% endif %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'assets'} %}
+    {{ macros.reportSectionPrevNext(report, 'assets') }}
 
 
 {% endblock %}

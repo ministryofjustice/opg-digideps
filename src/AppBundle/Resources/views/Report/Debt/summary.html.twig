@@ -123,7 +123,7 @@
         {% endif %}
     {% endif %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'debts'} %}
+    {{ macros.reportSectionPrevNext(report, 'debts') }}
 
 
 

@@ -38,6 +38,6 @@
     'transDomain': translationDomain
     } %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'mentalCapacity'} %}
+    {{ macros.reportSectionPrevNext(report, 'moneyTransfers') }}
 
 {% endblock %}

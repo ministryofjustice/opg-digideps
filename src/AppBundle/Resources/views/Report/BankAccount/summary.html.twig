@@ -38,6 +38,6 @@
     {% include "AppBundle:Report/BankAccount:_list.html.twig" %}
 
     {# Pagination #}
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'bankAccounts'} %}
+    {{ macros.reportSectionPrevNext(report, 'bankAccounts') }}
 
 {% endblock %}

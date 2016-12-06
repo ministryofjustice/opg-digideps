@@ -50,9 +50,7 @@
     {# Questions and answers table #}
     {% include 'AppBundle:Report/Action:_answers.html.twig' %}
 
-    {# Pagination #}
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'actions'} %}
-
+    {{ macros.reportSectionPrevNext(report, 'actions') }}
 
 {% endblock %}
 

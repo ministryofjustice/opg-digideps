@@ -50,7 +50,7 @@
     {# Questions and answers table #}
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'visitsCare'} %}
+    {{ macros.reportSectionPrevNext(report, 'visitsCare') }}
 
 {% endblock %}
 

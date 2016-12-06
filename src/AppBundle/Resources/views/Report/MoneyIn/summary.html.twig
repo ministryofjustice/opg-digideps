@@ -41,7 +41,7 @@
     {# Items list #}
     {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'moneyTransfers'} %}
+    {{ macros.reportSectionPrevNext(report, 'moneyIn') }}
 
 
 

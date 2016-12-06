@@ -22,7 +22,7 @@
         {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
     {% endif %}
 
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'balance'} %}
+    {{ macros.reportSectionPrevNext(report, 'balance') }}
 
 
 {% endblock %}
