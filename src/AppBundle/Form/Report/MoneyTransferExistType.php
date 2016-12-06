@@ -16,7 +16,7 @@ class MoneyTransferExistType extends AbstractType
             ->add('noTransfersToAdd', 'choice', array(
                 'choices' => [0 => 'Yes', 1 => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'transfers.noTransfersToAdd.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'transfer.exist.notBlank', 'groups' => ['exist']])],
             ))
             ->add('save', 'submit', ['label' => 'save.label']);
     }
