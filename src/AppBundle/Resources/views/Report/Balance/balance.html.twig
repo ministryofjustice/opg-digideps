@@ -22,12 +22,8 @@
         {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
     {% endif %}
 
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("money_out" , {'reportId': report.id }),
-    'previousLabel': 'Money out',
-    'nextLink': path("assets" , {'reportId': report.id }),
-    'nextLabel': 'Assets'
-    } %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'balance'} %}
+
 
 {% endblock %}
 

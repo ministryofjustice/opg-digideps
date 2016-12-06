@@ -40,6 +40,8 @@
     } %}
 
     {# Pagination #}
-    {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'contacts'} %}
+
+
 
 {% endblock %}

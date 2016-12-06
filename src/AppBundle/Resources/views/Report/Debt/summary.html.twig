@@ -123,12 +123,8 @@
         {% endif %}
     {% endif %}
 
-    {# Pagination #}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("assets" , {'reportId': report.id }),
-    'previousLabel': 'Assets',
-    'nextLink': path("actions" , {'reportId': report.id }),
-    'nextLabel': 'Actions'
-    } %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'debts'} %}
+
+
 
 {% endblock %}

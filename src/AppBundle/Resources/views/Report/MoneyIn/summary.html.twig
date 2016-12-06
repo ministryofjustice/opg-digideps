@@ -41,12 +41,8 @@
     {# Items list #}
     {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}
 
-    {# Pagination #}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': report.id }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("money_transfers" , {'reportId': report.id }),
-    'nextLabel': 'Money Transfers',
-    } %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'moneyTransfers'} %}
+
+
 
 {% endblock %}

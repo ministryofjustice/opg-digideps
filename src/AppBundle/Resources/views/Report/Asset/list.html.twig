@@ -41,11 +41,7 @@
         {{ render(controller('AppBundle:Report/Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
     {% endif %}
 
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("balance" , {'reportId': report.id }),
-    'previousLabel': 'Balance accounts',
-    'nextLink': path("debts" , {'reportId': report.id }),
-    'nextLabel': 'Debts'
-    } %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'assets'} %}
+
 
 {% endblock %}

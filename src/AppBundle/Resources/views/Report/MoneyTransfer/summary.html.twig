@@ -38,7 +38,6 @@
     'transDomain': translationDomain
     } %}
 
-    {# Pagination #}
-    {% include 'AppBundle:Report/MoneyTransfer:_nextprevious.html.twig' %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'mentalCapacity'} %}
 
 {% endblock %}

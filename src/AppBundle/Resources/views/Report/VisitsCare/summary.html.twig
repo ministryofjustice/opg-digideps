@@ -50,13 +50,7 @@
     {# Questions and answers table #}
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 
-    {# Pagination #}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("contacts" , {'reportId': report.id }),
-    'previousLabel': 'Contacts',
-    'nextLink': path("bank_accounts" , {'reportId': report.id }),
-    'nextLabel': 'Bank accounts'
-    } %}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {'section': 'visitsCare'} %}
 
 {% endblock %}
 
