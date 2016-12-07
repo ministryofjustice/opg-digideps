@@ -30,14 +30,14 @@ typePage:
   backLink: Back
 
 addPage:
-    htmlTitle: "Deputy report - Assets | GOV.UK"
-    supportTitle: Assets
-    pageSectionTitle: Add an asset: %assetTitle%
+  htmlTitle: "Deputy report - Assets | GOV.UK"
+  supportTitle: Assets
+  pageSectionTitle: Add an asset: %assetTitle%
 
 editPage:
-    htmlTitle: "Deputy report - Assets | GOV.UK"
-    supportTitle: Assets
-    pageSectionTitle: Edit %assetTitle%
+  htmlTitle: "Deputy report - Assets | GOV.UK"
+  supportTitle: Assets
+  pageSectionTitle: Edit %assetTitle%
 
 addAnotherPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
@@ -50,9 +50,9 @@ addAnotherPage:
        label: Continue
 
 stepPageProperty:
-    htmlTitle: "Deputy report - Property | GOV.UK"
-    supportTitle: Assets
-    pageSectionTitle: Add an asset: property
+  htmlTitle: "Deputy report - Property | GOV.UK"
+  supportTitle: Assets
+  pageSectionTitle: Add an asset: property
 
 summaryPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
@@ -80,47 +80,47 @@ form:
       assets_held_outside_england_and_wales: Assets held outside England and Wales
       other_assets: Other valuable assets
   value:
-      label: "Value"
-      hint: "Can be an estimated value"
+    label: "Value"
+    hint: "Can be an estimated value"
   description:
-      label: "Asset description"
-      hint: ""
+    label: "Asset description"
+    hint: ""
   valuationDate:
-      legend: Valuation date (optional)
-      hint: "(DD/MM/YYYY)"
-      label: Valuation date
+    legend: Valuation date (optional)
+    hint: "(DD/MM/YYYY)"
+    label: Valuation date
   property:
-      address:
-        label: Address
-      address2:
-        label: ""
-      county:
-        label: ""
-      postcode:
-        label: "Postcode"
-      occupants:
-        label: "Who lives at this property?"
-      owned:
-        label: Is the property fully or part-owned by %client%?
-      ownedPercentage:
-        label: What is %client%’s share of the property?
-      isSubjectToEquityRelease:
-        label: Is this property subject to an equity release scheme?
-      value:
-        label: What is the value of property? This can be an estimate.
-      hasMortgage:
-        label: Is there a mortgage on the property?
-      mortgageOutstandingAmount:
-        label: How much is left to pay?
-      hasCharges:
-        label: Are there any other charges on the property?
-        hint: For example, from the local authority to recover care fees
-      isRentedOut:
-        label: Is the property rented out? (partly or fully)
-      rentAgreementEndDate:
-        label: When does the rental agreement end?
-        hint: (MM/YYYY)
-      rentIncomeMonth:
-        label: What is the rental income each month?
+    address:
+      label: Address
+    address2:
+      label: ""
+    county:
+      label: ""
+    postcode:
+      label: "Postcode"
+    occupants:
+      label: "Who lives at this property?"
+    owned:
+      label: Is the property fully or part-owned by %client%?
+    ownedPercentage:
+      label: What is %client%’s share of the property?
+    isSubjectToEquityRelease:
+      label: Is this property subject to an equity release scheme?
+    value:
+      label: What is the value of property? This can be an estimate.
+    hasMortgage:
+      label: Is there a mortgage on the property?
+    mortgageOutstandingAmount:
+      label: How much is left to pay?
+    hasCharges:
+      label: Are there any other charges on the property?
+      hint: For example, from the local authority to recover care fees
+    isRentedOut:
+      label: Is the property rented out? (partly or fully)
+    rentAgreementEndDate:
+      label: When does the rental agreement end?
+      hint: (MM/YYYY)
+    rentIncomeMonth:
+      label: What is the rental income each month?
   save:
       label: Save and continue
