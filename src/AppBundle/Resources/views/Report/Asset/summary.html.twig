@@ -32,11 +32,7 @@
         </a>
     </p>
 
-    {# Items list #}
-    {% include 'AppBundle:Report/Asset:_list.html.twig' with {
-    'report': report,
-    'transDomain': translationDomain
-    } %}
+    {% include 'AppBundle:Report/Asset:_list.html.twig' %}
 
     {{ macros.reportSectionPrevNext(report, 'assets') }}
 

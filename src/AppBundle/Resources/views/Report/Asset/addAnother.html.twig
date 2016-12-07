@@ -1,0 +1,28 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label-bold'
+    }) }}
+
+    {{ form_submit(form.save,'addAnotherPage.form.save') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

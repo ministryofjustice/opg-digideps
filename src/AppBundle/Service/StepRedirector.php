@@ -79,6 +79,18 @@ class StepRedirector
         return $this;
     }
 
+    /**
+     * @param string $routeStartPage
+     */
+    public function setRoutes($routeStartPage, $routeStep, $routeSummary)
+    {
+        $this->routeStartPage = $routeStartPage;
+        $this->routeStep = $routeStep;
+        $this->routeSummary = $routeSummary;
+
+        return $this;
+    }
+
 
     /**
      * @param mixed $this ->fromPage

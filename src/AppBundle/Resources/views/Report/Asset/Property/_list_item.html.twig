@@ -1,0 +1,155 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% for asset in assetsInGroup %}
+    {# @var asset \AppBundle\Entity\Report\AssetProperty #}
+
+<table class="check-your-answers behat-region-list-properties">
+    <thead>
+    <tr>
+        <th><h3 class="heading-medium">{{ groupId | trans }} {{ loop.index }}</h3></th>
+        <th>
+            <span class="visuallyhidden">Answer</span>
+        </th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+            <a class="behat-link-account-delete push-half--left" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {# address #}
+    <tr>
+        <td>Address</td>
+        <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+
+    {# Who lives at this property? #}
+    <tr>
+        <td>{{ 'form.property.occupants.label' | trans(transOptions) }}</td>
+        <td>{{ asset.occupants | nl2br }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+
+    {#  fully/partyl owned + percentage #}
+    <tr>
+        <td>{{ 'form.property.owned.label' | trans(transOptions) }}</td>
+        <td>{{ asset.owned | capitalize }} owned</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+    {% if asset.owned == 'partly' %}
+        <tr>
+            <td>{{ 'form.property.ownedPercentage.label' | trans(transOptions) }}</td>
+            <td>{{ asset.ownedPercentage }} %</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit"
+                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+            </td>
+        </tr>
+    {% endif %}
+
+    {# mortgage + outstanding amount #}
+    <tr>
+        <td>{{ 'form.property.hasMortgage.label' | trans(transOptions) }}</td>
+        <td>{{ asset.hasMortgage | capitalize }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+        </td>
+    </tr>
+    {% if asset.hasMortgage == 'yes' %}
+        <tr>
+            <td>{{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}</td>
+            <td>£{{ asset.mortgageOutstandingAmount | money_format }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit"
+                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+            </td>
+        </tr>
+    {% endif %}
+
+    {# equity release scheme #}
+    <tr>
+        <td>{{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}</td>
+        <td>{{ asset.isSubjectToEquityRelease | capitalize }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+
+    {# other charges  #}
+    <tr>
+        <td>{{ 'form.property.hasCharges.label' | trans(transOptions) }}</td>
+        <td>{{ asset.hasCharges | capitalize }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+
+    {# rented out + rent agreement date + income month #}
+    <tr>
+        <td>{{ 'form.property.isRentedOut.label' | trans(transOptions) }}</td>
+        <td>{{ asset.isRentedOut | capitalize }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+    {% if asset.isRentedOut =='yes' %}
+        <tr>
+            <td>{{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}</td>
+            <td>{{ asset.rentAgreementEndDate | date("m/Y") }} </td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit"
+                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+            </td>
+        </tr>
+        <tr>
+            <td>{{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}</td>
+            <td>£ {{ asset.rentIncomeMonth | money_format }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit"
+                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+            </td>
+        </tr>
+    {% endif %}
+
+
+    {# Value #}
+    <tr>
+        <td>{{ 'form.property.value.label' | trans(transOptions) }}</td>
+        <td>£ {{ asset.value | money_format }}</td>
+        <td class="change-answer soft-half--left hard--right width-sixth">
+            <a class="behat-link-asset-edit"
+               href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+{% endfor %}

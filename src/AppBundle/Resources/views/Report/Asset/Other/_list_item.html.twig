@@ -1,0 +1,30 @@
+<h3 class="heading-medium">{{ groupId | trans }}</h3>
+
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+    <tr>
+        <th>Description of asset</th>
+        <th class="numeric">Value</th>
+        <th>Valuation Date</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assetsInGroup %}
+        {# @biggs td classes need a review, I copied them from "money in" that looked the most similar #}
+        <tr>
+            <td>
+                {{ asset.description | nl2br }}</td>
+            <td class="numeric-small width-eighth">£{{ asset.value | money_format }}</td>
+            <td class="">{{ asset.valuationDate | date }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit"
+                   href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">Edit</a>
+                <a class="behat-link-account-delete push-half--left" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

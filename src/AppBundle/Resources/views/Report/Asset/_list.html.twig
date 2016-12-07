@@ -1,6 +1,7 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
+{# "client own assets" question #}
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
         <tr>
@@ -26,63 +27,39 @@
     </tbody>
 </table>
 
-{#{% if report.moneyTransfers | length > 0 %}#}
-    {#<div class="grid-row">#}
-        {#<div class="column-half">#}
-            {#<h2 class="heading-medium flush--ends">List of money transfers</h2>#}
-        {#</div>#}
-        {#<div class="column-half text--right">#}
-            {#<a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up">#}
-                {#<span class="icon icon-plus"></span>#}
-                {#{{ 'summaryPage.addButton' | trans }}#}
-            {#</a>#}
-        {#</div>#}
-    {#</div>#}
-{#{% endif %}#}
+{# display title if assets are present #}
+{% if report.assets %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of assets</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('assets_select_title', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}
 
-{#{% if report.moneyTransfers | length > 0 %}#}
-    {#<table class="check-your-answers">#}
-        {#<thead>#}
-            {#<tr>#}
-                {#<th>Transferred from</th>#}
-                {#<th>Transferred to</th>#}
-                {#<th class="text--right">Amount</th>#}
-                {#<th>#}
-                    {#<span class="visuallyhidden">Actions</span>#}
-                {#</th>#}
-            {#</tr>#}
-        {#</thead>#}
-        {#<tbody>#}
-            {#{% for transfer in report.moneyTransfers %}#}
-                {#<tr>#}
-                    {#<td class="width-quarter">#}
-                        {#{% set account = transfer.accountFrom %}#}
-                        {#{{ account.accountTypeText }}<br/>#}
-                        {#<p class="font-xsmall flush--ends">#}
-                            {#Sort code: {{ account.sortCode }}<br/>#}
-                            {#Account number: ****{{ account.accountNumber }}<br/>#}
-                            {#Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>#}
-                        {#</p>#}
-                    {#</td>#}
-                    {#<td class="width-quarter">#}
-                        {#{% set account = transfer.accountTo %}#}
-                        {#{{ account.accountTypeText }}<br/>#}
-                        {#<p class="font-xsmall flush--ends">#}
-                            {#Sort code: {{ account.sortCode }}<br/>#}
-                            {#Account number: ****{{ account.accountNumber }}<br/>#}
-                            {#Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>#}
-                        {#</p>#}
-                    {#</td>#}
-                    {#<td class="numeric-small">#}
-                        {#£{{ transfer.amount | money_format }}#}
-                    {#</td>#}
-                    {#<td class="change-answer width-sixth soft-half--left hard--right">#}
-                        {#<a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-transfer-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>#}
-                        {#<a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left">Remove</a>#}
-                    {#</td>#}
-                {#</tr>#}
-            {#{% endfor %}#}
-        {#</tbody>#}
-    {#</table>#}
+{# display assets in groups #}
+{% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
+    {% if (groupId | lower) == 'property' %}
+        {% include 'AppBundle:Report/Asset/Property:_list_item.html.twig' %}
+    {% else %}
+        {% include 'AppBundle:Report/Asset/Other:_list_item.html.twig'%}
+    {% endif %}
+{% endfor %}
 
-{#{% endif %}#}
+{# Total #}
+<table class="check-your-answers push--top">
+    <tr class="no-border">
+        <td class="text--right">
+            <span class="heading-medium">Total value of assets:</span>
+        </td>
+        <td class="numeric-small width-eighth">
+            <span class="heading-medium">£{{ report.assetsTotalValue | money_format }}</span>
+        </td>
+        <td class="width-sixth"></td>
+    </tr>
+</table>
