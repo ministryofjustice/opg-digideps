@@ -122,7 +122,7 @@ class AssetController extends AbstractController
 
         return [
             'asset' => $asset,
-            'backLink' => $this->generateUrl('assets_summary', ['reportId'=>$reportId]),
+            'backLink' => $this->generateUrl('assets_select_title', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -209,11 +209,11 @@ class AssetController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-//        $stepRedirector = $this->get('stepRedirector')
-//            ->setRoutes('assets', 'assets_property_step', 'assets_summary')
-//            ->setFromPage($fromPage)
-//            ->setCurrentStep($step)->setTotalSteps(1)
-//            ->setRouteBaseParams(['reportId'=>$reportId, 'assetId' => $assetId]);
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutes('assets_select_title', 'assets_property_step', 'assets_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps(1)
+            ->setRouteBaseParams(['reportId'=>$reportId, 'assetId' => $assetId]);
 
 
         // create (add mode) or load assets (edit mode)
@@ -265,7 +265,7 @@ class AssetController extends AbstractController
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl('assets_summary', ['reportId'=>$report->getId()]), //$stepRedirector->getBackLink(),
+            'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
         ];
     }

@@ -40,6 +40,14 @@ summaryPage:
 #  relationship: Their relationship to %client%
 #  reasonForContact: Reason for contact
 
+errorPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageSectionTitle: Money transfers
+  errors:
+    atLeastTwoBankAccounts: You don't need to complete this section if you have less than two bank accounts
+  backToOverview: Back to overview page
+
+
 form:
   accountFrom:
     label: Which account did you transfer money from?

@@ -52,7 +52,7 @@ class BankAccountController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutePrefix('bank_accounts_')
+            ->setRoutes('bank_accounts', 'bank_accounts_step', 'bank_accounts_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
             ->setRouteBaseParams(['reportId'=>$reportId, 'accountId' => $accountId]);

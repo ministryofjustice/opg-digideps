@@ -1,18 +1,19 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 {# keep order in the overview section #}
-{% set prevNextConfig = {
-1: {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-2: {'section':'mentalCapacity', 'link': path('mental_capacity', {'reportId': report.id})},
-3: {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-4: {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-5: {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
-6: {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
-7: {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
-8: {'section':'assets', 'link': path('assets', {'reportId': report.id})},
-9: {'section':'debts', 'link': path('debts', {'reportId': report.id})},
-10: {'section':'actions', 'link': path('actions', {'reportId': report.id})},
-} %}
+{% set prevNextConfig = [
+{'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
+{'section':'mentalCapacity', 'link': path('mental_capacity', {'reportId': report.id})},
+{'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
+{'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+{'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
+{'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
+{'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
+{'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
+{'section':'assets', 'link': path('assets', {'reportId': report.id})},
+{'section':'debts', 'link': path('debts', {'reportId': report.id})},
+{'section':'actions', 'link': path('actions', {'reportId': report.id})},
+] %}
 
 {% for k,s in prevNextConfig %}
     {% if s.section == section %}

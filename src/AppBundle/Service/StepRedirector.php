@@ -20,7 +20,7 @@ class StepRedirector
     /**
      * @var string
      */
-    private $routeStartPage;
+    private $step1BackLink;
 
     /**
      * @var string
@@ -67,24 +67,14 @@ class StepRedirector
 
 
     /**
-     * @param mixed $routePrefix
-     * @return StepRedirector
+     * @param $step1BackLink
+     * @param $routeStep
+     * @param $routeSummary
+     * @return $this
      */
-    public function setRoutePrefix($routePrefix)
+    public function setRoutes($step1BackLink, $routeStep, $routeSummary)
     {
-        $this->routeStartPage = rtrim($routePrefix, '_');
-        $this->routeSummary = rtrim($routePrefix, '_') . '_summary';
-        $this->routeStep = rtrim($routePrefix, '_') . '_step';
-
-        return $this;
-    }
-
-    /**
-     * @param string $routeStartPage
-     */
-    public function setRoutes($routeStartPage, $routeStep, $routeSummary)
-    {
-        $this->routeStartPage = $routeStartPage;
+        $this->step1BackLink = $step1BackLink;
         $this->routeStep = $routeStep;
         $this->routeSummary = $routeSummary;
 
@@ -166,7 +156,7 @@ class StepRedirector
         if ($this->fromPage === 'summary') {
             return $this->generateUrl($this->routeSummary, ['from'=>'skip-step']);
         } else if ($this->currentStep == 1) {
-            return $this->generateUrl($this->routeStartPage);
+            return $this->generateUrl($this->step1BackLink);
         }
 
         return $this->generateUrl($this->routeStep, [
