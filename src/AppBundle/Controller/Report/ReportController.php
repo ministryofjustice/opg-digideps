@@ -270,6 +270,12 @@ class ReportController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
+            if ($data['no_asset_to_add']) {
+                foreach ($report->getAssets() as $asset) {
+                    $this->getEntityManager()->remove($asset);
+                }
+                $this->getEntityManager()->flush();
+            }
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
