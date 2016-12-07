@@ -68,19 +68,70 @@
 
 
     {% if step == 4 %}
-
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.hasMortgage.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline has_mortgage_radio',
+                    'items': [
+                    {'dataTarget': 'mortgage-outstanding-amount-textarea' },
+                    {},
+                    ]
+                }) }}
+                <div id="mortgage-outstanding-amount-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number'
+                    }) }}
+                </div>
+            </div>
+        </div>
     {% endif %}
 
     {% if step == 5 %}
-
+        {{ form_input(form.value, 'form.property.value', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        } ) }}
     {% endif %}
 
     {% if step == 6 %}
-
+        {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
+            'fieldSetClass' : 'inline'
+        }) }}
     {% endif %}
 
 
+    {% if step == 7 %}
+        {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
+            'fieldSetClass' : 'inline'
+        }) }}
+    {% endif %}
 
+
+    {% if step == 8 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.isRentedOut.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
+                    'fieldSetClass' : 'inline',
+                    'items': [
+                    {'dataTarget': 'rented-out-info' }, {}
+                    ]
+                }) }}
+
+                <div id="rented-out-info" class="panel panel-border-narrow js-hidden">
+                    {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
+                        'showDay': 'false'
+                    }) }}
+
+                    {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number'
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 
     {% if step == 9999 %}
@@ -88,39 +139,11 @@
 
 
 
-        {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
-            'fieldSetClass' : 'inline'
-        }) }}
-        {{ form_input(form.value, 'form.property.value', {
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
-        } ) }}
-        {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
-            'fieldSetClass' : 'inline has_mortgage_radio'
-        }) }}
-        <div id="mortgage_outstanding_amount_textarea" class="hidden-detail">
-            {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control__number'
-            }) }}
-        </div>
-        {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
-            'fieldSetClass' : 'inline'
-        }) }}
-        {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
-            'fieldSetClass' : 'inline is_rented_out_radio'
-        }) }}
 
-        <div id="rent_info" class="hidden-detail">
-            {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
-                'showDay': 'false'
-            }) }}
 
-            {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control__number'
-            }) }}
-        </div>
+
+
+
     {% endif %}
 
     {{ form_submit(form.save,'form.save') }}

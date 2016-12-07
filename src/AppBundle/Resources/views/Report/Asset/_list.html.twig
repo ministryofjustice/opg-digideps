@@ -52,14 +52,16 @@
 {% endfor %}
 
 {# Total #}
-<table class="check-your-answers push--top">
-    <tr class="no-border">
-        <td class="text--right">
-            <span class="heading-medium">Total value of assets:</span>
-        </td>
-        <td class="numeric-small width-eighth">
-            <span class="heading-medium">£{{ report.assetsTotalValue | money_format }}</span>
-        </td>
-        <td class="width-sixth"></td>
-    </tr>
-</table>
+{% if report.assets %}
+    <table class="check-your-answers push--top">
+        <tr class="no-border">
+            <td class="text--right">
+                <span class="heading-medium">Total value of assets:</span>
+            </td>
+            <td class="numeric-small width-eighth">
+                <span class="heading-medium">£{{ report.assetsTotalValue | money_format }}</span>
+            </td>
+            <td class="width-sixth"></td>
+        </tr>
+    </table>
+{% endif %}

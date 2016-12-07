@@ -43,51 +43,52 @@ class AssetTypeProperty extends AbstractType
                 'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
                 'expanded' => true,
             ))
-            ->add('ownedPercentage', 'number', [
-                'grouping' => false,
-                'precision' => 0,
-                'max_length' => 2,
-                'pattern' => '[0-9]',
-                'invalid_message' => 'asset.property.ownedPercentage.type',
-            ]);
+                ->add('ownedPercentage', 'number', [
+                    'grouping' => false,
+                    'precision' => 0,
+                    'max_length' => 2,
+                    'pattern' => '[0-9]',
+                    'invalid_message' => 'asset.property.ownedPercentage.type',
+                ]);
         }
         if ($this->step === 4) {
-
-        }
-
-        if ($this->step === 5) {
-
-        }
-
-        if ($this->step === 6) {
-
-        }
-
-
-        if ($this->step === 99) {
-            $builder
-                ->add('isSubjectToEquityRelease', 'choice', [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                    'expanded' => true,
-                ])
-                ->add('value', 'number', [
-                    'grouping' => true,
-                    'precision' => 2,
-                    'invalid_message' => 'asset.property.value.type',
-                ])
-                ->add('hasMortgage', 'choice', [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                    'expanded' => true,
-                ])
+            $builder->add('hasMortgage', 'choice', [
+                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+            ])
                 ->add('mortgageOutstandingAmount', 'number', [
                     'grouping' => true,
                     'precision' => 2,
                     'invalid_message' => 'asset.property.mortgageOutstandingAmount.type',
-                ])
+                ]);
+        }
+
+        if ($this->step === 5) {
+            $builder->add('value', 'number', [
+                'grouping' => true,
+                'precision' => 2,
+                'invalid_message' => 'asset.property.value.type',
+            ]);
+        }
+
+        if ($this->step === 6) {
+            $builder
+                ->add('isSubjectToEquityRelease', 'choice', [
+                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'expanded' => true,
+                ]);
+        }
+
+        if ($this->step === 7) {
+            $builder
                 ->add('hasCharges', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
-                ])
+                ]);
+        }
+
+        if ($this->step === 8) {
+            $builder
                 ->add('isRentedOut', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
@@ -102,7 +103,9 @@ class AssetTypeProperty extends AbstractType
                     'grouping' => true,
                     'precision' => 2,
                     'invalid_message' => 'asset.property.rentIncomeMonth.type',
-                ])
+                ]);
+
+            $builder
                 ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                     $data = $event->getData();
 
@@ -127,6 +130,8 @@ class AssetTypeProperty extends AbstractType
             /** @var $data \AppBundle\Entity\Report\AssetProperty */
             $data = $form->getData();
 
+            $validationGroups = [];
+
             if ($this->step == 1) {
                 $validationGroups = ['property-address'];
             }
@@ -138,19 +143,34 @@ class AssetTypeProperty extends AbstractType
             if ($this->step == 3) {
                 $validationGroups = ['property-owned'];
                 if ($data->getOwned() == 'partly') {
-                    $validationGroups[] = 'owned-partly';
+                    $validationGroups[] = 'property-owned-partly';
                 }
             }
 
-            if ($this->step == 99) {
-
-
+            if ($this->step == 4) {
+                $validationGroups = ['property-mortgage'];
                 if ($data->getHasMortgage() == 'yes') {
-                    $validationGroups[] = 'mortgage-yes';
+                    $validationGroups[] = 'property-mortgage-outstanding-amount';
                 }
+            }
 
+            if ($this->step == 5) {
+                $validationGroups[] = 'property-value';
+            }
+
+            if ($this->step == 6) {
+                $validationGroups[] = 'property-subject-equity-release';
+            }
+
+            if ($this->step == 7) {
+                $validationGroups[] = 'property-has-charges';
+            }
+
+            if ($this->step == 8) {
+                $validationGroups[] = 'property-rented-out';
                 if ($data->getIsRentedOut() == 'yes') {
-                    $validationGroups[] = 'rented-out-yes';
+                    $validationGroups[] = 'property-rent-agree-date';
+                    $validationGroups[] = 'property-rent-income-month';
                 }
             }
 

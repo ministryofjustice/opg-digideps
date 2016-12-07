@@ -8,11 +8,11 @@ use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * @Route("/report")
@@ -50,7 +50,11 @@ class AssetController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['asset']);
+        if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
+            $report->setNoAssetToAdd(0);
+        }
         $form = $this->createForm(new FormDir\Report\AssetExistType(), $report);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -202,7 +206,7 @@ class AssetController extends AbstractController
      */
     public function propertyStepAction(Request $request, $reportId, $step, $assetId = null)
     {
-        $totalSteps = 7;
+        $totalSteps = 8;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -238,7 +242,12 @@ class AssetController extends AbstractController
         isset($dataFromUrl['county']) && $asset->setCounty($dataFromUrl['county']);
         isset($dataFromUrl['occupants']) && $asset->setOccupants($dataFromUrl['occupants']);
         isset($dataFromUrl['owned']) && $asset->setOwned($dataFromUrl['owned']);
-        isset($dataFromUrl['owned_percentage']) && $asset->setOwnedPercentage($dataFromUrl['owned_percentage']);
+        isset($dataFromUrl['owned_p']) && $asset->setOwnedPercentage($dataFromUrl['owned_p']);
+        isset($dataFromUrl['has_mg']) && $asset->setHasMortgage($dataFromUrl['has_mg']);
+        isset($dataFromUrl['mg_oa']) && $asset->setMortgageOutstandingAmount($dataFromUrl['mg_oa']);
+        isset($dataFromUrl['value']) && $asset->setValue($dataFromUrl['value']);
+        isset($dataFromUrl['ser']) && $asset->setIsSubjectToEquityRelease($dataFromUrl['ser']);
+        isset($dataFromUrl['hc']) && $asset->setHasCharges($dataFromUrl['hc']);
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
         ]);
@@ -249,7 +258,15 @@ class AssetController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
 
-            $asset = $form->getData(); /* @var $asset Report\AssetProperty */
+            $asset = $form->getData();
+            /* @var $asset Report\AssetProperty */
+
+            // edit mode: save immediately and go back to summary page
+            if ($assetId) {
+                $this->getRestClient()->put("report/{$reportId}/asset/{$assetId}", $asset);
+
+                return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
+            }
 
             if ($step == 1) {
                 $stepUrlData['address'] = $asset->getAddress();
@@ -264,20 +281,28 @@ class AssetController extends AbstractController
 
             if ($step == 3) {
                 $stepUrlData['owned'] = $asset->getOwned();
-                $stepUrlData['owned_percentage'] = $asset->getOwnedPercentage();
+                $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
             }
 
+            if ($step == 4) {
+                $stepUrlData['has_mg'] = $asset->getHasMortgage();
+                $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
+            }
+            if ($step == 5) {
+                $stepUrlData['value'] = $asset->getValue();
+            }
+            if ($step == 6) {
+                $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
+            }
+            if ($step == 7) {
+                $stepUrlData['hc'] = $asset->getHasCharges();
+            }
 
+            // last step: save
             if ($step == $totalSteps) {
-                if ($assetId) {
-                    $this->getRestClient()->put("report/{$reportId}/asset/{$assetId}", $asset);
+                $this->getRestClient()->post("report/{$reportId}/asset", $asset);
 
-                    return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
-                } else {
-                    $this->getRestClient()->post("report/{$reportId}/asset", $asset);
-
-                    return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
-                }
+                return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
@@ -293,7 +318,9 @@ class AssetController extends AbstractController
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
-            'backLink' => $stepRedirector->getBackLink(),
+            'backLink' => $assetId
+                ? $this->generateUrl('assets_summary', ['reportId' => $report->getId()])
+                : $stepRedirector->getBackLink(),
             'skipLink' => null,
         ];
     }
