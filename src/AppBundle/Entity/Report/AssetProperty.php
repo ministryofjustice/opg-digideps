@@ -12,8 +12,8 @@ class AssetProperty extends Asset
     const OWNED_PARTLY = 'partly';
 
     /**
-     * @Assert\NotBlank(message="asset.property.address.notBlank", groups={"property"})
-     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property"})
+     * @Assert\NotBlank(message="asset.property.address.notBlank", groups={"property-address"})
+     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property-address"})
      * @JMS\Type("string")
      *
      * @var string
@@ -21,7 +21,7 @@ class AssetProperty extends Asset
     private $address;
 
     /**
-     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property"})
+     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property-address"})
      * @JMS\Type("string")
      *
      * @var string
@@ -29,7 +29,7 @@ class AssetProperty extends Asset
     private $address2;
 
     /**
-     * @Assert\Length( max=75, maxMessage="asset.property.county.maxMessage", groups={"property"})
+     * @Assert\Length( max=75, maxMessage="asset.property.county.maxMessage", groups={"property-address"})
      * @JMS\Type("string")
      *
      * @var string
@@ -37,8 +37,8 @@ class AssetProperty extends Asset
     private $county;
 
     /**
-     * @Assert\NotBlank(message="asset.property.postcode.notBlank", groups={"property"})
-     * @Assert\Length(max=10, maxMessage= "asset.property.postcode.maxMessage", groups={"property"})
+     * @Assert\NotBlank(message="asset.property.postcode.notBlank", groups={"property-address"})
+     * @Assert\Length(max=10, maxMessage= "asset.property.postcode.maxMessage", groups={"property-address"})
      * @JMS\Type("string")
      *
      * @var string
@@ -46,8 +46,8 @@ class AssetProperty extends Asset
     private $postcode;
 
     /**
-     * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property"})
-     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property"})
+     * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property-occupants"})
+     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property-occupants"})
      *
      * @var string
      * 
@@ -57,7 +57,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string fully/partly
-     * @Assert\NotBlank(message="asset.property.owned.notBlank", groups={"property"})
+     * @Assert\NotBlank(message="asset.property.owned.notBlank", groups={"property-owned"})
      * 
      * @JMS\Type("string")
      */
