@@ -29,10 +29,6 @@ class AssetController extends AbstractController
      */
     public function startAction($reportId)
     {
-        Route::class;
-        Method::class;
-        Template::class;
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['asset']);
         if (count($report->getAssets()) > 0 || $report->getNoAssetToAdd()) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
@@ -231,6 +227,7 @@ class AssetController extends AbstractController
                 return $t->getId() == $assetId;
             });
             $asset = array_shift($assets);
+            $stepRedirector->setFromPage('summary');
         } else {
             $asset = new EntityDir\Report\AssetProperty();
         }
@@ -318,9 +315,7 @@ class AssetController extends AbstractController
             'step' => $step,
             'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
-            'backLink' => $assetId
-                ? $this->generateUrl('assets_summary', ['reportId' => $report->getId()])
-                : $stepRedirector->getBackLink(),
+            'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
         ];
     }
