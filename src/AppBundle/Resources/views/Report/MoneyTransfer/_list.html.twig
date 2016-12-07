@@ -66,8 +66,11 @@
                 <tr>
                     <td class="width-quarter">
                         {% set account = transfer.accountFrom %}
-                        {{ account.accountTypeText }}<br/>
+                        {% if account.requiresBankNameAndSortCode %}
+                            {{ account.bank }}<br/>
+                        {% endif %}
                         <p class="font-xsmall flush--ends">
+                            {{ account.accountTypeText }}<br/>
                             Sort code: {{ account.sortCode }}<br/>
                             Account number: ****{{ account.accountNumber }}<br/>
                             Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
@@ -75,8 +78,11 @@
                     </td>
                     <td class="width-quarter">
                         {% set account = transfer.accountTo %}
-                        {{ account.accountTypeText }}<br/>
+                        {% if account.requiresBankNameAndSortCode %}
+                            {{ account.bank }}<br/>
+                        {% endif %}
                         <p class="font-xsmall flush--ends">
+                            {{ account.accountTypeText }}<br/>
                             Sort code: {{ account.sortCode }}<br/>
                             Account number: ****{{ account.accountNumber }}<br/>
                             Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
