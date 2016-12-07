@@ -97,9 +97,11 @@
     {% block linkBack %}{% endblock %}
 
     {% block helpline %}
-    <div class="helpline">
-        <h3>Helpline<br/>0115 934 2700</h3>
-    </div>
+        {% if not env =='admin' %}
+            <div class="helpline">
+                <h3>Helpline<br/>0115 934 2700</h3>
+            </div>
+        {% endif %}
     {% endblock %}
 
     {% block progressBar %}{% endblock %}
