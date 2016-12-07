@@ -5,16 +5,22 @@ namespace AppBundle\Form\Report\Asset;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AssetTypeProperty extends AbstractAssetType
+
+class AssetTypeProperty extends AbstractType
 {
-    protected function addFields($builder, $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('address', 'text')
             ->add('address2', 'text')
             ->add('postcode', 'text')
-            ->add('county', 'text')
+            ->add('county', 'text');
+
+        $builder
             ->add('occupants', 'textarea')
             ->add('owned', 'choice', array(
                 'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
@@ -73,6 +79,11 @@ class AssetTypeProperty extends AbstractAssetType
                     $event->setData($data);
                 }
             });
+
+        $builder
+            ->add('title', 'hidden')
+            ->add('id', 'hidden')
+            ->add('save', 'submit');
     }
 
     protected function getValidationGroups()
@@ -98,4 +109,19 @@ class AssetTypeProperty extends AbstractAssetType
             return $validationGroups;
         };
     }
+
+
+    public function getName()
+    {
+        return 'asset';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'report-assets',
+            'validation_groups' => $this->getValidationGroups(),
+        ]);
+    }
+
 }

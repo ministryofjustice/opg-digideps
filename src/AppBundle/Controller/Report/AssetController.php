@@ -197,7 +197,7 @@ class AssetController extends AbstractController
      */
     public function propertyStepAction(Request $request, $reportId, $step, $assetId = null)
     {
-        $totalSteps = 1;
+        $totalSteps = 7;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -212,7 +212,7 @@ class AssetController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('assets_select_title', 'assets_property_step', 'assets_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(1)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId, 'assetId' => $assetId]);
 
 
