@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +26,13 @@ class MoneyTransferController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportByIdWithChecks($reportId);
+        if (count($report->getAccounts()) < 2) {
+            return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
+                'error' => 'atLeastTwoBankAccounts',
+                'report' => $report,
+            ]);
+        }
+
         if (count($report->getMoneyTransfers()) > 0 || $report->getNoTransfersToAdd()) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
@@ -49,16 +55,16 @@ class MoneyTransferController extends AbstractController
         if ($form->isValid()) {
             switch ($report->getNoTransfersToAdd()) {
                 case false:
-                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step'=>1]);
+                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
                     $this->get('restClient')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
 
-        $backLink = $this->generateUrl('money_transfers', ['reportId'=>$reportId]);
-        if ( $request->get('from') == 'summary') {
-            $backLink = $this->generateUrl('money_transfers_summary', ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl('money_transfers', ['reportId' => $reportId]);
+        if ($request->get('from') == 'summary') {
+            $backLink = $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -90,7 +96,7 @@ class MoneyTransferController extends AbstractController
             ->setRoutePrefix('money_transfers_')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
-            ->setRouteBaseParams(['reportId'=>$reportId, 'transferId' => $transferId]);
+            ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);
 
 
         // create (add mode) or load transaction (edit mode)
@@ -130,11 +136,11 @@ class MoneyTransferController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
 
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
                     return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
                 }
             }
@@ -158,7 +164,6 @@ class MoneyTransferController extends AbstractController
     }
 
 
-
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
      * @Template()
@@ -173,7 +178,7 @@ class MoneyTransferController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from'=>'another', 'step'=>1]);
+                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
                 case 'no':
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
@@ -228,9 +233,7 @@ class MoneyTransferController extends AbstractController
     private function getReportByIdWithChecks($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer', 'account']);
-        if (count($report->getAccounts()) < 2) {
-            throw new DisplayableException('You must have at least 2 bank accounts to fill in this section');
-        }
+
 
         return $report;
     }
