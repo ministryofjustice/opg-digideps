@@ -7,7 +7,7 @@
     </div>
     <div class="column-half text--right">
         <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
-            class="bold-small move-quarter--up">
+            class="bold-small move-quarter--up action-link">
             <span class="icon icon-plus"></span>
             Add item of income
         </a>
@@ -36,9 +36,9 @@
             <td>{{ t.description | nl2br }}</td>
             <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-account-??"
+                <a class="behat-link-account-?? action-link"
                    href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>
-                <a class="behat-link-account-?? push-half--left" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
+                <a class="behat-link-account-?? push-half--left action-link" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
             </td>
         </tr>
     {% endfor %}

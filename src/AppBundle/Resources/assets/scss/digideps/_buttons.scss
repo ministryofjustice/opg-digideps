@@ -29,3 +29,9 @@
     margin-right: 297px;
     float: right;
 }
+
+.action-link {
+    &:visited {
+        color: $link-colour;
+    }
+}

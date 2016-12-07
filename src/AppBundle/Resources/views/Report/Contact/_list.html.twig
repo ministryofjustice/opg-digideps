@@ -28,7 +28,7 @@
                 <td>Reason for no contacts</td>
                 <td>{{ report.reasonForNoContacts | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}">{{ 'summaryPage.edit'| trans }}</a>
+                    <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -41,7 +41,7 @@
             <h2 class="heading-medium flush--ends">List of contacts</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+            <a href="{{ path('contact_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -91,8 +91,8 @@
                         {{ contact.explanation }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="behat-link-contact-n{{loop.index}}">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left">Remove</a>
+                        <a href="{{ url('contact_edit', { 'reportId': report.id, 'contactId': contact.id }) }}#pageBody" class="behat-link-contact-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('contact_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left action-link">Remove</a>
                     </td>
                 </tr>
             {% endfor %}

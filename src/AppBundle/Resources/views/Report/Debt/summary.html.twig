@@ -52,7 +52,7 @@
                     {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
+                    <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">Edit</a>
                 </td>
             </tr>
         </tbody>
@@ -66,7 +66,7 @@
                 <h2 class="heading-medium flush--ends">List of debts</h2>
             </div>
             <div class="column-half text--right">
-                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small">Edit</a>
+                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link">Edit</a>
             </div>
         </div>
 
@@ -115,7 +115,7 @@
                         <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
                         <td>{{ debtOther.moreDetails | nl2br }}</td>
                         <td class="change-answer">
-                            <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">Edit</a>
+                            <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">Edit</a>
                         </td>
                     </tr>
                 </tbody>

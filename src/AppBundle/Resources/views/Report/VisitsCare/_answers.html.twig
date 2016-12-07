@@ -33,7 +33,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">Edit</a>
             </td>
         </tr>
         {% if report.visitsCare.doYouLiveWithClient == 'no' %}
@@ -41,7 +41,7 @@
                 <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
                 <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
                 </td>
             </tr>
         {% endif %}
@@ -66,7 +66,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
             </td>
         </tr>
         {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
@@ -78,7 +78,7 @@
                     {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions) }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
                 </td>
             </tr>
         {% endif %}
@@ -103,7 +103,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}" class="action-link">Edit</a>
             </td>
         </tr>
 
@@ -127,7 +127,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
             </td>
         </tr>
         {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
@@ -139,7 +139,7 @@
                     {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}">Edit</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
                 </td>
             </tr>
         {% endif %}

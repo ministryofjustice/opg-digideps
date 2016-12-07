@@ -7,7 +7,7 @@
     </div>
     <div class="column-half text--right">
         <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}"
-            class="bold-small move-quarter--up">
+            class="bold-small move-quarter--up action-link">
             <span class="icon icon-plus"></span>
             Add account
         </a>
@@ -49,14 +49,10 @@
                 £{{ account.closingBalance == null ? ' -,-' : (account.closingBalance | money_format) }}
             </td>
             <td class="change-answer soft-half--left hard--right">
-                <a class="behat-link-account-{{ account.accountNumber }}"
-                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
-                    Edit
-                </a>
-                <a class="push-half--left behat-link-account-{{ account.accountNumber }}"
-                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
-                    Remove
-                </a>
+                <a class="behat-link-account-{{ account.accountNumber }} action-link"
+                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>
+                <a class="push-half--left behat-link-account-{{ account.accountNumber }} action-link"
+                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">Remove</a>
             </td>
         </tr>
     {% endfor %}
