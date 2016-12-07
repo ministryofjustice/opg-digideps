@@ -41,17 +41,19 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'type' => 'mustExist',
         ]);
         $asset = EntityDir\Report\Asset::factory($data['type']);
         $asset->setReport($report);
+        $report->setNoAssetToAdd(null);
 
         $this->updateEntityWithData($asset, $data);
 
         $this->persistAndFlush($asset);
+        $this->persistAndFlush($report);
 
         return ['id' => $asset->getId()];
     }

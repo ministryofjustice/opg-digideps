@@ -180,8 +180,7 @@ class ReportController extends RestController
         if ($report->getAction()){
             $em->remove($report->getAction());
         }
-
-        $report->setNoAssetToAdd(false);
+        $report->setNoAssetToAdd(null);
 
         $em->flush();
     }
