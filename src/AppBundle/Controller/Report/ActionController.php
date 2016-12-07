@@ -48,7 +48,7 @@ class ActionController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutePrefix('actions')
+            ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
             ->setRouteBaseParams(['reportId' => $reportId]);

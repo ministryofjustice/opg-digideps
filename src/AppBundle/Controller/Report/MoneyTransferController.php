@@ -93,7 +93,7 @@ class MoneyTransferController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutePrefix('money_transfers_')
+            ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps(self::STEPS)
             ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);

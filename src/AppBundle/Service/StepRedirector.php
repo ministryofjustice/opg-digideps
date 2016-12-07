@@ -67,20 +67,10 @@ class StepRedirector
 
 
     /**
-     * @param mixed $routePrefix
-     * @return StepRedirector
-     */
-    public function setRoutePrefix($routePrefix)
-    {
-        $this->routeStartPage = rtrim($routePrefix, '_');
-        $this->routeSummary = rtrim($routePrefix, '_') . '_summary';
-        $this->routeStep = rtrim($routePrefix, '_') . '_step';
-
-        return $this;
-    }
-
-    /**
-     * @param string $routeStartPage
+     * @param $routeStartPage
+     * @param $routeStep
+     * @param $routeSummary
+     * @return $this
      */
     public function setRoutes($routeStartPage, $routeStep, $routeSummary)
     {
