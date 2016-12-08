@@ -40,8 +40,7 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: |
-    ..
+  pageSectionDescription: As you have made decisions for Sally we need to know the details.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
@@ -70,20 +69,7 @@ form:
     label: " "
     hint: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
   save:
-    label: Save
-  cancel:
-    label: Cancel
-  delete:
-      label: Delete
-      message: "Are you sure that you want to delete this decision?"
-  delete-reason:
-      label: Delete
-      message: "Are you sure that you want to delete this reason?"
-  listing:
-    edit-link: Edit this decision
-    description: Description
-    date: Date
-    clientInvolvement: Client involvement
+    label: Save and continue
 
 #save:
 #    label: Save

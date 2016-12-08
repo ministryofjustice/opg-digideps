@@ -1,5 +1,6 @@
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
@@ -12,6 +13,35 @@
         </tr>
     </thead>
     <tbody>
+        {# mental capacity #}
+        <tr>
+            <td>
+               {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {% if report.mentalCapacity.hasCapacityChanged == 'stayedSame' %}
+                    Stayed the same
+                {% elseif report.mentalCapacity.hasCapacityChanged == 'changed' %}
+                    Changed
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.mentalCapacity.hasCapacityChanged == 'changed' %}
+            <tr>
+                <td>Mental capacity changes details</td>
+                <td>{{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# decisions #}
         <tr>
             <td>
                 {{ 'existPage.form.hasDecisions.label' | trans(transOptions)  }}
@@ -53,9 +83,9 @@
     <table class="check-your-answers columns-3">
         <thead>
             <tr>
-                <th>x</th>
-                <th>Relationship</th>
-                <th>Reason</th>
+                <th>Decision</th>
+                <th>Client involvement</th>
+                <th>Client involvement details</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
@@ -65,14 +95,19 @@
             {% for decision in report.decisions %}
                 <tr>
                     <td class="width-fifth">
-                        </p>
+                        {{ decision.description | nl2br }}
                     </td>
                     <td class="width-fifth">
+                        {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
                     </td>
-                    <td>
+                    <td class="width-fifth">
+                        {% if decision.clientInvolvedBoolean %}
+                            {{ decision.clientInvolvedDetails | nl2br }}
+                        {% else %}-
+                        {% endif %}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}#pageBody" class="behat-link-decision-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-decision-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
                         <a href="{{ path('decision_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link">Remove</a>
                     </td>
                 </tr>
