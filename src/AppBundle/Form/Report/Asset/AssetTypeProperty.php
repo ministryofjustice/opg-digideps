@@ -127,54 +127,22 @@ class AssetTypeProperty extends AbstractType
     {
         return function (FormInterface $form) {
 
-            /** @var $data \AppBundle\Entity\Report\AssetProperty */
-            $data = $form->getData();
+            /** @var $asset \AppBundle\Entity\Report\AssetProperty */
+            $asset = $form->getData();
 
-            $validationGroups = [];
+            return [
+                1 => ['property-address'],
+                2 => ['property-occupants'],
+                3 => ($asset->getOwned() == 'partly') ? ['property-owned', 'property-owned-partly'] : ['property-owned'],
+                4 => ($asset->getHasMortgage() == 'yes') ? ['property-mortgage', 'property-mortgage-outstanding-amount'] : ['property-mortgage'],
+                5 => ['property-value'],
+                6 => ['property-subject-equity-release'],
+                7 => ['property-has-charges'],
+                8 => ($asset->getIsRentedOut() == 'yes')
+                    ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
+                    : ['property-rented-out'],
 
-            if ($this->step == 1) {
-                $validationGroups = ['property-address'];
-            }
-
-            if ($this->step == 2) {
-                $validationGroups = ['property-occupants'];
-            }
-
-            if ($this->step == 3) {
-                $validationGroups = ['property-owned'];
-                if ($data->getOwned() == 'partly') {
-                    $validationGroups[] = 'property-owned-partly';
-                }
-            }
-
-            if ($this->step == 4) {
-                $validationGroups = ['property-mortgage'];
-                if ($data->getHasMortgage() == 'yes') {
-                    $validationGroups[] = 'property-mortgage-outstanding-amount';
-                }
-            }
-
-            if ($this->step == 5) {
-                $validationGroups[] = 'property-value';
-            }
-
-            if ($this->step == 6) {
-                $validationGroups[] = 'property-subject-equity-release';
-            }
-
-            if ($this->step == 7) {
-                $validationGroups[] = 'property-has-charges';
-            }
-
-            if ($this->step == 8) {
-                $validationGroups[] = 'property-rented-out';
-                if ($data->getIsRentedOut() == 'yes') {
-                    $validationGroups[] = 'property-rent-agree-date';
-                    $validationGroups[] = 'property-rent-income-month';
-                }
-            }
-
-            return $validationGroups;
+            ][$this->step];
         };
     }
 
