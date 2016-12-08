@@ -15,14 +15,6 @@
         } %}
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'mental_capacity',
-            report: report,
-            description: true,
-            state: reportStatus.mentalCapacityState,
-            list: true
-        } %}
-        {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
-            transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
             description: true,

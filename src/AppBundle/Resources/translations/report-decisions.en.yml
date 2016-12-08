@@ -1,55 +1,162 @@
-page:
-    htmlTitle: "Deputy report - decisions | GOV.UK"
-    pageSectionTitle: Decisions made over the reporting period
-    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying, selling or renting property, making gifts or changing care home.
-    pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
-    addDecisionButton: Add a decision
-    subSectionTitleAdd: Add a decision
-    subSectionTitleEdit: Edit this decision
-navLink: Decisions
-no_decision:
-    subSectionDescription: "If you did not make any significant decisions, please tell us why here."
-    fields:
-      noDecisionReason:
-        label: "Information type"
-        value: "Reason for not adding decisions"
-      editReason:
-        label: "Edit Reason link"
-        value: "Edit this reason"
-    controls:
-      reason:
-        label: ""
+startPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Decisions
+  startButton: Start decisions
+
+mentalCapacity:
+  htmlTitle: "Deputy report - mental capacity | GOV.UK"
+  pageSectionTitle: "Mental capacity"
+  form:
+    hasCapacityChanged:
+      label: "Has %client%'s mental capacity to make financial decisions changed?"
+      hint: ""
+    hasCapacityChangedDetails:
+      label: "Tell us more"
+    save:
+      label: "Save and continue"
+
+existPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageSectionTitle: Decisions
+  form:
+    hasDecisions:
+      label: Have you made any significant decisions for %client% during this reporting period?
+    reasonForNoDecisions:
+      label: Please give us an explanation
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageSectionTitle: Decisions
+  form:
+    addAnother:
+      label: The decision has been saved. Would you like to add another decision now?
+      hint: If you prefer, you can come back to this section later to add more decisions
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Add a decision
+  supportTitle: Decisions
+  pageSectionDescription: |
+    ..
+
+editPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  supportTitle: Decisions
+  pageSectionTitle: Edit decision
+
+summaryPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Decisions
+  addButton: Add a decision
+  edit: Edit
+  reasonForContact: Reason for decisions
+
 form:
-  controls:
-    addButton:
-      label: "Add a decision"
-      moreLabel: "Add another decision"
-# form
-title:
-  label: Title
-  hint: Add a title to help you identify the decision.
-description:
-  label: Description
-  hint: Give details of the decision here.
-clientInvolvedBoolean:
-  legend: %client%'s involvement
-  hint: Did you involve %client% in this decision?
-  defaultOption: Please select...
-clientInvolvedDetails:
-  label: " "
-  hint: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
-save:
-  label: Save
-cancel:
-  label: Cancel
-delete:
-    label: Delete
-    message: "Are you sure that you want to delete this decision?"
-delete-reason:
-    label: Delete
-    message: "Are you sure that you want to delete this reason?"
-listing:
-  edit-link: Edit this decision
-  description: Description
-  date: Date
-  clientInvolvement: Client involvement
+  title:
+    label: Title
+    hint: Add a title to help you identify the decision.
+  description:
+    label: Description
+    hint: Give details of the decision here.
+  clientInvolvedBoolean:
+    legend: %client%'s involvement
+    hint: Did you involve %client% in this decision?
+    defaultOption: Please select...
+  clientInvolvedDetails:
+    label: " "
+    hint: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
+  save:
+    label: Save
+  cancel:
+    label: Cancel
+  delete:
+      label: Delete
+      message: "Are you sure that you want to delete this decision?"
+  delete-reason:
+      label: Delete
+      message: "Are you sure that you want to delete this reason?"
+  listing:
+    edit-link: Edit this decision
+    description: Description
+    date: Date
+    clientInvolvement: Client involvement
+
+#save:
+#    label: Save
+#cancel:
+#    label: Cancel
+#delete:
+#    label: Delete
+#    message: "Are you sure that you want to delete this decision?"
+#delete-reason:
+#    label: Delete
+#    message: "Are you sure that you want to delete this reason?"
+
+#page:
+#    htmlTitle: "Deputy report - decisions | GOV.UK"
+#    pageSectionTitle: Decisions
+#    pageSectionDescription: Give details of people who helped you make significant decisions as a deputy, such as a GP, solicitor, accountant, family member or care worker.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
+#    pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
+#    subSectionTitleAdd : Add a new decision
+#    subSectionTitleEdit : Edit this decision
+#form:
+#    controls:
+#        addButton:
+#            label: Add a decision
+#            moreLabel: Add another decision
+#no_decision:
+#    subSectionDescription: "If you haven't added any decisions, tell us why."
+#    fields:
+#      noContactReason:
+#        label: "Information type"
+#        value: "Reason for not adding decisions"
+#      editReason:
+#        label: "Edit Reason link"
+#        value: "Edit this reason"
+#    controls:
+#      reason:
+#        label: "Reason for no decisions"
+#pageTitle: "Deputy report - decisions | GOV.UK"
+#view_decision:
+#    edit: Edit this decision
+#    relationship: Relationship to %client%
+#    reason: Reason for decision
+#    address: Address
+#    phone: Work phone
+#delete-reason:
+#    label: Delete
+#    message: "Are you sure that you want to delete this reason?"
+
+
+
+#page:
+#    htmlTitle: "Deputy report - decisions | GOV.UK"
+#    pageSectionTitle: Decisions made over the reporting period
+#    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying, selling or renting property, making gifts or changing care home.
+#    pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
+#    addDecisionButton: Add a decision
+#    subSectionTitleAdd: Add a decision
+#    subSectionTitleEdit: Edit this decision
+#navLink: Decisions
+#no_decision:
+#    subSectionDescription: "If you did not make any significant decisions, please tell us why here."
+#    fields:
+#      noDecisionReason:
+#        label: "Information type"
+#        value: "Reason for not adding decisions"
+#      editReason:
+#        label: "Edit Reason link"
+#        value: "Edit this reason"
+#    controls:
+#      reason:
+#        label: ""
+#form:
+#  controls:
+#    addButton:
+#      label: "Add a decision"
+#      moreLabel: "Add another decision"
+

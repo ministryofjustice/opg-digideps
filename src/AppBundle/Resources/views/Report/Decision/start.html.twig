@@ -1,0 +1,83 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set clientName = report.client.firstname %}
+{% set transOptions = {'%client%': clientName} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        {# @biggs. too much formatting to move to translations. easier to keep this in the HTML
+        http://hzaiwi.axshare.com/#g=1&p=decisions_-_introduction
+        #}
+        We need to know about:
+        <ul class="list list-bullet">
+            <li>Sally's mental capacity to make financial decisions</li>
+            <li>Significant decisions you have made for Sally during the reporting period</li>
+        </ul>
+    </div>
+
+    <details>
+        <summary><span class="summary">Why do we need to know this?</span></summary>
+        <div class="panel panel-border-narrow">
+
+            <p class="text">
+                We need to know the important decisions you've made to help us understand how you're looking after
+                Sally's
+                finances and wellbeing.
+            </p>
+
+            <p class="text">
+                This is because we have a responsibility to protect people who don't have the mental capacity to make
+                decisions
+                for themselves.
+            </p>
+
+        </div>
+
+    </details>
+
+
+    <details>
+        <summary><span class="summary">What is a significant decision?</span></summary>
+        <div class="panel panel-border-narrow">
+
+            <p class="text">
+
+                Significant decisions are any important decisions you make for Sally - not just financial decisions. We need
+                to know about any decisions that have a big impact on Sally's wellbeing or circumstances.</p>
+            <p class="text">Significant decisions might be:</p>
+            <ul class="list list-bullet">
+                <li>buying or selling or renting property</li>
+                <li>buying or selling investments or shares</li>
+                <li>holidays or frequent day trips</li>
+                <li>home improvements</li>
+                <li>making gifts</li>
+                <li>moving Sally to another nursing or care home</li>
+                <li>changing day centres</li>
+            </ul>
+
+        </div>
+
+    </details>
+
+    <p class="text">
+        Decisions you do not need to include here are small, day-to-day decisions such as about buying food or
+        toiletries</p>
+
+
+    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
+       class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+
+
+{% endblock %}

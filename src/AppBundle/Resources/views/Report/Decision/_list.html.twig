@@ -1,0 +1,83 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                {{ 'existPage.form.hasDecisions.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.hasDecisions | capitalize }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.reasonForNoDecisions %}
+            <tr>
+                <td>Reason for no decisions</td>
+                <td>{{ report.reasonForNoDecisions | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% if report.decisions | length > 0 %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of decisions</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('decision_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% if report.decisions | length > 0 %}
+    <table class="check-your-answers columns-3">
+        <thead>
+            <tr>
+                <th>x</th>
+                <th>Relationship</th>
+                <th>Reason</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for decision in report.decisions %}
+                <tr>
+                    <td class="width-fifth">
+                        </p>
+                    </td>
+                    <td class="width-fifth">
+                    </td>
+                    <td>
+                    </td>
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}#pageBody" class="behat-link-decision-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('decision_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

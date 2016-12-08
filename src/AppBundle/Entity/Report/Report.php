@@ -153,6 +153,8 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoDecisions"})
      *
+     * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reason-no-decisions"})
+     *
      * @var string
      */
     private $reasonForNoDecisions;
@@ -786,6 +788,21 @@ class Report
     }
 
     public function setHasContacts($value)
+    {
+        // necessary to simplify form logic
+        return null;
+    }
+
+    public function hasDecisions()
+    {
+        if (empty($this->getDecisions()) && $this->getReasonForNoDecisions() === null){
+            return null;
+        }
+
+        return $this->getReasonForNoDecisions() ? 'no' : 'yes';
+    }
+
+    public function setHasDecisions($value)
     {
         // necessary to simplify form logic
         return null;

@@ -1,0 +1,50 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'mentalCapacity.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'mentalCapacity.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {#    <div class="form-section"> #}
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}error{% endif %}">
+            {{ form_checkbox_group(form.hasCapacityChanged, 'mentalCapacity.form.hasCapacityChanged', {
+                'fieldSetClass' : 'inline has-capacity-changed',
+                'legendClass' : 'form-label',
+                'legendText' : 'mentalCapacity.form.hasCapacityChanged.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                'items': [{'dataTarget': 'has-capacity-changed-details-textarea'}]
+            }) }}
+            <div id="has-capacity-changed-details-textarea" class="panel panel-border-narrow js-hidden">
+                {{ form_input(form.hasCapacityChangedDetails, 'mentalCapacity.form.hasCapacityChangedDetails', {
+                    'labelClass': 'required',
+                    'labelParameters': { '%client%': report.client.firstname }
+                }) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_submit(form.save,'form.save') }}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var showHideContent = new GOVUK.ShowHideContent();
+            showHideContent.init();
+        });
+    </script>
+
+{% endblock %}

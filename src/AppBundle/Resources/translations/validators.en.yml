@@ -124,6 +124,8 @@ contact:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
     addAnother.notBlank: Please specify if you want to add another contact
 decision:
+    noDecisionChoice.notBlank: Please specify if you have you made any significant decisions
+    reasonForNoContacts.notBlank: Enter a reason why you don't have any decisions
     description:
         notBlank: You have to enter some details about this decision
         length: This description must be at least {{ limit }} letters long
@@ -132,8 +134,8 @@ decision:
     clientInvolvedDetails:
         notBlank: Tell us if you involved the client
         length: This description must be at least {{ limit }} letters long
-    no-decision-reason:
-        notBlank: Enter a reason here
+#    no-decision-reason:
+#        notBlank: Enter a reason here
 account:
     addAnother.notBlank: Please specify if you want to add another contact
     bank:
