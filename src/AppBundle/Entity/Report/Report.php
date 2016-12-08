@@ -819,7 +819,7 @@ class Report
      **/
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
-        $this->reasonForNoDecisions = $reasonForNoDecisions;
+        $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
 
         return $this;
     }
