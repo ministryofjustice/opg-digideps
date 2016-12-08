@@ -1014,58 +1014,6 @@ class Report
         }
     }
 
-//    /**
-//     * Virtual JMS property with IN transaction.
-//     *
-//     * @JMS\VirtualProperty
-//     * @JMS\Groups({"transaction", "transactionsIn"})
-//     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
-//     * @JMS\SerializedName("transactions_in")
-//     *
-//     * @return Transaction[]
-//     */
-//    public function getTransactionsIn()
-//    {
-//        $ret = [];
-//
-//        foreach ($this->transactions as $t) {
-//            if ($t->getTransactionType() instanceof TransactionTypeIn) {
-//                $ret[] = $t;
-//            }
-//        }
-//        uasort($ret, function ($t1, $t2) {
-//            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
-//        });
-//
-//        return $ret;
-//    }
-//
-//    /**
-//     * Virtual JMS property with OUT transaction.
-//     *
-//     * @JMS\VirtualProperty
-//     * @JMS\Groups({"transaction", "transactionsOut"})
-//     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
-//     * @JMS\SerializedName("transactions_out")
-//     *
-//     * @return Transaction[]
-//     */
-//    public function getTransactionsOut()
-//    {
-//        $ret = [];
-//
-//        foreach ($this->transactions as $t) {
-//            if ($t->getTransactionType() instanceof TransactionTypeOut) {
-//                $ret[] = $t;
-//            }
-//        }
-//        uasort($ret, function ($t1, $t2) {
-//            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
-//        });
-//
-//        return $ret;
-//    }
-
     /**
      * @deprecated
      * @param Transaction $transaction

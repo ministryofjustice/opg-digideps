@@ -104,13 +104,6 @@ class ReportController extends RestController
             $currentReport->setAgreedBehalfDeputyExplanation(null);
         }
 
-//        if (!empty($data['reason_not_all_agreed'])) {
-//            $currentReport->setAllAgreed(false);
-//            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
-//        } else {
-//            $currentReport->setAllAgreed(true);
-//        }
-
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
@@ -223,25 +216,6 @@ class ReportController extends RestController
             }
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
-
-//        foreach (['transactions_in', 'transactions_out'] as $tk) {
-//            if (!isset($data[$tk])) {
-//                continue;
-//            }
-//            foreach ($data[$tk] as $transactionRow) {
-//                $t = $report->getTransactionByTypeId($transactionRow['id']);
-//                /* @var $t EntityDir\Report\Transaction */
-//                if (!$t instanceof EntityDir\Report\Transaction) {
-//                    continue;
-//                }
-//                $t->setAmounts($transactionRow['amounts'] ?: []);
-//                if (array_key_exists('more_details', $transactionRow)) {
-//                    $t->setMoreDetails($transactionRow['more_details']);
-//                }
-//                $this->getEntityManager()->flush($t);
-//            }
-//            $this->setJmsSerialiserGroups(['transactions']); //returns saved data (AJAX operations)
-//        }
 
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
