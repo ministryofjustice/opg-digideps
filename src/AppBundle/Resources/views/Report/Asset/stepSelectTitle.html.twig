@@ -24,16 +24,14 @@
         <p>{{ 'typePage.pageSectionDescription' | trans(transOptions) }}</p>
     </div>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
-
-    {#<h3 class="heading-medium flush--top">{{ 'page.subSectionTitleSelect' | trans({}, translationDomain) }}</h3>#}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {{ form_checkbox_group(form.title, 'form.title', {
         'legendClass' : 'form-label-bold',
         'legendText' : 'form.title.legend' | trans(transOptions)
     }) }}
 
-    {{ form_submit(form.save,'form.titleSave', { 'buttonClass': '' }) }}
+    {{ form_submit(form.save,'', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
 
     {{ form_end(form) }}
 

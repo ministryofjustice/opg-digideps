@@ -18,17 +18,15 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.noAssetToAdd.vars.valid %}error{% endif %}">
-                {{ form_checkbox_group(form.noAssetToAdd, 'existPage.form.noAssetToAdd', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'labelParameters': { '%client%': report.client.firstname },
-                    'legendClass' : 'form-label-bold text',
-                    'formGroupClass': 'flush--bottom'
-                }) }}
-            </div>
-        </div>
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.noAssetToAdd, 'existPage.form.noAssetToAdd', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': { '%client%': report.client.firstname },
+            'legendClass' : 'form-label-bold text',
+            'legendText' : 'existPage.form.noAssetToAdd.label' | trans(transOptions, translationDomain),
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
 
     {{ form_submit(form.save,'existPage.form.save') }}
 

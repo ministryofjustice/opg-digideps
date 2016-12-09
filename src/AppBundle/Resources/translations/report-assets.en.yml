@@ -20,7 +20,7 @@ existPage:
 typePage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   supportTitle: Assets
-  pageSectionTitle: Add an assets
+  pageSectionTitle: Add an asset
   pageSectionDescription: |
     Please tell us a bit more about %client%'s assets.
     Start by adding a type of asset; we'll then ask you for
