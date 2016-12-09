@@ -11,6 +11,7 @@
             report: report,
             description: true,
             state: reportStatus.decisionsState,
+            nOfRecords: report.decisions | length,
             list: true
         } %}
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
@@ -21,6 +22,7 @@
             list: true,
             info: true,
             state: reportStatus.contactsState,
+            nOfRecords: report.contacts | length,
         } %}
     </li>
 
@@ -32,7 +34,7 @@
             report: report,
             info: true,
             description: true,
-            state: reportStatus.visitsCareState,
+            state: reportStatus.visitsCareState
         } %}
     </li>
 
@@ -44,6 +46,7 @@
                 subSection: 'bank_accounts',
                 report: report,
                 state: reportStatus.bankAccountsState,
+                nOfRecords: report.accounts | length,
                 warning: true,
                 description: true
             } %}
@@ -52,6 +55,7 @@
                 subSection: 'money_transfers',
                 report: report,
                 state: reportStatus.moneyTransferState,
+                nOfRecords: report.moneyTransfers | length,
                 warning: true,
                 description: true
             } %}
@@ -60,6 +64,7 @@
                 subSection: 'money_in',
                 report: report,
                 state: reportStatus.moneyInState,
+                nOfRecords: report.transactionsIn | length,
                 warning: true,
                 description: true
             } %}
@@ -68,6 +73,7 @@
                 subSection: 'money_out',
                 report: report,
                 state: reportStatus.moneyOutState,
+                nOfRecords: report.transactionsOut | length,
                 warning: true,
                 description: true
             } %}
@@ -84,6 +90,7 @@
                 subSection: 'assets',
                 report: report,
                 state: reportStatus.assetsState,
+                nOfRecords: report.assets | length,
                 list: true,
                 description: true
             } %}
@@ -92,6 +99,7 @@
             subSection: 'debts',
             report: report,
             state: reportStatus.debtsState,
+            nOfRecords: report.debtsNotEmpty | length,
             list: true,
             description: true
             } %}

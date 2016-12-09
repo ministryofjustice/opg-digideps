@@ -207,12 +207,21 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function actionsProvider()
     {
-        $action = m::mock(\AppBundle\Entity\Action::class);
+        $actionIncomplete = m::mock(\AppBundle\Entity\Action::class,[
+            'getDoYouHaveConcerns' => true,
+            'getDoYouExpectFinancialDecisions' => false
+        ]);
+
+        $actionComplete = m::mock(\AppBundle\Entity\Action::class,[
+            'getDoYouHaveConcerns' => true,
+            'getDoYouExpectFinancialDecisions' => true
+        ]);
 
         return [
             [[], StatusService::STATE_NOT_STARTED],
+            [['getAction' => $actionIncomplete], StatusService::STATE_INCOMPLETE],
             // done
-            [['getAction' => $action], StatusService::STATE_DONE],
+            [['getAction' => $actionComplete], StatusService::STATE_DONE],
         ];
     }
 

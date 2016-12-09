@@ -157,7 +157,16 @@ class ReportStatusService
     /** @return string */
     public function getActionsState()
     {
-        return $this->report->getAction() ? self::STATE_DONE : self::STATE_NOT_STARTED;
+        $action = $this->report->getAction();
+        if (empty($action)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
     }
 
     /** @return bool */

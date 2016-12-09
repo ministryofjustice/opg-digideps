@@ -673,6 +673,16 @@ class Report
     }
 
     /**
+     * @return Debt[]
+     */
+    public function getDebtsNotEmpty()
+    {
+       return array_filter($this->getDebts(), function($debt) {
+           return $debt->getAmount() !== null;
+       });
+    }
+
+    /**
      * @param $debtId
      * @return Debt|null
      */
