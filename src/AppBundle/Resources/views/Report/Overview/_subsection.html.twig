@@ -1,3 +1,6 @@
+{% set translationDomain = "overview" %}
+{% trans_default_domain translationDomain %}
+
 {% if disableedit is defined and disableedit == true %}
     {% set allowEdit = false %}
 {% else %}
@@ -6,22 +9,28 @@
 
 <div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
-        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
+        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
     {% endif %}
-    
-    <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
-    <span class="status {{ state }}">{{ ('labels.' ~ state) | trans({}, 'overview') }}</span>
+    <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
+    <span class="status {{ state }}">
+        {% if state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+            {{ (subSection ~ '.label.' ~ state) | transchoice(nOfRecords | default(0)) }}
+        {% else %}
+            {{ ('labels.' ~ state) | trans }}
+        {% endif %}
+
+    </span>
 
     <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ path(subSection, {reportId: report.id}) }}"{% endif %} >
         {% if state == 'not-started' %}
-            {{ (subSection ~ '.start') | trans({}, translationDomain) }}
+            {{ (subSection ~ '.start') | trans }}
         {% else %}
-            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+            {{ (subSection ~ '.edit') | trans }}
         {% endif %}
     </span>
 
     {%  if description is defined and description %}
-        <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': report.client.firstname}, translationDomain ) }}</p>
+        <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': report.client.firstname}) }}</p>
     {%  endif %}
 
 

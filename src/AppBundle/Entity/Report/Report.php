@@ -299,6 +299,8 @@ class Report
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"balance_mismatch_explanation"})
+     * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
+     * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
      * @var string
      */
@@ -670,6 +672,16 @@ class Report
         }
 
         return $ret;
+    }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebtsNotEmpty()
+    {
+       return array_filter($this->getDebts(), function($debt) {
+           return $debt->getAmount() !== null;
+       });
     }
 
     /**

@@ -17,17 +17,26 @@ notFinished: "Not finished"
 sectionsRemaining: "sections remaining"
 overview: Report overview
 
+labels:
+    not-started: "Not started"
+    incomplete: "Not finished"
+    #done: "Finished"
+
 heading.decisionsContacts: "Decisions and contacts"
 decisions:
     subSectionTitle: "Decisions"
     subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
 contacts:
     subSectionTitle: "Contacts"
     subSectionDescription: "Give us the details of people you consulted about %client%"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
 heading.healthAndWelfare: "Health and welfare"
 visits_care:
@@ -35,45 +44,66 @@ visits_care:
     subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
     edit: "Edit"
     start: "Start"
-
+    label:
+      done: "Finished"
 heading.propFinance: "Property and finance"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add %client%'s building society and savings accounts"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
 money_transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Tell us about money transferred between %client%'s accounts"
     edit: "Edit"
     start: "Start"
+    label:
+       done: "{0} no transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
 money_in:
     subSectionTitle: "Money in"
     subSectionDescription: "Tell us about money paid into %client%’s accounts"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 money_out:
     subSectionTitle: "Money out"
     subSectionDescription: "Tell us about money you have spent on %client%’s living and welfare costs"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+balance:
+    subSectionTitle: "Balance"
+    subSectionDescription: ""
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Tell us about %client%’s assets, including property"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
 debts:
     subSectionTitle: "Debts"
     subSectionDescription: "Let us know about any debts %client% owes"
     edit: "Edit"
     start: "Start"
-
+    label:
+       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
 heading.other: "Other"
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
     edit: "Edit"
     start: "Start"
+    label:
+      done: "Finished"
 
 
 #balance:
@@ -102,8 +132,3 @@ decisionsMadeAsDeputy: Decisions made as deputy
 announcement: |
   We’ve made some changes to the layout of this page.<br/>
   Use the links on this page to view and edit the different sections of your report.
-
-labels:
-    not-started: "Not started"
-    incomplete: "Not finished"
-    done: "Finished"

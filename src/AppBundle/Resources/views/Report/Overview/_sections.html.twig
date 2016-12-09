@@ -11,6 +11,7 @@
             report: report,
             description: true,
             state: reportStatus.decisionsState,
+            nOfRecords: report.decisions | length,
             list: true
         } %}
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
@@ -21,6 +22,7 @@
             list: true,
             info: true,
             state: reportStatus.contactsState,
+            nOfRecords: report.contacts | length,
         } %}
     </li>
 
@@ -32,18 +34,28 @@
             report: report,
             info: true,
             description: true,
-            state: reportStatus.visitsCareState,
+            state: reportStatus.visitsCareState
         } %}
     </li>
 
     {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
+            {% if not reportStatus.balanceMatches %}
+                {# @biggs style me, I'm ugly #}
+                <h3 class="error">
+                    Your accounts are not balanced.
+                    <a href="{{ path('balance', {'reportId': report.id}) }}">View details</a>
+                </h3>
+            {% endif %}
+
+
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'bank_accounts',
                 report: report,
                 state: reportStatus.bankAccountsState,
+                nOfRecords: report.accounts | length,
                 warning: true,
                 description: true
             } %}
@@ -52,6 +64,7 @@
                 subSection: 'money_transfers',
                 report: report,
                 state: reportStatus.moneyTransferState,
+                nOfRecords: report.moneyTransfers | length,
                 warning: true,
                 description: true
             } %}
@@ -60,6 +73,7 @@
                 subSection: 'money_in',
                 report: report,
                 state: reportStatus.moneyInState,
+                nOfRecords: report.transactionsIn | length,
                 warning: true,
                 description: true
             } %}
@@ -68,22 +82,27 @@
                 subSection: 'money_out',
                 report: report,
                 state: reportStatus.moneyOutState,
+                nOfRecords: report.transactionsOut | length,
                 warning: true,
                 description: true
             } %}
-            {#{% include 'AppBundle:Report/Overview:_subsection.html.twig' with {#}
-                {#transDomain: translationDomain,#}
-                {#subSection: 'balance',#}
-                {#report: report,#}
-                {#state: reportStatus.balanceState,#}
-                {#warning: true,#}
-                {#description: true#}
-            {#} %}#}
+            {# show balance section only for editing, when an explanation is given #}
+            {% if report.balanceMismatchExplanation %}
+                {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'balance',
+                    report: report,
+                    state: reportStatus.balanceState,
+                    warning: true,
+                    description: true
+                } %}
+            {% endif %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
                 report: report,
                 state: reportStatus.assetsState,
+                nOfRecords: report.assets | length,
                 list: true,
                 description: true
             } %}
@@ -92,6 +111,7 @@
             subSection: 'debts',
             report: report,
             state: reportStatus.debtsState,
+            nOfRecords: report.debtsNotEmpty | length,
             list: true,
             description: true
             } %}

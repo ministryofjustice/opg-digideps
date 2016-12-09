@@ -117,7 +117,7 @@ class ReportStatusService
             return self::STATE_DONE;
         }
 
-        return self::STATE_INCOMPLETE;
+        return self::STATE_NOT_STARTED;
     }
 
     /** @return string */
@@ -157,7 +157,16 @@ class ReportStatusService
     /** @return string */
     public function getActionsState()
     {
-        return $this->report->getAction() ? self::STATE_DONE : self::STATE_NOT_STARTED;
+        $action = $this->report->getAction();
+        if (empty($action)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
     }
 
     /** @return bool */
@@ -187,11 +196,11 @@ class ReportStatusService
     }
 
     /** @return bool */
-    private function missingBalance()
+    public function balanceMatches()
     {
         $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
 
-        return !$balanceValid;
+        return $balanceValid;
     }
 
     /**
@@ -225,7 +234,7 @@ class ReportStatusService
     /** @return bool */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0;
+        return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
     }
 
     /**
@@ -233,7 +242,7 @@ class ReportStatusService
      */
     public function getStatus()
     {
-        if ($this->isReadyToSubmit() && $this->report->isDue()) {
+        if ($this->isReadyToSubmit() && $this->report->isDue() && $this->balanceMatches()) {
             return 'readyToSubmit';
         } else {
             return 'notFinished';
