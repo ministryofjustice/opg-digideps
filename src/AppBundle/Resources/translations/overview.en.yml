@@ -2,11 +2,6 @@ page.htmlTitle: "Deputy report - overview | GOV.UK"
 report: "report"
 pageSectionTitle: "The deputy report"
 pageSectionDescription: "Your report:"
-heading:
-    planningTitle: ""
-    careAndWelfare: ""
-    finances: ""
-    finishYourReport: ""
 close: "Close"
 help: "Help"
 submitWhenReady: "You can't submit your report until the report is complete"
@@ -22,76 +17,73 @@ notFinished: "Not finished"
 sectionsRemaining: "sections remaining"
 overview: Report overview
 
-contacts:
-    subSectionTitle: "Contacts"
-    subSectionDescription: "Give us the details of people you consulted about %client%"
-    edit: "Edit contacts"
-    start: "Start contacts"
+heading.decisionsContacts: "Decisions and contacts"
 decisions:
     subSectionTitle: "Decisions"
     subSectionDescription: "Add the significant decisions you've made for %client%"
-    edit: "Edit decisions"
-    start: "Start decisions"
-mental_capacity:
-    subSectionTitle: "Mental capacity"
-    subSectionDescription: ""
-    edit: "Edit mental capacity"
-    start: "Start mental capacity"
-actions:
-    subSectionTitle: "Actions you plan to take"
-    subSectionDescription: "Tell us about any major changes in the next reporting period"
-    edit: "Edit actions"
-    start: "Start actions"
-bank_accounts:
-    subSectionTitle: "Bank accounts"
-    subSectionDescription: "Add %client%'s building society and savings accounts"
-    edit: "Edit bank accounts"
-    start: "Start bank accounts"
-money_transfers:
-    subSectionTitle: "Money transfers"
-    subSectionDescription: ""
-    edit: "Edit money transfers"
-    start: "Start money transfers"
-money_in:
-    subSectionTitle: "Money in"
-    subSectionDescription: ""
-    edit: "Edit money in"
-    start: "Start money in"
-money_out:
-    subSectionTitle: "Money out"
-    subSectionDescription: ""
-    edit: "Edit money out"
-    start: "Start money out"
-balance:
-    subSectionTitle: "Balance"
-    subSectionDescription: ""
-    edit: "Edit balance"
-    start: "Start balance"
-transfers:
-    subSectionTitle: "Money transfers"
-    subSectionDescription: "Tell us about money you've moved between %client%'s accounts"
-    edit: "Edit transfers"
-    start: "Start money transfers"
-transfersInactive:
-    subSectionTitle: "Money transfers"
-    subSectionDescription: "This will become available if you have more than one account"
-    edit: "Edit transfers"
-    start: "Start money transfers"
+    edit: "Edit"
+    start: "Start"
+contacts:
+    subSectionTitle: "Contacts"
+    subSectionDescription: "Give us the details of people you consulted about %client%"
+    edit: "Edit"
+    start: "Start"
+
+heading.healthAndWelfare: "Health and welfare"
 visits_care:
     subSectionTitle: "Visits and care"
-    subSectionDescription: "We need to know about your involvement with %client%'s care"
-    edit: "Edit visits"
-    start: "Start visits"
+    subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
+    edit: "Edit"
+    start: "Start"
+
+heading.propFinance: "Property and finance"
+bank_accounts:
+    subSectionTitle: "Accounts"
+    subSectionDescription: "Add %client%'s building society and savings accounts"
+    edit: "Edit"
+    start: "Start"
+money_transfers:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "Tell us about money transferred between %client%'s accounts"
+    edit: "Edit"
+    start: "Start"
+money_in:
+    subSectionTitle: "Money in"
+    subSectionDescription: "Tell us about money paid into %client%’s accounts"
+    edit: "Edit"
+    start: "Start"
+money_out:
+    subSectionTitle: "Money out"
+    subSectionDescription: "Tell us about money you have spent on %client%’s living and welfare costs"
+    edit: "Edit"
+    start: "Start"
 assets:
     subSectionTitle: "Assets"
-    subSectionDescription: "Add %client%'s property, investments and other valuables"
-    edit: "Edit assets"
-    start: "Start assets"
+    subSectionDescription: "Tell us about %client%’s assets, including property"
+    edit: "Edit"
+    start: "Start"
 debts:
     subSectionTitle: "Debts"
-    subSectionDescription: ""
-    edit: "Edit debts"
-    start: "Start debts"
+    subSectionDescription: "Let us know about any debts %client% owes"
+    edit: "Edit"
+    start: "Start"
+
+heading.other: "Other"
+actions:
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
+    edit: "Edit"
+    start: "Start"
+
+
+#balance:
+#    subSectionTitle: "Balance"
+#    subSectionDescription: ""
+#    edit: "Edit balance"
+#    start: "Start balance"
+
+
+
 report_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"

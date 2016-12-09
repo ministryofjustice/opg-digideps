@@ -4,7 +4,7 @@
 <ul id="overview-sections" class="overview-sections">
 
     <li id="planning-section" class="overview-section">
-        <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+        <h2 class="heading">{{ 'heading.decisionsContacts' | trans() }}</h2>
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'decisions',
@@ -25,7 +25,7 @@
     </li>
 
     <li id="welfare-section" class="overview-section">
-        <h2 class="heading">{{ 'heading.careAndWelfare' | trans() }}</h2>
+        <h2 class="heading">{{ 'heading.healthAndWelfare' | trans() }}</h2>
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'visits_care',
@@ -38,7 +38,7 @@
 
     {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.finances' | trans() }}</h2>
+            <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'bank_accounts',
@@ -71,14 +71,14 @@
                 warning: true,
                 description: true
             } %}
-            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'balance',
-                report: report,
-                state: reportStatus.balanceState,
-                warning: true,
-                description: true
-            } %}
+            {#{% include 'AppBundle:Report/Overview:_subsection.html.twig' with {#}
+                {#transDomain: translationDomain,#}
+                {#subSection: 'balance',#}
+                {#report: report,#}
+                {#state: reportStatus.balanceState,#}
+                {#warning: true,#}
+                {#description: true#}
+            {#} %}#}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
@@ -100,7 +100,7 @@
 
 
     <li id="report-submit-section" class="overview-section">
-        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+        <h2 class="heading">{{ 'heading.other' | trans() }}</h2>
         {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
