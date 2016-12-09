@@ -37,7 +37,7 @@
 
         <div class="form-group form-group-year">
             {{ form_label(element.year,'Year', {'label_attr': {'for': 'dob-year', 'class': 'visuallyhidden' } }) }}
-            {{ form_widget(element.year, { 'type':'text','attr': {'class': 'form-control', 'min': 0, 'max': 2500}}) }}
+            {{ form_widget(element.year, { 'type':'number','attr': {'class': 'form-control', 'min': 0, 'max': 2500}}) }}
         </div>
     </fieldset>
 </div>
