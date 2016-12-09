@@ -105,20 +105,10 @@ actions:
     label:
       done: "Finished"
 
-
-#balance:
-#    subSectionTitle: "Balance"
-#    subSectionDescription: ""
-#    edit: "Edit balance"
-#    start: "Start balance"
-
-
-
 report_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"
     start: "Start sign and submit"
-
 
 additionalInformation:
   subSectionTitle: More information

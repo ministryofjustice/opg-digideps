@@ -168,14 +168,7 @@ account:
         notBlank: Please choose yes or no
     isClosed:
         notBlank: Please choose yes or no
-#    moneyInOut:
-#        amount:
-#          notNumeric: Please use numbers only to enter the amount
-#          minMessage: The amount must be more than £{{ limit }}
-#          maxMessage: The amount must be less than £10,000,000,000
-#          missingWhenDetailsFilled: Please enter the total amount or remove the details
-#        moreDetails:
-#          empty: Please give us some more information about this amount
+
 moneyTransaction:
   addAnother.notBlank: Please choose one option
   form:

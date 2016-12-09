@@ -30,7 +30,6 @@ form:
   howIsCareFunded:
     label: How is the care funded?
     choices:
-      # TODO update with answer to http://hzaiwi.axshare.com/#g=4&p=visits_and_care_-_form_-_how_is_care_funded_1
       client_pays_for_all: %client% pays for all the care
       client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
       all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
