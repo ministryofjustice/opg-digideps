@@ -18,7 +18,13 @@
             <td>
                 {{ asset.description | nl2br }}</td>
             <td class="numeric-small width-eighth">£{{ asset.value | money_format }}</td>
-            <td class="">{{ asset.valuationDate | date }}</td>
+            <td class="">
+                {% if asset.valuationDate %}
+                    {{ asset.valuationDate | date }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-asset-edit"
                    href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">Edit</a>
