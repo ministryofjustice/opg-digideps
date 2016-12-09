@@ -24,7 +24,7 @@ abstract class Asset
      * @var int
      * @JMS\Type("integer")
      * @JMS\Groups({"asset"})
-     * 
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -34,10 +34,10 @@ abstract class Asset
 
     /**
      * @var decimal
-     * 
+     *
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
-     * 
+     *
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $value;

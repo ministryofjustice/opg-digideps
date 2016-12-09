@@ -59,10 +59,10 @@ class UserRegistrationService
      * - throw error 421 if user and client not found
      * - throw error 424 if user and client are found but the postcode doesn't match
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
-     * 
+     *
      * @param User   $user
      * @param Client $client
-     * 
+     *
      * @return CasRec
      */
     private function casRecChecks(User $user, Client $client)

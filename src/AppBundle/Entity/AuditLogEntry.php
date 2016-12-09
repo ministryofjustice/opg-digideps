@@ -72,7 +72,7 @@ class AuditLogEntry
 
     /**
      * @var \DateTime
-     * 
+     *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("DateTime")

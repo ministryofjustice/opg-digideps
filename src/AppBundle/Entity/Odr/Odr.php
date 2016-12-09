@@ -417,6 +417,4 @@ class Odr
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
         return $this;
     }
-
-
 }

@@ -17,7 +17,7 @@ class Account
     /**
      * Keep in sync with client.
      *
-     * @JMS\Exclude 
+     * @JMS\Exclude
      */
     public static $types = [
         'current' => 'Current account',
@@ -68,7 +68,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
     private $sortCode;
@@ -76,7 +76,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
@@ -84,7 +84,7 @@ class Account
     /**
      * @var \DateTime
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
@@ -92,7 +92,7 @@ class Account
     /**
      * @var \DateTime
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
@@ -101,17 +101,17 @@ class Account
      * @var decimal
      * @JMS\Groups({"account"})
      * @JMS\Type("string")
-     * 
+     *
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
 
     /**
      * @var decimal
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $closingBalance;
@@ -154,7 +154,7 @@ class Account
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     * 
+     *
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
     private $meta;
@@ -216,7 +216,7 @@ class Account
      * @JMS\VirtualProperty
      * @JMS\SerializedName("account_type_text")
      * @JMS\Groups({"account"})
-     * 
+     *
      * @return string
      */
     public function getAccountTypeText()
@@ -425,7 +425,7 @@ class Account
 
     /**
      * @param string $isJointAccount yes/no/null
-     * 
+     *
      * @return \AppBundle\Entity\Report\Account
      */
     public function setIsJointAccount($isJointAccount)

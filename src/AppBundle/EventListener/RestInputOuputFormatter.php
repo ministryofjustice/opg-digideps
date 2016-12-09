@@ -61,7 +61,7 @@ class RestInputOuputFormatter
 
     /**
      * @param Request $request
-     * 
+     *
      * @return array
      */
     public function requestContentToArray(Request $request)
@@ -117,11 +117,11 @@ class RestInputOuputFormatter
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        $data = array(
+        $data = [
             'success' => true,
             'data' => $event->getControllerResult(),
             'message' => '',
-        );
+        ];
 
         $response = $this->arrayToResponse($data, $event->getRequest());
 
@@ -157,7 +157,7 @@ class RestInputOuputFormatter
         // log exception
         $this->logger->log($level, $message);
 
-        $data = array(
+        $data = [
             'success' => false,
             'data' => ($e instanceof HasDataInterface) ? $e->getData() : '',
             'message' => $message,
@@ -165,7 +165,7 @@ class RestInputOuputFormatter
                     sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000))
                     : 'enable debug mode to see it',
             'code' => $code,
-        );
+        ];
 
         $response = $this->arrayToResponse($data, $event->getRequest());
         $response->setStatusCode($code);
@@ -182,13 +182,13 @@ class RestInputOuputFormatter
             if (!$lastError) {
                 return;
             }
-            echo json_encode(array(
+            echo json_encode([
                 'success' => false,
                 'data' => '',
                 'message' => "{$lastError['message']} {$lastError['file']}:{$lastError['line']} ",
-            ));
+            ]);
             die;
-            //TODO find a way to use kernely temrinate instead, usgin 
+            //TODO find a way to use kernely temrinate instead, usgin
         });
     }
 

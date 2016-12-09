@@ -15,9 +15,9 @@ class ReportRepository extends EntityRepository
 {
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
-     * 
+     *
      * @param EntityDir\Report\Report $report
-     * 
+     *
      * @return EntityDir\Report\Report
      */
     public function createNextYearReport(EntityDir\Report\Report $report)
@@ -40,8 +40,8 @@ class ReportRepository extends EntityRepository
         }
 
         // clone accounts
-        //  opening balance = closing balance 
-        //  opening date = closing date 
+        //  opening balance = closing balance
+        //  opening date = closing date
         foreach ($report->getAccounts() as $account) {
             $newAccount = new EntityDir\Report\Account();
             $newAccount->setBank($account->getBank());
@@ -64,9 +64,9 @@ class ReportRepository extends EntityRepository
     /**
      * add empty Transaction to Report.
      * Called from doctrine listener.
-     * 
+     *
      * @param Report $report
-     * 
+     *
      * @return int changed records
      */
     public function addTransactionsToReportIfMissing(Report $report)
