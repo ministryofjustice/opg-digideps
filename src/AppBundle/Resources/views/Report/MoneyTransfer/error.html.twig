@@ -20,6 +20,7 @@
 
     <a href="{{ path('report_overview', { 'reportId': report.id}) }}" class="">{{ 'errorPage.backToOverview' | trans }}</a>
 
+    {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'moneyTransfers') }}
 
 {% endblock %}
