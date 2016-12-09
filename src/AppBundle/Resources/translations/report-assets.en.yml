@@ -12,7 +12,7 @@ existPage:
   pageSectionTitle: Assets
   form:
     noAssetToAdd:
-      label: Does %client% own any assets ?
+      label: Does %client% own any assets?
       hint: For example, property, vehicles, investments, jewellery, artworks, antiques or stocks and shares
     save:
       label: Save and continue
@@ -57,7 +57,7 @@ stepPageProperty:
 summaryPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageSectionTitle: Assets
-  addButton: Add a asset
+  addButton: Add an asset
   edit: Edit
 
 form:
@@ -91,11 +91,11 @@ form:
     label: Valuation date
   property:
     address:
-      label: Address
+      label: Address line 1
     address2:
-      label: ""
+      label: Address line 2
     county:
-      label: ""
+      label: County
     postcode:
       label: "Postcode"
     occupants:

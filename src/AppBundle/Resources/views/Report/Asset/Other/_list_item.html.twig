@@ -5,7 +5,7 @@
     <tr>
         <th>Description of asset</th>
         <th class="numeric">Value</th>
-        <th>Valuation Date</th>
+        <th class="numeric">Valuation date</th>
         <th>
             <span class="visuallyhidden">Actions</span>
         </th>
@@ -13,24 +13,32 @@
     </thead>
     <tbody>
     {% for asset in assetsInGroup %}
-        {# @biggs td classes need a review, I copied them from "money in" that looked the most similar #}
         <tr>
-            <td>
-                {{ asset.description | nl2br }}</td>
-            <td class="numeric-small width-eighth">£{{ asset.value | money_format }}</td>
-            <td class="">
+            <td>{{ asset.description | nl2br }}</td>
+            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
+            <td class="numeric-small width-fifth">
                 {% if asset.valuationDate %}
-                    {{ asset.valuationDate | date }}
+                    {{ asset.valuationDate | date('d F Y') }}
                 {% else %}
                     -
                 {% endif %}
             </td>
             <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-asset-edit"
+                <a class="behat-link-asset-edit action-link"
                    href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">Edit</a>
-                <a class="behat-link-account-delete push-half--left" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
+                <a class="behat-link-account-delete push-half--left action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
             </td>
         </tr>
     {% endfor %}
+        <tr class="no-border">
+            <td>
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="text--right">
+                <span class="bold-small">£1,234.00</span>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
     </tbody>
 </table>

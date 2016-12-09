@@ -34,7 +34,7 @@
             <h2 class="heading-medium flush--ends">List of assets</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('assets_select_title', { 'reportId': report.id}) }}" class="bold-small move-quarter--up">
+            <a href="{{ path('assets_select_title', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -55,13 +55,9 @@
 {% if report.assets %}
     <table class="check-your-answers push--top">
         <tr class="no-border">
-            <td class="text--right">
-                <span class="heading-medium">Total value of assets:</span>
+            <td class="numeric-small hard--right">
+                <span class="heading-medium">Total value of assets: £{{ report.assetsTotalValue | money_format }}</span>
             </td>
-            <td class="numeric-small width-eighth">
-                <span class="heading-medium">£{{ report.assetsTotalValue | money_format }}</span>
-            </td>
-            <td class="width-sixth"></td>
         </tr>
     </table>
 {% endif %}
