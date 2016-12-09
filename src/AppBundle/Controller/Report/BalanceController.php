@@ -24,19 +24,27 @@ class BalanceController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'transaction']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance']);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Balance explanation added'
+            );
+
+            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+
         }
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'subsection' => 'balance',
+            'backLink' => $this->generateUrl('report_overview', ['reportId'=>$report->getId()])
         ];
     }
 }

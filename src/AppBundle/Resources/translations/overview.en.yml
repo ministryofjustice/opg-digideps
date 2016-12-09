@@ -75,6 +75,13 @@ money_out:
     start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+balance:
+    subSectionTitle: "Balance"
+    subSectionDescription: ""
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Tell us about %client%’s assets, including property"

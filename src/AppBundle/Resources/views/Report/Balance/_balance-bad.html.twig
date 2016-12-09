@@ -1,4 +1,4 @@
-{% set translationDomain = "report-accounts" %}
+{% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
 
 {% if report.totalsOffset < 0 %}
@@ -47,39 +47,14 @@
     </div>
 </div>
 
-{#<div class="hero split-three orange compact">
-    <div class="hero-column">
-        <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans }}:</div>
-        <div class="total">
-            £{{ report.calculatedBalance | money_format }}
-        </div>
-    </div>
-    <div class="hero-column">
-        <div class="message">
-            {{ 'balance.bad.totalFromAccounts' | trans }}:
-        </div>
-        <div class="total">
-           £{{ report.accountsClosingBalanceTotal | money_format }}
-        </div>
-    </div>
-    <div class="hero-column">
-        <div class="message">
-            <b>{{ 'balance.bad.unaccounted' | trans }}:</b>
-        </div>
-        <div class="total behat-region-unaccounted-for">
-           £{{ report.totalsOffset | abs | money_format }}
-        </div>
-    </div>
-</div>#}
-
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
 <p class="balance-warning page-section-warning">
     <span class="icon icon__notification"></span>
     <span class="left-margin-big">{{ 'balance.bad.goBack' | trans({
         '%client%': report.client.firstname,
-        '%accountsLink%': path('bank_accounts', {'reportId': report.id}),
-        '%moneyInLink%': path('money_in' , {'reportId': report.id}) ,
-        '%moneyOutLink%': path('money_out' , {'reportId': report.id}),
+        '%accountsLink%': path('bank_accounts_summary', {'reportId': report.id}),
+        '%moneyInLink%': path('money_in_summary' , {'reportId': report.id}) ,
+        '%moneyOutLink%': path('money_out_summary' , {'reportId': report.id}),
         '%paragraphBreak%': '<br/><br/>',
     }) | raw }}</span>
 </p>
@@ -87,16 +62,11 @@
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.balanceMismatchExplanation, 'balance.bad.formtitle', {
-        'labelText': 'balance.bad.formtitle.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format})
+    {{ form_input(form.balanceMismatchExplanation, 'balance.bad.explanation', {
+        'labelText': 'balance.bad.form.explanation.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format})
     }) }}
 
-    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-    transDomain: translationDomain,
-    section: 'accounts',
-    showDelete: false,
-    showCancel: false
-    } %}
+    {{ form_submit(form.save, 'balance.bad.form.save') }}
 
 {{ form_end(form) }}
 

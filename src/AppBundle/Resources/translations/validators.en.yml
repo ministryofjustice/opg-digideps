@@ -88,6 +88,9 @@ report:
     hasDebts:
         notBlank: You must select one option
         mustHaveAtLeastOneDebt: You must enter at least one debt
+    balanceMismatchExplanation:
+      notBlank: You must give an explanation for balance mismatching
+      length: This explanation must be at least {{ limit }} letters long
 
 report-declaration:
     agree:

@@ -41,6 +41,15 @@
     {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
+            {% if not reportStatus.balanceMatches %}
+                {# @biggs style me, I'm ugly #}
+                <h3 class="error">
+                    Your accounts are not balanced.
+                    <a href="{{ path('balance', {'reportId': report.id}) }}">View details</a>
+                </h3>
+            {% endif %}
+
+
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'bank_accounts',
@@ -77,14 +86,17 @@
                 warning: true,
                 description: true
             } %}
-            {#{% include 'AppBundle:Report/Overview:_subsection.html.twig' with {#}
-                {#transDomain: translationDomain,#}
-                {#subSection: 'balance',#}
-                {#report: report,#}
-                {#state: reportStatus.balanceState,#}
-                {#warning: true,#}
-                {#description: true#}
-            {#} %}#}
+            {# show balance section only for editing, when an explanation is given #}
+            {% if report.balanceMismatchExplanation %}
+                {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'balance',
+                    report: report,
+                    state: reportStatus.balanceState,
+                    warning: true,
+                    description: true
+                } %}
+            {% endif %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',

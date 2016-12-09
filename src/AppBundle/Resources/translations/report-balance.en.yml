@@ -1,0 +1,67 @@
+page:
+  htmlTitle: "Deputy report - balance | GOV.UK"
+  pageSectionTitle: "Balance"
+  backLink: Back
+
+balance:
+    good:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
+      accountsBalanced: Accounts balanced
+      accountsBalancedMessage: Money in and money out match the balance
+    bad:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: There’s a difference of £%totalOffset% between what you’ve told us the total money in and money out was, and the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.
+      accountsBalanced: Accounts not balanced
+      accountsBalancedMessage: Money in and money out don’t match the balance
+      totalAfterMoneyInOut:
+        title: "Total balance after money in and money out:"
+        subtitle: This is what you entered for the opening balance, income and spending
+      totalFromAccounts:
+        title: "Total balance of all bank accounts:"
+        subtitle: This is what you entered for the closing balance on %endDate%
+      missingAmount: "Missing amount:"
+      unaccounted: Unaccounted for
+      extraAmount: Extra amount
+      summaryBalanceInOut: Balance after total money in and money out
+      totalOfAllAccounts: Total balance of all bank accounts
+      checkYourAccounts: Check your accounts
+      goBack: |
+         After you have entered all of %client%'s income and expenses,
+         you should have a sum of money that matches the one you entered in the
+         closing balance in <a href="%accountsLink%">bank accounts</a>.
+         %paragraphBreak%
+         If the two sums don't match, first, check that the figures you gave in <a href="%accountsLink%">bank accounts</a> are correct. If the amounts still don't match, go back and carefully check that you have included all of %client%'s incomings and outgoings correctly in the <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> sections.
+      cantFind: Can’t find the problem?
+      form:
+        explanation:
+          label: If, having checked, you still can't see what's gone wrong, you can use the form below to explain why you weren't able to make the sums add up. You can still submit your report, and we may be able to help.
+        save:
+          label: Save and continue
+    balanceAfterReported: Total money in and money out
+    totalBankStart: Totals from all bank accounts at start of reporting period
+    totalInDuringPeriod: Total money in during reporting period
+    totalFromAllIn: Total from all opening balances and money in
+    totalOutInPeriod: Total money out during the reporting period
+    finalBalance: Balance after money in and money out
+    actualBalance: Total balance from all bank accounts
+    incomplete:
+        alertBox: Accounts incomplete
+        pageSectionDescription: |
+            We don't have all the information we need to balance your accounts
+            We still need you to tell us about:
+        moneyIn:
+            title: Money in
+            description: You need to tell us about money that has come into %client%'s accounts during the reporting period
+            addLink: Add money in
+        moneyOut:
+            title: Money out
+            description: You need to tell us about money that has gone out of %client%'s accounts during the reporting period
+            addLink: Add money out
+        noAccounts:
+            title: Bank accounts
+            description: You need to give details of at least 1 bank account that you use on behalf of %client%
+            addLink: Add bank accounts
+        accounts:
+            missing: Tell us how much money was in the account on %reportEndDate%
+            editLink: Edit this account
