@@ -24,7 +24,7 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
 
 //    public static function attempts()
 //    {
-//        return [ 
+//        return [
 //                [ [], [0=>false, 100=>false, 1000=>false]  ],
 //                // 1 attempt in last 60 secs
 //                [ [[1,10]], [0=>true]  ],
@@ -36,7 +36,7 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
 //                [ [[3, 60], [5, 120]],  [0=>false, 1=>false, 2=>true, 63=>false, 64=>true, 65=>true]],
 //            ];
 //    }
-//    
+//
 
     public function testMaxAttemptsReached()
     {

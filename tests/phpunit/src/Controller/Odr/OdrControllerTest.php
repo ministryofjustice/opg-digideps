@@ -85,7 +85,6 @@ class OdrControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('debts', $data);
-
     }
 
     public function testDebts()
@@ -245,7 +244,6 @@ class OdrControllerTest extends AbstractTestController
             'has_more_details' => false,
             'more_details' => null,
         ], $data['one_off'][1]);
-
     }
 
     public function testExpensesPutAndGet()
@@ -327,7 +325,6 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals('yes', $data['action_property_buy']);
         $this->assertEquals('no', $data['action_more_info']);
         $this->assertEquals('', $data['action_more_info_details']);
-
     }
 
     public function testSubmitAuth()
@@ -395,5 +392,4 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(null, $odr->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $odr->getSubmitDate()->format('Y-m-d'));
     }
-
 }

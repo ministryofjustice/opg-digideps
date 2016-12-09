@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Controller\Odr;
+
 use AppBundle\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController

@@ -235,7 +235,7 @@ class AssetControllerTest extends AbstractTestController
 
     /**
      * Run this last to avoid corrupting the data.
-     * 
+     *
      * @depends testgetAssets
      */
     public function testDelete()
