@@ -198,6 +198,4 @@ trait OdrActionTrait
         $this->actionMoreInfoDetails = $actionMoreInfoDetails;
         return $this;
     }
-
-
 }

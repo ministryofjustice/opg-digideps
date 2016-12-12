@@ -74,7 +74,7 @@ class UserController extends RestController
 
     /**
      * //TODO take user from logged user.
-     * 
+     *
      * @Route("/{id}/is-password-correct")
      * @Method({"POST"})
      */
@@ -193,7 +193,7 @@ class UserController extends RestController
      *
      * @Route("/{id}")
      * @Method({"DELETE"})
-     * 
+     *
      * @param int $id
      */
     public function delete($id)
@@ -246,7 +246,7 @@ class UserController extends RestController
 
     /**
      * Requires client secret.
-     * 
+     *
      * @Route("/recreate-token/{email}/{type}", defaults={"email": "none"}, requirements={
      *   "type" = "(activate|pass-reset)"
      * })
@@ -292,13 +292,13 @@ class UserController extends RestController
 
     /**
      * call setters on User when $data contains values.
-     * 
+     *
      * @param User  $user
      * @param array $data
      */
     private function populateUser(EntityDir\User $user, array $data)
     {
-        // Cannot easily(*) use JSM deserialising with already constructed objects. 
+        // Cannot easily(*) use JSM deserialising with already constructed objects.
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
         // (*) see options here https://github.com/schmittjoh/serializer/issues/79
         // http://jmsyst.com/libs/serializer/master/event_system

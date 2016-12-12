@@ -277,7 +277,9 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('end_date', $data);
 
         // assert transactions_in
-        $t = array_shift(array_filter($data['transactions_in'], function ($e) { return $e['id'] === 'dividends'; }));
+        $t = array_shift(array_filter($data['transactions_in'], function ($e) {
+            return $e['id'] === 'dividends';
+        }));
         $this->assertEquals('in', $t['type']);
         $this->assertEquals('income-and-earnings', $t['category']);
         $this->assertEquals([1200.10, 400], $t['amounts']);
@@ -285,15 +287,19 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(null, $t['has_more_details']);
 
         // assert transactions_out
-        $t = array_shift(array_filter($data['transactions_out'], function ($e) { return $e['id'] === 'accommodation-other'; }));
+        $t = array_shift(array_filter($data['transactions_out'], function ($e) {
+            return $e['id'] === 'accommodation-other';
+        }));
         $this->assertEquals('out', $t['type']);
         $this->assertEquals('accommodation', $t['category']);
-        $this->assertEquals([24.50],  $t['amounts']);
+        $this->assertEquals([24.50], $t['amounts']);
         $this->assertEquals(true, $t['has_more_details']);
         $this->assertEquals('extra service charge', $t['more_details']);
 
-        $t = array_shift(array_filter($data['transactions_out'], function ($e) { return $e['id'] === 'anything-else-paid-out'; }));
-        $this->assertEquals([],  $t['amounts']);
+        $t = array_shift(array_filter($data['transactions_out'], function ($e) {
+            return $e['id'] === 'anything-else-paid-out';
+        }));
+        $this->assertEquals([], $t['amounts']);
     }
 
     public function testDebts()

@@ -226,7 +226,7 @@ class ContactControllerTest extends AbstractTestController
 
     /**
      * Run this last to avoid corrupting the data.
-     * 
+     *
      * @depends testgetContacts
      */
     public function testDeleteContact()

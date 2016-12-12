@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 
-
 class ActionController extends RestController
 {
     /**
@@ -38,7 +37,7 @@ class ActionController extends RestController
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
@@ -58,7 +57,7 @@ class ActionController extends RestController
     /**
      * @param array            $data
      * @param EntityDir\Report\Action $action
-     * 
+     *
      * @return \AppBundle\Entity\Report\Report $report
      */
     private function updateEntity(array $data, EntityDir\Report\Action $action)

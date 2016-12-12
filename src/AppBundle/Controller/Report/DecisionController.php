@@ -61,7 +61,7 @@ class DecisionController extends RestController
     /**
      * @Route("/decision/{id}")
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function getOneById(Request $request, $id)

@@ -14,7 +14,7 @@ class ClientController extends RestController
 {
     /**
      * Add client.
-     * 
+     *
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
      */
@@ -66,7 +66,7 @@ class ClientController extends RestController
 
     /**
      * @param int $userId
-     * 
+     *
      * @return EntityDir\Client
      */
     private function add($userId)
@@ -82,7 +82,7 @@ class ClientController extends RestController
     /**
      * @Route("/{id}", name="client_find_by_id" )
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function findByIdAction(Request $request, $id)

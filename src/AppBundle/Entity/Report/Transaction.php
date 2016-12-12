@@ -41,7 +41,7 @@ class Transaction
 
     /**
      * @var array
-     * 
+     *
      * @JMS\Type("array<string>")
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *

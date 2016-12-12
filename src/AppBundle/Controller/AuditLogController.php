@@ -15,8 +15,8 @@ class AuditLogController extends RestController
     /**
      * exampleof request
      * {"performed_by_user":{"id":1},"ip_address":192,"created_at":"2015-06-02T12:53:53+0100","action":"user_add","user_edited":{"id":6}}.
-     * 
-     * 
+     *
+     *
      * @Route("")
      * @Method({"POST"})
      */

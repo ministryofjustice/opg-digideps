@@ -205,7 +205,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
     /**
      * Run this last to avoid corrupting the data.
-     * 
+     *
      * @depends testDeleteVisitsCareAcl
      */
     public function testDeleteVisitsCare()
@@ -223,7 +223,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
     /**
      * need the record to be deleted first.
-     * 
+     *
      * @depends testDeleteVisitsCare
      */
     public function testAdd()

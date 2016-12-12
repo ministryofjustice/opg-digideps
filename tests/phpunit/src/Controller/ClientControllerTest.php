@@ -17,7 +17,7 @@ class ClientControllerTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-        // deputy 1 
+        // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);

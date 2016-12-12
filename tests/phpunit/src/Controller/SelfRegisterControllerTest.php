@@ -176,8 +176,8 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertContains('not found', $responseArray['message']);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @depends savesValidUserToDb
      */
     public function throwErrorForDuplicate()

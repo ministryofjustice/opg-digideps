@@ -25,7 +25,7 @@ abstract class AbstractTestController extends WebTestCase
     {
         parent::setUpBeforeClass();
 
-        // each test restores the db before launching the entire suite, 
+        // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
         Fixtures::restoreDb();
 
@@ -121,7 +121,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @param string $email
      * @param string $password
-     * 
+     *
      * @return string token
      */
     public function login($email, $password, $clientSecret)

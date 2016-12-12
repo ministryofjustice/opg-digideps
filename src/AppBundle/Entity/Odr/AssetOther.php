@@ -34,7 +34,7 @@ class AssetOther extends Asset
 
     /**
      * Set description.
-     * 
+     *
      * @param string $description
      *
      * @return Asset

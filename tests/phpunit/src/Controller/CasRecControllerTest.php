@@ -91,13 +91,13 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('r1', $users[0]->getClientLastname());
         $this->assertEquals('dn1', $users[0]->getDeputyNo());
         $this->assertEquals('r2', $users[0]->getDeputySurname());
-        $this->assertEquals('sw1ah3',  $users[0]->getDeputyPostCode());
+        $this->assertEquals('sw1ah3', $users[0]->getDeputyPostCode());
 
         $this->assertEquals('22', $users[1]->getCaseNumber());
         $this->assertEquals('h1', $users[1]->getClientLastname());
         $this->assertEquals('dn2', $users[1]->getDeputyNo());
         $this->assertEquals('h2', $users[1]->getDeputySurname());
-        $this->assertEquals('',  $users[1]->getDeputyPostCode());
+        $this->assertEquals('', $users[1]->getDeputyPostCode());
 
         // assert no-truncate
         $this->assertJsonRequest('POST', '/casrec/bulk-add/0', [
