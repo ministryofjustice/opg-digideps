@@ -56,7 +56,7 @@ class AssetController extends AbstractController
         if ($form->isValid()) {
             switch ($report->getNoAssetToAdd()) {
                 case 0: // yes
-                    return $this->redirectToRoute('assets_select_title', ['reportId' => $reportId,]);
+                    return $this->redirectToRoute('assets_select_type', ['reportId' => $reportId,]);
                 case 1: //no
                     $this->get('restClient')->put('report/' . $reportId, $report, ['noAssetsToAdd']);
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
@@ -76,10 +76,10 @@ class AssetController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/assets/step-select-title", name="assets_select_title")
+     * @Route("/report/{reportId}/assets/step-select-type", name="assets_select_type")
      * @Template()
      */
-    public function stepSelectTitleAction(Request $request, $reportId)
+    public function stepSelectTypeAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['asset']);
         $form = $this->createForm('asset_title', new EntityDir\Report\AssetOther(), [
@@ -127,7 +127,7 @@ class AssetController extends AbstractController
 
         return [
             'asset' => $asset,
-            'backLink' => $this->generateUrl('assets_select_title', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl('assets_select_type', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -183,7 +183,7 @@ class AssetController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('assets_select_title', ['reportId' => $reportId, 'from' => 'another']);
+                    return $this->redirectToRoute('assets_select_type', ['reportId' => $reportId, 'from' => 'another']);
                 case 'no':
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
@@ -215,7 +215,7 @@ class AssetController extends AbstractController
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutes('assets_select_title', 'assets_property_step', 'assets_summary')
+            ->setRoutes('assets_select_type', 'assets_property_step', 'assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'assetId' => $assetId]);
