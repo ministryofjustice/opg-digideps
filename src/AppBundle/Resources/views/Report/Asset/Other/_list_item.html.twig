@@ -12,7 +12,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for asset in assetsInGroup %}
+    {% for asset in assetsInGroup.items %}
         <tr>
             <td>{{ asset.description | nl2br }}</td>
             <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
@@ -35,7 +35,7 @@
                 <span class="bold-small">Total amount</span>
             </td>
             <td class="text--right">
-                <span class="bold-small">£1,234.00</span>
+                <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
             </td>
             <td></td>
             <td></td>

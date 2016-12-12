@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% for asset in assetsInGroup %}
+{% for asset in assetsInGroup.items %}
 {# @var asset \AppBundle\Entity\Report\AssetProperty #}
 
     <div class="grid-row push--ends">
