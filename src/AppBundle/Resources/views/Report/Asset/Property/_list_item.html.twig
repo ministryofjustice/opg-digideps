@@ -7,7 +7,7 @@
 
     <div class="grid-row push--ends">
         <div class="column-half">
-            <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h2>
+            <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
             <a class="behat-link-account-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
