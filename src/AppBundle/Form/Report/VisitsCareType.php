@@ -121,7 +121,7 @@ class VisitsCareType extends AbstractType
                 /* @var $data VisitsCare */
                 $validationGroups = [
                     1 => ($data->getDoYouLiveWithClient() == 'no')
-                        ? ['visits-care-live-client', 'visits-care-live-client-no']
+                        ? ['visits-care-live-client', 'visits-care-how-often-contact']
                         : ['visits-care-live-client'],
                     2=> ($data->getDoesClientReceivePaidCare() == 'yes')
                     ? ['visits-care-receive-paid-care', 'visits-care-how-care-funded']
