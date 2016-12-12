@@ -19,6 +19,7 @@ prevNextLinks:
   next: Next section
   previous: Previous section
   sections:
+    reportOverview: Report overview
     decisions: Decisions
     mentalCapacity: Mental capacity
     contacts: Contacts
@@ -30,4 +31,5 @@ prevNextLinks:
     assets: Assets
     debts: Debts
     actions: Actions
+
 

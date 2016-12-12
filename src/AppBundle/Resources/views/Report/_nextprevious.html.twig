@@ -2,6 +2,7 @@
 {% trans_default_domain translationDomain %}
 {# keep order in the overview section #}
 {% set prevNextConfig = [
+{'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
 {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
 {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
 {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
@@ -12,6 +13,7 @@
 {'section':'assets', 'link': path('assets', {'reportId': report.id})},
 {'section':'debts', 'link': path('debts', {'reportId': report.id})},
 {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+{'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
 ] %}
 
 {% for k,s in prevNextConfig %}
