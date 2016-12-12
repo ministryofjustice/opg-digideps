@@ -18,69 +18,71 @@ class VisitsCare
      */
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidence.notBlank", groups={"visits-care"})
-     */
-    private $planMoveNewResidence;
+
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidenceDetails.notBlank", groups={"plan-move-residence-yes"})
-     */
-    private $planMoveNewResidenceDetails;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care-live-client"})
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-no"})
+     * @Assert\NotBlank(message="odr.visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-how-often-contact"})
      */
     private $howOftenDoYouContactClient;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care-receive-paid-care"})
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare"})
+     * @Assert\NotBlank(message="odr.visitsCare.howIsCareFunded.notBlank", groups={"visits-care-how-care-funded"})
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care-who-does-caring"})
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care-have-care-plan"})
      */
     private $doesClientHaveACarePlan;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"visits-care"})
-     * @Assert\NotBlank(message="odr.visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-hasCarePlan"})
-     * @Assert\Date( message="odr.visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-hasCarePlan"} )
+     * @Assert\NotBlank(message="odr.visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
+     * @Assert\Date( message="odr.visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
     private $whenWasCarePlanLastReviewed;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidence.notBlank", groups={"visits-care-plan-move-residence"})
+     */
+    private $planMoveNewResidence;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"visits-care"})
+     * @Assert\NotBlank(message="odr.visitsCare.planMoveNewResidenceDetails.notBlank", groups={"visits-care-plan-move-residence-details"})
+     */
+    private $planMoveNewResidenceDetails;
 
     /**
      * @return int $id
@@ -316,11 +318,42 @@ class VisitsCare
     }
 
     /**
+     * If deputy lives with client then we don't
+     * all this other responses.
+     *
+     * @return bool
+     */
+    public function keepOnlyRelevantVisitsCareData()
+    {
+        if ($this->doYouLiveWithClient == 'yes') {
+            $this->howOftenDoYouContactClient = null;
+        }
+
+        if ($this->doesClientReceivePaidCare == 'no') {
+            $this->howIsCareFunded = null;
+        }
+
+        if ($this->doesClientHaveACarePlan == 'no') {
+            $this->whenWasCarePlanLastReviewed = null;
+        }
+
+        return true;
+    }
+
+    /**
+     * checks if report is missing visits care
+     * information.
+     *
      * @return bool
      */
     public function missingInfo()
     {
-        if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
+        if (empty($this->doYouLiveWithClient)
+            || empty($this->doesClientReceivePaidCare)
+            || empty($this->whoIsDoingTheCaring)
+            || empty($this->doesClientHaveACarePlan)
+            || empty($this->planMoveNewResidence)
+        ) {
             return true;
         }
 

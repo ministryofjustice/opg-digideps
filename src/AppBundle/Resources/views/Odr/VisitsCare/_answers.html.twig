@@ -1,0 +1,185 @@
+{% set translationDomain = "odr-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region-live-with-client">
+            {% if validator.missing('doYouLiveWithClient') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.doYouLiveWithClient | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.visitsCare.doYouLiveWithClient == 'no' %}
+            <tr class="behat-region-how-often-contact-client">
+                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+                <td>{{ odr.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# step 2 #}
+        <tr class="behat-region-does-client-receive-paid-care">
+            {% if validator.missing('doesClientReceivePaidCare') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.doesClientReceivePaidCare | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.visitsCare.doesClientReceivePaidCare == 'yes' %}
+            <tr class="behat-region-how-is-care-funded">
+                <td>
+                    {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ ('form.howIsCareFunded.choices.' ~ odr.visitsCare.howIsCareFunded) | trans(transOptions) }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# step 3 #}
+        <tr class="behat-region-who-is-doing-caring">
+            {% if validator.missing('whoIsDoingTheCaring') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.whoIsDoingTheCaring | nl2br }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':3, 'from': 'summary'}) }}" class="action-link">Edit</a>
+            </td>
+        </tr>
+
+        {# step 4 #}
+        <tr class="behat-region-client-has-care-plan">
+            {% if validator.missing('doesClientHaveACarePlan') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.doesClientHaveACarePlan | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.visitsCare.doesClientHaveACarePlan == 'yes' %}
+            <tr class="behat-region-care-plan-last-reviewed">
+                <td>
+                    {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# step 5 #}
+        <tr class="behat-region-client-has-care-plan">
+            {% if validator.missing('planMoveNewResidence') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.planMoveNewResidence.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.planMoveNewResidence.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.planMoveNewResidence | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.visitsCare.planMoveNewResidence == 'yes' %}
+            <tr class="behat-region-care-plan-last-reviewed">
+                <td>
+                    {{ 'form.planMoveNewResidenceDetails.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.visitsCare.planMoveNewResidenceDetails | nl2br }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>
