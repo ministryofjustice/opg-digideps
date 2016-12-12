@@ -145,7 +145,7 @@ account:
         length: The sort code must be {{ limit }} numbers long
     accountNumber:
         notBlank: You need to enter the last 4 numbers of the account number
-        type: The account number must be in numbers
+        type: The account number must be alpha numeric
         length: You need to enter the last 4 digits of the account number
     openingBalance:
         notBlank: You need to enter an opening balance
@@ -346,7 +346,7 @@ odr:
           length: The sort code must be {{ limit }} numbers long
       accountNumber:
           notBlank: Enter the last 4 digits of the account number
-          type: The account number must be in numbers
+          type: The account number must be alpha numeric
           length: Enter the last 4 digits of the account number
       balanceOnCourtOrderDate:
           notBlank: Enter the account balance on the date shown on your court order

@@ -79,7 +79,7 @@ class Account
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"add_edit"})
-     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"add_edit"})
+     * @Assert\Type(type="alnum", message="account.accountNumber.type", groups={"add_edit"})
      * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"add_edit"})
      * @JMS\Groups({"account"})
      * 

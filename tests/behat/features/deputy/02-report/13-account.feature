@@ -166,3 +166,14 @@ Feature: deputy / report / account
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 0 | | |
             | closingBalance  | 0 | | |
+
+    @deputy
+    Scenario: add account with letters for account number
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I add the following bank account:
+            | bank    | temp2  | | |
+            | accountNumber | qwer | | |
+            | accountType | isa | | |
+            | sortCode | 12 | 23 | 34 |
+            | openingBalance  | 100 | | |
+            | closingBalance  | 1000 | | |
