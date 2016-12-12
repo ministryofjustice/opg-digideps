@@ -346,12 +346,13 @@ class AssetController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($reportId, $assetId)
+    public function deleteAction(Request $request, $reportId, $assetId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['asset']);
 
         if ($report->hasAssetWithId($assetId)) {
             $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");
+            $request->getSession()->getFlashBag()->add('notice', 'Asset removed');
         }
 
         return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
