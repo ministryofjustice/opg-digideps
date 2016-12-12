@@ -13,8 +13,6 @@ use AppBundle\Controller\AbstractController;
 class ExpensesController extends AbstractController
 {
     private static $odrJmsGroups = [
-        'odr',
-        'client',
         'client-cot',
         'odr-expenses',
     ];

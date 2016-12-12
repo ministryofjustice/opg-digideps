@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends AbstractController
 {
     private static $odrJmsGroups = [
-        'odr',
-        'client',
         'visits-care',
     ];
 

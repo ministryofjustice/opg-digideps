@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
-    private static $odrJmsGroups = ['odr', 'client', 'odr-debt'];
+    private static $odrJmsGroups = ['odr-debt'];
 
     /**
      * List debts.

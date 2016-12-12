@@ -80,8 +80,12 @@ class AbstractController extends Controller
      *
      * @return Odr
      */
-    public function getOdr($odrId, array $groups/* = ['basic']*/)
+    public function getOdr($odrId, array $groups)
     {
+        $groups[] =  'odr';
+        $groups[] =  'client';
+        $groups = array_unique($groups);
+
         return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', $groups);
     }
 

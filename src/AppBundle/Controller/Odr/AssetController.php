@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AssetController extends AbstractController
 {
-    private static $odrJmsGroups = ['odr', 'client', 'odr-asset'];
+    private static $odrJmsGroups = ['odr-asset'];
 
     /**
      * List assets and also handle no-asset checkbox-form.

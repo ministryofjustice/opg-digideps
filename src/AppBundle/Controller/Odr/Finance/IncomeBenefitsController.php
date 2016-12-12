@@ -12,8 +12,6 @@ use AppBundle\Controller\AbstractController;
 class IncomeBenefitsController extends AbstractController
 {
     private static $odrJmsGroups = [
-        'odr',
-        'client',
         'client-cot',
         'odr-income-benefits',
         'odr-income-state-benefits',

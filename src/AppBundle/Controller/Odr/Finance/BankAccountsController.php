@@ -12,7 +12,7 @@ use AppBundle\Controller\AbstractController;
 
 class BankAccountsController extends AbstractController
 {
-    private static $odrJmsGroups = ['odr', 'client', 'odr-account', 'client-cot'];
+    private static $odrJmsGroups = ['odr-account', 'client-cot'];
 
     /**
      * @Route("/odr/{odrId}/finance/banks", name="odr-bank-accounts")
