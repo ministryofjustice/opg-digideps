@@ -23,7 +23,7 @@ class MoneyInController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/money-in/start", name="money_in")
+     * @Route("/report/{reportId}/money-in", name="money_in")
      * @Template()
      */
     public function startAction(Request $request, $reportId)

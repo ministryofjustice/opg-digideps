@@ -23,7 +23,7 @@ class MoneyOutController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/money-out/start", name="money_out")
+     * @Route("/report/{reportId}/money-out", name="money_out")
      * @Template()
      */
     public function startAction(Request $request, $reportId)

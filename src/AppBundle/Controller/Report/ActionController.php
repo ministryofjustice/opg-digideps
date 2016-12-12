@@ -19,7 +19,7 @@ class ActionController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/actions/start", name="actions")
+     * @Route("/report/{reportId}/actions", name="actions")
      * @Template()
      */
     public function startAction(Request $request, $reportId)

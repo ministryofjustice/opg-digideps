@@ -19,7 +19,7 @@ class VisitsCareController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/visits-care/start", name="visits_care")
+     * @Route("/report/{reportId}/visits-care", name="visits_care")
      * @Template()
      */
     public function startAction(Request $request, $reportId)

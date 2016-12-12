@@ -18,7 +18,7 @@ class DebtController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/debts/start", name="debts")
+     * @Route("/report/{reportId}/debts", name="debts")
      * @Template()
      */
     public function startAction(Request $request, $reportId)

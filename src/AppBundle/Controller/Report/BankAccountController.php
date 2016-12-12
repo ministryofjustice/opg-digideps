@@ -19,7 +19,7 @@ class BankAccountController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
+     * @Route("/report/{reportId}/bank-accounts", name="bank_accounts")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
