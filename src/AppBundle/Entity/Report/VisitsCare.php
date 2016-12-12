@@ -25,7 +25,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care", "visits-care-step1"})
+     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care", "visits-care-live-client"})
      */
     private $doYouLiveWithClient;
 
@@ -41,7 +41,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care", "visits-care-step2"})
+     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care", "visits-care-receive-paid-care"})
      */
     private $doesClientReceivePaidCare;
 
@@ -49,7 +49,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare", "visits-care-paidCare"})
+     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare", "visits-care-how-care-funded"})
      */
     private $howIsCareFunded;
 
@@ -57,8 +57,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care", "visits-care-step3"})
-     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care", "visits-care-who-does-caring"})
      */
     private $whoIsDoingTheCaring;
 
@@ -66,7 +65,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care", "visits-care-step4"})
+     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care", "visits-care-have-care-plan"})
      */
     private $doesClientHaveACarePlan;
 
