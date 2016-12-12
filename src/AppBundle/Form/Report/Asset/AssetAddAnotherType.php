@@ -17,7 +17,7 @@ class AssetAddAnotherType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'assets.addAnother.notBlank'])],
+                'constraints' => [new NotBlank(['message' => 'asset.addAnother.notBlank'])],
             ))
             ->add('save', 'submit', ['label' => 'save.label']);
     }
