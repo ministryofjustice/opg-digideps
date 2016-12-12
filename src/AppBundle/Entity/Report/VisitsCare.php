@@ -49,7 +49,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare", "visits-care-how-care-funded"})
+     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-how-care-funded"})
      */
     private $howIsCareFunded;
 
