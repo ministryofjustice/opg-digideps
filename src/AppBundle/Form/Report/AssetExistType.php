@@ -25,7 +25,7 @@ class AssetExistType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-//            'validation_groups' => ['exist'],
+            'validation_groups' => ['exist'],
         ]);
     }
 
