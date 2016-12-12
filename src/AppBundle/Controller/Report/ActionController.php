@@ -14,13 +14,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ActionController extends AbstractController
 {
+    private static $jmsGroups = [
+        'action',
+    ];
+
     /**
      * @Route("/report/{reportId}/actions/start", name="actions")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getAction() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
@@ -40,7 +44,7 @@ class ActionController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $action = $report->getAction() ?: new EntityDir\Report\Action();
         $fromPage = $request->get('from');
 
@@ -88,7 +92,7 @@ class ActionController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         //$this->flagSectionStarted($report, self::SECTION_ID);
         if (!$report->getAction() && $fromPage != 'skip-step') {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);

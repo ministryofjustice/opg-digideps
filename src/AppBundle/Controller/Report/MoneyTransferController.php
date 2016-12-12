@@ -13,6 +13,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class MoneyTransferController extends AbstractController
 {
+    private static $jmsGroups = [
+        'money-transfer',
+        'account'
+    ];
+
     /**
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
      * @Template()
@@ -23,7 +28,7 @@ class MoneyTransferController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportByIdWithChecks($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAccounts()) < 2) {
             return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
@@ -46,7 +51,7 @@ class MoneyTransferController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportByIdWithChecks($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\MoneyTransferExistType(), $report);
         $form->handleRequest($request);
 
@@ -87,7 +92,7 @@ class MoneyTransferController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportByIdWithChecks($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -169,7 +174,7 @@ class MoneyTransferController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportByIdWithChecks($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Report\MoneyTransferAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -199,7 +204,7 @@ class MoneyTransferController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportByIdWithChecks($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getMoneyTransfers()) == 0 && $report->getNoTransfersToAdd() === null) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
@@ -227,14 +232,6 @@ class MoneyTransferController extends AbstractController
         );
 
         return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
-    }
-
-    private function getReportByIdWithChecks($reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['money-transfer', 'account']);
-
-
-        return $report;
     }
 
 }

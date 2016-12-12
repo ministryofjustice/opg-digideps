@@ -14,7 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class BankAccountController extends AbstractController
 {
-    const STEPS = 4;
+    private static $jmsGroups = [
+        'account',
+    ];
 
     /**
      * @Route("/report/{reportId}/bank-accounts/start", name="bank_accounts")
@@ -22,7 +24,7 @@ class BankAccountController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAccounts())) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
@@ -33,8 +35,6 @@ class BankAccountController extends AbstractController
     }
 
     /**
-     * //TODO refactor when assets is implemented too
-     *
      * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
      * @Template()
      */
@@ -48,7 +48,7 @@ class BankAccountController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -113,9 +113,9 @@ class BankAccountController extends AbstractController
             // last step: save
             if ($isLastStep) {
                 if ($accountId) {
-                    $this->getRestClient()->put('/account/' . $accountId, $account, ['account']);
+                    $this->getRestClient()->put('/account/' . $accountId, $account, self::$jmsGroups);
                 } else {
-                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, ['account']);
+                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
                 }
             }
 
@@ -177,7 +177,7 @@ class BankAccountController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAccounts()) === 0) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
@@ -197,7 +197,7 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $accountId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

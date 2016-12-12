@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContactController extends AbstractController
 {
+    private static $jmsGroups = [
+        'contact',
+    ];
+
+
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
      * @Template()
@@ -22,7 +27,7 @@ class ContactController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         if (count($report->getContacts()) > 0 || !empty($report->getReasonForNoContacts())) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
@@ -39,7 +44,7 @@ class ContactController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\ContactExistType(), $report);
         $form->handleRequest($request);
 
@@ -172,7 +177,7 @@ class ContactController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['contact']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         return [
             'report' => $report,

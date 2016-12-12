@@ -16,13 +16,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyInController extends AbstractController
 {
+    private static $jmsGroups = [
+        'transactionsIn',
+    ];
+
+
+
     /**
      * @Route("/report/{reportId}/money-in/start", name="money_in")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if ($report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -46,7 +52,7 @@ class MoneyInController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -154,7 +160,7 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
@@ -174,7 +180,7 @@ class MoneyInController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $transaction = array_filter($report->getTransactionsIn(), function($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });

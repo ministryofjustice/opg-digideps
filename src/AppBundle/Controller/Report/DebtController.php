@@ -13,6 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
+    private static $jmsGroups = [
+        '',
+    ];
+
     /**
      * @Route("/report/{reportId}/debts/start", name="debts")
      * @Template()

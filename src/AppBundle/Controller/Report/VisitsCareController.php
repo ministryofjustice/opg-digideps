@@ -14,13 +14,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
 {
+    private static $jmsGroups = [
+        'visits-care',
+    ];
+
     /**
      * @Route("/report/{reportId}/visits-care/start", name="visits_care")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getVisitsCare() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
@@ -41,7 +45,7 @@ class VisitsCareController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
@@ -65,7 +69,7 @@ class VisitsCareController extends AbstractController
             if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, ['visits-care']);
+                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary')  {
@@ -96,7 +100,7 @@ class VisitsCareController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         //$this->flagSectionStarted($report, self::SECTION_ID);
         if (!$report->getVisitsCare() && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);

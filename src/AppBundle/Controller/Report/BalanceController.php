@@ -14,6 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BalanceController extends AbstractController
 {
+    private static $jmsGroups = [
+        'balance',
+    ];
+
     /**
      * @Route("/report/{reportId}/accounts/balance", name="balance")
      *
@@ -24,7 +28,7 @@ class BalanceController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
