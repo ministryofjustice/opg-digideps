@@ -73,8 +73,8 @@ class VisitsCare
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-hasCarePlan"})
-     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-hasCarePlan"} )
+     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
+     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
     private $whenWasCarePlanLastReviewed;
 

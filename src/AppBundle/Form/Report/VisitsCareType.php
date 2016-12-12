@@ -128,7 +128,7 @@ class VisitsCareType extends AbstractType
                     : ['visits-care-receive-paid-care'],
                     3=> ['visits-care-who-does-caring'],
                     4=> ($data->getDoesClientHaveACarePlan() == 'yes')
-                        ?['visits-care-have-care-plan', 'visits-care-hasCarePlan']
+                        ?['visits-care-have-care-plan', 'visits-care-care-plan-last-review']
                         :['visits-care-have-care-plan'],
                 ][$this->step];
 
