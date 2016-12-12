@@ -14,9 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ActionController extends AbstractController
 {
-    const STEPS = 2;
-    //const SECTION_ID = 'actions';
-
     /**
      * @Route("/report/{reportId}/actions/start", name="actions")
      * @Template()
@@ -39,7 +36,8 @@ class ActionController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
-        if ($step < 1 || $step > self::STEPS) {
+        $totalSteps = 2;
+        if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfReportNotSubmitted($reportId, ['action']);
@@ -50,7 +48,7 @@ class ActionController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(new FormDir\Report\ActionType($step, $this->get('translator'), $report->getClient()->getFirstname()), $action);

@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyOutController extends AbstractController
 {
-    const STEPS = 3;
-
     /**
      * @Route("/report/{reportId}/money-out/start", name="money_out")
      * @Template()
@@ -40,7 +38,8 @@ class MoneyOutController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
-        if ($step < 1 || $step > self::STEPS) {
+        $totalSteps = 3;
+        if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
 
@@ -54,7 +53,7 @@ class MoneyOutController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('money_out', 'money_out_step', 'money_out_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId, 'transactionId' => $transactionId]);
 
 
@@ -87,7 +86,7 @@ class MoneyOutController extends AbstractController
                 $stepUrlData['group'] = $transaction->getGroup();
             } else if ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
-            } else if ($step == self::STEPS) {
+            } else if ($step == $totalSteps) {
                 if ($transactionId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',

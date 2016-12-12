@@ -14,9 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
 {
-    const STEPS = 4;
-    //const SECTION_ID = 'visitsCare';
-
     /**
      * @Route("/report/{reportId}/visits-care/start", name="visits_care")
      * @Template()
@@ -40,7 +37,8 @@ class VisitsCareController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
-        if ($step < 1 || $step > self::STEPS) {
+        $totalSteps = 4;
+        if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfReportNotSubmitted($reportId, ['visits-care']);
@@ -51,7 +49,7 @@ class VisitsCareController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('visits_care', 'visits_care_step', 'visits_care_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId]);
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);

@@ -13,8 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class MoneyTransferController extends AbstractController
 {
-    const STEPS = 2;
-
     /**
      * @Route("/report/{reportId}/money-transfers", name="money_transfers")
      * @Template()
@@ -81,7 +79,8 @@ class MoneyTransferController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $transferId = null)
     {
-        if ($step < 1 || $step > self::STEPS) {
+        $totalSteps = 2;
+        if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -95,7 +94,7 @@ class MoneyTransferController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);
 
 
@@ -130,7 +129,7 @@ class MoneyTransferController extends AbstractController
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
                 $stepUrlData['to-id'] = $transfer->getAccountToId();
-            } else if ($step == self::STEPS) {
+            } else if ($step == $totalSteps) {
                 if ($transferId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',

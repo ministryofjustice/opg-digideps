@@ -40,7 +40,8 @@ class BankAccountController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
-        if ($step < 1 || $step > self::STEPS) {
+        $totalSteps = 4;
+        if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -54,7 +55,7 @@ class BankAccountController extends AbstractController
         $stepRedirector = $this->get('stepRedirector')
             ->setRoutes('bank_accounts', 'bank_accounts_step', 'bank_accounts_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps(self::STEPS)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId, 'accountId' => $accountId]);
 
 
@@ -106,8 +107,8 @@ class BankAccountController extends AbstractController
             }
 
             // 4th step only if closing balance is equals to 0
-            $isLastStep = $step == self::STEPS
-                || ($step == (self::STEPS - 1) && !$account->isClosingBalanceZero());
+            $isLastStep = $step == $totalSteps
+                || ($step == ($totalSteps - 1) && !$account->isClosingBalanceZero());
 
             // last step: save
             if ($isLastStep) {
