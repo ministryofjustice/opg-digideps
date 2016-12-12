@@ -221,14 +221,13 @@ class AssetController extends AbstractController
             ->setRouteBaseParams(['reportId' => $reportId, 'assetId' => $assetId]);
 
 
-        // create (add mode) or load assets (edit mode)
-        if ($assetId) {
+        if ($assetId) { // edit asset
             $assets = array_filter($report->getAssets(), function ($t) use ($assetId) {
                 return $t->getId() == $assetId;
             });
             $asset = array_shift($assets);
             $stepRedirector->setFromPage('summary');
-        } else {
+        } else { // add new asset
             $asset = new EntityDir\Report\AssetProperty();
         }
 
@@ -261,6 +260,7 @@ class AssetController extends AbstractController
             // edit mode: save immediately and go back to summary page
             if ($assetId) {
                 $this->getRestClient()->put("report/{$reportId}/asset/{$assetId}", $asset);
+                $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
                 return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
             }
