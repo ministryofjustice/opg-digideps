@@ -3,12 +3,6 @@
 namespace AppBundle\Service\SectionValidator;
 use AppBundle\Entity\Report\VisitsCare;
 
-/**
- * Created by PhpStorm.
- * User: elvis
- * Date: 19/10/2016
- * Time: 12:23
- */
 class VisitsCareValidator
 {
     /**
