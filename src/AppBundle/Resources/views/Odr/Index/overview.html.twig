@@ -53,7 +53,7 @@
             odr: odr,
             state: odrStatus.bankAccountsState,
             nOfRecords: odr.bankAccounts | length,
-            linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
+            linkToSubSection: path('odr_bank_accounts', {odrId: odr.id}),
             description: true
             } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {

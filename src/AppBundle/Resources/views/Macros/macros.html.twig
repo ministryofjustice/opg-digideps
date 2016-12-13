@@ -29,3 +29,8 @@
 {% macro reportSectionPrevNext(report, section) %}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {'reportId': report.id, 'section': section} %}
 {% endmacro %}
+
+{% macro odrSectionPrevNext(odr, section) %}
+    {# TODO #}
+    [navigator to implement]
+{% endmacro %}
