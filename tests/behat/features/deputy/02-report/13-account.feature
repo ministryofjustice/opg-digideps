@@ -171,9 +171,29 @@ Feature: deputy / report / account
     Scenario: add account with letters for account number
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | temp2  | | |
+            | bank    | Account - letters  | | |
             | accountNumber | qwer | | |
             | accountType | isa | | |
             | sortCode | 12 | 23 | 34 |
-            | openingBalance  | 100 | | |
-            | closingBalance  | 1000 | | |
+            | openingBalance  | 0 | | |
+            | closingBalance  | 0 | | |
+        And I press "account_save"
+        And I save the page as "report-account-list"
+        #Then the response status code should be 200
+        And the form should be valid
+        And the URL should match "/report/\d+/accounts"
+        And I should see "Account - letters" in the "list-accounts" region
+
+    @deputy
+    Scenario: add account with letters for account number
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I add the following bank account:
+            | bank    | Account - special characters  | | |
+            | accountNumber | !?,. | | |
+            | accountType | isa | | |
+            | sortCode | 12 | 23 | 34 |
+            | openingBalance  | 0 | | |
+            | closingBalance  | 0 | | |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_accountNumber |
