@@ -176,6 +176,3 @@ Feature: deputy / report / account
             | accountType | isa | | |
             | sortCode | 12 | 23 | 34 |
             | openingBalance  | 0 | | |
-            | closingBalance  | 0 | | |
-        Then the URL should match "/report/\d+/accounts"
-        And I should see "Account - letters" in the "list-accounts" region
