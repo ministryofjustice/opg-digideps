@@ -18,6 +18,29 @@ class OdrStatusService
         $this->odr = $odr;
     }
 
+
+    /** @return string */
+    public function getBankAccountsState()
+    {
+        if (empty($this->odr->getBankAccounts())) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
+
+
+    /** @return string */
+    public function getVisitsCareState()
+    {
+        if (!$this->odr->getVisitsCare() || $this->odr->getVisitsCare()->missingInfo()) {
+            return self::STATE_NOT_STARTED;
+        } else {
+            return self::STATE_DONE;
+        }
+    }
+
+
     /**
      * @return array
      */
@@ -60,15 +83,6 @@ class OdrStatusService
         return 'notFinished';
     }
 
-    /** @return string */
-    public function getVisitsCareState()
-    {
-        if (!$this->odr->getVisitsCare() || $this->odr->getVisitsCare()->missingInfo()) {
-            return self::STATE_NOT_STARTED;
-        } else {
-            return self::STATE_DONE;
-        }
-    }
 
     public function getFinanceState()
     {

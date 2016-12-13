@@ -20,47 +20,66 @@ odrReady: Report ready to submit
 sectionsRemaining: "sections remaining"
 overview: New deputy report
 
+
+
+visitsCare:
+    subSectionTitle: "Visits and care"
+    subSectionDescription: "Give us an overview of who is looking after %client%"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
+bank_accounts:
+    subSectionTitle: "Accounts"
+    subSectionDescription: "Add %client%’s bank, building society and savings accounts"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+
+
+finances:
+    subSectionTitle: "Finances (old, no OTPP)"
+    subSectionDescription: "Enter details of all income and spending in the reporting period"
+    edit: "Edit finances"
+    start: "Start finances"
 contacts:
-    subSectionTitle: "Contacts"
+    subSectionTitle: "Contacts (no OTPP)"
     subSectionDescription: "Tell us about the people you consulted regarding %client%"
     edit: "Edit contacts"
     start: "Start contacts"
 decisions:
-    subSectionTitle: "Decisions"
+    subSectionTitle: "Decisions (no OTPP)"
     subSectionDescription: "Let us know about any significant decisions you've made for %client%"
     edit: "Edit decisions"
     start: "Start decisions"
 actions:
-    subSectionTitle: "Actions you plan to take"
+    subSectionTitle: "Actions you plan to take (no OTPP)"
     subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
     edit: "Edit actions"
     start: "Start actions"
 finances:
-    subSectionTitle: "Finances"
+    subSectionTitle: "Finances  (no OTPP)"
     subSectionDescription: "Enter details of all income and spending in the reporting period"
     edit: "Edit finances"
     start: "Start finances"
 transfers:
-    subSectionTitle: "Money transfers"
+    subSectionTitle: "Money transfers (no OTPP)"
     subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
     edit: "Edit transfers"
     start: "Start money transfers"
 transfersInactive:
-    subSectionTitle: "Money transfers"
+    subSectionTitle: "Money transfers (no OTPP)"
     subSectionDescription: "This will become available if you have more than one account"
     edit: "Edit transfers"
     start: "Start money transfers"
-visitsCare:
-    subSectionTitle: "Visits and care"
-    subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
-    edit: "Edit visits and care"
-    start: "Start visits and care"
+
 actions:
-    subSectionTitle: "Actions"
+    subSectionTitle: "Actions (no OTPP)"
     edit: "Edit actions"
     start: "Start actions"
 assets:
-    subSectionTitle: "Assets and debts"
+    subSectionTitle: "Assets and debts (no OTPP)"
     subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
     edit: "Edit assets and debts"
     start: "Start assets and debts"

@@ -31,8 +31,31 @@
 
         <ul id="overview-sections" class="overview-sections">
 
+            <li id="visits-and-actions" class="overview-section">
+                <h2 class="heading">Health and Welfare</h2>
+                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'visitsCare',
+                linkToSubSection: path('odr_visits_care', {odrId: odr.id}),
+                odr: odr,
+                info: true,
+                description: true,
+                state: odrStatus.visitsCareState,
+                } %}
+            </li>
+
+
             <li id="finances-and-assets" class="overview-section">
-            <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+            <h2 class="heading">Property and finance</h2>
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'bank_accounts',
+            odr: odr,
+            state: odrStatus.bankAccountsState,
+            nOfRecords: odr.bankAccounts | length,
+            linkToSubSection: path('odr-bank-accounts', {odrId: odr.id}),
+            description: true
+            } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'finances',
