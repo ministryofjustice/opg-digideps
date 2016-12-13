@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
-    private static $odrJmsGroups = ['odr-debt'];
+    private static $jmsGroups = ['odr-debt'];
 
     /**
      * List debts.
@@ -22,7 +22,7 @@ class DebtController extends AbstractController
      */
     public function listAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }

@@ -12,7 +12,7 @@ use AppBundle\Controller\AbstractController;
 
 class BankAccountsController extends AbstractController
 {
-    private static $odrJmsGroups = ['odr-account', 'client-cot'];
+    private static $jmsGroups = ['odr-account', 'client-cot'];
 
     /**
      * @Route("/odr/{odrId}/finance/banks", name="odr-bank-accounts")
@@ -24,7 +24,7 @@ class BankAccountsController extends AbstractController
      */
     public function indexAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
@@ -50,7 +50,7 @@ class BankAccountsController extends AbstractController
      */
     public function upsertAction(Request $request, $odrId, $id = null)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         $type = $id ? 'edit' : 'add';
 
         if ($type === 'edit') {
@@ -99,7 +99,7 @@ class BankAccountsController extends AbstractController
      */
     public function deleteAction($odrId, $id)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
 
         if ($odr->hasBankAccountWithId($id)) {
             $this->getRestClient()->delete("/odr/account/{$id}");

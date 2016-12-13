@@ -12,7 +12,7 @@ use AppBundle\Controller\AbstractController;
 
 class ExpensesController extends AbstractController
 {
-    private static $odrJmsGroups = [
+    private static $jmsGroups = [
         'client-cot',
         'odr-expenses',
     ];
@@ -28,7 +28,7 @@ class ExpensesController extends AbstractController
      */
     public function indexAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }

@@ -11,7 +11,7 @@ use AppBundle\Controller\AbstractController;
 
 class ActionsController extends AbstractController
 {
-    private static $odrJmsGroups = [
+    private static $jmsGroups = [
         'client-cot',
         'odr-action-give-gifts',
         'odr-action-property',
@@ -29,7 +29,7 @@ class ActionsController extends AbstractController
      */
     public function giftsAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
@@ -60,7 +60,7 @@ class ActionsController extends AbstractController
      */
     public function propertyAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }
@@ -91,7 +91,7 @@ class ActionsController extends AbstractController
      */
     public function infoAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Odr already submitted and not editable.');
         }

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
 {
-    private static $odrJmsGroups = [
+    private static $jmsGroups = [
         'visits-care',
     ];
 
@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
      */
     public function startAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         if ($odr->getVisitsCare() != null/* || $odr->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('odr_visits_care_summary', ['odrId' => $odrId]);
         }
@@ -45,7 +45,7 @@ class VisitsCareController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('odr_visits_care_summary', ['odrId' => $odrId]);
         }
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         $visitsCare = $odr->getVisitsCare() ?: new EntityDir\Odr\VisitsCare();
         $fromPage = $request->get('from');
 
@@ -99,7 +99,7 @@ class VisitsCareController extends AbstractController
     public function summaryAction(Request $request, $odrId)
     {
         $fromPage = $request->get('from');
-        $odr = $this->getOdr($odrId, self::$odrJmsGroups);
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
         //$this->flagSectionStarted($odr, self::SECTION_ID);
         if (!$odr->getVisitsCare() && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_visits_care', ['odrId' => $odrId]);
