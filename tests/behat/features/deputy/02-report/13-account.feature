@@ -176,3 +176,5 @@ Feature: deputy / report / account
             | accountType | isa | | |
             | sortCode | 12 | 23 | 34 |
             | openingBalance  | 0 | | |
+            | closingBalance  | 0 | | |
+
