@@ -317,7 +317,6 @@ class AssetController extends AbstractController
             'asset' => $asset,
             'report' => $report,
             'step' => $step,
-            'reportStatus' => new ReportStatusService($report),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
