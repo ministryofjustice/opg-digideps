@@ -52,6 +52,7 @@ class OdrStatusService
             'visitsCare' => $this->getVisitsCareState(),
             'assets' => $this->getAssetsState(),
             'bankAccounts' => $this->getBankAccountsState(),
+            'debts' => $this->getDebtsState(),
 //            'actions' => $this->getActionsState(),
         ];
 
@@ -86,13 +87,17 @@ class OdrStatusService
     }
 
 
-    public function getFinanceState()
+    /** @return string */
+    public function getDebtsState()
     {
-        if (empty($this->odr->getBankAccounts()) && $this->odr->incomeBenefitsStatus() == 'not-started') {
+        $hasDebts = $this->odr->getHasDebts();
+
+        if (empty($hasDebts)) {
             return self::STATE_NOT_STARTED;
         }
 
-        if (count($this->odr->getBankAccounts()) > 0 && $this->odr->incomeBenefitsStatus() == 'done') {
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($debtsSectionComplete) {
             return self::STATE_DONE;
         }
 

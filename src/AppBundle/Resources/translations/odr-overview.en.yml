@@ -43,47 +43,56 @@ assets:
     start: "Start"
     label:
       done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
+debts:
+    subSectionTitle: "Debts"
+    subSectionDescription: "Let us know about any debts %client% owes"
+    edit: "Edit"
+    start: "Start"
+    label:
+       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
 
-finances:
-    subSectionTitle: "Finances (old, no OTPP)"
-    subSectionDescription: "Enter details of all income and spending in the reporting period"
-    edit: "Edit finances"
-    start: "Start finances"
-contacts:
-    subSectionTitle: "Contacts (no OTPP)"
-    subSectionDescription: "Tell us about the people you consulted regarding %client%"
-    edit: "Edit contacts"
-    start: "Start contacts"
-decisions:
-    subSectionTitle: "Decisions (no OTPP)"
-    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
-    edit: "Edit decisions"
-    start: "Start decisions"
-actions:
-    subSectionTitle: "Actions you plan to take (no OTPP)"
-    subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
-    edit: "Edit actions"
-    start: "Start actions"
-finances:
-    subSectionTitle: "Finances  (no OTPP)"
-    subSectionDescription: "Enter details of all income and spending in the reporting period"
-    edit: "Edit finances"
-    start: "Start finances"
-transfers:
-    subSectionTitle: "Money transfers (no OTPP)"
-    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
-    edit: "Edit transfers"
-    start: "Start money transfers"
-transfersInactive:
-    subSectionTitle: "Money transfers (no OTPP)"
-    subSectionDescription: "This will become available if you have more than one account"
-    edit: "Edit transfers"
-    start: "Start money transfers"
 
-actions:
-    subSectionTitle: "Actions (no OTPP)"
-    edit: "Edit actions"
-    start: "Start actions"
+
+#finances:
+#    subSectionTitle: "Finances (old, no OTPP)"
+#    subSectionDescription: "Enter details of all income and spending in the reporting period"
+#    edit: "Edit finances"
+#    start: "Start finances"
+#contacts:
+#    subSectionTitle: "Contacts (no OTPP)"
+#    subSectionDescription: "Tell us about the people you consulted regarding %client%"
+#    edit: "Edit contacts"
+#    start: "Start contacts"
+#decisions:
+#    subSectionTitle: "Decisions (no OTPP)"
+#    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
+#    edit: "Edit decisions"
+#    start: "Start decisions"
+#actions:
+#    subSectionTitle: "Actions you plan to take (no OTPP)"
+#    subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
+#    edit: "Edit actions"
+#    start: "Start actions"
+#finances:
+#    subSectionTitle: "Finances  (no OTPP)"
+#    subSectionDescription: "Enter details of all income and spending in the reporting period"
+#    edit: "Edit finances"
+#    start: "Start finances"
+#transfers:
+#    subSectionTitle: "Money transfers (no OTPP)"
+#    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
+#    edit: "Edit transfers"
+#    start: "Start money transfers"
+#transfersInactive:
+#    subSectionTitle: "Money transfers (no OTPP)"
+#    subSectionDescription: "This will become available if you have more than one account"
+#    edit: "Edit transfers"
+#    start: "Start money transfers"
+#
+#actions:
+#    subSectionTitle: "Actions (no OTPP)"
+#    edit: "Edit actions"
+#    start: "Start actions"
 
 odr_add_further_info:
     subSectionTitle: "Sign and submit"

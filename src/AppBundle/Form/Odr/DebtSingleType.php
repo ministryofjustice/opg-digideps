@@ -58,6 +58,6 @@ class DebtSingleType extends AbstractType
 
     public function getName()
     {
-        return 'debt_single';
+        return 'odr_debt_single';
     }
 }

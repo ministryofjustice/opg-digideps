@@ -1,0 +1,25 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(odr) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">
+        {{ 'startPage.pageSectionDescription' | trans(transOptions) }}
+    </p>
+
+    <a href="{{ path('odr_debts_exist', { 'odrId': odr.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}

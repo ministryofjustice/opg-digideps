@@ -9,7 +9,12 @@ use AppBundle\Entity\Odr\Traits\OdrIncomeBenefitTrait;
 use AppBundle\Entity\Odr\Traits\ActionTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
+
+/**
+ * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
+ */
 class Odr
 {
     use OdrIncomeBenefitTrait;
@@ -62,7 +67,7 @@ class Odr
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var Debt[]
      */
@@ -70,7 +75,7 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
      *
@@ -80,7 +85,7 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var decimal
      */
@@ -296,6 +301,21 @@ class Odr
     public function getDebts()
     {
         return $this->debts;
+    }
+
+    /**
+     * @param $debtId
+     * @return Debt|null
+     */
+    public function getDebtById($debtId)
+    {
+        foreach ($this->getDebts() as $debt) {
+            if ($debt->getDebtTypeId() == $debtId) {
+                return $debt;
+            }
+        }
+
+        return null;
     }
 
     /**

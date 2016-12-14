@@ -1,0 +1,53 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {% for debt in form.debts %}
+        <div class="{{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
+            {{ form_row(debt.debtTypeId) }}
+            {{ form_input(debt.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control__number js-more-info js-format-currency',
+                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                'formGroupClass': ' form-group-value'
+            }) }}
+
+            {% if debt.moreDetails is defined %}
+                {{ form_input(debt.moreDetails, 'moreDetails', {
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                    'formGroupClass': 'panel panel-border-narrow form-group-combo-description',
+                    'inputClass': ' transaction-more-details'
+                }) }}
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ form_submit(form.save,'', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new GOVUK.ExpandingMoreDetails('.expand-more-details');
+        });
+    </script>
+
+{% endblock %}
