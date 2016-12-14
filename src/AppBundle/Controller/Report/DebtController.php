@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
-    private static $jmsGroups = [
-        '',
-    ];
+    private static $jmsGroups = ['debt'];
 
     /**
      * @Route("/report/{reportId}/debts", name="debts")
@@ -23,7 +21,7 @@ class DebtController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getHasDebts() != null) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
@@ -45,11 +43,6 @@ class DebtController extends AbstractController
 
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' . $reportId, $report, ['debt']);
-
-            // To discuss with Kevin and Liz. notification after you change your mind about debts existance
-            //if ($request->get('from') == 'summary')  {
-            //    $request->getSession()->getFlashBag()->add('notice', 'Record edited');
-            //}
 
             if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
@@ -78,7 +71,7 @@ class DebtController extends AbstractController
      */
     public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
@@ -87,7 +80,7 @@ class DebtController extends AbstractController
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary')  {
-                $request->getSession()->getFlashBag()->add('notice', 'Record edited');
+                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
             }
 
             return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
@@ -113,7 +106,7 @@ class DebtController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['debt']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getHasDebts() == null) {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
