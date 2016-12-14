@@ -18,7 +18,6 @@
         {% else %}
             {{ ('labels.' ~ state) | trans }}
         {% endif %}
-
     </span>
 
     <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ path(subSection, {reportId: report.id}) }}"{% endif %} >
