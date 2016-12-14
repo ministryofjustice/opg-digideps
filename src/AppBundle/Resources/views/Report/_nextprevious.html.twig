@@ -1,34 +1,23 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
-{# keep order in the overview section #}
-{% set prevNextConfig = [
-{'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-{'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-{'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-{'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-{'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
-{'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
-{'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
-{'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
-{'section':'assets', 'link': path('assets', {'reportId': report.id})},
-{'section':'debts', 'link': path('debts', {'reportId': report.id})},
-{'section':'actions', 'link': path('actions', {'reportId': report.id})},
-{'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-] %}
 
-{% for k,s in prevNextConfig %}
+{# iterate the config. When the section if found (k=n), includes the nextprevious.html.twig with
+   the k=n-1 and k=n+1 config.
+   When all the NDR OTPP section are implemented, consider merge up the included template
+ #}
+{% for k,s in config %}
     {% if s.section == section %}
         {% set templateOptions = {} %}
-        {% if prevNextConfig[k-1] is defined %}
+        {% if config[k-1] is defined %}
             {% set templateOptions = templateOptions | merge({
-            'previousLink': prevNextConfig[k-1].link,
-            'previousLabel': ('prevNextLinks.sections.' ~ prevNextConfig[k-1].section) | trans,
+            'previousLink': config[k-1].link,
+            'previousLabel': ('prevNextLinks.sections.' ~ config[k-1].section) | trans,
             }) %}
         {% endif %}
-        {% if prevNextConfig[k+1] is defined %}
+        {% if config[k+1] is defined %}
             {% set templateOptions = templateOptions | merge({
-            'nextLink': prevNextConfig[k+1].link,
-            'nextLabel': ('prevNextLinks.sections.' ~ prevNextConfig[k+1].section) | trans,
+            'nextLink': config[k+1].link,
+            'nextLabel': ('prevNextLinks.sections.' ~ config[k+1].section) | trans,
             }) %}
         {% endif %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with templateOptions %}
