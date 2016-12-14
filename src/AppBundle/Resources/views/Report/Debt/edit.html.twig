@@ -40,11 +40,6 @@
         </div>
     {% endfor %}
 
-    {#<div class="sub-total ">#}
-        {#Total debts#}
-        {#:£<span class="value">{{ report.debtsTotalAmount | money_format }}</span>#}
-    {#</div>#}
-
     {{ form_submit(form.save,'', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
 
     {{ form_end(form) }}

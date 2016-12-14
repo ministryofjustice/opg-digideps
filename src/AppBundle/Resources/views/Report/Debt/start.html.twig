@@ -20,6 +20,6 @@
         {{ 'startPage.pageSectionDescription' | trans(transOptions) }}
     </p>
 
-    <a href="{{ path('debts_exist', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+    <a href="{{ path('debts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
 {% endblock %}
