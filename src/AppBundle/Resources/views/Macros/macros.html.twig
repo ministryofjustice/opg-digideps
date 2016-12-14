@@ -1,19 +1,28 @@
-
 {% macro breadcrumbs(report) %}
-	<div class="breadcrumbs hard--bottom">
+    {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
+    {% set reportType = (report | class_name) == 'AppBundle\\Entity\\Odr\\Odr' ? 'odr' : 'report' %}
+
+    <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
-                <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
+                {# NDR users have a different homepage #}
+                {% if isUserOdrEnabled %}
+                    <a href="{{ path('odr_index') }}">Deputy Reports</a>
+                {% else %}
+                    <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
+                {% endif %}
             </li>
-            {% if report =='settings' %}
-                <li>
+            <li>
+                {% if report == 'settings' %}
                     <a href="{{ path('account_settings') }}">Account settings</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">Deputy report overview</a>
-                </li>
-            {% endif %}
+                {% elseif reportType == 'report' %}
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                       class="behat-link-breadcrumbs-report-overview">Deputy report overview</a>
+                {% elseif reportType == 'odr' %}
+                    <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">New deputy
+                        report overview</a>
+                {% endif %}
+            </li>
         </ol>
     </div>
 {% endmacro %}
