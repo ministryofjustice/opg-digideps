@@ -190,4 +190,19 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('need to mock environemnt to test');
     }
 
+
+    /**
+     * @test
+     */
+    public function class_name()
+    {
+        $f = $this->object->getFilters()['class_name']->getCallable();
+
+        $this->assertEquals(null, $f(0));
+        $this->assertEquals(null, $f([]));
+        $this->assertEquals(null, $f(''));
+        $this->assertEquals('Closure', $f(function(){}));
+        $this->assertEquals('DateTime', $f(new \DateTime()));
+    }
+
 }
