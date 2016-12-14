@@ -25,8 +25,8 @@
             </td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-asset-edit action-link"
-                   href="{{ path('asset_other_edit', {'odrId': odr.id, 'assetId': asset.id}) }}">Edit</a>
-                <a class="behat-link-account-delete push-half--left action-link" href="{{ path('asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
+                   href="{{ path('odr_asset_other_edit', {'odrId': odr.id, 'assetId': asset.id}) }}">Edit</a>
+                <a class="behat-link-account-delete push-half--left action-link" href="{{ path('odr_asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
             </td>
         </tr>
     {% endfor %}

@@ -415,22 +415,26 @@ class Odr
 
         $ret = [];
         foreach ($this->assets as $asset) {
+            // select title
             if ($asset instanceof AssetProperty) {
-                $ret['Property'][$asset->getId()] = $asset;
+                $title = 'Property';
             } elseif ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
-                $ret[$title][$asset->getId()] = $asset;
             }
-        }
 
-        return $ret;
+            // add asset into "items" and sum total
+            $ret[$title]['items'][$asset->getId()] = $asset;
+            $ret[$title]['total'] = isset($ret[$title]['total'])
+                ? $ret[$title]['total'] + $asset->getValueTotal()
+                : $asset->getValueTotal();
+        }
 
         // order categories
         ksort($ret);
-        // order assets inside by key
+        // foreach category, order assets by ID desc
         foreach ($ret as &$row) {
-            ksort($row);
+            krsort($row['items']);
         }
 
         return $ret;

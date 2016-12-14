@@ -10,7 +10,7 @@
             <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
-            <a class="behat-link-account-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
+            <a class="behat-link-account-delete push-half--left bold-small action-link" href="{{ path('odr_asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
         </div>
     </div>
 
