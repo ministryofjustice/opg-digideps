@@ -29,6 +29,10 @@
             </div>
         </div>
 
+        {#
+        http://hzaiwi.axshare.com/#g=1&p=odr_report_overview_-_not_started_-_first_time_use
+        #}
+
         <ul id="overview-sections" class="overview-sections">
 
             <li id="visits-and-actions" class="overview-section">
@@ -77,16 +81,7 @@
             </li>
 
             <li id="visits-and-actions" class="overview-section">
-                <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'visitsCare',
-                linkToSubSection: path('odr_visits_care', {odrId: odr.id}),
-                odr: odr,
-                info: true,
-                description: true,
-                state: odrStatus.visitsCareState,
-                } %}
+                <h2 class="heading">Other</h2>
                 {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'actions',
