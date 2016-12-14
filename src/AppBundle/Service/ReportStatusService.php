@@ -47,20 +47,13 @@ class ReportStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        $vc = $this->report->getVisitsCare();
-        if (!$vc) {
+        if (!$this->report->getVisitsCare()) {
             return self::STATE_NOT_STARTED;
         }
-
-        if ($vc->getDoYouLiveWithClient()
-            && $vc->getDoesClientReceivePaidCare()
-            && $vc->getWhoIsDoingTheCaring()
-            && $vc->getDoesClientHaveACarePlan()
-        ) {
-            return self::STATE_DONE;
+        if ($this->report->getVisitsCare()->missingInfo()) {
+            return self::STATE_INCOMPLETE;
         }
-
-        return self::STATE_INCOMPLETE;
+        return self::STATE_DONE;
     }
 
     /** @return string */

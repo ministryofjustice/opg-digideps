@@ -285,7 +285,7 @@ class VisitsCare
      *
      * @return bool
      */
-    public function missingVisitsCareInfo()
+    public function missingInfo()
     {
         if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
             return true;
