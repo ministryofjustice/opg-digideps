@@ -62,35 +62,35 @@
             } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'finances',
-            odr: odr,
-            description: false,
-            state: odrStatus.getFinanceState,
-            linkToSubSection: path('odr-expenses', {odrId: odr.id}),
-            list: true
-            } %}
-            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
-            transDomain: translationDomain,
             subSection: 'assets',
             odr: odr,
             description: false,
-            state: odrStatus.getAssetsDebtsState,
-            linkToSubSection: path('odr-assets', {odrId: odr.id}),
+            state: odrStatus.getAssetsState,
+            linkToSubSection: path('odr_assets', {odrId: odr.id}),
             list: true
             } %}
+            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'finances',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: odrStatus.getFinanceState,#}
+            {#linkToSubSection: path('odr-expenses', {odrId: odr.id}),#}
+            {#list: true#}
+            {#} %}#}
             </li>
 
             <li id="visits-and-actions" class="overview-section">
                 <h2 class="heading">Other</h2>
-                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'actions',
-                linkToSubSection: path('odr-action-gifts', {odrId: odr.id}),
-                odr: odr,
-                info: true,
-                description: false,
-                state: odrStatus.actionsState,
-                } %}
+                {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+                {#transDomain: translationDomain,#}
+                {#subSection: 'actions',#}
+                {#linkToSubSection: path('odr-action-gifts', {odrId: odr.id}),#}
+                {#odr: odr,#}
+                {#info: true,#}
+                {#description: false,#}
+                {#state: odrStatus.actionsState,#}
+                {#} %}#}
             </li>
 
 

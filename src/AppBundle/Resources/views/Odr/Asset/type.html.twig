@@ -1,0 +1,38 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ 'typePage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'typePage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'typePage.backLink' | trans) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'typePage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'typePage.pageSectionDescription' | trans(transOptions) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_checkbox_group(form.title, 'form.title', {
+        'legendClass' : 'form-label-bold',
+        'legendText' : 'form.title.legend' | trans(transOptions)
+    }) }}
+
+    {{ form_submit(form.save,'', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

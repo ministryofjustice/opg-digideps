@@ -47,7 +47,7 @@ class AssetTypeTitle extends AbstractType
 
         // translate keys and order by name
         foreach ($this->assetDropdownKeys as $key) {
-            $translation = $this->translator->trans('dropdown.'.$key, [], $this->translatorDomain);
+            $translation = $this->translator->trans('form.title.choices.'.$key, [], $this->translatorDomain);
             $ret[$translation] = $translation;
         }
         // order by name (keep position for the last element)
@@ -61,8 +61,11 @@ class AssetTypeTitle extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'choice', ['choices' => $this->getTitleChoices(), 'empty_value' => 'Please select'])
-            ->add('next', 'submit');
+        $builder->add('title', 'choice', [
+                'choices' => $this->getTitleChoices(),
+                'empty_value' => 'Please select',
+                'expanded' => true])
+            ->add('save', 'submit');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

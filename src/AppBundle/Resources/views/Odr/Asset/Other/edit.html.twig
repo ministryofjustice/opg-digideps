@@ -1,0 +1,24 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname, '%assetTitle%': asset.title | lower} %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% include 'AppBundle:Odr/Asset/Other:_form.html.twig' %}
+
+{% endblock %}

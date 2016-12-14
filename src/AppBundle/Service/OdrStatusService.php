@@ -33,11 +33,13 @@ class OdrStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        if (!$this->odr->getVisitsCare() || $this->odr->getVisitsCare()->missingInfo()) {
+        if (!$this->odr->getVisitsCare()) {
             return self::STATE_NOT_STARTED;
-        } else {
-            return self::STATE_DONE;
         }
+        if ($this->odr->getVisitsCare()->missingInfo()) {
+            return self::STATE_INCOMPLETE;
+        }
+        return self::STATE_DONE;
     }
 
 
@@ -48,9 +50,9 @@ class OdrStatusService
     {
         $states = [
             'visitsCare' => $this->getVisitsCareState(),
-            'finance' => $this->getFinanceState(),
-            'assetsDebts' => $this->getAssetsDebtsState(),
-            'actions' => $this->getActionsState(),
+            'assets' => $this->getAssetsState(),
+            'bankAccounts' => $this->getBankAccountsState(),
+//            'actions' => $this->getActionsState(),
         ];
 
         return array_filter($states, function ($e) {
@@ -97,20 +99,17 @@ class OdrStatusService
         return self::STATE_INCOMPLETE;
     }
 
-    public function getAssetsDebtsState()
+    /** @return string */
+    public function getAssetsState()
     {
         $hasAtLeastOneAsset = count($this->odr->getAssets()) > 0;
         $noAssetsToAdd = $this->odr->getNoAssetToAdd();
-        $hasDebts = $this->odr->getHasDebts();
 
-        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd) {
             return self::STATE_NOT_STARTED;
         }
 
-        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
-
-        if ($assetsSubSectionComplete && $debtsSectionComplete) {
+        if ($hasAtLeastOneAsset || $noAssetsToAdd) {
             return self::STATE_DONE;
         }
 

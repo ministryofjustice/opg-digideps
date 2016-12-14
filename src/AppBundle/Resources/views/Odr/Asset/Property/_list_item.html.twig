@@ -1,0 +1,151 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% for asset in assetsInGroup.items %}
+{# @var asset \AppBundle\Entity\Report\AssetProperty #}
+
+    <div class="grid-row push--ends">
+        <div class="column-half">
+            <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
+        </div>
+        <div class="column-half text--right">
+            <a class="behat-link-account-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
+        </div>
+    </div>
+
+    <table class="check-your-answers columns-2 behat-region-list-properties">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {# address #}
+        <tr>
+            <td>Address</td>
+            <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
+            </td>
+        </tr>
+
+        {# Who lives at this property? #}
+        <tr>
+            <td>{{ 'form.property.occupants.label' | trans(transOptions) }}</td>
+            <td>{{ asset.occupants | nl2br }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 2}) }}">Edit</a>
+            </td>
+        </tr>
+
+        {#  fully/partly owned + percentage #}
+        <tr>
+            <td>{{ 'form.property.owned.label' | trans(transOptions) }}</td>
+            <td>{{ asset.owned | capitalize }} owned</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 3}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if asset.owned == 'partly' %}
+            <tr>
+                <td>{{ 'form.property.ownedPercentage.label' | trans(transOptions) }}</td>
+                <td>{{ asset.ownedPercentage }}%</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-asset-edit action-link"
+                       href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 3}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# mortgage + outstanding amount #}
+        <tr>
+            <td>{{ 'form.property.hasMortgage.label' | trans(transOptions) }}</td>
+            <td>{{ asset.hasMortgage | capitalize }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 4}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if asset.hasMortgage == 'yes' %}
+            <tr>
+                <td>{{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}</td>
+                <td>£{{ asset.mortgageOutstandingAmount | money_format }}</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-asset-edit action-link"
+                       href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 4}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# Value #}
+        <tr>
+            <td>{{ 'form.property.value.label' | trans(transOptions) }}</td>
+            <td>£{{ asset.value | money_format }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 5}) }}">Edit</a>
+            </td>
+        </tr>
+
+        {# equity release scheme #}
+        <tr>
+            <td>{{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}</td>
+            <td>{{ asset.isSubjectToEquityRelease | capitalize }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 6}) }}">Edit</a>
+            </td>
+        </tr>
+
+        {# other charges  #}
+        <tr>
+            <td>{{ 'form.property.hasCharges.label' | trans(transOptions) }}</td>
+            <td>{{ asset.hasCharges | capitalize }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 7}) }}">Edit</a>
+            </td>
+        </tr>
+
+        {# rented out + rent agreement date + income month #}
+        <tr>
+            <td>{{ 'form.property.isRentedOut.label' | trans(transOptions) }}</td>
+            <td>{{ asset.isRentedOut | capitalize }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-asset-edit action-link"
+                   href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 8}) }}">Edit</a>
+            </td>
+        </tr>
+        {% if asset.isRentedOut =='yes' %}
+            <tr>
+                <td>{{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}</td>
+                <td>{{ asset.rentAgreementEndDate | date("m/Y") }}</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-asset-edit action-link"
+                       href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 8}) }}">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}</td>
+                <td>£{{ asset.rentIncomeMonth | money_format }}</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-asset-edit action-link"
+                       href="{{ path('odr_assets_property_step', {'odrId': odr.id, 'assetId': asset.id, 'step': 8}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        </tbody>
+    </table>
+
+{% endfor %}

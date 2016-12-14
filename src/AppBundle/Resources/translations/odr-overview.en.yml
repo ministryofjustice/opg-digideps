@@ -36,7 +36,13 @@ bank_accounts:
     start: "Start"
     label:
       done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
-
+assets:
+    subSectionTitle: "Assets"
+    subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
 
 finances:
     subSectionTitle: "Finances (old, no OTPP)"
@@ -78,11 +84,7 @@ actions:
     subSectionTitle: "Actions (no OTPP)"
     edit: "Edit actions"
     start: "Start actions"
-assets:
-    subSectionTitle: "Assets and debts (no OTPP)"
-    subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
-    edit: "Edit assets and debts"
-    start: "Start assets and debts"
+
 odr_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Sign and submit"

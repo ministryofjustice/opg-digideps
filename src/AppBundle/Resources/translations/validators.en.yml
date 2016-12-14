@@ -389,6 +389,7 @@ odr:
         notEmpty: You must give us more information about this amount
       atLeastOne: You must add at least one debt
   asset:
+      exist.notBlank: Please choose an option
       title:
           notBlank: Choose the type of asset from the list
           maxMessage: The asset name can't be longer than {{ limit }} letters
