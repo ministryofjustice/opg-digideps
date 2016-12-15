@@ -62,6 +62,15 @@
             } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
+            subSection: 'assets',
+            odr: odr,
+            state: odrStatus.assetsState,
+            nOfRecords: odr.assets | length,
+            linkToSubSection: path('odr_assets', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
             subSection: 'debts',
             odr: odr,
             description: false,
