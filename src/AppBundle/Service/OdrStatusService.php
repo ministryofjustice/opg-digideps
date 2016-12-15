@@ -74,16 +74,9 @@ class OdrStatusService
     {
         if ($this->isReadyToSubmit()) {
             return 'readyToSubmit';
+        } else {
+            return 'notFinished';
         }
-
-        if ($this->getVisitsCareState() == self::STATE_NOT_STARTED
-            && $this->getFinanceState() == self::STATE_NOT_STARTED
-            && $this->getAssetsDebtsState() == self::STATE_NOT_STARTED
-        ) {
-            return 'notStarted';
-        }
-
-        return 'notFinished';
     }
 
 
