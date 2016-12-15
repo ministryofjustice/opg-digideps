@@ -76,7 +76,7 @@
             description: false,
             state: odrStatus.getDebtsState,
             linkToSubSection: path('odr_debts', {odrId: odr.id}),
-            list: true
+            description: true
             } %}
             {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
             {#transDomain: translationDomain,#}
@@ -85,7 +85,6 @@
             {#description: false,#}
             {#state: odrStatus.getFinanceState,#}
             {#linkToSubSection: path('odr-expenses', {odrId: odr.id}),#}
-            {#list: true#}
             {#} %}#}
             </li>
 
