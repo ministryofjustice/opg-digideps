@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Odr;
 
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
+use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -13,101 +15,93 @@ class ActionController extends AbstractController
 {
     private static $jmsGroups = [
         'client-cot',
+        //TODO merge groups in the API into "odr-action"
         'odr-action-give-gifts',
         'odr-action-property',
         'odr-action-more-info',
     ];
 
+
     /**
-     * @Route("/odr/{odrId}/actions/gifts", name="odr-action-gifts")
-     *
-     * @param Request $request
-     * @param int     $odrId
-     * @Template("AppBundle:Odr/Action:gifts.html.twig")
-     *
-     * @return array
+     * @Route("/odr/{odrId}/actions", name="odr_actions")
+     * @Template()
      */
-    public function giftsAction(Request $request, $odrId)
+    public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdr($odrId, self::$jmsGroups);
-        if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Odr already submitted and not editable.');
-        }
-
-        $form = $this->createForm(new FormDir\Odr\Action\GiftsType(), $odr);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-give-gifts']);
-
-            return $this->redirect($this->generateUrl('odr-action-gifts', ['odrId' => $odrId]));
+        if (!$odr->hasAtLeastOneAction()) {
+            return $this->redirectToRoute('odr_actions_summary', ['odrId' => $odrId]);
         }
 
         return [
             'odr' => $odr,
-            'form' => $form->createView(),
-            'subsection' => 'gifts', //property, info
         ];
     }
 
     /**
-     * @Route("/odr/{odrId}/actions/property", name="odr-action-property")
-     *
-     * @param Request $request
-     * @param int     $odrId
-     * @Template("AppBundle:Odr/Action:property.html.twig")
-     *
-     * @return array
+     * @Route("/odr/{odrId}/actions/step/{step}", name="odr_actions_step")
+     * @Template()
      */
-    public function propertyAction(Request $request, $odrId)
+    public function stepAction(Request $request, $odrId, $step)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
-        if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Odr already submitted and not editable.');
+        $totalSteps = 4;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('odr_actions_summary', ['odrId' => $odrId]);
         }
+        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $fromPage = $request->get('from');
 
-        $form = $this->createForm(new FormDir\Odr\Action\PropertyType(), $odr);
+        /* @var $stepRedirector StepRedirector */
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutes('odr_actions', 'odr_actions_step', 'odr_actions_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['odrId' => $odrId]);
+
+        $form = $this->createForm(new FormDir\Odr\ActionType($step, $this->get('translator'), $odr->getClient()->getFirstname()), $odr);
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-property']);
 
-            return $this->redirect($this->generateUrl('odr-action-property', ['odrId' => $odrId]));
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            $data = $form->getData();
+            $this->getRestClient()->put('odr/' . $odrId , $data, ['action']);
+
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Answer edited'
+                );
+            }
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
-            'odr' => $odr,
-            'form' => $form->createView(),
-            'subsection' => 'property',
+            'odr'       => $odr,
+            'step'         => $step,
+            'odrStatus' => new OdrStatusService($odr),
+            'form'         => $form->createView(),
+            'backLink'     => $stepRedirector->getBackLink(),
+            'skipLink'     => $stepRedirector->getSkipLink(),
         ];
     }
 
     /**
-     * @Route("/odr/{odrId}/actions/info", name="odr-action-info")
-     *
-     * @param Request $request
-     * @param int     $odrId
-     * @Template("AppBundle:Odr/Action:info.html.twig")
-     *
-     * @return array
+     * @Route("/odr/{odrId}/actions/summary", name="odr_actions_summary")
+     * @Template()
      */
-    public function infoAction(Request $request, $odrId)
+    public function summaryAction(Request $request, $odrId)
     {
+        $fromPage = $request->get('from');
         $odr = $this->getOdr($odrId, self::$jmsGroups);
-        if ($odr->getSubmitted()) {
-            throw new \RuntimeException('Odr already submitted and not editable.');
-        }
-
-        $form = $this->createForm(new FormDir\Odr\Action\InfoType(), $odr);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->getRestClient()->put('odr/'.$odrId, $form->getData(), ['action-more-info']);
-
-            return $this->redirect($this->generateUrl('odr-action-info', ['odrId' => $odrId]));
+        //$this->flagSectionStarted($odr, self::SECTION_ID);
+        if (!$odr->hasAtLeastOneAction() && $fromPage != 'skip-step') {
+            return $this->redirectToRoute('odr_actions', ['odrId' => $odrId]);
         }
 
         return [
-            'odr' => $odr,
-            'form' => $form->createView(),
-            'subsection' => 'info',
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'odr'             => $odr,
+            'validator'          => new ActionsValidator($odr),
         ];
     }
 }

@@ -2,59 +2,78 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait ActionTrait
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-give-gifts"})
+     * @JMS\Groups({"action"})
      * @Assert\NotBlank(message="odr.action.actionGiveGiftsToClient.notBlank", groups={"action-give-gifts"})
      */
     private $actionGiveGiftsToClient;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-give-gifts"})
+     * @JMS\Groups({"action"})
      * @Assert\NotBlank(message="odr.action.actionGiveGiftsToClientDetails.notBlank", groups={"action-give-gifts-details"})
      */
     private $actionGiveGiftsToClientDetails;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-property"})
-     * @Assert\NotBlank(message="odr.action.actionPropertyMaintenance.notBlank", groups={"action-property"})
+     * @JMS\Groups({"action"})
+     * @Assert\NotBlank(message="odr.action.actionPropertyMaintenance.notBlank", groups={"action-property-maintenance"})
      */
     private $actionPropertyMaintenance;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-property"})
-     * @Assert\NotBlank(message="odr.action.actionPropertySellingRent.notBlank", groups={"action-property"})
+     * @JMS\Groups({"action"})
+     * @Assert\NotBlank(message="odr.action.actionPropertySellingRent.notBlank", groups={"action-property-selling-rent"})
      */
     private $actionPropertySellingRent;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-property"})
-     * @Assert\NotBlank(message="odr.action.actionPropertyBuy.notBlank", groups={"action-property"})
+     * @JMS\Groups({"action"})
+     * @Assert\NotBlank(message="odr.action.actionPropertyBuy.notBlank", groups={"action-property-buy"})
      */
     private $actionPropertyBuy;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-more-info"})
+     * @JMS\Groups({"action"})
      * @Assert\NotBlank(message="odr.action.actionMoreInfo.notBlank", groups={"action-more-info"})
      */
     private $actionMoreInfo;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"action-more-info"})
+     * @JMS\Groups({"action"})
      * @Assert\NotBlank(message="odr.action.actionMoreInfoDetails.notBlank", groups={"action-more-info-details"})
      */
     private $actionMoreInfoDetails;
+
+    /**
+     * @return bool
+     */
+    public function missingActionInfo()
+    {
+        return empty($this->actionGiveGiftsToClient)
+                || empty($this->actionPropertyMaintenance)
+                || empty($this->actionPropertySellingRent)
+                || empty($this->actionPropertyBuy);
+    }
+
+    public function hasAtLeastOneAction()
+    {
+        return !empty($this->actionGiveGiftsToClient)
+        || !empty($this->actionPropertyMaintenance)
+        || !empty($this->actionPropertySellingRent)
+        || !empty($this->actionPropertyBuy);
+    }
 
     /**
      * @return mixed

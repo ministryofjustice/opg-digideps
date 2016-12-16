@@ -3,10 +3,8 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Traits\AgreeTrait;
-use AppBundle\Entity\Odr\Traits\OdrExpensesTrait;
-use AppBundle\Entity\Odr\Traits\OdrIncomeBenefitTrait;
 use AppBundle\Entity\Odr\Traits\ActionTrait;
+use AppBundle\Entity\Odr\Traits as OdrTraits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -17,10 +15,10 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Odr
 {
-    use OdrIncomeBenefitTrait;
-    use OdrExpensesTrait;
-    use ActionTrait;
-    use AgreeTrait;
+    use OdrTraits\IncomeBenefitTrait;
+    use OdrTraits\ExpensesTrait;
+    use OdrTraits\ActionTrait;
+    use OdrTraits\AgreeTrait;
 
     /**
      * @JMS\Type("integer")

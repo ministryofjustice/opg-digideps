@@ -1,0 +1,111 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}
+    {{ 'stepPage.htmlTitle' | trans }}
+{% endblock %}
+{% block pageTitle %}
+    {% if step == 1 %}
+        {{ 'stepPage.gifts.pageSectionTitle' | trans }}
+    {% else %}
+        {{ 'stepPage.property.pageSectionTitle' | trans }}
+    {% endif %}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+<span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {# step 1 (gifts) #}
+    {% if step == 1 %}
+
+        <p class="text">
+            {{ 'stepPage.gifts.pageSectionDescription1' | trans(transOptions) }}
+        </p>
+        <p class="text">
+            {{ 'stepPage.gifts.pageSectionDescription2' | trans(transOptions) }}
+        </p>
+        <p class="text">
+            {{ 'stepPage.gifts.pageSectionDescription3' | trans(transOptions) }}
+        </p>
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.actionGiveGiftsToClient.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.actionGiveGiftsToClient, 'form.actionGiveGiftsToClient', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.actionGiveGiftsToClient.label' | trans(transOptions),
+                    'items': [
+                        {'dataTarget': 'give-gifts-client-textarea' }
+                    ]
+                }) }}
+
+                <div id="give-gifts-client-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.actionGiveGiftsToClientDetails, 'form.actionGiveGiftsToClientDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# steps 2,3,4 (property) #}
+    {% if step == 2 %}
+        {{ form_checkbox_group(form.actionPropertyMaintenance, 'form.actionPropertyMaintenance', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertyMaintenance.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+        }) }}
+    {% endif %}
+
+    {% if step == 3 %}
+        {{ form_checkbox_group(form.actionPropertySellingRent, 'form.actionPropertySellingRent', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+        }) }}
+    {% endif %}
+
+    {% if step == 4 %}
+        {{ form_checkbox_group(form.actionPropertyBuy, 'form.actionPropertyBuy', {
+            'fieldSetClass' : 'inline paid-anything',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.actionPropertyBuy.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+        }) }}
+    {% endif %}
+
+
+
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var showHideContent = new GOVUK.ShowHideContent();
+            showHideContent.init();
+        });
+    </script>
+
+{% endblock %}
+

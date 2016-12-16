@@ -1,0 +1,35 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(odr) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">
+        {{ 'startPage.pageSectionDescription1' | trans(transOptions) }}
+    </p>
+
+    <p class="text">
+        {{ 'startPage.pageSectionDescription2' | trans(transOptions) }}
+    </p>
+
+    <p class="text">
+        {{ 'startPage.pageSectionDescription3' | trans(transOptions) }}
+    </p>
+
+    <p class="text">
+        {{ 'startPage.pageSectionDescription4' | trans(transOptions) }}
+    </p>
+
+    <a href="{{ path('odr_actions_step', { 'odrId': odr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}

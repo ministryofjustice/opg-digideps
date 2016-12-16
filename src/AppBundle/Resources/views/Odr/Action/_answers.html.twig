@@ -1,0 +1,141 @@
+{% set translationDomain = "odr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+
+<h2 class="heading-medium flush--ends">Gifts</h2>
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region-live-with-client">
+            {% if validator.missing('actionGiveGiftsToClient') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.actionGiveGiftsToClient | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.actionGiveGiftsToClient == 'yes' %}
+            <tr class="behat-region-how-often-contact-client">
+                <td>{{ 'form.actionGiveGiftsToClientDetails.label' | trans(transOptions) }}</td>
+                <td>{{ odr.actionGiveGiftsToClientDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>
+
+<h2 class="heading-medium flush--ends">Property</h2>
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {# step 2 #}
+    <tr class="behat-region-live-with-client">
+        {% if validator.missing('actionPropertyMaintenance') %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ odr.actionPropertyMaintenance | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+        </td>
+    </tr>
+
+    {# step 3 #}
+    <tr class="behat-region-live-with-client">
+        {% if validator.missing('actionPropertySellingRent') %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ odr.actionPropertySellingRent | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+        </td>
+    </tr>
+
+    {# step 4 #}
+    <tr class="behat-region-live-with-client">
+        {% if validator.missing('actionPropertyBuy') %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ odr.actionPropertyBuy | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>

@@ -1,0 +1,53 @@
+startPage:
+  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  pageSectionTitle: Actions you plan to take
+  pageSectionDescription1: |
+    Use this section to tell us about any significant financial decisions you plan to
+    make on %client%'s behalf in the next 12 months.
+  pageSectionDescription2: |
+    You should refer to your court order for a reminder of what you can and can't do.
+  pageSectionDescription3: |
+    Your actions might include making a large gift (such as a 21st birthday present for a relative),
+    or maintenance and alterations to %client%'s home.
+  pageSectionDescription4: |
+    You should also let us know if you are planning to sell or rent property owned
+    by %client%, or buy a property for her.
+  startButton: Start actions
+
+stepPage:
+  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  supportTitle: Actions you plan to take
+  gifts:
+    pageSectionTitle: Gifts
+    pageSectionDescription1: |
+      Your court order will say if you can buy gifts or give gifts of money on Sally's behalf.
+    pageSectionDescription2: |
+      Gifts can include a 21st birthday present, charitable donations, help with university fees or allowing someone to live 'rent-free' at a house owned by Sally.
+    pageSectionDescription3: |
+      But gifts must be reasonable – you need to make sure they don’t reduce the level of care Sally can afford.
+  property:
+    pageSectionTitle: Property
+  backLink: Back
+
+
+summaryPage:
+  htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
+  supportTitle: Actions you plan to take
+  pageSectionTitle: Actions you plan to take
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+
+form:
+  save:
+    label: Save
+  actionGiveGiftsToClient:
+    label: Are you intending to give any gifts on behalf of %client%?
+  actionGiveGiftsToClientDetails:
+    label: Please tell us more about the gifts you intend to make
+  actionPropertyMaintenance:
+    label: Are there plans for maintenance or alterations to any property owned by %client% ?
+  actionPropertySellingRent:
+    label: Are you planning to sell or rent any property owned by %client% ?
+  actionPropertyBuy:
+    label: Are you planning to buy a property for %client% ?

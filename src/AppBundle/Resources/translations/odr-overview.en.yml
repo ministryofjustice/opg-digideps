@@ -50,8 +50,13 @@ debts:
     start: "Start"
     label:
        done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
-
-
+actions:
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
+    edit: "Edit actions"
+    start: "Start actions"
+    label:
+      done: "Finished"
 
 #finances:
 #    subSectionTitle: "Finances (old, no OTPP)"
@@ -68,11 +73,7 @@ debts:
 #    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
 #    edit: "Edit decisions"
 #    start: "Start decisions"
-#actions:
-#    subSectionTitle: "Actions you plan to take (no OTPP)"
-#    subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
-#    edit: "Edit actions"
-#    start: "Start actions"
+
 #finances:
 #    subSectionTitle: "Finances  (no OTPP)"
 #    subSectionDescription: "Enter details of all income and spending in the reporting period"

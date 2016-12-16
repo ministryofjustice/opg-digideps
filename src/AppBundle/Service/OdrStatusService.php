@@ -116,20 +116,20 @@ class OdrStatusService
 
     public function getActionsState()
     {
-        $giftsStarted = !empty($this->odr->getActionGiveGiftsToClient());
-        $propertyStarted = !empty($this->odr->getActionPropertyBuy())
-            || !empty($this->odr->getActionPropertyMaintenance())
-            || !empty($this->odr->getActionPropertySellingRent());
-        $moreInfoStarted = !empty($this->odr->getActionMoreInfo());
+        $filled = count(array_filter([
+            $this->odr->getActionGiveGiftsToClient(),
+            $this->odr->getActionPropertyBuy(),
+            $this->odr->getActionPropertyMaintenance(),
+            $this->odr->getActionPropertySellingRent()
+        ]));
 
-        if (!$giftsStarted && !$propertyStarted && !$moreInfoStarted) {
-            return self::STATE_NOT_STARTED;
+        switch ($filled){
+            case 0:
+                return self::STATE_NOT_STARTED;
+            case 4:
+                return self::STATE_DONE;
+            default:
+                return self::STATE_INCOMPLETE;
         }
-
-        if ($giftsStarted && $propertyStarted && $moreInfoStarted) {
-            return self::STATE_DONE;
-        }
-
-        return self::STATE_INCOMPLETE;
     }
 }
