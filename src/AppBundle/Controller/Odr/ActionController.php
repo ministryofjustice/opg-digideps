@@ -9,7 +9,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 
-class ActionsController extends AbstractController
+class ActionController extends AbstractController
 {
     private static $jmsGroups = [
         'client-cot',
