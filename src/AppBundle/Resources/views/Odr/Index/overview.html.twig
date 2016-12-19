@@ -141,6 +141,8 @@
         </div>
         {% endif %}
 
+        [<a href="{{ path('reset-odr', {'odrId': odr.id}) }}">Reset NDR data (only OTPP dev branch)</a>]
+
     </div>
     <div id="pagebody-right-content">
         {%include 'AppBundle:Components:_helpline.html.twig' %}
