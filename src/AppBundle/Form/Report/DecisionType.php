@@ -26,18 +26,7 @@ class DecisionType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'validation_groups' => function (FormInterface $form) {
-
-                $data = $form->getData();
-                /* @var $data Decision */
-                $validationGroups = ['decision-description', 'decision-client-involved'];
-
-                if ($data->isClientInvolvedBoolean()) {
-                    $validationGroups[] = 'decision-client-involved-details';
-                }
-
-                return $validationGroups;
-            },
+            'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details'],
         ]);
     }
 
