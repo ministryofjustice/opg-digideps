@@ -191,6 +191,9 @@ class DecisionController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
             $this->getRestClient()->put('report/decision', $data, ['decision']);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
+
             return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
 
         }
