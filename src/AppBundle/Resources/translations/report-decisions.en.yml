@@ -40,7 +40,7 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: As you have made decisions for Sally we need to know the details.
+  pageSectionDescription: As you have made decisions for %client% we need to know the details.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"

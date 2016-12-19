@@ -99,8 +99,16 @@
                 description: true,
                 state: odrStatus.actionsState,
                 } %}
+                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('odr_other_info', {odrId: odr.id}),
+                odr: odr,
+                info: true,
+                description: true,
+                state: odrStatus.otherInfoState,
+                } %}
             </li>
-
 
             <li id="report-submit-section" class="overview-section">
                 <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>

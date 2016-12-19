@@ -18,6 +18,7 @@ class Odr
     use OdrTraits\IncomeBenefitTrait;
     use OdrTraits\ExpensesTrait;
     use OdrTraits\ActionTrait;
+    use OdrTraits\MoreInfoTrait;
     use OdrTraits\AgreeTrait;
 
     /**

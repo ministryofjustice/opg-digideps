@@ -42,19 +42,6 @@ trait ActionTrait
      */
     private $actionPropertyBuy;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     * @Assert\NotBlank(message="odr.action.actionMoreInfo.notBlank", groups={"action-more-info"})
-     */
-    private $actionMoreInfo;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     * @Assert\NotBlank(message="odr.action.actionMoreInfoDetails.notBlank", groups={"action-more-info-details"})
-     */
-    private $actionMoreInfoDetails;
 
     /**
      * @return bool
@@ -175,43 +162,5 @@ trait ActionTrait
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getActionMoreInfo()
-    {
-        return $this->actionMoreInfo;
-    }
 
-    /**
-     * @param mixed $actionMoreInfo
-     *
-     * @return ActionTrait
-     */
-    public function setActionMoreInfo($actionMoreInfo)
-    {
-        $this->actionMoreInfo = $actionMoreInfo;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getActionMoreInfoDetails()
-    {
-        return $this->actionMoreInfoDetails;
-    }
-
-    /**
-     * @param mixed $actionMoreInfoDetails
-     *
-     * @return ActionTrait
-     */
-    public function setActionMoreInfoDetails($actionMoreInfoDetails)
-    {
-        $this->actionMoreInfoDetails = $actionMoreInfoDetails;
-
-        return $this;
-    }
 }

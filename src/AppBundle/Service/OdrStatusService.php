@@ -132,4 +132,16 @@ class OdrStatusService
                 return self::STATE_INCOMPLETE;
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getOtherInfoState()
+    {
+        if ($this->odr->getActionMoreInfo() === null) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
 }

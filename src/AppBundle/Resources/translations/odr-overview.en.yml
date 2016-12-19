@@ -57,6 +57,13 @@ actions:
     start: "Start actions"
     label:
       done: "Finished"
+other_info:
+    subSectionTitle: "Any other information"
+    subSectionDescription: "Is there anything else you want to tell us about?"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
 
 #finances:
 #    subSectionTitle: "Finances (old, no OTPP)"

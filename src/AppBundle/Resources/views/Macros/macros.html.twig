@@ -65,9 +65,11 @@
     {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': odr.id})},
     {'section':'assets','link': path('odr_assets', {'odrId': odr.id})},
     {'section':'actions', 'link': path('odr_actions', {'odrId': odr.id})},
+    {'section':'other_info', 'link': path('odr_other_info', {'odrId': odr.id})},
     {'section':'reportOverview', 'link': path('odr_overview')},
     ] %}
 
+    {# TODO move template out from here #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
     'section': currentSectionId,
     'config': config

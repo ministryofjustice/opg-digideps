@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Odr\Action;
+namespace AppBundle\Form\Odr;
 
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class InfoType extends AbstractType
+class OtherInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -29,20 +29,20 @@ class InfoType extends AbstractType
 
                 $data = $form->getData();
                 /* @var $data Odr */
-                $validationGroups = ['action-more-info'];
+                $validationGroups = ['more-info'];
 
                 if ($data->getActionMoreInfo() == 'yes') {
-                    $validationGroups[] = 'action-more-info-details';
+                    $validationGroups[] = 'more-info-details';
                 }
 
                 return $validationGroups;
             },
-            'translation_domain' => 'odr-action-info',
+            'translation_domain' => 'odr-more-info',
         ]);
     }
 
     public function getName()
     {
-        return 'odr_action_info';
+        return 'odr_more_info';
     }
 }

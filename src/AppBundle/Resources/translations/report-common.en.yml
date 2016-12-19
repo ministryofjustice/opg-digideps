@@ -31,5 +31,6 @@ prevNextLinks:
     assets: Assets
     debts: Debts
     actions: Actions
+    other_info: Any other information
 
 
