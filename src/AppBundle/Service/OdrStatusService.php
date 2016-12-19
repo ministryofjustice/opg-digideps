@@ -53,7 +53,8 @@ class OdrStatusService
             'assets' => $this->getAssetsState(),
             'bankAccounts' => $this->getBankAccountsState(),
             'debts' => $this->getDebtsState(),
-//            'actions' => $this->getActionsState(),
+            'actions' => $this->getActionsState(),
+            'otherInfo' => $this->getOtherInfoState(),
         ];
 
         return array_filter($states, function ($e) {
