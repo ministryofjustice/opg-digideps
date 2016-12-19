@@ -29,7 +29,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdr($odrId, self::$jmsGroups);
-        if (!$odr->hasAtLeastOneAction()) {
+        if ($odr->hasAtLeastOneAction()) {
             return $this->redirectToRoute('odr_actions_summary', ['odrId' => $odrId]);
         }
 
