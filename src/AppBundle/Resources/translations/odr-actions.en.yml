@@ -20,11 +20,11 @@ stepPage:
   gifts:
     pageSectionTitle: Gifts
     pageSectionDescription1: |
-      Your court order will say if you can buy gifts or give gifts of money on Sally's behalf.
+      Your court order will say if you can buy gifts or give gifts of money on %client%'s behalf.
     pageSectionDescription2: |
-      Gifts can include a 21st birthday present, charitable donations, help with university fees or allowing someone to live 'rent-free' at a house owned by Sally.
+      Gifts can include a 21st birthday present, charitable donations, help with university fees or allowing someone to live 'rent-free' at a house owned by %client%.
     pageSectionDescription3: |
-      But gifts must be reasonable – you need to make sure they don’t reduce the level of care Sally can afford.
+      But gifts must be reasonable – you need to make sure they don’t reduce the level of care %client% can afford.
   property:
     pageSectionTitle: Property
   backLink: Back
