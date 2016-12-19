@@ -193,4 +193,48 @@ class OdrController extends RestController
 
         return ['id' => $odr->getId()];
     }
+
+    /**
+     * REMOVE THIS WHEN OTPP IS MERGED
+     * @Route("/odr/{id}/reset-data-dev")
+     * @Method({"PUT"})
+     */
+    public function resetDataDev(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+        /* @var $odr EntityDir\Odr\Odr */
+
+        $em = $this->getEntityManager();
+
+        if ($odr->getVisitsCare()) {
+            $em->remove($odr->getVisitsCare());
+        }
+
+        foreach ($odr->getBankAccounts() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($odr->getAssets() as $e){
+            $em->remove($e);
+        }
+        $odr->setNoAssetToAdd(null);
+
+        foreach ($odr->getDebts() as $e){
+            $e->setAmount(null);
+        }
+        $odr->setHasDebts(null);
+
+        $odr->setActionGiveGiftsToClient(null);
+        $odr->setActionGiveGiftsToClientDetails(null);
+        $odr->setActionMoreInfo(null);
+        $odr->setActionMoreInfoDetails(null);
+        $odr->setActionPropertyBuy(null);
+        $odr->setActionPropertyMaintenance(null);
+        $odr->setActionPropertySellingRent(null);
+
+
+        $em->flush();
+    }
 }
