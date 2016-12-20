@@ -114,6 +114,10 @@ class BankAccountController extends AbstractController
             if ($isLastStep) {
                 if ($accountId) {
                     $this->getRestClient()->put('/account/' . $accountId, $account, self::$jmsGroups);
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Bank account edited'
+                    );
                 } else {
                     $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
                 }
