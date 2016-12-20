@@ -187,7 +187,7 @@ class BankAccountController extends AbstractController
             'Bank account deleted'
         );
 
-        if ($odr->hasBankAccountWithId($odrId)) {
+        if ($odr->hasBankAccountWithId($accountId)) {
             $this->getRestClient()->delete("/odr/account/{$accountId}");
         }
 
