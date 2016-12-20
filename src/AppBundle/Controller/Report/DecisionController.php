@@ -62,6 +62,9 @@ class DecisionController extends AbstractController
             $data->setReport($report);
 
             $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+            }
 
             $route = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_exist';
 
@@ -187,8 +190,6 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
-
-            $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
             $this->getRestClient()->put('report/decision', $data, ['decision']);
 
