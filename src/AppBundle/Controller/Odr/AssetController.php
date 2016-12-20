@@ -101,7 +101,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/odr/{odrId}/assets/other/{title}/add", name="odr_asset_other_add")
-     * @Template("AppBundle:odr/Asset/Other:add.html.twig")
+     * @Template("AppBundle:Odr/Asset/Other:add.html.twig")
      */
     public function otherAddAction(Request $request, $odrId, $title)
     {
@@ -130,7 +130,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/odr/{odrId}/assets/other/edit/{assetId}", name="odr_asset_other_edit")
-     * @Template("AppBundle:odr/Asset/Other:edit.html.twig")
+     * @Template("AppBundle:Odr/Asset/Other:edit.html.twig")
      */
     public function otherEditAction(Request $request, $odrId, $assetId = null)
     {
@@ -193,7 +193,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/odr/{odrId}/assets/property/step{step}/{assetId}", name="odr_assets_property_step", requirements={"step":"\d+"})
-     * @Template("AppBundle:odr/Asset/Property:step.html.twig")
+     * @Template("AppBundle:Odr/Asset/Property:step.html.twig")
      */
     public function propertyStepAction(Request $request, $odrId, $step, $assetId = null)
     {
