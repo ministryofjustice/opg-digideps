@@ -5,10 +5,10 @@ namespace AppBundle\Form\Odr;
 use AppBundle\Entity\Odr\VisitsCare;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class VisitsCareType extends AbstractType
@@ -37,7 +37,7 @@ class VisitsCareType extends AbstractType
         $this->translator = $translator;
         $this->clientFirstName = $clientFirstName;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->step === 1) {
@@ -131,18 +131,18 @@ class VisitsCareType extends AbstractType
                 /* @var $data VisitsCare */
                 $validationGroups = [
                     1 => ($data->getDoYouLiveWithClient() == 'no')
-                        ? ['visits-care-live-client', 'visits-care-live-client-no']
+                        ? ['visits-care-live-client', 'visits-care-how-often-contact']
                         : ['visits-care-live-client'],
-                    2=> ($data->getDoesClientReceivePaidCare() == 'yes')
+                    2 => ($data->getDoesClientReceivePaidCare() == 'yes')
                         ? ['visits-care-receive-paid-care', 'visits-care-how-care-funded']
                         : ['visits-care-receive-paid-care'],
-                    3=> ['visits-care-who-does-caring'],
-                    4=> ($data->getDoesClientHaveACarePlan() == 'yes')
-                        ?['visits-care-have-care-plan', 'visits-care-hasCarePlan']
-                        :['visits-care-have-care-plan'],
-                    5=> ($data->getPlanMoveNewResidence() == 'yes')
-                        ?['visits-care-plan-move-residence', 'visits-care-plan-move-residence-details']
-                        :['visits-care-plan-move-residence'],
+                    3 => ['visits-care-who-does-caring'],
+                    4 => ($data->getDoesClientHaveACarePlan() == 'yes')
+                        ? ['visits-care-have-care-plan', 'visits-care-care-plan-last-review']
+                        : ['visits-care-have-care-plan'],
+                    5 => ($data->getPlanMoveNewResidence() == 'yes')
+                        ? ['visits-care-plan-move-residence', 'visits-care-plan-move-residence-details']
+                        : ['visits-care-plan-move-residence'],
                 ][$this->step];
 
                 return $validationGroups;
