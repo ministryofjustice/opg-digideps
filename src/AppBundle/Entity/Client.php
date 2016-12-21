@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * Client.
- * 
+ *
  * @ORM\Table(name="client")
  * @ORM\Entity
  */
@@ -35,7 +35,7 @@ class Client
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}     
+     *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
      */
     private $users;
@@ -69,7 +69,7 @@ class Client
      * @JMS\Groups({"client"})
      *
      * @var string
-     * 
+     *
      * @ORM\Column(name="email", type="string", length=60, nullable=true)
      */
     private $email;
@@ -158,7 +158,7 @@ class Client
      * @JMS\Type("array")
      * @JMS\Groups({"client"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
-     * 
+     *
      * @var array
      */
     private $allowedCourtOrderTypes;

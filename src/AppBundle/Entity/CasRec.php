@@ -14,7 +14,7 @@ class CasRec
 {
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -24,7 +24,7 @@ class CasRec
 
     /**
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      *
      * @Assert\NotBlank()
@@ -35,7 +35,7 @@ class CasRec
 
     /**
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      *
      * @Assert\NotBlank()
@@ -46,11 +46,11 @@ class CasRec
 
     /**
      * @var string
-     * 
+     *
      * @JMS\Type("string")
-     * 
+     *
      * @Assert\NotBlank()
-     * 
+     *
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
      */
     private $deputyNo;
@@ -59,9 +59,9 @@ class CasRec
      * @var string
      *
      * @Assert\NotBlank()
-     * 
+     *
      * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
-     * 
+     *
      * @JMS\Type("string")
      */
     private $deputySurname;
@@ -70,9 +70,9 @@ class CasRec
      * @var string
      *
      * @JMS\Type("string")
-     * 
+     *
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
-     * 
+     *
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
      */
     private $deputyPostCode;

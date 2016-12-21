@@ -44,7 +44,7 @@ class AuthService
     /**
      * @param string $email
      * @param string $pass
-     * 
+     *
      * @return User or null if the user it not found or password is wrong
      */
     public function getUserByEmailAndPassword($email, $pass)
@@ -77,7 +77,7 @@ class AuthService
 
     /**
      * @param string $token
-     * 
+     *
      * @return User|null
      */
     public function getUserByToken($token)
@@ -90,7 +90,7 @@ class AuthService
     /**
      * @param User    $user
      * @param Request $request
-     * 
+     *
      * @return bool
      */
     public function isSecretValidForUser(User $user, Request $request)

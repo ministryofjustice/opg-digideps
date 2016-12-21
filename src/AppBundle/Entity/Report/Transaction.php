@@ -39,7 +39,7 @@ class Transaction
 
     /**
      * @var array
-     * 
+     *
      * @ORM\Column(type="simple_array", nullable=true)
      */
     private $amounts;

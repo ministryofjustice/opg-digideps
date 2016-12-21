@@ -17,8 +17,8 @@ class AuthController extends RestController
     /**
      * Return the user by email&password or token
      * expected keys in body: 'token' or ('email' and 'password').
-     * 
-     * 
+     *
+     *
      * @Route("/login")
      * @Method({"POST"})
      */
@@ -52,7 +52,7 @@ class AuthController extends RestController
         if (array_key_exists('token', $data)) {
             $user = $this->getAuthService()->getUserByToken($data['token']);
         } else {
-            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']),  $data['password']);
+            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
         }
 
         if (!$user) {
@@ -96,8 +96,8 @@ class AuthController extends RestController
 
     /**
      * Return the user by email and hashed password (or exception if not found).
-     * 
-     * 
+     *
+     *
      * @Route("/logout")
      * @Method({"POST"})
      */
@@ -110,7 +110,7 @@ class AuthController extends RestController
 
     /**
      * Test endpoint used for testing to check auth permissions.
-     * 
+     *
      * @Route("/get-logged-user")
      * @Method({"GET"})
      */

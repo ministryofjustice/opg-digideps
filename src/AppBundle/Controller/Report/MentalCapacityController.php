@@ -37,7 +37,7 @@ class MentalCapacityController extends RestController
     /**
      * @Route("/report/{reportId}/mental-capacity")
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
@@ -57,7 +57,7 @@ class MentalCapacityController extends RestController
     /**
      * @param array                    $data
      * @param EntityDir\Report\MentalCapacity $mc
-     * 
+     *
      * @return \AppBundle\Entity\Report\Report $report
      */
     private function updateEntity(array $data, EntityDir\Report\MentalCapacity $mc)

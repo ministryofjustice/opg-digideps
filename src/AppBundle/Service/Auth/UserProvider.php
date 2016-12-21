@@ -44,11 +44,11 @@ class UserProvider implements UserProviderInterface
 
     /**
      * Called by HeaderTokenAuthenticator::authenticateToken() for each request.
-     * 
+     *
      * @param string $username token (String)
      *
      * @return User
-     * 
+     *
      * @throws RuntimeException with specific codes, in order to avoid being wrapped and losing their` type
      */
     public function loadUserByUsername($username)
@@ -87,7 +87,7 @@ class UserProvider implements UserProviderInterface
     /**
      * @param string $token
      * @param User   $user
-     * 
+     *
      * @return string
      */
     public function generateRandomTokenAndStore(User $user)

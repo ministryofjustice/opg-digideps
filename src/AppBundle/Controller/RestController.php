@@ -29,7 +29,7 @@ abstract class RestController extends Controller
     /**
      * @param array $data
      * @param array $assertions key=>rule
-     * 
+     *
      * @throws \InvalidArgumentException
      */
     protected function validateArray($data, array $assertions = [])
@@ -69,7 +69,7 @@ abstract class RestController extends Controller
      * @param string    $entityClass
      * @param array|int $criteriaOrId
      * @param string    $errorMessage
-     * 
+     *
      * @throws NotFound
      */
     protected function findEntityBy($entityClass, $criteriaOrId, $errorMessage = null)
@@ -109,8 +109,8 @@ abstract class RestController extends Controller
     /**
      * Set serialise group used by JMS serialiser to composer ouput response
      * Attach setting to REquest as header, to be read by REstInputOuputFormatter kernel listener.
-     * 
-     * @param string $groups user 
+     *
+     * @param string $groups user
      */
     protected function setJmsSerialiserGroups(array $groups)
     {

@@ -8,9 +8,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 
 /**
- * command that launches doctrine migration, 
+ * command that launches doctrine migration,
  * using redis to implement locking in order to prevent concurrent execution.
- * 
+ *
  * @codeCoverageIgnore
  */
 class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
@@ -73,7 +73,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 
     /**
      * release lock.
-     * 
+     *
      * @param type $output
      */
     private function releaseLock($output)

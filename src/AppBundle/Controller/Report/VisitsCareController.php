@@ -75,7 +75,7 @@ class VisitsCareController extends RestController
     /**
      * @Route("/visits-care/{id}")
      * @Method({"GET"})
-     * 
+     *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
@@ -112,7 +112,7 @@ class VisitsCareController extends RestController
     /**
      * @param array                  $data
      * @param EntityDir\Report\VisitsCare $visitsCare
-     * 
+     *
      * @return \AppBundle\Entity\Report\Report $report
      */
     private function updateInfo(array $data, EntityDir\Report\VisitsCare $visitsCare)

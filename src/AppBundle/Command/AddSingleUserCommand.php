@@ -102,7 +102,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
     /**
      * @param User   $user
      * @param string $passwordPlain
-     * 
+     *
      * @return string encoded password
      */
     protected function encodePassword(User $user, $passwordPlain)

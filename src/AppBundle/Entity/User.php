@@ -20,7 +20,7 @@ class User implements UserInterface
      * @var int
      * @JMS\Type("integer")
      * @JMS\Groups({"audit_log","user"})
-     * 
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -39,7 +39,7 @@ class User implements UserInterface
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({ "audit_log","user"})
-     * 
+     *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     private $firstname;
@@ -73,7 +73,7 @@ class User implements UserInterface
      * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"user"})
-     * 
+     *
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
     private $active;
@@ -114,14 +114,14 @@ class User implements UserInterface
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
-     * 
+     *
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
     private $tokenDate;
 
     /**
      * @var int
-     * 
+     *
      * @JMS\Groups({"audit_log", "role"})
      * @JMS\Type("AppBundle\Entity\Role")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
@@ -132,7 +132,7 @@ class User implements UserInterface
     /**
      * This id is supplied to GA for UserID tracking. It is an md5 of the user id,
      * does not get stored in the database.
-     * 
+     *
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"user"})
@@ -150,7 +150,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"user"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
@@ -206,14 +206,14 @@ class User implements UserInterface
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
-     * 
+     *
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
     private $lastLoggedIn;
 
     /**
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
@@ -567,7 +567,7 @@ class User implements UserInterface
 
     /**
      * Get gaTrackingId.
-     * 
+     *
      * @return string $gaTrackingId
      */
     public function getGaTrackingId()
@@ -810,5 +810,4 @@ class User implements UserInterface
 
         return $this;
     }
-
 }

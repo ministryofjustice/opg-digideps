@@ -11,9 +11,9 @@ use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
 /**
  * Throws exception if you have previously executed migrations in the database that are not registered migrations.
  * Otherwise, only prints "Status check: OK. Migration to execute: <migrations to execute>".
- * 
- * Used to warn if the code is reverted back to an old version with a newer unexpected db version 
- * 
+ *
+ * Used to warn if the code is reverted back to an old version with a newer unexpected db version
+ *
  * @codeCoverageIgnore
  */
 class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand

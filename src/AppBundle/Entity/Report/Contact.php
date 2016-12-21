@@ -15,7 +15,7 @@ class Contact
 {
     /**
      * @var int
-     * 
+     *
      * @JMS\Type("integer")
      * @JMS\Groups({"contact"})
      * @ORM\Column(name="id", type="integer", nullable=false)

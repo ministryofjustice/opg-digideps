@@ -67,7 +67,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"odr-account"})
-     * 
+     *
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
     private $sortCode;
@@ -75,7 +75,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"odr-account"})
-     * 
+     *
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
@@ -92,7 +92,7 @@ class Account
      * @var decimal
      * @JMS\Groups({"odr-account"})
      * @JMS\Type("string")
-     * 
+     *
      * @ORM\Column(name="balance_on_cod", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $balanceOnCourtOrderDate;

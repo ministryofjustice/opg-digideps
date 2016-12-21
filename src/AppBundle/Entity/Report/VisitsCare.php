@@ -47,7 +47,7 @@ class VisitsCare
      * how_often_do_you_write_email_or_letter
      * how_often_does_client_see_other_people
      * anything_else_to_tell.
-     * 
+     *
      * @var string
      *
      * @JMS\Type("string")

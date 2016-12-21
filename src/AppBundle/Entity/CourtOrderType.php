@@ -15,7 +15,7 @@ class CourtOrderType
 {
     /**
      * Added via digideps:fixtures command.
-     * 
+     *
      * @JMS\Exclude
      */
     public static $fixtures = [

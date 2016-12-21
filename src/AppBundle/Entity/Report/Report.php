@@ -33,7 +33,7 @@ class Report
 
     /**
      * @var int
-     * 
+     *
      * @JMS\Groups({"client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
@@ -156,7 +156,7 @@ class Report
 
     /**
      * @var \DateTime
-     * 
+     *
      * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -166,7 +166,7 @@ class Report
 
     /**
      * @var \DateTime
-     * 
+     *
      * @JMS\Groups({"report"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
@@ -259,7 +259,7 @@ class Report
      */
     private $balanceMismatchExplanation;
 
-    /** 
+    /**
      * @var string
      *
      * @JMS\Type("string")
@@ -268,7 +268,7 @@ class Report
      */
     private $agreedBehalfDeputy;
 
-    /** 
+    /**
      * @var string
      *
      * @JMS\Type("string")
@@ -863,7 +863,7 @@ class Report
      * @JMS\Type("integer")
      * @JMS\SerializedName("court_order_type_id")
      * @JMS\Groups({"report"})
-     * 
+     *
      * @return int
      */
     public function getCourtOrderTypeId()
@@ -897,7 +897,7 @@ class Report
 
     /**
      * @param User $user
-     * 
+     *
      * @return bool
      */
     public function belongsToUser(User $user)
@@ -1174,12 +1174,12 @@ class Report
 
     /**
      * Return sum of closing balances (if all of them have a value, otherwise returns null).
-     * 
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"balance", "account"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_closing_balance_total")
-     * 
+     *
      * @return float
      */
     public function getAccountsClosingBalanceTotal()
