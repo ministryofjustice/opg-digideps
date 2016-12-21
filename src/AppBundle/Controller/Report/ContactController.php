@@ -79,7 +79,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
             $contact = new EntityDir\Report\Contact();
 
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
@@ -114,7 +114,7 @@ class ContactController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Report\ContactAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -141,7 +141,7 @@ class ContactController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $contactId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
         $contact->setReport($report);
 
