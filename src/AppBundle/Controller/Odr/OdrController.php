@@ -143,6 +143,12 @@ class OdrController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $odr->setNoAssetToAdd($data['no_asset_to_add']);
+            if ($odr->getNoAssetToAdd()) {
+                foreach ($odr->getAssets() as $asset) {
+                    $this->getEntityManager()->remove($asset);
+                }
+                $this->getEntityManager()->flush();
+            }
         }
 
         if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
