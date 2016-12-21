@@ -203,7 +203,6 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertTrue(null === self::fixtures()->getRepo('Odr\Expense')->find(self::$expense1->getId()));
     }
 
-
     /**
      * @depends testDelete
      */
