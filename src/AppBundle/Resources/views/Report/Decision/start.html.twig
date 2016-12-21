@@ -15,69 +15,51 @@
 
 {% block pageContent %}
 
-    <div class="text">
-        {# @biggs. too much formatting to move to translations. easier to keep this in the HTML
-        http://hzaiwi.axshare.com/#g=1&p=decisions_-_introduction
-        #}
-        We need to know about:
-        <ul class="list list-bullet">
-            <li>Sally's mental capacity to make financial decisions</li>
-            <li>Significant decisions you have made for Sally during the reporting period</li>
-        </ul>
+    <p class="text">{{ 'startPage.description1' | trans }}</p>
+    <ul class="list list-bullet">
+        <li>{{ 'startPage.descriptionListItem1' | trans(transOptions) }}</li>
+        <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>
+    </ul>
+
+    <div class="accordian help-item push--ends">
+        <h3 class="summary">{{ 'startPage.whyweneedthisSummary' | trans }}</h3>
+        <div class="content text">
+            <p>{{ 'startPage.whyweneedthisPara1' | trans(transOptions) }}</p>
+            <p>{{ 'startPage.whyweneedthisPara2' | trans(transOptions) }}</p>
+        </div>
     </div>
 
-    <details>
-        <summary><span class="summary">Why do we need to know this?</span></summary>
-        <div class="panel panel-border-narrow">
-
-            <p class="text">
-                We need to know the important decisions you've made to help us understand how you're looking after
-                Sally's
-                finances and wellbeing.
-            </p>
-
-            <p class="text">
-                This is because we have a responsibility to protect people who don't have the mental capacity to make
-                decisions
-                for themselves.
-            </p>
-
-        </div>
-
-    </details>
-
-
-    <details>
-        <summary><span class="summary">What is a significant decision?</span></summary>
-        <div class="panel panel-border-narrow">
-
-            <p class="text">
-
-                Significant decisions are any important decisions you make for Sally - not just financial decisions. We need
-                to know about any decisions that have a big impact on Sally's wellbeing or circumstances.</p>
-            <p class="text">Significant decisions might be:</p>
+    <div class="accordian help-item push--ends">
+        <h3 class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</h3>
+        <div class="content text">
+            <p>{{ 'startPage.whatisdecisionPara1' | trans(transOptions) }}</p>
+            <p>{{ 'startPage.whatisdecisionPara2' | trans(transOptions) }}</p>
             <ul class="list list-bullet">
-                <li>buying or selling or renting property</li>
-                <li>buying or selling investments or shares</li>
-                <li>holidays or frequent day trips</li>
-                <li>home improvements</li>
-                <li>making gifts</li>
-                <li>moving Sally to another nursing or care home</li>
-                <li>changing day centres</li>
+                <li>{{ 'startPage.whatisdecisionListItem1' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem2' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem3' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem4' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem5' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem6' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem7' | trans(transOptions) }}</li>
             </ul>
-
         </div>
+    </div>
 
-    </details>
-
-    <p class="text">
-        Decisions you do not need to include here are small, day-to-day decisions such as about buying food or
-        toiletries</p>
-
+    <p class="text">{{ 'startPage.description2' | trans }}</p>
 
     <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
        class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.accordian').each(function(index,item) {
+                opg.accordian({
+                    target:item,
+                    open: false
+                });
+            });
+        });
+    </script>
 
 {% endblock %}
