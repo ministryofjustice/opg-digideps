@@ -153,13 +153,9 @@ class OdrController extends RestController
 
         if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
             $odr->setPaidForAnything($data['paid_for_anything']);
-            foreach ($odr->getExpenses() as $e) {
-                $this->getEntityManager()->remove($e);
-            }
-            foreach ($data['paid_for_anything'] == 'yes' ? $data['expenses'] : [] as $row) {
-                if ($row['explanation'] && $row['amount']) {
-                    $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
-                    $this->getEntityManager()->persist($exp);
+            if ($odr->getPaidForAnything() === 'no') { // remove existing expenses
+                foreach ($odr->getExpenses() as $e) {
+                    $this->getEntityManager()->remove($e);
                 }
             }
         }
