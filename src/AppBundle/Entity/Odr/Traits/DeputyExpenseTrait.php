@@ -6,14 +6,14 @@ use AppBundle\Entity\Odr\Expense;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait ExpensesTrait
+trait DeputyExpenseTrait
 {
     /**
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
-     * @Assert\NotBlank(message="odr.expenses.paidForAnything.notBlank", groups={"odr-expenses"})
+     * @JMS\Groups({"odr-expenses-paid-anything"})
+     * @Assert\NotBlank(message="odr.expenses.paidForAnything.notBlank", groups={"odr-expenses-paid-anything"})
      */
     private $paidForAnything;
 
@@ -46,7 +46,7 @@ trait ExpensesTrait
     }
 
     /**
-     * @return mixed
+     * @return Expense[]
      */
     public function getExpenses()
     {
@@ -75,5 +75,20 @@ trait ExpensesTrait
         $this->expenses[] = $expense;
 
         return $this;
+    }
+
+    /**
+     * Get expenses total value.
+     *
+     * @return float
+     */
+    public function getExpensesTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getExpenses() as $expense) {
+            $ret += $expense->getAmount();
+        }
+
+        return $ret;
     }
 }

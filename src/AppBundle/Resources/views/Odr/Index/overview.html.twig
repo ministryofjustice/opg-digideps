@@ -53,6 +53,15 @@
             <h2 class="heading">Property and finance</h2>
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
+            subSection: 'deputy_expenses',
+            odr: odr,
+            state: odrStatus.bankAccountsState,
+            nOfRecords: odr.bankAccounts | length,
+            linkToSubSection: path('odr_deputy_expenses', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
             subSection: 'bank_accounts',
             odr: odr,
             state: odrStatus.bankAccountsState,

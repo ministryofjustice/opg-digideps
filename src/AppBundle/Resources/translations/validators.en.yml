@@ -464,10 +464,15 @@ odr:
       moreDetails:
           notBlank: Please give us some more information
   expenses:
-      paidForAnything:
-         notBlank: Choose yes or no
-      singleExpense:
-         notNumeric: Enter the amount of the expense in numbers
+    paidForAnything.notBlank: Choose yes or no
+    addAnother.notBlank: Please specify if you want to add another expense
+    singleExpense:
+       notNumeric: Enter the amount of the expense in numbers
+    explanation:
+      notBlank: Please enter an explanation
+    amount:
+      notBlank: Please specify an amount
+      type: Enter a valid amount
   action:
     actionGiveGiftsToClient:
       notBlank: Choose yes or no

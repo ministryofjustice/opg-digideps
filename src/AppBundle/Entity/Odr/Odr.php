@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Odr
 {
     use OdrTraits\IncomeBenefitTrait;
-    use OdrTraits\ExpensesTrait;
+    use OdrTraits\DeputyExpenseTrait;
     use OdrTraits\ActionTrait;
     use OdrTraits\MoreInfoTrait;
     use OdrTraits\AgreeTrait;

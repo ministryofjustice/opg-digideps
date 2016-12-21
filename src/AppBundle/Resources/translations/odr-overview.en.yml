@@ -29,6 +29,13 @@ visitsCare:
     start: "Start"
     label:
       done: "Finished"
+deputy_expenses:
+    subSectionTitle: "Deputy expenses"
+    subSectionDescription: "Claim for things you paid for on %client%'s behalf before your court order "
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add %client%’s bank, building society and savings accounts"

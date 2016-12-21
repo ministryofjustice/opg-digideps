@@ -145,4 +145,16 @@ class OdrStatusService
 
         return self::STATE_DONE;
     }
+
+    /**
+     * @return string
+     */
+    public function getExpensesState()
+    {
+        if (empty($this->odr->getExpenses())) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
 }
