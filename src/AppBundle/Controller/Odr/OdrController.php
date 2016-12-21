@@ -151,7 +151,7 @@ class OdrController extends RestController
             }
         }
 
-        if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
+        if (array_key_exists('paid_for_anything', $data)) {
             $odr->setPaidForAnything($data['paid_for_anything']);
             if ($odr->getPaidForAnything() === 'no') { // remove existing expenses
                 foreach ($odr->getExpenses() as $e) {

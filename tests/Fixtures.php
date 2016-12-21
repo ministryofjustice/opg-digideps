@@ -229,6 +229,20 @@ class Fixtures
     }
 
     /**
+     * @return EntityDir\Odr\Expense
+     */
+    public function createOdrExpense($type, EntityDir\Odr\Odr $odr, array $settersMap = [])
+    {
+        $record = new EntityDir\Odr\Expense($odr);
+        foreach ($settersMap as $k => $v) {
+            $record->$k($v);
+        }
+        $this->em->persist($record);
+
+        return $record;
+    }
+
+    /**
      * @return EntityDir\Report\Decision
      */
     public function createDecision(EntityDir\Report\Report $report, array $settersMap = [])
