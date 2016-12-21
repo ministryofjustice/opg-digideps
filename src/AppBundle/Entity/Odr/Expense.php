@@ -14,6 +14,8 @@ class Expense
     /**
      * @var int
      *
+     * @JMS\Groups({"odr-expenses"})
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -55,13 +57,27 @@ class Expense
      * @param string $explanation
      * @param $amount
      */
-    public function __construct(Odr $odr, $explanation, $amount)
+    public function __construct(Odr $odr)
     {
         $this->odr = $odr;
-        $odr->addExpense($this);
-        $this->explanation = $explanation;
-        $this->amount = $amount;
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
     /**
      * @return mixed
@@ -102,4 +118,21 @@ class Expense
 
         return $this;
     }
+
+    /**
+     * @return Odr
+     */
+    public function getOdr()
+    {
+        return $this->odr;
+    }
+
+    /**
+     * @param Odr $odr
+     */
+    public function setOdr($odr)
+    {
+        $this->odr = $odr;
+    }
+
 }

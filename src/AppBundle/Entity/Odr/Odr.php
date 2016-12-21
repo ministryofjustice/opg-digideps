@@ -150,6 +150,7 @@ class Odr
         $this->assets = new ArrayCollection();
         $this->stateBenefits = new ArrayCollection();
         $this->oneOff = new ArrayCollection();
+        $this->expenses = new ArrayCollection();
     }
 
     /**
