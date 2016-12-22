@@ -82,6 +82,9 @@ class ComponentsExtension extends \Twig_Extension
             'class_name' => new \Twig_SimpleFilter('class_name', function ($object) {
                 return is_object($object) ? get_class($object) : null;
             }),
+            'lcfirst' => new \Twig_SimpleFilter('lcfirst', function ($string) {
+                return lcfirst($string);
+            }),
         ];
     }
 
