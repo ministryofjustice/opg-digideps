@@ -153,7 +153,7 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoDecisions"})
      *
-     * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reason-no-decisions"})
+     * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
      * @var string
      */
