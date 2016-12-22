@@ -4,7 +4,7 @@
 
 {% set translationDomain = "odr-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname, '%assetTitle%': asset.title | lower} %}
+{% set transOptions = {'%client%': odr.client.firstname, '%assetTitle%': asset.title | lcfirst} %}
 
 {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
