@@ -18,16 +18,16 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {#    <div class="form-section"> #}
     <div class="form-section push--bottom">
         <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}error{% endif %}">
             {{ form_checkbox_group(form.hasCapacityChanged, 'mentalCapacity.form.hasCapacityChanged', {
-                'fieldSetClass' : 'inline has-capacity-changed',
-                'legendClass' : 'form-label',
+                'useFormGroup': false,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold',
                 'legendText' : 'mentalCapacity.form.hasCapacityChanged.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'items': [{'dataTarget': 'has-capacity-changed-details-textarea'}]
+                'items': [{'dataTarget': 'has-capacity-changed-details'}]
             }) }}
-            <div id="has-capacity-changed-details-textarea" class="panel panel-border-narrow js-hidden">
+            <div id="has-capacity-changed-details" class="panel panel-border-narrow js-hidden">
                 {{ form_input(form.hasCapacityChangedDetails, 'mentalCapacity.form.hasCapacityChangedDetails', {
                     'labelClass': 'required',
                     'labelParameters': { '%client%': report.client.firstname }
@@ -39,12 +39,5 @@
     {{ form_submit(form.save,'form.save') }}
 
     {{ form_end(form) }}
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var showHideContent = new GOVUK.ShowHideContent();
-            showHideContent.init();
-        });
-    </script>
 
 {% endblock %}

@@ -17,15 +17,11 @@
 {% block pageContent %}
 
     {# Introduction text #}
-    <div class="text">
-        {# @biggs. not clear what should go here
-        #}
-        We need to know about:
-        <ul class="list list-bullet">
-            <li>Sally's mental capacity to make financial decisions</li>
-            <li>Significant decisions you have made for Sally during the reporting period</li>
-        </ul>
-    </div>
+    <p class="text">{{ 'startPage.description1' | trans }}</p>
+    <ul class="list list-bullet">
+        <li>{{ 'startPage.descriptionListItem1' | trans(transOptions) }}</li>
+        <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>
+    </ul>
 
     {# Check answers text #}
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>

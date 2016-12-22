@@ -83,9 +83,9 @@
     <table class="check-your-answers columns-3">
         <thead>
             <tr>
-                <th>Decision</th>
-                <th>Client involvement</th>
-                <th>Client involvement details</th>
+                <th>{{ 'summaryPage.decisionTableColumnHeading1' | trans(transOptions)  }}</th>
+                <th>{{ 'summaryPage.decisionTableColumnHeading2' | trans(transOptions)  }}</th>
+                <th>{{ 'summaryPage.decisionTableColumnHeading3' | trans(transOptions)  }}</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
@@ -94,13 +94,13 @@
         <tbody>
             {% for decision in report.decisions %}
                 <tr>
-                    <td class="width-fifth">
+                    <td class="width-quarter">
                         {{ decision.description | nl2br }}
                     </td>
-                    <td class="width-fifth">
+                    <td class="width-eighth">
                         {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
                     </td>
-                    <td class="width-fifth">
+                    <td class="width-quarter">
                         {% if decision.clientInvolvedBoolean %}
                             {{ decision.clientInvolvedDetails | nl2br }}
                         {% else %}-

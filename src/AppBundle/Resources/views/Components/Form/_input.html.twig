@@ -1,11 +1,11 @@
 <div id="form-group-{{ element.vars.id }}" class="form-group{% if not element.vars.valid %} error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
     {% if labelRaw is defined and labelRaw %}
-      <label class="form-label {% if element.vars.required %} required {% endif %}" for="{{ element.vars.id }}">
+      <label class="form-label {% if element.vars.required %} required {% endif %} text" for="{{ element.vars.id }}">
         {{ labelText | raw }}
       </label>
     {% else %}
-      {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
+      {{ form_label(element, labelText, {'label_attr': {'class': 'form-label text ' ~ labelClass | default('') }}) }}
     {% endif %}
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint text">

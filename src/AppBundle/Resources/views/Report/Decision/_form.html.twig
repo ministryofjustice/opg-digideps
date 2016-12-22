@@ -1,17 +1,20 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
+<h4 class="heading-medium">{{ 'form.description.heading' | trans({}, translationDomain) }}</h4>
+
 {{ form_input(form.description,'form.description', { 'labelClass': 'required' }) }}
+
+<h4 class="heading-medium">{{ 'form.clientInvolvedBoolean.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h4>
 
 {{ form_checkbox_group(form.clientInvolvedBoolean, 'form.clientInvolvedBoolean', {
     'fieldSetClass' : 'inline',
     'legendClass' : 'form-label',
-    'legendText' : 'form.clientInvolvedBoolean.legend' | trans({'%client%': report.client.firstname}, translationDomain),
-    'hintText' : 'form.clientInvolvedBoolean.hint' | trans({'%client%': report.client.firstname}, translationDomain)
+    'labelParameters': { '%client%': report.client.firstname }
 }) }}
 
 {{ form_input(form.clientInvolvedDetails,'form.clientInvolvedDetails', {
     'labelClass': 'required',
-    'hintText': 'form.clientInvolvedDetails.hint'| trans({'%client%': report.client.firstname}, translationDomain)
+    'labelParameters': { '%client%': report.client.firstname }
 }) }}
 
 {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
