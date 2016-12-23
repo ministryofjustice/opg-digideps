@@ -262,9 +262,6 @@ class RestClient
     {
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
-//            if ($method=='put') {
-//                echo $options['body'];die;
-//            }
         }
 
         $response = $this->rawSafeCall($method, $endpoint, $options + [

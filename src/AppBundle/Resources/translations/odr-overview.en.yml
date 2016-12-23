@@ -36,6 +36,13 @@ deputy_expenses:
     start: "Start"
     label:
       done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+income_benefits:
+    subSectionTitle: "Income and benefits"
+    subSectionDescription: "Give us details of %client%’s income and any state benefits"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add %client%’s bank, building society and savings accounts"

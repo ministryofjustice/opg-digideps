@@ -1,0 +1,130 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ ('stepPage.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}
+    {{ {
+        1: 'stepPage.pageSectionTitle.stateBenefits',
+        2: 'stepPage.pageSectionTitle.pensions',
+        3: 'stepPage.pageSectionTitle.pensions' ,
+        4: 'stepPage.pageSectionTitle.damages',
+        5: 'stepPage.pageSectionTitle.oneOff'}[step] | trans(transOptions)  }}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <p class="text">
+            {{ 'form.stateBenefits.label' | trans(transOptions) }}
+        </p>
+        <p class="form-hint">
+            {{ 'form.stateBenefits.hint' | trans(transOptions) }}
+        </p>
+        {% include 'AppBundle:Odr/IncomeBenefit:_checkboxes_list.html.twig' with {
+        'categoryKey': 'form.stateBenefits',
+        'elements': form.stateBenefits,
+        } %}
+
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.receiveStatePension.label' | trans(transOptions),
+        }) }}
+    {% endif %}
+
+    {% if step == 3 %}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}error{% endif %}">
+
+                {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
+                    'fieldSetClass' : 'inline receive-other-income',
+                    'legendClass' : 'form-label',
+                    'legendText' : 'form.receiveOtherIncome.label' | trans(transOptions),
+                    'hintText' : 'form.receiveOtherIncome.hint' | trans(transOptions),
+                    'items': [
+                    {'dataTarget': 'receive-other-income-details' }
+                    ]
+                }) }}
+                <div id="receive-other-income-details" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+
+    {% if step == 4 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}error{% endif %}">
+
+                {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
+                    'fieldSetClass' : 'inline expect-compensation-damages',
+                    'legendClass' : 'form-label',
+                    'legendText' : 'form.expectCompensationDamages.label' | trans(transOptions),
+                    'hintText' : 'form.expectCompensationDamages.hint' | trans(transOptions),
+                    'items': [
+                    {'dataTarget': 'expect-compensation-damages-details' }
+                    ]
+                }) }}
+                <div id="expect-compensation-damages-details" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {% if step == 5 %}
+        <p class="text">
+            {{ 'form.oneOff.label' | trans(transOptions) }}
+        </p>
+        <p class="form-hint">
+            {{ 'form.oneOff.hint' | trans(transOptions) }}
+        </p>
+        {% include 'AppBundle:Odr/IncomeBenefit:_checkboxes_list.html.twig' with {
+        'categoryKey': 'form.oneOff',
+        'elements': form.oneOff,
+        } %}
+    {% endif %}
+
+
+
+
+    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}"
+           class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

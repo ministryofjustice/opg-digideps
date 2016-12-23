@@ -20,7 +20,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
+     * @JMS\Groups({"odr-receive-state-pension"})
      * @Assert\NotBlank(message="odr.incomeBenefit.receiveStatePension.notBlank", groups={"receive-state-pension"})
      */
     private $receiveStatePension;
@@ -29,7 +29,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
+     * @JMS\Groups({"odr-receive-other-income"})
      * @Assert\NotBlank(message="odr.incomeBenefit.receiveOtherIncome.notBlank", groups={"receive-other-income"})
      */
     private $receiveOtherIncome;
@@ -38,8 +38,8 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
-     * @Assert\NotBlank(message="odr.incomeBenefit.receiveOtherIncomeDetails.notBlank", groups={"receive-other-income-yes"})
+     * @JMS\Groups({"odr-receive-other-income"})
+     * @Assert\NotBlank(message="odr.incomeBenefit.receiveOtherIncomeDetails.notBlank", groups={"receive-other-income-details"})
      */
     private $receiveOtherIncomeDetails;
 
@@ -57,7 +57,7 @@ trait IncomeBenefitTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-income-damages"})
-     * @Assert\NotBlank(message="odr.incomeBenefit.expectCompensationDamagesDetails.notBlank", groups={"expect-compensation-damage-yes"})
+     * @Assert\NotBlank(message="odr.incomeBenefit.expectCompensationDamagesDetails.notBlank", groups={"expect-compensation-damage-details"})
      */
     private $expectCompensationDamagesDetails;
 
@@ -212,15 +212,15 @@ trait IncomeBenefitTrait
      *
      * @return int
      */
-    public function countRecordsPresent($elements)
+    public function recordsPresent($elements)
     {
         if (empty($elements) || !is_array($elements)) {
             return 0;
         }
 
-        return count(array_filter($elements, function ($st) {
+        return array_filter($elements, function ($st) {
             return $st instanceof IncomeBenefit && $st->isPresent();
-        }));
+        });
     }
 
     /**
@@ -230,11 +230,11 @@ trait IncomeBenefitTrait
      */
     public function incomeBenefitsStatus()
     {
-        $stCount = $this->countRecordsPresent($this->getStateBenefits());
+        $stCount = count($this->recordsPresent($this->getStateBenefits()));
+        $ooCount = count($this->recordsPresent($this->getOneOff()));
         $statePens = $this->getReceiveStatePension();
         $otherInc = $this->getReceiveOtherIncome();
         $compensDamag = $this->getExpectCompensationDamages();
-        $ooCount = $this->countRecordsPresent($this->getOneOff());
 
         if ($stCount === 0
             && $statePens == null && $otherInc == null && $compensDamag == null
@@ -250,36 +250,4 @@ trait IncomeBenefitTrait
         return 'incomplete';
     }
 
-    /**
-     * Display status of each category
-     * Called from template.
-     *
-     * @param string $category
-     *
-     * @return string
-     */
-    public function incomeBenefitsSectionStatus($category)
-    {
-        switch ($category) {
-            case 'stateBenefits';
-                $count = $this->countRecordsPresent($this->getStateBenefits());
-
-                return "{$count} Selected";
-
-            case 'pensionsOtherIncome';
-                $completed = $this->getReceiveStatePension() && $this->getReceiveOtherIncome();
-
-                return $completed ? 'Completed' : '';
-
-            case 'damages';
-                $completed = $this->getExpectCompensationDamages();
-
-                return $completed ? 'Completed' : '';
-
-            case 'oneOff';
-                $count = $this->countRecordsPresent($this->getOneOff());
-
-                return "{$count} Selected";
-        }
-    }
 }

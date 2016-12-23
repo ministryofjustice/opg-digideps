@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Odr\IncomeBenefit;
+namespace AppBundle\Form\Odr;
 
 use AppBundle\Entity\Odr\IncomeBenefit;
 use Symfony\Component\Form\AbstractType;

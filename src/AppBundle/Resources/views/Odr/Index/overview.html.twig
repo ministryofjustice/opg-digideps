@@ -62,6 +62,14 @@
             } %}
             {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
             transDomain: translationDomain,
+            subSection: 'income_benefits',
+            odr: odr,
+            state: odrStatus.incomeBenefitsState,
+            linkToSubSection: path('odr_income_benefits', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
             subSection: 'bank_accounts',
             odr: odr,
             state: odrStatus.bankAccountsState,

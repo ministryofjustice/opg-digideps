@@ -157,4 +157,30 @@ class OdrStatusService
 
         return self::STATE_DONE;
     }
+
+    /**
+     * @return string
+     */
+    public function getIncomeBenefitsState()
+    {
+        $stCount = count($this->odr->recordsPresent($this->odr->getStateBenefits()));
+        $statePens = $this->odr->getReceiveStatePension();
+        $otherInc = $this->odr->getReceiveOtherIncome();
+        $compensDamag = $this->odr->getExpectCompensationDamages();
+        $ooCount = count($this->odr->recordsPresent($this->odr->getOneOff()));
+
+        if ($stCount === 0
+            && $statePens == null && $otherInc == null && $compensDamag == null
+            && $ooCount === 0
+        ) {
+            return self::STATE_NOT_STARTED;
+        }
+
+
+        if ($statePens != null && $otherInc != null && $compensDamag != null) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
 }
