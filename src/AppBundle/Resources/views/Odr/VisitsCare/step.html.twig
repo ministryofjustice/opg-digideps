@@ -59,6 +59,7 @@
 
                 <div id="how-care-funded-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
+                        'fieldSetClass': 'text',
                         'legendClass' : 'form-label-bold'
                     }) }}
                 </div>
@@ -105,8 +106,9 @@
         <div class="form-section push--bottom">
             <div class="form-group flush--bottom {% if not form.planMoveNewResidence.vars.valid %}error{% endif %}">
                 {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
-                    'fieldSetClass' : 'inline plan-move-residence-radio',
-                    'legendClass' : 'form-label',
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
                     'legendText' : 'form.planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
                     'items': [
                     {'dataTarget': 'plan-move-residence-details-textarea'},
