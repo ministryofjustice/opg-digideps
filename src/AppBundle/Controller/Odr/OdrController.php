@@ -105,7 +105,9 @@ class OdrController extends RestController
             foreach ($data['state_benefits'] as $row) {
                 $e = $odr->getStateBenefitByTypeId($row['type_id']);
                 if ($e instanceof EntityDir\Odr\IncomeBenefitStateBenefit) {
-                    $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
+                    $e
+                        ->setPresent($row['present'])
+                        ->setMoreDetails($row['present'] ? $row['more_details']: null);
                     $this->getEntityManager()->flush($e);
                 }
             }
