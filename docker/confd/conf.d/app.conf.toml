@@ -1,6 +1,0 @@
-[template]
-src = "app.conf.tmpl"
-dest = "/etc/nginx/conf.d/app.conf"
-keys = [
-    "/opg/nginx"
-]
