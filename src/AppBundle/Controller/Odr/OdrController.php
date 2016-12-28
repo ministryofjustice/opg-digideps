@@ -115,20 +115,26 @@ class OdrController extends RestController
             $odr->setReceiveStatePension($data['receive_state_pension']);
         }
 
-        if (array_key_exists('receive_other_income', $data)) {
-            $odr->setReceiveOtherIncome($data['receive_other_income']);
-        }
-
         if (array_key_exists('receive_other_income_details', $data)) {
             $odr->setReceiveOtherIncomeDetails($data['receive_other_income_details']);
         }
 
-        if (array_key_exists('expect_compensation_damages', $data)) {
-            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+        if (array_key_exists('receive_other_income', $data)) {
+            $odr->setReceiveOtherIncome($data['receive_other_income']);
+            if ($odr->getReceiveOtherIncome() == 'no') {
+                $odr->setReceiveOtherIncomeDetails(null);
+            }
         }
 
         if (array_key_exists('expect_compensation_damages_details', $data)) {
             $odr->setExpectCompensationDamagesDetails($data['expect_compensation_damages_details']);
+        }
+
+        if (array_key_exists('expect_compensation_damages', $data)) {
+            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+            if ($odr->getExpectCompensationDamages() == 'no') {
+                $odr->setExpectCompensationDamagesDetails(null);
+            }
         }
 
         if (array_key_exists('one_off', $data)) {
