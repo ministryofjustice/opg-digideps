@@ -53,7 +53,7 @@ form:
       other_benefits:
         label: Other benefits
         moreInfo: Please tell us more about these benefits
-
+  stateBenefitsOtherDetails.labelSummaryPage: More about other benefits
   receiveStatePension:
     label: Does %client% receive a state pension?
   receiveOtherIncome:

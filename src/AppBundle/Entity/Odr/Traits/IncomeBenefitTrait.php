@@ -78,6 +78,18 @@ trait IncomeBenefitTrait
     }
 
     /**
+     * @return IncomeBenefit
+     */
+    public function getStateBenefitOther()
+    {
+        foreach($this->stateBenefits as $st) {
+            if ($st->getTypeId() == 'other_benefits') {
+                return $st;
+            }
+        }
+    }
+
+    /**
      * @param IncomeBenefit $stateBenefits
      *
      * @return Odr

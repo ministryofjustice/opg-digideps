@@ -40,6 +40,21 @@
             <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 1, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
         </td>
     </tr>
+    {% set stateBenefitsOther = odr.getStateBenefitOther() %}
+    {% if stateBenefitsOther.present %}
+        <tr>
+            <td>
+                {{ 'form.stateBenefitsOtherDetails.labelSummaryPage' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ stateBenefitsOther.moreDetails | nl2br }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 4, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
     </tbody>
 </table>
 
