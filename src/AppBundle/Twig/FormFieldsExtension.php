@@ -417,6 +417,7 @@ class FormFieldsExtension extends \Twig_Extension
         $preInputText = ($preInputTextTrans != $translationKey.'.preInput') ? $preInputTextTrans : null;
 
         return [
+            'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
             'labelText' => $labelText,
             'hintText' => $hintText,
             'hintListArray' => $hintListEntriesText,
