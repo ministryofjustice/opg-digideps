@@ -50,7 +50,7 @@
                 {{ stateBenefitsOther.moreDetails | nl2br }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 4, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 1, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     {% endif %}
