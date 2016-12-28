@@ -19,6 +19,10 @@ class ActionsValidator
         $this->action = $action;
     }
 
+    /**
+     * @param $question
+     * @return bool
+     */
     public function missing($question)
     {
         switch ($question) {
@@ -29,6 +33,9 @@ class ActionsValidator
         }
     }
 
+    /**
+     * @return int
+     */
     public function countMissing()
     {
         return count(array_filter([

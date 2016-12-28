@@ -19,6 +19,10 @@ class VisitsCareValidator
         $this->visitsCare = $visitsCare;
     }
 
+    /**
+     * @param $question
+     * @return bool
+     */
     public function missing($question)
     {
         switch ($question) {
@@ -33,6 +37,9 @@ class VisitsCareValidator
         }
     }
 
+    /**
+     * @return int
+     */
     public function countMissing()
     {
         return count(array_filter([

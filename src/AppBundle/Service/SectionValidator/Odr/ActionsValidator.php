@@ -32,4 +32,17 @@ class ActionsValidator
         }
     }
 
+    /**
+     * @return int
+     */
+    public function countMissing()
+    {
+        return count(array_filter([
+            $this->odr->getActionGiveGiftsToClient() === null,
+            $this->odr->getActionPropertyMaintenance() === null,
+            $this->odr->getActionPropertySellingRent() === null,
+            $this->odr->getActionPropertyBuy() === null,
+        ]));
+    }
+
 }

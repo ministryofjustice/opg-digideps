@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
+use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -113,6 +114,7 @@ class IncomeBenefitController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
+            'validator' => new IncomeBenefitsValidator($odr),
         ];
     }
 
