@@ -76,8 +76,7 @@ class FixturesCommand extends AddSingleUserCommand
                 $role = new Role();
                 $role
                         ->setId($id)
-                        ->setRole($roleString)
-                        ->setName($nameString);
+                        ->setRole($roleString);
                 $em->persist($role);
                 $output->writeln('added');
             }

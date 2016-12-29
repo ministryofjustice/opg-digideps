@@ -29,7 +29,7 @@ parameters:
             firstname: "AD user"
             lastname: "AD surname"
             password: Abcd1234
-            roleId: 5
+            roleId: 3
             activated: true
 
     client_secrets:

@@ -34,7 +34,7 @@ class RoleControllerTest extends AbstractTestController
 
         $this->assertEquals([
             'id' => 1,
-            'name' => 'OPG Administrator',
+            'name' => 'OPG Admin',
             'role' => 'ROLE_ADMIN',
         ], $data[0]);
 

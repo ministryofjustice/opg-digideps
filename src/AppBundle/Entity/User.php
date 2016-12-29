@@ -229,6 +229,15 @@ class User implements UserInterface
     private $odrEnabled;
 
     /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
+     */
+    private $adManaged;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -809,5 +818,21 @@ class User implements UserInterface
         $this->odrEnabled = $odrEnabled;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAdManaged()
+    {
+        return $this->adManaged;
+    }
+
+    /**
+     * @param boolean $adManaged
+     */
+    public function setAdManaged($adManaged)
+    {
+        $this->adManaged = $adManaged;
     }
 }
