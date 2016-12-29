@@ -1,0 +1,18 @@
+addUserForm:
+  email:
+    label: Email
+    hint: ''
+  firstname:
+    label: First name
+    hint: ''
+  lastname:
+    label: Last name
+    hint: ''
+  roleId:
+    label: Role
+    hint: ''
+    defaultOption: Please select ...
+  odrEnabled:
+    label: Enable NDR for this user
+  submit:
+    label: Save user

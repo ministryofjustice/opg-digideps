@@ -12,10 +12,16 @@
 
     <a name="pageBody"></a>
     {% block validationSummary %}
-        {{ form_errors_list(form) }}
+        {% if form is defined %}
+            {{ form_errors_list(form) }}
+        {% endif %}
     {% endblock %}
 
     <div id="page-body">
+
+        {% for flashMessage in app.session.flashbag.get('action') %}
+            <p class="flash">{{ flashMessage |trans({}, transDomain)|raw }}</p>
+        {% endfor %}
 
         {% block pageBody %}{% endblock %}
     </div>

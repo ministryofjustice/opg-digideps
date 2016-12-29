@@ -1,3 +1,4 @@
+{% if report.accounts | length > 0 %}
 <div class="section" id="accounts-section">
     <h2 class="section-heading">Accounts</h2>
 
@@ -14,3 +15,4 @@
     {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
     
 </div>
+{% endif %}

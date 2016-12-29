@@ -1,20 +1,157 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-
-{% trans_default_domain "assisted-digital" %}
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 
 {% block pageTitle %}Administration - Users{% endblock %}
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}OPG Assisted Digital{% endblock %}
+{% block title %}Admin{% endblock %}
 
 {% block validationSummary %}
+    {{ form_errors_list(form) }}
 {% endblock %}
 
 
+
 {% block pageBody %}
-    {#Register a new assited digital user
-     <a href="/ad/register" class="open-button button">Register a new user</a>
-     <p><br/></p>
-     <p><br/></p>
-    Help an existing assited digital user
-     <a href="/ad/login" class="open-button button">Sign in for a user</a>#}
+    <div class="jump-to-user">
+        <h1 class="form-title heading-large">
+            ASSISTED DIGITAL
+        </h1>
+
+        <form action="/ad/view-user" method="GET">
+            Jump to user with ID equals to
+            <input name="what" value="user_id" type="hidden"/>
+            <input name="filter" required="required" class="form-control" style="width: 250px">
+            <button class="button" type="submit"/>
+            Go</button>
+        </form>
+
+        <form action="/ad/view-user" method="GET">
+            Jump to client with Case number equals to
+            <input name="what" value="case_number" type="hidden"/>
+            <input name="filter" required="required" class="form-control" style="width: 250px">
+            <button class="button" type="submit"/>
+            Go</button>
+        </form>
+    </div>
+
+
+    {# LIST AsisD USERS #}
+    <h2 class="form-title heading-medium" id="users-list-title">
+        Existing assisted Lay deputy sessions.
+    </h2>
+    <p class="text"></p>
+    {% if (users | length) == 0 %}
+        No assisted Lay deputy session started.
+        Find lay deputy using the form above,
+        or click "view->Login (deputy area)" on them from the user management section
+    {% else %}
+    <table class="behat-region-users user-list">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">
+                {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'lastname') %}
+                    <a href="{{ url('ad_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder }) }}#users-list-title">
+                        Deputy</a>
+
+                    {% if app.request.query.get('sort_order') == "ASC" %}
+                        (a-z)
+                    {% else %}
+                        (z-a)
+                    {% endif %}
+
+                {% else %}
+                    <a href="{{ url('ad_homepage', { 'order_by': 'lastname', 'sort_order': 'DESC' }) }}#users-list-title">
+                        Firstname</a>
+                {% endif %}
+            </th>
+             <th>NDR enabled</th>
+            <th>Details</th>
+            <th>Deputy area login</th>
+
+            <th scope="col">
+                {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'registrationDate') %}
+                    <a href="{{ url('ad_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder }) }}#users-list-title">Created/Registered
+                        at</a>
+
+                    {% if app.request.query.get('sort_order') == "ASC" %}
+                        (a-z)
+                    {% else %}
+                        (z-a)
+                    {% endif %}
+
+                {% else %}
+                    <a href="{{ url('ad_homepage', { 'order_by': 'registrationDate', 'sort_order': 'ASC' }) }}#users-list-title">Created/Registered
+                        at</a>
+                {% endif %}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {# simple paginator #}
+        <div style="float: right">
+            {{ userCount }} users in total.
+            {% if userCount > limit %}
+                Go to page
+                {% set pages = range(0, userCount, limit) %}
+                {% for currentOffset in pages %}
+                    {% if currentOffset == offset %}
+                        {{ loop.index }}
+                    {% else %}
+                        <a href="{{ path("ad_homepage", {
+                            "offset": currentOffset,
+                            'sort_order': app.request.query.get('sort_order'),
+                            'order_by': app.request.query.get('order_by')}
+                        ) }}#users-list-title">{{ loop.index }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% for user in users %}
+            <tr {% if user.id == app.request.get('userAdded') %} style="background-color: #e6db74"{% endif %}>
+                <td>
+                    {{ user.id }}
+                </td>
+                <td>
+                    {{ user.firstname }} {{ user.lastname }}
+                </td>
+                <td>
+                    {{ user.odrEnabled ? 'yes' : 'no' }}
+                </td>
+                <td>
+                    <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">View </a>
+                </td>
+                <td>
+                    <a href="{{ path('ad_deputy_login_redirect', {deputyId: user.id}) }}" target="_blank" class=""
+                    >Login (Deputy area)
+                        <img width="16" height="16" title="" alt=""
+                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5RjgyQkFCNDc3NDgxMUU0QUJCNUNCMDA4NzgyNTgyMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFMzhBRUE4Qzc4RjcxMUU0QUJCNUNCMDA4NzgyNTgyMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlGODJCQUIyNzc0ODExRTRBQkI1Q0IwMDg3ODI1ODIxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlGODJCQUIzNzc0ODExRTRBQkI1Q0IwMDg3ODI1ODIxIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+OBiYSgAAAYRJREFUeNpi/P//P8NAAiaGAQajDhhwBzCAEiGNEmIQEM8kaC8NHZAFsgeIHwCxEb0c4AXEq4H4KhB/gjoAhhcDMSutHCAOxGfQLMSG3wNxBBBLw+xlhFnOyMgIoniAWB6I/0I14AJ/gFgCiE9A1d8CYmYiHfsYiCcD7e1GT4SJQHyOCF/A8DMgloTGMbF6FoL8iisKpkB9RqxhyUCcgkX8LsiHQHwASewhEDtgS4QseIIKFKfXgJgbTZwZGkUg+V1I4nuBuBCIL0P5RUBsD8SxQLyEmHIAOQSeEJniYT7MwyIvAMRcQJwNxCW47MVVEr4hwgHqUBpk+SQs8h+AeBXUY+y0KIrVgPgONL6xgWAg9oZ5GJchLBQ44DoQH8NXyhNjCCUOmA9NMxQBShzwebQ9MKwdwEgFsxkpSYS6QGwFLVYFSLQYVEy/AGI/Uh3AiORqEH2UiiHNSEwU/KZGvsbTfiAYArOA+DkQhwPxa2JLMgKADUqvwhk0o12zUQcMtAMAAgwABILPck7FTlMAAAAASUVORK5CYII="/>
+                    </a>
+                </td>
+                <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {# ADD USER FORM #}
+    <h2 class="form-title heading-medium" id="users-add-form">
+        Create assisted Lay Deputy user
+    </h2>
+    <p class="text">
+        This user will be managed uniquely from this AD area.
+    No email nor activation email will be created. After the user is created,
+        it'll be immediately possible to login on the deputy area and complete the deputy reports on behalf of the user
+    </p>
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_input(form.firstname,'addUserForm.firstname', { 'labelClass': 'required' }) }}
+    {{ form_input(form.lastname,'addUserForm.lastname', { 'labelClass': 'required' }) }}
+    {{ form_select(form.roleId,'addUserForm.roleId', { 'labelClass': 'required' }) }}
+    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled', { 'labelClass': 'required' }) }}
+    <p class="text">Other user details, client details, NDR and annual reports will be editable from the deputy area</p>
+    {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_end(form) }}
+
 {% endblock %}

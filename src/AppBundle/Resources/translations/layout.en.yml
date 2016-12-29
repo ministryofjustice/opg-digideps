@@ -1,9 +1,10 @@
 welcomeMessage: Hello %name%, welcome to the site
-adminArea: Users
-assistedDigitalArea: OPG assisted digital
+
 logout: Sign out
 Invalid credentials.: Enter a valid username and password
 nav:
+    adminArea: Users
+    adArea: Assisted Digital
     userDetails: Your details
     clientHome: Your client
     reports: Reports

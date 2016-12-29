@@ -63,7 +63,8 @@ class MailFactory
      */
     public function createActivationEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $user->getRole()['role'] == (EntityDir\Role::LAY_DEPUTY) ?
+            self::AREA_DEPUTY : self::AREA_ADMIN;
 
         $viewParams = [
             'name' => $user->getFullName(),

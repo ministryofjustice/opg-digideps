@@ -1,5 +1,8 @@
 {% extends 'AppBundle:Layouts:moj_template.html.twig' %}
 
+{% set adLoggedAsDeputy = app.session.get('_adId') %}
+{% set adName = app.session.get('_adFirstname') ~ ' ' ~ app.session.get('_adLastname') %}
+
 {% trans_default_domain "layout" %}
 
 {% block topOfPage %}{% endblock %}
@@ -19,6 +22,13 @@
 
     <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
     <link href="{{ 'stylesheets/govuk-template-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
+    {% if adLoggedAsDeputy %}
+        <style type="text/css">
+            #global-header, #global-header .header-wrapper {
+                background-color: #00a33b;
+            }
+        </style>
+    {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -26,7 +36,6 @@
 {% endblock %}
 
 {% block pageTitle %}Digideps Page Title{% endblock %}
-
 
 
 {% block bodyClasses %}{% endblock %}
@@ -49,38 +58,43 @@
         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
     {% endif %}
     <nav id="proposition-menu">
-        <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
+        <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">
+            {% if adLoggedAsDeputy %}Deputy area  - Assisted Digital
+            {% else %}
+                Complete the deputy report
+            {% endif %}
+        </a>
         {% if app.user %}
             <ul id="proposition-links">
+                {#{% if is_granted('ROLE_SUPER_ADMIN') %}#}
+                    {#<li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>#}
+                    {#<li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>#}
+                    {#<li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>#}
+                {#{% endif %}#}
 
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
+                    <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_AD') %}
-                    <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
-                {% endif %}
-
-
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
+                    <li><a href="{{ path('ad_homepage') }}">{% trans %}nav.adArea{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
                     <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
-                {% else %}
+                {% endif %}
+
+                {% if is_granted('ROLE_LAY_DEPUTY') %}
+                    <li style="color: white">
+                            Logged as {{  adName }} (Assisted Digital)</li>
                     <li><a href="{{path('client_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    {% if (app.user.hasDetails() and app.user.numberOfReports > 0) %}
+                        <li><a href="{{path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
+                    {% endif %}
                 {% endif %}
+                <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
 
-                {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.numberOfReports > 0) %}
-                    <li><a href="{{path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
-                {% endif %}
-
-                {% if app.session.get('ad') %}
-                    <li>
-                        <a href="{{path('ad_logout')}}">Terminate deputy session</a>
-                    </li>
-                {% elseif is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or app.user.idOfClientWithDetails %}
-                    <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
-                {% endif %}
             </ul>
         {% endif %}
     </nav>

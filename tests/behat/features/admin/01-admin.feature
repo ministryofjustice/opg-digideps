@@ -14,7 +14,7 @@ Feature: admin / admin
         And I create a new "ODR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
         #Then the response status code should be 200
-        And I should see "OPG Administrator" in the "users" region
+        And I should see "OPG Admin" in the "users" region
         And I save the page as "admin-admin-added"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         And the last audit log entry should contain:

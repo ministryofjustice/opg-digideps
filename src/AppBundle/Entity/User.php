@@ -29,9 +29,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
-     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "user_details_basic", "user_details_full"} )
-     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "user_details_basic", "user_details_full"} )
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
      * 
      * @var string
      */
@@ -39,9 +39,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
-     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "user_details_basic", "user_details_full"} )
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "user_details_basic", "user_details_full"} )
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
      * 
      * @var string
      */
@@ -49,7 +49,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user"})
+     * @JMS\Groups({"admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "password_reset"} )
      * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset"}, checkMX=false, checkHost=false )
      * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset"} )
@@ -94,8 +94,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"admin_add_user"})
-     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user"} )
+     * @JMS\Groups({"admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
      * 
      * @var int
      */
@@ -221,11 +221,18 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"admin_add_user"})
+     * @JMS\Groups({"admin_add_user", "ad_add_user"})
      *
      * @var bool
      */
     private $odrEnabled;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"ad_managed", "ad_add_user"})
+     */
+    private $adManaged;
 
     /**
      * @return int $id
@@ -704,6 +711,22 @@ class User implements AdvancedUserInterface
     public function setOdrEnabled($odrEnabled)
     {
         $this->odrEnabled = $odrEnabled;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAdManaged()
+    {
+        return $this->adManaged;
+    }
+
+    /**
+     * @param boolean $adManaged
+     */
+    public function setAdManaged($adManaged)
+    {
+        $this->adManaged = $adManaged;
     }
 
 
