@@ -1,7 +1,3 @@
-nav:
-    client-edit: "%client%'s details"
-    deputy-edit: "Your details"
-    change-password: "Change password"
 h1Title:
     client-edit: "Account: %client%'s details"
     deputy-edit: "Account: Your details"

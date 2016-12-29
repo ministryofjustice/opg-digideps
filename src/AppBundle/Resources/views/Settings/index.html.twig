@@ -9,23 +9,31 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('home') }}
 {% endblock %}
 
 {% block pageContent %}
-    <ul>
-        {% if not is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ path('client_show') }}"
-                   class="behat-link-client-show">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}</a>
-            </li>
-        {% endif %}
-        <li>
-            <a href="{{ path('user_show') }}"
-               class="behat-link-deputy-show">{{ 'nav.deputy-edit' | trans({}, 'user-account') }}</a></li>
-        <li>
-            <a href="{{ path('user_password_edit') }}"
-               class="behat-link-change-password">{{ 'nav.change-password' | trans({}, 'user-account') }}</a>
-        </li>
-    </ul>
+
+    {% if is_granted('ROLE_LAY_DEPUTY') %}
+
+        {% set transOptions = {'%client%': client.firstname} %}
+        <a href="{{ path('client_show') }}" class="behat-link-client-show">
+            <h2 class="heading-small">{{ 'links.clientDetails.label' | trans(transOptions) }}</h2>
+        </a>
+        <p class="text text-info">{{ 'links.clientDetails.hint' | trans(transOptions) }}</p>
+    {% endif %}
+
+
+    <a href="{{ path('user_show') }}" class="behat-link-user-details">
+        <h2 class="heading-small">{{ 'links.userDetails.label' | trans(transOptions) }}</h2>
+    </a>
+    <p class="text text-info">{{ 'links.userDetails.hint' | trans(transOptions) }}</p>
+
+
+    <a href="{{ path('user_password_edit') }}" class="behat-link-password">
+        <h2 class="heading-small">{{ 'links.password.label' | trans(transOptions) }}</h2>
+    </a>
+    <p class="text text-info">{{ 'links.password.hint' | trans(transOptions) }}</p>
+
 
 {% endblock %}

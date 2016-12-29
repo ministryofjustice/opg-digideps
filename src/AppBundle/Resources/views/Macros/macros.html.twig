@@ -1,11 +1,11 @@
 {% macro breadcrumbs(report) %}
     {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
-    {% set reportType = (report | class_name) == 'AppBundle\\Entity\\Odr\\Odr' ? 'odr' : 'report' %}
+    {% set isOdrReport = (report | class_name) == 'AppBundle\\Entity\\Odr\\Odr' %}
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
-                {# NDR users have a different homepage #}
+                {# NDR users have a different homepage. Remove once NDR and non-NDR homepages are merged #}
                 {% if isUserOdrEnabled %}
                     <a href="{{ path('odr_index') }}">Deputy Reports</a>
                 {% else %}
@@ -13,16 +13,30 @@
                 {% endif %}
             </li>
             <li>
-                {% if report == 'settings' %}
-                    <a href="{{ path('account_settings') }}">Account settings</a>
-                {% elseif reportType == 'report' %}
-                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                       class="behat-link-breadcrumbs-report-overview">Deputy report overview</a>
-                {% elseif reportType == 'odr' %}
-                    <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">New deputy
-                        report overview</a>
+                {% if isOdrReport %}
+                    <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">
+                        New deputy report overview</a>
+
+                {% else %}
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">
+                        Deputy report overview</a>
                 {% endif %}
             </li>
+        </ol>
+    </div>
+{% endmacro %}
+
+{% macro breadcrumbsSettings(section) %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li>
+                <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
+            </li>
+            {% if section != 'home' %}
+                <li>
+                    <a href="{{ path('account_settings') }}">Your account</a>
+                </li>
+            {% endif %}
         </ol>
     </div>
 {% endmacro %}
@@ -51,9 +65,10 @@
     {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
     ] %}
 
+    {# TODO move template out from here #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
-        'section': currentSectionId,
-        'config': config
+    'section': currentSectionId,
+    'config': config
     } %}
 {% endmacro %}
 

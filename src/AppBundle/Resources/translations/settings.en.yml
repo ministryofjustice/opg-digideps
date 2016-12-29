@@ -1,0 +1,15 @@
+page:
+  htmlTitle: "Deputy report - Your account | GOV.UK"
+  pageSectionTitle: "Your account"
+
+links:
+  clientDetails:
+    label: Sally's details
+    hint: Edit Sally's contact details and choose how Sally's name is displayed.
+  userDetails:
+    label: Your details
+    hint: Edit your contact details.
+  password:
+    label: Password
+    hint: Change the password which you use to sign in.
+

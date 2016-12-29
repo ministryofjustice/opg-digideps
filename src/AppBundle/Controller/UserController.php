@@ -205,6 +205,7 @@ class UserController extends AbstractController
             $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
+            $request->getSession()->getFlashBag()->add('notice', "Password edited");
 
             return $this->redirect($this->generateUrl('user_password_edit_done'));
         }
@@ -277,6 +278,7 @@ class UserController extends AbstractController
              * the api
              */
             $this->getRestClient()->put('user/'.$user->getId(), $formData, ['user_details_full']);
+            $request->getSession()->getFlashBag()->add('notice', "Your details edited");
 
             return $this->redirect($this->generateUrl('user_show'));
         }
