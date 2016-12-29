@@ -24,13 +24,13 @@
     {% endif %}
 
 
-    <a href="{{ path('user_show') }}" class="behat-link-user-details">
+    <a href="{{ path('user_show') }}" class="behat-link-deputy-show">
         <h2 class="heading-small">{{ 'links.userDetails.label' | trans(transOptions) }}</h2>
     </a>
     <p class="text text-info">{{ 'links.userDetails.hint' | trans(transOptions) }}</p>
 
 
-    <a href="{{ path('user_password_edit') }}" class="behat-link-password">
+    <a href="{{ path('user_password_edit') }}" class="behat-link-change-password">
         <h2 class="heading-small">{{ 'links.password.label' | trans(transOptions) }}</h2>
     </a>
     <p class="text text-info">{{ 'links.password.hint' | trans(transOptions) }}</p>
