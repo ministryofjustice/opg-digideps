@@ -1,4 +1,4 @@
-Feature: Tems and Conditions
+Feature: Terßms and Conditions
     
     @deputy
     Scenario: The footer provides a link to terms and conditions in the login page
@@ -14,5 +14,5 @@ Feature: Tems and Conditions
     Scenario: The terms and conditions page contains a back link
         Given I am on the login page
         And I go to "/terms"
-        Then the "Return to deputy report" link url should contain "/"
+        Then the "Back" link url should contain "/login"
     
