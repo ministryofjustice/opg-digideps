@@ -89,14 +89,6 @@ trait FormTrait
     }
 
 
-    /**
-     * @Then /^I click on the first decision$/
-     * @Then /^I click on the first contact$/
-     */
-    public function iClickOnTheFirstDecision()
-    {
-        $this->getSession()->getPage()->clickLink('edit-1-link');
-    }
 
     /**
      * Fills in form field with specified id|name|label|value.
@@ -172,4 +164,5 @@ EOT;
             $elementsFound[0]->setValue($value);
         }
     }
+
 }
