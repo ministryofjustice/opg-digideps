@@ -227,7 +227,7 @@ trait IncomeBenefitTrait
     public function recordsPresent($elements)
     {
         if (empty($elements) || !is_array($elements)) {
-            return 0;
+            return [];
         }
 
         return array_filter($elements, function ($st) {
