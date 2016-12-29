@@ -88,7 +88,7 @@ class AdminController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -100,6 +100,18 @@ class AdminController extends AbstractController
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
             'roleIdDisabled' => $user->getId() == $this->getUser()->getId(),
         ]), $user);
+
+        $clients = $user->getClients();
+        $odr = null;
+        $odrForm = null;
+        if (count($clients)) {
+            $odr = $clients[0]->getOdr();
+            if ($odr) {
+                $odrForm = $this->createForm(new FormDir\OdrType(), $odr, [
+                    'action' => $this->generateUrl('admin_editOdr', ['id' => $odr->getId()]),
+                ]);
+            }
+        }
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -113,8 +125,39 @@ class AdminController extends AbstractController
                 $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
             }
         }
+        $view = ['form' => $form->createView(), 'action' => 'edit', 'id' => $user->getId(), 'user' => $user];
 
-        return ['form' => $form->createView(), 'action' => 'edit', 'id' => $user->getId(), 'user' => $user];
+        if ($odr && $odrForm) {
+            $view['odrForm'] = $odrForm->createView();
+        }
+
+        return $view;
+    }
+
+    /**
+     * @Route("/edit-odr/{id}", name="admin_editOdr")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     */
+    public function editOdrAction(Request $request, $id)
+    {
+        $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'user']);
+        $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
+        if ($request->getMethod() == 'POST') {
+            $odrForm->handleRequest($request);
+
+            if ($odrForm->isValid()) {
+                $updateOdr = $odrForm->getData();
+                $this->getRestClient()->put('odr/' . $id, $updateOdr, ['start_date']);
+                $request->getSession()->getFlashBag()->add('action', 'action.message');
+            }
+        }
+        /** @var EntityDir\Client $client */
+        $client = $odr->getClient();
+        $users = $client->getUsers();
+
+        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]]));
     }
 
     /**

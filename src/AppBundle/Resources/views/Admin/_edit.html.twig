@@ -31,6 +31,12 @@ transDomain: 'admin'
         <li>Client name: {{ firstClient.firstname }}</li>
         <li>Client lastname: {{ firstClient.lastname }}</li>
         <li>Case number: {{ firstClient.caseNumber }}</li>
+        {% if firstClient.odr %}
+            {% if firstClient.odr.submitted == false %}
+            <li>NDR Start Date: {{ firstClient.odr.startDate | date("d/m/Y") }}</li>
+            <li>NDR Due Date: {{ firstClient.odr.dueDate | date("d/m/Y") }}</li>
+        {% endif %}
+        {% endif %}
     </ul>
 {% else %}
     No clients for this user
@@ -75,3 +81,11 @@ transDomain: 'admin'
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
 {{ form_end(form) }}
+{% if firstClient %}
+    {% if firstClient.odr %}
+        {% if firstClient.odr.submitted == false %}
+        <h2 class="heading-small">Update NDR Start Date</h2>
+        {{ form(odrForm) }}
+        {% endif %}
+    {% endif %}
+{% endif %}

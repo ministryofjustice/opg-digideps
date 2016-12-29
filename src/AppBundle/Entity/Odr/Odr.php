@@ -35,6 +35,13 @@ class Odr
     /**
      * @var \DateTime
      * @JMS\Type("DateTime")
+     * @JMS\Groups({"start_date"})
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
@@ -128,6 +135,22 @@ class Odr
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
     }
 
     /**
@@ -230,17 +253,7 @@ class Odr
      */
     public function getDueDate()
     {
-        $client = $this->getClient();
-        if (!$client instanceof Client) {
-            return;
-        }
-
-        $cod = $client->getCourtDate();
-
-        if (!$cod instanceof \DateTime) {
-            return;
-        }
-        $dueDate = clone $cod;
+        $dueDate = clone $this->getStartDate();
         $dueDate->modify('+40 days');
 
         return $dueDate;
