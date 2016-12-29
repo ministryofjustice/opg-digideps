@@ -1,0 +1,17 @@
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+
+{% block pageTitle %}Administration - Users{% endblock %}
+{% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}Admin{% endblock %}
+
+{% block validationSummary %}
+{% endblock %}
+
+
+{% block pageBody %}
+    <h1 class="error heading-medium">
+        {{ error }}
+    </h1>
+    <a href="/ad">Go back to AD homepage</a>
+
+{% endblock %}

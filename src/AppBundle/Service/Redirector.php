@@ -3,11 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class Redirector
 {
@@ -33,7 +32,7 @@ class Redirector
 
     /**
      * Routes the user can be redirected to, if accessed before timeout.
-     * 
+     *
      * @var array
      */
     private $redirectableRoutes = [
@@ -53,14 +52,15 @@ class Redirector
 
     /**
      * @param \AppBundle\Service\SecurityContext $security
-     * @param type                               $router
+     * @param type $router
      */
     public function __construct(
         SecurityContextInterface $security,
         RouterInterface $router,
         Session $session,
         $env
-    ) {
+    )
+    {
         $this->security = $security;
         $this->router = $router;
         $this->session = $session;
@@ -82,21 +82,17 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return $this->getAdminHomepage();
-        } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
+        if ($this->security->isGranted(EntityDir\Role::ADMIN)
+            || $this->security->isGranted(EntityDir\Role::SUPER_ADMIN)
+        ) {
+            return $this->router->generate('admin_homepage');
+        } elseif ($this->security->isGranted(EntityDir\Role::AD)) {
+            return $this->router->generate('ad_homepage');
+        } elseif ($this->security->isGranted(EntityDir\Role::LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
         }
-    }
-
-    /**
-     * @return string URL
-     */
-    private function getAdminHomepage()
-    {
-        return $this->router->generate('admin_homepage');
     }
 
     /**
@@ -179,10 +175,12 @@ class Redirector
 
         if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($securityContext->isGranted('ROLE_ADMIN')) {
+            if ($securityContext->isGranted(EntityDir\Role::SUPER_ADMIN)
+                || $securityContext->isGranted(EntityDir\Role::ADMIN)
+            ) {
                 return $this->router->generate('admin_homepage');
             }
-            if ($securityContext->isGranted('ROLE_AD')) {
+            if ($securityContext->isGranted(EntityDir\Role::AD)) {
                 return $this->router->generate('ad_homepage');
             }
 

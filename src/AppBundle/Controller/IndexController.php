@@ -9,12 +9,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use AppBundle\Service\StringUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use AppBundle\Service\StringUtils;
 
 class IndexController extends AbstractController
 {
@@ -76,6 +76,9 @@ class IndexController extends AbstractController
 
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
+            $session->set('_adId', null);
+            $session->set('_adFirstname', null);
+            $session->set('_adLastname', null);
             $session->set('loggedOutFrom', null);
 
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
@@ -111,6 +114,29 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @Route("login-ad/{userToken}/{adId}/{adFirstname}/{adLastname}", name="ad_login")
+     */
+    public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
+    {
+        $user = $this->getRestClient()->loadUserByToken($userToken); /* @var $user EntityDir\User*/
+
+        $this->get('deputyprovider')->login(['token' => $userToken]);
+
+        $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+        $this->get('security.context')->setToken($clientToken); //now the user is logged in
+
+        $session = $this->get('session');
+        $session->set('_security_secured_area', serialize($clientToken));
+        $session->set('_adId', $adId);
+        $session->set('_adFirstname', $adFirstname);
+        $session->set('_adLastname', $adLastname);
+
+        $url = $this->get('redirectorService')->getHomepageRedirect();
+
+        return $this->redirect($url);
+    }
+
+    /**
      * @Route("login_check", name="login_check")
      */
     public function loginCheckAction()
@@ -131,7 +157,7 @@ class IndexController extends AbstractController
 
     /**
      * keep session alive. Called from session timeout dialog.
-     * 
+     *
      * @Route("session-keep-alive", name="session-keep-alive")
      * @Method({"GET"})
      */
@@ -192,10 +218,8 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
-        f();
         $this->get('security.context')->setToken(null);
         $request->getSession()->invalidate();
-
         return $this->redirect(
             $this->generateUrl('homepage')
         );

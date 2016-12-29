@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Odr;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Role;
 use AppBundle\Form\Odr\ReportDeclarationType;
 use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -148,7 +149,7 @@ class IndexController extends AbstractController
     private function getPdfBinaryContent($odr)
     {
         $html = $this->render('AppBundle:Odr/Formatted:formatted_body.html.twig', array(
-            'odr' => $odr,
+            'odr' => $odr, 'adLoggedAsDeputy' => $this->isGranted(Role::AD)
         ))->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);

@@ -1,22 +1,141 @@
 {% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 
-{# {% trans_default_domain "admin" %} #}
+{% trans_default_domain "admin" %}
+{% set currentSortOrder = app.request.query.get('sort_order') %}
+{% set currentOrderBy = app.request.query.get('order_by') %}
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
-
-
 {% block pageBody %}
-    {% include 'AppBundle:Admin:_add.html.twig' with { 'title': 'Add a user'} %}
+<style type="text/css">
+    .user-table td {
+    font-size: 0.8em;
+    }
+</style>
+    <h1 class="form-title heading-large">
+        USER MANAGEMENT
+    </h1>
+
+    {# JUMP TO #}
+    <div class="jump-to-user">
+        <form action="{{ path('admin_editUser') }}" method="GET">
+            Edit user with
+            <select name="what" class="form-control form-control-fit" style="width: 250px">
+                <option value="email">Email</option>
+                <option value="case_number">Case number</option>
+                <option value="user_id">User ID</option>
+            </select>
+            &nbsp;equals to&nbsp;
+            <input name="filter" required="required" class="form-control form-control-fit" style="width: 250px">
+            <button class="button" type="submit"/>Go</button>
+        </form>
+    </div>
 
     <hr>
-    {% include 'AppBundle:Admin:_jump_to_user.html.twig' with {users: users, form: form} %}
 
-    <hr>
-    {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
+    {# LIST #}
+
+    <div class="behat-region-users user-list">
+
+        <h2 class="form-title heading-medium" id="users-list-title">
+            User list
+        </h2>
+        <p class="text">[<a href="{{ path('admin_add_user') }}" class="behat-link-user-add-new">Add a new user</a>]</p>
+
+
+        {# simple paginator #}
+        <div style="float: right">
+            {{ userCount }} users in total.
+            {% if userCount > limit %}
+                Go to page
+                {% set pages = range(0, userCount, limit) %}
+                {% for currentOffset in pages %}
+                    {% if currentOffset == offset %}
+                        {{ loop.index }}
+                    {% else %}
+                        <a href="{{  path("admin_homepage", {
+                            "offset": currentOffset,
+                            'sort_order': currentSortOrder,
+                            'order_by': app.request.query.get('order_by')}
+                        ) }}#users-list-title">{{ loop.index }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {# user list #}
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th scope="col">
+                    {% if currentOrderBy == 'firstname' %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': newSortOrder })}}#users-list-title"> Firstname</a>
+                        ({{ currentSortOrder == "ASC" ? ' a-z' : 'z-a' }})
+                    {% else %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': 'DESC' })}}#users-list-title" > Firstname</a>
+                    {% endif %}
+                </th>
+
+                <th scope="col">
+                    {% if currentOrderBy == 'lastname' %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}#users-list-title">Lastname</a>
+                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
+                    {% else %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}#users-list-title"  >Lastname</a>
+                    {% endif %}
+                </th>
+                <th scope="col">
+                    {% if currentOrderBy == 'email' %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': newSortOrder })}}#users-list-title">Email</a>
+                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
+                    {% else %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': 'ASC' })}}#users-list-title" >Email</a>
+                    {% endif %}
+                </th>
+                <th scope="col">Role</th>
+                <th scope="col">NDR Enabled</th>
+                <th scope="col">
+                    {% if currentOrderBy == 'registrationDate' %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder })}}#users-list-title">Registration date</a>
+                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
+                    {% else %}
+                        <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': 'ASC' })}}#users-list-title" >Registration date</a>
+                    {% endif %}
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody >
+            {% for user in users %}
+                <tr>
+                    <td>
+                        {{ user.firstname }}
+                    </td>
+                    <td>{{ user.lastname }}</td>
+                    <td  >{{ user.adManaged ? '-' : user.email }}</td>
+                    <td nowrap>
+                        {{ user.role.name }}
+                        {% if user.adManaged %} Assisted{% endif %}
+                        {% if app.user.id == user.id %} (currenty logged){% endif %}
+                        {% if is_granted('ROLE_AD') and user.role.role == 'ROLE_LAY_DEPUTY' %}
+                            [<a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id })}}">View</a>]
+                        {% endif %}
+
+                    </td>
+                    <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">{{ user.odrEnabled ? 'yes' : '-' }}</td>
+                    <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
+                <td>
+                    {% if user.role.role != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
+                    [<a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id })}}' class="behat-link-user-{{ user.email }}" >Edit</a>]
+                    {% endif %}
+                </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
 
 {% endblock %}

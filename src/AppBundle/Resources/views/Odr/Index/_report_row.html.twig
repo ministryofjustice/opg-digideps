@@ -24,10 +24,7 @@
                 {% endif %}
             </p>
             <p class="text-secondary soft-half--top">
-                {% if reportActive %}
-                    {{ ('report.due') | trans }}
-                    {{ reportActive.getDueDate() | date("jS F Y") }}
-                {% endif %}
+                &nbsp;
             </p>
         </div>
         {% set link = reportActive ?

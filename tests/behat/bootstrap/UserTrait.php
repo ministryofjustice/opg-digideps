@@ -16,6 +16,7 @@ trait UserTrait
      */
     public function iCreateTheUserWithEmail($odrType, $role, $firstname, $lastname, $email)
     {
+        $this->clickOnBehatLink('user-add-new');
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
         $this->fillField('admin_lastname', $lastname);

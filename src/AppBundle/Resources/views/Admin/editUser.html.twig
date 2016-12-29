@@ -9,5 +9,75 @@
 
 
 {% block pageBody %}
-    {% include 'AppBundle:Admin:_edit.html.twig' with { 'title': 'Edit user'} %}
+    <a href="{{ path('admin_homepage') }}">Back</a>
+    <h1 class="form-title heading-medium">
+        Edit user
+    </h1>
+
+    {% set firstClient = (user.clients | length) > 0 ? (user.clients | first) : null %}
+    {% set reports = firstClient ? firstClient.reports : [] %}
+    {% set reportsCount = reports | length %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+
+    {{ form_input(form.email,'addUserForm.email', { 'labelClass': 'required' }) }}
+    {{ form_input(form.firstname,'addUserForm.firstname', { 'labelClass': 'required' }) }}
+    {{ form_input(form.lastname,'addUserForm.lastname', { 'labelClass': 'required' }) }}
+    {{ form_select(form.roleId,'addUserForm.roleId', { 'labelClass': 'required' }) }}
+    {% if reportsCount > 0 %}
+        Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.
+    {% endif %}
+    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled', { 'labelClass': 'required' }) }}
+    {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+
+
+    <h2 class="heading-small">Client</h2>
+    {% if firstClient %}
+        {% set firstClient = user.clients | first %}
+        <ul>
+            <li>Client name: {{ firstClient.firstname }}</li>
+            <li>Client lastname: {{ firstClient.lastname }}</li>
+            <li>Case number: {{ firstClient.caseNumber }}</li>
+        </ul>
+    {% else %}
+        No clients for this user
+    {% endif %}
+
+    <h2 class="heading-small">Reports</h2>
+    {% if reportsCount > 0 %}
+        <ul>
+            <li>Number of total reports: {{ reportsCount }}</li>
+        </ul>
+    {% else %}
+        No reports
+    {% endif %}
+
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: 'admin',
+            linkButtonLabel: 'cancel.label',
+            linkClass: 'button-link',
+            linkHref: path('admin_homepage')
+            } %}
+            {# only admin are allowed to delete users (except themselves when logged) #}
+            {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
+                {% if reportsCount == 0 %}
+                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
+                    linkClass: 'button-link',
+                    linkHref: path('admin_delete_confirm', { id: id })
+                    } %}
+                {% else %}
+                    &nbsp;[Delete is disabled as there is at least one report]
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {{ form_end(form) }}
+
 {% endblock %}

@@ -7,20 +7,17 @@
         </dl>
     </div>
 
-    {#<div class="box" id="report-dates">#}
-        {#<h3>Reporting period</h3>#}
-
-        {#<dl class="labelvalue half-width first" id="report-start-date">#}
-            {#<dt class="label">Start date</dt>#}
-            {#<dd class="value">{{ odr.startDate | date("d / m / Y") }}</dd>#}
-        {#</dl>#}
-
-        {#<dl class="labelvalue half-width">#}
-            {#<dt class="label">End date</dt>#}
-            {#<dd class="value">{{ odr.endDate | date("d / m / Y") }}</dd>#}
-        {#</dl>#}
-
-    {#</div>#}
+    {% if adLoggedAsDeputy %}
+        <div class="box">
+            <dl class="labelvalue cleared">
+                <dt class="label">Assisted Digital</dt>
+                <dd class="value">
+                    {{ app.session.get('_adFirstname') }}
+                    {{ app.session.get('_adLastname') }}
+                </dd>
+            </dl>
+        </div>
+    {% endif %}
 
     <div class="box">
         <div id="deputy-details-subsection" class="half-width first">
@@ -29,10 +26,10 @@
             <dl class="labelvalue">
 
                 <dt class="label">First names</dt>
-                <dd class="value">{{deputy.firstname}}</dd>
+                <dd class="value">{{ deputy.firstname }}</dd>
 
                 <dt class="label">Last name</dt>
-                <dd class="value">{{deputy.lastname}}</dd>
+                <dd class="value">{{ deputy.lastname }}</dd>
 
                 <dt class="label">Address</dt>
                 <dd class="value textarea address-value">
@@ -44,9 +41,9 @@
 
                 <dt class="label">Telephone number</dt>
                 <dd class="value">
-                    {{deputy.phoneMain}}
+                    {{ deputy.phoneMain }}
                     {% if (deputy.phoneAlternative is defined) %}
-                        <br />{{deputy.phoneAlternative}}
+                        <br/>{{ deputy.phoneAlternative }}
                     {% endif %}
                 </dd>
             </dl>
@@ -70,13 +67,17 @@
                 </dd>
 
                 <dt class="label">Telephone number</dt>
-                <dd class="value">{{client.phone}}</dd>
+                <dd class="value">{{ client.phone }}</dd>
             </dl>
         </div>
+
+        {% if not adLoggedAsDeputy %}
         <dl class="labelvalue cleared">
             <dt class="label">Email (optional)</dt>
-            <dd class="value">{{deputy.email}}</dd>
+            <dd class="value">{{ deputy.email }}</dd>
         </dl>
+        {% endif %}
+
     </div>
 
 

@@ -10,6 +10,9 @@
     <div id="content" class="formatted-report content">
         <div id="report-header">Office of the Public Guardian</div>
         <h1>New deputy report</h1>
+        {% if adLoggedAsDeputy %}
+        <h2>Assisted Digital</h2>
+        {% endif %}
         {% include 'AppBundle:Odr/Formatted:_client_information.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_assets.html.twig' %}

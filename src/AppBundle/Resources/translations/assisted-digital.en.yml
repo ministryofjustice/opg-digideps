@@ -1,8 +1,0 @@
-email:
-    label: Email address
-    hint:
-password:
-    label: Password
-signin:
-    label: Sign in as user
-    invalidMessage: You've entered an invalid email or password. Please try again.

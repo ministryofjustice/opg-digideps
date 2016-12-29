@@ -33,6 +33,7 @@ Feature: deputy / user / add user
         And I reset the email log
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # invalid email
+        When I click on "user-add-new"
         When I fill in the following:
             | admin_email | invalidEmail |
             | admin_firstname | 1 |
@@ -42,8 +43,8 @@ Feature: deputy / user / add user
         And I press "admin_save"
         Then the form should be invalid
         And I save the page as "admin-deputy-add-error1"
-        And I should not see "invalidEmail" in the "users" region
         # assert form OK
+        When I am on admin page "/admin"
         When I create a new "ODR-disabled" "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region

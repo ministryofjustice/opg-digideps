@@ -1,0 +1,51 @@
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+
+{% set firstClient = (user.clients | length) > 0 ? (user.clients | first) : null %}
+{% set reports = firstClient ? firstClient.reports : [] %}
+{% set reportsCount = reports | length %}
+
+{% block pageTitle %}Administration - Users{% endblock %}
+{% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}Admin{% endblock %}
+
+{% block pageBody %}
+    <a href="{{ path('ad_homepage') }}">Back</a>
+    <h2 class="heading-small">{{ user.adManaged ? 'Assisted':'' }} {{ user.role.name }}</h2>
+    <ul>
+        <li>Name: {{ user.firstname }}</li>
+        <li>Lastname: {{ user.lastname }}</li>
+        <li>NDR enabled: {{ user.odrEnabled ? 'yes':'no' }}</li>
+        <li>Assisted: {{ user.adManaged ? 'yes':'no' }}</li>
+    </ul>
+
+    <h2 class="heading-small">Client</h2>
+    {% if firstClient %}
+        <ul>
+            <li>Client name: {{ firstClient.firstname }}</li>
+            <li>Client lastname: {{ firstClient.lastname }}</li>
+            <li>Case number: {{ firstClient.caseNumber }}</li>
+        </ul>
+    {% else %}
+        You must create the client from the deputy area
+    {% endif %}
+
+    <h2 class="heading-small">NDR</h2>
+    {% if firstClient.odr is defined %}
+        <ul>
+            <li>Status: {{ firstClient.odr.submitted ? 'Submitted' : 'Not submitted' }}</li>
+        </ul>
+    {% else %}
+        You must create the client first from the deputy area
+    {% endif %}
+
+    {% if is_granted('ROLE_AD') and  user.role.role == 'ROLE_LAY_DEPUTY' %}
+        <h2 class="heading-small">Login as deputy</h2>
+        <p>Login as a deputy to edit all the data above.</p>
+        <a href="{{ path('ad_deputy_login_redirect', {deputyId: user.id}) }}" target="_blank" class=""
+        >Login (Deputy area)
+            <img width="16" height="16" title="" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5RjgyQkFCNDc3NDgxMUU0QUJCNUNCMDA4NzgyNTgyMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFMzhBRUE4Qzc4RjcxMUU0QUJCNUNCMDA4NzgyNTgyMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlGODJCQUIyNzc0ODExRTRBQkI1Q0IwMDg3ODI1ODIxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlGODJCQUIzNzc0ODExRTRBQkI1Q0IwMDg3ODI1ODIxIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+OBiYSgAAAYRJREFUeNpi/P//P8NAAiaGAQajDhhwBzCAEiGNEmIQEM8kaC8NHZAFsgeIHwCxEb0c4AXEq4H4KhB/gjoAhhcDMSutHCAOxGfQLMSG3wNxBBBLw+xlhFnOyMgIoniAWB6I/0I14AJ/gFgCiE9A1d8CYmYiHfsYiCcD7e1GT4SJQHyOCF/A8DMgloTGMbF6FoL8iisKpkB9RqxhyUCcgkX8LsiHQHwASewhEDtgS4QseIIKFKfXgJgbTZwZGkUg+V1I4nuBuBCIL0P5RUBsD8SxQLyEmHIAOQSeEJniYT7MwyIvAMRcQJwNxCW47MVVEr4hwgHqUBpk+SQs8h+AeBXUY+y0KIrVgPgONL6xgWAg9oZ5GJchLBQ44DoQH8NXyhNjCCUOmA9NMxQBShzwebQ9MKwdwEgFsxkpSYS6QGwFLVYFSLQYVEy/AGI/Uh3AiORqEH2UiiHNSEwU/KZGvsbTfiAYArOA+DkQhwPxa2JLMgKADUqvwhk0o12zUQcMtAMAAgwABILPck7FTlMAAAAASUVORK5CYII=" />
+        </a>
+    {% endif %}
+
+
+{% endblock %}

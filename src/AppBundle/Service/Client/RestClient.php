@@ -164,7 +164,7 @@ class RestClient
      * 
      * @return \AppBundle\Entity\User
      */
-    public function userRecreateToken($email, $type)
+    public function userRecreateToken($email, $type = 'pass-reset')
     {
         return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [], false);
     }
