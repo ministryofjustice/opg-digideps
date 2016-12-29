@@ -56,7 +56,6 @@ class OdrControllerTest extends AbstractTestController
         $url = '/odr/' . self::$odr1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
     public function testGetOneByIdAcl()

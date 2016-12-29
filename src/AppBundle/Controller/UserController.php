@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
 
         $data = $this->deserializeBodyContent($request, [
             'role_id' => 'notEmpty',
@@ -43,7 +44,6 @@ class UserController extends RestController
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
         }
 
-        // send activation email
         $user->recreateRegistrationToken();
 
         $this->persistAndFlush($user);
@@ -59,7 +59,10 @@ class UserController extends RestController
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
 
-        if ($this->getUser()->getId() != $user->getId() && !$this->isGranted(EntityDir\Role::ADMIN)) {
+        if ($this->getUser()->getId() != $user->getId()
+            && !$this->isGranted(EntityDir\Role::ADMIN)
+            && !$this->isGranted(EntityDir\Role::AD)
+        ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
 
@@ -181,7 +184,9 @@ class UserController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(EntityDir\Role::ADMIN) && !$requestedUserIsLogged) {
+        if (!$this->isGranted(EntityDir\Role::ADMIN)
+            && !$this->isGranted(EntityDir\Role::AD)
+            && !$requestedUserIsLogged) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
 
@@ -217,16 +222,21 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/count")
+     * @Route("/count/{adOnly}")
      * @Method({"GET"})
      */
-    public function userCount()
+    public function userCount($adOnly)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
 
+        /** @var $qb QueryBuilder $qb */
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
         $qb->select('count(user.id)');
         $qb->from('AppBundle\Entity\User', 'user');
+
+        if ($adOnly) {
+            $qb->where('user.adManaged = true');
+        }
 
         $count = $qb->getQuery()->getSingleScalarResult();
 
@@ -234,14 +244,18 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/get-all/{order_by}/{sort_order}/{limit}/{offset}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
+     * @Route("/get-all/{order_by}/{sort_order}/{limit}/{offset}/{adOnly}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
      */
-    public function getAll($order_by, $sort_order, $limit, $offset)
+    public function getAll($order_by, $sort_order, $limit, $offset, $adOnly)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
 
-        return $this->getRepository('User')->findBy([], [$order_by => $sort_order], $limit, $offset);
+        $criteria = [];
+        if ($adOnly) {
+            $criteria['adManaged'] = true;
+        }
+        return $this->getRepository('User')->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
     }
 
     /**
@@ -258,9 +272,12 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
         $user = $this->findEntityBy('User', ['email' => $email]);
-        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+
+        //TODO consider an AD key from admin area
+        /*$isAd = $this->getUser()->getRole();
+        if (!$isAd && !$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRole()->getRole().' user role not allowed from this client.', 403);
-        }
+        }*/
 
         $user->recreateRegistrationToken();
 
@@ -335,6 +352,10 @@ class UserController extends RestController
 
         if (array_key_exists('odr_enabled', $data)) {
             $user->setOdrEnabled($data['odr_enabled']);
+        }
+
+        if (array_key_exists('ad_managed', $data)) {
+            $user->setAdManaged($data['ad_managed']);
         }
     }
 }

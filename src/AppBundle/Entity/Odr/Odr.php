@@ -112,6 +112,16 @@ class Odr
      * @var \DateTime
      *
      * @JMS\Groups({"odr"})
+     * @JMS\Accessor(getter="getStartDate")
+     * @JMS\Type("DateTime")
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Groups({"odr"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -145,6 +155,7 @@ class Odr
     public function __construct(Client $client)
     {
         $this->client = $client;
+        $this->startDate = new \DateTime();
         $this->bankAccounts = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->assets = new ArrayCollection();
@@ -215,6 +226,30 @@ class Odr
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function getDueDate()
+    {
+        $dueDate = clone $this->getStartDate();
+        $dueDate->modify('+40 days');
+
+        return $dueDate;
     }
 
     /**
