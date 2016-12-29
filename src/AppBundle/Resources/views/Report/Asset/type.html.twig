@@ -31,7 +31,7 @@
         'legendText' : 'form.title.legend' | trans(transOptions)
     }) }}
 
-    {{ form_submit(form.save,'', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+    {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 

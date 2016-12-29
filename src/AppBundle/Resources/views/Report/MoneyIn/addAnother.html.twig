@@ -21,7 +21,7 @@
         'legendClass' : 'form-label-bold'
     }) }}
 
-    {{ form_submit(form.save,'addAnotherPage.moneyIn.form.save') }}
+    {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 

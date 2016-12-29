@@ -113,10 +113,7 @@
         } %}
     {% endif %}
 
-
-
-
-    {{ form_submit(form.save, '', {'labelText': 'stepPage.saveAndContinue' | trans({}, 'common')}) }}
+    {{ macros.saveAndContinueButton(form.save) }}
 
     {% if skipLink %}
         <a href="{{ skipLink }}"

@@ -92,3 +92,12 @@
     'config': config
     } %}
 {% endmacro %}
+
+
+{% macro saveAndContinueButton(button) %}
+    {{ form_submit(button, 'form.save', {
+        'labelText': 'stepPage.saveAndContinue' | trans({}, 'common'),
+        'buttonClass': 'behat-link-save-and-continue',
+    }) }}
+
+{% endmacro %}
