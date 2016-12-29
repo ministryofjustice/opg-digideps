@@ -18,16 +18,16 @@ class OdrController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
         $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['odr'];
         $this->setJmsSerialiserGroups($groups);
 
-        //$this->getRepository('Odr\Odr')->warmUpArrayCacheTransactionTypes();
-
-        $report = $this->findEntityBy('Odr\Odr', $id);
         /* @var $report EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($report);
+        $report = $this->findEntityBy('Odr\Odr', $id);
+
+        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
+            $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+            $this->denyAccessIfOdrDoesNotBelongToUser($report);
+        }
 
         return $report;
     }
@@ -72,11 +72,13 @@ class OdrController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
         /* @var $odr EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+
+        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
+            $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+            $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        }
 
         $data = $this->deserializeBodyContent($request);
 
@@ -187,6 +189,10 @@ class OdrController extends RestController
                     $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
                 );
             }
+        }
+
+        if (array_key_exists('start_date', $data)) {
+            $odr->setStartDate(new \DateTime($data['start_date']));
         }
 
         $this->getEntityManager()->flush();
