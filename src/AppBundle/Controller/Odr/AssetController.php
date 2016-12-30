@@ -326,7 +326,7 @@ class AssetController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdr($odrId, self::$jmsGroups);
-        if (count($odr->getAssets()) == 0 && $odr->getNoAssetToAdd() === null) {
+        if (count($odr->getAssets()) === 0 && $odr->getNoAssetToAdd() === null) {
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
         }
 
