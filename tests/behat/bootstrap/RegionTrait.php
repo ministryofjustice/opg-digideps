@@ -40,7 +40,7 @@ trait RegionTrait
     }
 
     /**
-     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist.
+     * Assert that the HTML element with class behat-<type>-<element> does not exist.
      *
      * @Then I should see the :element :type
      */
