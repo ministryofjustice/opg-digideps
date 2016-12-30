@@ -8,29 +8,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class BankAccountAddAnotherType extends AbstractType
+class BankAccountAddAnotherType extends AbstractAddAnotherType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('addAnother', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'account.addAnother.notBlank'])],
-            ))
-            ->add('save', 'submit', ['label' => 'save.label']);
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'report-bank-accounts',
-        ]);
-    }
-
-    public function getName()
-    {
-        return 'bank_account_add_another';
-    }
+    protected $missingMessage = 'account.addAnother.notBlank';
+    protected $translationDomain = 'report-bank-accounts';
 }

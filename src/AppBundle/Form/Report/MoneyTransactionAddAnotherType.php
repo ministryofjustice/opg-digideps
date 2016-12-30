@@ -8,40 +8,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MoneyTransactionAddAnotherType extends AbstractType
+class MoneyTransactionAddAnotherType extends AbstractAddAnotherType
 {
-    private $type;
-
-    /**
-     * @param $type in|out
-     */
-    public function __construct($type)
-    {
-        $this->type = $type;
-    }
-
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('addAnother', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'moneyTransaction.addAnother.notBlank'])],
-            ))
-            ->add('save', 'submit', ['label' => 'save.label']);
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'report-money-transaction',
-        ]);
-    }
-
-    public function getName()
-    {
-        return 'report_money_'. $this->type .'_add_another';
-    }
+    protected $missingMessage = 'moneyTransaction.addAnother.notBlank';
+    protected $translationDomain = 'report-money-transaction';
 }

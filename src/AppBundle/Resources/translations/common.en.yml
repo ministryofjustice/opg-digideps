@@ -30,6 +30,9 @@ stepPage:
    skipLink: Skip this question for now
    saveAndContinue: Save and continue
 
+addAnotherPage:
+  save: Continue
+
 summaryPage:
    pageContent:
      weHaveListed: We've listed your saved answers below.

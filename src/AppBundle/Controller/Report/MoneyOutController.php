@@ -132,7 +132,7 @@ class MoneyOutController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType('out'), $report);
+        $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

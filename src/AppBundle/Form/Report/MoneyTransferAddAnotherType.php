@@ -8,29 +8,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MoneyTransferAddAnotherType extends AbstractType
+class MoneyTransferAddAnotherType extends AbstractAddAnotherType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('addAnother', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'transfer.addAnother.notBlank'])],
-            ))
-            ->add('save', 'submit', ['label' => 'save.label']);
-    }
+    protected $missingMessage = 'transfer.addAnother.notBlank';
+    protected $translationDomain = 'report-money-transfer';
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'report-money-transfer',
-        ]);
-    }
-
-    public function getName()
-    {
-        return 'contact_add_another';
-    }
 }
