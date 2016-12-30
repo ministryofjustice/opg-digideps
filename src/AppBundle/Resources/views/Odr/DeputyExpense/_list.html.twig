@@ -45,7 +45,7 @@
         <thead>
             <tr>
                 <th>Description of expense</th>
-                <th>Amount</th>
+                <th class="text--right">Amount</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
@@ -57,7 +57,7 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    <td class="">
+                    <td class="numeric-small">
                         £{{ expense.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
@@ -70,7 +70,7 @@
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
-                <td class="">
+                <td class="numeric-small">
                     <span class="bold-small">£{{ odr.expensesTotalValue | money_format }}</span>
                 </td>
                 <td></td>

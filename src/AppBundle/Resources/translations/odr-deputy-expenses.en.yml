@@ -22,8 +22,8 @@ existPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  pageSectionTitle: Add an expense
   supportTitle: Deputy expenses
-  pageSectionTitle: Deputy expenses
   form:
     addAnother:
       label: The expense has been saved. Would you like to add another expense now?
