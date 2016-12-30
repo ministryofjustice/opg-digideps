@@ -57,8 +57,9 @@
             <div class="form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}error{% endif %}">
 
                 {{ form_checkbox_group(form.receiveOtherIncome, 'xxx', {
-                    'fieldSetClass' : 'inline receive-other-income',
-                    'legendClass' : 'form-label',
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
                     'legendText' : 'form.receiveOtherIncome.label' | trans(transOptions),
                     'hintText' : 'form.receiveOtherIncome.hint' | trans(transOptions),
                     'items': [
@@ -82,8 +83,9 @@
             <div class="form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}error{% endif %}">
 
                 {{ form_checkbox_group(form.expectCompensationDamages, 'xxx', {
-                    'fieldSetClass' : 'inline expect-compensation-damages',
-                    'legendClass' : 'form-label',
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
                     'legendText' : 'form.expectCompensationDamages.label' | trans(transOptions),
                     'items': [
                     {'dataTarget': 'expect-compensation-damages-details' }

@@ -63,7 +63,7 @@ form:
       label: Tell us more
       labelSummaryPage: More about %client%'s other regular sources of income
   expectCompensationDamages:
-    label: Are you expecting %client% to get any compensation awards or damages ?
+    label: Are you expecting %client% to get any compensation awards or damages?
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
     labelSummaryPage: More about any damages or compensation paid to %client%

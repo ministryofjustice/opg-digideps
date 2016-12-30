@@ -2,27 +2,25 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': odr.client.firstname} %}
 
+<div class="form-section push--bottom">
 {% for sbSingleForm in elements %}
     {% set hasMoreDetails = sbSingleForm.moreDetails is defined %}
-    <div class="{% if hasMoreDetails %}form-section push--bottom{% endif %}">
-        <div class="form-group flush--bottom {% if false %}error{% endif %}">
-            {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
-            {{ form_checkbox(sbSingleForm.present, '', {
-                'inputClass' : '',
-                'useFormGroup': false,
-                'labelText': labelText,
-                'formGroupClass': 'form-group-compound',
-                'labelDataTarget': hasMoreDetails ? (sbSingleForm.typeId.vars.value ~ '-more-details') : null,
-            }) }}
-            {{ form_row(sbSingleForm.typeId) }}
-            {% if hasMoreDetails %}
-                <div id="{{ sbSingleForm.typeId.vars.value }}-more-details" class="panel panel-border-narrow js-hidden">
-                        {{ form_input(sbSingleForm.moreDetails, '', {
-                            'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(transOptions),
-                            'formGroupClass': ''
-                        }) }}
-                </div>
-            {% endif %}
-        </div>
+    <div class="form-group flush--bottom {% if false %}error{% endif %}">
+        {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
+        {{ form_checkbox(sbSingleForm.present, '', {
+            'useFormGroup': false,
+            'labelText': labelText,
+            'formGroupClass': 'form-group-compound',
+            'labelDataTarget': hasMoreDetails ? (sbSingleForm.typeId.vars.value ~ '-more-details') : null,
+        }) }}
+        {{ form_row(sbSingleForm.typeId) }}
+        {% if hasMoreDetails %}
+            <div id="{{ sbSingleForm.typeId.vars.value }}-more-details" class="panel panel-border-narrow js-hidden">
+                {{ form_input(sbSingleForm.moreDetails, '', {
+                    'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(transOptions)
+                }) }}
+            </div>
+        {% endif %}
     </div>
 {% endfor %}
+</div>
