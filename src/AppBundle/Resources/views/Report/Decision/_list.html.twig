@@ -14,7 +14,7 @@
     </thead>
     <tbody>
         {# mental capacity #}
-        <tr>
+        <tr class="behat-region-mental-capacity">
             <td>
                {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
             </td>
@@ -32,7 +32,7 @@
             </td>
         </tr>
         {% if report.mentalCapacity.hasCapacityChanged == 'changed' %}
-            <tr>
+            <tr class="behat-region-mental-capacity-changed-details">
                 <td>Mental capacity changes details</td>
                 <td>{{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}</td>
                 <td class="change-answer">
@@ -42,7 +42,7 @@
         {% endif %}
 
         {# decisions #}
-        <tr>
+        <tr  class="behat-region-has-decisions">
             {% if not report.hasDecisions %}
                 <td>
                     <span class="error">
@@ -65,7 +65,7 @@
             </td>
         </tr>
         {% if report.reasonForNoDecisions %}
-            <tr>
+            <tr class="behat-region-reason-no-decisions">
                 <td>Reason for no decisions</td>
                 <td>{{ report.reasonForNoDecisions | nl2br }}</td>
                 <td class="change-answer">
