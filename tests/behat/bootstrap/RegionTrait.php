@@ -12,7 +12,7 @@ use Behat\Gherkin\Node\TableNode;
 trait RegionTrait
 {
     /**
-     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist.
+     * Assert that the HTML element with class behat-<type>-<element> does not exist.
      *
      * @Then I should not see the :element :type
      */
