@@ -82,7 +82,7 @@
             <h2 class="heading-medium flush--ends">List of decisions</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('decision_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+            <a href="{{ path('decision_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>

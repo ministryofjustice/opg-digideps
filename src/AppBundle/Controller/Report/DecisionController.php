@@ -91,7 +91,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             switch ($form['hasDecisions']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
                     $this->get('restClient')->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
                     foreach($report->getDecisions() as $decision) {
@@ -121,6 +121,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
         $decision = new EntityDir\Report\Decision();
+        $from = $request->get('from');
 
         $form = $this->createForm(new FormDir\Report\DecisionType(), $decision);
         $form->handleRequest($request);
@@ -134,10 +135,7 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decision_add_another', ['reportId' => $reportId]));
         }
 
-        $backLink = $this->generateUrl('decisions_exist', ['reportId'=>$reportId]);
-        if ( $request->get('from') == 'another') {
-            $backLink = $this->generateUrl('decision_add_another', ['reportId'=>$reportId]);
-        }
+        $backLink = $this->routeExists($from) ? $this->generateUrl($from, ['reportId'=>$reportId]) : '';
 
         return [
             'backLink' => $backLink,
@@ -161,7 +159,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId, 'from'=>'another']);
+                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId, 'from'=>'decision_add_another']);
                 case 'no':
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
