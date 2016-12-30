@@ -228,6 +228,25 @@ class OdrController extends RestController
             $em->remove($odr->getVisitsCare());
         }
 
+        foreach ($odr->getExpenses() as $e){
+            $em->remove($e);
+        }
+        $odr->setPaidForAnything(null);
+
+        foreach($odr->getStateBenefits() as $e) {
+            $e->setPresent(false);
+            $e->setMoreDetails(null);
+        }
+        $odr->setReceiveStatePension(null);
+        $odr->setReceiveOtherIncome(null);
+        $odr->setReceiveOtherIncomeDetails(null);
+        $odr->setExpectCompensationDamages(null);
+        $odr->setExpectCompensationDamagesDetails(null);
+        foreach($odr->getOneOff() as $e) {
+            $e->setPresent(false);
+            $e->setMoreDetails(null);
+        }
+
         foreach ($odr->getBankAccounts() as $e){
             $em->remove($e);
         }
@@ -244,12 +263,12 @@ class OdrController extends RestController
 
         $odr->setActionGiveGiftsToClient(null);
         $odr->setActionGiveGiftsToClientDetails(null);
-        $odr->setActionMoreInfo(null);
-        $odr->setActionMoreInfoDetails(null);
         $odr->setActionPropertyBuy(null);
         $odr->setActionPropertyMaintenance(null);
         $odr->setActionPropertySellingRent(null);
 
+        $odr->setActionMoreInfo(null);
+        $odr->setActionMoreInfoDetails(null);
 
         $em->flush();
     }
