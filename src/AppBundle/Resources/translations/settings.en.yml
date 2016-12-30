@@ -4,8 +4,8 @@ page:
 
 links:
   clientDetails:
-    label: Sally's details
-    hint: Edit Sally's contact details and choose how Sally's name is displayed.
+    label: %client%'s details
+    hint: Edit %client%'s contact details and choose how %client%'s name is displayed.
   userDetails:
     label: Your details
     hint: Edit your contact details.
