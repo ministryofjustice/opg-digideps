@@ -112,10 +112,7 @@
                         {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
                     </td>
                     <td class="width-quarter">
-                        {% if decision.clientInvolvedBoolean %}
-                            {{ decision.clientInvolvedDetails | nl2br }}
-                        {% else %}-
-                        {% endif %}
+                        {{ decision.clientInvolvedDetails | nl2br }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
                         <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
