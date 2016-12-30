@@ -144,6 +144,15 @@ class AbstractController extends Controller
         return $this->get('mailSender');
     }
 
+    /**
+     * @param $route
+     * @return boolean
+     */
+    protected function routeExists($route)
+    {
+        return $this->get('router')->getRouteCollection()->get($route) ? true : false;
+    }
+
 //    /**
 //     * @param Report\Report $report
 //     * @param $sectionId
