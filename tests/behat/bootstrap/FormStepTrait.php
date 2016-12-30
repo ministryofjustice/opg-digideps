@@ -18,7 +18,6 @@ trait FormStepTrait
         $this->theFormShouldBeInvalid(); // from FormTrait
     }
 
-
     /**
      * @Then the step with the following values :what be submitted:
      */
@@ -50,11 +49,31 @@ trait FormStepTrait
     }
 
 
+    /**
+     * @Given I choose :what when asked for adding another record
+     */
+    public function iChooseWhenAskingToAddAnotherRecord($what)
+    {
+        // check that "add another" has validation (could be tested just once as it's the same form)
+        $this->stepSaveAndContinue();
+        $this->theFormShouldBeInvalid(); // from FormTrait
+        switch (strtolower($what)) {
+            case 'yes':
+                $this->fillField('add_another_addAnother_0', 'yes');
+                break;
+            case 'no':
+                $this->fillField('add_another_addAnother_1', 'no');
+                break;
+            default:
+                throw new \RuntimeException("invalid value");
+        }
+        $this->clickOnBehatLink('save-and-continue');
+    }
+
     private function stepSaveAndContinue()
     {
         $this->clickOnBehatLink('save-and-continue');
     }
-
 
     private function stepGoBack()
     {
