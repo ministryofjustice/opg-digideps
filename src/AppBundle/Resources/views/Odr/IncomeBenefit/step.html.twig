@@ -44,10 +44,10 @@
     {% endif %}
 
     {% if step == 2 %}
-        {{ form_checkbox_group(form.receiveStatePension, 'xxx', {
+        {{ form_checkbox_group(form.receiveStatePension, 'form.receiveStatePension', {
             'fieldSetClass' : 'inline',
             'legendClass' : 'form-label',
-            'legendText' : 'form.receiveStatePension.label' | trans(transOptions),
+            'labelParameters': transOptions,
         }) }}
     {% endif %}
 
