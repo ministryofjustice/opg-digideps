@@ -25,7 +25,7 @@ summaryPage:
     weAskAbout: |
       In this section, we ask you about %client%'s debts, for example,
       care fees, credit cards or loans
-  moreAbout: more about %client%'s other debts of %amount%
+  moreAbout: more about %client%'s other debts of £%amount%
 
 form:
   entries:

@@ -20,6 +20,7 @@
             //console.log(value);
             if (!isNaN(value) && value !== 0) {
                 textareaGroup.removeClass('hidden');
+                textareaGroup.parent().removeClass('hidden');
             } else {
                 textareaGroup.addClass('hidden');
             }

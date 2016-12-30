@@ -26,16 +26,17 @@
             {{ form_input(debt.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control__number js-more-info js-format-currency',
-                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
-                'formGroupClass': ' form-group-value'
+                'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans
             }) }}
 
             {% if debt.moreDetails is defined %}
-                {{ form_input(debt.moreDetails, 'moreDetails', {
-                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                    'formGroupClass': 'panel panel-border-narrow form-group-combo-description',
-                    'inputClass': ' transaction-more-details'
-                }) }}
+                <div class="hidden">
+                    {{ form_input(debt.moreDetails, 'moreDetails', {
+                        'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
+                        'formGroupClass': 'panel panel-border-narrow',
+                        'inputClass': ' transaction-more-details'
+                    }) }}
+                </div>
             {% endif %}
         </div>
     {% endfor %}
