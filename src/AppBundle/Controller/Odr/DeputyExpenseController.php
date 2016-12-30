@@ -28,7 +28,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdr($odrId, self::$jmsGroups);
 
-        if (count($odr->getExpenses())) {
+        if (count($odr->getExpenses()) > 0 || $odr->getPaidForAnything() !== null) {
             return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
         }
 
@@ -173,6 +173,9 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdr($odrId, self::$jmsGroups);
+        if (count($odr->getExpenses()) === 0 && $odr->getPaidForAnything() === null) {
+            return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
+        }
 
         return [
             'odr' => $odr,

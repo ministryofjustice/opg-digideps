@@ -37,11 +37,11 @@ class OdrStatusService
      */
     public function getExpensesState()
     {
-        if (empty($this->odr->getExpenses())) {
-            return self::STATE_NOT_STARTED;
+        if (count($this->odr->getExpenses()) > 0 || $this->odr->getPaidForAnything() === 'no') {
+            return self::STATE_DONE;
         }
 
-        return self::STATE_DONE;
+        return self::STATE_NOT_STARTED;
     }
 
     /**

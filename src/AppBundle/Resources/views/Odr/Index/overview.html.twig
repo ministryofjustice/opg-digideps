@@ -55,8 +55,8 @@
             transDomain: translationDomain,
             subSection: 'deputy_expenses',
             odr: odr,
-            state: odrStatus.bankAccountsState,
-            nOfRecords: odr.bankAccounts | length,
+            state: odrStatus.expensesState,
+            nOfRecords: odr.expenses | length,
             linkToSubSection: path('odr_deputy_expenses', {odrId: odr.id}),
             description: true
             } %}

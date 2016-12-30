@@ -22,6 +22,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $odr = m::mock(Odr::class, $odrMethods + [
                 'getVisitsCare' => [],
                 'getExpenses' => [],
+                'getPaidForAnything' => null,
                 'getStateBenefits' => [],
                 'recordsPresent' => [],
                 'getReceiveStatePension' => null,
@@ -62,6 +63,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
      * @dataProvider visitsCareProvider
      */
     public function visitsCare($mocks, $state)
@@ -79,11 +81,14 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
-            [['getExpenses' => [$expense]], StatusService::STATE_DONE],
+            [['getPaidForAnything' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
+            [['getPaidForAnything' => 'no'], StatusService::STATE_DONE],
+            [['getExpenses' => [$expense], 'getPaidForAnything' => 'yes'], StatusService::STATE_DONE],
         ];
     }
 
     /**
+     * @test
      * @dataProvider expensesProvider
      */
     public function expenses($mocks, $state)
