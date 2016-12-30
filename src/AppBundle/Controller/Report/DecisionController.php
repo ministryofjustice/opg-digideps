@@ -31,7 +31,7 @@ class DecisionController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         $decisionValid = count($report->getDecisions()) > 0 || !empty($report->getReasonForNoDecisions());
-        if ($decisionValid && $report->getMentalCapacity()) {
+        if ($decisionValid || $report->getMentalCapacity()) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 

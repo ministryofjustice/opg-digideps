@@ -43,12 +43,23 @@
 
         {# decisions #}
         <tr>
-            <td>
-                {{ 'existPage.form.hasDecisions.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.hasDecisions | capitalize }}
-            </td>
+            {% if not report.hasDecisions %}
+                <td>
+                    <span class="error">
+                        {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'existPage.form.hasDecisions.label' | trans(transOptions)  }}
+                </td>
+                <td>
+                    {{ report.hasDecisions | capitalize }}
+                </td>
+            {% endif %}
             <td class="change-answer">
                 <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
             </td>
