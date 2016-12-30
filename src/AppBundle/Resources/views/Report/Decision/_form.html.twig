@@ -17,6 +17,6 @@
     'labelParameters': { '%client%': report.client.firstname }
 }) }}
 
-{{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
+{{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}

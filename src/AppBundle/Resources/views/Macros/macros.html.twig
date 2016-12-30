@@ -96,9 +96,15 @@
 
 
 {% macro saveAndContinueButton(button) %}
-    {{ form_submit(button, 'form.save', {
+    {{ form_submit(button, '', {
         'labelText': 'stepPage.saveAndContinue' | trans({}, 'common'),
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
+{% endmacro %}
 
+{% macro addAnotherSaveButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'addAnotherPage.save' | trans({}, 'common'),
+        'buttonClass': 'behat-link-save-and-continue',
+    }) }}
 {% endmacro %}

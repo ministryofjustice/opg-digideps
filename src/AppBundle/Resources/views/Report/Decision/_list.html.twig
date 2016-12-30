@@ -36,7 +36,7 @@
                 <td>Mental capacity changes details</td>
                 <td>{{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
+                    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -61,7 +61,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
         {% if report.reasonForNoDecisions %}
@@ -69,7 +69,7 @@
                 <td>Reason for no decisions</td>
                 <td>{{ report.reasonForNoDecisions | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
+                    <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -82,7 +82,7 @@
             <h2 class="heading-medium flush--ends">List of decisions</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('decision_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link">
+            <a href="{{ path('decision_add', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -104,7 +104,7 @@
         </thead>
         <tbody>
             {% for decision in report.decisions %}
-                <tr>
+                <tr class="behat-region-decision-{{ loop.index }}">
                     <td class="width-quarter">
                         {{ decision.description | nl2br }}
                     </td>
@@ -118,8 +118,8 @@
                         {% endif %}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-decision-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('decision_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link">Remove</a>
+                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('decision_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
