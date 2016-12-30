@@ -77,7 +77,7 @@ trait OdrIncomeBenefitTrait
     private $oneOff;
 
     /**
-     * @return IncomeBenefit[]
+     * @return IncomeBenefitStateBenefit[]
      */
     public function getStateBenefits()
     {
@@ -199,7 +199,7 @@ trait OdrIncomeBenefitTrait
     }
 
     /**
-     * @return IncomeBenefit[]
+     * @return IncomeBenefitOneOff[]
      */
     public function getOneOff()
     {
