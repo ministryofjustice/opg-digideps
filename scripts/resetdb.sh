@@ -1,7 +1,5 @@
 #!/bin/bash
 set -e
-#let's configure environment
-run-parts /etc/my_init.d
 
 cd /app
 export PGPASSWORD=$API_DATABASE_PASSWORD
