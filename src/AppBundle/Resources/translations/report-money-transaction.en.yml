@@ -13,7 +13,7 @@ startPage:
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money in
+    pageSectionTitle: Money out
     pageSectionDescription1: |
       Tell us about money you have spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
