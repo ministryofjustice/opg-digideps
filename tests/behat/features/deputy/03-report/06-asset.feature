@@ -3,47 +3,95 @@ Feature: deputy / report / asset with variations
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        And I click on "reports,report-2016-open, edit-assets"
-#        And I save the page as "report-assets-empty"
-#        # wrong form
-#        When I follow "add-assets-button"
-#        And I press "asset_title_next"
-#        And I save the page as "report-assets-title-add-error-empty"
-#        Then the following fields should have an error:
-#            | asset_title_title |
-#        Then I fill in "asset_title_title" with "Vehicles"
-#        And I press "asset_title_next"
-#        Then the form should be valid
-#        And I save the page as "report-assets-title-added"
-#        # rest of the form
-#        When I press "asset_save"
-#          Then the following fields should have an error:
-#            | asset_value |
-#            | asset_description |
-#        When I fill in the following:
-#            | asset_value       | 1000000000001 |
-#            | asset_description | Alfa Romeo 156 JTD |
-#            | asset_valuationDate_day | 99 |
-#            | asset_valuationDate_month |  |
-#            | asset_valuationDate_year | 2016 |
-#        And I press "asset_save"
-#        And I save the page as "report-assets-add-error-date"
-#        Then the following fields should have an error:
-#            | asset_value |
-#            | asset_valuationDate_day |
-#            | asset_valuationDate_month |
-#            | asset_valuationDate_year |
-#        # first asset (empty date)
-#        When I add the following assets:
-#          | title        | value       |  description        | valuationDate |
-#          | Artwork    | 250000.00   |  Impressionist painting  |               |
-#          | Vehicles    | 13000.00   |  Alfa Romeo 156 JTD |    10/11/2016  |
-#        And I should see " Impressionist painting" in the "list-assets" region
-#        And I should see "£250,000.00" in the "list-assets" region
-#        Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
-#        And I should see "£13,000.00" in the "list-assets" region
-#        And I save the page as "report-assets-list"
-#
+        And I click on "reports,report-2016-open, edit-assets, start"
+        # chose "no records"
+        Then the step cannot be submitted without making a selection
+        And the step with the following values CAN be submitted:
+            | asset_exist_noAssetToAdd_1 | 1 |
+        # summary page check
+        And each text should be present in the corresponding region:
+            | No      | has-assets      |
+        # select there are records (from summary page link)
+        Given I click on "edit" in the "has-assets" region
+        And the step with the following values CAN be submitted:
+            | asset_exist_noAssetToAdd_0 | 0 |
+        # add asset n.1 (and validate form)
+        Then the step cannot be submitted without making a selection
+        And the step with the following values CAN be submitted:
+            | asset_title_title_0 | Vehicles  |
+        And the step with the following values CANNOT be submitted:
+            | asset_value |   | [ERR] |
+            | asset_description |   | [ERR] |
+        And the step with the following values CANNOT be submitted:
+            | asset_value       | 1000000000001 |  [ERR] |
+            | asset_description | Alfa Romeo 156 JTD |  [OK] |
+            | asset_valuationDate_day | 99 |  [ERR] |
+            | asset_valuationDate_month |  |  [ERR] |
+            | asset_valuationDate_year | 2016 |  [ERR] |
+        And the step with the following values CAN be submitted:
+            | asset_value       | 17,000 |
+            | asset_description | Alfa Romeo 156 JTD |
+            | asset_valuationDate_day | 12 |
+            | asset_valuationDate_month | 1 |
+            | asset_valuationDate_year | 2016 |
+        # add asset n.2
+        And I choose "yes" when asked for adding another record
+        And the step with the following values CAN be submitted:
+            | asset_title_title_0 | Artwork |
+        And the step with the following values CAN be submitted:
+            | asset_value       | 25010.00 |
+            | asset_description | Impressionist painting |
+            | asset_valuationDate_day |  |
+            | asset_valuationDate_month |  |
+            | asset_valuationDate_year |  |
+        # add asset n.3
+        And I choose "yes" when asked for adding another record
+        And the step with the following values CAN be submitted:
+            | asset_title_title_0 | Artwork |
+        And the step with the following values CAN be submitted:
+            | asset_value       | 999.00 |
+            | asset_description | temp |
+            | asset_valuationDate_day |  |
+            | asset_valuationDate_month |  |
+            | asset_valuationDate_year |  |
+        #add another: no
+        And I choose "no" when asked for adding another record
+        # check record in summary page
+        And each text should be present in the corresponding region:
+            | Alfa Romeo 156 JTD | asset-alfa-romeo-156-jtd |
+            | £17,000.00 | asset-alfa-romeo-156-jtd |
+            | 12 January 2016 | asset-alfa-romeo-156-jtd |
+            | Impressionist painting | asset-impressionist-painting |
+            | £25,010.00 | asset-impressionist-painting |
+        # remove asset n.3
+        When I click on "delete" in the "asset-temp" region
+        Then I should not see the "asset-temp" region
+        # test add link
+        When I click on "add"
+        Then I should see the "save-and-continue" link
+        When I click on "step-back"
+        # edit asset n.1
+        When I click on "edit" in the "asset-alfa-romeo-156-jtd" region
+        Then the following fields should have the corresponding values:
+            | asset_value       | 17,000.00 |
+            | asset_description | Alfa Romeo 156 JTD |
+            | asset_valuationDate_day | 12 |
+            | asset_valuationDate_month | 01 |
+            | asset_valuationDate_year | 2016 |
+        And the step with the following values CAN be submitted:
+            | asset_value       | 17,500 |
+            | asset_description | Alfa Romeo 147 JTD |
+            | asset_valuationDate_day | 11 |
+            | asset_valuationDate_month | 3 |
+            | asset_valuationDate_year | 2015 |
+        And each text should be present in the corresponding region:
+            | Alfa Romeo 147 JTD | asset-alfa-romeo-147-jtd |
+            | £17,500.00 | asset-alfa-romeo-147-jtd |
+            | 11 March 2015 | asset-alfa-romeo-147-jtd |
+
+
+
+
 #    @deputy
 #    Scenario: add asset property
 #        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
