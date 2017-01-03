@@ -81,9 +81,9 @@ form:
       other_assets: Other valuable assets
   value:
     label: "Value"
-    hint: "Can be an estimated value"
+    hint: "This can be an estimate"
   description:
-    label: "Asset description"
+    label: "Description of asset"
     hint: ""
   valuationDate:
     legend: Valuation date (optional)
