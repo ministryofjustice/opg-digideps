@@ -91,7 +91,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             switch ($form['hasDecisions']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
                     $this->get('restClient')->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
                     foreach($report->getDecisions() as $decision) {
@@ -114,7 +114,7 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/add", name="decision_add")
+     * @Route("/report/{reportId}/decisions/add", name="decisions_add")
      * @Template()
      */
     public function addAction(Request $request, $reportId)
@@ -132,7 +132,7 @@ class DecisionController extends AbstractController
 
             $this->getRestClient()->post('report/decision', $data, ['decision', 'report-id']);
 
-            return $this->redirect($this->generateUrl('decision_add_another', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
         }
 
         $backLink = $this->routeExists($from) ? $this->generateUrl($from, ['reportId'=>$reportId]) : '';
@@ -146,7 +146,7 @@ class DecisionController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/decisions/add_another", name="decision_add_another")
+     * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
      * @Template()
      */
     public function addAnotherAction(Request $request, $reportId)
@@ -159,7 +159,7 @@ class DecisionController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decision_add', ['reportId' => $reportId, 'from'=>'decision_add_another']);
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_add_another']);
                 case 'no':
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -173,7 +173,7 @@ class DecisionController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decision_edit")
+     * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
      * @Template()
      */
     public function editAction(Request $request, $reportId, $decisionId)
@@ -224,7 +224,7 @@ class DecisionController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decision_delete")
+     * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
      *
      * @param int $id
      *

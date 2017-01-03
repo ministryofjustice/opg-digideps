@@ -82,7 +82,7 @@
             <h2 class="heading-medium flush--ends">List of decisions</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('decision_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+            <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -115,8 +115,8 @@
                         {{ decision.clientInvolvedDetails | nl2br }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('decision_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('decision_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
+                        <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
