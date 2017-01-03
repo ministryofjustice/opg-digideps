@@ -6,6 +6,6 @@
 } ) }}
 {{ form_input(form.description, 'form.description') }}
 {{ form_known_date(form.valuationDate, 'form.valuationDate') }}
-{{ form_submit(form.save,'form.save') }}
+{{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
