@@ -57,8 +57,8 @@ addAnotherPage:
   pageSectionTitle: Decisions
   form:
     addAnother:
-      label: The decision has been saved. Would you like to add another decision now?
-      hint: If you prefer, you can come back to this section later to add more decisions
+      label: The significant decision has been saved. Would you like to add another significant decision now?
+      hint: If you prefer, you can come back to this section later to add more significant decisions
     save:
        label: Continue
 
@@ -66,7 +66,7 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: As you have made decisions for %client% we need to know the details.
+  pageSectionDescription: As you have made significant decisions for %client% we need to know the details.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
@@ -76,7 +76,7 @@ editPage:
 summaryPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Decisions
-  addButton: Add a decision
+  addButton: Add significant decision
   edit: Edit
   decisionTableColumnHeading1: Decision description
   decisionTableColumnHeading2: Was %client% involved?
@@ -88,7 +88,7 @@ form:
     hint: Add a title to help you identify the decision.
   description:
     heading: Description
-    label: Give details of the decision here.
+    label: Give details of the significant decision here.
   clientInvolvedBoolean:
     heading: %client%'s involvement
     label: Did you involve %client% in this decision?
