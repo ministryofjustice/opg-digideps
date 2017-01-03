@@ -30,7 +30,7 @@ class ContactController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
 
         if (count($report->getContacts()) > 0 || !empty($report->getReasonForNoContacts())) {
-            return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+            return $this->redirectToRoute('contact_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -39,7 +39,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
+     * @Route("/report/{reportId}/contacts/exist", name="contact_exist")
      * @Template()
      */
     public function existAction(Request $request, $reportId)
@@ -51,19 +51,19 @@ class ContactController extends AbstractController
         if ($form->isValid()) {
             switch ($form['hasContacts']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
                     $this->get('restClient')->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach($report->getContacts() as $contact) {
                         $this->getRestClient()->delete("/report/contact/".$contact->getId());
                     }
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contact_summary', ['reportId' => $reportId]);
             }
         }
 
         $backLink = $this->generateUrl('contacts', ['reportId'=>$reportId]);
         if ( $request->get('from') == 'summary') {
-            $backLink = $this->generateUrl('contacts_summary', ['reportId'=>$reportId]);
+            $backLink = $this->generateUrl('contact_summary', ['reportId'=>$reportId]);
         }
 
         return [
@@ -80,7 +80,7 @@ class ContactController extends AbstractController
     public function addAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
-            $contact = new EntityDir\Report\Contact();
+        $contact = new EntityDir\Report\Contact();
 
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
         $form->handleRequest($request);
@@ -95,10 +95,8 @@ class ContactController extends AbstractController
                 return $this->redirect($this->generateUrl('contact_add_another', ['reportId' => $reportId]));
         }
 
-        $backLink = $this->generateUrl('contacts_exist', ['reportId'=>$reportId]);
-        if ( $request->get('from') == 'another') {
-            $backLink = $this->generateUrl('contact_add_another', ['reportId'=>$reportId]);
-        }
+        $backLinkRoute = 'contact_' . $request->get('from');
+        $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
         return [
             'backLink' => $backLink,
@@ -122,9 +120,9 @@ class ContactController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId, 'from'=>'another']);
+                    return $this->redirectToRoute('contact_add', ['reportId' => $reportId, 'from'=>'add_another']);
                 case 'no':
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('contact_summary', ['reportId' => $reportId]);
             }
         }
 
@@ -160,7 +158,7 @@ class ContactController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl('contacts_summary', ['reportId'=>$reportId]),
+            'backLink' => $this->generateUrl('contact_summary', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -168,7 +166,7 @@ class ContactController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
+     * @Route("/report/{reportId}/contacts/summary", name="contact_summary")
      * @Template()
      *
      * @param int $reportId

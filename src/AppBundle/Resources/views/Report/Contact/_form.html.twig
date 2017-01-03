@@ -11,6 +11,6 @@
     {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control__postcode' }) }}
     {{ form_select(form.country, 'form.country') }}
 
-    {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
+    {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
