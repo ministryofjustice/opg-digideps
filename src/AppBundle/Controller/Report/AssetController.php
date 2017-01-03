@@ -237,7 +237,7 @@ class AssetController extends AbstractController
 
         // add URL-data into model
         isset($dataFromUrl['address']) && $asset->setAddress($dataFromUrl['address']);
-        isset($dataFromUrl['address2']) && $asset->setAddress2($dataFromUrl['address']);
+        isset($dataFromUrl['address2']) && $asset->setAddress2($dataFromUrl['address2']);
         isset($dataFromUrl['postcode']) && $asset->setPostcode($dataFromUrl['postcode']);
         isset($dataFromUrl['county']) && $asset->setCounty($dataFromUrl['county']);
         isset($dataFromUrl['occupants']) && $asset->setOccupants($dataFromUrl['occupants']);

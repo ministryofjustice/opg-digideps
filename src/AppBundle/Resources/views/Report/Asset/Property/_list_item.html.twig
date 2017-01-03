@@ -5,12 +5,12 @@
 {% for asset in assetsInGroup.items %}
 {# @var asset \AppBundle\Entity\Report\AssetProperty #}
 
-    <div class="grid-row push--ends">
+    <div class="grid-row push--ends behat-region-property-{{ asset.postcode | behat_namify }}">
         <div class="column-half">
             <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
-            <a class="behat-link-account-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
+            <a class="behat-link-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
         </div>
     </div>
 
@@ -28,11 +28,11 @@
         <tbody>
 
         {# address #}
-        <tr>
+        <tr class="behat-region-property-{{ asset.postcode | behat_namify }}-address">
             <td>Address</td>
             <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-asset-edit action-link"
+                <a class="behat-link-edit action-link"
                    href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">Edit</a>
             </td>
         </tr>
