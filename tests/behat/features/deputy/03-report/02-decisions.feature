@@ -1,7 +1,7 @@
 Feature: deputy / report / decisions
 
     @deputy
-    Scenario: add decision
+    Scenario: decisions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports,report-2016-open, edit-decisions, start"
         # step  mental capacity
