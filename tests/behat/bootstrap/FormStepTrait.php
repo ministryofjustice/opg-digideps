@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * Behat steps to test OTPP forms
@@ -23,7 +24,18 @@ trait FormStepTrait
      */
     public function theStepWithTheFollowingValuesCanCannotBeSubmitted(TableNode $table, $what)
     {
-        $this->fillFields($table); // from MinkContext
+        // similar to "fillFields" but takes note of fields wih "ERR"
+        $expectedErrors = [];
+        foreach ($table->getRowsHash() as $field => $value) {
+            if (is_array($value)) {
+                if ($value[1]=='[ERR]') {
+                    $expectedErrors[] = $field;
+                }
+                $value = $value[0];
+            }
+            $this->fillField($field, $value);
+        }
+        
         $this->stepSaveAndContinue();
         switch (strtolower($what)) {
             case 'can':
@@ -31,6 +43,8 @@ trait FormStepTrait
                 break;
             case 'cannot':
                 $this->theFormShouldBeInvalid();  // from FormTrait
+                // check fields one by one
+//                $this->theFollowingFieldsOnlyShouldHaveAnError(new TableNode($expectedErrors));
                 break;
             default:
                 throw new \RuntimeException("invalid value: only 'can|cannot' are acceoted");
