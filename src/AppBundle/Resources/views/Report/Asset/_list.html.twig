@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="behat-region-has-assets">
             <td>
                 {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
             </td>
@@ -21,7 +21,7 @@
                 {{ report.noAssetToAdd ? 'No' : 'Yes' }}
             </td>
             <td class="change-answer">
-                <a href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     </tbody>
