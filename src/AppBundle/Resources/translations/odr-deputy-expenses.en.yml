@@ -47,6 +47,9 @@ editPage:
 summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
+  pageSectionDescription: |
+    In this section we asked you to tell us about things you paid for on Sally's behalf before your
+    court order.
   addButton: Add a deputy expense
   edit: Edit
 

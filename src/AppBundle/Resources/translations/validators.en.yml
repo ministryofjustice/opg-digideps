@@ -469,7 +469,7 @@ odr:
     singleExpense:
        notNumeric: Enter the amount of the expense in numbers
     explanation:
-      notBlank: Please enter an explanation
+      notBlank: Please enter a description
     amount:
       notBlank: Please specify an amount
       type: Enter a valid amount
