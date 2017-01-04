@@ -15,27 +15,20 @@
     </thead>
     <tbody>
     <tr>
-        {% if validator.missing('stateBenefits') %}
-            <td>
-                <span class="error">
-                    {{ 'form.stateBenefits.label' | trans(transOptions) }}
-                </span>
-            </td>
-            <td>
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.stateBenefits.label' | trans(transOptions)  }}
-            </td>
-            <td>
+        <td>
+            {{ 'form.stateBenefits.label' | trans(transOptions) }}
+        </td>
+        <td>
+            {% if validator.missing('stateBenefits') %}
+                None
+            {% else %}
                 {# display state benefits choices comma separated #}
-                {% for sb in odr.recordsPresent(odr.stateBenefits)  %}
+                {% for sb in odr.recordsPresent(odr.stateBenefits) %}
                     {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
-            </td>
-        {% endif %}
+            {% endif %}
+        </td>
         <td class="change-answer">
             <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 1, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
         </td>
@@ -44,7 +37,7 @@
     {% if stateBenefitsOther.present %}
         <tr>
             <td>
-                {{ 'form.stateBenefitsOtherDetails.labelSummaryPage' | trans(transOptions)  }}
+                {{ 'form.stateBenefitsOtherDetails.labelSummaryPage' | trans(transOptions) }}
             </td>
             <td>
                 {{ stateBenefitsOther.moreDetails | nl2br }}
@@ -84,7 +77,7 @@
             </td>
         {% else %}
             <td>
-                {{ 'form.receiveStatePension.label' | trans(transOptions)  }}
+                {{ 'form.receiveStatePension.label' | trans(transOptions) }}
             </td>
             <td>
                 {{ odr.receiveStatePension | capitalize }}
@@ -106,7 +99,7 @@
             </td>
         {% else %}
             <td>
-                {{ 'form.receiveOtherIncome.label' | trans(transOptions)  }}
+                {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
             </td>
             <td>
                 {{ odr.receiveOtherIncome | capitalize }}
@@ -117,17 +110,17 @@
         </td>
     </tr>
     {% if odr.receiveOtherIncome == 'yes' %}
-    <tr>
-        <td>
-            {{ 'form.receiveOtherIncomeDetails.labelSummaryPage' | trans(transOptions)  }}
-        </td>
-        <td>
-            {{ odr.receiveOtherIncomeDetails | nl2br }}
-        </td>
-        <td class="change-answer">
-            <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 3, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                {{ 'form.receiveOtherIncomeDetails.labelSummaryPage' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ odr.receiveOtherIncomeDetails | nl2br }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 3, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
     {% endif %}
     </tbody>
 </table>
@@ -156,7 +149,7 @@
             </td>
         {% else %}
             <td>
-                {{ 'form.expectCompensationDamages.label' | trans(transOptions)  }}
+                {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
             </td>
             <td>
                 {{ odr.expectCompensationDamages | capitalize }}
@@ -169,7 +162,7 @@
     {% if odr.expectCompensationDamages == 'yes' %}
         <tr>
             <td>
-                {{ 'form.expectCompensationDamagesDetails.labelSummaryPage' | trans(transOptions)  }}
+                {{ 'form.expectCompensationDamagesDetails.labelSummaryPage' | trans(transOptions) }}
             </td>
             <td>
                 {{ odr.expectCompensationDamagesDetails | nl2br }}
@@ -195,27 +188,20 @@
     </thead>
     <tbody>
     <tr>
-        {% if validator.missing('oneOff') %}
-            <td>
-                <span class="error">
-                    {{ 'form.oneOff.label' | trans(transOptions) }}
-                </span>
-            </td>
-            <td>
-                <span class="error-message">Please answer this question</span>
-            </td>
-        {% else %}
-            <td>
-                {{ 'form.oneOff.label' | trans(transOptions)  }}
-            </td>
-            <td>
+        <td>
+            {{ 'form.oneOff.label' | trans(transOptions) }}
+        </td>
+        <td>
+            {% if validator.missing('oneOff') %}
+                None
+            {% else %}
                 {# display one Off choices comma separated #}
-                {% for sb in odr.recordsPresent(odr.oneOff)  %}
+                {% for sb in odr.recordsPresent(odr.oneOff) %}
                     {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
-            </td>
-        {% endif %}
+            {% endif %}
+        </td>
         <td class="change-answer">
             <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 5, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
         </td>

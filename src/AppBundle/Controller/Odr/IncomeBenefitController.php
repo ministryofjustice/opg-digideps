@@ -7,6 +7,7 @@ use AppBundle\Entity\Odr\Odr;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -107,7 +108,7 @@ class IncomeBenefitController extends AbstractController
 
         // not started -> go back to start page
         $oss = new OdrStatusService($odr);
-        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' ) {
+        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step' ) {
             return $this->redirectToRoute('odr_income_benefits', ['odrId' => $odrId]);
         }
 
