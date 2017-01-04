@@ -82,7 +82,8 @@ class MoneyInController extends AbstractController
 
         // crete and handle form
         $form = $this->createForm(new FormDir\Report\MoneyTransactionType(
-            $step, 'in', $transaction->getGroup(), $transaction->getCategory()
+            $step, 'in', $this->get('translator'), $report->getClient()->getFirstname(),
+            $transaction->getGroup(), $transaction->getCategory()
         ), $transaction);
         $form->handleRequest($request);
 
