@@ -10,7 +10,7 @@ Feature: deputy / report / decisions
             | mental_capacity_hasCapacityChanged_0 | changed |
         And the step with the following values CAN be submitted:
             | mental_capacity_hasCapacityChanged_1 | stayedSame |
-        And I click on "step-back"
+        And I go back from the step
         And the step with the following values CAN be submitted:
             | mental_capacity_hasCapacityChanged_0 | changed |
             | mental_capacity_hasCapacityChangedDetails | mchccd |
@@ -63,7 +63,7 @@ Feature: deputy / report / decisions
         # test add link
         When I click on "add"
         Then I should see the "save-and-continue" link
-        When I click on "step-back"
+        When I go back from the step
         # edit decision n.1
         When I click on "edit" in the "decision-1" region
         Then the following fields should have the corresponding values:

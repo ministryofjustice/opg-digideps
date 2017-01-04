@@ -58,7 +58,7 @@ Feature: deputy / report / contacts
         # test add link
         When I click on "add"
         Then I should see the "save-and-continue" link
-        When I click on "step-back"
+        When I go back from the step
         # edit contact n.1
         When I click on "edit" in the "contact-n2-aw1" region
         Then the following fields should have the corresponding values:

@@ -78,7 +78,10 @@ trait FormStepTrait
         $this->clickOnBehatLink('save-and-continue');
     }
 
-    private function stepGoBack()
+    /**
+     * @Then I go back from the step
+     */
+    public function iGoBackFromTheStep()
     {
         $this->clickOnBehatLink('step-back');
     }

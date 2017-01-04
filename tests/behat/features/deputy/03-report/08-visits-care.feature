@@ -17,7 +17,7 @@ Feature: deputy / report / visits and care
       | visits_care_doYouLiveWithClient_1      | no    |
       | visits_care_howOftenDoYouContactClient | daily |
       # go back, check content, skip
-    When I click on "step-back"
+    When I go back from the step
     Then the following fields should have the corresponding values:
       | visits_care_doYouLiveWithClient_1      | no    |
       | visits_care_howOftenDoYouContactClient | daily |
@@ -32,7 +32,7 @@ Feature: deputy / report / visits and care
       | visits_care_doesClientReceivePaidCare_0 | yes                 |
       | visits_care_howIsCareFunded_0           | client_pays_for_all |
       # go back, check content, skip
-    When I click on "step-back"
+    When I go back from the step
     Then the following fields should have the corresponding values:
       | visits_care_doesClientReceivePaidCare_0 | yes                 |
       | visits_care_howIsCareFunded_0           | client_pays_for_all |
@@ -43,7 +43,7 @@ Feature: deputy / report / visits and care
     And the step with the following values CAN be submitted:
       | visits_care_whoIsDoingTheCaring | the brother |
       # go back, check content, skip
-    When I click on "step-back"
+    When I go back from the step
     Then the following fields should have the corresponding values:
       | visits_care_whoIsDoingTheCaring | the brother |
     Then I click on "step-skip"

@@ -69,7 +69,7 @@ Feature: deputy / report / asset with variations
         # test add link
         When I click on "add"
         Then I should see the "save-and-continue" link
-        When I click on "step-back"
+        When I go back from the step
         # edit asset n.1
         When I click on "edit" in the "asset-alfa-romeo-156-jtd" region
         Then the following fields should have the corresponding values:
