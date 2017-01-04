@@ -1,73 +1,76 @@
 Feature: deputy / report / account transactions
 
-#    @deputy
-#    Scenario: money in
-#        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        And I click on "reports,report-2016-open, edit-money_in"
-#        # check no data was previously saved
-#        Then the following fields should have the corresponding values:
-#            | transactions_transactionsIn_0_amounts_0        |  |
-#            | transactions_transactionsIn_26_amounts_0       |  |
-#            | transactions_transactionsIn_26_moreDetails  |  |
-#        And I save the page as "report-account-transactions-empty"
-#        # wrong values (wrong amount types, amount without explanation, explanation without amount)
-#        When I fill in the following:
-#            | transactions_transactionsIn_0_amounts_0        | in |
-#        And I press "transactions_save"
-#        Then the following fields should have an error:
-#            | transactions_transactionsIn_0_amounts_0  |
-#        And I save the page as "report-account-transactions-errors"
-#        # right values
-#        When I fill in the following:
-#            | transactions_transactionsIn_0_amounts_0       | 1250 |
-#            | transactions_transactionsIn_26_amounts_0      | 2000.0 |
-#            | transactions_transactionsIn_26_moreDetails | more-details-in-15  |
-#        And I press "transactions_save"
-#        Then the form should be valid
-#        # reload page
-#        When I click on "reports,report-2016-open, edit-money_in"
-#        # assert value saved
-#        And the following fields should have the corresponding values:
-#            | transactions_transactionsIn_0_amounts_0       | 1,250.00 |
-#            | transactions_transactionsIn_26_amounts_0      | 2,000.00 |
-#            | transactions_transactionsIn_26_moreDetails | more-details-in-15  |
-#        And I should see "3,250.00" in the "transaction-total" region
-#        And I save the page as "report-account-transactions-data-saved"
-#
-#    @deputy
-#    Scenario: money out
-#        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        And I click on "reports,report-2016-open, edit-money_out"
-#        # check no data was previously saved
-#        Then the following fields should have the corresponding values:
-#            | transactions_transactionsOut_0_amounts_0        |  |
-#            | transactions_transactionsOut_11_amounts_0       |  |
-#            | transactions_transactionsOut_11_moreDetails  |  |
-#        And I save the page as "report-account-transactions-empty"
-#        # wrong values (wrong amount types, amount without explanation, explanation without amount)
-#        When I fill in the following:
-#            | transactions_transactionsOut_0_amounts_0        | in |
-#        And I press "transactions_save"
-#        Then the following fields should have an error:
-#            | transactions_transactionsOut_0_amounts_0  |
-#        And I save the page as "report-account-transactions-errors"
-#        # right values
-#        When I fill in the following:
-#            | transactions_transactionsOut_0_amounts_0       | 1250 |
-#            | transactions_transactionsOut_1_amounts_0       |  |
-#            | transactions_transactionsOut_2_amounts_0       |  |
-#            | transactions_transactionsOut_3_amounts_0       |  |
-#            | transactions_transactionsOut_4_amounts_0       |  |
-#            | transactions_transactionsOut_11_amounts_0      | 2100.0 |
-#            | transactions_transactionsOut_11_moreDetails | more-details-in-15  |
-#        And I press "transactions_save"
-#        Then the form should be valid
-#        # reload page
-#        When I click on "reports,report-2016-open, edit-money_out"
-#        # assert value saved
-#        And the following fields should have the corresponding values:
-#            | transactions_transactionsOut_0_amounts_0       | 1,250.00 |
-#            | transactions_transactionsOut_11_amounts_0      | 2,100.00 |
-#            | transactions_transactionsOut_11_moreDetails | more-details-in-15  |
-#        And I should see "3,350.00" in the "transaction-total" region
-#        And I save the page as "report-account-transactions-data-saved"
+  @deputy
+  Scenario: money in
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports,report-2016-open, edit-money_in, start"
+    # add transaction n.1 and check validation
+    Then the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | account_group_0 | pensions |
+    Then the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | account_category_0 | state-pension |
+    And the step with the following values CANNOT be submitted:
+      | account_description |  |       |
+      | account_amount      |  | [ERR] |
+    And the step with the following values CAN be submitted:
+      | account_description | pension received |
+      | account_amount      | 12345.67         |
+    # add another: yes
+    And I choose "yes" when asked for adding another record
+    # add transaction n.2
+    And the step with the following values CAN be submitted:
+      | account_group_0 | pensions |
+    And the step with the following values CAN be submitted:
+      | account_category_0 | state-pension |
+    And the step with the following values CAN be submitted:
+      | account_description | delete me |
+      | account_amount      | 1         |
+    # add another: yes
+    And I choose "yes" when asked for adding another record
+    # add transaction n.3
+    And the step with the following values CAN be submitted:
+      | account_group_0 | moneyin-other |
+    And the step with the following values CAN be submitted:
+      | account_category_0 | anything-else |
+    And the step with the following values CAN be submitted:
+      | account_description | money found on the road |
+      | account_amount      | 50                      |
+    # add another: no
+    And I choose "no" when asked for adding another record
+    # check record in summary page
+    And each text should be present in the corresponding region:
+      | State Pension           | transaction-pension-received        |
+      | pension received        | transaction-pension-received        |
+      | £12,345.67              | transaction-pension-received        |
+      | State Pension           | transaction-delete-me               |
+      | delete me               | transaction-delete-me               |
+      | £1                      | transaction-delete-me               |
+      | Anything else           | transaction-money-found-on-the-road |
+      | money found on the road | transaction-money-found-on-the-road |
+      | £50.00                  | transaction-money-found-on-the-road |
+      | £12,346.67              | pensions-total                      |
+    # remove transaction n.2
+    When I click on "delete" in the "transaction-delete-me" region
+    Then I should not see the "transaction-delete-me" region
+    # test add link
+    When I click on "add"
+    Then I should see the "save-and-continue" link
+    When I go back from the step
+    # edit transaction n.3
+    When I click on "edit" in the "transaction-money-found-on-the-road" region
+    Then the following fields should have the corresponding values:
+      | account_description | money found on the road |
+      | account_amount      | 50.00                      |
+    And the step with the following values CAN be submitted:
+      | account_description | Some money found on the road |
+      | account_amount      | 51                      |
+    And each text should be present in the corresponding region:
+      | Anything else           | transaction-some-money-found-on-the-road |
+      | Some money found on the road | transaction-some-money-found-on-the-road |
+      | £51.00 | transaction-some-money-found-on-the-road |
+
+
+
+
