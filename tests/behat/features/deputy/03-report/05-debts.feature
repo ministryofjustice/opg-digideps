@@ -3,7 +3,7 @@ Feature: Report debts
     @deputy
     Scenario: debts
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports,report-2016-open, edit-debts, start"
+        And I click on "reports, report-2016-to-2017, edit-debts, start"
         # chose "no records"
         Given the step cannot be submitted without making a selection
         And the step with the following values CAN be submitted:

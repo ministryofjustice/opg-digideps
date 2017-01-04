@@ -3,7 +3,7 @@ Feature: Report actions
   @deputy
   Scenario: report actions
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports,report-2016-open, edit-actions, start"
+    And I click on "reports, report-2016-to-2017, edit-actions, start"
       # step 1
     And the step cannot be submitted without making a selection
     Then the step with the following values CANNOT be submitted:
