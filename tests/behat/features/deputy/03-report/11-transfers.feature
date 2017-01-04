@@ -3,7 +3,7 @@ Feature: deputy / report / account transfers
     @deputy
     Scenario: account transfers
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And die 1
+#        And die 1
 #        And I click on "reports, report-2016-to-2017, edit-money_transfers"
 #        # wrong values (wrong amount types, amount without explanation, explanation without amount)
 #        When I press "transfers_save"
