@@ -118,13 +118,13 @@ class BankAccountController extends AbstractController
                         'notice',
                         'Bank account edited'
                     );
+
+                    return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
                 } else {
                     $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
-                }
-            }
 
-            if ($isLastStep) {
-                return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
+                }
             }
 
             $stepRedirector->setStepUrlAdditionalParams([

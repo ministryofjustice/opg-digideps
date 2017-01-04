@@ -7,7 +7,7 @@
     </div>
     <div class="column-half text--right">
         <a href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1}) }}"
-            class="bold-small move-quarter--up action-link">
+            class="bold-small move-quarter--up action-link behat-link-add">
             <span class="icon icon-plus"></span>
             Add account
         </a>
@@ -26,7 +26,7 @@
     </thead>
     <tbody>
     {% for account in odr.bankAccounts %}
-        <tr>
+        <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">
             <td>
                 {% if account.requiresBankNameAndSortCode %}
                     {{ account.bank }}<br/>
@@ -43,9 +43,9 @@
                 £{{ account.balanceOnCourtOrderDate | money_format }}
             </td>
             <td class="change-answer soft-half--left hard--right">
-                <a class="behat-link-account-{{ account.accountNumber }} action-link"
+                <a class="behat-link-edit action-link"
                    href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>
-                <a class="push-half--left behat-link-account-{{ account.accountNumber }} action-link"
+                <a class="push-half--left behat-link-delete action-link"
                    href="{{ path('odr_bank_account_delete' , {'odrId': odr.id, 'accountId': account.id}) }}">Remove</a>
             </td>
         </tr>
