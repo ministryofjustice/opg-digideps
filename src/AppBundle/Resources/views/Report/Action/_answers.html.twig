@@ -14,7 +14,7 @@
     </thead>
     <tbody>
         {# step 1 #}
-        <tr class="behat-region-live-with-client">
+        <tr class="behat-region-expect-financial-decision">
             {% if validator.missing('doYouExpectFinancialDecisions') %}
                 <td>
                     <span class="error">
@@ -33,11 +33,11 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
             </td>
         </tr>
         {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
-            <tr class="behat-region-how-often-contact-client">
+            <tr class="behat-region-expect-financial-decision-details">
                 <td>{{ 'form.doYouExpectFinancialDecisionsDetails.label' | trans(transOptions) }}</td>
                 <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
                 <td class="change-answer">
@@ -47,7 +47,7 @@
         {% endif %}
 
         {# step 2 #}
-        <tr class="behat-region-live-with-client">
+        <tr class="behat-region-have-concerns">
             {% if validator.missing('doYouHaveConcerns') %}
                 <td>
                     <span class="error">
@@ -66,11 +66,11 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
             </td>
         </tr>
         {% if report.action.doYouHaveConcerns == 'yes' %}
-            <tr class="behat-region-how-often-contact-client">
+            <tr class="behat-region-have-concerns-details">
                 <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>
                 <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
                 <td class="change-answer">
