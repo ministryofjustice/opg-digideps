@@ -21,8 +21,9 @@
             <h2 class="heading-small">{{ 'links.clientDetails.label' | trans(transOptions) }}</h2>
         </a>
         <p class="text text-info">{{ 'links.clientDetails.hint' | trans(transOptions) }}</p>
+    {% else %}
+        {% set transOptions = {} %}
     {% endif %}
-
 
     <a href="{{ path('user_show') }}" class="behat-link-deputy-show">
         <h2 class="heading-small">{{ 'links.userDetails.label' | trans(transOptions) }}</h2>

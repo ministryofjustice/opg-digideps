@@ -53,13 +53,13 @@
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
-                    <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_AD') %}
                     <li><a href="{{ path('ad_homepage') }}">{% trans %}nav.adArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
-                    <li><a href="{{path('user_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
