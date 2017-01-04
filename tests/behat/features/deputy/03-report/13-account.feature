@@ -4,7 +4,7 @@ Feature: deputy / report / account
   Scenario: add account
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports,report-2016-open, edit-bank_accounts, start"
-      # step 1
+    # step 1
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_accountType_0 | current |
@@ -29,7 +29,7 @@ Feature: deputy / report / account
     And the step with the following values CAN be submitted:
       | account_openingBalance | 100.40 |
       | account_closingBalance | 200.50 |
-    #add another: yes
+    # add another: yes
     And I choose "yes" when asked for adding another record
     # add account n.2
     And the step with the following values CAN be submitted:
@@ -44,22 +44,22 @@ Feature: deputy / report / account
     And the step with the following values CAN be submitted:
       | account_openingBalance | 123 |
       | account_closingBalance | 123 |
-    #add another: no
+    # add another: no
     And I choose "no" when asked for adding another record
-        # check record in summary page
+    # check record in summary page
     And each text should be present in the corresponding region:
       | HSBC - main account | account-a876 |
       | Current account     | account-a876 |
       | £100.40             | account-a876 |
       | £200.50             | account-a876 |
-    ## remove account 1234
+    # remove account 1234
     When I click on "delete" in the "account-1234" region
     Then I should not see the "account-1234" region
     # test add link
     When I click on "add"
     Then I should see the "save-and-continue" link
     When I go back from the step
-        # edit account n.1
+    # edit account n.1
     When I click on "edit" in the "account-a876" region
     Then the following fields should have the corresponding values:
       | account_accountType_0 | current |
