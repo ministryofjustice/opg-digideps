@@ -11,7 +11,7 @@ startPage:
     or maintenance and alterations to %client%'s home.
   pageSectionDescription4: |
     You should also let us know if you are planning to sell or rent property owned
-    by %client%, or buy a property for her.
+    by %client%, or buy a property for %client%.
   startButton: Start actions
 
 stepPage:
@@ -36,7 +36,7 @@ summaryPage:
   pageSectionTitle: Actions you plan to take
   supportTitle: ""
   pageContent:
-    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+    weAskAbout: In this section, we ask you about significant financial decisions you're planning to make on behalf of %client%.
 
 form:
   save:
@@ -44,10 +44,10 @@ form:
   actionGiveGiftsToClient:
     label: Are you intending to give any gifts on behalf of %client%?
   actionGiveGiftsToClientDetails:
-    label: Please tell us more about the gifts you intend to make
+    label: Please tell us more about the gifts you intend to make.
   actionPropertyMaintenance:
-    label: Are there plans for maintenance or alterations to any property owned by %client% ?
+    label: Are there plans for maintenance or alterations to any property owned by %client%?
   actionPropertySellingRent:
-    label: Are you planning to sell or rent any property owned by %client% ?
+    label: Are you planning to sell or rent any property owned by %client%?
   actionPropertyBuy:
-    label: Are you planning to buy a property for %client% ?
+    label: Are you planning to buy a property for %client%?

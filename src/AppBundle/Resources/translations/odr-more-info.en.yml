@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "New deputy report - any other information | GOV.UK"
   pageSectionTitle: Any other information
   pageSectionDescription1: |
-    This section is optional, but you can use it to give us information that isn’t covered elsewhere in your new deputy report.
+    This section is optional, but you can use it to give us information that isn’t covered elsewhere in this report.
   pageSectionDescription2: |
     You can also raise concerns about your deputyship and get help from the Office of the Public Guardian (OPG).
   pageSectionDescription3: |
@@ -21,7 +21,7 @@ summaryPage:
   pageSectionTitle: Any other information
   supportTitle: ""
   pageContent:
-    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+    weAskAbout: In this section, you can raise concerns about your deputyship and give us any other information you think we should have.
 
 form:
   save:
@@ -29,4 +29,4 @@ form:
   actionMoreInfo:
     label: Is there anything you’d like to tell us that you haven't covered elsewhere in your new deputy report?
   actionMoreInfoDetails:
-    label: Please give us details of any information, concerns or questions you may have about your deputyship or %client%
+    label: Please give us details of any further information, concerns or questions you may have about your deputyship or %client%

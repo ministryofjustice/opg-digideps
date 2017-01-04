@@ -4,7 +4,7 @@ startPage:
   pageSectionDescription: |
     Use this section to tell us about %client%'s assets.
     They may include property, vehicles, valuables or investments.
-    We also need to know if %client% doesn't own any assets.
+    We also need to know if %client% doesn't have any assets.
   startButton: Start assets
 
 existPage:
@@ -24,7 +24,7 @@ typePage:
   pageSectionDescription: |
     Please tell us a bit more about %client%'s assets.
     Start by adding a type of asset; we'll then ask you for
-    some details about it.  You can go back and add more assets
+    some details about it. You can go back and add more assets
     if you need to.
   formstartButton: Save and continue
   backLink: Back
@@ -101,7 +101,7 @@ form:
     occupants:
       label: "Who lives at this property?"
     owned:
-      label: Is the property fully or part-owned by %client%?
+      label: Is the property fully or partly-owned by %client%?
     ownedPercentage:
       label: What is %client%’s share of the property?
     isSubjectToEquityRelease:
@@ -116,7 +116,7 @@ form:
       label: Are there any other charges on the property?
       hint: For example, from the local authority to recover care fees
     isRentedOut:
-      label: Is the property rented out? (partly or fully)
+      label: Is the property rented out (either partly or fully)? 
     rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: (MM/YYYY)

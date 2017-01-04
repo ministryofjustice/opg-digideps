@@ -2,9 +2,8 @@ startPage:
   htmlTitle: "Deputy report - income and benefits | GOV.UK"
   pageSectionTitle: Income and benefits
   pageSectionDescription: |
-    As a deputy, it's important that you review %client%'s finances throughout the year,
-    look after her affairs and explain any decisions you've made.
-    This includes making sure %client% is getting all the benefits she's entitled to.
+    As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
+    This includes making sure %client%'s full entitlement of benefits is claimed.
   startButton: Start income and benefits
 
 stepPage:
@@ -68,8 +67,8 @@ form:
     label: Please tell us more about any damages or compensation awards
     labelSummaryPage: More about any damages or compensation paid to %client%
   oneOff:
-    label: Which types of one-off payments has %client% received since the court order?
-    description: Which types of one-off payments has %client% received?
+    label: Which types of one-off payment has %client% received since the court order?
+    description: Which types of one-off payment has %client% received?
     hint: Please tick all that apply
     entries:
       bequest_or_inheritance:

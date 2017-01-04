@@ -7,7 +7,7 @@ startPage:
   pageSectionDescription2: |
     Over the course of your deputyship, you can claim expenses for things you have to do to
     carry out your role, like phone calls, postage and travel costs.
-    You claim for these expenses at the end of every year you are a deputy
+    You claim for these expenses at the end of every year you are a deputy.
 
   startButton: Start deputy expenses
 
@@ -48,7 +48,7 @@ summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
   pageSectionDescription: |
-    In this section we asked you to tell us about things you paid for on Sally's behalf before your
+    In this section we ask you to tell us about things you paid for on %client%'s behalf before your
     court order.
   addButton: Add a deputy expense
   edit: Edit

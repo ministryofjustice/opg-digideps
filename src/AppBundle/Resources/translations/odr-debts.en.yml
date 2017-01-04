@@ -3,7 +3,7 @@ startPage:
   pageSectionTitle: "Debts"
   pageSectionDescription: |
     Use this section to tell us about %client%'s debts, for example,
-    care fees, credit cards or loans
+    care fees, credit cards or loans.
   startButton: Start debts
 
 existPage:
@@ -11,7 +11,7 @@ existPage:
   pageSectionTitle: Debts
   form:
     exist:
-      label: Does %client% have any debts ?
+      label: Does %client% have any debts?
     save:
       label: Save and continue
 
@@ -24,7 +24,7 @@ summaryPage:
   pageContent:
     weAskAbout: |
       In this section, we ask you about %client%'s debts, for example,
-      care fees, credit cards or loans
+      care fees, credit cards or loans.
   moreAbout: more about %client%'s other debts of £%amount%
 
 form:
