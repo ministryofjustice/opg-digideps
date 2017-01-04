@@ -80,7 +80,7 @@ class BankAccount
      * @JMS\Groups({"bank-account"})
      *
      * @Assert\NotBlank(message="odr.account.accountNumber.notBlank", groups={"bank-account-number"})
-     * @Assert\Type(type="numeric", message="odr.account.accountNumber.type", groups={"bank-account-number"})
+     * @Assert\Type(type="alnum", message="odr.account.accountNumber.type", groups={"bank-account-number"})
      * @Assert\Length(exactMessage="odr.account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
      *
      * @var string

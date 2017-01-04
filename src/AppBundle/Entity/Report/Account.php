@@ -82,6 +82,11 @@ class Account
 
     /**
      * @JMS\Type("string")
+     *
+     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"bank-account-number"})
+     * @Assert\Type(type="alnum", message="account.accountNumber.type", groups={"bank-account-number"})
+     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
+     *
      * @JMS\Groups({"account"})
      * 
      * @var string
