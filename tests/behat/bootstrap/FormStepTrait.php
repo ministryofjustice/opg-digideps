@@ -53,17 +53,6 @@ trait FormStepTrait
     }
 
     /**
-     * @Then I fill in the step with the following, save and go back checking it's saved:
-     */
-    public function iFillInTheStepWithTheFollowingSaveAndGoBackCheckingItSSaved(TableNode $table)
-    {
-        $this->theStepWithTheFollowingValuesCanCannotBeSubmitted($table, 'can');  // from FormTrait
-        $this->stepGoBack();
-        $this->followingFieldsShouldHaveTheCorrespondingValues($table); //from FormTrait
-    }
-
-
-    /**
      * @Given I choose :what when asked for adding another record
      */
     public function iChooseWhenAskingToAddAnotherRecord($what)
