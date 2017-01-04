@@ -7,7 +7,7 @@ Feature: deputy / report / edit and test tabs
 #        And I save the page as "report-health-welfare-homepage"
 #        And I should see a "#edit-decisions" element
 #        And I should see a "#edit-contacts" element
-#        But I should not see a "#edit-accounts" element
+#        But I should not see a "#edit-bank_accounts" element
 #        And I should not see a "#edit-assets" element
 #        And I should see a "#edit-visits_care" element
 

@@ -7,7 +7,7 @@ Feature: deputy / report / balance
 #        And I click on "reports, report-2016-open"
 #        Then the report should not be submittable
 #        # assert balance is bad
-#        When I follow "edit-accounts"
+#        When I follow "edit-bank_accounts"
 #        And I follow "account-balance"
 #        Then I should see the "balance-bad" region
 #        And I should see "105.00" in the "unaccounted-for" region

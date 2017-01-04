@@ -94,9 +94,9 @@ Feature: deputy / report / submit
 #        And I save the page as "report-property-affairs-homepage"
 #        Then I should see a "#edit-contacts" element
 #        And I should see a "#edit-decisions" element
-#        And I should see a "#edit-accounts" element
+#        And I should see a "#edit-bank_accounts" element
 #        And I should see a "#edit-assets" element
-#        When I follow "edit-accounts"
+#        When I follow "edit-bank_accounts"
 #        And I click on "account-0876"
 #        # check no data was previously saved
 #        Then the following fields should have the corresponding values:

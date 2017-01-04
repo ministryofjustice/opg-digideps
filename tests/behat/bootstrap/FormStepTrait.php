@@ -15,7 +15,7 @@ trait FormStepTrait
      */
     public function theStepCannotBeSubmittedWithoutMakingASelection()
     {
-        $this->stepSaveAndContinue();
+        $this->iSubmitTheStep();
         $this->theFormShouldBeInvalid(); // from FormTrait
     }
 
@@ -36,7 +36,7 @@ trait FormStepTrait
             $this->fillField($field, $value);
         }
         
-        $this->stepSaveAndContinue();
+        $this->iSubmitTheStep();
         switch (strtolower($what)) {
             case 'can':
                 $this->theFormShouldBeValid();  // from FormTrait
@@ -58,7 +58,7 @@ trait FormStepTrait
     public function iChooseWhenAskingToAddAnotherRecord($what)
     {
         // check that "add another" has validation (could be tested just once as it's the same form)
-        $this->stepSaveAndContinue();
+        $this->iSubmitTheStep();
         $this->theFormShouldBeInvalid(); // from FormTrait
         switch (strtolower($what)) {
             case 'yes':
@@ -73,7 +73,10 @@ trait FormStepTrait
         $this->clickOnBehatLink('save-and-continue');
     }
 
-    private function stepSaveAndContinue()
+    /**
+     * @Then I submit the step
+     */
+    public function iSubmitTheStep()
     {
         $this->clickOnBehatLink('save-and-continue');
     }
