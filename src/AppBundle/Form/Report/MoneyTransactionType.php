@@ -13,6 +13,7 @@ use AppBundle\Entity\Report\Account;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyTransactionType extends AbstractType
 {
@@ -22,18 +23,27 @@ class MoneyTransactionType extends AbstractType
     private $selectedCategory;
 
     /**
-     * MoneyTransactionType constructor.
-     * @param integer $step
-     * @param $type in|out
-     * @param string $selectedGroup
-     * @param null|string $selectedCategory
+     * @var TranslatorInterface
      */
-    public function __construct($step, $type, $selectedGroup, $selectedCategory = null)
+    private $translator;
+
+    /**
+     * MoneyTransactionType constructor.
+     * @param $step
+     * @param $type
+     * @param TranslatorInterface $translator
+     * @param $clientFirstName
+     * @param $selectedGroup
+     * @param null $selectedCategory
+     */
+    public function __construct($step, $type, TranslatorInterface $translator, $clientFirstName, $selectedGroup, $selectedCategory = null)
     {
         $this->step = (int)$step;
         $this->type = $type;
         $this->selectedGroup = $selectedGroup;
         $this->selectedCategory = $selectedCategory;
+        $this->translator = $translator;
+        $this->clientFirstName = $clientFirstName;
     }
 
     private function getGroups()
@@ -43,7 +53,7 @@ class MoneyTransactionType extends AbstractType
         foreach(Transaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($type == $this->type) {
-                $ret[$groupId] = 'form.group.entries.' . $groupId;
+                $ret[$groupId] = $this->translate('form.group.entries.' . $groupId);
             }
         }
 
@@ -57,7 +67,7 @@ class MoneyTransactionType extends AbstractType
         foreach(Transaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($groupId == $this->selectedGroup) {
-                $ret[$categoryId] = 'form.category.entries.' . $categoryId . '.label';
+                $ret[$categoryId] = $this->translate('form.category.entries.' . $categoryId . '.label');
             }
         }
 
@@ -75,6 +85,11 @@ class MoneyTransactionType extends AbstractType
                 return $hasDetails;
             }
         }
+    }
+
+    private function translate($key)
+    {
+        return $this->translator->trans($key, ['%client%' => $this->clientFirstName], 'report-money-transaction');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
