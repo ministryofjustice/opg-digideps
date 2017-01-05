@@ -1,7 +1,7 @@
 Feature: deputy / report / account transactions
 
   @deputy
-  Scenario: money in
+  Scenario: money out
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016-to-2017, edit-money_out, start"
     # add transaction n.1 and check validation
