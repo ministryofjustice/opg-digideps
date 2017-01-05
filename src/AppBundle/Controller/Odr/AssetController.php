@@ -336,7 +336,7 @@ class AssetController extends AbstractController
     }
 
     /**
-     * @Route("/{odrId}/assets/{assetId}/delete", name="odr_asset_delete")
+     * @Route("/odr/{odrId}/assets/{assetId}/delete", name="odr_asset_delete")
      *
      * @return RedirectResponse
      */
