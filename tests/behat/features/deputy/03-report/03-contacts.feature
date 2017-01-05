@@ -3,7 +3,6 @@ Feature: deputy / report / contacts
     @deputy
     Scenario: contacts
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        # TODO implement me (OTPP)
         And I click on "reports, report-2016-to-2017, edit-contacts, start"
         # chose "no records"
         Given the step cannot be submitted without making a selection
