@@ -116,10 +116,10 @@ Feature: deputy / report / submit
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "reports, download-2016-to-2017-report"
+        When I click on "reports, download-2016-report"
         And the response should contain "12345ABC"
         And the response should contain "Peter"
         And the response should contain "White"
         # test go back link
         When I click on "back-to-reports"
-        Then I should see the "download-2016-to-2017-report" link
+        Then I should see the "download-2016-report" link
