@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="behat-region-no-transfers-to-add">
             <td>
                 {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
             </td>
@@ -20,7 +20,7 @@
                 {{ report.noTransfersToAdd ? 'No' : 'Yes' }}
             </td>
             <td class="change-answer">
-                <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="action-link">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     </tbody>
@@ -32,7 +32,7 @@
             <h2 class="heading-medium flush--ends">List of money transfers</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up action-link">
+            <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -54,7 +54,7 @@
         </thead>
         <tbody>
             {% for transfer in report.moneyTransfers %}
-                <tr>
+                <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <td class="width-quarter">
                         {% set account = transfer.accountFrom %}
                         {% if account.requiresBankNameAndSortCode %}
@@ -83,8 +83,8 @@
                         £{{ transfer.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-transfer-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left action-link">Remove</a>
+                        <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
