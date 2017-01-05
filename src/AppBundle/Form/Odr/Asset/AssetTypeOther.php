@@ -39,7 +39,7 @@ class AssetTypeOther extends AbstractType
 
     public function getName()
     {
-        return 'odr_asset';
+        return 'asset';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

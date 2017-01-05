@@ -78,6 +78,6 @@ class AssetTypeTitle extends AbstractType
 
     public function getName()
     {
-        return 'odr_asset_title';
+        return 'asset_title';
     }
 }

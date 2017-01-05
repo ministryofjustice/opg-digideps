@@ -52,6 +52,6 @@ class ReportDeclarationType extends AbstractType
 
     public function getName()
     {
-        return 'odr_declaration';
+        return 'declaration';
     }
 }

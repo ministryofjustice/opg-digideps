@@ -61,7 +61,7 @@ class ActionType extends AbstractType
 
     public function getName()
     {
-        return 'odr_actions';
+        return 'actions';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

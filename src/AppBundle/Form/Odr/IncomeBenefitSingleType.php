@@ -38,6 +38,6 @@ class IncomeBenefitSingleType extends AbstractType
 
     public function getName()
     {
-        return 'odr_income_benefit_single';
+        return 'income_benefit_single';
     }
 }

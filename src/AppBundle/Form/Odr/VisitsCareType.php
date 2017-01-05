@@ -152,6 +152,6 @@ class VisitsCareType extends AbstractType
 
     public function getName()
     {
-        return 'odr_visits_care';
+        return 'visits_care';
     }
 }

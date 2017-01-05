@@ -31,6 +31,6 @@ class AssetExistType extends AbstractType
 
     public function getName()
     {
-        return 'odr_assets_exist';
+        return 'assets_exist';
     }
 }

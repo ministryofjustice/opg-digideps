@@ -125,6 +125,6 @@ class IncomeBenefitType extends AbstractType
 
     public function getName()
     {
-        return 'odr_visits_care';
+        return 'income_benefits';
     }
 }

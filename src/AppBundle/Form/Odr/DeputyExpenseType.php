@@ -35,6 +35,6 @@ class DeputyExpenseType extends AbstractType
 
     public function getName()
     {
-        return 'odr_expenses_single';
+        return 'expenses_single';
     }
 }

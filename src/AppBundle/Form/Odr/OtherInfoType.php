@@ -43,6 +43,6 @@ class OtherInfoType extends AbstractType
 
     public function getName()
     {
-        return 'odr_more_info';
+        return 'more_info';
     }
 }

@@ -31,6 +31,6 @@ class DeputyExpenseExistType extends AbstractType
 
     public function getName()
     {
-        return 'odr_expense_exist';
+        return 'expense_exist';
     }
 }
