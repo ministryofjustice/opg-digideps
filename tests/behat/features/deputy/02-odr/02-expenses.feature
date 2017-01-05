@@ -3,8 +3,8 @@ Feature: odr / finance expenses
   @odr
   Scenario: ODR expenses
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-finances"
-    And I save the page as "odr-expenses-empty"
+#    And I click on "odr-start, edit-finances"
+#    And I save the page as "odr-expenses-empty"
     # empty form
 #    When I press "odr_expenses_save"
 #    Then the following fields should have an error:
