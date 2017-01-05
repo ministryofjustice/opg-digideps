@@ -19,7 +19,7 @@ class BalanceController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/accounts/balance", name="balance")
+     * @Route("/report/{reportId}/balance", name="balance")
      *
      * @param int $reportId
      * @Template()
@@ -36,10 +36,10 @@ class BalanceController extends AbstractController
             $data = $form->getData();
             $this->getRestClient()->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Balance explanation added'
-            );
+//            $request->getSession()->getFlashBag()->add(
+//                'notice',
+//                'Balance explanation added'
+//            );
 
             return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
 

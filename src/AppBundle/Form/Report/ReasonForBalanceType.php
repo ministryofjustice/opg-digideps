@@ -25,6 +25,6 @@ class ReasonForBalanceType extends AbstractType
 
     public function getName()
     {
-        return 'form';
+        return 'balance';
     }
 }
