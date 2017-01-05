@@ -14,9 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("/report")
- */
 class AssetController extends AbstractController
 {
     private static $jmsGroups = [
