@@ -4,7 +4,7 @@ Feature: deputy / report / submit
     Scenario: report declaration page
 #        Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016-to-2017"
+        And I click on "reports, report-2016"
         Then I should not see the "download-2016-report" link
         And I save the page as "report-submit-overview-pre-add-further-info"
         # if not found, it means that the report is not submittable
@@ -28,7 +28,7 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I click on "reports, report-2016-to-2017"
+        And I click on "reports, report-2016"
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
@@ -96,7 +96,7 @@ Feature: deputy / report / submit
         When I click on "reports"
         Then I should not see the "report-2016-edit" link
         And I should not see the "report-2016" link
-        And I should see the "report-2016-to-2017-submitted-on" region
+        And I should see the "report-2016-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/decisions/summary" should not be accessible
         And the URL "/report/1/contacts/summary" should not be accessible

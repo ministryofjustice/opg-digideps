@@ -3,7 +3,7 @@ Feature: deputy / report / account transactions
   @deputy
   Scenario: money out
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016-to-2017, edit-money_out, start"
+    And I click on "reports, report-2016, edit-money_out, start"
     # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:

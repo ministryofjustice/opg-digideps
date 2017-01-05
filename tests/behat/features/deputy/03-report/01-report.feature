@@ -21,7 +21,7 @@ Feature: deputy / report / edit and test tabs
         And I click on "reports, report-2016-edit" 
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
-            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_month | 03 |
             | report_edit_startDate_year | 2016 |
             | report_edit_endDate_day | 31 |
             | report_edit_endDate_month | 12 |
@@ -45,7 +45,7 @@ Feature: deputy / report / edit and test tabs
         # valid values
         When I fill in the following:
             | report_edit_startDate_day | 01 |
-            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_month | 02 |
             | report_edit_startDate_year | 2016 |
             | report_edit_endDate_day | 31 |
             | report_edit_endDate_month | 12 |
@@ -56,7 +56,7 @@ Feature: deputy / report / edit and test tabs
         And I click on "report-2016-edit"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
-            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_month | 02 |
             | report_edit_startDate_year | 2016 |
             | report_edit_endDate_day | 31 |
             | report_edit_endDate_month | 12 |
@@ -74,11 +74,11 @@ Feature: deputy / report / edit and test tabs
         And I should see a "#edit-money_out" element
         And I should see a "#edit-assets" element
 
-    @deputy
-    Scenario: Check report notification and submission warnings
-        # set report due
-        Given I set the report 1 end date to 3 days ago
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        # disabled element are not visible from behat
-        And I should not see a "report_submit_submitReport" element
-        And I should not see a ".report_submission_period" element
+#    @deputy
+#    Scenario: Check report notification and submission warnings
+#        # set report due
+##        Given I set the report 1 end date to 3 days ago
+#        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#        # disabled element are not visible from behat
+#        And I should not see a "report_submit_submitReport" element
+#        And I should not see a ".report_submission_period" element

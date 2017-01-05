@@ -3,7 +3,7 @@ Feature: deputy / report / visits and care
   @deputy
   Scenario: visits and care steps
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016-to-2017, edit-visits_care"
+    And I click on "reports, report-2016, edit-visits_care"
       # start
     When I click on "start"
       # step 1 empty
@@ -63,7 +63,7 @@ Feature: deputy / report / visits and care
   @deputy
   Scenario: visits and care summary page and edit
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016-to-2017, edit-visits_care"
+    And I click on "reports, report-2016, edit-visits_care"
       # Summary overview
     Then each text should be present in the corresponding region:
       | No                    | live-with-client              |
