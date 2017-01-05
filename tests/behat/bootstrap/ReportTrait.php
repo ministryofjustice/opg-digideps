@@ -538,6 +538,16 @@ trait ReportTrait
      */
     public function theReportShouldNotBeSubmittable()
     {
+        $this->assertUrlRegExp('#/overview#');
         $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
+    }
+
+    /**
+     * @Given the report should be submittable
+     */
+    public function theReportShouldBeSubmittable()
+    {
+        $this->assertUrlRegExp('#/overview#');
+        $this->assertSession()->elementExists('css', '#edit-report_add_further_info');
     }
 }
