@@ -22,7 +22,7 @@ overview: New deputy report
 
 
 
-visitsCare:
+visits_care:
     subSectionTitle: "Visits and care"
     subSectionDescription: "Give us an overview of who is looking after %client%"
     edit: "Edit"
