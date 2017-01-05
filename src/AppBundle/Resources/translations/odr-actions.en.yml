@@ -5,13 +5,7 @@ startPage:
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
   pageSectionDescription2: |
-    You should refer to your court order for a reminder of what you can and can't do.
-  pageSectionDescription3: |
-    Your actions might include making a large gift (such as a 21st birthday present for a relative),
-    or maintenance and alterations to %client%'s home.
-  pageSectionDescription4: |
-    You should also let us know if you are planning to sell or rent property owned
-    by %client%, or buy a property for %client%.
+    Your actions might include making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%.
   startButton: Start actions
 
 stepPage:

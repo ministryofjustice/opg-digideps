@@ -31,7 +31,7 @@ form:
     label: How is the care funded?
     choices:
       client_pays_for_all: %client% pays for all the care
-      client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
+      client_gets_financial_help: %client% gets some financial help (for example, from the local authority or NHS)
       all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
   whoIsDoingTheCaring:
     label: Who is doing the caring?
