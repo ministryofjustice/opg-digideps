@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="behat-region-paid-for-anything">
             <td>
                 {{ 'existPage.form.paidForAnything.label' | trans(transOptions)  }}
             </td>
@@ -20,7 +20,7 @@
                 {{ odr.paidForAnything | capitalize }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('odr_deputy_expenses_exist', { 'odrId': odr.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('odr_deputy_expenses_exist', { 'odrId': odr.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     </tbody>
@@ -32,7 +32,7 @@
             <h2 class="heading-medium flush--ends">List of expenses</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('odr_deputy_expense_add', { 'odrId': odr.id}) }}" class="bold-small move-quarter--up action-link">
+            <a href="{{ path('odr_deputy_expenses_add', { 'odrId': odr.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -53,7 +53,7 @@
         </thead>
         <tbody>
             {% for expense in odr.expenses %}
-                <tr>
+                <tr class="behat-region-expense-{{ expense.explanation | behat_namify }}">
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
@@ -61,8 +61,8 @@
                         £{{ expense.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ url('odr_deputy_expense_edit', { 'odrId': odr.id, 'expenseId': expense.id }) }}#pageBody" class="behat-link-expense-n{{loop.index}} action-link">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('odr_deputy_expense_delete', { 'odrId': odr.id, 'expenseId': expense.id }) }}" class="push-half--left action-link">Remove</a>
+                        <a href="{{ url('odr_deputy_expenses_edit', { 'odrId': odr.id, 'expenseId': expense.id }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('odr_deputy_expenses_delete', { 'odrId': odr.id, 'expenseId': expense.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -71,7 +71,7 @@
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="numeric-small">
-                    <span class="bold-small">£{{ odr.expensesTotalValue | money_format }}</span>
+                    <span class="bold-small behat-region-expense-total">£{{ odr.expensesTotalValue | money_format }}</span>
                 </td>
                 <td></td>
             </tr>
