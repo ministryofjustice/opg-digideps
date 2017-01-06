@@ -1,7 +1,7 @@
 page:
     htmlTitle: "Deputy report - visits and care | GOV.UK"
     pageSectionTitle: Visits and care
-    pageSectionDescription: Tell us about %client%'s care and contact with you and other people. We need to know how you check whether %client%'s needs are met. We ask this because OPG has a duty to protect people who don't have the mental capacity to make decisions for themselves.
+    pageSectionDescription: Please tell us about %client%'s care and contact with you and other people. We ask about this because it’s OPG’s responsibility to make sure you are looking after %client%'s best interests, including health and welfare.
 form:
     contact:
         subSectionTitle: Contact with %client%
