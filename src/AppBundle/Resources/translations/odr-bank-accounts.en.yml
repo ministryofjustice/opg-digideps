@@ -16,7 +16,7 @@ stepPage:
   pageSectionTitle: Add an account
   supportTitle: Accounts
   pageSectionDescription:
-    step1: Start by adding %client%'s first account; we'll then ask you for the account details. You can go back and add more accounts if you need to.
+    step1: Start by selecting one type of account. We'll then ask you for the details of that account. You can go back and add more accounts if you need to.
   backLink: Back
 
 addAnotherPage:
