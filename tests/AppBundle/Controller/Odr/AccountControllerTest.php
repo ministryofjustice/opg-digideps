@@ -152,12 +152,14 @@ class AccountControllerTest extends AbstractTestController
             'data' => [
                 'bank' => 'bank1-modified',
                 'balance_on_court_order_date' => '499',
+                'is_joint_account' => 'yes',
             ],
         ])['data'];
 
         $account = self::fixtures()->getRepo('Odr\Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
+        $this->assertEquals('yes', $account->getIsJointAccount());
 
         // assert user cannot modify another users' account
         $url2 = '/odr/account/'.self::$account2->getId();
