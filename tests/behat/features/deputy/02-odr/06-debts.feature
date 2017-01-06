@@ -1,4 +1,4 @@
-Feature: NDR / debts
+Feature: NDR debts
 
   @deputy
   Scenario: NDR debts

@@ -1,7 +1,7 @@
-Feature: odr / visits care
+Feature: NDR visits care
 
   @odr
-  Scenario: ODR visits care
+  Scenario: NDR visits care
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-visits_care, start"
       # step 1 empty

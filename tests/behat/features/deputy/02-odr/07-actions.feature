@@ -1,4 +1,4 @@
-Feature: odr / actions / gifts
+Feature: NDR actions
 
   @odr
   Scenario: ODR actions gifts

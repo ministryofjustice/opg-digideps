@@ -1,7 +1,7 @@
-Feature: odr / finance income benefits
+Feature: NDR income benefits
 
   @odr
-  Scenario: income and benefits
+  Scenario: NDR income and benefits
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-income_benefits, start"
     # State benefits: tick Housing benefit, Universal Credit

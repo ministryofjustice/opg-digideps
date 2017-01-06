@@ -1,7 +1,7 @@
-Feature: odr / finance expenses
+Feature: NDR expenses
 
   @odr
-  Scenario: ODR expenses
+  Scenario: NDR expenses
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-deputy_expenses, start"
     # chose "no records"
