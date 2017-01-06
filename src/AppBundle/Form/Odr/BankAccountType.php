@@ -56,6 +56,10 @@ class BankAccountType extends AbstractType
                     'groups' => ['sortcode'],
                 ]),
             ]);
+            $builder->add('isJointAccount', 'choice', [
+                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+            ]);
         }
 
         if ($this->step === 3) {
@@ -85,8 +89,8 @@ class BankAccountType extends AbstractType
                 return [
                     1 => ['bank-account-type'],
                     2 => $requiresBankNameAndSortCode ?
-                        ['bank-account-name', 'sortcode', 'bank-account-number']
-                        : ['bank-account-number'],
+                        ['bank-account-name', 'sortcode', 'bank-account-number', 'bank-account-is-joint']
+                        : ['bank-account-number', 'bank-account-is-joint'],
                     3 => ['bank-account-balance-on-cot'],
                 ][$this->step];
             },

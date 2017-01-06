@@ -49,6 +49,12 @@
         {% else %}
             {% do form.sortCode.setRendered %}
         {% endif %}
+
+        {{ form_checkbox_group(form.isJointAccount, 'form.isJointAccount', {
+            'fieldSetClass' : 'inline',
+            'legendText' : 'form.isJointAccount.label' | trans({}, translationDomain),
+            'legendClass' : 'form-label'
+        }) }}
     {% endif %}
 
     {% if step == 3 %}

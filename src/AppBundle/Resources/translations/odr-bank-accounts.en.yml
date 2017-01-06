@@ -36,6 +36,11 @@ summaryPage:
   pageSectionDescription1: |
     In this section we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
+  pageSectionDescription2: |
+      Use this section to tell us about all of %client%'s bank accounts, building society
+      accounts, savings accounts and ISAs.
+  pageSectionDescription3: |
+      We will also need to know the balance of each account.
 
 form:
   accountType:
@@ -51,6 +56,8 @@ form:
     legend: Branch sort code
   balanceOnCourtOrderDate:
       label: How much was in the account on %cotDate%?
+  isJointAccount:
+      label: Is this a joint account ?
   save:
     label: Save and continue
   cancel:

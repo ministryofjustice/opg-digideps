@@ -378,6 +378,8 @@ odr:
           notBlank: Enter the account balance on the date shown on your court order
           type: The account balance must be in numbers
           outOfRange: The balance must be less than £10,000,000,000
+      isJointAccount:
+          notBlank: Please choose yes or no
   debt:
       #notBlank: Choose yes or no
       noDebtsChoice.notBlank: Choose Yes or No

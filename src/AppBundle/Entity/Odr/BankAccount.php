@@ -100,6 +100,16 @@ class BankAccount
     private $balanceOnCourtOrderDate;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"bank-account"})
+     *
+     * @Assert\NotBlank(message="odr.account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
+     *
+     * @var string
+     */
+    private $isJointAccount;
+
+    /**
      * @return mixed
      */
     public static function getTypes()
@@ -251,5 +261,17 @@ class BankAccount
     public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
+    }
+
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = $isJointAccount;
+
+        return $this;
     }
 }

@@ -69,6 +69,7 @@ class BankAccountController extends AbstractController
         isset($dataFromUrl['bank']) && $account->setBank($dataFromUrl['bank']);
         isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
         isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
+        isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
         ]);
@@ -87,6 +88,7 @@ class BankAccountController extends AbstractController
                 $stepUrlData['bank'] = $account->getBank();
                 $stepUrlData['number'] = $account->getAccountNumber();
                 $stepUrlData['sort-code'] = $account->getSortCode();
+                $stepUrlData['is-joint'] = $account->getIsJointAccount();
             }
 
             // last step: save
