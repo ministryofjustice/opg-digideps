@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     {% for asset in assetsInGroup.items %}
-        <tr>
+        <tr class="behat-region-asset-{{ asset.description | behat_namify }}">
             <td>{{ asset.description | nl2br }}</td>
             <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
             <td class="numeric-small width-fifth">
@@ -24,9 +24,9 @@
                 {% endif %}
             </td>
             <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-asset-edit action-link"
+                <a class="behat-link-edit action-link"
                    href="{{ path('odr_asset_other_edit', {'odrId': odr.id, 'assetId': asset.id}) }}">Edit</a>
-                <a class="behat-link-account-delete push-half--left action-link" href="{{ path('odr_asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
+                <a class="behat-link-delete push-half--left action-link" href="{{ path('odr_asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
             </td>
         </tr>
     {% endfor %}

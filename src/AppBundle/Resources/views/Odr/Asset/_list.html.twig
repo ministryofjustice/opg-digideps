@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr class="behat-region-has-assets">
             <td>
                 {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
             </td>
@@ -21,7 +21,7 @@
                 {{ odr.noAssetToAdd ? 'No' : 'Yes' }}
             </td>
             <td class="change-answer">
-                <a href="{{ url('odr_assets_exist', { 'odrId': odr.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ url('odr_assets_exist', { 'odrId': odr.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     </tbody>
@@ -34,7 +34,7 @@
             <h2 class="heading-medium flush--ends">List of assets</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('odr_assets_type', { 'odrId': odr.id}) }}" class="bold-small move-quarter--up action-link">
+            <a href="{{ path('odr_assets_type', { 'odrId': odr.id}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
@@ -56,7 +56,7 @@
     <table class="check-your-answers push--top">
         <tr class="no-border">
             <td class="numeric-small hard--right">
-                <span class="heading-medium">Total value of assets: £{{ odr.assetsTotalValue | money_format }}</span>
+                <span class="heading-medium behat-region-asset-total">Total value of assets: £{{ odr.assetsTotalValue | money_format }}</span>
             </td>
         </tr>
     </table>

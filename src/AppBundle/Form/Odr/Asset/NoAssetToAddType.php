@@ -26,6 +26,6 @@ class NoAssetToAddType extends AbstractType
 
     public function getName()
     {
-        return 'no_assets_add';
+        return 'odr_no_assets_add';
     }
 }
