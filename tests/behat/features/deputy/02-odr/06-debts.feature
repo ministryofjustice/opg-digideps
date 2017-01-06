@@ -3,7 +3,7 @@ Feature: NDR / debts
   @deputy
   Scenario: NDR debts
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "reports,report-2016-open, edit-debts, start"
+    And I click on "odr-start, edit-debts, start"
 #      # chose "no records"
 #    Given the step cannot be submitted without making a selection
 #    And the step with the following values CAN be submitted:

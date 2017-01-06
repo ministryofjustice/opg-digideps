@@ -3,7 +3,7 @@ Feature: odr / assets
   @odr
   Scenario: ODR add asset vechicle
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-assets, assets-tab"
+    And I click on "odr-start, edit-assets, start"
 #    And I save the page as "odr-assets-empty"
 #    # wrong form
 #    When I follow "add-assets-button"

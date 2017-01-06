@@ -3,7 +3,13 @@ Feature: odr / finance expenses
   @odr
   Scenario: ODR expenses
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-finances"
+    And I click on "odr-start, edit-deputy_expenses, start"
+
+
+#  psql -c "delete from odr_visits_care" ; bin/behat -c tests/behat/behat.yml.dist tests/behat/features/deputy/02-odr/01-visits-care.feature --suite=deputyodr --stop-on-failure --profile=headless
+
+      # step 1 empty
+      #    And I click on "odr-start, edit-finances"
 #    And I save the page as "odr-expenses-empty"
     # empty form
 #    When I press "odr_expenses_save"

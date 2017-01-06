@@ -80,4 +80,3 @@ Feature: odr / visits care
       # check edited
     Then I should see "Yes" in the "live-with-client" region
     And I should not see the "how-often-contact-client" region
-    

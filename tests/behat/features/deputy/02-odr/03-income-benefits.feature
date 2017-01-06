@@ -3,7 +3,7 @@ Feature: odr / finance income benefits
   @odr
   Scenario: income and benefits
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-finances, finance-income-benefits"
+    And I click on "odr-start, edit-income_benefits, start"
 #    And I save the page as "odr-income-benefits-empty"
 #    # empty
 #    And I press "odr_income_state_benefits_save"

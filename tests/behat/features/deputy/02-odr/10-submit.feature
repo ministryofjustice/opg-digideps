@@ -3,7 +3,6 @@ Feature: odr / report submit
     @odr
     Scenario: ODR review page
         Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        # assert URLs not accessible
 #        Then the URL "/report/1/submitted" should not be accessible
 #        # go to review page
 #        When I click on "odr-start, odr-submit"

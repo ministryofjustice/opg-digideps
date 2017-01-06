@@ -3,7 +3,7 @@ Feature: odr / actions / gifts
   @odr
   Scenario: ODR actions gifts
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-actions, action-gifts"
+    And I click on "odr-start, edit-actions, start"
 #    And I save the page as "odr-actions-gifts-empty"
 #     # empty form
 #    When I press "odr_action_gift_save"
