@@ -57,11 +57,6 @@ Feature: deputy / report / visits and care
       | visits_care_doesClientHaveACarePlan_0         | yes  |
       | visits_care_whenWasCarePlanLastReviewed_month | 12   |
       | visits_care_whenWasCarePlanLastReviewed_year  | 2015 |
-
-  @deputy
-  Scenario: visits and care summary page and edit
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-visits_care"
       # Summary overview
     Then each text should be present in the corresponding region:
       | No                    | live-with-client              |
