@@ -24,7 +24,7 @@ Feature: odr / visits care
     And the step cannot be submitted without making a selection
       # step 2 missing details
     And the step with the following values CANNOT be submitted:
-      | visits_care_doesClientReceivePaidCare_0 | yes |       |
+      | visits_care_doesClientReceivePaidCare_0 | yes |  |
       # step 2 correct
     And the step with the following values CAN be submitted:
       | visits_care_doesClientReceivePaidCare_0 | yes                 |
@@ -49,28 +49,35 @@ Feature: odr / visits care
     And the step cannot be submitted without making a selection
       # step 4 missing details
     Then the step with the following values CANNOT be submitted:
-      | visits_care_doesClientHaveACarePlan_0         | yes   | [ERR] |
-      | visits_care_whenWasCarePlanLastReviewed_month |       | [ERR] |
-      | visits_care_whenWasCarePlanLastReviewed_year  |       | [ERR] |
+      | visits_care_doesClientHaveACarePlan_0         | yes | [ERR] |
+      | visits_care_whenWasCarePlanLastReviewed_month |     | [ERR] |
+      | visits_care_whenWasCarePlanLastReviewed_year  |     | [ERR] |
       # step 4 correct
     And the step with the following values CAN be submitted:
       | visits_care_doesClientHaveACarePlan_0         | yes  |
       | visits_care_whenWasCarePlanLastReviewed_month | 12   |
       | visits_care_whenWasCarePlanLastReviewed_year  | 2015 |
-
-  @deputy
-  Scenario: visits and care summary page and edit
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-visits_care"
+      # step 5 (currently not on annual report)
+    And the step cannot be submitted without making a selection
+      # step 5 missing details
+    And the step with the following values CANNOT be submitted:
+      | visits_care_planMoveNewResidence_0      | yes |       |
+      | visits_care_planMoveNewResidenceDetails |     | [ERR] |
+      # step 5 correct
+    And the step with the following values CAN be submitted:
+      | visits_care_planMoveNewResidence_0      | yes                  |
+      | visits_care_planMoveNewResidenceDetails | bought a bigger flat |
       # Summary overview
     Then each text should be present in the corresponding region:
-      | No                    | live-with-client              |
-      | daily                 | how-often-contact-client      |
-      | Yes                   | does-client-receive-paid-care |
-      | pays for all the care | how-is-care-funded            |
-      | the brother           | who-is-doing-caring           |
-      | Yes                   | client-has-care-plan          |
-      | December 2015         | care-plan-last-reviewed       |
+      | No                    | live-with-client                |
+      | daily                 | how-often-contact-client        |
+      | Yes                   | does-client-receive-paid-care   |
+      | pays for all the care | how-is-care-funded              |
+      | the brother           | who-is-doing-caring             |
+      | Yes                   | client-has-care-plan            |
+      | December 2015         | care-plan-last-reviewed         |
+      | Yes                   | plan-move-new-residence         |
+      | bought a bigger flat  | plan-move-new-residence-details |
       # edit and check back link
     When I click on "live-with-client-edit, step-back"
       # edit

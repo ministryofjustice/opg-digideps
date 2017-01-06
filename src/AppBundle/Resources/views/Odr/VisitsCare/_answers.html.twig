@@ -145,7 +145,7 @@
         {% endif %}
 
         {# step 5 #}
-        <tr class="behat-region-client-has-care-plan">
+        <tr class="behat-region-plan-move-new-residence">
             {% if validator.missing('planMoveNewResidence') %}
                 <td>
                     <span class="error">
@@ -168,7 +168,7 @@
             </td>
         </tr>
         {% if odr.visitsCare.planMoveNewResidence == 'yes' %}
-            <tr class="behat-region-care-plan-last-reviewed">
+            <tr class="behat-region-plan-move-new-residence-details">
                 <td>
                     {{ 'form.planMoveNewResidenceDetails.label' | trans(transOptions) }}
                 </td>
