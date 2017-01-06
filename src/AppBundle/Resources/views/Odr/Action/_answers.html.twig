@@ -16,7 +16,7 @@
     </thead>
     <tbody>
         {# step 1 #}
-        <tr class="behat-region-live-with-client">
+        <tr class="behat-region-give-gifts-client">
             {% if validator.missing('actionGiveGiftsToClient') %}
                 <td>
                     <span class="error">
@@ -35,11 +35,11 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+                <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
             </td>
         </tr>
         {% if odr.actionGiveGiftsToClient == 'yes' %}
-            <tr class="behat-region-how-often-contact-client">
+            <tr class="behat-region-give-gifts-client-details">
                 <td>{{ 'form.actionGiveGiftsToClientDetails.label' | trans(transOptions) }}</td>
                 <td>{{ odr.actionGiveGiftsToClientDetails | nl2br }}</td>
                 <td class="change-answer">
@@ -65,7 +65,7 @@
     <tbody>
 
     {# step 2 #}
-    <tr class="behat-region-live-with-client">
+    <tr class="behat-region-property-maintenance">
         {% if validator.missing('actionPropertyMaintenance') %}
             <td>
                 <span class="error">
@@ -84,12 +84,12 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
         </td>
     </tr>
 
     {# step 3 #}
-    <tr class="behat-region-live-with-client">
+    <tr class="behat-region-property-selling-rent">
         {% if validator.missing('actionPropertySellingRent') %}
             <td>
                 <span class="error">
@@ -108,12 +108,12 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
         </td>
     </tr>
 
     {# step 4 #}
-    <tr class="behat-region-live-with-client">
+    <tr class="behat-region-property-buy">
         {% if validator.missing('actionPropertyBuy') %}
             <td>
                 <span class="error">
@@ -132,7 +132,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-xxx action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
         </td>
     </tr>
 

@@ -4,107 +4,34 @@ Feature: NDR actions
   Scenario: ODR actions gifts
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-actions, start"
-#    And I save the page as "odr-actions-gifts-empty"
-#     # empty form
-#    When I press "odr_action_gift_save"
-#    Then the following fields should have an error:
-#      | odr_action_gift_actionGiveGiftsToClient_0 |
-#      | odr_action_gift_actionGiveGiftsToClient_1 |
-#    # no
-#    When I fill in the following:
-#      |  odr_action_gift_actionGiveGiftsToClient_1 | no |
-#    And I press "odr_action_gift_save"
-#    Then the form should be valid
-#    When I click on "action-gifts"
-#    Then the following fields should have the corresponding values:
-#      |  odr_action_gift_actionGiveGiftsToClient_1 | no |
-#    # yes: wrong
-#    When I fill in the following:
-#      |  odr_action_gift_actionGiveGiftsToClient_0 | yes |
-#      |  odr_action_gift_actionGiveGiftsToClientDetails |  |
-#    And I press "odr_action_gift_save"
-#    Then the following fields should have an error:
-#      | odr_action_gift_actionGiveGiftsToClientDetails |
-#    # yes
-#    When I fill in the following:
-#      |  odr_action_gift_actionGiveGiftsToClient_0 | yes |
-#      |  odr_action_gift_actionGiveGiftsToClientDetails | ggtcd |
-#    And I press "odr_action_gift_save"
-#    Then the form should be valid
-#    # check
-#    When I click on "action-gifts"
-#    Then the following fields should have the corresponding values:
-#      |  odr_action_gift_actionGiveGiftsToClient_0 | yes |
-#      |  odr_action_gift_actionGiveGiftsToClientDetails | ggtcd |
-#    And I save the page as "odr-actions-gifts-done"
-
-  #    And I click on "odr-start, edit-actions, action-property"
-#    And I save the page as "odr-actions-property-empty"
-#     # empty form
-#    When I press "odr_action_property_save"
-#    Then the following fields should have an error:
-#      | odr_action_property_actionPropertyMaintenance_0 |
-#      | odr_action_property_actionPropertyMaintenance_1 |
-#      | odr_action_property_actionPropertySellingRent_0 |
-#      | odr_action_property_actionPropertySellingRent_1 |
-#      | odr_action_property_actionPropertyBuy_0 |
-#      | odr_action_property_actionPropertyBuy_1 |
-#    # no
-#    When I fill in the following:
-#      | odr_action_property_actionPropertyMaintenance_1 | no |
-#      | odr_action_property_actionPropertySellingRent_1 | no |
-#      | odr_action_property_actionPropertyBuy_1 | no |
-#    And I press "odr_action_property_save"
-#    Then the form should be valid
-#    When I click on "action-property"
-#    Then the following fields should have the corresponding values:
-#      | odr_action_property_actionPropertyMaintenance_1 | no |
-#      | odr_action_property_actionPropertySellingRent_1 | no |
-#      | odr_action_property_actionPropertyBuy_1 | no |
-#    # yes
-#    When I fill in the following:
-#      | odr_action_property_actionPropertyMaintenance_0 | yes |
-#      | odr_action_property_actionPropertySellingRent_0 | yes |
-#      | odr_action_property_actionPropertyBuy_0 | yes |
-#    And I press "odr_action_property_save"
-#    Then the form should be valid
-#    When I click on "action-property"
-#    Then the following fields should have the corresponding values:
-#      | odr_action_property_actionPropertyMaintenance_0 | yes |
-#      | odr_action_property_actionPropertySellingRent_0 | yes |
-#      | odr_action_property_actionPropertyBuy_0 | yes |
-
-  #    And I click on "odr-start, edit-actions, action-info"
-#    And I save the page as "odr-actions-info-empty"
-#     # empty form
-#    When I press "odr_action_info_save"
-#    Then the following fields should have an error:
-#      | odr_action_info_actionMoreInfo_0 |
-#      | odr_action_info_actionMoreInfo_1 |
-#    # no
-#    When I fill in the following:
-#      |  odr_action_info_actionMoreInfo_1 | no |
-#    And I press "odr_action_info_save"
-#    Then the form should be valid
-#    When I click on "action-info"
-#    Then the following fields should have the corresponding values:
-#      |  odr_action_info_actionMoreInfo_1 | no |
-#    # yes: wrong
-#    When I fill in the following:
-#      |  odr_action_info_actionMoreInfo_0 | yes |
-#      |  odr_action_info_actionMoreInfoDetails |  |
-#    And I press "odr_action_info_save"
-#    Then the following fields should have an error:
-#      | odr_action_info_actionMoreInfoDetails |
-#    # yes
-#    When I fill in the following:
-#      |  odr_action_info_actionMoreInfo_0 | yes |
-#      |  odr_action_info_actionMoreInfoDetails | amid |
-#    And I press "odr_action_info_save"
-#    Then the form should be valid
-#    # check
-#    When I click on "action-info"
-#    Then the following fields should have the corresponding values:
-#      |  odr_action_info_actionMoreInfo_0 | yes |
-#      |  odr_action_info_actionMoreInfoDetails | amid |
-#    And I save the page as "odr-actions-info-done"
+       # gifts
+    And the step cannot be submitted without making a selection
+    Then the step with the following values CANNOT be submitted:
+      | actions_actionGiveGiftsToClient_0      | yes |       |
+      | actions_actionGiveGiftsToClientDetails |     | [ERR] |
+    Then the step with the following values CAN be submitted:
+      | actions_actionGiveGiftsToClient_0      | yes    |
+      | actions_actionGiveGiftsToClientDetails | aggtcd |
+    # property
+    And the step cannot be submitted without making a selection
+    Then the step with the following values CAN be submitted:
+      | actions_actionPropertyMaintenance_0 | yes |
+    And the step cannot be submitted without making a selection
+    Then the step with the following values CAN be submitted:
+      | actions_actionPropertySellingRent_0 | yes |
+    And the step cannot be submitted without making a selection
+    Then the step with the following values CAN be submitted:
+      | actions_actionPropertyBuy_0 | yes |
+    # check summary page
+    And each text should be present in the corresponding region:
+      | Yes    | give-gifts-client |
+      | aggtcd | give-gifts-client-details |
+      | Yes    | property-maintenance |
+      | Yes    |  property-selling-rent|
+      | Yes    |  property-buy|
+    # check step 1 reloaded
+    When I click on "edit" in the "give-gifts-client" region
+    Then the following fields should have the corresponding values:
+      | actions_actionGiveGiftsToClient_0      | yes    |
+      | actions_actionGiveGiftsToClientDetails | aggtcd |
+    And I go back from the step
