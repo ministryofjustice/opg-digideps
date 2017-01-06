@@ -35,7 +35,7 @@ class AssetTypeTitle extends AbstractType
     }
 
     /**
-     * @return array with choices for the "title" choice element
+     * @return array with choices for the "title" dropdown element
      */
     public function getTitleChoices()
     {
@@ -62,9 +62,8 @@ class AssetTypeTitle extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title', 'choice', [
-                'choices'  => $this->getTitleChoices(),
-                'expanded' => true
-            ])
+                'choices' => $this->getTitleChoices(),
+                'expanded' => true])
             ->add('save', 'submit');
     }
 
@@ -72,7 +71,7 @@ class AssetTypeTitle extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-            'validation_groups'  => 'title_only',
+            'validation_groups' => 'title_only',
         ]);
     }
 
