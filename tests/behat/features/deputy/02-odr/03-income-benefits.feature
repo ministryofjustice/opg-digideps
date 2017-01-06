@@ -4,103 +4,55 @@ Feature: odr / finance income benefits
   Scenario: income and benefits
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-income_benefits, start"
-#    And I save the page as "odr-income-benefits-empty"
-#    # empty
-#    And I press "odr_income_state_benefits_save"
-#    Then the form should be valid
-#    # error
-#    When I check "odr_income_state_benefits_stateBenefits_11_present"
-#    And I press "odr_income_state_benefits_save"
-#    Then the following fields should have an error:
-#      | odr_income_state_benefits_stateBenefits_11_moreDetails |
-#    # correct
-#    When I check "odr_income_state_benefits_stateBenefits_9_present"
-#    And I check "odr_income_state_benefits_stateBenefits_11_present"
-#    And I fill in the following:
-#      |  odr_income_state_benefits_stateBenefits_11_moreDetails | other benefits details |
-#    And I press "odr_income_state_benefits_save"
-#    # check saved ok
-#    When I click on "finance-income-benefits"
-#    Then the following fields should have the corresponding values:
-#      |  odr_income_state_benefits_stateBenefits_9_present | 1 |
-#      |  odr_income_state_benefits_stateBenefits_11_present | 1 |
-#      |  odr_income_state_benefits_stateBenefits_11_moreDetails | other benefits details |
-#
-#  @odr
-#  Scenario: income and benefits / pension
-#    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-finances, finance-income-benefits"
-#    # empty
-#    When I press "odr_income_pension_save"
-#    Then the following fields should have an error:
-#      | odr_income_pension_receiveStatePension_0 |
-#      | odr_income_pension_receiveStatePension_1 |
-#      | odr_income_pension_receiveOtherIncome_0 |
-#      | odr_income_pension_receiveOtherIncome_1 |
-#    #  error
-#    Then I fill in the following:
-#      |  odr_income_pension_receiveStatePension_1 | no |
-#      |  odr_income_pension_receiveOtherIncome_0 | yes |
-#      |  odr_income_pension_receiveOtherIncomeDetails |  |
-#    And I press "odr_income_pension_save"
-#    Then the following fields should have an error:
-#      | odr_income_pension_receiveOtherIncomeDetails |
-#    # correct
-#    When I fill in the following:
-#      |  odr_income_pension_receiveStatePension_1 | no |
-#      |  odr_income_pension_receiveOtherIncome_0 | yes |
-#      |  odr_income_pension_receiveOtherIncomeDetails | roi-details |
-#    And I press "odr_income_pension_save"
-#    Then the form should be valid
-#    # check saved ok
-#    When I click on "finance-income-benefits"
-#    Then the following fields should have the corresponding values:
-#      |  odr_income_pension_receiveStatePension_1 | no |
-#      |  odr_income_pension_receiveOtherIncome_0 | yes |
-#      |  odr_income_pension_receiveOtherIncomeDetails | roi-details |
-#
-#  @odr
-#  Scenario: income and benefits / damages
-#    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-finances, finance-income-benefits"
-#    # empty
-#    When I press "odr_income_damage_save"
-#    Then the following fields should have an error:
-#      | odr_income_damage_expectCompensationDamages_0 |
-#      | odr_income_damage_expectCompensationDamages_1 |
-#    #  error
-#    Then I fill in the following:
-#      |  odr_income_damage_expectCompensationDamages_0 | yes |
-#      |  odr_income_damage_expectCompensationDamagesDetails |  |
-#    And I press "odr_income_damage_save"
-#    Then the following fields should have an error:
-#      | odr_income_damage_expectCompensationDamagesDetails |
-#    # correct
-#    When I fill in the following:
-#      |  odr_income_damage_expectCompensationDamages_0 | yes |
-#      |  odr_income_damage_expectCompensationDamagesDetails | ecd-details |
-#    And I press "odr_income_damage_save"
-#    Then the form should be valid
-#    # check saved ok
-#    When I click on "finance-income-benefits"
-#    Then the following fields should have the corresponding values:
-#      |  odr_income_damage_expectCompensationDamages_0 | yes |
-#      |  odr_income_damage_expectCompensationDamagesDetails | ecd-details |
-#
-#  @odr
-#  Scenario: income and benefits / one off
-#    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "odr-start, edit-finances, finance-income-benefits"
-#    And I save the page as "odr-income-benefits-empty"
-#    # empty
-#    And I press "odr_income_one_off_save"
-#    Then the form should be valid
-#    # correct
-#    When I check "odr_income_one_off_oneOff_0_present"
-#    And I check "odr_income_one_off_oneOff_2_present"
-#    And I press "odr_income_one_off_save"
-#    # check saved ok
-#    When I click on "finance-income-benefits"
-#    Then the following fields should have the corresponding values:
-#      |  odr_income_one_off_oneOff_0_present | 1 |
-#      |  odr_income_one_off_oneOff_2_present | 1 |
+    # State benefits: tick Housing benefit, Universal Credit
+    And the step with the following values CANNOT be submitted:
+      | income_benefits_stateBenefits_11_present     | 1 |       |
+      | income_benefits_stateBenefits_11_moreDetails |   | [ERR] |
+    And the step with the following values CAN be submitted:
+      | income_benefits_stateBenefits_4_present      | 1      |
+      | income_benefits_stateBenefits_11_present     | 1      |
+      | income_benefits_stateBenefits_11_moreDetails | st11md |
+    # Pensions and other income
+    And the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | income_benefits_receiveStatePension_0 | yes |
+    And the step with the following values CANNOT be submitted:
+      | income_benefits_receiveOtherIncome_0      | yes |       |
+      | income_benefits_receiveOtherIncomeDetails |     | [ERR] |
+    And the step with the following values CAN be submitted:
+      | income_benefits_receiveOtherIncome_0      | yes  |
+      | income_benefits_receiveOtherIncomeDetails | roid |
+    # damages
+    And the step with the following values CANNOT be submitted:
+      | income_benefits_expectCompensationDamages_0      | yes |       |
+      | income_benefits_expectCompensationDamagesDetails |     | [ERR] |
+    And the step with the following values CAN be submitted:
+      | income_benefits_expectCompensationDamages_0      | yes  |
+      | income_benefits_expectCompensationDamagesDetails | ecdd |
+    # one off : tick Refunds, Sale of property
+    And the step with the following values CAN be submitted:
+      | income_benefits_oneOff_2_present | 1 |
+      | income_benefits_oneOff_5_present | 1 |
+        # check record in summary page
+    And each text should be present in the corresponding region:
+      | Housing benefit  | benefits                                  |
+      | Other benefits   | benefits                                  |
+      | Yes              | benefits-other-more-details               |
+      | Yes              | receive-state-pension                     |
+      | Yes              | receive-other-regular-income              |
+      | roid             | receive-other-regular-income-more-details |
+      | Yes              | compensation-awards                       |
+      | ecdd             | compensation-awards-more-details          |
+      | Refunds          | one-off                                   |
+      | Sale of property | one-off                                   |
+     # edit and check back link
+    When I click on "edit" in the "benefits-other-more-details" region
+    When I click on "step-back"
+      # edit
+    When I click on "edit" in the "benefits-other-more-details" region
+    And I uncheck "income_benefits_stateBenefits_11_present"
+    And I submit the step
+    # check edited
+    Then I should not see the "benefits-other-more-details" region
+    And each text should be present in the corresponding region:
+      | Housing benefit  | benefits                                  |
