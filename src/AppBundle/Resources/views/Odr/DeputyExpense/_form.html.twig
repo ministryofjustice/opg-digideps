@@ -9,6 +9,6 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {{ form_submit(form.save, 'form.save', { 'buttonClass': '' }) }}
+    {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
