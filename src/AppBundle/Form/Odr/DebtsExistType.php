@@ -31,6 +31,6 @@ class DebtsExistType extends AbstractType
 
     public function getName()
     {
-        return 'odr_debt_exist';
+        return 'debt_exist';
     }
 }
