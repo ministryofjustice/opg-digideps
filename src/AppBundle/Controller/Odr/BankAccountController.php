@@ -21,7 +21,7 @@ class BankAccountController extends AbstractController
      */
     public function startAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if (count($odr->getBankAccounts())) {
             return $this->redirectToRoute('odr_bank_accounts_summary', ['odrId' => $odrId]);
         }
@@ -45,7 +45,7 @@ class BankAccountController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -132,7 +132,7 @@ class BankAccountController extends AbstractController
      */
     public function addAnotherAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Odr\BankAccountAddAnotherType(), $odr);
         $form->handleRequest($request);
@@ -162,7 +162,7 @@ class BankAccountController extends AbstractController
      */
     public function summaryAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if (count($odr->getBankAccounts()) === 0) {
             return $this->redirectToRoute('odr_bank_accounts', ['odrId' => $odrId]);
         }
@@ -182,7 +182,7 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction(Request $request, $odrId, $accountId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

@@ -26,7 +26,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function startAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         if (count($odr->getExpenses()) > 0 || $odr->getPaidForAnything() !== null) {
             return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
@@ -43,7 +43,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function existAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Odr\DeputyExpenseExistType(), $odr);
         $form->handleRequest($request);
 
@@ -77,7 +77,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function addAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = new EntityDir\Odr\Expense();
 
         $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
@@ -115,7 +115,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function addAnotherAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Odr\DeputyExpenseAddAnotherType(), $odr);
         $form->handleRequest($request);
@@ -142,7 +142,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function editAction(Request $request, $odrId, $expenseId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('odr/'.$odr->getId().'/expense/' . $expenseId, 'Odr\Expense');
 
         $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
@@ -176,7 +176,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function summaryAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if (count($odr->getExpenses()) === 0 && $odr->getPaidForAnything() === null) {
             return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
         }
@@ -196,7 +196,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function deleteAction(Request $request, $odrId, $expenseId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         $this->getRestClient()->delete('odr/'.$odr->getId().'/expense/'.$expenseId);
 

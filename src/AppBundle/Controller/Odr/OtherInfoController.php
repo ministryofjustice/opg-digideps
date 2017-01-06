@@ -25,7 +25,7 @@ class OtherInfoController extends AbstractController
      */
     public function startAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if ($odr->getActionMoreInfo() !== null) {
             return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
         }
@@ -45,7 +45,7 @@ class OtherInfoController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
         }
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -89,7 +89,7 @@ class OtherInfoController extends AbstractController
     public function summaryAction(Request $request, $odrId)
     {
         $fromPage = $request->get('from');
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         //$this->flagSectionStarted($odr, self::SECTION_ID);
         if ($odr->getActionMoreInfo() === null && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_other_info', ['odrId' => $odrId]);

@@ -64,15 +64,14 @@ Feature: odr / report submit
     @odr
     Scenario: check ODR report not accessible after submission
         Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And the URL "/odr/1/visits-care" should not be accessible
-        And the URL "/odr/1/deputy-expenses" should not be accessible
-        And the URL "/odr/1/income-benefits" should not be accessible
-        And the URL "/odr/1/bank-accounts" should not be accessible
-        And the URL "/odr/1/assets" should not be accessible
-        And the URL "/odr/1/debts" should not be accessible
-        And the URL "/odr/1/actions" should not be accessible
-        And the URL "/odr/1/any-other-info" should not be accessible
-        And the URL "" should not be accessible
+        And the URL "/odr/1/visits-care/summary" should not be accessible
+        And the URL "/odr/1/deputy-expenses/summary" should not be accessible
+        And the URL "/odr/1/income-benefits/summary" should not be accessible
+        And the URL "/odr/1/bank-accounts/summary" should not be accessible
+        And the URL "/odr/1/assets/summary" should not be accessible
+        And the URL "/odr/1/debts/summary" should not be accessible
+        And the URL "/odr/1/actions/summary" should not be accessible
+        And the URL "/odr/1/any-other-info/summary" should not be accessible
 
     @odr
     Scenario: ODR homepage and create new report

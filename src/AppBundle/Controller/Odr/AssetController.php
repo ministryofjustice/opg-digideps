@@ -24,7 +24,7 @@ class AssetController extends AbstractController
      */
     public function startAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if (count($odr->getAssets()) > 0 || $odr->getNoAssetToAdd()) {
             return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
         }
@@ -40,7 +40,7 @@ class AssetController extends AbstractController
      */
     public function existAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if ($request->getMethod() == 'GET' && $odr->getAssets()) { // if assets are added, set form default to "Yes"
             $odr->setNoAssetToAdd(0);
         }
@@ -76,7 +76,7 @@ class AssetController extends AbstractController
      */
     public function typeAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm('odr_asset_title', new EntityDir\Odr\AssetOther(), [
         ]);
         $form->handleRequest($request);
@@ -105,7 +105,7 @@ class AssetController extends AbstractController
      */
     public function otherAddAction(Request $request, $odrId, $title)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $asset = new EntityDir\Odr\AssetOther();
         $asset->setTitle($title);
         $asset->setodr($odr);
@@ -134,7 +134,7 @@ class AssetController extends AbstractController
      */
     public function otherEditAction(Request $request, $odrId, $assetId = null)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if ($assetId) {
             $asset = $this->getRestClient()->get("odr/{$odrId}/asset/{$assetId}", 'Odr\\Asset');
         } else {
@@ -170,7 +170,7 @@ class AssetController extends AbstractController
      */
     public function addAnotherAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Odr\Asset\AssetAddAnotherType(), $odr);
         $form->handleRequest($request);
@@ -205,7 +205,7 @@ class AssetController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -325,7 +325,7 @@ class AssetController extends AbstractController
      */
     public function summaryAction($odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if (count($odr->getAssets()) === 0 && $odr->getNoAssetToAdd() === null) {
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
         }
@@ -342,7 +342,7 @@ class AssetController extends AbstractController
      */
     public function deleteAction(Request $request, $odrId, $assetId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         if ($odr->hasAssetWithId($assetId)) {
             $this->getRestClient()->delete("/odr/{$odrId}/asset/{$assetId}");

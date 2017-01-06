@@ -84,7 +84,6 @@ class IndexController extends AbstractController
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
-
         if ($odr->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
         }

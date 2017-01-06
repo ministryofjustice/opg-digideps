@@ -20,7 +20,7 @@ class DebtController extends AbstractController
      */
     public function startAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if ($odr->getHasDebts() != null) {
             return $this->redirectToRoute('odr_debts_summary', ['odrId' => $odrId]);
         }
@@ -36,7 +36,7 @@ class DebtController extends AbstractController
      */
     public function existAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Odr\DebtsExistType(), $odr);
         $form->handleRequest($request);
 
@@ -70,7 +70,7 @@ class DebtController extends AbstractController
      */
     public function editAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Odr\DebtsType(), $odr);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
@@ -105,7 +105,7 @@ class DebtController extends AbstractController
      */
     public function summaryAction(Request $request, $odrId)
     {
-        $odr = $this->getOdr($odrId, self::$jmsGroups);
+        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         if ($odr->getHasDebts() == null) {
             return $this->redirectToRoute('odr_debts', ['odrId' => $odrId]);
         }
