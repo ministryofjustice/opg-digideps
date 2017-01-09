@@ -29,6 +29,8 @@ class ReportController extends AbstractController
         'mental-capacity',
         'money-transfer',
         'transaction',
+        'transactionsIn',
+        'transactionsOut',
     ];
 
     /**
@@ -40,6 +42,10 @@ class ReportController extends AbstractController
     public function indexAction(Request $request, $cot, $reportId = null)
     {
         $user = $this->getUserWithData(['user', 'client', 'report']);
+        if ($user->isOdrEnabled()) {
+            return $this->redirectToRoute('odr_index');
+        }
+
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 

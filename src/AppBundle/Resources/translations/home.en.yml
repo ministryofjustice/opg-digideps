@@ -1,4 +1,5 @@
 htmlTitle: "Deputy report | GOV.UK"
+pageTitle: "Complete the deputy report"
 intro: |
     This online service helps you as a deputy to tell the Office of the Public Guardian (OPG)
     about decisions you've made on behalf of the client and who you've consulted with. It also
@@ -8,11 +9,15 @@ iwanttocreate: I want to register for the online deputy service
 createaccount: Create an account now
 
 whatyouneed: What you'll need to sign up to the deputy service
-whatyouneedlist: "* the case number. Every letter from us will have your case number; look for 'OPG reference' * your email address * your client's last name"
+whatyouneedListItem1: "the case number. Every letter from us will have your case number; look for 'OPG reference'"
+whatyouneedListItem2: "your email address"
+whatyouneedListItem3: "your client's last name"
 ialready: I already have a deputy account
 signtoaccess: Sign in to access your existing account
 makesure: "Make sure you've got:"
-makelist: "*your financial records (for example bank statements or spreadsheets) * your record of any decisions you've made for the client * your record of anyone you've contacted for the client"
+makeListItem1: "your financial records (for example bank statements or spreadsheets)"
+makeListItem2: "your record of any decisions you've made for the client"
+makeListItem3: "your record of anyone you've contacted for the client"
 before: Before you begin
 beginsummary: "If you're new to the deputy service there are a few things that you may need to know. The help topics and quick questions below are a good place to start. You don't have to complete the deputy report in one go; you can save your details and come back later on"
 morethanone: More than one deputy?

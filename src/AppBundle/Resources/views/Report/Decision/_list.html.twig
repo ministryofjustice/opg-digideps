@@ -1,0 +1,126 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# mental capacity #}
+        <tr class="behat-region-mental-capacity">
+            <td>
+               {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {% if report.mentalCapacity.hasCapacityChanged == 'stayedSame' %}
+                    Stayed the same
+                {% elseif report.mentalCapacity.hasCapacityChanged == 'changed' %}
+                    Changed
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.mentalCapacity.hasCapacityChanged == 'changed' %}
+            <tr class="behat-region-mental-capacity-changed-details">
+                <td>Mental capacity changes details</td>
+                <td>{{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# decisions #}
+        <tr  class="behat-region-has-decisions">
+            {% if not report.hasDecisions %}
+                <td>
+                    <span class="error">
+                        {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'existPage.form.hasDecisions.label' | trans(transOptions)  }}
+                </td>
+                <td>
+                    {{ report.hasDecisions | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+        {% if report.reasonForNoDecisions %}
+            <tr class="behat-region-reason-no-decisions">
+                <td>Reason for no decisions</td>
+                <td>{{ report.reasonForNoDecisions | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% if report.decisions | length > 0 %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of significant decisions</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% if report.decisions | length > 0 %}
+    <table class="check-your-answers columns-3">
+        <thead>
+            <tr>
+                <th>{{ 'summaryPage.decisionTableColumnHeading1' | trans(transOptions)  }}</th>
+                <th>{{ 'summaryPage.decisionTableColumnHeading2' | trans(transOptions)  }}</th>
+                <th>{{ 'summaryPage.decisionTableColumnHeading3' | trans(transOptions)  }}</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for decision in report.decisions %}
+                <tr class="behat-region-decision-{{ loop.index }}">
+                    <td class="width-quarter">
+                        {{ decision.description | nl2br }}
+                    </td>
+                    <td class="width-eighth">
+                        {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                    </td>
+                    <td class="width-quarter">
+                        {{ decision.clientInvolvedDetails | nl2br }}
+                    </td>
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

@@ -1,0 +1,16 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_input(form.contactName, 'form.contactName') }}
+    {{ form_input(form.relationship, 'form.relationship', {
+        'labelText': 'form.relationship.label' | trans({'%client%': report.client.firstname}, translationDomain)
+    }) }}
+    {{ form_input(form.explanation, 'form.explanation') }}
+    {{ form_input(form.address, 'form.address') }}
+    {{ form_input(form.address2, 'form.address2') }}
+    {{ form_input(form.county, 'form.county') }}
+    {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control__postcode' }) }}
+    {{ form_select(form.country, 'form.country') }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

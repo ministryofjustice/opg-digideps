@@ -1,20 +1,13 @@
-// Forms - Application specific version
 // ==========================================================================
+// FORMS
+// Various custom form styles
 
 // Fix for annoying clear x in windows
 input[type=text]::-ms-clear {
     display: none;
 }
 
-// TODO had to override after having added alphagovk repo. change for all block-labels ?
-.inline .block-label {
-    margin-bottom: 10px;
-}
-
 form {
-    padding: 0 3px 0 3px;
-    overflow: hidden;
-
     &.single-texta-area {
         padding-top: 3px;
     }
@@ -95,13 +88,6 @@ form {
 
 }
 
-.form-section {
-    @extend %contain-floats;
-    border-left: 3px solid $grey-2;
-    padding-left: 15px;
-    margin-bottom: 40px;
-}
-
 .form--client-add-report {
     margin: 40px 0 20px 0;
 }
@@ -112,15 +98,10 @@ form {
         float: left;
     }
 
-    .form-control,
     .expanding-wrapper {
         width: 90%;
         max-width: 540px;
         line-height: 1.4;
-    }
-
-    select.form-control {
-        width: 100%;
     }
 
     &.form-inline {
@@ -131,7 +112,6 @@ form {
 
     textarea.form-control {
         height: 7em;
-        width: 65%;
     }
 
     .pre-input-text {
@@ -154,6 +134,10 @@ form {
 .form-group__checkbox-group {
     margin-left: 2px;
 
+    // @deprecated
+    // @refactor
+    // Only used on client add where a hint description is
+    // forced between radio inputs in a group
     .vertical {
         .description {
             float: left;
@@ -176,14 +160,6 @@ form {
             margin-top: 30px;
         }
 
-    }
-
-    .horizontal {
-
-        .block-label {
-            clear: none;
-            margin-right: 20px;
-        }
     }
 
 }
@@ -240,20 +216,21 @@ ul.form-hint {
 }
 
 .input-group-prefix {
-    @include core-19();
-    margin: 2px 0 0 2px;
     position: absolute;
     width: 10px;
+    margin: 2px 0 0 2px;
     background: $grey-3;
     padding: 5px 9px 4px 8px;
     border: 0;
 
     + input {
+        position: relative;
         padding-left: 2em;
         margin: 0;
+        background: transparent;
     }
 
-    .error & {
+    .error > & {
         margin: 4px 0 0 4px;
     }
 }

@@ -1,29 +1,30 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% set translationDomain = "report-contacts" %}
-    {% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-    {% block pageBody %}
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'addPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
 
-        {% include 'AppBundle:Report/Contact:_contact_form.html.twig' with {
-        'translationDomain': translationDomain,
-        'showAddForm': true,
-        'form': form
-        } %}
-    {% endblock %}
+{% block pageContent %}
 
-    {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Report/Contact:_nextprevious.html.twig' %}
-    {% endblock %}
+    <p class="text">{{ 'addPage.pageSectionDescription' | trans(transOptions) }}</p>
 
-{% endembed %}
+    {% include 'AppBundle:Report/Contact:_form.html.twig' with {
+	    'translationDomain': translationDomain,
+	    'form': form
+    } %}
+
+{% endblock %}

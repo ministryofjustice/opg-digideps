@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "settings" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('home') }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if is_granted('ROLE_LAY_DEPUTY') %}
+
+        {% set transOptions = {'%client%': client.firstname} %}
+        <a href="{{ path('client_show') }}" class="behat-link-client-show">
+            <h2 class="heading-small">{{ 'links.clientDetails.label' | trans(transOptions) }}</h2>
+        </a>
+        <p class="text text-info">{{ 'links.clientDetails.hint' | trans(transOptions) }}</p>
+    {% else %}
+        {% set transOptions = {} %}
+    {% endif %}
+
+    <a href="{{ path('user_show') }}" class="behat-link-deputy-show">
+        <h2 class="heading-small">{{ 'links.userDetails.label' | trans(transOptions) }}</h2>
+    </a>
+    <p class="text text-info">{{ 'links.userDetails.hint' | trans(transOptions) }}</p>
+
+
+    <a href="{{ path('user_password_edit') }}" class="behat-link-change-password">
+        <h2 class="heading-small">{{ 'links.password.label' | trans(transOptions) }}</h2>
+    </a>
+    <p class="text text-info">{{ 'links.password.hint' | trans(transOptions) }}</p>
+
+
+{% endblock %}

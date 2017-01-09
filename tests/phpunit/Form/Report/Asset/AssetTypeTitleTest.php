@@ -16,8 +16,8 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[], []],
-            [['test'], ['dropdown.test-TRANSLATED' => 'dropdown.test-TRANSLATED']],
-            [['c', 'b', 'a'], ['dropdown.b-TRANSLATED' => 'dropdown.b-TRANSLATED', 'dropdown.c-TRANSLATED' => 'dropdown.c-TRANSLATED', 'dropdown.a-TRANSLATED' => 'dropdown.a-TRANSLATED']],
+            [['test'], ['form.title.choices.test-TRANSLATED' => 'form.title.choices.test-TRANSLATED']],
+            [['c', 'b', 'a'], ['form.title.choices.b-TRANSLATED' => 'form.title.choices.b-TRANSLATED', 'form.title.choices.c-TRANSLATED' => 'form.title.choices.c-TRANSLATED', 'form.title.choices.a-TRANSLATED' => 'form.title.choices.a-TRANSLATED']],
         ];
     }
 

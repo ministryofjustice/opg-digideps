@@ -1,3 +1,7 @@
+// ==========================================================================
+// BUTTON BAR
+// Containers for buttons
+
 .button-bar {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -23,22 +27,6 @@ form .form-group.button-bar {
     width: 100%;
 }
 
-.button-secondary {
-    @include button($grey-3);
-}
-
-.button-warning {
-    @include button($red);
-    margin-left: 60px;
-}
-
-.button-link {
-    line-height: 2.5;
-    margin-left: 15px;
-    top: 1px;
-    position: relative;
-}
-
 .save-section {
     float: none;
     clear: both;
@@ -51,9 +39,4 @@ form .form-group.button-bar {
 
 .next-section {
     padding-left: 15px;
-}
-
-.right-link {
-    margin-right: 297px;
-    float: right;
 }

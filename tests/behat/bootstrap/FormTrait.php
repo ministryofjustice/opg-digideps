@@ -88,27 +88,7 @@ trait FormTrait
         }
     }
 
-    /**
-     * @Then the :arg1 field should be expandable
-     * @Then the :arg1 field is expandable
-     */
-    public function expandableField($arg1)
-    {
-        $element = $this->getSession()->getPage()->find('css', 'textarea#'.$arg1.'.expanding');
 
-        if (!$element) {
-            throw new \RuntimeException('Cannot find an expanding textarea with that id: '.$arg1);
-        }
-    }
-
-    /**
-     * @Then /^I click on the first decision$/
-     * @Then /^I click on the first contact$/
-     */
-    public function iClickOnTheFirstDecision()
-    {
-        $this->getSession()->getPage()->clickLink('edit-1-link');
-    }
 
     /**
      * Fills in form field with specified id|name|label|value.
@@ -184,4 +164,5 @@ EOT;
             $elementsFound[0]->setValue($value);
         }
     }
+
 }

@@ -3,19 +3,23 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Traits\AgreeTrait;
-use AppBundle\Entity\Odr\Traits\OdrExpensesTrait;
-use AppBundle\Entity\Odr\Traits\OdrIncomeBenefitTrait;
 use AppBundle\Entity\Odr\Traits\ActionTrait;
+use AppBundle\Entity\Odr\Traits as OdrTraits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
+
+/**
+ * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
+ */
 class Odr
 {
-    use OdrIncomeBenefitTrait;
-    use OdrExpensesTrait;
-    use ActionTrait;
-    use AgreeTrait;
+    use OdrTraits\IncomeBenefitTrait;
+    use OdrTraits\DeputyExpenseTrait;
+    use OdrTraits\ActionTrait;
+    use OdrTraits\MoreInfoTrait;
+    use OdrTraits\AgreeTrait;
 
     /**
      * @JMS\Type("integer")
@@ -69,7 +73,7 @@ class Odr
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var Debt[]
      */
@@ -77,7 +81,7 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
      *
@@ -87,7 +91,7 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debts"})
+     * @JMS\Groups({"debt"})
      *
      * @var decimal
      */
@@ -312,6 +316,21 @@ class Odr
     }
 
     /**
+     * @param $debtId
+     * @return Debt|null
+     */
+    public function getDebtById($debtId)
+    {
+        foreach ($this->getDebts() as $debt) {
+            if ($debt->getDebtTypeId() == $debtId) {
+                return $debt;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return boolean
      */
     public function hasAtLeastOneDebt()
@@ -428,22 +447,26 @@ class Odr
 
         $ret = [];
         foreach ($this->assets as $asset) {
+            // select title
             if ($asset instanceof AssetProperty) {
-                $ret['Property'][$asset->getId()] = $asset;
+                $title = 'Property';
             } elseif ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
-                $ret[$title][$asset->getId()] = $asset;
             }
-        }
 
-        return $ret;
+            // add asset into "items" and sum total
+            $ret[$title]['items'][$asset->getId()] = $asset;
+            $ret[$title]['total'] = isset($ret[$title]['total'])
+                ? $ret[$title]['total'] + $asset->getValueTotal()
+                : $asset->getValueTotal();
+        }
 
         // order categories
         ksort($ret);
-        // order assets inside by key
+        // foreach category, order assets by ID desc
         foreach ($ret as &$row) {
-            ksort($row);
+            krsort($row['items']);
         }
 
         return $ret;

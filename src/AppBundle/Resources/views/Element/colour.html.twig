@@ -1,19 +1,21 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% block htmlTitle %}Colours - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Colours{% endblock %}
 
+{% block helpline %}{% endblock %}
 
-{% block pageTitle %}Digideps Styleguide{% endblock %}
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
     <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-    } %}
-
     <!-- Top Nav -->
     <div class="grid-row">
-        <h2 class="heading-large">Colours</h2>
 
         <div class="example">
 

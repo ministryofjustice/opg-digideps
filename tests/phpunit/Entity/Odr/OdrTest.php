@@ -23,13 +23,23 @@ class OdrTest extends \PHPUnit_Framework_TestCase
 
     public function testCountRecordsPresent()
     {
-        $this->assertEquals(0, $this->odr->countRecordsPresent(null));
-        $this->assertEquals(0, $this->odr->countRecordsPresent([]));
-        $this->assertEquals(0, $this->odr->countRecordsPresent([$this->incomeUnticked, $this->incomeUnticked]));
-        $this->assertEquals(1, $this->odr->countRecordsPresent([$this->incomeTicked, $this->incomeUnticked]));
-        $this->assertEquals(1, $this->odr->countRecordsPresent([$this->incomeTicked]));
+        $this->assertCount(0, $this->odr->recordsPresent(null));
+        $this->assertCount(0, $this->odr->recordsPresent([]));
+        $this->assertCount(0, $this->odr->recordsPresent([$this->incomeUnticked, $this->incomeUnticked]));
+        $this->assertCount(1, $this->odr->recordsPresent([$this->incomeTicked, $this->incomeUnticked]));
+        $this->assertCount(1, $this->odr->recordsPresent([$this->incomeTicked]));
     }
 
+    public function testgetStateBenefitOther()
+    {
+        $odr = new Odr;
+
+        $odr->setStateBenefits([]);
+        $this->assertNull($odr->getStateBenefitOther());
+
+        $odr->setStateBenefits([new IncomeBenefit('other_benefits', true)]);
+        $this->assertEquals('other_benefits', $odr->getStateBenefitOther()->getTypeId());
+    }
 
     public function testIncomeBenefitsStatus()
     {

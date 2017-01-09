@@ -1,6 +1,0 @@
-<!--Component: button-bar-start-->
-{% set class = 'form-group button-bar' %}
-{% if buttonBarClass is defined %}
-    {% set class = 'form-group button-bar ' ~ buttonBarClass %}
-{% endif %}
-<div class="{{ class }}" {% if divId is defined %} id="{{ divId }}" {% endif %}>

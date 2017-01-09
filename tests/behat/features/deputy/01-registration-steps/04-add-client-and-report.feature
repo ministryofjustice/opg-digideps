@@ -113,7 +113,7 @@ Feature: deputy / user / add client and report
         # missing D,M,Y
         When I fill in the following:
             | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
+            | report_startDate_month | 03 |
             | report_startDate_year | 2016 |
             | report_endDate_day |  |
             | report_endDate_month |  |
@@ -128,7 +128,7 @@ Feature: deputy / user / add client and report
         # invalid date
         When I fill in the following:
             | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
+            | report_startDate_month | 03 |
             | report_startDate_year | 2016 |
             | report_endDate_day | 99 |
             | report_endDate_month | 99 |
@@ -138,7 +138,7 @@ Feature: deputy / user / add client and report
         # date before report
         When I fill in the following:
             | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
+            | report_startDate_month | 03 |
             | report_startDate_year | 2016 |
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
@@ -148,7 +148,7 @@ Feature: deputy / user / add client and report
         # date range too high
         When I fill in the following:
             | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
+            | report_startDate_month | 03 |
             | report_startDate_year | 2016 |
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
@@ -159,7 +159,7 @@ Feature: deputy / user / add client and report
         # valid form
         Then I fill in the following:
             | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
+            | report_startDate_month | 03 |
             | report_startDate_year | 2016 |
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |

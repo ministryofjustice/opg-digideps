@@ -1,0 +1,63 @@
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{# "client own assets" question #}
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="behat-region-has-assets">
+            <td>
+                {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ odr.noAssetToAdd ? 'No' : 'Yes' }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ url('odr_assets_exist', { 'odrId': odr.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{# display title if assets are present #}
+{% if odr.assets %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of assets</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('odr_assets_type', { 'odrId': odr.id}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                {{ 'summaryPage.addButton' | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{# display assets in groups #}
+{% for groupId, assetsInGroup in odr.assetsGroupedByTitle %}
+    {% if (groupId | lower) == 'property' %}
+        {% include 'AppBundle:Odr/Asset/Property:_list_item.html.twig' %}
+    {% else %}
+        {% include 'AppBundle:Odr/Asset/Other:_list_item.html.twig'%}
+    {% endif %}
+{% endfor %}
+
+{# Total #}
+{% if odr.assets %}
+    <table class="check-your-answers push--top">
+        <tr class="no-border">
+            <td class="numeric-small hard--right">
+                <span class="heading-medium behat-region-asset-total">Total value of assets: £{{ odr.assetsTotalValue | money_format }}</span>
+            </td>
+        </tr>
+    </table>
+{% endif %}

@@ -1,26 +1,21 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "registration" %}
 
-{% block pageTitle %}{{ 'createReport.pageTitle' | trans }} {% endblock %}
-{% block title %}{{ 'createReport.h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'createReport.pageTitle' | trans }} {% endblock %}
+{% block pageTitle %}{{ 'createReport.h1Title' | trans }}{% endblock %}
 
-{% block pageNavigation %}
+{% block progressBar %}
     {% if app.user.odrEnabled %}
-        <nav class="back-bar">
-            <a id="overview-button" href="{{ path('odr_index') }}">Return to Homepage</a>
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
-        </nav>
+        <a id="overview-button" href="{{ path('odr_index') }}" class="link-back behat-link-step-back">Return to Homepage</a>
     {% else %}
         {{ progress_bar_registration(app.user, 'create_report') }}
     {% endif %}
 {% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block helpline %}{% endblock %}
 
-
-{% block pageBody %}
+{% block pageContent %}
 
     {% include 'AppBundle:Report:_report_form.html.twig' %}
 

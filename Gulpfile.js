@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     scsslint = require('gulp-scss-lint'),
     jshint = require('gulp-jshint'),
+    replace = require('gulp-replace'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     source = require('vinyl-source-stream'),
@@ -107,22 +108,23 @@ gulp.task('sass.application-print', () => {
 
 });
 
-// Copy govuk template css to stylesheets
+// Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
 gulp.task('copy-css', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
+        .pipe(replace('images/', '/images/'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
 gulp.task('sass.images', () => {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+        .pipe(gulp.dest('./web/images'));
 
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
         .pipe(gulp.dest('./web/images'));
 
-    gulp.src(config.sassSrc + '/images/**/*')
-        .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+    gulp.src(config.imgSrc + '/**/*')
+        .pipe(gulp.dest('./web/images'));
 });
 gulp.task('sass.fonts', () => {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
@@ -143,7 +145,9 @@ gulp.task('js.prod', ['lint.js'], () => {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            config.jsSrc + '/*.js'])
+            './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
+            config.jsSrc + '/modules/*.js',
+            config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
         .pipe(uglify())
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
@@ -156,7 +160,9 @@ gulp.task('js.debug', function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            config.jsSrc + '/*.js'])
+            './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
+            config.jsSrc + '/modules/*.js',
+            config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });

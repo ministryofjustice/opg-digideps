@@ -5,15 +5,16 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use AppBundle\Service\StringUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class IndexController extends AbstractController
 {
@@ -43,7 +44,6 @@ class IndexController extends AbstractController
         ]);
         $form->handleRequest($request);
         $vars = [
-            'form' => $form->createView(),
             'isAdmin' => $this->container->getParameter('env') === 'admin',
         ];
 
@@ -64,7 +64,11 @@ class IndexController extends AbstractController
                     // too-many-attempts warning. captcha ?
                 }
 
-                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $error]);
+                $form->addError(new FormError($error));
+
+                return $this->render('AppBundle:Index:login.html.twig', [
+                        'form' => $form->createView(),
+                    ] + $vars);
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
@@ -94,7 +98,9 @@ class IndexController extends AbstractController
 
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
+            return $this->render('AppBundle:Index:login-from-logout.html.twig', [
+                    'form' => $form->createView()
+                ] + $vars);
         } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [
@@ -102,7 +108,9 @@ class IndexController extends AbstractController
             ], 'signin');
         }
 
-        return $this->render('AppBundle:Index:login.html.twig', $vars);
+        return $this->render('AppBundle:Index:login.html.twig', [
+                'form' => $form->createView()
+            ] + $vars);
     }
 
     /**

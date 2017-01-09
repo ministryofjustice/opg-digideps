@@ -1,5 +1,7 @@
-// Example boxes
 // ==========================================================================
+// EXAMPLE
+// Example boxes in the styleguide
+
 // Fix grid layout within example boxes for IE7 and below
 // where box-sizing isn't supported: http://caniuse.com/#search=box-sizing
 @mixin example-box-column($width) {

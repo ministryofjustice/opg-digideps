@@ -227,4 +227,24 @@ class BehatController extends AbstractController
             ],
         ]);
     }
+
+    /**
+     * @Route("/reset-report-dev/{reportId}", name="reset-report")
+     */
+    public function resetReportAction($reportId)
+    {
+        $this->getRestClient()->put('report/'.$reportId.'/reset-data-dev', []);
+
+        return $this->redirectToRoute('report_overview', ['reportId'=>$reportId]);
+    }
+
+    /**
+     * @Route("/reset-odr-dev/{odrId}", name="reset-odr")
+     */
+    public function resetOdrAction($odrId)
+    {
+        $this->getRestClient()->put('odr/'.$odrId.'/reset-data-dev', []);
+
+        return $this->redirectToRoute('odr_overview');
+    }
 }

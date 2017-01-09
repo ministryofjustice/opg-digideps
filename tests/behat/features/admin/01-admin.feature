@@ -101,7 +101,7 @@ Feature: admin / admin
         And I press "change_password_save"
         Then the form should be valid
         # restore old password (and assert the current password can be used as old password)
-        When I click on "change-password"
+        When I click on "user-account, change-password"
         And I fill in the following:
           | change_password_current_password | Abcd12345 |
           | change_password_plain_password_first | Abcd1234 |

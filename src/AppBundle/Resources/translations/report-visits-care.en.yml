@@ -2,8 +2,8 @@ startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   pageSectionDescription: |
-    Please tell us about %client%'s care and contact with you and other people. We ask about this
-    because it’s OPG’s responsibility to make sure you are looking after %client%'s best interests,
+    Please tell us about %client%’s care and contact with you and other people. We ask about this
+    because it’s OPG’s responsibility to make sure you are looking after %client%’s best interests,
     including health and welfare.
   startButton: Start visits and care
 

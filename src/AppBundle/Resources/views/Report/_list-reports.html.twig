@@ -20,7 +20,7 @@
             </h3>
 
             {% if report.submitted %}
-                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="view-button view-report-link behat-link-download-{{ report.getPeriod() }}-report">
+                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="view-button view-report-link behat-link-download-{{ report.getPeriod() | behat_namify }}-report">
                     {{ 'reportDataList.downloadThisReportLink' | trans() }}
                 </a>
             {% else %}
@@ -35,7 +35,7 @@
                 {% if report.submitted %}
                     {% set submitDate = ( report.getSubmitDate() is null ? 'reportDataList.submitDateNotSet'|trans : report.getSubmitDate() | date(" d F Y") ) %}
                     <dt class="item-label">{{ 'reportDataList.status' | trans }}</dt>
-                    <dd class="item-value behat-region-report-{{ report.getPeriod() }}-submitted-on">{{ 'reportDataList.submitted' | trans( { '%date%': submitDate } ) }}</dd>
+                    <dd class="item-value behat-region-report-{{ report.getPeriod() | behat_namify }}-submitted-on">{{ 'reportDataList.submitted' | trans( { '%date%': submitDate } ) }}</dd>
                 {% elseif report.isDue() %}
                     <dt class="item-label">{{ 'reportDataList.status' | trans }}</dt>
                     <dd class="item-value">{{ 'reportDataList.isDue' | trans }}</dd>

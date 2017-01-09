@@ -1,24 +1,8 @@
+// ==========================================================================
+// REPORT OVERVIEW
+// Layout for overview pages
+
 .report-overview {
-
-    .page-section-warning {
-
-        width: auto;
-
-        @include media(mobile) {
-            #submit-start-at {
-                display: block;
-            }
-        }
-
-    }
-
-    span.icon.icon__notification {
-
-        @include media(mobile) {
-            display: none;
-        }
-
-    }
 
     #pagebody {
 

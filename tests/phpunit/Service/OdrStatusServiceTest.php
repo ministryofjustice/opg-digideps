@@ -3,11 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\BankAccount;
-use AppBundle\Entity\Odr\Debt;
-use AppBundle\Entity\Odr\VisitsCare;
-use Mockery as m;
+use AppBundle\Entity\Odr\Expense;
+use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\VisitsCare;
 use AppBundle\Service\OdrStatusService as StatusService;
+use Mockery as m;
 
 class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,6 +21,14 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $odr = m::mock(Odr::class, $odrMethods + [
                 'getVisitsCare' => [],
+                'getExpenses' => [],
+                'getPaidForAnything' => null,
+                'getStateBenefits' => [],
+                'recordsPresent' => [],
+                'getReceiveStatePension' => null,
+                'getReceiveOtherIncome' => null,
+                'getExpectCompensationDamages' => null,
+                'getOneOff' => [],
                 'getBankAccounts' => [],
                 'getHasDebts' => null,
                 'getNoAssetToAdd' => null,
@@ -38,85 +47,146 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function visitsCareProvider()
     {
-        $visitsCareOk = m::mock(VisitsCare::class, [
+        $visitsCareNotMissinginfo = m::mock(VisitsCare::class, [
             'missingInfo' => false,
         ]);
-
-        $visitsCareErr = m::mock(VisitsCare::class, [
+        $visitsCareMissinginfo = m::mock(VisitsCare::class, [
             'missingInfo' => true,
         ]);
 
         return [
             // not started
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $visitsCareErr], StatusService::STATE_NOT_STARTED],
-            // done
-            [['getVisitsCare' => $visitsCareOk], StatusService::STATE_DONE],
+            [['getVisitsCare' => null], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $visitsCareMissinginfo], StatusService::STATE_INCOMPLETE],
+            [['getVisitsCare' => $visitsCareNotMissinginfo], StatusService::STATE_DONE],
         ];
     }
 
     /**
+     * @test
      * @dataProvider visitsCareProvider
      */
-    public function testVisitsCare($mocks, $state)
+    public function visitsCare($mocks, $state)
     {
         $object = $this->getOdrMocked($mocks);
         $this->assertEquals($state, $object->getVisitsCareState());
     }
 
 
-    public function financeProvider()
+    public function expensesProvider()
     {
-        $bankAccount1 = m::mock(BankAccount::class);
+        $expense = m::mock(Expense::class, [
+            'missingInfo' => false,
+        ]);
 
         return [
-            // not started
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'not-started'], StatusService::STATE_NOT_STARTED],
-            // incomplete
-            [['getBankAccounts' => [$bankAccount1], 'incomeBenefitsStatus'=>'not-started'], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'incomplete'], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [], 'incomeBenefitsStatus'=>'done'], StatusService::STATE_INCOMPLETE],
-            // done
-            [['getBankAccounts' => [$bankAccount1], 'incomeBenefitsStatus'=>'done'], StatusService::STATE_DONE],
-        ];
-    }
-
-    /**
-     * @dataProvider financeProvider
-     */
-    public function testFinance($mocks, $state)
-    {
-        $object = $this->getOdrMocked($mocks);
-        $this->assertEquals($state, $object->getFinanceState());
-    }
-
-    public function assetsDebtsProvider()
-    {
-        $asset = m::mock(\AppBundle\Entity\Asset::class);
-
-        return [
-            [[], StatusService::STATE_NOT_STARTED],
-            // missing sth
-            [['getAssets' => [$asset], 'getHasDebts' => null], StatusService::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'no'], StatusService::STATE_INCOMPLETE],
-            // done
-            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getHasDebts' => 'no'], StatusService::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
+            [['getPaidForAnything' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
+            [['getPaidForAnything' => 'no'], StatusService::STATE_DONE],
+            [['getExpenses' => [$expense], 'getPaidForAnything' => 'yes'], StatusService::STATE_DONE],
         ];
     }
 
     /**
      * @test
-     * @dataProvider assetsDebtsProvider
+     * @dataProvider expensesProvider
+     */
+    public function expenses($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getExpensesState());
+    }
+
+
+    public function incomeBenefitsProvider()
+    {
+        $ib = m::mock(IncomeBenefit::class, [
+            'missingInfo' => false,
+        ]);
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [[
+                'getExpectCompensationDamages'=>true, //only this one complete
+                ], StatusService::STATE_INCOMPLETE],
+            [[
+                'getReceiveStatePension'=>true,
+                'getReceiveOtherIncome'=>false,
+                'getExpectCompensationDamages'=>false], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider incomeBenefitsProvider
+     */
+    public function incomeBenefits($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getIncomeBenefitsState());
+    }
+
+    public function debtsProvider()
+    {
+        return [
+            [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getHasDebts' => 'no'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider debtsProvider
+     */
+    public function debts($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getDebtsState());
+    }
+
+    public function banksProvider()
+    {
+        $bankAccount1 = m::mock(BankAccount::class);
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$bankAccount1]], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider banksProvider
+     */
+    public function banks($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getBankAccountsState());
+    }
+
+    public function assetsProvider()
+    {
+        $asset = m::mock(\AppBundle\Entity\Asset::class);
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
+            [['getAssets' => [], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => false], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider assetsProvider
      */
     public function assets($mocks, $state)
     {
         $object = $this->getOdrMocked($mocks);
-        $this->assertEquals($state, $object->getAssetsDebtsState());
+        $this->assertEquals($state, $object->getAssetsState());
     }
 
     public function actionProvider()
@@ -126,19 +196,15 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
             'getActionPropertyBuy' => 'yes',
             'getActionPropertyMaintenance' => 'yes',
             'getActionPropertySellingRent' => 'yes',
-            'getActionMoreInfo' => 'yes',
         ];
 
         return [
             [[], StatusService::STATE_NOT_STARTED],
-            // missing sth
             [['getActionGiveGiftsToClient' => 'yes'], StatusService::STATE_INCOMPLETE],
             [['getActionPropertyBuy' => 'yes'], StatusService::STATE_INCOMPLETE],
             [['getActionPropertyMaintenance' => 'yes'], StatusService::STATE_INCOMPLETE],
             [['getActionPropertySellingRent' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getActionMoreInfo' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getActionMoreInfo' => 'yes', 'getActionPropertySellingRent' => 'yes'], StatusService::STATE_INCOMPLETE],
-            // done
+            [['getActionPropertyBuy' => 'yes', 'getActionPropertySellingRent' => 'yes'], StatusService::STATE_INCOMPLETE],
             [$allDone, StatusService::STATE_DONE],
         ];
     }
@@ -153,6 +219,26 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getActionsState());
     }
 
+
+    public function otherInfoProvider()
+    {
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getActionMoreInfo' => 'mr'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider otherInfoProvider
+     */
+    public function otherinfo($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getOtherInfoState());
+    }
+
+
     /**
      * @test
      */
@@ -160,21 +246,28 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->getOdrMocked([]);
         $rs = $object->getRemainingSections();
-        $this->assertCount(4, $rs);
         $this->assertEquals('not-started', $rs['visitsCare']);
-        $this->assertEquals('not-started', $rs['finance']);
-        $this->assertEquals('not-started', $rs['assetsDebts']);
+        $this->assertEquals('not-started', $rs['expenses']);
+        $this->assertEquals('not-started', $rs['incomeBenefits']);
+        $this->assertEquals('not-started', $rs['bankAccounts']);
+        $this->assertEquals('not-started', $rs['assets']);
+        $this->assertEquals('not-started', $rs['debts']);
         $this->assertEquals('not-started', $rs['actions']);
+        $this->assertEquals('not-started', $rs['otherInfo']);
     }
 
     public function getRemainingSectionsPartialProvider()
     {
         return [
-            // create using last DONE section of each provider
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
-            [array_pop($this->financeProvider())[0], 'finance'],
-            [array_pop($this->assetsDebtsProvider())[0], 'assets'],
+            [array_pop($this->expensesProvider())[0], 'expenses'],
+            [array_pop($this->incomeBenefitsProvider())[0], 'incomeBenefits'],
+            [array_pop($this->banksProvider())[0], 'bankAccounts'],
+            [array_pop($this->assetsProvider())[0], 'assets'],
+            [array_pop($this->debtsProvider())[0], 'debts'],
             [array_pop($this->actionProvider())[0], 'actions'],
+            [array_pop($this->otherInfoProvider())[0], 'otherInfo'],
+
         ];
     }
 
@@ -189,6 +282,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
     }
 
+
     /**
      * @test
      */
@@ -198,9 +292,13 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $object = $this->getOdrMocked(
             array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->financeProvider())[0]
-            + array_pop($this->assetsDebtsProvider())[0]
+            + array_pop($this->expensesProvider())[0]
+            + array_pop($this->incomeBenefitsProvider())[0]
+            + array_pop($this->banksProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->debtsProvider())[0]
             + array_pop($this->actionProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
         );
 
         $this->assertEquals([], $object->getRemainingSections());

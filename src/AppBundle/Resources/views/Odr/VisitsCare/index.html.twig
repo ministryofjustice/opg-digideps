@@ -1,20 +1,16 @@
-{% embed 'AppBundle:Components/Page:page-odr.html.twig'%}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
 
 {% set translationDomain = "odr-visits-care" %}
 {% trans_default_domain translationDomain %}
 
 {% block bodyClasses %}visits-care-page{% endblock %}
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 
-{% block pageBody %}
+{% block pageContent %}
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
-
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
-    {% endblock %}
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
 
     {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
           transDomain: translationDomain
@@ -25,18 +21,13 @@
     {{ form_checkbox_group(form.planMoveNewResidence, 'form.planMoveNewResidence', {
         'fieldSetClass' : 'inline plan-move-residence-radio',
         'legendClass' : 'form-label',
-        'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="plan-move-residence-details-textarea">
         <div class="panel panel-border-narrow">
             {{ form_input(form.planMoveNewResidenceDetails, 'planMoveNewResidenceDetails', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     </div>
@@ -44,18 +35,13 @@
     {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
         'fieldSetClass' : 'inline do-you-live-radio',
         'legendClass' : 'form-label',
-        'legendText' : 'doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="visit-questions">
         <div class="panel panel-border-narrow">
             {{ form_input(form.howOftenDoYouContactClient, 'howOftenDoYouContactClient', {
                 'labelClass': 'required',
-                'labelParameters': { '%client%': odr.client.firstname },
-                'inputClass': 'expanding'
+                'labelParameters': { '%client%': odr.client.firstname }
             }) }}
         </div>
     </div>
@@ -63,37 +49,24 @@
     {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
         'fieldSetClass' : 'inline does-client-receive-care',
         'legendClass' : 'form-label',
-        'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
 
     <div id="care-questions">
         <div class="panel panel-border-narrow">
             {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
                 'fieldSetClass' : 'stacked',
-                'legendClass' : 'form-label',
-                'items': [
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' },
-                    {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+                'legendClass' : 'form-label'
             }) }}
         </div>
     </div>
 
-    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required' }) }}
 
     {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
         'fieldSetClass' : 'inline care-plan',
         'legendClass' : 'form-label',
-        'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain),
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain)
     }) }}
     <div id="care-plan-questions">
         <div class="panel panel-border-narrow">
@@ -103,15 +76,12 @@
         </div>
     </div>
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.save') }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
     <script type="text/javascript">
         $(document).ready(function() {
-            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
             new opg.RadioHide({
                 radio:'.plan-move-residence-radio input[type=radio]',
                 content: '#plan-move-residence-details-textarea',
@@ -135,15 +105,8 @@
         });
     </script>
 
-{% endblock %}
+    <div id="body-footer-nav">
 
-{% block pageBodyFooterNav %}
-    {% include 'AppBundle:Components:nextprevious.html.twig' with {
-    'previousLink': path("odr-debts" , {'odrId': odr.id }),
-    'previousLabel': 'Debts',
-    'nextLink': path("odr-action-gifts", {'odrId': odr.id }),
-    'nextLabel': 'Gifts'
-    } %}
-{% endblock %}
+    </div>
 
-{% endembed %}
+{% endblock %}

@@ -1,36 +1,25 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% block htmlTitle %}Layouts - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Layouts{% endblock %}
 
+{% block helpline %}{% endblock %}
 
-{% block pageTitle %}Digideps Styleguide{% endblock %}
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-{% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-} %}
-    
-    <div class="grid-row">
-        <header id="page-header" class="column-two-thirds">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">Digideps Elements</span>
-                Layouts
-            </h1>
-            
-            <p class="lede">
-                Extra layouts used within the site for navigation or content display
-            </p>
-        </header>
-    </div>
+    <p class="lede text">Extra layouts used within the site for navigation or content display</p>
 
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-small heading-contents">Contents:</h2>
             <ul class="list list-contents">
-                <li>
-                    <a href="#left-tabnav">Left tabbed navigation</a>
-                </li>
                 <li>
                     <a href="#nextprev">Next/Previous navigation</a>
                 </li>
@@ -43,11 +32,10 @@
             </ul>
         </div>
     </div>
-    
-    
-    {% include 'AppBundle:Element/layout:lefttab.html.twig' %}
+
+
     {% include 'AppBundle:Element/layout:descriptivelistitem.html.twig' %}
     {% include 'AppBundle:Element/layout:_cardlist.html.twig' %}
-    
+
     <script src="/prism/prism.js"></script>
 {% endblock %}

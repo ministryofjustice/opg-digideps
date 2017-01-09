@@ -49,6 +49,7 @@ class FormFieldsExtension extends \Twig_Extension
     }
 
     /**
+     * @DEPRECATED
      * Renders form input field.
      *
      * @param type  $element
@@ -82,6 +83,7 @@ class FormFieldsExtension extends \Twig_Extension
     }
 
     /**
+     * @DEPRECATED
      * form_checkbox_group(element, 'allowedCourtOrderTypes', {.
      'legendClass' : 'form-label-bold',
      'fieldSetClass' : 'inline',
@@ -131,6 +133,66 @@ class FormFieldsExtension extends \Twig_Extension
         echo $this->environment->render('AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass'] : null,
+            'legendText' => $legendText,
+            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
+            'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
+            'hintText' => $hintText,
+            'element' => $element,
+            'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
+            'items' => empty($vars['items']) ? [] : $vars['items'],
+            'translationDomain' => $domain,
+        ]);
+    }
+
+    /**
+     * @DEPRECATED
+     * form_checkbox_group(element, 'allowedCourtOrderTypes', {.
+    'legendClass' : 'form-label-bold',
+    'fieldSetClass' : 'inline',
+    'vertical': true,
+    'items': [
+    {'labelClass': 'block-label', 'elementClass': 'checkbox' },
+    {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
+    ]
+    })
+     */
+    public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
+    {
+        //lets get the translation for hintText, labelClass and labelText
+        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $domain = $element->parent->vars['translation_domain'];
+
+        //sort hint text translation
+        if (isset($vars['hintText'])) {
+            $hintText = $vars['hintText'];
+        } else {
+            $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
+            $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
+        }
+
+        if (isset($vars['legendText'])) {
+            $legendText = $vars['legendText'];
+        } else {
+
+            //get legendText translation. Look for a .legend value, if there isn't one then try the top level
+            $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
+
+            if ($legendTextTrans != $translationKey.'.legend') {
+                $legendText = $legendTextTrans;
+            } else {
+                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+                $legendTextTrans = $this->translator->trans($translationKey.'.label', $labelParams, $domain);
+                if ($legendTextTrans != $translationKey.'.label') {
+                    $legendText = $legendTextTrans;
+                } else {
+                    $legendText = null;
+                }
+            }
+        }
+
+        //generate input field html using variables supplied
+        echo $this->environment->render('AppBundle:Components/Form:_checkboxgroup_new.html.twig', [
+            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'legendText' => $legendText,
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
             'hintText' => $hintText,
@@ -355,6 +417,7 @@ class FormFieldsExtension extends \Twig_Extension
         $preInputText = ($preInputTextTrans != $translationKey.'.preInput') ? $preInputTextTrans : null;
 
         return [
+            'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
             'labelText' => $labelText,
             'hintText' => $hintText,
             'hintListArray' => $hintListEntriesText,

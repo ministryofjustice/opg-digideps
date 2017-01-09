@@ -16,38 +16,60 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class BankAccountType extends AbstractType
 {
+    private $step;
+
+    /**
+     * @param $step
+     */
+    public function __construct($step)
+    {
+        $this->step = (int)$step;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', 'hidden');
-        $builder->add('accountType', 'choice', [
-            'choices' => BankAccount::$types,
-            'expanded' => false,
-            'empty_value' => 'Please select',
-        ]);
-        $builder->add('bank', 'text', [
-            'required' => false,
-        ]);
-        $builder->add('accountNumber', 'text', ['max_length' => 4]);
-        $builder->add('sortCode', new SortCodeType(), [
-            'error_bubbling' => false,
-            'required' => false,
-            'constraints' => new Chain([
-                'constraints' => [
-                    new NotBlank(['groups' => ['sortcode'], 'message'=>'account.sortCode.notBlank']),
-                    new Type(['type' => 'numeric', 'message'=>'account.sortCode.type', 'groups' => ['sortcode']]),
-                    new Length(['min'=>6, 'max'=>6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['sortcode']]),
-                ],
-                'stopOnError' => true,
-                'groups' => ['sortcode'],
-            ]),
-        ]);
 
-        $builder->add('balanceOnCourtOrderDate', 'number', [
-            'precision' => 2,
-            'grouping' => true,
-            'invalid_message' => 'odr.account.balanceOnCourtOrderDate.type',
+        if ($this->step === 1) {
+            $builder->add('accountType', 'choice', [
+                'choices' => BankAccount::$types,
+                'expanded' => true,
+                'empty_value' => 'Please select',
+            ]);
+        }
 
-        ]);
+        if ($this->step === 2) {
+            $builder->add('bank', 'text', [
+                'required' => false,
+            ]);
+            $builder->add('accountNumber', 'text', ['max_length' => 4]);
+            $builder->add('sortCode', new SortCodeType(), [
+                'error_bubbling' => false,
+                'required' => false,
+                'constraints' => new Chain([
+                    'constraints' => [
+                        new NotBlank(['groups' => ['sortcode'], 'message' => 'account.sortCode.notBlank']),
+                        new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['sortcode']]),
+                        new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['sortcode']]),
+                    ],
+                    'stopOnError' => true,
+                    'groups' => ['sortcode'],
+                ]),
+            ]);
+            $builder->add('isJointAccount', 'choice', [
+                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+            ]);
+        }
+
+        if ($this->step === 3) {
+            $builder->add('balanceOnCourtOrderDate', 'number', [
+                'precision' => 2,
+                'grouping' => true,
+                'invalid_message' => 'odr.account.balanceOnCourtOrderDate.type',
+
+            ]);
+        }
 
         $builder->add('save', 'submit');
     }
@@ -60,18 +82,17 @@ class BankAccountType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'odr-account-form',
-            'validation_groups' => function (FormInterface $form) {
+            'translation_domain' => 'odr-bank-accounts',
+            'validation_groups'  => function (FormInterface $form) {
+                $requiresBankNameAndSortCode = $form->getData()->requiresBankNameAndSortCode();
 
-                $data = $form->getData(); /* @var $data \AppBundle\Entity\Odr\BankAccount */
-                $validationGroups = ['add_edit'];
-
-                if ($data->requiresBankNameAndSortCode()) {
-                    $validationGroups[] = 'sortcode';
-                    $validationGroups[] = 'bank_name';
-                }
-
-                return $validationGroups;
+                return [
+                    1 => ['bank-account-type'],
+                    2 => $requiresBankNameAndSortCode ?
+                        ['bank-account-name', 'sortcode', 'bank-account-number', 'bank-account-is-joint']
+                        : ['bank-account-number', 'bank-account-is-joint'],
+                    3 => ['bank-account-balance-on-cot'],
+                ][$this->step];
             },
         ]);
     }

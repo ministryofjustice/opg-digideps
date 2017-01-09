@@ -20,50 +20,102 @@ odrReady: Report ready to submit
 sectionsRemaining: "sections remaining"
 overview: New deputy report
 
-contacts:
-    subSectionTitle: "Contacts"
-    subSectionDescription: "Tell us about the people you consulted regarding %client%"
-    edit: "Edit contacts"
-    start: "Start contacts"
-decisions:
-    subSectionTitle: "Decisions"
-    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
-    edit: "Edit decisions"
-    start: "Start decisions"
+
+
+visits_care:
+    subSectionTitle: "Visits and care"
+    subSectionDescription: "Give us an overview of who is looking after %client%"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
+deputy_expenses:
+    subSectionTitle: "Deputy expenses"
+    subSectionDescription: "Claim for things you paid for on %client%'s behalf before your court order "
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+income_benefits:
+    subSectionTitle: "Income and benefits"
+    subSectionDescription: "Give us details of %client%’s income and any state benefits"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
+bank_accounts:
+    subSectionTitle: "Accounts"
+    subSectionDescription: "Add %client%’s bank, building society and savings accounts"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+assets:
+    subSectionTitle: "Assets"
+    subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
+debts:
+    subSectionTitle: "Debts"
+    subSectionDescription: "Let us know about any debts %client% owes"
+    edit: "Edit"
+    start: "Start"
+    label:
+       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
 actions:
     subSectionTitle: "Actions you plan to take"
-    subSectionDescription: "Keep us informed of any major changes due in the next reporting period"
+    subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
     edit: "Edit actions"
     start: "Start actions"
-finances:
-    subSectionTitle: "Finances"
-    subSectionDescription: "Enter details of all income and spending in the reporting period"
-    edit: "Edit finances"
-    start: "Start finances"
-transfers:
-    subSectionTitle: "Money transfers"
-    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
-    edit: "Edit transfers"
-    start: "Start money transfers"
-transfersInactive:
-    subSectionTitle: "Money transfers"
-    subSectionDescription: "This will become available if you have more than one account"
-    edit: "Edit transfers"
-    start: "Start money transfers"
-visitsCare:
-    subSectionTitle: "Visits and care"
-    subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
-    edit: "Edit visits and care"
-    start: "Start visits and care"
-actions:
-    subSectionTitle: "Actions"
-    edit: "Edit actions"
-    start: "Start actions"
-assets:
-    subSectionTitle: "Assets and debts"
-    subSectionDescription: "Enter details of %client%'s property, investments and other valuables"
-    edit: "Edit assets and debts"
-    start: "Start assets and debts"
+    label:
+      done: "Finished"
+other_info:
+    subSectionTitle: "Any other information"
+    subSectionDescription: "Is there anything else you want to tell us about?"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
+
+#finances:
+#    subSectionTitle: "Finances (old, no OTPP)"
+#    subSectionDescription: "Enter details of all income and spending in the reporting period"
+#    edit: "Edit finances"
+#    start: "Start finances"
+#contacts:
+#    subSectionTitle: "Contacts (no OTPP)"
+#    subSectionDescription: "Tell us about the people you consulted regarding %client%"
+#    edit: "Edit contacts"
+#    start: "Start contacts"
+#decisions:
+#    subSectionTitle: "Decisions (no OTPP)"
+#    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
+#    edit: "Edit decisions"
+#    start: "Start decisions"
+
+#finances:
+#    subSectionTitle: "Finances  (no OTPP)"
+#    subSectionDescription: "Enter details of all income and spending in the reporting period"
+#    edit: "Edit finances"
+#    start: "Start finances"
+#transfers:
+#    subSectionTitle: "Money transfers (no OTPP)"
+#    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
+#    edit: "Edit transfers"
+#    start: "Start money transfers"
+#transfersInactive:
+#    subSectionTitle: "Money transfers (no OTPP)"
+#    subSectionDescription: "This will become available if you have more than one account"
+#    edit: "Edit transfers"
+#    start: "Start money transfers"
+#
+#actions:
+#    subSectionTitle: "Actions (no OTPP)"
+#    edit: "Edit actions"
+#    start: "Start actions"
+
 odr_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Sign and submit"

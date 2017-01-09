@@ -1,0 +1,83 @@
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region-expect-financial-decision">
+            {% if validator.missing('doYouExpectFinancialDecisions') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doYouExpectFinancialDecisions.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doYouExpectFinancialDecisions.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            </td>
+        </tr>
+        {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+            <tr class="behat-region-expect-financial-decision-details">
+                <td>{{ 'form.doYouExpectFinancialDecisionsDetails.label' | trans(transOptions) }}</td>
+                <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+
+        {# step 2 #}
+        <tr class="behat-region-have-concerns">
+            {% if validator.missing('doYouHaveConcerns') %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.action.doYouHaveConcerns | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            </td>
+        </tr>
+        {% if report.action.doYouHaveConcerns == 'yes' %}
+            <tr class="behat-region-have-concerns-details">
+                <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>
+                <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>

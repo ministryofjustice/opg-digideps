@@ -1,0 +1,57 @@
+startPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageSectionTitle: Money transfers
+  pageSectionDescription: |
+    Tell us about money transferred between %client%'s accounts.
+    If you've made more than one transfer from one account to another,
+    you can give us a total for the reporting period.
+
+  startButton: Start money transfers
+
+existPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageSectionTitle: Money transfers
+  form:
+    noTransfersToAdd:
+      label: Have you made any money transfers between %client%'s accounts in this reporting period?
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add another transfer | GOV.UK"
+  pageSectionTitle: Money transfers
+  form:
+    addAnother:
+      label: The transfer has been saved. Would you like to add another transfer now?
+      hint: If you prefer, you can come back to this section later to add more transfers
+    save:
+       label: Continue
+
+stepPage:
+  htmlTitle: "Deputy report - Money transfer | GOV.UK"
+  supportTitle: Money transfers
+  pageSectionTitle: Add a money transfer
+
+summaryPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageSectionTitle: Money transfers
+  addButton: Add a transfer
+  edit: Edit
+#  relationship: Their relationship to %client%
+#  reasonForContact: Reason for contact
+
+errorPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageSectionTitle: Money transfers
+  errors:
+    atLeastTwoBankAccounts: You don't need to complete this section if you have less than two bank accounts
+  backToOverview: Back to overview page
+
+
+form:
+  accountFrom:
+    label: Which account did you transfer money from?
+  accountTo:
+    label: Which account did you transfer money to?
+  amount:
+    label: How much money was transferred from %fromAccountName% to %toAccountName% ?

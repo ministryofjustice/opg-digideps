@@ -2,37 +2,29 @@
 
 {# {% trans_default_domain "admin" %} #}
 
-{% block pageTitle %}Administration - Users{% endblock %}
-{% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}Admin{% endblock %}
+{% block htmlTitle %}Administration - Users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
 
 {% block validationSummary %}
 {% endblock %}
 
 {% block pageBody %}
-   <h1 class="form-title heading-medium">
-     Delete user
-  </h1>
+    <h1 class="form-title heading-medium">Delete user</h1>
+    <p>Are you sure that you want to delete the user <span style="font-weight: bolder"> {{user.getFullname()}} </span> ?</p>
 
-    Are you sure that you want to delete the user <span style="font-weight: bolder"> {{user.getFullname()}} </span> ?
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'yes.label',
+        linkClass: 'button-warning',
+        linkHref: path('admin_delete', { id: user.id })
+    } %}
 
- {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-               transDomain: 'admin',
-               linkButtonLabel: 'yes.label',
-               linkClass: 'button-warning',
-               linkHref: path('admin_delete', { id: user.id })
-               } %}
-
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-               transDomain: 'admin',
-               linkButtonLabel: 'no.label',
-               linkClass: 'button-secondary',
-               linkHref: path('admin_editUser', { what: 'user_id', filter: user.id })
-               } %}
-
-{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'no.label',
+        linkClass: 'button-secondary',
+        linkHref: path('admin_editUser', { what: 'user_id', filter: user.id })
+    } %}
 
 {% endblock %}
 

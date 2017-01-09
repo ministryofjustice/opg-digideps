@@ -2,20 +2,19 @@
 {% set translationDomain = "report-display" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}Complete the deputy report{% endblock %}
+{% block htmlTitle %}Complete the deputy report{% endblock %}
 
 {% block pageContent %}
 
     {% if report.submitted == true %}
         <nav class="back-bar">
-            <a id="back-to-client" href="{{ path('client_show') }}">Your client</a>
+            <a id="back-to-client" href="{{ path('reports', {'cot': report.courtOrderTypeId}) }}" class="link-return behat-link-back-to-reports">Back</a>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
-    </div>
+    <h1 class="heading-large">{{ 'page.pageSectionTitle' | trans }}</h1>
+
     {% if report.submitted == false %}
         {% if reportStatus.isReadyToSubmit and report.isDue %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {

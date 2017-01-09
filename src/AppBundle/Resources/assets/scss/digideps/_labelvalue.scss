@@ -1,3 +1,8 @@
+// ==========================================================================
+// LABEL VALUE
+// Label(key) / Value pairing. Quite vague in many places and mixed
+// in with outer classes for targeting
+
 .labelvalue {
     .label {
         @include core-19();

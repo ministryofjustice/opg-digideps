@@ -1,22 +1,9 @@
+// ==========================================================================
+// LAYOUT
+// Custom layout
+
 $item-right-margin: 263px;
 
-.column-full {
-    @include grid-column(1);
-}
-
-#footer .footer-meta .footer-meta-inner ul li:last-child {
-    float: left;
-}
-
-
-.your-client-page header.page-header h1 {
-    width: 55%;
-}
-
-.heading-medium {
-    margin-bottom: 20px;
-}
-
-.list-bullet li {
-    @include core-19();
+#pagebody-left-content {
+    max-width: 960px * .75;
 }

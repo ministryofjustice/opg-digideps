@@ -1,13 +1,11 @@
 {% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 
-{% block pageTitle %}Administration - Users{% endblock %}
-{% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}Admin{% endblock %}
+{% block htmlTitle %}Administration - Users{% endblock %}
+{% block pageTitle %}OPG Assisted Digital{% endblock %}
 
 {% block validationSummary %}
     {{ form_errors_list(form) }}
 {% endblock %}
-
 
 
 {% block pageBody %}

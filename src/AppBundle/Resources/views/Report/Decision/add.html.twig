@@ -1,18 +1,30 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
-{% extends 'AppBundle:Report/Decision:layout-decisions.html.twig'  %}
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block maincontent %}
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'addPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
 
-    {% include 'AppBundle:Report/Decision:_decisions_help.html.twig' %}
+{% block pageContent %}
 
-    {% include 'AppBundle:Report/Decision:_decision_form.html.twig' with {
-            'translationDomain': translationDomain,
-            'showAddForm': true,
-            'form': form
-        } %}
+    <p class="text">{{ 'addPage.pageSectionDescription' | trans(transOptions) }}</p>
+
+    {% include 'AppBundle:Report/Decision:_form.html.twig' with {
+	    'translationDomain': translationDomain,
+	    'form': form
+    } %}
 
 {% endblock %}

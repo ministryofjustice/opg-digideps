@@ -1,0 +1,30 @@
+{% set translationDomain = "report-balance" %}
+{% trans_default_domain translationDomain %}
+
+<h3 class="heading-medium behat-region-balance-good">{{ 'balance.good.pageSectionTitle' | trans }}</h3>
+<p>{{ 'balance.good.pageSectionDescription' | trans }}</p>
+
+<div class="hero">
+    <h2 class="heading">{{ 'balance.good.accountsBalanced' | trans }}</h2>
+    <div class="message">{{ 'balance.good.accountsBalancedMessage' | trans }}</div>
+</div>
+
+<div class="hero split-two">
+    <div class="hero-column">
+        <div class="message">
+            {{ 'balance.balanceAfterReported' | trans }}:
+        </div>
+        <div class="total">
+            £{{ report.calculatedBalance | money_format }}
+        </div>
+    </div>
+    <div class="hero-column">
+        <div class="message">
+            {{ 'balance.actualBalance' | trans }}:
+        </div>
+        <div class="total">
+           £{{ report.accountsClosingBalanceTotal | money_format }}
+        </div>
+    </div>
+</div>
+

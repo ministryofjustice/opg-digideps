@@ -41,23 +41,24 @@ class BankAccount
      * @JMS\Type("string")
      * @JMS\Groups({"bank-account"})
      *
-     * @Assert\NotBlank(message="odr.account.bank.notBlank", groups={"basic", "bank_name"})
-     * @Assert\Length(max=500, min=2,  minMessage="odr.account.bank.minMessage", maxMessage="odr.account.bank.maxMessage", groups={"basic", "bank_name"})
+     * @Assert\NotBlank(message="odr.account.accountType.notBlank", groups={"bank-account-type"})
+     * @Assert\Length(max=100, maxMessage="odr.account.accountType.maxMessage", groups={"bank-account-type"})
      *
      * @var string
      */
-    private $bank;
+    private $accountType;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"bank-account"})
      *
-     * @Assert\NotBlank(message="odr.account.accountType.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Length(max=100, maxMessage="odr.account.accountType.maxMessage", groups={"basic", "add_edit"})
+     * @Assert\NotBlank(message="odr.account.bank.notBlank", groups={"bank-account-name"})
+     * @Assert\Length(max=500, min=2,  minMessage="odr.account.bank.minMessage", maxMessage="odr.account.bank.maxMessage", groups={"bank-account-name"})
      *
      * @var string
      */
-    private $accountType;
+    private $bank;
+
 
     /**
      * @JMS\Type("string")
@@ -78,9 +79,9 @@ class BankAccount
      * @JMS\Type("string")
      * @JMS\Groups({"bank-account"})
      *
-     * @Assert\NotBlank(message="odr.account.accountNumber.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Type(type="alnum", message="odr.account.accountNumber.type", groups={"basic", "add_edit"})
-     * @Assert\Length(exactMessage="odr.account.accountNumber.length",min=4, max=4, groups={"basic", "add_edit"})
+     * @Assert\NotBlank(message="odr.account.accountNumber.notBlank", groups={"bank-account-number"})
+     * @Assert\Type(type="alnum", message="odr.account.accountNumber.type", groups={"bank-account-number"})
+     * @Assert\Length(exactMessage="odr.account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
      *
      * @var string
      */
@@ -90,13 +91,23 @@ class BankAccount
      * @JMS\Type("string")
      * @JMS\Groups({"bank-account"})
      *
-     * @Assert\NotBlank(message="odr.account.balanceOnCourtOrderDate.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Type(type="numeric", message="odr.account.balanceOnCourtOrderDate.type", groups={"basic", "add_edit"})
-     * @Assert\Range(max=10000000000, maxMessage="odr.account.balanceOnCourtOrderDate.outOfRange", groups={"basic", "add_edit"})
+     * @Assert\NotBlank(message="odr.account.balanceOnCourtOrderDate.notBlank", groups={"bank-account-balance-on-cot"})
+     * @Assert\Type(type="numeric", message="odr.account.balanceOnCourtOrderDate.type", groups={"bank-account-balance-on-cot"})
+     * @Assert\Range(max=10000000000, maxMessage="odr.account.balanceOnCourtOrderDate.outOfRange", groups={"bank-account-balance-on-cot"})
      *
      * @var decimal
      */
     private $balanceOnCourtOrderDate;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"bank-account"})
+     *
+     * @Assert\NotBlank(message="odr.account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
+     *
+     * @var string
+     */
+    private $isJointAccount;
 
     /**
      * @return mixed
@@ -250,5 +261,17 @@ class BankAccount
     public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
+    }
+
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = $isJointAccount;
+
+        return $this;
     }
 }

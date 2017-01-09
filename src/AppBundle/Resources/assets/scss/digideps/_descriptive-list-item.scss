@@ -1,3 +1,8 @@
+// ==========================================================================
+// DESCRIPTIVE LIST ITEM
+// Similar to the table list item on iOS, shows a title, description and
+// a link to edit or do something.
+
 .descriptive-list-item {
     @extend %contain-floats;
     border-top: 1px solid $grey-3;

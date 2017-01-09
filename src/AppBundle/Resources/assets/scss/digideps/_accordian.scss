@@ -1,11 +1,12 @@
 // =======================================================
 // ACCORDIAN
 // Hidden text (progressive disclosure). Custom <DETAILS> element
+// Seemingly useless without the .help-item class.
 
 .accordian span.icon {
     width: 21px;
     height: 13px;
-    background-image: url('images/icons/accordian-arrow.png');
+    background-image: url("/images/icons/accordian-arrow.png");
     background-position: -12px -60px;
 }
 

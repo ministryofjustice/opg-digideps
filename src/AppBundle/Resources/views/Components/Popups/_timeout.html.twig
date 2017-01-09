@@ -7,46 +7,18 @@
 <div id="timeoutPopup" data-role="timeout-popup" class="session-timeout js-session-timeout">
     <div class="session-timeout-dialog">
 
-        <div id="page-section-title-container" class="page-section-title-container">
-            <h1>{{ 'component.title' | trans }}</h1>
-        </div>
-        
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'component.firstLine' | trans({
+        <h1 class="heading-large push-half--top">{{ 'component.title' | trans }}</h1>
+
+        <p>{{ 'component.firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
         '%loggedOutIn%': ((session_expires_seconds - session_popup_show_after) / 60) | round(2, 'floor')
-        })
-        } %}
+        }) }}</p>
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'component.secondLine'
-        } %}
-
-        {#
-                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'component.controls.okButton.label',
-                linkClass: 'button js-ok-button',
-                linkHref: '#'
-                } %}
-
-                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'component.controls.signOutButton.label',
-                linkClass: 'button-secondary',
-                linkHref: path('logout')
-                } %}
-        #}
+        <p>{{ 'component.secondLine' | trans }}</p>
 
         <form name="session-timeout-form" action="/logout">
-            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
             <button type="button" name="continue" class="button js-ok-button">OK</button>
             <button type="submit" name="subsmit" class="button-secondary">Sign out</button>
-
-            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
         </form>
 
     </div>

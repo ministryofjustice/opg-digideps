@@ -143,6 +143,8 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoContacts"})
      *
+     * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
+     *
      * @var string
      */
     private $reasonForNoContacts;
@@ -150,6 +152,8 @@ class Report
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoDecisions"})
+     *
+     * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
      *
      * @var string
      */
@@ -165,6 +169,7 @@ class Report
 
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"money-transfers-no-transfers"})
      *
      * @var bool
      */
@@ -294,6 +299,8 @@ class Report
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"balance_mismatch_explanation"})
+     * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
+     * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
      * @var string
      */
@@ -324,6 +331,14 @@ class Report
      * @var decimal
      */
     private $debtsTotalAmount;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-metadata"})
+     *
+     * @var decimal
+     */
+    private $metadata;
 
     /**
      * @return int $id
@@ -465,7 +480,7 @@ class Report
     }
 
     /**
-     * @return int $client
+     * @return Client
      */
     public function getClient()
     {
@@ -510,6 +525,18 @@ class Report
     public function getAccounts()
     {
         return $this->accounts;
+    }
+
+    /**
+     * @return Account
+     */
+    public function getAccountWithId($id)
+    {
+        foreach($this->accounts as $account) {
+            if ($account->getId() == $id) {
+                return $account;
+            }
+        }
     }
 
     /**
@@ -648,6 +675,31 @@ class Report
     }
 
     /**
+     * @return Debt[]
+     */
+    public function getDebtsNotEmpty()
+    {
+       return array_filter($this->getDebts(), function($debt) {
+           return $debt->getAmount() !== null;
+       });
+    }
+
+    /**
+     * @param $debtId
+     * @return Debt|null
+     */
+    public function getDebtById($debtId)
+    {
+        foreach ($this->getDebts() as $debt) {
+            if ($debt->getDebtTypeId() == $debtId) {
+                return $debt;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Used in the list view
      * AssetProperty is considered having title "Property"
      * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery".
@@ -665,22 +717,26 @@ class Report
 
         $ret = [];
         foreach ($this->assets as $asset) {
+            // select title
             if ($asset instanceof AssetProperty) {
-                $ret['Property'][$asset->getId()] = $asset;
+                $title = 'Property';
             } elseif ($asset instanceof AssetOther) {
                 $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
                     $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
-                $ret[$title][$asset->getId()] = $asset;
             }
-        }
 
-        return $ret;
+            // add asset into "items" and sum total
+            $ret[$title]['items'][$asset->getId()] = $asset;
+            $ret[$title]['total'] = isset($ret[$title]['total'])
+                ? $ret[$title]['total'] + $asset->getValueTotal()
+                : $asset->getValueTotal();
+        }
 
         // order categories
         ksort($ret);
-        // order assets inside by key
+        // foreach category, order assets by ID desc
         foreach ($ret as &$row) {
-            ksort($row);
+            krsort($row['items']);
         }
 
         return $ret;
@@ -736,6 +792,36 @@ class Report
         $reportDueOn->setTime(0, 0, 0);
 
         return $today >= $reportDueOn;
+    }
+
+    public function hasContacts()
+    {
+        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null){
+            return null;
+        }
+
+        return $this->getReasonForNoContacts() ? 'no' : 'yes';
+    }
+
+    public function setHasContacts($value)
+    {
+        // necessary to simplify form logic
+        return null;
+    }
+
+    public function hasDecisions()
+    {
+        if (empty($this->getDecisions()) && $this->getReasonForNoDecisions() === null){
+            return null;
+        }
+
+        return $this->getReasonForNoDecisions() ? 'no' : 'yes';
+    }
+
+    public function setHasDecisions($value)
+    {
+        // necessary to simplify form logic
+        return null;
     }
 
     /**
@@ -993,6 +1079,28 @@ class Report
     }
 
     /**
+     * //TODO improve this
+     * @return Transaction[]
+     */
+    public function getValidTransactions($transactions)
+    {
+        return array_filter($transactions, function($t){
+            return $t->getAmounts()[0] > 0;
+        });
+    }
+
+    /**
+     * //TODO improve this
+     * @return Transaction[]
+     */
+    public function getTransactionsInWithId($id)
+    {
+        return array_filter($transactions, function($t) use ($id) {
+            return $t->getId() == $id;
+        });
+    }
+
+    /**
      * @param Transaction[] $transactionsIn
      */
     public function setTransactionsIn($transactionsIn)
@@ -1020,22 +1128,46 @@ class Report
         return $this;
     }
 
+    public function getTransactionCategories(array $transactions)
+    {
+        $ret = [];
+        foreach ($transactions as $id => $transaction) {
+            $ret[$transaction->getCategory()] = 'form.category.entries.' . $transaction->getCategory();
+        }
+        $ret = array_unique($ret);
+
+        return $ret;
+    }
+
+    public function getTransactionIds(array $transactions, $category)
+    {
+        $ret = [];
+        foreach ($transactions as $id => $transaction) {
+            if ($category == $transaction->getCategory()) {
+                $ret[$transaction->getId()] = 'form.id.entries.' . $transaction->getId() . '.label';
+            }
+        }
+        $ret = array_unique($ret);
+
+        return $ret;
+    }
+
     /**
      * @param Transaction[] $transactions
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
-    public function groupByCategory(array $transactions)
+    public function groupByGroup(array $transactions)
     {
         $ret = [];
 
         foreach ($transactions as $id => $transaction) {
-            $cat = $transaction->getCategory();
-            if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
+            $group = $transaction->getGroup();
+            if (!isset($ret[$group])) {
+                $ret[$group] = ['entries' => [], 'amountTotal' => 0];
             }
-            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $transaction->getAmountsTotal();
+            $ret[$group]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
+            $ret[$group]['amountTotal'] += $transaction->getAmount();
         }
 
         return $ret;
@@ -1192,9 +1324,7 @@ class Report
      */
     public function hasMoneyIn()
     {
-        return count(array_filter($this->getTransactionsIn() ?: [], function ($t) {
-            return count(array_filter($t->getAmounts())) > 0;
-        })) > 0;
+        return count($this->getTransactionsIn()) > 0;
     }
 
     /**
@@ -1202,9 +1332,7 @@ class Report
      */
     public function hasMoneyOut()
     {
-        return count(array_filter($this->getTransactionsOut() ?: [], function ($t) {
-             return count(array_filter($t->getAmounts())) > 0;
-        })) > 0;
+        return count($this->getTransactionsOut()) > 0;
     }
 
     /**
@@ -1335,4 +1463,35 @@ class Report
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }
+
+//    public function isSectionStarted($sectionId)
+//    {
+//        $metadataDecoded = json_decode($this->metadata, true);
+//
+//        return !empty($metadataDecoded['sections'][$sectionId]['started']);
+//    }
+//
+//    public function setSectionStarted($sectionId)
+//    {
+//        $metadataDecoded = json_decode($this->metadata, true);
+//        $metadataDecoded['sections'][$sectionId]['started'] = true;
+//        $this->metadata = json_encode($metadataDecoded);
+//    }
+//
+//    /**
+//     * @return decimal
+//     */
+//    public function getMetadata()
+//    {
+//        return $this->metadata;
+//    }
+//
+//    /**
+//     * @param decimal $metadata
+//     */
+//    public function setMetadata($metadata)
+//    {
+//        $this->metadata = $metadata;
+//    }
+
 }

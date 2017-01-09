@@ -138,8 +138,9 @@ class IncomeBenefit
             $context->addViolationAt('moreDetails', 'odr.incomeBenefit.moreDetails.notBlank');
         }
 
-        if (!$isPresent && $hasMoreDetails) {
-            $context->addViolationAt('present', 'odr.incomeBenefit.present.notBlank');
-        }
+        // require checkbox if textarea is filled. Disabled as there is a JS toggle now
+//        if (!$isPresent && $hasMoreDetails) {
+//            $context->addViolationAt('present', 'odr.incomeBenefit.present.notBlank');
+//        }
     }
 }

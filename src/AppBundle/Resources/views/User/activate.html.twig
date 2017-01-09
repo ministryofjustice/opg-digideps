@@ -2,8 +2,8 @@
 {% set translationDomain = "user-activate" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-{% block title %}{{ 'h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
         {{ progress_bar_registration(user, 'password') }}
@@ -22,10 +22,8 @@
 
     {{ form_input(form.password.second,'password_confirm', { 'labelClass': 'required' } ) }}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
-    
+
 {% endblock %}

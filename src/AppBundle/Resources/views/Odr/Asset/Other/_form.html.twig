@@ -1,0 +1,11 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+{{ form_input(form.value, 'form.value', {
+    'inputPrefix' : '£',
+    'inputClass' : 'form-control__number js-format-currency'
+} ) }}
+{{ form_input(form.description, 'form.description') }}
+{{ form_known_date(form.valuationDate, 'form.valuationDate') }}
+{{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

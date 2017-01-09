@@ -2,18 +2,18 @@
 {% trans_default_domain translationDomain %}
 
 <div id="report-status" class="{{ reportStatus.status }}">
-    
+
     <a class="button-grey heading heading-large" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
     <div class="labelsvalues">
         <div class="labelvalue">
             <div class="label">Progress:</div>
             <div class="value">{{ reportStatus.remainingSections | length }} {{ 'sectionsRemaining' | trans() }}</div>
         </div>
-        
+
         <div class="labelvalue">
             <div class="label">Status:</div>
             <div class="value">{{ reportStatus.status | trans() }}</div>
         </div>
     </div>
-    
+
 </div>

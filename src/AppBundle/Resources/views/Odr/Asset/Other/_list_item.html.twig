@@ -1,0 +1,44 @@
+<h3 class="heading-medium">{{ groupId | trans }}</h3>
+
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+    <tr>
+        <th>Description of asset</th>
+        <th class="numeric">Value</th>
+        <th class="numeric">Valuation date</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assetsInGroup.items %}
+        <tr class="behat-region-asset-{{ asset.description | behat_namify }}">
+            <td>{{ asset.description | nl2br }}</td>
+            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
+            <td class="numeric-small width-fifth">
+                {% if asset.valuationDate %}
+                    {{ asset.valuationDate | date('d F Y') }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-edit action-link"
+                   href="{{ path('odr_asset_other_edit', {'odrId': odr.id, 'assetId': asset.id}) }}">Edit</a>
+                <a class="behat-link-delete push-half--left action-link" href="{{ path('odr_asset_delete', {'odrId': odr.id, 'assetId': asset.id}) }}">Remove</a>
+            </td>
+        </tr>
+    {% endfor %}
+        <tr class="no-border">
+            <td>
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="text--right">
+                <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

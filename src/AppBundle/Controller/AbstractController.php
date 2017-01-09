@@ -2,12 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Odr\Odr;
-use AppBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Report;
+use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AbstractController extends Controller
 {
@@ -30,7 +30,7 @@ class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
+        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -38,7 +38,8 @@ class AbstractController extends Controller
      */
     protected function getFirstClient($groups = ['user', 'client'])
     {
-        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $groups); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
+        /* @var $user EntityDir\User */
         $clients = $user->getClients();
 
         return !empty($clients) ? $clients[0] : null;
@@ -59,35 +60,10 @@ class AbstractController extends Controller
         return $choices;
     }
 
-    /**
-     * @param int   $reportId
-     * @param array $groups
-     * 
-     * @return Report\Report
-     */
-    public function getReport($reportId, array $groups = [])
-    {
-        $groups[] = 'report';
-        $groups[] = 'client';
-        $groups = array_unique($groups);
-        sort($groups); // helps HTTP caching
-        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
-    }
-
-    /**
-     * @param int   $odrId
-     * @param array $groups
-     *
-     * @return Odr
-     */
-    public function getOdr($odrId, array $groups/* = ['basic']*/)
-    {
-        return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', $groups);
-    }
 
     /**
      * @param Client $client
-     * @param array  $groups
+     * @param array $groups
      *
      * @return Report[]
      */
@@ -107,10 +83,27 @@ class AbstractController extends Controller
         return $ret;
     }
 
+
+    /**
+     * @param int $reportId
+     * @param array $groups
+     *
+     * @return Report\Report
+     */
+    public function getReport($reportId, array $groups = [])
+    {
+        $groups[] = 'report';
+        $groups[] = 'client';
+        $groups = array_unique($groups);
+        sort($groups); // helps HTTP caching
+        return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
+    }
+
+
     /**
      * @param int $reportId
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report\Report
      *
      * @throws \RuntimeException if report is submitted
      */
@@ -123,6 +116,40 @@ class AbstractController extends Controller
 
         return $report;
     }
+
+
+    /**
+     * @param int $odrId
+     * @param array $groups
+     *
+     * @return Odr
+     */
+    public function getOdr($odrId, array $groups)
+    {
+        $groups[] = 'odr';
+        $groups[] = 'client';
+        $groups = array_unique($groups);
+
+        return $this->getRestClient()->get("odr/{$odrId}", 'Odr\Odr', $groups);
+    }
+
+    /**
+     * @param int $reportId
+     *
+     * @return Odr
+     *
+     * @throws \RuntimeException if report is submitted
+     */
+    protected function getOdrIfNotSubmitted($reportId, array $groups = [])
+    {
+        $report = $this->getOdr($reportId, $groups);
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException('New deputy report already submitted and not editable.');
+        }
+
+        return $report;
+    }
+
 
     /**
      * @return \AppBundle\Service\Mailer\MailFactory
@@ -139,4 +166,23 @@ class AbstractController extends Controller
     {
         return $this->get('mailSender');
     }
+
+    /**
+     * @param $route
+     * @return boolean
+     */
+    protected function routeExists($route)
+    {
+        return $this->get('router')->getRouteCollection()->get($route) ? true : false;
+    }
+
+//    /**
+//     * @param Report\Report $report
+//     * @param $sectionId
+//     */
+//    protected function flagSectionStarted(Report\Report $report, $sectionId)
+//    {
+//        $report->setSectionStarted($sectionId);
+//        $this->getRestClient()->put('report/'.$report->getId(), $report, ['report-metadata']);
+//    }
 }

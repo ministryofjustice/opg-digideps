@@ -190,4 +190,33 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('need to mock environemnt to test');
     }
 
+
+    /**
+     * @test
+     */
+    public function class_name()
+    {
+        $f = $this->object->getFilters()['class_name']->getCallable();
+
+        $this->assertEquals(null, $f(0));
+        $this->assertEquals(null, $f([]));
+        $this->assertEquals(null, $f(''));
+        $this->assertEquals('Closure', $f(function(){}));
+        $this->assertEquals('DateTime', $f(new \DateTime()));
+    }
+
+    /**
+     * @test
+     */
+    public function lcfirst()
+    {
+        $f = $this->object->getFilters()['lcfirst']->getCallable();
+
+        $this->assertEquals(null, $f(null));
+        $this->assertEquals('', $f(''));
+        $this->assertEquals('123aBc', $f('123aBc'));
+        $this->assertEquals('aBCd', $f('ABCd'));
+        $this->assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
+    }
+
 }

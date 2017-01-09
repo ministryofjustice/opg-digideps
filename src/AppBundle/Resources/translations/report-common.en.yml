@@ -14,5 +14,26 @@ report:
           label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"
-next: Next
-previous: Previous
+
+prevNextLinks:
+  next: Next section
+  previous: Previous section
+  sections:
+    reportOverview: Report overview
+    decisions: Decisions
+    mentalCapacity: Mental capacity
+    contacts: Contacts
+    visitsCare: Visits and care
+    bankAccounts: Bank Accounts
+    moneyTransfers: Money transfers
+    moneyIn: Money In
+    moneyOut: Money Out
+    assets: Assets
+    debts: Debts
+    actions: Actions
+    other_info: Any other information
+    incomeBenefits: Income and benefits
+    deputy_expenses: Deputy expenses
+
+
+

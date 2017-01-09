@@ -1,0 +1,70 @@
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+
+<div class="grid-row push--top">
+    <div class="column-half">
+        <h2 class="heading-medium flush--ends">List of items of income</h2>
+    </div>
+    <div class="column-half text--right">
+        <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1}) }}"
+            class="bold-small move-quarter--up action-link behat-link-add">
+            <span class="icon icon-plus"></span>
+            Add item of income
+        </a>
+    </div>
+</div>
+
+{% for groupId, groupData in report.groupByGroup(report.transactionsIn) %}
+
+<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans }}</h3>
+
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th class="numeric">Amount</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for t in groupData.entries %}
+        <tr class="behat-region-transaction-{{ t.description | behat_namify }}">
+            <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans }}</td>
+            <td>{{ t.description | nl2br }}</td>
+            <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
+            <td class="change-answer soft-half--left hard--right width-sixth">
+                <a class="behat-link-edit action-link"
+                   href="{{ path('money_in_step', {'reportId': report.id, 'step': 3, 'transactionId': t.id}) }}">Edit</a>
+                <a class="behat-link-delete push-half--left action-link" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">Remove</a>
+            </td>
+        </tr>
+    {% endfor %}
+        <tr class="no-border">
+            <td colspan="2">
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="text--right">
+                <span class="bold-small behat-region-{{ groupId | behat_namify }}-total">£{{ groupData.amountTotal | money_format }}</span>
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+{% endfor %}
+
+{# Total money in #}
+<table class="check-your-answers push--top">
+    <tr class="no-border">
+        <td class="text--right">
+            <span class="heading-medium">Total money in:</span>
+        </td>
+        <td class="numeric-small width-eighth">
+            <span class="heading-medium">£{{ report.moneyInTotal | money_format }}</span>
+        </td>
+        <td class="width-sixth"></td>
+    </tr>
+</table>

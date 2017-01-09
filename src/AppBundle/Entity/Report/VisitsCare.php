@@ -25,7 +25,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care-live-client"})
      */
     private $doYouLiveWithClient;
 
@@ -33,7 +33,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-no"})
+     * @Assert\NotBlank(message="visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-how-often-contact"})
      */
     private $howOftenDoYouContactClient;
 
@@ -41,7 +41,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care-receive-paid-care"})
      */
     private $doesClientReceivePaidCare;
 
@@ -49,7 +49,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-paidCare"})
+     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-how-care-funded"})
      */
     private $howIsCareFunded;
 
@@ -57,7 +57,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care-who-does-caring"})
      */
     private $whoIsDoingTheCaring;
 
@@ -65,7 +65,7 @@ class VisitsCare
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care"})
+     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care-have-care-plan"})
      */
     private $doesClientHaveACarePlan;
 
@@ -73,8 +73,8 @@ class VisitsCare
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"visits-care"})
      *
-     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-hasCarePlan"})
-     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-hasCarePlan"} )
+     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
+     * @Assert\Date( message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
     private $whenWasCarePlanLastReviewed;
 
@@ -285,7 +285,7 @@ class VisitsCare
      *
      * @return bool
      */
-    public function missingVisitsCareInfo()
+    public function missingInfo()
     {
         if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
             return true;

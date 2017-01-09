@@ -5,263 +5,213 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Service\ReportStatusService;
+use AppBundle\Service\StepRedirector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class BankAccountController extends AbstractController
 {
+    private static $jmsGroups = [
+        'account',
+    ];
+
     /**
-     * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
-     *
-     * @param int     $reportId
-     * @param Request $request
+     * @Route("/report/{reportId}/bank-accounts", name="bank_accounts")
      * @Template()
-     *
-     * @return array
      */
-    public function moneyinAction(Request $request, $reportId)
+    public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsIn', 'balance']);
-        $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsIn'), $report);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsIn']);
-
-            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (count($report->getAccounts())) {
+            return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
         return [
             'report' => $report,
-            'subsection' => 'moneyin',
-            'jsonEndpoint' => 'transactionsIn',
-            'form' => $form->createView(),
         ];
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/moneyout", name="accounts_moneyout")
-     *
-     * @param int     $reportId
-     * @param Request $request
+     * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
      * @Template()
-     *
-     * @return array
      */
-    public function moneyoutAction(Request $request, $reportId)
+    public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactionsOut', 'balance']);
-
-        $form = $this->createForm(new FormDir\Report\TransactionsType('transactionsOut'), $report);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), ['transactionsOut']);
-
-            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
+        $totalSteps = 4;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
-        return [
-            'report' => $report,
-            'subsection' => 'moneyout',
-            'jsonEndpoint' => 'transactionsOut',
-            'form' => $form->createView(),
-        ];
-    }
+        // common vars and data
+        $dataFromUrl = $request->get('data') ?: [];
+        $stepUrlData = $dataFromUrl;
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
 
-    /**
-     * @Route("/report/{reportId}/accounts/balance", name="accounts_balance")
-     *
-     * @param int $reportId
-     * @Template()
-     *
-     * @return array
-     */
-    public function balanceAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account', 'transaction']);
-        $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
-        $form->handleRequest($request);
+        /* @var $stepRedirector StepRedirector */
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutes('bank_accounts', 'bank_accounts_step', 'bank_accounts_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId'=>$reportId, 'accountId' => $accountId]);
 
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $this->getRestClient()->put('report/'.$reportId, $data, ['balance_mismatch_explanation']);
-        }
 
-        return [
-            'report' => $report,
-            'form' => $form->createView(),
-            'subsection' => 'balance',
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/accounts", name="accounts")
-     *
-     * @param int $reportId
-     * @Template()
-     *
-     * @return array
-     */
-    public function banksAction($reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['balance', 'account']);
-
-        return [
-            'report' => $report,
-            'subsection' => 'banks',
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="account_upsert", defaults={ "id" = null })
-     * 
-     * @param Request $request
-     * @param int     $reportId
-     * @param int     $id       account Id
-     * 
-     * @Template()
-     *
-     * @return array
-     */
-    public function upsertAction(Request $request, $reportId, $id = null)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'client', 'account']);
-        $type = $id ? 'edit' : 'add';
-        $showMigrationWarning = false;
-
-        if ($type === 'edit') {
-            if (!$report->hasAccountWithId($id)) {
-                throw new \RuntimeException('Account not found.');
-            }
-            $account = $this->getRestClient()->get('report/account/'.$id, 'Report\\Account');
-            // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
-            $showMigrationWarning = $account->hasMissingInformation();
+        // create (add mode) or load account (edit mode)
+        if ($accountId) {
+            $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\Account');
         } else {
             $account = new EntityDir\Report\Account();
             $account->setReport($report);
         }
-        // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
-        $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
-        $form = $this->createForm(new FormDir\Report\BankAccountType(), $account);
+
+        // add URL-data into model
+        isset($dataFromUrl['type']) && $account->setAccountType($dataFromUrl['type']);
+        isset($dataFromUrl['bank']) && $account->setBank($dataFromUrl['bank']);
+        isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
+        isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
+        isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
+        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
+        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl
+        ]);
+
+        // crete and handle form
+        $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $data->setReport($report);
+        if ($form->get('save')->isClicked() && $form->isValid()) {
             // if closing balance is set to non-zero values, un-close the account
-            if (!$data->isClosingBalanceZero()) {
+            /*if (!$data->isClosingBalanceZero()) {
                 $data->setIsClosed(false);
-            }
-            if ($type === 'edit') {
-                $this->getRestClient()->put('/account/'.$id, $account, ['account']);
-            } else {
-                $addedAccount = $this->getRestClient()->post('report/'.$reportId.'/account', $account, ['account']);
-                $id = $addedAccount['id'];
+            }*/
+
+            // decide what data in the partial form needs to be passed to next step
+            if ($step == 1) {
+                $stepUrlData['type'] = $account->getAccountType();
             }
 
-            // if the balance is zero, and the isClosed checkbox is not shown, redirect to the edit page with the checkbox visible
-            if ($data->isClosingBalanceZero() &&
-                !$showIsClosed // avoid loops    
-            ) {
-                return $this->redirect($this->generateUrl('account_upsert', ['reportId' => $reportId, 'id' => $id, 'show-is-closed' => 'yes']).'#form-group-account_sortCode');
+            if ($step == 2) {
+                $stepUrlData['bank'] = $account->getBank();
+                $stepUrlData['number'] = $account->getAccountNumber();
+                $stepUrlData['sort-code'] = $account->getSortCode();
+                $stepUrlData['is-joint'] = $account->getIsJointAccount();
             }
 
-            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
+            if ($step == 3) {
+                $stepUrlData['closing-balance'] = $account->getOpeningBalance();
+                $stepUrlData['opening-balance'] = $account->getClosingBalance();
+            }
+
+            // 4th step only if closing balance is equals to 0
+            $isLastStep = $step == $totalSteps
+                || ($step == ($totalSteps - 1) && !$account->isClosingBalanceZero());
+
+            // last step: save
+            if ($isLastStep) {
+                if ($accountId) {
+                    $this->getRestClient()->put('/account/' . $accountId, $account, self::$jmsGroups);
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Bank account edited'
+                    );
+
+                    return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
+                } else {
+                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
+
+                    return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
+                }
+            }
+
+            $stepRedirector->setStepUrlAdditionalParams([
+                'data' => $stepUrlData
+            ]);
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
-            'report' => $report,
-            'subsection' => 'banks',
-            'form' => $form->createView(),
-            'type' => $type,
-            'showMigrationWarning' => $showMigrationWarning,
             'account' => $account,
-            'showIsClosed' => $showIsClosed == 'yes',
+            'report' => $report,
+            'step' => $step,
+            'reportStatus' => new ReportStatusService($report),
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => null,
         ];
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/{id}/delete", name="account_delete")
-     *
-     * @param int $reportId
-     * @param int $id
-     *
-     * @return RedirectResponse
+     * @Route("/report/{reportId}/bank-accounts/add_another", name="bank_accounts_add_another")
+     * @Template("AppBundle:Report/BankAccount:add_another.html.twig")
      */
-    public function deleteAction($reportId, $id)
+    public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account']);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
 
-        if ($report->hasAccountWithId($id)) {
-            $this->getRestClient()->delete("/account/{$id}");
+        $form = $this->createForm(new FormDir\Report\BankAccountAddAnotherType(), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
+                case 'no':
+                    return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            }
         }
 
-        return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/{type}.json", name="accounts_money_save_json",
-     *     requirements={"type"="transactionsIn|transactionsOut"}
-     * )
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/bank-accounts/summary", name="bank_accounts_summary")
      *
-     * @param Request $request
-     * @param int     $reportId
-     * @param string  $type
+     * @param int $reportId
+     * @Template()
      *
-     * 1000 - Already submitted
-     * 1001 - Form field error
-     * 1002 - Exception
-     * 1003 - Error saving
-     *
-     * @return JsonResponse
+     * @return array
      */
-    public function moneySaveJson(Request $request, $reportId, $type)
+    public function summaryAction($reportId)
     {
-        try {
-            $report = $this->getReport($reportId, [$type, 'balance']);
-            if ($report->getSubmitted()) {
-                return new JsonResponse([
-                    'success' => false,
-                    'errors' => [
-                        'errorCode' => 1000,
-                        'errorDescription' => 'Unable to change submitted report ',
-                    ],
-                ], 500);
-            }
-
-            $form = $this->createForm(new FormDir\Report\TransactionsType($type), $report, ['method' => 'PUT']);
-            $form->handleRequest($request);
-
-            if (!$form->isValid()) {
-                $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
-
-                return new JsonResponse([
-                    'success' => false,
-                    'errors' => [
-                        'errorCode' => 1001,
-                        'errorDescription' => 'Form validation error',
-                        'fields' => $errorsArray,
-                    ],
-                ], 500);
-            }
-
-            $this->getRestClient()->put('report/'.$report->getId(), $form->getData(), [$type]);
-
-            return new JsonResponse(['success' => true]);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'errors' => [
-                    'errorCode' => 1002,
-                    'errorDescription' => $e->getMessage(),
-                ],
-            ], 500);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (count($report->getAccounts()) === 0) {
+            return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/bank-account/{accountId}/delete", name="bank_account_delete")
+     *
+     * @param int $reportId
+     * @param int $accountId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, $reportId, $accountId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Bank account deleted'
+        );
+
+        if ($report->hasAccountWithId($accountId)) {
+            $this->getRestClient()->delete("/account/{$accountId}");
+        }
+
+        return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
     }
 }

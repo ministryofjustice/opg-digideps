@@ -12,10 +12,6 @@ class DebtsType extends AbstractType
     {
         $builder
             ->add('id', 'hidden')
-            ->add('hasDebts', 'choice', array(
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-            ))
             ->add('debts', 'collection', [
                 'type' => new DebtSingleType(),
                 'cascade_validation' => true,
@@ -35,6 +31,6 @@ class DebtsType extends AbstractType
 
     public function getName()
     {
-        return 'odr_debt';
+        return 'debt';
     }
 }

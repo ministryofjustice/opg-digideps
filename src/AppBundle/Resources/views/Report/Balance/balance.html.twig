@@ -1,0 +1,28 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-balance" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'page.backLink' | trans) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if report.isTotalsMatch %}
+        {% include 'AppBundle:Report/Balance:_balance-good.html.twig' %}
+    {% else %}
+        {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
+    {% endif %}
+
+    {# Pagination #}
+    {{ macros.reportSectionPrevNext(report, 'balance') }}
+
+
+{% endblock %}
+

@@ -4,42 +4,43 @@ outputStyleForInLine: false,
 outputHeaderStyles: true
 } %}
 
-    {% set translationDomain = "email-report-submit-confirm" %}
-    {% trans_default_domain translationDomain %}
+{% set translationDomain = "email-report-submit-confirm" %}
+{% trans_default_domain translationDomain %}
 
+{% block emailHTMLHeaderTitle %}
 
-    {% block emailHTMLHeaderTitle %}
+{% endblock %}
 
-    {% endblock %}
+{% block emailHTMLHeader %}{{ parent() }}{% endblock %}
 
+{% block emailHTMLMessage %}
 
-    {% block emailHTMLHeader %}{{ parent() }}{% endblock %}
+    <p>Dear {{ deputyFirstName }}</p>
+    <br/>
 
-
-    {% block emailHTMLMessage %}
-    <p>Thank you for submitting your report for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.</p>
-
-    <p>The Office of the Public Guardian (OPG) are in the process of reviewing your report and we will contact you once this has been done. </p>
-
-    <p>You can review and download this report. You'll need to sign in and go to Your client to download it as a PDF.</p>
-
-    <p>Sign into the deputy service:<br/>
-        <a href="{{ link }}">{{ link }}</a>
+    <p>
+        <strong>Thank you for submitting your annual deputy report</strong> for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
     </p>
 
-    <p>If you're ready, you can start your report for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}. </p>
+    <p>We’re in the process of reviewing your report, and will contact you when this has been done. </p>
+    
+     <p><strong>Download a pdf of your report</strong></p>
 
-    <p>Sign into the deputy service to start your next report:<br/>
-      <a href="{{ link }}">{{ link }}</a>
+    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
     </p>
+    
 
-<p>Don't worry if you're not ready; we'll remind you when it's time to get started.</p>
+    <p><strong>What happens next</strong></p>
 
-        <br/>
+    <p>If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
 
+    <p>Sign in to <a href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
 
-    {% endblock %}
+    <p>We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
+    <br/>
 
-    {% block emailHTMLFooter %}{{ parent() }}{% endblock %}
+{% endblock %}
+
+{% block emailHTMLFooter %}{{ parent() }}{% endblock %}
 
 {% endembed %}

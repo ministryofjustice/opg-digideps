@@ -1,26 +1,10 @@
+// ==========================================================================
+// REPORT STATUS
+// Status of report, on right hand side, on overview page
+
 #report-status {
 
     margin-top: 20px;
-
-    h2 {
-        @include bold-24();
-        padding-bottom: 25px;
-
-        @include media(mobile) {
-            border-top: 4px solid $grey-3;
-            padding-top: 25px;
-
-            #report-status.readytosubmit & {
-                border-top: 4px solid $green-status;
-            }
-        }
-
-        a {
-            color: $link-colour;
-            text-decoration: none;
-        }
-
-    }
 
     .labelvalue {
         margin-bottom: 20px;

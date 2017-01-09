@@ -11,10 +11,9 @@
             </div>
             {% else %}
             <ul class="list" id="assets">
-                {% for type, assets in report.getAssetsGroupedByTitle %}
-                        <li class="asset-group" data-group="{{ type }}">
-                        {# each property has more than a grey box, so they are delegated to #}
-                        {% if type == 'Property' %}
+                {% for groupId, assetsInGroup in report.getAssetsGroupedByTitle %}
+                        <li class="asset-group" data-group="{{ groupId }}">
+                        {% if (groupId | lower) == 'property' %}
                             {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
                         {% else %}
                              {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
