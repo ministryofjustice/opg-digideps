@@ -1,0 +1,69 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+
+{% set groupString = ('form.group.entries.' ~ transaction.group) | trans %}
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
+{% set transOptions = {'%client%': report.client.firstname, '%group%': groupString, '%category%': categoryString} %}
+
+{% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}
+    {% if step == 1 %}
+        {{ 'stepPage.moneyIn.pageSectionTitle' | trans(transOptions) }}
+    {% else %}
+        {{ 'stepPage.moneyIn.pageSectionTitleWithCategory' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.moneyIn.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
+
+    {% if step == 1 %}
+        <p class="text">
+            {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
+        </p>
+        {{ form_checkbox_group(form.group, 'form.group', {
+            'legendClass' : 'form-label-bold',
+            'legendText' : 'form.group.moneyIn.legend' | trans(transOptions)
+        }) }}
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_checkbox_group(form.category, 'form.category', {
+            'legendClass' : 'form-label-bold',
+            'legendText' : 'form.category.legend' | trans(transOptions)
+        }) }}
+    {% endif %}
+
+    {% if step == 3 %}
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
+            'labelParameters' : transOptions
+        }) }}
+
+        {{ form_input(form.amount, 'form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number js-format-currency',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
+        {# form_known_date(form.createdAt, 'form.createdAt') #}
+
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

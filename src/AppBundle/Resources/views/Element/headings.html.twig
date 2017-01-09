@@ -1,27 +1,28 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% block htmlTitle %}Headings - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Headings{% endblock %}
 
+{% block helpline %}{% endblock %}
 
-{% block pageTitle %}Digideps Styleguide{% endblock %}
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+        breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
-
-{% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-breadCrumb: breadCrumb
-} %}
 
 <!-- Section Title -->
 <div class="grid-row">
     <div class="column">
         <h2 class="heading-large">Section title</h2>
         <div class="example">
-            <div id="page-section-title-container" class="page-section-title-container">
-                <h1>Accounts</h1>
-                <span class="info">
-                    <span id="save-status" data-status="saved">Saved</span>
-                </span>
-            </div>
+            <h1 class="heading-large">Accounts</h1>
+            <span class="info">
+                <span id="save-status" data-status="saved">Saved</span>
+            </span>
         </div>
 
             <pre><code class="language-markup">&lt;div id="page-section-title-container" class="page-section-title-container">

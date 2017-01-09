@@ -1,0 +1,46 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-deputy-expenses" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(odr) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Introduction text #}
+    <div class="text">
+        <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+    </div>
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    {# Return to overview link #}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="bold-small">
+            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
+        </a>
+    </p>
+
+    {# Items list #}
+    {% include 'AppBundle:Odr/DeputyExpense:_list.html.twig' with {
+    'odr': odr,
+    'transDomain': translationDomain
+    } %}
+
+    {# Pagination #}
+    {{ macros.odrSectionPrevNext(odr, 'deputy_expenses') }}
+
+
+
+{% endblock %}

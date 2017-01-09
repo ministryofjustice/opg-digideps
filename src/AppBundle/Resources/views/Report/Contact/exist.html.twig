@@ -1,0 +1,48 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.hasContacts.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': { '%client%': report.client.firstname },
+                    'legendClass' : 'form-label-bold text',
+                    'items': [
+                        {},
+                        {'dataTarget': 'reason-for-no-contact'}
+                    ],
+                    'formGroupClass': 'flush--bottom'
+                }) }}
+
+                <div id="reason-for-no-contact" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

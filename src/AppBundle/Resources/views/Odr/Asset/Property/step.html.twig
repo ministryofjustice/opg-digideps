@@ -1,0 +1,133 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{% block htmlTitle %}{{ 'stepPageProperty.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'stepPageProperty.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPageProperty.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
+
+    {% if step == 1 %}
+        {{ form_input(form.address, 'form.property.address') }}
+        {{ form_input(form.address2, 'form.property.address2', {}) }}
+        {{ form_input(form.county, 'form.property.county') }}
+        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control__postcode' }) }}
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_input(form.occupants, 'form.property.occupants') }}
+    {% endif %}
+
+    {% if step == 3 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.owned.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.owned, 'form.property.owned', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': {'%client%': odr.client.firstname},
+                    'legendClass': 'form-label-bold',
+                    'items': [
+                        {},
+                        {'dataTarget': 'owned-percentage-textarea' }
+                    ]
+                }) }}
+                <div id="owned-percentage-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
+                        'inputPrefix' : '%',
+                        'inputClass' : 'form-control__number',
+                        'labelParameters': {'%client%': odr.client.firstname},
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if step == 4 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.hasMortgage.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass': 'form-label-bold',
+                    'items': [
+                        {'dataTarget': 'mortgage-outstanding-amount-textarea' },
+                        {},
+                    ]
+                }) }}
+                <div id="mortgage-outstanding-amount-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number js-format-currency'
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if step == 5 %}
+        {{ form_input(form.value, 'form.property.value', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number js-format-currency'
+        } ) }}
+    {% endif %}
+
+    {% if step == 6 %}
+        {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
+            'fieldSetClass' : 'inline',
+            'legendClass': 'form-label-bold'
+        }) }}
+    {% endif %}
+
+    {% if step == 7 %}
+        {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
+            'fieldSetClass' : 'inline',
+            'legendClass': 'form-label-bold'
+        }) }}
+    {% endif %}
+
+    {% if step == 8 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.isRentedOut.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass': 'form-label-bold',
+                    'items': [
+                        {'dataTarget': 'rented-out-info' },
+                        {}
+                    ]
+                }) }}
+
+                <div id="rented-out-info" class="panel panel-border-narrow js-hidden">
+                    {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
+                        'showDay': 'false'
+                    }) }}
+
+                    {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number js-format-currency'
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

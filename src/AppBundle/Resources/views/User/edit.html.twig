@@ -1,22 +1,20 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('user-edit') }}
 {% endblock %}
 
-{% block maincontent %}
-    
+{% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-    
+
     {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
 
     {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
@@ -37,20 +35,15 @@
         {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
     {% endif %}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
-    
+
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-        transDomain: translationDomain,
-        linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
-        linkClass: 'button-link',
-        linkHref: path('user_show')
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+    linkClass: 'button-link',
+    linkHref: path('user_show')
     } %}
-    
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
 {% endblock %}
-{% endembed %}

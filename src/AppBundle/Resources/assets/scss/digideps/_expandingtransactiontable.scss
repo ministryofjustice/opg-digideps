@@ -1,3 +1,8 @@
+// ==========================================================================
+// EXPANDING TRANSACTIONS TABLE
+// The transaction form (hidden or not) tied in with a js object
+// with the same name
+
 .expanding-transaction-table {
 
     margin-top: 60px;
@@ -26,7 +31,7 @@
                     float: left;
                     color: $link-colour;
                     padding-left: 30px;
-                    background-image: url('images/icons/solid-arrow.png');
+                    background-image: url("/images/icons/solid-arrow.png");
                     background-position: 0 0;
                     background-repeat: no-repeat;
                 }
@@ -110,13 +115,13 @@
                 height: 30px;
                 width: 30px;
                 color: transparent;
-                background: url("images/icons/remove.png") top left no-repeat;
+                background: url("/images/icons/remove.png") top left no-repeat;
                 background-position: 5px 5px;
                 background-size: 25px 25px;
                 cursor: pointer;
 
                 @include device-pixel-ratio() {
-                    background-image: url("images/icons/remove_2x.png");
+                    background-image: url("/images/icons/remove_2x.png");
                 }
 
             }
@@ -132,7 +137,7 @@
                     width: 170px;
                     margin: 0 15px 15px 0;
                     padding-left: 20px;
-                    background: url("images/icons/smallplus.png") 0 1px no-repeat;
+                    background: url("/images/icons/smallplus.png") 0 1px no-repeat;
                     color: $link-colour;
 
                     &:focus {

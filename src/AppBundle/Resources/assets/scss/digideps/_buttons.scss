@@ -1,5 +1,37 @@
+// ==========================================================================
+// BUTTONS
+// Buttons and links
+
 // scss-lint:disable PlaceholderInExtend
 .button-grey {
     @extend .button;
     @include button ($grey-3);
+}
+// scss-lint:enable PlaceholderInExtend
+
+.button-secondary {
+    @include button($grey-3);
+}
+
+.button-warning {
+    @include button($red);
+    margin-left: 60px;
+}
+
+.button-link {
+    line-height: 2.5;
+    margin-left: 15px;
+    top: 1px;
+    position: relative;
+}
+
+.right-link {
+    margin-right: 297px;
+    float: right;
+}
+
+.action-link {
+    &:visited {
+        color: $link-colour;
+    }
 }

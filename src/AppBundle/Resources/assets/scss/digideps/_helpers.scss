@@ -41,6 +41,14 @@
 .push-half--ends    { margin-top:   $gutter-half !important; margin-bottom:$gutter-half !important; }
 .push-half--sides   { margin-right: $gutter-half !important; margin-left:  $gutter-half !important; }
 
+.push-double          { margin:       $gutter * 2 !important; }
+.push-double--top     { margin-top:   $gutter * 2 !important; }
+.push-double--right   { margin-right: $gutter * 2 !important; }
+.push-double--bottom  { margin-bottom:$gutter * 2 !important; }
+.push-double--left    { margin-left:  $gutter * 2 !important; }
+.push-double--ends    { margin-top:   $gutter * 2 !important; margin-bottom:$gutter * 2 !important; }
+.push-double--sides   { margin-right: $gutter * 2 !important; margin-left:  $gutter * 2 !important; }
+
 // Add padding
 .soft           { padding:       $gutter !important; }
 .soft--top      { padding-top:   $gutter !important; }
@@ -57,6 +65,9 @@
 .soft-half--left    { padding-left:  $gutter-half !important; }
 .soft-half--ends    { padding-top:   $gutter-half !important; padding-bottom:$gutter-half !important; }
 .soft-half--sides   { padding-right: $gutter-half !important; padding-left:  $gutter-half !important; }
+
+// Move elements (experimental)
+.move-quarter--up { position: relative; top: -$gutter-one-quarter; }
 
 // Text alignment
 .text--left     { text-align: left   !important; }
@@ -100,5 +111,14 @@
 
     .js-enabled & {
         display: none !important;
+    }
+}
+
+// Negating borders
+.no-border {
+    border: none;
+
+    td {
+        border: none;
     }
 }

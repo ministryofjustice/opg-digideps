@@ -1,0 +1,64 @@
+startPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageSectionTitle: Accounts
+  pageSectionDescription1: |
+    An important part of your role as a deputy is to keep a record of
+    the money that comes in and goes out of %client%'s accounts.
+  pageSectionDescription2: |
+    Use this section to tell us about all of  %client%'s bank and building society
+    accounts, and her savings accounts and ISAs.
+  pageSectionDescription3: |
+    We will also need to know the balance of each account.
+  startButton: Start accounts
+
+stepPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageSectionTitle: Add an account
+  supportTitle: Accounts
+  pageSectionDescription:
+    step1: Start by adding %client%'s first account; we'll then ask you for the account details. You can go back and add more accounts if you need to.
+  backLink: Back
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add another account | GOV.UK"
+  pageSectionTitle: Accounts
+  form:
+    addAnother:
+      label: The account has been saved. Would you like to add another account now?
+      hint: If you prefer, you can come back to this section later to add more accounts
+    save:
+       label: Continue
+
+summaryPage:
+  totalBalance: Total balance on %endDate%: £%amount%
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageSectionTitle: Accounts
+  pageSectionDescription1: An important part of your role as a deputy is to keep a record of the money that comes in and goes out of %client%'s accounts.
+  pageSectionDescription2: Use this section to tell us about all of %client%'s bank and building society accounts, and her savings accounts and ISAs.
+  pageSectionDescription3: We will also need to know the balance of each account.
+
+
+form:
+  accountType:
+      label: What type of account is it?
+  bank:
+    label: Bank or building society name
+  meta:
+    label: Additional information (optional)
+  accountNumber:
+    label: Last 4 digits of the account number
+    preInput: "* * * *"
+  sortCode:
+    legend: Branch sort code
+  openingBalance:
+    label: How much was in the account on %startDate%?
+  closingBalance:
+    label: How much was in the account on %endDate%?
+  isJointAccount:
+    label: Is this a joint account ?
+  isClosed:
+      label: You currently have £0 in this account on %endDate%.  Have you closed this account?
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel

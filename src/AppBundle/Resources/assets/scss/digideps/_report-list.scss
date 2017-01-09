@@ -1,3 +1,7 @@
+// ==========================================================================
+// REPORT LIST
+// List styles: Assets, Contacts, Decisions
+
 .report-list {
     border-top: 1px solid $grey-3;
     margin-top: 30px;
@@ -84,13 +88,18 @@
                 width: 210px;
             }
 
+            dd.report-list__item-fields-description {
+                margin-left: 220px;
+            }
         }
-
     }
-
 }
 
 .report-list--decisions {
+
+    dd.report-list__item-fields-description {
+        margin-left: 50px;
+    }
 
     .report-list__item {
         position: relative;

@@ -5,76 +5,187 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends AbstractController
 {
+    private static $jmsGroups = [
+        'money-transfer',
+        'account'
+    ];
+
     /**
-     * @Route("/report/{reportId}/transfers/edit", name="transfers")
+     * @Route("/report/{reportId}/money-transfers", name="money_transfers")
+     * @Template()
      *
      * @param int $reportId
      *
      * @return array
      */
-    public function index(Request $request, $reportId)
+    public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
-        if (($nofAccounts = count($report->getAccounts())) < 2) {
-            return $this->render('AppBundle:Report/BankAccount/MoneyTransfer:index_unhappy.html.twig', [
-                    'report' => $report,
-                    'subsection' => 'transfers',
-                    'nOfAccounts' => $nofAccounts,
-            ]);
-        }
-
-        $transfer = new EntityDir\Report\MoneyTransfer();
-        $form = $this->createForm(new FormDir\Report\TransferType($report->getAccounts()), $transfer);
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $this->getRestClient()->post('report/'.$report->getId().'/money-transfers', $form->getData());
-
-            return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
-        }
-
-        return $this->render('AppBundle:Report/BankAccount/MoneyTransfer:index.html.twig', [
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (count($report->getAccounts()) < 2) {
+            return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
+                'error' => 'atLeastTwoBankAccounts',
                 'report' => $report,
-                'subsection' => 'transfers',
-                'form' => $form->createView(),
-        ]);
+            ]);
+        }
+
+        if (count($report->getMoneyTransfers()) > 0 || $report->getNoTransfersToAdd()) {
+            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+        }
+
+        return [
+            'report' => $report,
+        ];
     }
 
     /**
-     * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_delete")
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/money-transfers/exist", name="money_transfers_exist")
+     * @Template()
      */
-    public function delete($reportId, $transferId)
+    public function existAction(Request $request, $reportId)
     {
-        $this->getRestClient()->delete('report/'.$reportId.'/money-transfers/'.$transferId);
-
-        return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
-    }
-
-    /**
-     * Sub controller action called when the no transfers form is embedded in another page.
-     *
-     * @Template("AppBundle:Report/BankAccount/MoneyTransfer:_noTransfers.html.twig")
-     */
-    public function _noTransfersPartialAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
-
-        $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(new FormDir\Report\MoneyTransferExistType(), $report);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $request->getMethod() == 'POST' && $form->isValid()) {
-            $this->getRestClient()->put('report/'.$reportId, [
-                'no_transfers_to_add' => $form->getData()->getNoTransfersToAdd(),
+        if ($form->isValid()) {
+            switch ($report->getNoTransfersToAdd()) {
+                case false:
+                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
+                case true:
+                    $this->get('restClient')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
+                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+            }
+        }
+
+        $backLink = $this->generateUrl('money_transfers', ['reportId' => $reportId]);
+        if ($request->get('from') == 'summary') {
+            $backLink = $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]);
+        }
+
+        return [
+            'backLink' => $backLink,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
+     * @Template()
+     */
+    public function stepAction(Request $request, $reportId, $step, $transferId = null)
+    {
+        $totalSteps = 2;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+        }
+
+        // common vars and data
+        $dataFromUrl = $request->get('data') ?: [];
+        $stepUrlData = $dataFromUrl;
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
+
+        /* @var $stepRedirector StepRedirector */
+        $stepRedirector = $this->get('stepRedirector')
+            ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);
+
+
+        // create (add mode) or load transaction (edit mode)
+        if ($transferId) {
+            $transfer = $report->getMoneyTransferWithId($transferId);
+            $transfer->setAccountFromId($transfer->getAccountFrom()->getId());
+            $transfer->setAccountToId($transfer->getAccountTo()->getId());
+        } else {
+            $transfer = new EntityDir\Report\MoneyTransfer();
+        }
+
+        // add URL-data into model
+        if (isset($dataFromUrl['from-id']) && isset($dataFromUrl['to-id'])) {
+            $transfer->setAccountFromId($dataFromUrl['from-id']);
+            $transfer->setAccountFrom($report->getAccountWithId($dataFromUrl['from-id']));
+            $transfer->setAccountToId($dataFromUrl['to-id']);
+            $transfer->setAccountTo($report->getAccountWithId($dataFromUrl['to-id']));
+        }
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl
+        ]);
+
+        // crete and handle form
+        $form = $this->createForm(new FormDir\Report\MoneyTransferType(
+            $step, $report->getAccounts()
+        ), $transfer);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            // decide what data in the partial form needs to be passed to next step
+            if ($step == 1) {
+                $stepUrlData['from-id'] = $transfer->getAccountFromId();
+                $stepUrlData['to-id'] = $transfer->getAccountToId();
+            } else if ($step == $totalSteps) {
+                if ($transferId) { // edit
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Entry edited'
+                    );
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
+
+                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+                } else { // add
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+                    return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
+                }
+            }
+
+            $stepRedirector->setStepUrlAdditionalParams([
+                'data' => $stepUrlData
             ]);
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+        }
+
+        return [
+            'transfer' => $transfer,
+            'report' => $report,
+            'step' => $step,
+            'reportStatus' => new ReportStatusService($report),
+            'form' => $form->createView(),
+            'backLink' => $stepRedirector->getBackLink(),
+            'skipLink' => null,
+        ];
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
+     * @Template()
+     */
+    public function addAnotherAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+
+        $form = $this->createForm(new FormDir\Report\MoneyTransferAddAnotherType(), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
+                case 'no':
+                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -84,83 +195,43 @@ class MoneyTransferController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/transfers", name="transfers_save_json")
-     * @Method({"POST", "PUT"})
+     * @Route("/report/{reportId}/money-transfers/summary", name="money_transfers_summary")
+     * @Template()
      *
-     * @param Request $request
-     * @param int     $reportId
+     * @param int $reportId
      *
-     * @return JsonResponse
+     * @return array
      */
-    public function saveJson(Request $request, $reportId)
+    public function summaryAction($reportId)
     {
-        $data = [
-            'account_from_id' => $request->get('account')[0],
-            'account_to_id' => $request->get('account')[1],
-            'amount' => $request->get('amount'),
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (count($report->getMoneyTransfers()) == 0 && $report->getNoTransfersToAdd() === null) {
+            return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
+        }
+
+        return [
+            'report' => $report,
         ];
-
-        try {
-            if (!$request->isXmlHttpRequest()) {
-                throw new \RuntimeException('Endpoint only callable via AJAX');
-            }
-
-            if ($request->getMethod() == 'PUT') {
-                $id = $request->get('id');
-                $this->getRestClient()->put("report/{$reportId}/money-transfers/{$id}", $data);
-
-                return new JsonResponse(['success' => true]);
-            } else { //POST
-                $createdTransferId = $this->getRestClient()->post("report/{$reportId}/money-transfers", $data);
-
-                return new JsonResponse(['success' => true, 'transferId' => $createdTransferId]);
-            }
-        } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
-        }
     }
+
 
     /**
-     * @Route("/report/{reportId}/transfers", name="transfers_delete_json")
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
      *
-     * @param Request $request
-     * @param int     $reportId
-     * @param int     $transferId
-     *                            return JsonResponse
+     * @param int $id
+     *
+     * @return RedirectResponse
      */
-    public function deleteJson(Request $request, $reportId)
+    public function deleteAction(Request $request, $reportId, $transferId)
     {
-        try {
-            $this->getRestClient()->delete('report/'.$reportId.'/money-transfers/'.$request->get('id'));
+        $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
 
-            return new JsonResponse(['success' => true]);
-        } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
-        }
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Money transfer deleted'
+        );
+
+        return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
     }
 
-    /**
-     * @Route("/report/{reportId}/notransfers", name="transfers_no_transfers_json")
-     * @Method({"POST"})
-     *
-     * @param Request $request
-     * @param int     $reportId
-     *                          return JsonResponse
-     */
-    public function noTransfersJson(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['account', 'money-transfer']);
-
-        $form = $this->createForm(new FormDir\Report\NoTransfersToAddType(), $report, []);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getRestClient()->put('report/'.$reportId, [
-                'no_transfers_to_add' => $form->getData()->getNoTransfersToAdd(),
-            ]);
-        }
-
-        return new JsonResponse(['success' => true]);
-    }
 }

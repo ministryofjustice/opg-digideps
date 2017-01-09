@@ -3,7 +3,7 @@ lastLoggedIn:
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
   hoursAgo: "{1} about one hour ago | ]1,Inf] about %count% hours ago"
   exactDate: "%date%"
-  
+
 back.label: Back to deputy report
 
 registrationProgressBar:
@@ -15,3 +15,28 @@ registrationProgressBar:
         label: Add your client's details
     create_report:
         label: Create a report
+
+existsPage:
+  backLink: Back
+
+addPage:
+  backLink: Back
+
+editPage:
+  backLink: Back
+
+stepPage:
+   backLink: Back
+   skipLink: Skip this question for now
+   saveAndContinue: Save and continue
+
+addAnotherPage:
+  save: Continue
+
+summaryPage:
+   pageContent:
+     weHaveListed: We've listed your saved answers below.
+     checkCorrect: Check they're correct and edit them where necessary.
+     remindComplete: Don’t worry if you’ve had to skip some questions. We’ll remind you to complete them next time you log in.
+     canYouAnswer: Can you answer the missing questions? You won’t be able to submit your new deputy report until it’s complete.
+     returnToReport: Return to report overview

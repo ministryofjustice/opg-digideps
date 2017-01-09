@@ -41,25 +41,26 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank_name"})
-     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank_name"})
-     * 
-     * @JMS\Groups({"account"})
-     * 
-     * @var string
-     */
-    private $bank;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"add_edit"})
-     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"add_edit"})
+     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"bank-account-type"})
+     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"bank-account-type"})
      *
      * @JMS\Groups({"account"})
      *
      * @var string
      */
     private $accountType;
+
+
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank-account-name"})
+     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank-account-name"})
+     *
+     * @JMS\Groups({"account"})
+     *
+     * @var string
+     */
+    private $bank;
 
     /**
      * @JMS\Type("string")
@@ -70,30 +71,33 @@ class Account
 
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"bank-account-number"})
+     * @Assert\Type(type="alnum", message="account.accountNumber.type", groups={"bank-account-number"})
+     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
      * @JMS\Groups({"account"})
-     * 
-     * @var string
-     */
-    private $sortCode;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"add_edit"})
-     * @Assert\Type(type="alnum", message="account.accountNumber.type", groups={"add_edit"})
-     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"add_edit"})
-     * @JMS\Groups({"account"})
-     * 
+     *
      * @var string
      */
     private $accountNumber;
 
     /**
      * @JMS\Type("string")
+     *
+     * @JMS\Groups({"account"})
+     * 
+     * @var string
+     */
+    private $sortCode;
+
+
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"account"})
      *
-     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"add_edit"})
-     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"add_edit"})
-     * @Assert\Range(max=10000000000, maxMessage = "account.openingBalance.outOfRange", groups={"add_edit"})
+     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"bank-account-opening-balance"})
+     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"bank-account-opening-balance"})
+     * @Assert\Range(max=1000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
      *
      * @var decimal
      */
@@ -101,8 +105,8 @@ class Account
 
     /**
      * @JMS\Type("string")
-     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
-     * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance", "add_edit"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
+     * @Assert\Range(max=1000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
      * @JMS\Groups({"account"})
      * 
      * @var decimal
@@ -112,6 +116,7 @@ class Account
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"account"})
+     * @Assert\NotBlank(message="account.isClosed.notBlank", groups={"bank-account-is-closed"})
      *
      * @var bool
      */
@@ -120,7 +125,7 @@ class Account
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"add_edit"})
+     * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
      * 
      * @var string
      */
@@ -216,6 +221,10 @@ class Account
     public function setClosingBalance($closingBalance)
     {
         $this->closingBalance = $closingBalance;
+
+        if (!$this->isClosingBalanceZero()) {
+            $this->setIsClosed(false);
+        }
 
         return $this;
     }

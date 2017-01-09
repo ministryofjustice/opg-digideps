@@ -1,25 +1,23 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('user-show') }}
 {% endblock %}
 
-{% block maincontent %}
-    
+{% block pageContent %}
     <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
-        
+
         <a href="{{ path('user_edit') }}"
            class="edit-button behat-link-deputy-edit">{{ 'yourDetails.edit'| trans }}</a>
-           
+
        <h2 class="title behat-region-my-details-name" itemprop="name">{{ user.getFullname }}</h2>
 
         <dl class="item-data item-data-fixed behat-region-my-details">
@@ -42,7 +40,7 @@
                     <div itemprop="addressCountry">{{ user.addressCountry | country_name }}</div>
                 {% endif %}
             </dd>
-            
+
             <dt class="item-label">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
             <dd class="item-value behat-region-my-details-phone-main">{{ user.phoneMain }}&nbsp;</dd>
 
@@ -55,4 +53,3 @@
     </div>
 
 {% endblock %}
-{% endembed %}

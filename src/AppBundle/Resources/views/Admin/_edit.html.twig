@@ -44,41 +44,36 @@ transDomain: 'admin'
 
 <h2 class="heading-small">Reports</h2>
 {% if reportsCount > 0 %}
-    <ul>
-        <li>Number of total reports: {{ reportsCount }}</li>
-    </ul>
+    <p>Number of total reports: {{ reportsCount }}</p>
 {% else %}
     No reports
 {% endif %}
 
+{{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 
-{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-  {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
-
-  {% if action is defined %}
-      {% if action == 'edit' %}
-          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-          transDomain: 'admin',
-          linkButtonLabel: 'cancel.label',
-          linkClass: 'button-link',
-          linkHref: path('admin_homepage')
-          } %}
-          {# only admin are allowed to delete users (except themselves when logged) #}
-          {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
-              {% if reportsCount == 0 %}
-                  {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                  transDomain: 'admin',
-                  linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
-                  linkClass: 'button-link',
-                  linkHref: path('admin_delete_confirm', { id: id })
-                  } %}
-              {% else %}
-                  &nbsp;[Delete is disabled as there is at least one report]
-              {% endif %}
-          {% endif %}
-      {% endif %}
-  {% endif %}
-{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{% if action is defined %}
+    {% if action == 'edit' %}
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('admin_homepage')
+        } %}
+        {# only admin are allowed to delete users (except themselves when logged) #}
+        {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
+            {% if reportsCount == 0 %}
+                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: 'admin',
+                linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
+                linkClass: 'button-link',
+                linkHref: path('admin_delete_confirm', { id: id })
+                } %}
+            {% else %}
+                &nbsp;[Delete is disabled as there is at least one report]
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}
 
 {{ form_end(form) }}
 {% if firstClient %}

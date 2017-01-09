@@ -1,0 +1,131 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "odr-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(odr) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Introduction text #}
+    <p class="text">
+         {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
+    </p>
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    {# Return to overview link #}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="bold-small">
+            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
+        </a>
+    </p>
+
+    {# Questions and answers table #}
+    <table class="check-your-answers columns-2 push-double--bottom">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="behat-region-has-debts">
+                <td>
+                    {{ 'existPage.form.exist.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.hasDebts == 'yes' ? 'Yes': 'No' }}
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_debts_exist', {'odrId': odr.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if odr.hasDebts == 'yes' %}
+
+        {# Items list heading #}
+        <div class="grid-row  behat-region-debts-list">
+            <div class="column-half">
+                <h2 class="heading-medium flush--ends">List of debts</h2>
+            </div>
+            <div class="column-half text--right">
+                <a href="{{ path('odr_debts_edit', {'odrId': odr.id, 'from': 'summary'}) }}" class="bold-small action-link  behat-link-edit">Edit</a>
+            </div>
+        </div>
+
+        {# Items list table #}
+        <table class="check-your-answers columns-2">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="numeric">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for debt in odr.debts %}
+                <tr class="behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
+                    <td> {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}</td>
+                    <td class="numeric-small">£{{ debt.amount | money_format }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td class="no-border">
+                    <span class="bold-small">Total amount</span>
+                </td>
+                <td class="no-border text--right">
+                    <span class="bold-small">£{{ odr.debtsTotalAmount | money_format }}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        {% set debtOther = odr.getDebtById('other') %}
+        {% if debtOther.moreDetails %}
+
+            {# Questions and answers table #}
+            <table class="check-your-answers columns-2 push--top">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>
+                            <span class="visuallyhidden">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="behat-region-debt-other-more-details">
+                        <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
+                        <td>{{ debtOther.moreDetails | nl2br }}</td>
+                        <td class="change-answer">
+                            <a href="{{ path('odr_debts_edit', {'odrId': odr.id, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    {% endif %}
+
+    {# Pagination #}
+    {{ macros.odrSectionPrevNext(odr, 'debts') }}
+
+
+
+{% endblock %}

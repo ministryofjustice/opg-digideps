@@ -1,142 +1,20 @@
-table.money-table {
-
-    margin: 30px 0 30px 0;
-
-    td {
-        padding: 14px 25px 10px 25px;
-
-        &.value,
-        &.right {
-            text-align: right;
-        }
-
-    }
-
-
-    tr.solid-row {
-
-        background: $grey-3;
-
-        td.title {
-            @include core-19();
-            color: $black;
-        }
-
-        td.value {
-            @include core-24();
-            color: $black;
-        }
-
-    }
-
-    tr.split-row {
-        td.title {
-            @include core-19();
-            color: $black;
-            background: $white;
-            border: 0;
-        }
-
-        td.value {
-            @include bold-24();
-            color: $black;
-            background: $grey-3;
-        }
-
-        &.highlighted-row {
-
-            border: 1px solid $turquoise;
-
-            td.title {
-                @include bold-19();
-                background: $white;
-                color: $turquoise;
-            }
-
-            td.value {
-                @include bold-24();
-                background: $turquoise;
-                color: $white;
-            }
-
-            &.orange {
-                border-color: $orange;
-
-                td.title {
-                    color: $black;
-                }
-
-                td.value {
-                    background: $orange;
-                    color: $black;
-                    border-bottom-color: $orange;
-                }
-
-            }
-
-            &.black {
-                border-color: $black;
-
-                td.title {
-                    color: $black;
-                }
-
-                td.value {
-                    background: $black;
-                    color: $white;
-                    border-bottom-color: $black;
-                }
-
-            }
-
-
-        }
-    }
-
-
-
-    tr.medium-bottom-margin {
-        margin-bottom: 20px;
-    }
-
-    tr.large-bottom-margin {
-        margin-bottom: 30px;
-    }
-
-    tr.spacer {
-        td {
-            padding: 15px 25px 15px 25px;
-            border: 0;
-        }
-    }
-
-    tr.borderless {
-        td {
-            border: 0;
-        }
-    }
-
-}
-
+// ==========================================================================
+// BALANCE SUMMARY TABLE
+// Money balance spacing
 
 .balance-warning.page-section-warning {
 
     width: 95%;
 
-    .page-section-description {
-        display: block;
-        margin-bottom: 0;
+    .left-margin {
+        margin-left: 40px;
+    }
 
-        &.left-margin {
-            margin-left: 40px;
-        }
+    .left-margin-big {
+        margin-left: 50px;
+    }
 
-        &.left-margin-big {
-            margin-left: 50px;
-        }
-
-        &.big {
-            font-size: 1.15em;
-        }
+    .big {
+        font-size: 1.15em;
     }
 }

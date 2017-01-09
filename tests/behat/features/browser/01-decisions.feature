@@ -23,6 +23,7 @@ Feature: Browser - manage decisions
         And I click on "edit-decisions, decisions"
         When I follow "add-decisions-button"
         Then I save the page as "decision-add"
+        And I click on "reports,report-2016-open, edit-decisions"
         And I add the following decisions:
             | description | clientInvolved | clientInvolvedDetails |
             | 2 beds | yes | the client was able to decide at 90% |
@@ -30,7 +31,7 @@ Feature: Browser - manage decisions
         And I save the page as "decision-list"
         Then I should see "2 beds" in the "list-decisions" region
         And I should see "3 beds" in the "list-decisions" region
-        Then I click on the first decision
+        Then I press "edit-1-link"
         And I click on "delete-button"
         And I save the page as "decision-delete-confirm"
         Then I should see a confirmation

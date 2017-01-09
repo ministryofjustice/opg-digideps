@@ -1,0 +1,26 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
+{# iterate the config. When the section if found (k=n), includes the nextprevious.html.twig with
+   the k=n-1 and k=n+1 config.
+   When all the NDR OTPP section are implemented, consider merge up the included template
+ #}
+{% for k,s in config %}
+    {% if s.section == section %}
+        {% set templateOptions = {} %}
+        {% if config[k-1] is defined %}
+            {% set templateOptions = templateOptions | merge({
+            'previousLink': config[k-1].link,
+            'previousLabel': ('prevNextLinks.sections.' ~ config[k-1].section) | trans,
+            }) %}
+        {% endif %}
+        {% if config[k+1] is defined %}
+            {% set templateOptions = templateOptions | merge({
+            'nextLink': config[k+1].link,
+            'nextLabel': ('prevNextLinks.sections.' ~ config[k+1].section) | trans,
+            }) %}
+        {% endif %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with templateOptions %}
+    {% endif %}
+{% endfor %}
+

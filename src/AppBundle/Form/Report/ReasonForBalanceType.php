@@ -18,12 +18,13 @@ class ReasonForBalanceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-accounts',
+            'translation_domain' => 'report-balance',
+            'validation_groups' => ['balance'],
         ]);
     }
 
     public function getName()
     {
-        return 'form';
+        return 'balance';
     }
 }

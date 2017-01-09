@@ -1,3 +1,6 @@
+{% set translationDomain = "odr-overview" %}
+{% trans_default_domain translationDomain %}
+
 {% if disableedit is defined and disableedit == true %}
     {% set allowEdit = false %}
 {% else %}
@@ -12,7 +15,13 @@
         {% endif %}
 
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
-        <span class="status {{ state }}">{{ ('labels.' ~ state) | trans({}, 'overview') }}</span>
+        <span class="status {{ state }}">
+            {% if state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+                {{ (subSection ~ '.label.' ~ state) | transchoice(nOfRecords | default(0)) }}
+            {% else %}
+                {{ ('labels.' ~ state) | trans }}
+            {% endif %}
+        </span>
 
     <span  class="{{ editLinkClass | default('edit-link') }}
             {% if allowEdit == false %}disabled{% endif %}"

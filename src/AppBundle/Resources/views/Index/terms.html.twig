@@ -1,137 +1,162 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "common" %}
 
-{% block pageTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'Terms and conditions' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     <nav class="back-bar">
-        <a id="overview-button" href="{{ app.request.headers.get('referer') }}">Return to deputy report</a>
+        <a id="overview-button" href="{{ app.request.headers.get('referer') }}" class="link-return">Return to deputy report</a>
         {% include 'AppBundle:Components:_helpline.html.twig' %}
     </nav>
 {% endblock %}
 
-{% block title %}{{ 'Terms And Conditions' | trans }}{% endblock %}
-
-{% block pageHeader %}
-    {{ parent() }}
+{% block linkBack %}
+  <a href="{{ app.request.headers.get('referer') }}" class="link-back behat-link-step-back">Back</a>
 {% endblock %}
 
-{% block validationSummary %}
+{% block pageContent %}
 
-{% endblock %}
+<h2 class="lede text">By using this digital Complete the deputy report tool you agree to our <a href="#pi-charter">personal information charter</a> and to these terms and conditions. Please read them carefully.</h2>
 
-{% block contentClass %}terms{% endblock %}
-
-{% block pageBody %}
-
-
-<h2 class="heading-large">By using this digital Complete the deputy report tool you agree to our <a href="#pi-charter">personal information charter</a> and to these terms and conditions. Please read them carefully.</h2>
 
 <h2 class="heading-large">1. What are these terms about?</h2>
+<div class="text">
+  <p>These terms of use tell you how you may use the deputy service to access and view the content for your personal and non-business use. Please read them carefully.</p>
 
-<p>These terms of use tell you how you may use the deputy service to access and view the content for your personal and non-business use. Please read them carefully.</p>
+  <p>This service complies with all principles of the Data Protection Act 1998.</p>
 
-<p>This service complies with all principles of the Data Protection Act 1998.</p>
+  <p>Ministry of Justice (MoJ) is the 'data controller' for the purposes of the act. However, the information you enter into the service is not transmitted to the Office of the Public Guardian (OPG), but is stored in a secure database. OPG will only see the information you enter when the submitted report is received by the OPG.</p>
+</div>
 
-<p>Ministry of Justice (MoJ) is the 'data controller' for the purposes of the act. However, the information you enter into the service is not transmitted to the Office of the Public Guardian (OPG), but is stored in a secure database. OPG will only see the information you enter when the submitted report is received by the OPG.</p>
-
-<h3 class="heading-medium">Who makes the Complete the deputy report service available to me?</h3>
-<p>The deputy service is made available to you by the Office of the Public Guardian (OPG):
-    <span class="address">
-        Office of the Public Guardian<br/>
-        PO Box 16185<br/>
-        Birmingham<br/>
-        B2 2WH<br/>
-    </span>
-</p>
+<h3 class="heading-medium text">Who makes the Complete the deputy report service available to me?</h3>
+<div class="text">
+  <p>The deputy service is made available to you by the Office of the Public Guardian (OPG):</p>
+  <p>
+      Office of the Public Guardian<br/>
+      PO Box 16185<br/>
+      Birmingham<br/>
+      B2 2WH<br/>
+  </p>
+</div>
 
 <h3 class="heading-medium">Should I read any other information or terms?</h3>
-<p>The privacy and cookies policy forms part of the terms. If there is any inconsistency between the privacy and cookies policy and the terms, the terms will prevail.</p>
-<p>Once you have set up an account through the deputy service, section 6 will confirm how your email address is stored and held within the service.</p>
-<p>Your use of the deputy service and any dispute arising from its use will be governed by and construed in accordance with the laws of England and Wales, including but not limited to:
-    <ul class="list-bullet text">
-        <li>Computer Misuse Act 1990</li>
-        <li>Data Protection Act 1998</li>
-        <li>Mental Capacity Act 2005</li>
-    </ul>
-</p>
+<div class="text">
+  <p>The privacy and cookies policy forms part of the terms. If there is any inconsistency between the privacy and cookies policy and the terms, the terms will prevail.</p>
+  <p>Once you have set up an account through the deputy service, section 6 will confirm how your email address is stored and held within the service.</p>
+  <p>Your use of the deputy service and any dispute arising from its use will be governed by and construed in accordance with the laws of England and Wales, including but not limited to:
+      <ul class="list-bullet text">
+          <li>Computer Misuse Act 1990</li>
+          <li>Data Protection Act 1998</li>
+          <li>Mental Capacity Act 2005</li>
+      </ul>
+  </p>
+</div>
+
 
 <h2 class="heading-large">2. What is the deputy service?</h2>
-<p>In order to use this service, you will need to enter information including names, addresses, other contact details, dates of birth and the relationship of involved parties to the client. We use this information to populate a report and for no other purpose. OPG doesn't see what you’ve entered into the service until you have submitted the report.
-Separately from the information entered by those using this service, OPG also collects site-usage information from this service This allows us to see how the service is being used so we can improve it. This information does not contain any personal data.</p>
-<p>We’ll only ever collect information that will help us make the site work better for you: information that will let us contact you if you’ve asked us to, let us give you accurate information if you need it, and give us a sense of how people are using the service, so we can keep improving it.</p>
-<p>You have the right as the owner of the account to delete it, or any and all information in it, at any point.</p>
+<div class="text">
+  <p>In order to use this service, you will need to enter information including names, addresses, other contact details, dates of birth and the relationship of involved parties to the client. We use this information to populate a report and for no other purpose. OPG doesn't see what you’ve entered into the service until you have submitted the report.</p>
+  <p>Separately from the information entered by those using this service, OPG also collects site-usage information from this service This allows us to see how the service is being used so we can improve it. This information does not contain any personal data.</p>
+  <p>We’ll only ever collect information that will help us make the site work better for you: information that will let us contact you if you’ve asked us to, let us give you accurate information if you need it, and give us a sense of how people are using the service, so we can keep improving it.</p>
+  <p>You have the right as the owner of the account to delete it, or any and all information in it, at any point.</p>
+</div>
 
-<h2 class="heading-large">3. What happens when I submit my report?</h2>
-<p>When you click submit within the service a version of the annual report is sent to a mail box which is accessed by OPG and kept in accordance with the privacy policy.</p>
-<p>Within the application itself, any reports that have been submitted to the OPG can no longer be changed. But prior to the submission of the report, there is a ‘save and return’ functionality that gives the deputy the opportunity to change any information they have entered in the system. The save and return function will be explained at the beginning of the form.</p>
-<p>However, deputies are still able to request for their data to be corrected and the service’s terms and conditions will include information on how to correct data that has already been submitted through their deputy report.</p>
 
-<h2 class="heading-large">4. How you may NOT use the service</h2>
-<p>You must not misuse our service by knowingly introducing viruses, trojans, worms, logic bombs or other material which is malicious or technologically harmful. You must not attempt to gain unauthorised access to our service, the system on which our service is stored or any server, computer or database connected to our service. You must not attack our site via a denial-of-service attack or a distributed denial-of-service attack.</p>
+<h2 class="heading-large text">3. What happens when I submit my report?</h2>
+<div class="text">
+  <p>When you click submit within the service a version of the annual report is sent to a mail box which is accessed by OPG and kept in accordance with the privacy policy.</p>
+  <p>Within the application itself, any reports that have been submitted to the OPG can no longer be changed. But prior to the submission of the report, there is a ‘save and return’ functionality that gives the deputy the opportunity to change any information they have entered in the system. The save and return function will be explained at the beginning of the form.</p>
+  <p>However, deputies are still able to request for their data to be corrected and the service’s terms and conditions will include information on how to correct data that has already been submitted through their deputy report.</p>
+</div>
 
-<h2 class="heading-large">5. How does the service use your personal information?</h2>
-<p>OPG works hard to make sure the information within the service is accurate. However, we can’t guarantee the accuracy and completeness of any information at all times. Guidance contained within this service should not be considered legal advice.</p>
-<p>OPG is not responsible for the content or reliability of any linked services or websites, and does not necessarily endorse any views expressed within them.</p>
-<p>While OPG makes every effort to ensure this service is accessible at all times, we are not liable if the service is unavailable for any period of time.</p>
+
+<h2 class="heading-large text">4. How you may NOT use the service</h2>
+<div class="text">
+  <p>You must not misuse our service by knowingly introducing viruses, trojans, worms, logic bombs or other material which is malicious or technologically harmful. You must not attempt to gain unauthorised access to our service, the system on which our service is stored or any server, computer or database connected to our service. You must not attack our site via a denial-of-service attack or a distributed denial-of-service attack.</p>
+</div>
+
+
+<h2 class="heading-large text">5. How does the service use your personal information?</h2>
+<div class="text">
+  <p>OPG works hard to make sure the information within the service is accurate. However, we can’t guarantee the accuracy and completeness of any information at all times. Guidance contained within this service should not be considered legal advice.</p>
+  <p>OPG is not responsible for the content or reliability of any linked services or websites, and does not necessarily endorse any views expressed within them.</p>
+  <p>While OPG makes every effort to ensure this service is accessible at all times, we are not liable if the service is unavailable for any period of time.</p>
+</div>
 
 <h3 class="heading-medium">How does the service keep your information safe?</h3>
-<p>The OPG takes data security very seriously. We take every step to make sure that your data remains private and secure.</p>
-<p>The postcode lookup functionality within this service only returns information about the address in question. No other information is either sent to the service or returned from the service.</p>
-<p>We make every effort to check and test this service whenever we amend or update it. However, you must take your own precautions to ensure that the way you access this service does not expose you to the risk of viruses, malicious computer code or other forms of interference which may damage your own computer system.</p>
-<p>You stay signed in until you sign out, or until 20 minutes elapse from the time you close or navigate away from the service. This is in order to keep the service secure.</p>
-<h3 class="heading-medium">All data collected by this service is stored in our secure database and is kept within the European Economic Area (EEA).</h3>
-<p>However, due to the global nature of the internet, the data sent to and from the database may transit through countries outside of the EEA. Data isn’t stored in a non-EEA country.</p>
+<div class="text">
+  <p>The OPG takes data security very seriously. We take every step to make sure that your data remains private and secure.</p>
+  <p>The postcode lookup functionality within this service only returns information about the address in question. No other information is either sent to the service or returned from the service.</p>
+  <p>We make every effort to check and test this service whenever we amend or update it. However, you must take your own precautions to ensure that the way you access this service does not expose you to the risk of viruses, malicious computer code or other forms of interference which may damage your own computer system.</p>
+  <p>You stay signed in until you sign out, or until 20 minutes elapse from the time you close or navigate away from the service. This is in order to keep the service secure.</p>
+</div>
+
+<h3 class="heading-medium text">All data collected by this service is stored in our secure database and is kept within the European Economic Area (EEA).</h3>
+<p class="text">However, due to the global nature of the internet, the data sent to and from the database may transit through countries outside of the EEA. Data isn’t stored in a non-EEA country.</p>
+
 <h3 class="heading-medium">Will the service share my information?</h3>
-<p>We never share your information with other organisations for marketing, market research or commercial purposes, and won’t pass on your personal information to any other websites.</p>
+<p class="text">We never share your information with other organisations for marketing, market research or commercial purposes, and won’t pass on your personal information to any other websites.</p>
 
 <h3 class="heading-medium">Who has access to the service?</h3>
-<p>Our hosting provider (Amazon Web Services) and Ministry of Justice (MoJ) staff are responsible for supporting the service and have access to the secure database in which all information entered into this service will be stored. All staff who have access to the secure data have MoJ security clearance.</p>
+<p class="text">Our hosting provider (Amazon Web Services) and Ministry of Justice (MoJ) staff are responsible for supporting the service and have access to the secure database in which all information entered into this service will be stored. All staff who have access to the secure data have MoJ security clearance.</p>
 
-<h2 class="heading-large">6. Managing your account details and activity</h2>
-<p>You are solely responsible for keeping your username and password for the service (if you have them) confidential. You are responsible for all activity that occurs under  your Complete the deputy report service account. </p>
 
-<h2 class="heading-large">7. What are the OPG’s legal obligations to you and how do the terms limit the OPG’s liability?</h2>
-<h3 class="heading-medium">The basis on which OPG makes the service available to you</h3>
-<p>The OPG does not guarantee that the service will always be available or be uninterrupted, timely, secure or free from bugs, viruses, errors and omissions.
-The OPG reserves its right to modify, suspend or discontinue all or any part of the service without giving you any notice.</p>
+<h2 class="heading-large text">6. Managing your account details and activity</h2>
+<p class="text">You are solely responsible for keeping your username and password for the service (if you have them) confidential. You are responsible for all activity that occurs under  your Complete the deputy report service account. </p>
 
-<h2 class="heading-large">8. How can OPG stop making the deputy service available to you and what happens if it does so?</h2>
-<h3 class="heading-medium">OPG’s right to stop making the deputy service available to you</h3>
-<p>OPG reserves the right to stop making all or any part of the service available to you with immediate effect and without notice if: in its sole reasonable opinion you are using
-    the service, and/or any other OPG service, inappropriately (for instance harassing or causing distress or inconvenience to any other person), incompetently or in any way that
-    may constitute derogatory treatment of the OPG or might bring the OPG into disrepute or in a way that might be considered to be prejudicial to the image of the OPG; you breach the terms in a way that cannot be corrected, or you fail to correct a breach within a reasonable period of time if the OPG asks you to do so; or there is, in the OPG’s reasonable opinion, any reason why the Complete the deputy report service must be withdrawn.</li>
 
-</p>
+<h2 class="heading-large text">7. What are the OPG’s legal obligations to you and how do the terms limit the OPG’s liability?</h2>
+
+<h3 class="heading-medium text">The basis on which OPG makes the service available to you</h3>
+<div class="text">
+  <p>The OPG does not guarantee that the service will always be available or be uninterrupted, timely, secure or free from bugs, viruses, errors and omissions.</p>
+  <p>The OPG reserves its right to modify, suspend or discontinue all or any part of the service without giving you any notice.</p>
+</div>
+
+
+<h2 class="heading-large text">8. How can OPG stop making the deputy service available to you and what happens if it does so?</h2>
+
+<h3 class="heading-medium text">OPG’s right to stop making the deputy service available to you</h3>
+<p class="text">OPG reserves the right to stop making all or any part of the service available to you with immediate effect and without notice if: in its sole reasonable opinion you are using the service, and/or any other OPG service, inappropriately (for instance harassing or causing distress or inconvenience to any other person), incompetently or in any way that may constitute derogatory treatment of the OPG or might bring the OPG into disrepute or in a way that might be considered to be prejudicial to the image of the OPG; you breach the terms in a way that cannot be corrected, or you fail to correct a breach within a reasonable period of time if the OPG asks you to do so; or there is, in the OPG’s reasonable opinion, any reason why the Complete the deputy report service must be withdrawn.</p>
+
 
 <h2 class="heading-large">9. What other (general) terms apply?</h2>
-<h3 class="heading-medium">What happens if the OPG does not enforce a right against me?</h3>
-<p>If the OPG decides not to exercise or enforce any right that it has against you at a particular time, then this does not prevent the OPG from later deciding to exercise or enforce that right.</p>
 
-<h3 class="heading-medium">What happens if any part of the terms is found to be ineffective?</h3>
-<p>If any part of the terms is found to be illegal, invalid or otherwise unenforceable by a court or regulator, then, where required, that part shall be deleted from the terms and the remaining parts of the terms will continue to be enforceable.</p>
-<h3 class="heading-medium">Matters beyond OPG’s reasonable control</h3>
-<p>OPG is not liable for any breach or disruptions caused to the service caused by matters beyond its reasonable control including acts of God, fire, lightning, explosion, war, disorder, flood, industrial disputes, weather of exceptional severity and unavoidable hardware or software failures.</p>
+<h3 class="heading-medium text">What happens if the OPG does not enforce a right against me?</h3>
+<p class="text">If the OPG decides not to exercise or enforce any right that it has against you at a particular time, then this does not prevent the OPG from later deciding to exercise or enforce that right.</p>
+
+<h3 class="heading-medium text">What happens if any part of the terms is found to be ineffective?</h3>
+<p class="text">If any part of the terms is found to be illegal, invalid or otherwise unenforceable by a court or regulator, then, where required, that part shall be deleted from the terms and the remaining parts of the terms will continue to be enforceable.</p>
+
+<h3 class="heading-medium text">Matters beyond OPG’s reasonable control</h3>
+<p class="text">OPG is not liable for any breach or disruptions caused to the service caused by matters beyond its reasonable control including acts of God, fire, lightning, explosion, war, disorder, flood, industrial disputes, weather of exceptional severity and unavoidable hardware or software failures.</p>
 
 <h3 class="heading-medium">Third parties</h3>
-<p>The terms do not create or infer any rights that are enforceable by any person who is not party to the terms.</p>
+<p class="text">The terms do not create or infer any rights that are enforceable by any person who is not party to the terms.</p>
 
 <h3 class="heading-medium">Transfer of rights</h3>
-<p>You may not assign, sub-license or otherwise transfer any of your rights and obligations in the terms to any other person.</p>
+<p class="text">You may not assign, sub-license or otherwise transfer any of your rights and obligations in the terms to any other person.</p>
 
-<h3 class="heading-medium">What happens if there is a dispute arising out of the terms?</h3>
-<p>Any disputes arising out of the terms will be governed by and interpreted in accordance with the laws of England and Wales. If you choose to bring proceedings in connection with the terms you must do so in the courts of England and Wales.</p>
-<p>Within the application itself, any reports that have been submitted to the OPG can no longer be changed. But prior to the submission of the report, there is a ‘save and return’ functionality which gives the Deputy the opportunity to change any information they have entered in the system. The save and return function will be explained at the beginning of the form.</p>
-<p>However, Deputies are still able to request for their data to be corrected and the service’s Terms and conditions will include information on how to correct data that has already been submitted through their annual report.</p>
+<h3 class="heading-medium text">What happens if there is a dispute arising out of the terms?</h3>
+<div class="text">
+  <p>Any disputes arising out of the terms will be governed by and interpreted in accordance with the laws of England and Wales. If you choose to bring proceedings in connection with the terms you must do so in the courts of England and Wales.</p>
+  <p>Within the application itself, any reports that have been submitted to the OPG can no longer be changed. But prior to the submission of the report, there is a ‘save and return’ functionality which gives the Deputy the opportunity to change any information they have entered in the system. The save and return function will be explained at the beginning of the form.</p>
+  <p>However, Deputies are still able to request for their data to be corrected and the service’s Terms and conditions will include information on how to correct data that has already been submitted through their annual report.</p>
+</div>
 
-<a name="pi-charter"></a>
-<h2 class="heading-large">Personal Information Charter</h2>
+
+<h2 class="heading-large" id="pi-charter">Personal Information Charter</h2>
+
 <h3 class="heading-medium">Purpose</h3>
-<p>This information charter sets out the standards that you can expect when we ask for, use, and share your personal information. It tells you how to get access to the information we hold on you.</p>
-<p>The Office of the Public Guardian is an executive agency of the Ministry of Justice (MoJ). The MoJ is the ‘data controller’ for the purposes of the Data Protection Act 1998.</p>
-<p>We use your information to help us carry out the duties of the Public Guardian, in line with the Mental Capacity Act 2005.</p>
+<div class="text">
+  <p>This information charter sets out the standards that you can expect when we ask for, use, and share your personal information. It tells you how to get access to the information we hold on you.</p>
+  <p>The Office of the Public Guardian is an executive agency of the Ministry of Justice (MoJ). The MoJ is the ‘data controller’ for the purposes of the Data Protection Act 1998.</p>
+  <p>We use your information to help us carry out the duties of the Public Guardian, in line with the Mental Capacity Act 2005.</p>
+</div>
 
-<h3 class="heading-medium">We collect your personal information when:</h3>
+<h3 class="heading-medium text">We collect your personal information when:</h3>
 <ul class="list-bullet text">
   <li>you apply to register a power of attorney</li>
   <li>you apply to register a lasting power of attorney using the online tool</li>
@@ -144,7 +169,7 @@ The OPG reserves its right to modify, suspend or discontinue all or any part of 
   <li>you make a complaint</li>
 </ul>
 
-<h3 class="heading-medium">We will use your personal information to:</h3>
+<h3 class="heading-medium text">We will use your personal information to:</h3>
 <ul class="list-bullet text">
   <li>register your power of attorney</li>
   <li>process your fee payment</li>
@@ -154,7 +179,7 @@ The OPG reserves its right to modify, suspend or discontinue all or any part of 
   <li>carry out administration</li>
 </ul>
 
-<h3 class="heading-medium">When we ask for your personal information we promise to:</h3>
+<h3 class="heading-medium text">When we ask for your personal information we promise to:</h3>
 <ul class="list-bullet text">
   <li>only ask for the information we need</li>
   <li>make sure your information is safe, that no unauthorised person has access to it</li>
@@ -169,16 +194,18 @@ The OPG reserves its right to modify, suspend or discontinue all or any part of 
 </ul>
 
 <h3 class="heading-medium">Sharing personal information</h3>
-<p>We will only share your information when the law says we can. This includes sharing information to protect vulnerable people.</p>
-<p>We may share your contact information with organisations carrying out customer research on our behalf. They must make sure any information we give them is safe, and not use it for any other purpose.</p>
+<div class="text">
+  <p>We will only share your information when the law says we can. This includes sharing information to protect vulnerable people.</p>
+  <p>We may share your contact information with organisations carrying out customer research on our behalf. They must make sure any information we give them is safe, and not use it for any other purpose.</p>
+</div>
 
 <h3 class="heading-medium">Access to personal information</h3>
-<p>Under the Data Protection Act 1998, you can ask for a copy of the information we hold about you by making a subject access request (SAR). You will need to pay a £10 fee and send us valid proof of identity with your SAR.</p>
-<p>To send us a SAR, <a href="https://www.justice.gov.uk/information-access-rights/how-to-make-a-subject-access-request/make-a-subject-access-request" target="_blank">use the form on our website</a>:</p>
+<div class="text">
+  <p>Under the Data Protection Act 1998, you can ask for a copy of the information we hold about you by making a subject access request (SAR). You will need to pay a £10 fee and send us valid proof of identity with your SAR.</p>
+  <p>To send us a SAR, <a href="https://www.justice.gov.uk/information-access-rights/how-to-make-a-subject-access-request/make-a-subject-access-request" target="_blank">use the form on our website</a>:</p>
 
-
-<p>If you believe the information we hold about you is not accurate, you can contact us:
-  <span class="address">
+  <p>If you believe the information we hold about you is not accurate, you can contact us:</p>
+  <p class="address">
       Office of the Public Guardian<br/>
       PO Box 16185<br/>
       Birmingham<br/>
@@ -187,10 +214,10 @@ The OPG reserves its right to modify, suspend or discontinue all or any part of 
       0300 456 0300<br/>
       <br/>
       <a href="mailto:customerservices@publicguardian.gsi.gov.uk">customerservices@publicguardian.gsi.gov.uk</a><br/>
-  </span>
-</p>
+  </p>
+</div>
 
 <h3 class="heading-medium">Contact details</h3>
-<p>For more information on how we handle your personal information, email the OPG information assurance team at <a href="mailto:OPGInformationAssurance@publicguardian.gsi.gov.uk">OPGInformationAssurance@publicguardian.gsi.gov.uk</a></p>
+<p class="text">For more information on how we handle your personal information, email the OPG information assurance team at <a href="mailto:OPGInformationAssurance@publicguardian.gsi.gov.uk">OPGInformationAssurance@publicguardian.gsi.gov.uk</a></p>
 
 {% endblock %}

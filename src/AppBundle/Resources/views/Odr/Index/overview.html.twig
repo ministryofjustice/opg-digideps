@@ -3,19 +3,17 @@
 {% set translationDomain = "odr-overview" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block contentClass %}page-report-content report-overview odr-overview{% endblock %}
 
 {% block pageContent %}
 <div id="pagebody">
     <div id="pagebody-left-content">
 
-        <header class="page-report-header">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
-                {{ client.fullname }}
-            </h1>
-        </header>
+        <h1 class="heading-xlarge">
+            <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
+            {{ client.fullname }}
+        </h1>
 
         {% if odrStatus.isReadyToSubmit %}
             <div id="header-report-submit" class="hero">
@@ -24,52 +22,110 @@
             </div>
         {% endif %}
 
+        <div id="report-period-due">
+            <div id="report-due" class="labelvalue">
+                <div class="label">{{ 'dueDate' | trans() }}:</div>
+                <div class="value">{{ odr.getDueDate() | date("j M Y") }}</div>
+            </div>
+        </div>
+
+        {#
+        http://hzaiwi.axshare.com/#g=1&p=odr_report_overview_-_not_started_-_first_time_use
+        #}
+
         <ul id="overview-sections" class="overview-sections">
 
-            <li id="finances-and-assets" class="overview-section">
-            <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
-            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'finances',
-            odr: odr,
-            description: false,
-            state: odrStatus.getFinanceState,
-            linkToSubSection: path('odr-expenses', {odrId: odr.id}),
-            list: true
-            } %}
-            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            odr: odr,
-            description: false,
-            state: odrStatus.getAssetsDebtsState,
-            linkToSubSection: path('odr-assets', {odrId: odr.id}),
-            list: true
-            } %}
-            </li>
-
             <li id="visits-and-actions" class="overview-section">
-                <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
+                <h2 class="heading">Health and Welfare</h2>
                 {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'visitsCare',
-                linkToSubSection: path('odr-visits-care', {odrId: odr.id}),
+                subSection: 'visits_care',
+                linkToSubSection: path('odr_visits_care', {odrId: odr.id}),
                 odr: odr,
                 info: true,
                 description: true,
                 state: odrStatus.visitsCareState,
                 } %}
+            </li>
+
+
+            <li id="finances-and-assets" class="overview-section">
+            <h2 class="heading">Property and finance</h2>
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'deputy_expenses',
+            odr: odr,
+            state: odrStatus.expensesState,
+            nOfRecords: odr.expenses | length,
+            linkToSubSection: path('odr_deputy_expenses', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'income_benefits',
+            odr: odr,
+            state: odrStatus.incomeBenefitsState,
+            linkToSubSection: path('odr_income_benefits', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'bank_accounts',
+            odr: odr,
+            state: odrStatus.bankAccountsState,
+            nOfRecords: odr.bankAccounts | length,
+            linkToSubSection: path('odr_bank_accounts', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'assets',
+            odr: odr,
+            state: odrStatus.assetsState,
+            nOfRecords: odr.assets | length,
+            linkToSubSection: path('odr_assets', {odrId: odr.id}),
+            description: true
+            } %}
+            {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'debts',
+            odr: odr,
+            description: false,
+            state: odrStatus.getDebtsState,
+            linkToSubSection: path('odr_debts', {odrId: odr.id}),
+            description: true
+            } %}
+            {#{% include 'AppBundle:Odr/Index:_subsection.html.twig' with {#}
+            {#transDomain: translationDomain,#}
+            {#subSection: 'finances',#}
+            {#odr: odr,#}
+            {#description: false,#}
+            {#state: odrStatus.getFinanceState,#}
+            {#linkToSubSection: path('odr-expenses', {odrId: odr.id}),#}
+            {#} %}#}
+            </li>
+
+            <li id="visits-and-actions" class="overview-section">
+                <h2 class="heading">Other</h2>
                 {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'actions',
-                linkToSubSection: path('odr-action-gifts', {odrId: odr.id}),
+                linkToSubSection: path('odr_actions', {odrId: odr.id}),
                 odr: odr,
                 info: true,
-                description: false,
+                description: true,
                 state: odrStatus.actionsState,
                 } %}
+                {% include 'AppBundle:Odr/Index:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('odr_other_info', {odrId: odr.id}),
+                odr: odr,
+                info: true,
+                description: true,
+                state: odrStatus.otherInfoState,
+                } %}
             </li>
-
 
             <li id="report-submit-section" class="overview-section">
                 <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
@@ -101,6 +157,8 @@
             <p>{{ 'cantSubmitUntilComplete' | trans()  }}</p>
         </div>
         {% endif %}
+
+        [<a href="{{ path('reset-odr', {'odrId': odr.id}) }}">Reset NDR data (only OTPP dev branch)</a>]
 
     </div>
     <div id="pagebody-right-content">

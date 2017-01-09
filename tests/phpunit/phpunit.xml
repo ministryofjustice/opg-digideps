@@ -16,7 +16,6 @@
             <directory>Entity</directory>
             <directory>EventListener</directory>
             <directory>Form</directory>
-            <directory>Resources</directory>
             <directory>Service</directory>
             <directory>Twig</directory>
         </testsuite>

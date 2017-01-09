@@ -1,0 +1,58 @@
+{% set translationDomain = "odr-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="grid-row push--top">
+    <div class="column-half">
+        <h2 class="heading-medium flush--ends">List of accounts</h2>
+    </div>
+    <div class="column-half text--right">
+        <a href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1}) }}"
+            class="bold-small move-quarter--up action-link behat-link-add">
+            <span class="icon icon-plus"></span>
+            Add account
+        </a>
+    </div>
+</div>
+
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+        <tr>
+            <th>Account</th>
+            <th class="text--right">Balance on {{ odr.client.courtDate | date("jS F Y") }}</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for account in odr.bankAccounts %}
+        <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">
+            <td>
+                {% if account.requiresBankNameAndSortCode %}
+                    {{ account.bank }}<br/>
+                {% endif %}
+                <p class="font-xsmall flush--ends">
+                    {{ account.accountTypeText }}<br/>
+                    {% if account.requiresBankNameAndSortCode %}
+                        Sort code: {{ account.sortCode }}<br/>
+                    {% endif %}
+                    Account number: ****{{ account.accountNumber }}<br/>
+                    {# property added later, so it could be null. remove the "if" from 2018 #}
+                    {% if account.isJointAccount != '' %}
+                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                    {% endif %}
+                </p>
+            </td>
+            <td class="numeric-small">
+                £{{ account.balanceOnCourtOrderDate | money_format }}
+            </td>
+            <td class="change-answer soft-half--left hard--right">
+                <a class="behat-link-edit action-link"
+                   href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>
+                <a class="push-half--left behat-link-delete action-link"
+                   href="{{ path('odr_bank_account_delete' , {'odrId': odr.id, 'accountId': account.id}) }}">Remove</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

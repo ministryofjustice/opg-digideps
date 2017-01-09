@@ -1,0 +1,49 @@
+{% set translationDomain = "odr-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="behat-region-more-info">
+            {% if odr.actionMoreInfo is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ odr.actionMoreInfo | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('odr_other_info_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            </td>
+        </tr>
+        {% if odr.actionMoreInfo == 'yes' %}
+            <tr class="behat-region-more-info-details">
+                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}</td>
+                <td>{{ odr.actionMoreInfoDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('odr_other_info_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>

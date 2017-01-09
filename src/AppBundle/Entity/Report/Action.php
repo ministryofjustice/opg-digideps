@@ -22,25 +22,33 @@ class Action
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action"})
+     * @JMS\Groups({"action"})
+     *
+     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action-expect-decisions-choice"})
      */
     private $doYouExpectFinancialDecisions;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
+     * @JMS\Groups({"action"})
+     *
+     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"action-expect-decisions-details"})
      */
     private $doYouExpectFinancialDecisionsDetails;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action"})
+     * @JMS\Groups({"action"})
+     *
+     * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action-have-concerns-choice"})
      */
     private $doYouHaveConcerns;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"have-actions-yes"})
+     * @JMS\Groups({"action"})
+     *
+     * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"action-have-concerns-details"})
      */
     private $doYouHaveConcernsDetails;
 
@@ -142,5 +150,20 @@ class Action
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 
         return $this;
+    }
+
+    /**
+     * checks if report is missing visits care
+     * information.
+     *
+     * @return bool
+     */
+    public function missingInfo()
+    {
+        if (empty($this->doYouExpectFinancialDecisions) || empty($this->doYouHaveConcerns)) {
+            return true;
+        }
+
+        return false;
     }
 }

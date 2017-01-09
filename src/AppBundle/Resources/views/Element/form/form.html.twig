@@ -1,26 +1,21 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-{% block pageTitle %}Digideps Styleguide{% endblock %}
+{% block htmlTitle %}Form elements - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Form elements{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block breadcrumbs %}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+{% endblock %}
 
 {% block pageContent %}
     <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-    } %}
+    <p class="lede text">Enhanced form controls created for specific kids of data.</p>
 
-    <div class="grid-row">
-        <header id="page-header" class="column-two-thirds">
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">Digideps Elements</span>
-                Form Elements
-            </h1>
-
-            <p class="lede">
-                Enhanced form controls created for specific kids of data.
-            </p>
-        </header>
-    </div>
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-small heading-contents">Contents:</h2>
@@ -209,6 +204,7 @@
         </div>
     </div>
     <div class="example" id="radio-example">
+        <form action="">
       <fieldset class="radio-with-hidden form-group">
         <legend class="form-label">Do you expect to make any significant decisions on behalf of the client in the next 12 months?</legend>
         <p class="form-hint">For example, the client moving to other accommodation, buying or selling property or making adaptations
@@ -232,10 +228,10 @@
           </label>
         </div>
       </fieldset>
+      </form>
     </div>
     <script type="text/javascript">
       $(document).ready(function() {
-        new GOVUK.SelectionButtons('.radio-buttons :radio');
         new opg.RadioHide({
             radio: '#radio-example input[type=radio]',
             content: '#radio-example .hidden-section',

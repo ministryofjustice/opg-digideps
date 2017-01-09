@@ -2,14 +2,20 @@
 
 namespace AppBundle\Form\Report\Asset;
 
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+
 /**
  * Asset form.
  * 
  * note: title is hidden (filled from the controller based on AssetTypeTitle form)
  */
-class AssetTypeOther extends AbstractAssetType
+class AssetTypeOther extends AbstractType
 {
-    protected function addFields($builder, $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
                 ->add('value', 'number', [
@@ -23,5 +29,29 @@ class AssetTypeOther extends AbstractAssetType
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
         ]);
+
+
+        $builder
+            ->add('title', 'hidden')
+            ->add('id', 'hidden')
+            ->add('save', 'submit');
+    }
+
+    public function getName()
+    {
+        return 'asset';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'report-assets',
+            'validation_groups' => $this->getValidationGroups(),
+        ]);
+    }
+
+    protected function getValidationGroups()
+    {
+        return [];
     }
 }

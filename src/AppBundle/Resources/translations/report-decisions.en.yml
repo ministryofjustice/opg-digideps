@@ -1,55 +1,101 @@
-page:
-    htmlTitle: "Deputy report - decisions | GOV.UK"
-    pageSectionTitle: Decisions made over the reporting period
-    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying, selling or renting property, making gifts or changing care home.
-    pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
-    addDecisionButton: Add a decision
-    subSectionTitleAdd: Add a decision
-    subSectionTitleEdit: Edit this decision
-navLink: Decisions
-no_decision:
-    subSectionDescription: "If you did not make any significant decisions, please tell us why here."
-    fields:
-      noDecisionReason:
-        label: "Information type"
-        value: "Reason for not adding decisions"
-      editReason:
-        label: "Edit Reason link"
-        value: "Edit this reason"
-    controls:
-      reason:
-        label: ""
+startPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Decisions
+  startButton: Start decisions
+  description1: "We need to know about:"
+  description2: |
+    Decisions you do not need to include here are small, day-to-day decisions
+    such as about buying food or toiletries
+  descriptionListItem1: %client%'s mental capacity to make financial decisions
+  descriptionListItem2: Significant decisions you have made for %client% during the reporting period
+  whyweneedthisSummary: Why do we need to know this?
+  whyweneedthisPara1: |
+    We need to know the important decisions you've made to help us understand
+    how you're looking after %client%'s finances and wellbeing.
+  whyweneedthisPara2: |
+    This is because we have a responsibility to protect people who don't have
+    the mental capacity to make decisions for themselves.
+  whatisdecisionSummary: What is a significant decision?
+  whatisdecisionPara1: |
+    Significant decisions are any important decisions you make for %client% - not
+    just financial decisions. We need to know about any decisions that have a big
+    impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara2: "Significant decisions might be:"
+  whatisdecisionListItem1: buying or selling or renting property
+  whatisdecisionListItem2: buying or selling investments or shares
+  whatisdecisionListItem3: holidays or frequent day trips
+  whatisdecisionListItem4: home improvements
+  whatisdecisionListItem5: making gifts
+  whatisdecisionListItem6: moving %client% to another nursing or care home
+  whatisdecisionListItem7: changing day centres
+
+mentalCapacity:
+  htmlTitle: "Deputy report - mental capacity | GOV.UK"
+  pageSectionTitle: "Mental capacity"
+  form:
+    hasCapacityChanged:
+      label: "Has %client%'s mental capacity to make financial decisions changed?"
+      hint: ""
+    hasCapacityChangedDetails:
+      label: "Tell us more"
+    save:
+      label: "Save and continue"
+
+existPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageSectionTitle: Decisions
+  form:
+    hasDecisions:
+      label: Have you made any significant decisions for %client% during this reporting period?
+    reasonForNoDecisions:
+      label: Please give us an explanation
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageSectionTitle: Decisions
+  form:
+    addAnother:
+      label: The significant decision has been saved. Would you like to add another significant decision now?
+      hint: If you prefer, you can come back to this section later to add more significant decisions
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Add a decision
+  supportTitle: Decisions
+  pageSectionDescription: As you have made significant decisions for %client% we need to know the details.
+
+editPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  supportTitle: Decisions
+  pageSectionTitle: Edit decision
+
+summaryPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageSectionTitle: Decisions
+  addButton: Add significant decision
+  edit: Edit
+  decisionTableColumnHeading1: Decision description
+  decisionTableColumnHeading2: Was %client% involved?
+  decisionTableColumnHeading3: How was %client% involved?
+
 form:
-  controls:
-    addButton:
-      label: "Add a decision"
-      moreLabel: "Add another decision"
-# form
-title:
-  label: Title
-  hint: Add a title to help you identify the decision.
-description:
-  label: Description
-  hint: Give details of the decision here.
-clientInvolvedBoolean:
-  legend: %client%'s involvement
-  hint: Did you involve %client% in this decision?
-  defaultOption: Please select...
-clientInvolvedDetails:
-  label: " "
-  hint: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
-save:
-  label: Save
-cancel:
-  label: Cancel
-delete:
-    label: Delete
-    message: "Are you sure that you want to delete this decision?"
-delete-reason:
-    label: Delete
-    message: "Are you sure that you want to delete this reason?"
-listing:
-  edit-link: Edit this decision
-  description: Description
-  date: Date
-  clientInvolvement: Client involvement
+  title:
+    label: Title
+    hint: Add a title to help you identify the decision.
+  description:
+    heading: Description
+    label: Give details of the significant decision here.
+  clientInvolvedBoolean:
+    heading: %client%'s involvement
+    label: Did you involve %client% in this decision?
+    defaultOption: Please select...
+  clientInvolvedDetails:
+    label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
+  save:
+    label: Save and continue
+
+

@@ -4,9 +4,8 @@
 {% set currentSortOrder = app.request.query.get('sort_order') %}
 {% set currentOrderBy = app.request.query.get('order_by') %}
 
-{% block pageTitle %}Administration - Users{% endblock %}
-{% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}Admin{% endblock %}
+{% block htmlTitle %}Administration - Users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
 
 {% block pageBody %}
 <style type="text/css">
@@ -32,7 +31,6 @@
             <button class="button" type="submit"/>Go</button>
         </form>
     </div>
-
 
     <hr>
 

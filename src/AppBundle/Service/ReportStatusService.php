@@ -33,6 +33,7 @@ class ReportStatusService
         }
     }
 
+
     /** @return string */
     public function getContactsState()
     {
@@ -46,30 +47,70 @@ class ReportStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        if (!$this->report->getVisitsCare() || $this->report->getVisitsCare()->missingVisitsCareInfo()) {
+        if (!$this->report->getVisitsCare()) {
             return self::STATE_NOT_STARTED;
-        } else {
-            return self::STATE_DONE;
         }
+        if ($this->report->getVisitsCare()->missingInfo()) {
+            return self::STATE_INCOMPLETE;
+        }
+        return self::STATE_DONE;
     }
 
     /** @return string */
-    public function getAccountsState()
+    public function getBankAccountsState()
     {
-        $missingAccounts = empty($this->report->getAccounts());
-
-        // not started
-        if ($missingAccounts && !$this->report->hasMoneyIn() && !$this->report->hasMoneyOut()) {
+        if (empty($this->report->getAccounts())) {
             return self::STATE_NOT_STARTED;
         }
 
-        // all done
-        if (!$missingAccounts && !$this->hasOutstandingAccounts() && $this->report->hasMoneyIn() && $this->report->hasMoneyOut() && !$this->missingTransfers() && !$this->missingBalance()) {
+        return self::STATE_DONE;
+    }
+
+    public function getMoneyTransferState()
+    {
+        if (count($this->report->getAccounts()) <= 1) {
             return self::STATE_DONE;
         }
 
-        // amber in all the other cases
-        return self::STATE_INCOMPLETE;
+        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
+        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
+
+        return $valid ? self::STATE_DONE : self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyInState()
+    {
+        if ($this->report->hasMoneyIn()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyOutState()
+    {
+        if ($this->report->hasMoneyOut()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    public function getBalanceState()
+    {
+        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        if ($this->report->isTotalsMatch()) {
+            return self::STATE_DONE; // balance matching => complete
+        }
+
+        if ($this->report->getBalanceMismatchExplanation()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
     }
 
     /** @return string */
@@ -77,16 +118,29 @@ class ReportStatusService
     {
         $hasAtLeastOneAsset = count($this->report->getAssets()) > 0;
         $noAssetsToAdd = $this->report->getNoAssetToAdd();
-        $hasDebts = $this->report->getHasDebts();
 
-        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd) {
             return self::STATE_NOT_STARTED;
         }
 
-        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($hasAtLeastOneAsset || $noAssetsToAdd) {
+            return self::STATE_DONE;
+        }
 
-        if ($assetsSubSectionComplete && $debtsSectionComplete) {
+        return self::STATE_INCOMPLETE;
+    }
+
+    /** @return string */
+    public function getDebtsState()
+    {
+        $hasDebts = $this->report->getHasDebts();
+
+        if (empty($hasDebts)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($debtsSectionComplete) {
             return self::STATE_DONE;
         }
 
@@ -96,7 +150,16 @@ class ReportStatusService
     /** @return string */
     public function getActionsState()
     {
-        return $this->report->getAction() ? self::STATE_DONE : self::STATE_NOT_STARTED;
+        $action = $this->report->getAction();
+        if (empty($action)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
     }
 
     /** @return bool */
@@ -125,27 +188,12 @@ class ReportStatusService
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    private function missingTransfers()
-    {
-        if (count($this->report->getAccounts()) <= 1) {
-            return false;
-        }
-
-        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
-        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
-
-        return !$valid;
-    }
-
     /** @return bool */
-    private function missingBalance()
+    public function balanceMatches()
     {
         $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
 
-        return !$balanceValid;
+        return $balanceValid;
     }
 
     /**
@@ -162,8 +210,12 @@ class ReportStatusService
 
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
-                'accounts' => $this->getAccountsState(),
+                'bankAccounts' => $this->getBankAccountsState(),
+                'moneyTransfers' => $this->getMoneyTransferState(),
+                'moneyIn' => $this->getMoneyInState(),
+                'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),
+                'debts' => $this->getDebtsState(),
             ];
         }
 
@@ -175,7 +227,7 @@ class ReportStatusService
     /** @return bool */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0;
+        return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
     }
 
     /**
@@ -183,7 +235,7 @@ class ReportStatusService
      */
     public function getStatus()
     {
-        if ($this->isReadyToSubmit() && $this->report->isDue()) {
+        if ($this->isReadyToSubmit() && $this->report->isDue() && $this->balanceMatches()) {
             return 'readyToSubmit';
         } else {
             return 'notFinished';

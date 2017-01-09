@@ -54,11 +54,11 @@ abstract class Asset
     /**
      * @Assert\NotBlank(message="odr.asset.value.notBlank")
      * @Assert\Type( type="numeric", message="odr.asset.value.type")
-     * @Assert\Range(max=100000000000, maxMessage = "odr.asset.value.outOfRange")
+     * @Assert\Range(min=0, max=100000000000, maxMessage = "odr.asset.value.outOfRange")
      *
-     * @Assert\NotBlank(message="odr.asset.property.value.notBlank", groups={"property"})
-     * @Assert\Type( type="numeric", message="odr.asset.property.value.type", groups={"property"})
-     * @Assert\Range(max=10000000000, maxMessage = "odr.asset.property.value.outOfRange", groups={"property"})
+     * @Assert\NotBlank(message="odr.asset.property.value.notBlank", groups={"property-value"})
+     * @Assert\Type( type="numeric", message="odr.asset.property.value.type", groups={"property-value"})
+     * @Assert\Range(min=0, max=10000000000, maxMessage = "odr.asset.property.value.outOfRange", groups={"property-value"})
      *
      * @JMS\Type("string")
      */

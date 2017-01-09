@@ -1,21 +1,20 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "register" %}
 
-{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block pageContent %}
 
-{% block pageBody %}
-
-    <p class="page-section-description">{{ 'intro' | trans }}</p>
-    <p class="page-section-description">{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    <div class="text">
+        <p>{{ 'intro' | trans }}</p>
+        <p>{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
+    </div>
 
     <section class="help-item">
       <h3 class="summary heading-medium">{{ 'moreThanOne' | trans }}</h3>
-      <p class="content page-section-description">{{ 'moreThanOneDescription' | trans | raw }}</p>
+      <p class="content text">{{ 'moreThanOneDescription' | trans | raw }}</p>
     </section>
 
     {% set formClass = 'registration-form' %}
@@ -30,9 +29,7 @@
         {{ form_input(form.clientLastname,'clientLastname', { 'labelClass': 'required' }) }}
         {{ form_input(form.caseNumber,'caseNumber', { 'labelClass': 'required' }) }}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'save') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

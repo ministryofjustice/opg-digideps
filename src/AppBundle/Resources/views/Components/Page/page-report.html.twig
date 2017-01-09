@@ -1,18 +1,9 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% block pageTitle %}Deputyship Report{% endblock %}
+{% block htmlTitle %}Deputyship report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
-{% if (showNav is not defined) %}
-{%     set showNav = true %}
-{% endif %}
-
-{% if (showHelp is not defined) %}
-{%     set showHelp = true %}
-{% endif %}
-
-
 {% block pageContent %}
-    
+
     <a name="pageBody"></a>
 
     {% block pageNavigation %}
@@ -20,14 +11,11 @@
             'report': report
         } %}
     {% endblock %}
-    
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{% block title %}{% endblock %}</h1>
-    </div>
 
-    
+    <h1 class="heading-large">{% block pageTitle %}{% endblock %}</h1>
+
     <div id="page-body">
-        <div id="pagebody-left-content">
+        <div id="{% block leftContentId %}pagebody-left-content{% endblock %}">
            {% block pageBody %}{% endblock %}
         </div>
         <div id="body-footer-nav">{% block pageBodyFooterNav %}{% endblock %}</div>

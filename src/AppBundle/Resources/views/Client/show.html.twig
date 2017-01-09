@@ -1,21 +1,19 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}client-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('client') }}
 {% endblock %}
 
-{% block maincontent %}
-
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
+{% block pageContent %}
+    <p>{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
 
     <div itemscope itemtype="http://schema.org/Person" class="item client-details">
         <a href="{{ path('client_edit') }}#edit-client"
@@ -43,11 +41,10 @@
                     <div itemprop="addressCountry">{{ client.country | country_name }}</div>
                 {% endif %}
             </dd>
-            
+
             <dt class="item-label">{{ 'clientDetails.courtDate' | trans }}</dt>
             <dd class="item-value behat-region-case-number">{{ client.courtDate | date("d/m/Y") }}</dd>
         </dl>
     </div>
 
 {% endblock %}
-{% endembed %}

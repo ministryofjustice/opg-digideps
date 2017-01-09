@@ -79,6 +79,12 @@ class ComponentsExtension extends \Twig_Extension
             'money_format' => new \Twig_SimpleFilter('money_format', function ($string) {
                 return number_format($string, 2, '.', ',');
             }),
+            'class_name' => new \Twig_SimpleFilter('class_name', function ($object) {
+                return is_object($object) ? get_class($object) : null;
+            }),
+            'lcfirst' => new \Twig_SimpleFilter('lcfirst', function ($string) {
+                return lcfirst($string);
+            }),
         ];
     }
 

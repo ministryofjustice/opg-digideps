@@ -4,7 +4,7 @@
         {% if previousLink is defined %}
         <li class="previous">
             <a title="Navigate to previous part" rel="prev" href="{{ previousLink }}">
-                <span class="pagination-label">{{ 'previous' | trans({}, translationDomain) }}</span>
+                <span class="pagination-label">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
                 <span class="pagination-part-title">{{ previousLabel }}</span>
             </a>
         </li>
@@ -12,7 +12,7 @@
         {% if nextLink is defined %}
         <li class="next">
             <a title="Navigate to next part" rel="next" href="{{ nextLink }}">
-                <span class="pagination-label">{{ 'next' | trans({}, translationDomain) }}</span>
+                <span class="pagination-label">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
                 <span class="pagination-part-title">{{ nextLabel }}</span>
             </a>
         </li>

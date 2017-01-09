@@ -3,8 +3,6 @@ Feature: odr / report submit
     @odr
     Scenario: ODR review page
         Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        # assert URLs not accessible
-        Then the URL "/report/1/submitted" should not be accessible
         # go to review page
         When I click on "odr-start, odr-submit"
         Then the URL should match "/odr/review"
@@ -27,13 +25,13 @@ Feature: odr / report submit
         Then the URL should match "/odr/declaration"
         And I save the application status into "odr-submit-pre"
         #
-        # empty form   
+        # empty form
         #
         When I press "odr_declaration_save"
         Then the following fields should have an error:
             | odr_declaration_agree |
-            | odr_declaration_agreedBehalfDeputy_0 | 
-            | odr_declaration_agreedBehalfDeputy_1 | 
+            | odr_declaration_agreedBehalfDeputy_0 |
+            | odr_declaration_agreedBehalfDeputy_1 |
             | odr_declaration_agreedBehalfDeputy_2 |
         # missing explanation
         When I fill in the following:
@@ -66,15 +64,14 @@ Feature: odr / report submit
     @odr
     Scenario: check ODR report not accessible after submission
         Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And the URL "/odr/1/finance/expenses" should not be accessible
-        And the URL "/odr/1/finance/income-benefits" should not be accessible
-        And the URL "/odr/1/finance/banks" should not be accessible
-        And the URL "/odr/1/assets" should not be accessible
-        And the URL "/odr/1/debts" should not be accessible
-        And the URL "/odr/1/visits-care" should not be accessible
-        And the URL "/odr/1/actions/gifts" should not be accessible
-        And the URL "/odr/1/actions/property" should not be accessible
-        And the URL "/odr/1/actions/info" should not be accessible
+        And the URL "/odr/1/visits-care/summary" should not be accessible
+        And the URL "/odr/1/deputy-expenses/summary" should not be accessible
+        And the URL "/odr/1/income-benefits/summary" should not be accessible
+        And the URL "/odr/1/bank-accounts/summary" should not be accessible
+        And the URL "/odr/1/assets/summary" should not be accessible
+        And the URL "/odr/1/debts/summary" should not be accessible
+        And the URL "/odr/1/actions/summary" should not be accessible
+        And the URL "/odr/1/any-other-info/summary" should not be accessible
 
     @odr
     Scenario: ODR homepage and create new report

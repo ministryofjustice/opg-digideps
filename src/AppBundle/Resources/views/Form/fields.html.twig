@@ -21,7 +21,7 @@
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
         {%- for error in errors -%}
-            <span class="error-message">{{ error.message }}</span>
+            <span class="error-message text">{{ error.message }}</span>
         {%- endfor -%}
     {%- endif -%}
 {%- endblock form_errors -%}

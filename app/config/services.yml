@@ -140,4 +140,9 @@ services:
         arguments:  
            url: "http://wkhtmltopdf:80"
            timeoutSeconds: 30
+
+    stepRedirector:
+      class: AppBundle\Service\StepRedirector
+      arguments: [ @router ]
+
     

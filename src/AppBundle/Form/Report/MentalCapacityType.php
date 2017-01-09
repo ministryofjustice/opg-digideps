@@ -29,7 +29,7 @@ class MentalCapacityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-mental-capacity',
+            'translation_domain' => 'report-decisions',
             'validation_groups' => function (FormInterface $form) {
 
                 $data = $form->getData(); /* @var $data Action */

@@ -1,8 +1,8 @@
+// ==========================================================================
+// OVERVIEW SECTIONS
+// Report overview sections - grey boxes and spacing
+
 .overview-sections {
-
-    color: $text-colour;
-    list-style: inherit;
-
 
     .overview-section {
 
@@ -13,18 +13,10 @@
             margin-top: 0;
         }
 
-
         > .heading {
-            @include core-19();
-            color: $text-colour;
             background: $grey-3;
             padding: 7px 10px 5px 10px;
             min-height: 19px;
-
-            @include media(mobile) {
-                font-size: 16px;
-            }
-
         }
 
     }

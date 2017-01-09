@@ -1,68 +1,54 @@
-{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
-    'hideReportNav': true
-} %}
+{% extends 'AppBundle:Layouts:application_new.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
-{% block bodyClasses %}client-page{% endblock %}
-{% block pageTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block title %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block backLinktop %}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
 
-{% block leftcontent %}
-    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('client') }}
 {% endblock %}
 
-{% block maincontent %}
+{% block pageContent %}
 
-    <div id="edit" class="">
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
+    {{ form_input(form.firstname, 'firstname') }}
+    {{ form_input(form.lastname, 'lastname') }}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+    {{ form_input(form.address, 'address') }}
+    {{ form_input(form.address2, 'address2') }}
+    {{ form_input(form.county, 'county') }}
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+    {{ form_select(form.country, 'country') }}
+    {{ form_input(form.phone, 'phone') }}
 
-        {{ form_input(form.firstname, 'firstname') }}
-        {{ form_input(form.lastname, 'lastname') }}
+    {{ form_input(form.caseNumber, 'caseNumber') }}
+    {{ form_known_date(form.courtDate, 'courtDate') }}
 
-        {{ form_input(form.address, 'address') }}
-        {{ form_input(form.address2, 'address2') }}
-        {{ form_input(form.county, 'county') }}
-        {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
-        {{ form_select(form.country, 'country') }}
-        {{ form_input(form.phone, 'phone') }}
+    {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
+        'fieldSetClass' : 'vertical',
+        'formGroupClass': 'visuallyhidden',
+        'legendClass' : 'form-label',
+        'items': [
+            {'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
+            {'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
+        ]
+    }) }}
 
-        {{ form_input(form.caseNumber, 'caseNumber') }}
-        {{ form_known_date(form.courtDate, 'courtDate') }}
+    {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
 
-        {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
-'fieldSetClass' : 'vertical',
-'formGroupClass': 'visuallyhidden',
-'legendClass' : 'form-label',
-'items': [
-{'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
-{'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
-]
-}) }}
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.editClientForm.controls.cancel.label',
 
+        linkClass: 'button-link',
+        linkHref: path('client_show')
+    } %}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
-        {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
-
-       {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: translationDomain,
-            linkButtonLabel: 'form.editClientForm.controls.cancel.label',
-
-            linkClass: 'button-link',
-            linkHref: path('client_show')
-        } %}
-        
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-        {{ form_end(form) }}
-    </div>
+    {{ form_end(form) }}
 
 {% endblock %}
-{% endembed %}

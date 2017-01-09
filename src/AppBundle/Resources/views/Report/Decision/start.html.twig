@@ -1,0 +1,65 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set clientName = report.client.firstname %}
+{% set transOptions = {'%client%': clientName} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">{{ 'startPage.description1' | trans }}</p>
+    <ul class="list list-bullet">
+        <li>{{ 'startPage.descriptionListItem1' | trans(transOptions) }}</li>
+        <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>
+    </ul>
+
+    <div class="accordian help-item push--ends">
+        <h3 class="summary">{{ 'startPage.whyweneedthisSummary' | trans }}</h3>
+        <div class="content text">
+            <p>{{ 'startPage.whyweneedthisPara1' | trans(transOptions) }}</p>
+            <p>{{ 'startPage.whyweneedthisPara2' | trans(transOptions) }}</p>
+        </div>
+    </div>
+
+    <div class="accordian help-item push--ends">
+        <h3 class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</h3>
+        <div class="content text">
+            <p>{{ 'startPage.whatisdecisionPara1' | trans(transOptions) }}</p>
+            <p>{{ 'startPage.whatisdecisionPara2' | trans(transOptions) }}</p>
+            <ul class="list list-bullet">
+                <li>{{ 'startPage.whatisdecisionListItem1' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem2' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem3' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem4' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem5' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem6' | trans(transOptions) }}</li>
+                <li>{{ 'startPage.whatisdecisionListItem7' | trans(transOptions) }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="text">{{ 'startPage.description2' | trans }}</p>
+
+    <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
+       class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.accordian').each(function(index,item) {
+                opg.accordian({
+                    target:item,
+                    open: false
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

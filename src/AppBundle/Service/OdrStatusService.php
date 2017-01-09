@@ -18,6 +18,134 @@ class OdrStatusService
         $this->odr = $odr;
     }
 
+
+    /** @return string */
+    public function getVisitsCareState()
+    {
+        if (!$this->odr->getVisitsCare()) {
+            return self::STATE_NOT_STARTED;
+        }
+        if ($this->odr->getVisitsCare()->missingInfo()) {
+            return self::STATE_INCOMPLETE;
+        }
+        return self::STATE_DONE;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getExpensesState()
+    {
+        if (count($this->odr->getExpenses()) > 0 || $this->odr->getPaidForAnything() === 'no') {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIncomeBenefitsState()
+    {
+        $stCount = count($this->odr->recordsPresent($this->odr->getStateBenefits()));
+        $statePens = $this->odr->getReceiveStatePension();
+        $otherInc = $this->odr->getReceiveOtherIncome();
+        $compensDamag = $this->odr->getExpectCompensationDamages();
+        $ooCount = count($this->odr->recordsPresent($this->odr->getOneOff()));
+
+        if ($stCount === 0
+            && $statePens == null && $otherInc == null && $compensDamag == null
+            && $ooCount === 0
+        ) {
+            return self::STATE_NOT_STARTED;
+        }
+
+
+        if ($statePens !== null && $otherInc !== null && $compensDamag !== null) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
+
+    /** @return string */
+    public function getBankAccountsState()
+    {
+        if (empty($this->odr->getBankAccounts())) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
+
+    /** @return string */
+    public function getAssetsState()
+    {
+        $hasAtLeastOneAsset = count($this->odr->getAssets()) > 0;
+        $noAssetsToAdd = $this->odr->getNoAssetToAdd();
+
+        if (!$hasAtLeastOneAsset && !$noAssetsToAdd) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        if ($hasAtLeastOneAsset || $noAssetsToAdd) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
+
+    /** @return string */
+    public function getDebtsState()
+    {
+        $hasDebts = $this->odr->getHasDebts();
+
+        if (empty($hasDebts)) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
+        if ($debtsSectionComplete) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_INCOMPLETE;
+    }
+
+    public function getActionsState()
+    {
+        $filled = count(array_filter([
+            $this->odr->getActionGiveGiftsToClient(),
+            $this->odr->getActionPropertyBuy(),
+            $this->odr->getActionPropertyMaintenance(),
+            $this->odr->getActionPropertySellingRent()
+        ]));
+
+        switch ($filled) {
+            case 0:
+                return self::STATE_NOT_STARTED;
+            case 4:
+                return self::STATE_DONE;
+            default:
+                return self::STATE_INCOMPLETE;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getOtherInfoState()
+    {
+        if ($this->odr->getActionMoreInfo() === null) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
+
+
     /**
      * @return array
      */
@@ -25,9 +153,13 @@ class OdrStatusService
     {
         $states = [
             'visitsCare' => $this->getVisitsCareState(),
-            'finance' => $this->getFinanceState(),
-            'assetsDebts' => $this->getAssetsDebtsState(),
+            'expenses' => $this->getExpensesState(),
+            'incomeBenefits' => $this->getIncomeBenefitsState(),
+            'assets' => $this->getAssetsState(),
+            'bankAccounts' => $this->getBankAccountsState(),
+            'debts' => $this->getDebtsState(),
             'actions' => $this->getActionsState(),
+            'otherInfo' => $this->getOtherInfoState(),
         ];
 
         return array_filter($states, function ($e) {
@@ -42,83 +174,15 @@ class OdrStatusService
     }
 
     /**
+     * //TODO replace with isReadyToSubmit
      * @return string $status | null
      */
     public function getStatus()
     {
         if ($this->isReadyToSubmit()) {
             return 'readyToSubmit';
-        }
-
-        if ($this->getVisitsCareState() == self::STATE_NOT_STARTED
-            && $this->getFinanceState() == self::STATE_NOT_STARTED
-            && $this->getAssetsDebtsState() == self::STATE_NOT_STARTED
-        ) {
-            return 'notStarted';
-        }
-
-        return 'notFinished';
-    }
-
-    /** @return string */
-    public function getVisitsCareState()
-    {
-        if (!$this->odr->getVisitsCare() || $this->odr->getVisitsCare()->missingInfo()) {
-            return self::STATE_NOT_STARTED;
         } else {
-            return self::STATE_DONE;
+            return 'notFinished';
         }
-    }
-
-    public function getFinanceState()
-    {
-        if (empty($this->odr->getBankAccounts()) && $this->odr->incomeBenefitsStatus() == 'not-started') {
-            return self::STATE_NOT_STARTED;
-        }
-
-        if (count($this->odr->getBankAccounts()) > 0 && $this->odr->incomeBenefitsStatus() == 'done') {
-            return self::STATE_DONE;
-        }
-
-        return self::STATE_INCOMPLETE;
-    }
-
-    public function getAssetsDebtsState()
-    {
-        $hasAtLeastOneAsset = count($this->odr->getAssets()) > 0;
-        $noAssetsToAdd = $this->odr->getNoAssetToAdd();
-        $hasDebts = $this->odr->getHasDebts();
-
-        if (!$hasAtLeastOneAsset && !$noAssetsToAdd && empty($hasDebts)) {
-            return self::STATE_NOT_STARTED;
-        }
-
-        $assetsSubSectionComplete = $hasAtLeastOneAsset || $noAssetsToAdd;
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
-
-        if ($assetsSubSectionComplete && $debtsSectionComplete) {
-            return self::STATE_DONE;
-        }
-
-        return self::STATE_INCOMPLETE;
-    }
-
-    public function getActionsState()
-    {
-        $giftsStarted = !empty($this->odr->getActionGiveGiftsToClient());
-        $propertyStarted = !empty($this->odr->getActionPropertyBuy())
-            || !empty($this->odr->getActionPropertyMaintenance())
-            || !empty($this->odr->getActionPropertySellingRent());
-        $moreInfoStarted = !empty($this->odr->getActionMoreInfo());
-
-        if (!$giftsStarted && !$propertyStarted && !$moreInfoStarted) {
-            return self::STATE_NOT_STARTED;
-        }
-
-        if ($giftsStarted && $propertyStarted && $moreInfoStarted) {
-            return self::STATE_DONE;
-        }
-
-        return self::STATE_INCOMPLETE;
     }
 }

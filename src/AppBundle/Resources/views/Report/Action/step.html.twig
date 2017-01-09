@@ -1,0 +1,80 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
+                        {'dataTarget': 'financial-decisions-textarea' },
+                        {},
+                    ]
+                }) }}
+
+                <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if step == 2 %}
+        <div class="form-section push--bottom">
+
+            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'items': [
+                        {'dataTarget': 'actions-details-textarea' },
+                        {},
+                    ]
+                }) }}
+
+                <div id="actions-details-textarea" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

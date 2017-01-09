@@ -1,3 +1,7 @@
+// ==========================================================================
+// PROGRESS INDICATOR
+// When setting up user and client (registration)
+
 $spacingforchevron: 14px;
 
 @mixin visuallyhide {
@@ -123,7 +127,7 @@ ol.progress {
         }
 
         &.progress--active {
-            background: $light-blue url("images/progress-chevron.png") right 50% no-repeat;
+            background: $light-blue url("/images/progress-chevron.png") right 50% no-repeat;
 
             .progress__step,
             .progress__label {
@@ -173,14 +177,14 @@ ol.progress {
             .progress__step::before {
                 color: $white;
                 text-indent: -9999px;
-                background: $turquoise url("images/progress-tick.png") center 3px no-repeat;
+                background: $turquoise url("/images/progress-tick.png") center 3px no-repeat;
             }
 
         }
 
         &.progress--previous {
             // allows left part of chevron to scale
-            background: url("images/progress-chevron-end.png") right 50% no-repeat;
+            background: url("/images/progress-chevron-end.png") right 50% no-repeat;
 
             .progress__step {
                 margin-right: $spacingforchevron;

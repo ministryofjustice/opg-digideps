@@ -42,7 +42,7 @@ abstract class AbstractAssetType extends AbstractType
 
     public function getName()
     {
-        return 'odr_asset';
+        return 'oasset';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
