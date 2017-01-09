@@ -52,10 +52,19 @@ class MentalCapacity
     private $hasCapacityChangedDetails;
 
     /**
+     * @var \Date
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"mental-capacity"})
+     * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
+     */
+    private $mentalAssessmentDate = null;
+
+    /**
      * @param Report $report
      */
     public function __construct(Report $report)
     {
+        $this->mentalAssessmentDate = null;
         $this->report = $report;
         $report->setMentalCapacity($this);
     }
@@ -114,6 +123,18 @@ class MentalCapacity
     public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
+
+        return $this;
+    }
+
+    public function getMentalAssessmentDate()
+    {
+        return $this->mentalAssessmentDate;
+    }
+
+    public function setMentalAssessmentDate($mentalAssessmentDate)
+    {
+        $this->mentalAssessmentDate = $mentalAssessmentDate;
 
         return $this;
     }

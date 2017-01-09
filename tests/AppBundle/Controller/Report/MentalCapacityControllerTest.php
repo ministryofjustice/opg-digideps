@@ -75,6 +75,7 @@ class MentalCapacityControllerTest extends AbstractTestController
             'data' => [
                 'has_capacity_changed' => MentalCapacity::CAPACITY_CHANGED,
                 'has_capacity_changed_details' => 'ccd',
+                'capacity_assessment_date' => '01-01-2017',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
@@ -92,6 +93,7 @@ class MentalCapacityControllerTest extends AbstractTestController
             'data' => [
                 'has_capacity_changed' => MentalCapacity::CAPACITY_STAYED_SAME,
                 'has_capacity_changed_details' => 'should no tbe saved',
+                'capacity_assessment_date' => '01-01-2017',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
