@@ -41,15 +41,15 @@
                     </dl>
                 </div>
 
-                <div class="column-one-half">
+                <div class="column-one-half text--right">
                     {% if report.submitted %}
-                        <a href="{{ path('report_review', {'reportId': report.id}) }}" class="view-button view-report-link behat-link-download-{{ report.getPeriod() | behat_namify }}-report">
+                        <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-{{ report.getPeriod() | behat_namify }}-report">
                             {{ 'reportDataList.downloadThisReportLink' | trans() }}
                         </a>
                     {% else %}
-                        <a href="{{ linkToReportOverviewPage }}" class="open-button button behat-link-report-open behat-link-report-{{ report.getPeriod() | behat_namify }}-open">{{ 'reportDataList.open' | trans }}</a>
+                        <a href="{{ linkToReportOverviewPage }}" class="button push-half--bottom behat-link-report-open behat-link-report-{{ report.getPeriod() | behat_namify }}-open">{{ 'reportDataList.open' | trans }}</a><br>
                         <a href="{{ linkEditReportingPeriod }}"
-                           class="edit-button edit-report behat-link-report-{{ report.getPeriod() | behat_namify }}-edit">{{ 'reportDataList.edit'| trans }}</a>
+                           class="behat-link-report-{{ report.getPeriod() | behat_namify }}-edit">{{ 'reportDataList.edit'| trans }}</a>
                     {% endif %}
                 </div>
 
