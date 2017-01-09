@@ -674,15 +674,6 @@ class Report
         return $ret;
     }
 
-    /**
-     * @return Debt[]
-     */
-    public function getDebtsNotEmpty()
-    {
-       return array_filter($this->getDebts(), function($debt) {
-           return $debt->getAmount() !== null;
-       });
-    }
 
     /**
      * @param $debtId
@@ -1443,15 +1434,16 @@ class Report
         return $this;
     }
 
-    public function hasAtLeastOneDebtsWithValidAmount()
+    /**
+     * @return Debt[]
+     */
+    public function getDebtsWithValidAmount()
     {
-        foreach ($this->debts as $debt) {
-            if ($debt->getAmount()) {
-                return true;
-            }
-        }
+        $debtsWithAValidAmount = array_filter($this->debts, function($debt) {
+            return !empty($debt->getAmount());
+        });
 
-        return false;
+        return $debtsWithAValidAmount;
     }
 
     /**
@@ -1459,39 +1451,9 @@ class Report
      */
     public function debtsValid(ExecutionContextInterface $context)
     {
-        if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
+        if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }
-
-//    public function isSectionStarted($sectionId)
-//    {
-//        $metadataDecoded = json_decode($this->metadata, true);
-//
-//        return !empty($metadataDecoded['sections'][$sectionId]['started']);
-//    }
-//
-//    public function setSectionStarted($sectionId)
-//    {
-//        $metadataDecoded = json_decode($this->metadata, true);
-//        $metadataDecoded['sections'][$sectionId]['started'] = true;
-//        $this->metadata = json_encode($metadataDecoded);
-//    }
-//
-//    /**
-//     * @return decimal
-//     */
-//    public function getMetadata()
-//    {
-//        return $this->metadata;
-//    }
-//
-//    /**
-//     * @param decimal $metadata
-//     */
-//    public function setMetadata($metadata)
-//    {
-//        $this->metadata = $metadata;
-//    }
 
 }

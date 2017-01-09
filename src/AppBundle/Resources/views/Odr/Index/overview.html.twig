@@ -92,6 +92,7 @@
             odr: odr,
             description: false,
             state: odrStatus.getDebtsState,
+            nOfRecords: odr.debtsWithValidAmount | length,
             linkToSubSection: path('odr_debts', {odrId: odr.id}),
             description: true
             } %}
