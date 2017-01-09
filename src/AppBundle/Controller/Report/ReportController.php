@@ -104,13 +104,6 @@ class ReportController extends RestController
             $currentReport->setAgreedBehalfDeputyExplanation(null);
         }
 
-//        if (!empty($data['reason_not_all_agreed'])) {
-//            $currentReport->setAllAgreed(false);
-//            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
-//        } else {
-//            $currentReport->setAllAgreed(true);
-//        }
-
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
@@ -120,6 +113,70 @@ class ReportController extends RestController
 
         //response to pass back
         return ['newReportId' => $nextYearReport->getId()];
+    }
+
+    /**
+     * REMOVE THIS WHEN OTPP IS MERGED
+     * @Route("/report/{id}/reset-data-dev")
+     * @Method({"PUT"})
+     */
+    public function resetDataDev(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        /* @var $report EntityDir\Report\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $em = $this->getEntityManager();
+
+        if ($report->getVisitsCare()) {
+            $em->remove($report->getVisitsCare());
+        }
+
+        if ($report->getMentalCapacity()) {
+            $em->remove($report->getMentalCapacity());
+        }
+
+        foreach ($report->getDebts() as $e){
+            $e->setAmount(null);
+        }
+        $report->setHasDebts(null);
+
+        foreach ($report->getContacts() as $e){
+            $em->remove($e);
+        }
+        $report->setReasonForNoContacts(null);
+
+        foreach ($report->getDecisions() as $e){
+            $em->remove($e);
+        }
+        $report->setReasonForNoDecisions(null);
+
+        foreach ($report->getMoneyTransactions() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getMoneyTransfers() as $e){
+            $em->remove($e);
+        }
+        $report->setNoTransfersToAdd(false);
+
+        foreach ($report->getAccounts() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($report->getAssets() as $e){
+            $em->remove($e);
+        }
+        $report->setNoAssetToAdd(null);
+
+        if ($report->getAction()){
+            $em->remove($report->getAction());
+        }
+
+
+        $em->flush();
     }
 
     /**
@@ -147,35 +204,18 @@ class ReportController extends RestController
                 $this->getEntityManager()->flush($debt);
             }
             // set debts as per "debts" key
-            foreach ($data['debts'] as $row) {
-                $debt = $report->getDebtByTypeId($row['debt_type_id']);
-                if (!$debt instanceof EntityDir\Report\Debt) {
-                    continue; //not clear when that might happen. kept similar to transaction below
+            if ($data['has_debts'] == 'yes') {
+                foreach ($data['debts'] as $row) {
+                    $debt = $report->getDebtByTypeId($row['debt_type_id']);
+                    if (!$debt instanceof EntityDir\Report\Debt) {
+                        continue; //not clear when that might happen. kept similar to transaction below
+                    }
+                    $debt->setAmount($row['amount']);
+                    $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
+                    $this->getEntityManager()->flush($debt);
                 }
-                $debt->setAmount($row['amount']);
-                $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
-                $this->getEntityManager()->flush($debt);
-                $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
             }
-        }
-
-        foreach (['transactions_in', 'transactions_out'] as $tk) {
-            if (!isset($data[$tk])) {
-                continue;
-            }
-            foreach ($data[$tk] as $transactionRow) {
-                $t = $report->getTransactionByTypeId($transactionRow['id']);
-                /* @var $t EntityDir\Report\Transaction */
-                if (!$t instanceof EntityDir\Report\Transaction) {
-                    continue;
-                }
-                $t->setAmounts($transactionRow['amounts'] ?: []);
-                if (array_key_exists('more_details', $transactionRow)) {
-                    $t->setMoreDetails($transactionRow['more_details']);
-                }
-                $this->getEntityManager()->flush($t);
-            }
-            $this->setJmsSerialiserGroups(['transactions']); //returns saved data (AJAX operations)
+            $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
 
         if (array_key_exists('cot_id', $data)) {
@@ -205,6 +245,12 @@ class ReportController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
+            if ($report->getNoAssetToAdd()) {
+                foreach ($report->getAssets() as $asset) {
+                    $this->getEntityManager()->remove($asset);
+                }
+                $this->getEntityManager()->flush();
+            }
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
@@ -221,6 +267,10 @@ class ReportController extends RestController
 
         if (array_key_exists('balance_mismatch_explanation', $data)) {
             $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
+        }
+
+        if (array_key_exists('metadata', $data)) {
+            $report->setMetadata($data['metadata']);
         }
 
         $this->getEntityManager()->flush($report);

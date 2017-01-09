@@ -2,33 +2,23 @@
 
 namespace Application\Migrations;
 
-use AppBundle\Entity\Client;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * debts fix existing reports
+ * Auto-generated Migration: Please modify to your needs!
  */
-class Version079 extends AbstractMigration implements ContainerAwareInterface
+class Version097 extends AbstractMigration
 {
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
-        ini_set('memory_limit','1024M');
-
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('ALTER TABLE odr_account ADD is_joint_account VARCHAR(3) DEFAULT NULL');
     }
 
     /**
@@ -38,5 +28,7 @@ class Version079 extends AbstractMigration implements ContainerAwareInterface
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('ALTER TABLE odr_account DROP is_joint_account');
     }
 }

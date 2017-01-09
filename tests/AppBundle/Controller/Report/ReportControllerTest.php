@@ -92,14 +92,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
-
-        $transactionTypesCount = count(self::fixtures()->getRepo('Report\TransactionType')->findAll());
-        $this->assertTrue($transactionTypesCount > 1, 'transaction type not added');
-
-        // assert transactions have been added
-        $this->assertCount($transactionTypesCount, $report->getTransactions());
-
-//        $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
     }
 
     public function testGetByIdAuth()
@@ -241,7 +233,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    public function testUpdateAndTransactions()
+    public function testUpdate()
     {
         $reportId = self::$report1->getId();
         $url = '/report/'.$reportId;
@@ -253,53 +245,31 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'start_date' => '2015-01-29',
                 'end_date' => '2015-12-29',
-                'transactions_in' => [
-                    ['id' => 'dividends', 'amounts' => [1200.10, 400], 'more_details' => ''],
-                    ['id' => 'salary-or-wages', 'amounts' => [760]],
-                ],
-                'transactions_out' => [
-                    ['id' => 'accommodation-other', 'amounts' => [24.50], 'more_details' => 'extra service charge'],
-                ],
+//                'transactions_in' => [
+//                    ['id' => 'dividends', 'amounts' => [1200.10, 400], 'more_details' => ''],
+//                    ['id' => 'salary-or-wages', 'amounts' => [760]],
+//                ],
+//                'transactions_out' => [
+//                    ['id' => 'accommodation-other', 'amounts' => [24.50], 'more_details' => 'extra service charge'],
+//                ],
                 'balance_mismatch_explanation' => 'bme',
+                'metadata' => 'md',
             ],
         ]);
 
         // both
-        $q = http_build_query(['groups' => ['report', 'transactionsIn', 'transactionsOut']]);
+        $q = http_build_query(['groups' => ['report'/*, 'transactionsIn', 'transactionsOut'*/]]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-        $this->assertTrue(count($data['transactions_in']) > 25);
-        $this->assertTrue(count($data['transactions_out']) > 40);
+//        $this->assertTrue(count($data['transactions_in']) > 25);
+//        $this->assertTrue(count($data['transactions_out']) > 40);
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
+        $this->assertEquals('md', $data['metadata']);
 
-        // assert transactions_in
-        $t = array_shift(array_filter($data['transactions_in'], function ($e) {
-            return $e['id'] === 'dividends';
-        }));
-        $this->assertEquals('in', $t['type']);
-        $this->assertEquals('income-and-earnings', $t['category']);
-        $this->assertEquals([1200.10, 400], $t['amounts']);
-        $this->assertEquals(null, $t['more_details']);
-        $this->assertEquals(null, $t['has_more_details']);
-
-        // assert transactions_out
-        $t = array_shift(array_filter($data['transactions_out'], function ($e) {
-            return $e['id'] === 'accommodation-other';
-        }));
-        $this->assertEquals('out', $t['type']);
-        $this->assertEquals('accommodation', $t['category']);
-        $this->assertEquals([24.50], $t['amounts']);
-        $this->assertEquals(true, $t['has_more_details']);
-        $this->assertEquals('extra service charge', $t['more_details']);
-
-        $t = array_shift(array_filter($data['transactions_out'], function ($e) {
-            return $e['id'] === 'anything-else-paid-out';
-        }));
-        $this->assertEquals([], $t['amounts']);
     }
 
     public function testDebts()

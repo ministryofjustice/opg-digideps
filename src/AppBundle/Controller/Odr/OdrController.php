@@ -107,7 +107,9 @@ class OdrController extends RestController
             foreach ($data['state_benefits'] as $row) {
                 $e = $odr->getStateBenefitByTypeId($row['type_id']);
                 if ($e instanceof EntityDir\Odr\IncomeBenefitStateBenefit) {
-                    $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
+                    $e
+                        ->setPresent($row['present'])
+                        ->setMoreDetails($row['present'] ? $row['more_details']: null);
                     $this->getEntityManager()->flush($e);
                 }
             }
@@ -117,20 +119,26 @@ class OdrController extends RestController
             $odr->setReceiveStatePension($data['receive_state_pension']);
         }
 
-        if (array_key_exists('receive_other_income', $data)) {
-            $odr->setReceiveOtherIncome($data['receive_other_income']);
-        }
-
         if (array_key_exists('receive_other_income_details', $data)) {
             $odr->setReceiveOtherIncomeDetails($data['receive_other_income_details']);
         }
 
-        if (array_key_exists('expect_compensation_damages', $data)) {
-            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+        if (array_key_exists('receive_other_income', $data)) {
+            $odr->setReceiveOtherIncome($data['receive_other_income']);
+            if ($odr->getReceiveOtherIncome() == 'no') {
+                $odr->setReceiveOtherIncomeDetails(null);
+            }
         }
 
         if (array_key_exists('expect_compensation_damages_details', $data)) {
             $odr->setExpectCompensationDamagesDetails($data['expect_compensation_damages_details']);
+        }
+
+        if (array_key_exists('expect_compensation_damages', $data)) {
+            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+            if ($odr->getExpectCompensationDamages() == 'no') {
+                $odr->setExpectCompensationDamagesDetails(null);
+            }
         }
 
         if (array_key_exists('one_off', $data)) {
@@ -145,17 +153,19 @@ class OdrController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $odr->setNoAssetToAdd($data['no_asset_to_add']);
+            if ($odr->getNoAssetToAdd()) {
+                foreach ($odr->getAssets() as $asset) {
+                    $this->getEntityManager()->remove($asset);
+                }
+                $this->getEntityManager()->flush();
+            }
         }
 
-        if (array_key_exists('paid_for_anything', $data) && array_key_exists('expenses', $data)) {
+        if (array_key_exists('paid_for_anything', $data)) {
             $odr->setPaidForAnything($data['paid_for_anything']);
-            foreach ($odr->getExpenses() as $e) {
-                $this->getEntityManager()->remove($e);
-            }
-            foreach ($data['paid_for_anything'] == 'yes' ? $data['expenses'] : [] as $row) {
-                if ($row['explanation'] && $row['amount']) {
-                    $exp = new EntityDir\Odr\Expense($odr, $row['explanation'], $row['amount']);
-                    $this->getEntityManager()->persist($exp);
+            if ($odr->getPaidForAnything() === 'no') { // remove existing expenses
+                foreach ($odr->getExpenses() as $e) {
+                    $this->getEntityManager()->remove($e);
                 }
             }
         }
@@ -198,5 +208,68 @@ class OdrController extends RestController
         $this->getEntityManager()->flush();
 
         return ['id' => $odr->getId()];
+    }
+
+    /**
+     * REMOVE THIS WHEN OTPP IS MERGED
+     * @Route("/odr/{id}/reset-data-dev")
+     * @Method({"PUT"})
+     */
+    public function resetDataDev(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+        /* @var $odr EntityDir\Odr\Odr */
+
+        $em = $this->getEntityManager();
+
+        if ($odr->getVisitsCare()) {
+            $em->remove($odr->getVisitsCare());
+        }
+
+        foreach ($odr->getExpenses() as $e){
+            $em->remove($e);
+        }
+        $odr->setPaidForAnything(null);
+
+        foreach($odr->getStateBenefits() as $e) {
+            $e->setPresent(false);
+            $e->setMoreDetails(null);
+        }
+        $odr->setReceiveStatePension(null);
+        $odr->setReceiveOtherIncome(null);
+        $odr->setReceiveOtherIncomeDetails(null);
+        $odr->setExpectCompensationDamages(null);
+        $odr->setExpectCompensationDamagesDetails(null);
+        foreach($odr->getOneOff() as $e) {
+            $e->setPresent(false);
+            $e->setMoreDetails(null);
+        }
+
+        foreach ($odr->getBankAccounts() as $e){
+            $em->remove($e);
+        }
+
+        foreach ($odr->getAssets() as $e){
+            $em->remove($e);
+        }
+        $odr->setNoAssetToAdd(null);
+
+        foreach ($odr->getDebts() as $e){
+            $e->setAmount(null);
+        }
+        $odr->setHasDebts(null);
+
+        $odr->setActionGiveGiftsToClient(null);
+        $odr->setActionGiveGiftsToClientDetails(null);
+        $odr->setActionPropertyBuy(null);
+        $odr->setActionPropertyMaintenance(null);
+        $odr->setActionPropertySellingRent(null);
+
+        $odr->setActionMoreInfo(null);
+        $odr->setActionMoreInfoDetails(null);
+
+        $em->flush();
     }
 }

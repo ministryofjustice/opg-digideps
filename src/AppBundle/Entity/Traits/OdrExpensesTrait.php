@@ -23,7 +23,7 @@ trait OdrExpensesTrait
      * @JMS\Groups({"odr-expenses"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Expense", mappedBy="odr", cascade={"persist"})
      *
-     * @var ArrayCollection
+     * @var Expense[]
      */
     private $expenses;
 

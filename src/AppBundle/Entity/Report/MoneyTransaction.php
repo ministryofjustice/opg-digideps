@@ -6,26 +6,23 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- *  @deprecated  REMOVE WHEN OTPP is merged and migrated
+ * @ORM\Table(name="money_transaction")
  * @ORM\Entity
- * @ORM\Table(name="transaction_type")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"in" = "TransactionTypeIn", "out" = "TransactionTypeOut"})
  */
-abstract class TransactionType
+class MoneyTransaction
 {
     /**
-     * Added via digideps:fixtures command.
+     * Keep in sync with client
      *
      * @JMS\Exclude
      */
-    public static $fixtures = [
+    public static $categories = [
         // id | hasMoreDetails | order | category | in/out
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
         ['salary-or-wages', false, '60', 'income-and-earnings', 'in'],
+        ['other-incomes', true, '65', 'income-and-earnings', 'in'],
         ['attendance-allowance', false, '70', 'state-benefits', 'in'],
         ['disability-living-allowance', false, '80', 'state-benefits', 'in'],
         ['employment-support-allowance', false, '90', 'state-benefits', 'in'],
@@ -93,97 +90,97 @@ abstract class TransactionType
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
         ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
         ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],
-        ['other-incomes', true, '65', 'income-and-earnings', 'in'],
+
     ];
 
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="string", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\SequenceGenerator(sequenceName="transaction_id_seq", allocationSize=1, initialValue=1)
+     *
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      */
     private $id;
 
     /**
-     * Discriminator (in/out).
+     * @var Report
      *
-     * @var string
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="moneyTransactions")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
-    private $type;
+    private $report;
 
     /**
-     * @var int
+     * Category (e.g. "dividends") identifies group (income and dividends) and type (in)
+     * @var TransactionType
      *
-     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
-     */
-    private $hasMoreDetails;
-
-    /**
-     * @var int
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
-     * @ORM\Column(name="display_order", type="integer", nullable=true)
-     */
-    private $displayOrder;
-
-    /**
-     * @var TransactionTypeCategory
-     *
-     * @ORM\Column(name="category", type="string", nullable=false)
-     *
-     * @JMS\Type("string")
+     * @ORM\Column(name="category", type="string", length=255, nullable=false)
      */
     private $category;
 
+    /**
+     * @var array
+     * 
+     * @JMS\Type("string")
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     *
+     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
+     */
+    private $amount;
+
+    /**
+     * @var string
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    public function __construct(Report $report)
+    {
+        $this->report = $report;
+        $report->addMoneyTransaction($this);
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report $report
+     */
+    public function setReport($report)
+    {
+        $this->report = $report;
+    }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function getHasMoreDetails()
-    {
-        return $this->hasMoreDetails;
-    }
-
-    public function getDisplayOrder()
-    {
-        return $this->displayOrder;
-    }
-
+    /**
+     * @param int $id
+     */
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function setHasMoreDetails($hasMoreDetails)
-    {
-        $this->hasMoreDetails = $hasMoreDetails;
-
-        return $this;
-    }
-
-    public function setDisplayOrder($displayOrder)
-    {
-        $this->displayOrder = $displayOrder;
-
-        return $this;
     }
 
     /**
-     * @return TransactionTypeCategory
+     * @return TransactionType
      */
     public function getCategory()
     {
@@ -191,7 +188,7 @@ abstract class TransactionType
     }
 
     /**
-     * @param TransactionTypeCategory $category
+     * @param TransactionType $category
      */
     public function setCategory($category)
     {
@@ -199,4 +196,83 @@ abstract class TransactionType
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param array $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the type (in/out) based on the category
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("group")
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     *
+     * @return string in/out
+     */
+    public function getGroup()
+    {
+        foreach (self::$categories as $cat){
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            if ($this->getCategory() == $categoryId) {
+                return $groupId;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the type (in/out) based on the category
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("type")
+     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
+     *
+     * @return string in/out
+     */
+    public function getType()
+    {
+        foreach (self::$categories as $cat){
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            if ($this->getCategory() == $categoryId) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
+
 }

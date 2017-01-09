@@ -63,11 +63,18 @@ class Report
     private $moneyTransfers;
 
     /**
-     * @JMS\Groups({"transaction"})
+     * @deprecated REMOVE WHEN OTPP is merged and migrated
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
+
+    /**
+     * @JMS\Groups({"transaction"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $moneyTransactions;
 
     /**
      * @JMS\Groups({"debt"})
@@ -213,7 +220,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report","decision"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
@@ -271,6 +278,15 @@ class Report
     private $agreedBehalfDeputyExplanation;
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report"})
+     * @ORM\Column(name="metadata", type="text", nullable=true)
+     */
+    private $metadata;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -278,6 +294,7 @@ class Report
         $this->contacts = new ArrayCollection();
         $this->accounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
+        $this->moneyTransactions = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->decisions = new ArrayCollection();
@@ -802,7 +819,7 @@ class Report
      **/
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
-        $this->reasonForNoDecisions = $reasonForNoDecisions;
+        $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
 
         return $this;
     }
@@ -942,58 +959,63 @@ class Report
     }
 
     /**
-     * Virtual JMS property with IN transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transaction", "transactionsIn"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_in")
+     * @JMS\Groups({"transactionsIn"})
      *
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getTransactionsIn()
     {
-        $ret = [];
-
-        foreach ($this->transactions as $t) {
-            if ($t->getTransactionType() instanceof TransactionTypeIn) {
-                $ret[] = $t;
-            }
-        }
-        uasort($ret, function ($t1, $t2) {
-            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+        return $this->moneyTransactions->filter(function($t) {
+            return $t->getType() == 'in';
         });
-
-        return $ret;
     }
 
     /**
-     * Virtual JMS property with OUT transaction.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transaction", "transactionsOut"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
      * @JMS\SerializedName("transactions_out")
+     * @JMS\Groups({"transactionsOut"})
      *
-     * @return Transaction[]
+     * @return MoneyTransaction[]
      */
     public function getTransactionsOut()
     {
-        $ret = [];
-
-        foreach ($this->transactions as $t) {
-            if ($t->getTransactionType() instanceof TransactionTypeOut) {
-                $ret[] = $t;
-            }
-        }
-        uasort($ret, function ($t1, $t2) {
-            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
+        return $this->moneyTransactions->filter(function($t) {
+            return $t->getType() == 'out';
         });
-
-        return $ret;
     }
 
     /**
+     * @return MoneyTransaction[]
+     */
+    public function getMoneyTransactions()
+    {
+        return $this->moneyTransactions;
+    }
+
+    /**
+     * @param mixed $moneyTransactions
+     */
+    public function setMoneyTransactions($moneyTransactions)
+    {
+        $this->moneyTransactions = $moneyTransactions;
+    }
+
+    /**
+     * @param mixed $moneyTransactions
+     */
+    public function addMoneyTransaction(MoneyTransaction $t)
+    {
+        if (!$this->moneyTransactions->contains($t)) {
+            $this->moneyTransactions->add($t);
+        }
+    }
+
+    /**
+     * @deprecated
      * @param Transaction $transaction
      */
     public function addTransaction(Transaction $transaction)
@@ -1004,6 +1026,8 @@ class Report
 
         return $this;
     }
+
+
 
     /**
      * @param mixed $debts
@@ -1095,15 +1119,17 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"transactionsIn"})
      * @JMS\Type("double")
      * @JMS\SerializedName("money_in_total")
      */
     public function getMoneyInTotal()
     {
         $ret = 0;
-        foreach ($this->getTransactionsIn() as $t) {
-            $ret += $t->getAmountsTotal();
+        foreach ($this->getMoneyTransactions() as $t) {
+            if ($t->getType() == 'in') {
+                $ret += $t->getAmount();
+            }
         }
 
         return $ret;
@@ -1111,15 +1137,17 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"transactionsOut"})
      * @JMS\Type("double")
      * @JMS\SerializedName("money_out_total")
      */
     public function getMoneyOutTotal()
     {
         $ret = 0;
-        foreach ($this->getTransactionsOut() as $t) {
-            $ret +=  $t->getAmountsTotal();
+        foreach ($this->getMoneyTransactions() as $t) {
+            if ($t->getType() == 'out') {
+                $ret += $t->getAmount();
+            }
         }
 
         return $ret;
@@ -1127,7 +1155,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "account"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_opening_balance_total")
      */
@@ -1135,6 +1163,9 @@ class Report
     {
         $ret = 0;
         foreach ($this->getAccounts() as $a) {
+            if ($a->getOpeningBalance() === null) {
+                return;
+            }
             $ret += $a->getOpeningBalance();
         }
 
@@ -1145,7 +1176,7 @@ class Report
      * Return sum of closing balances (if all of them have a value, otherwise returns null).
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "account"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_closing_balance_total")
      *
@@ -1172,6 +1203,10 @@ class Report
      */
     public function getCalculatedBalance()
     {
+        if ($this->getAccountsOpeningBalanceTotal() === null) {
+            return null;
+        }
+
         return $this->getAccountsOpeningBalanceTotal()
         + $this->getMoneyInTotal()
         - $this->getMoneyOutTotal();
@@ -1185,6 +1220,10 @@ class Report
      */
     public function getTotalsOffset()
     {
+        if ($this->getCalculatedBalance() === null || $this->getAccountsClosingBalanceTotal() === null) {
+            return null;
+        }
+
         return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
     }
 
@@ -1196,7 +1235,7 @@ class Report
      */
     public function getTotalsMatch()
     {
-        return abs($this->getTotalsOffset()) < 0.2;
+        return $this->getTotalsOffset() !== null && abs($this->getTotalsOffset()) < 0.2;
     }
 
     /**
@@ -1234,5 +1273,21 @@ class Report
         $reportDueOn->setTime(0, 0, 0);
 
         return $today >= $reportDueOn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param string $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
     }
 }

@@ -106,6 +106,15 @@ class Account
     private $odr;
 
     /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"odr-account"})
+     *
+     * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
+     */
+    private $isJointAccount;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -313,6 +322,23 @@ class Account
     public function setOdr($odr)
     {
         $this->odr = $odr;
+
+        return $this;
+    }
+
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+    /**
+     * @param string $isJointAccount yes/no/null
+     *
+     * @return \AppBundle\Entity\Report\Account
+     */
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = trim(strtolower($isJointAccount));
 
         return $this;
     }

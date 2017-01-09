@@ -2,33 +2,25 @@
 
 namespace Application\Migrations;
 
-use AppBundle\Entity\Client;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * debts fix existing reports
+ * Auto-generated Migration: Please modify to your needs!
  */
-class Version079 extends AbstractMigration implements ContainerAwareInterface
+class Version094 extends AbstractMigration
 {
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
-        ini_set('memory_limit','1024M');
-
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('CREATE TABLE money_transaction (id SERIAL NOT NULL, report_id INT DEFAULT NULL, category VARCHAR(255) NOT NULL, amount NUMERIC(14, 2) NOT NULL, description TEXT DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_D21254E24BD2A4C0 ON money_transaction (report_id)');
+        $this->addSql('ALTER TABLE money_transaction ADD CONSTRAINT FK_D21254E24BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     /**
@@ -38,5 +30,7 @@ class Version079 extends AbstractMigration implements ContainerAwareInterface
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('DROP TABLE money_transaction');
     }
 }

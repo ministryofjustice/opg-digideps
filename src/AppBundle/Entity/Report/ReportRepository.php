@@ -62,6 +62,7 @@ class ReportRepository extends EntityRepository
     }
 
     /**
+     * @deprecated addTransactionsToReportIfMissing
      * add empty Transaction to Report.
      * Called from doctrine listener.
      *
