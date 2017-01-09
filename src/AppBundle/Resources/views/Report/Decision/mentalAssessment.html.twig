@@ -1,0 +1,27 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'mentalAssessment.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'mentalAssessment.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_known_date(form.mentalAssessmentDate, 'mentalAssessment.form.mentalAssessmentDate', {'showDay': 'false'}) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

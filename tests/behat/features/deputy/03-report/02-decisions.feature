@@ -14,6 +14,11 @@ Feature: deputy / report / decisions
         And the step with the following values CAN be submitted:
             | mental_capacity_hasCapacityChanged_0 | changed |
             | mental_capacity_hasCapacityChangedDetails | mchccd |
+        # mental assessment date step
+        Given the step cannot be submitted without making a selection
+        And the step with the following values CAN be submitted:
+            | mental_assessment_mentalAssessmentDate_month | 01 |
+            | mental_assessment_mentalAssessmentDate_year | 2017 |
         # chose "no records"
         Given the step cannot be submitted without making a selection
         Then the step with the following values CANNOT be submitted:

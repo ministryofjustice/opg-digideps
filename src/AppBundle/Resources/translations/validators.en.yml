@@ -322,6 +322,11 @@ mentalCapacity:
     hasCapacityChangedDetails:
         notBlank: You must tell us how the client's mental capacity has changed
 
+mentalAssessment:
+  mentalAssessmentDate:
+    notBlank: Please enter the last assessment date
+    invalidMessage: Enter the date in this format:  MM/YYYY
+
 feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option

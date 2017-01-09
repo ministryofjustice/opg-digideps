@@ -41,6 +41,16 @@ mentalCapacity:
     save:
       label: "Save and continue"
 
+mentalAssessment:
+  htmlTitle: "Deputy report - mental assessment | GOV.UK"
+  pageSectionTitle: "Mental assessment"
+  form:
+    mentalAssessmentDate:
+      label: "When was %client%’s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
+      hint: "(MM/YYYY)"
+    save:
+      label: "Save and continue"
+
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
   pageSectionTitle: Decisions
