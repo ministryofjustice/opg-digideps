@@ -24,12 +24,6 @@ $declaration-margin: 170px;
             border-top: 0;
         }
 
-        .edit-button,
-        .view-button,
-        .button-wrapper {
-            top: 30px;
-        }
-
     }
 
 }
@@ -38,21 +32,11 @@ $declaration-margin: 170px;
 
     @include core-19();
     position: relative;
-
     margin-top: 40px;
 
     .title {
         @include bold-24();
         margin-bottom: 5px;
-    }
-
-    .edit-button,
-    .view-button,
-    .button-wrapper {
-        width: 32%;
-        position: absolute;
-        top: 0;
-        right: 0;
     }
 }
 
@@ -135,16 +119,6 @@ $declaration-margin: 170px;
 
 }
 
-
-.no-reason {
-    margin: 40px 0 40px 0;
-
-    .edit-button {
-        text-align: right;
-    }
-
-}
-
 .my-client {
 
     .item-list.reports,
@@ -165,23 +139,6 @@ $declaration-margin: 170px;
     }
 
 
-}
-
-.reports-page {
-    .reports {
-        .edit-button {
-            bottom: 30px;
-            top: auto;
-        }
-
-        .open-button {
-            @include core-24();
-        }
-
-        .item {
-            list-style-type: none;
-        }
-    }
 }
 
 .your-details {
