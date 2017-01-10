@@ -13,4 +13,4 @@ exec('php app/console digideps:fixtures  --env=test');
 // additional check to see if doctrine schema is ok
 exec('php app/console doctrine:schema:validate --env=test');
 
-Fixtures::backupDb();
+//Fixtures::backupDb();
