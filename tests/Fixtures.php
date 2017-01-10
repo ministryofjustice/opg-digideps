@@ -333,19 +333,18 @@ class Fixtures
     {
     }
 
-//    public static function backupDb()
-//    {
-//        self::pgCommand('pg_dump --clean > '.self::PG_DUMP_PATH);
-//    }
+    public static function backupDb()
+    {
+        self::pgCommand('pg_dump --clean > '.self::PG_DUMP_PATH);
+    }
 
-//    public static function restoreDb()
-//    {
-//        if (!file_exists(self::PG_DUMP_PATH)) {
-//            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
-//        }
-////        self::pgCommand("psql -c 'DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;' 2> /dev/null");
-//        self::pgCommand('psql < '.self::PG_DUMP_PATH);
-//    }
+    public static function restoreDb()
+    {
+        if (!file_exists(self::PG_DUMP_PATH)) {
+            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
+        }
+        self::pgCommand('psql < '.self::PG_DUMP_PATH);
+    }
 
     public static function deleteReportsData()
     {

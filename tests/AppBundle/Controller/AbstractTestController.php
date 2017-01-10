@@ -23,11 +23,9 @@ abstract class AbstractTestController extends WebTestCase
      */
     public static function setUpBeforeClass()
     {
-        parent::setUpBeforeClass();
-
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
-//        Fixtures::restoreDb();
+        //TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
