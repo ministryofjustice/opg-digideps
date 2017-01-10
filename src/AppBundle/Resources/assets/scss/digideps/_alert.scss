@@ -53,3 +53,24 @@
     width: 65%;
 }
 
+// ALERT
+
+.alert {
+    .icon {
+        margin-right: 10px;
+        float: left;
+    }
+
+    &:focus {
+        outline: 3px solid $focus-colour;
+    }
+}
+
+.alert-message {
+    overflow: hidden;
+}
+
+.alert-error {
+    border-color: $error-colour;
+}
+
