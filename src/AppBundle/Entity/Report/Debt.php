@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,6 +12,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Debt
 {
+    use DebtTrait;
+
     /**
      * Hold debts type
      * 1st value = id, 2nd value = hasMoreInformation.

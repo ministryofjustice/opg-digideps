@@ -97,8 +97,7 @@ class OdrController extends RestController
                     if (!$debt instanceof EntityDir\Odr\Debt) {
                         continue; //not clear when that might happen. kept similar to transaction below
                     }
-                    $debt->setAmount($row['amount']);
-                    $debt->setMoreDetails($debt->getHasMoreDetails() ? $row['more_details'] : null);
+                    $debt->setAmountAndDetails($row['amount'], $row['more_details']);
                     $this->getEntityManager()->flush($debt);
                     $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
                 }
