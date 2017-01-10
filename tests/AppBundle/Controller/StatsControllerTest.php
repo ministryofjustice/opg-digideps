@@ -59,7 +59,6 @@ class StatsControllerTest extends AbstractTestController
 
     public function testStatsUsers()
     {
-        $this->markTestSkipped();
         $url = '/stats/users';
 
         $data = $this->assertJsonRequest('GET', $url, [
@@ -67,17 +66,20 @@ class StatsControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $first = array_shift($data);
-        $this->assertEquals(self::$client1->getId(), $first['id']);
-        $this->assertEquals('test', $first['name']);
-        $this->assertEquals('deputy', $first['lastname']);
-        $this->assertEquals('2016-12-30', $first['client_court_order_date']);
-        $this->assertEquals('2015-10-15', $first['registration_date']);
-        $this->assertContains(date('Y-m-d'), $first['last_logged_in']);
-        $this->assertEquals('c1', $first['client_name']);
-        $this->assertEquals('l1', $first['client_lastname']);
-        $this->assertEquals('222333t', $first['client_casenumber']);
-        $this->assertEquals(2, $first['total_reports']);
-        $this->assertEquals(1, $first['active_reports']);
+        $deputy = array_filter($data, function($user){
+            return $user['email'] == 'deputy@example.org';
+        });
+        $deputy = array_shift($deputy);
+        $this->assertEquals(self::$deputy1->getId(), $deputy['id']);
+        $this->assertEquals('test', $deputy['name']);
+        $this->assertEquals('deputy', $deputy['lastname']);
+        $this->assertEquals('2016-12-30', $deputy['client_court_order_date']);
+        $this->assertEquals('2015-10-15', $deputy['registration_date']);
+        $this->assertContains(date('Y-m-d'), $deputy['last_logged_in']);
+        $this->assertEquals('c1', $deputy['client_name']);
+        $this->assertEquals('l1', $deputy['client_lastname']);
+        $this->assertEquals('222333t', $deputy['client_casenumber']);
+        $this->assertEquals(2, $deputy['total_reports']);
+        $this->assertEquals(1, $deputy['active_reports']);
     }
 }
