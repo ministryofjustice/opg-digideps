@@ -59,6 +59,7 @@ class StatsControllerTest extends AbstractTestController
 
     public function testStatsUsers()
     {
+        $this->markTestSkipped();
         $url = '/stats/users';
 
         $data = $this->assertJsonRequest('GET', $url, [
