@@ -331,15 +331,15 @@ class Odr
     }
 
     /**
-     * @return boolean
+     * @return Debt[]
      */
-    public function hasAtLeastOneDebt()
+    public function getDebtsWithValidAmount()
     {
         $debtsWithAValidAmount = array_filter($this->debts, function($debt) {
             return !empty($debt->getAmount());
         });
 
-        return count($debtsWithAValidAmount) > 0;
+        return $debtsWithAValidAmount;
     }
 
     /**
@@ -388,23 +388,12 @@ class Odr
         return $this;
     }
 
-    public function hasAtLeastOneDebtsWithValidAmount()
-    {
-        foreach ($this->debts as $debt) {
-            if ($debt->getAmount()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @param ExecutionContextInterface $context
      */
     public function debtsValid(ExecutionContextInterface $context)
     {
-        if ($this->getHasDebts() == 'yes' && !$this->hasAtLeastOneDebtsWithValidAmount()) {
+        if ($this->getHasDebts() == 'yes'  && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('odr.debt.mustHaveAtLeastOneDebt');
         }
     }
