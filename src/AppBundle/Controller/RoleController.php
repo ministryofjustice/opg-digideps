@@ -12,6 +12,7 @@ use AppBundle\Entity\Role;
 class RoleController extends RestController
 {
     /**
+     * //TODO consider hardcoding roles in model, no need to store them in the DB
      * @Route("")
      * @Method({"GET"})
      */

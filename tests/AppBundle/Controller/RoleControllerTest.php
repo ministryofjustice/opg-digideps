@@ -15,14 +15,14 @@ class RoleControllerTest extends AbstractTestController
         }
     }
 
-    public function testgetAllCourtOrderTypeActionAuth()
+    public function testgetAllActionAuth()
     {
         $url = '/role';
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
-    public function testgetAllCourtOrderTypeAction()
+    public function testgetAllAction()
     {
         $url = '/role';
 
