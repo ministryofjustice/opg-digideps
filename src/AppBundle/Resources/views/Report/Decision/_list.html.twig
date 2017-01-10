@@ -40,6 +40,21 @@
                 </td>
             </tr>
         {% endif %}
+        <tr>
+            <td>
+                {{ 'mentalAssessment.form.mentalAssessmentDate.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {% if report.mentalCapacity.mentalAssessmentDate %}
+                    {{ report.mentalCapacity.mentalAssessmentDate | date("m/Y") }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('decisions_mental_assessment', { 'reportId': report.id, 'from': 'summary' }) }}">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
 
         {# decisions #}
         <tr  class="behat-region-has-decisions">

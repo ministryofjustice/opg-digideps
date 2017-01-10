@@ -66,7 +66,7 @@ class DecisionController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
-            $route = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_exist';
+            $route = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_mental_assessment';
 
             return $this->redirect($this->generateUrl($route, ['reportId' => $reportId]));
         }
@@ -74,6 +74,46 @@ class DecisionController extends AbstractController
         return [
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('decisions', ['reportId'=>$report->getId()]),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
+     * @Template()
+     */
+    public function mentalAssessmentAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
+        $routeForward = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_exist';
+        $routeBack = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_mental_capacity';
+
+        $mc = $report->getMentalCapacity();
+        if ($mc == null) {
+            $mc = new EntityDir\Report\MentalCapacity();
+        }
+
+        $form = $this->createForm(new FormDir\Report\MentalAssessment(), $mc);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            $data = $form->getData();
+
+            $data->setReport($report);
+
+            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+            }
+
+
+            return $this->redirect($this->generateUrl($routeForward, ['reportId' => $reportId]));
+        }
+
+        return [
+            'form' => $form->createView(),
+            'backLink' => $this->generateUrl($routeBack, ['reportId'=>$report->getId()]),
             'report' => $report,
         ];
     }
@@ -101,7 +141,7 @@ class DecisionController extends AbstractController
             }
         }
 
-        $backLink = $this->generateUrl('decisions_mental_capacity', ['reportId'=>$reportId]);
+        $backLink = $this->generateUrl('decisions_mental_assessment', ['reportId'=>$reportId]);
         if ( $request->get('from') == 'summary') {
             $backLink = $this->generateUrl('decisions_summary', ['reportId'=>$reportId]);
         }
