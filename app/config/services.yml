@@ -12,17 +12,33 @@ services:
         class: AppBundle\EventListener\DoctrineListener
         tags:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
-    user.selfRegistration:
+    app.service.user_registration_service:
         class: AppBundle\Service\UserRegistrationService
         arguments: [@doctrine.orm.entity_manager]
-    statsService:
-          class: AppBundle\Service\StatsService
-          arguments: [@doctrine.orm.entity_manager]
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
         arguments:  [ @service_container ]
         tags:
               - { name: monolog.processor, method: processRecord }
-    
-            
+
+    app.repository.report_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Report\Report
+
+    app.repository.user_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\User
+
+    app.service.stats_service:
+        class: AppBundle\Service\StatsService
+        arguments: ["@app.repository.user_repository", "@app.service.report_service"]
+
+    app.service.report_service:
+        class: AppBundle\Service\ReportService
+        arguments:
+            - "@app.repository.report_repository"

@@ -23,7 +23,7 @@ class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $statsService = $this->getContainer()->get('statsService'); /* @var $statsService StatsService */
+        $statsService = $this->getContainer()->get('app.service.stats_service'); /* @var $statsService StatsService */
 
         $file = $input->getArgument('file');
         if (!$file) {

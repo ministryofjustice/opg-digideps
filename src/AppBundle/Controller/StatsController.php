@@ -21,7 +21,7 @@ class StatsController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $stats = $this->get('statsService');
+        $stats = $this->get('app.service.stats_service');
         /* @var $stats StatsService */
         $ret = $stats->getRecords($request->query->get('limit'));
 

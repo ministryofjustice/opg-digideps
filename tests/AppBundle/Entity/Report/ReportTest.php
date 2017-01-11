@@ -102,4 +102,15 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
+
+    public function testDueDate()
+    {
+        $endDate = new \DateTime();
+        $dueDate = new \DateTime();
+        $dueDate->add(new \DateInterval('P56D'));
+        $this->report->setEndDate($endDate);
+        $reportDueDate = $this->report->getDueDate();
+
+        $this->assertEquals($dueDate->format('Y-m-d'), $reportDueDate->format('Y-m-d'));
+    }
 }

@@ -7,15 +7,19 @@ use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\CasRec;
+use Doctrine\ORM\EntityRepository;
 
 class StatsService
 {
-    /** @var EntityManager */
-    private $em;
+    /** @var  EntityRepository */
+    protected $userRepository;
+    /** @var  ReportService */
+    protected $reportService;
 
-    public function __construct($em)
+    public function __construct(EntityRepository $userRepository, ReportService $reportService)
     {
-        $this->em = $em;
+        $this->userRepository = $userRepository;
+        $this->reportService = $reportService;
     }
 
     /**
@@ -25,25 +29,20 @@ class StatsService
      */
     public function getRecords($maxResults = null)
     {
-        //$deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
-        // pre-join data to reduce number of queries
-//         $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
-        $qb = $this->em->createQuery(
-            "SELECT u, c, role FROM AppBundle\Entity\User u
-                LEFT JOIN u.role role
-                LEFT JOIN u.clients c
-                WHERE role.role = 'ROLE_LAY_DEPUTY' ORDER BY u.id DESC" // 87M
-        );
+        $ret = [];
+        $qb = $this->userRepository->createQueryBuilder('u');
+        $qb->leftJoin('u.role', 'r')
+            ->leftJoin('u.clients', 'c')
+            ->where('r.role = ?1')
+            ->orderBy('u.id', 'DESC');
+        $qb->setParameter('1', 'ROLE_LAY_DEPUTY');
 
         if ($maxResults) {
             $qb->setMaxResults($maxResults);
         }
+        $query = $qb->getQuery();
 
-        $users = $qb->getResult();
-
-        // alternative without join and lazy-loading
-        // $deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
-        // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
+        $users = $query->getResult();
 
         foreach ($users as $user) {
             /* @var $user User */
@@ -53,6 +52,8 @@ class StatsService
                 'name' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
                 'registration_date' => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
+                'report_date_due' => 'n/a',
+                'report_date_submitted' => 'n/a',
                 'last_logged_in' => $user->getLastLoggedIn() ? $user->getLastLoggedIn()->format('Y-m-d H:i:s') : '-',
                 'client_name' => 'n.a.',
                 'client_lastname' => 'n.a.',
@@ -74,6 +75,11 @@ class StatsService
                     }
                     ++$row['active_reports'];
                 }
+            }
+            $activeReportId = $user->getActiveReportId();
+            if ($activeReportId) {
+                $report = $this->reportService->findById($activeReportId);
+                $row['report_date_due'] = $report->getDueDate()->format('Y-m-d');
             }
 
             $ret[] = $row;
