@@ -59,7 +59,7 @@ class ReportStatusService
     /** @return string */
     public function getBankAccountsState()
     {
-        if (empty($this->report->getAccounts())) {
+        if (empty($this->report->getBankAccounts())) {
             return self::STATE_NOT_STARTED;
         }
 
@@ -68,7 +68,7 @@ class ReportStatusService
 
     public function getMoneyTransferState()
     {
-        if (count($this->report->getAccounts()) <= 1) {
+        if (count($this->report->getBankAccounts()) <= 1) {
             return self::STATE_DONE;
         }
 
@@ -165,7 +165,7 @@ class ReportStatusService
     /** @return bool */
     public function hasOutstandingAccounts()
     {
-        foreach ($this->report->getAccounts() as $account) {
+        foreach ($this->report->getBankAccounts() as $account) {
             if (!$account->hasClosingBalance() || $account->hasMissingInformation()) {
                 return true;
             }

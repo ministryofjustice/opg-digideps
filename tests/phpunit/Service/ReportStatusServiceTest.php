@@ -17,7 +17,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $report = m::mock(Report::class, $reportMethods + [
                 'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
-                'getAccounts' => [],
+                'getBankAccounts' => [],
                 'getAssets' => [],
                 'getDecisions' => [],
                 'getNoAssetToAdd' => null,
@@ -135,7 +135,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $transfer = m::mock(\AppBundle\Entity\MoneyTransfer::class);
 
         $partial1 = [
-            'getAccounts' => [$accountOk, $accountOk],
+            'getBankAccounts' => [$accountOk, $accountOk],
             'hasMoneyIn' => true,
             'hasMoneyOut' => true,
             'getBalanceMismatchExplanation' => null,
@@ -147,12 +147,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             // not started
             [[], StatusService::STATE_NOT_STARTED],
-            [['getAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountClosingMissing]], StatusService::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountMissingInfo]], StatusService::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk], 'hasMoneyIn' => true], StatusService::STATE_INCOMPLETE],
-            [['getAccounts' => [$accountOk], 'hasMoneyOut' => true], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountClosingMissing]], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountMissingInfo]], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountOk], 'hasMoneyIn' => true], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$accountOk], 'hasMoneyOut' => true], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransfers' => [$transfer]] + $partial1, StatusService::STATE_INCOMPLETE],
             [['getNoTransfersToAdd' => 'x'] + $partial1, StatusService::STATE_INCOMPLETE],
             [['isTotalsMatch' => true] + $partial1, StatusService::STATE_INCOMPLETE],
@@ -161,7 +161,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getNoTransfersToAdd' => 'x', 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
             [['getMoneyTransfers' => [$transfer], 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
             // one account does not require trnasfers or transfer explanation
-            [['getAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_DONE],
+            [['getBankAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_DONE],
         ];
     }
 

@@ -88,7 +88,7 @@ class Report
      *
      * @var Account[]
      */
-    private $accounts;
+    private $bankAccounts;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
@@ -522,9 +522,9 @@ class Report
     /**
      * @return Account[]
      */
-    public function getAccounts()
+    public function getBankAccounts()
     {
-        return $this->accounts;
+        return $this->bankAccounts;
     }
 
     /**
@@ -532,7 +532,7 @@ class Report
      */
     public function getAccountWithId($id)
     {
-        foreach($this->accounts as $account) {
+        foreach($this->bankAccounts as $account) {
             if ($account->getId() == $id) {
                 return $account;
             }
@@ -569,17 +569,17 @@ class Report
     }
 
     /**
-     * @param array $accounts
+     * @param array $bankAccounts
      *
      * @return \AppBundle\Entity\Report
      */
-    public function setAccounts($accounts)
+    public function setBankAccounts($bankAccounts)
     {
-        foreach ($accounts as $account) {
+        foreach ($bankAccounts as $account) {
             $account->setReport($this);
         }
 
-        $this->accounts = $accounts;
+        $this->bankAccounts = $bankAccounts;
 
         return $this;
     }
@@ -1307,7 +1307,7 @@ class Report
      */
     public function hasAccounts()
     {
-        return count($this->getAccounts()) > 0;
+        return count($this->getBankAccounts()) > 0;
     }
 
     /**
@@ -1331,7 +1331,7 @@ class Report
      */
     public function getAccountsWithNoClosingBalance()
     {
-        return array_filter($this->getAccounts(), function ($account) {
+        return array_filter($this->getBankAccounts(), function ($account) {
             /* @var $account Account */
             return $account->getClosingBalance() === null;
         });
@@ -1371,8 +1371,8 @@ class Report
      */
     public function hasAccountWithId($id)
     {
-        foreach ($this->getAccounts() as $asset) {
-            if ($asset->getId() == $id) {
+        foreach ($this->getBankAccounts() as $e) {
+            if ($e->getId() == $id) {
                 return true;
             }
         }
