@@ -67,7 +67,7 @@ class AssetProperty extends Asset
      * @var float 0-100
      * 
      * @Assert\NotBlank(message="asset.property.ownedPercentage.notBlank", groups={"property-owned-partly"})
-     * @Assert\Range(min=0, max=100, minMessage = "asset.property.ownedPercentage.type", maxMessage = "asset.property.ownedPercentage.type", groups={"owned-partly"})
+     * @Assert\Range(min=1, max=100, minMessage = "asset.property.ownedPercentage.type", maxMessage = "asset.property.ownedPercentage.type", groups={"property-owned-partly"})
      * 
      * @JMS\Type("float")
      */
