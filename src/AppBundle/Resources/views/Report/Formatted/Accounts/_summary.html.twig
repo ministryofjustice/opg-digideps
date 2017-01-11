@@ -13,7 +13,7 @@
             </thead>
             <tbody>
 
-            {% for account in report.accounts %}
+            {% for account in report.bankAccounts %}
                 <tr>
                     <td>
                         <div class="account-name">
@@ -32,7 +32,7 @@
                         </div>
                     </td>
                     <td class="numeric grey">&pound;{{ account.openingBalance | money_format }}</td>
-                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | money_format }}</td>
+                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | abs | money_format }}</td>
                     <td class="numeric grey">&pound;{{ account.closingBalance | money_format }}</td>
                 </tr>
             {% endfor %}

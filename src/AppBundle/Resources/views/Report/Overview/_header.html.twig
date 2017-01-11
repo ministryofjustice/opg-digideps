@@ -10,7 +10,7 @@
     </div>
 {% else %}
 
-    {% for account in report.accounts %}
+    {% for account in report.bankAccounts %}
         {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
             {% set linkToAccount = path('bank_account_edit', {'reportId': report.id, 'id': account.id }) %}
             <p class="flash flash-news">

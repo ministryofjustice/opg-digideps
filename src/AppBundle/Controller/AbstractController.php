@@ -39,7 +39,7 @@ class AbstractController extends Controller
     protected function getFirstClient($groups = ['user', 'client'])
     {
         $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
-        /* @var $user EntityDir\User */
+        /* @var $user User */
         $clients = $user->getClients();
 
         return !empty($clients) ? $clients[0] : null;
@@ -88,7 +88,7 @@ class AbstractController extends Controller
      * @param int $reportId
      * @param array $groups
      *
-     * @return Report\Report
+     * @return Report
      */
     public function getReport($reportId, array $groups = [])
     {
@@ -103,7 +103,7 @@ class AbstractController extends Controller
     /**
      * @param int $reportId
      *
-     * @return Report\Report
+     * @return Report
      *
      * @throws \RuntimeException if report is submitted
      */
@@ -175,14 +175,4 @@ class AbstractController extends Controller
     {
         return $this->get('router')->getRouteCollection()->get($route) ? true : false;
     }
-
-//    /**
-//     * @param Report\Report $report
-//     * @param $sectionId
-//     */
-//    protected function flagSectionStarted(Report\Report $report, $sectionId)
-//    {
-//        $report->setSectionStarted($sectionId);
-//        $this->getRestClient()->put('report/'.$report->getId(), $report, ['report-metadata']);
-//    }
 }
