@@ -8,7 +8,7 @@
 {% endif %}
 
 <h3 class="heading-medium behat-region-balance-bad">{{ 'balance.bad.pageSectionTitle' | trans }}</h3>
-<p>{{ 'balance.bad.pageSectionDescription' | trans({'%client%': report.client.firstname, '%more%': moreless, '%totalOffset%':  report.totalsOffset | abs | money_format }) }}</p>
+<p class="text">{{ 'balance.bad.pageSectionDescription' | trans({'%client%': report.client.firstname, '%more%': moreless, '%totalOffset%':  report.totalsOffset | abs | money_format }) }}</p>
 
 <div class="hero orange compact">
     <h2 class="heading">{{ 'balance.bad.accountsBalanced' | trans }}</h2>
@@ -48,16 +48,18 @@
 </div>
 
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
-<p class="balance-warning page-section-warning">
+<div class="alert panel panel-border-narrow text">
     <span class="icon icon__notification"></span>
-    <span class="left-margin-big">{{ 'balance.bad.goBack' | trans({
-        '%client%': report.client.firstname,
-        '%accountsLink%': path('bank_accounts_summary', {'reportId': report.id}),
-        '%moneyInLink%': path('money_in_summary' , {'reportId': report.id}) ,
-        '%moneyOutLink%': path('money_out_summary' , {'reportId': report.id}),
-        '%paragraphBreak%': '<br/><br/>',
-    }) | raw }}</span>
-</p>
+    <div class="alert-message">
+        <p>{{ 'balance.bad.goBack' | trans({
+            '%client%': report.client.firstname,
+            '%accountsLink%': path('bank_accounts_summary', {'reportId': report.id}),
+            '%moneyInLink%': path('money_in_summary' , {'reportId': report.id}) ,
+            '%moneyOutLink%': path('money_out_summary' , {'reportId': report.id}),
+            '%paragraphBreak%': '<br/><br/>'
+        }) | raw }}</p>
+    </div>
+</div>
 
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
