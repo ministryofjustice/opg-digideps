@@ -32,7 +32,7 @@
                         </div>
                     </td>
                     <td class="numeric grey">&pound;{{ account.openingBalance | money_format }}</td>
-                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | money_format }}</td>
+                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | abs | money_format }}</td>
                     <td class="numeric grey">&pound;{{ account.closingBalance | money_format }}</td>
                 </tr>
             {% endfor %}
