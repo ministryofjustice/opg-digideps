@@ -74,10 +74,10 @@ class ReportRepositoryTest extends WebTestCase
         $this->assertEquals(100, $asset->getValue());
         $this->assertEquals('2013-06-10', $asset->getValuationDate()->format('Y-m-d'));
 
-        $this->assertCount(1, $newReport->getAccounts());
+        $this->assertCount(1, $newReport->getBankAccounts());
 
         /** @var $account Account */
-        $account = $newReport->getAccounts()[0];
+        $account = $newReport->getBankAccounts()[0];
 
         $this->assertEquals('NATWEST', $account->getBank());
         $this->assertEquals('Current', $account->getAccountType());

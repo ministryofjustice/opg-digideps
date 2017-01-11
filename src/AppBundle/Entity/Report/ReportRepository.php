@@ -42,7 +42,7 @@ class ReportRepository extends EntityRepository
         // clone accounts
         //  opening balance = closing balance
         //  opening date = closing date
-        foreach ($report->getAccounts() as $account) {
+        foreach ($report->getBankAccounts() as $account) {
             $newAccount = new EntityDir\Report\Account();
             $newAccount->setBank($account->getBank());
             $newAccount->setAccountType($account->getAccountType());
