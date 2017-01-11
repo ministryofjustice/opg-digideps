@@ -1,5 +1,6 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
 <div class="grid-row push--top">
     <div class="column-half">
@@ -16,7 +17,7 @@
 
 {% for groupId, groupData in report.groupByGroup(report.transactionsIn) %}
 
-<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans }}</h3>
+<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
 <table class="check-your-answers behat-region-list-accounts">
     <thead>

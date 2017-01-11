@@ -1,5 +1,6 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
 <div class="grid-row push--top">
     <div class="column-half">
@@ -16,7 +17,7 @@
 
 {% for groupId, groupData in report.groupByGroup(report.transactionsOut) %}
 
-<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans }}</h3>
+<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
 <table class="check-your-answers behat-region-list-accounts">
     <thead>
@@ -32,7 +33,7 @@
     <tbody>
     {% for t in groupData.entries %}
         <tr class="behat-region-transaction-{{ t.description | behat_namify }}">
-            <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans }}</td>
+            <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans(transOptions) }}</td>
             <td>{{ t.description | nl2br }}</td>
             <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">

@@ -5,9 +5,10 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
-{% set groupString = ('form.group.entries.' ~ transaction.group) | trans %}
-{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans %}
-{% set transOptions = {'%client%': report.client.firstname, '%group%': groupString, '%category%': categoryString} %}
+{% set clientTransOptions = {'%client%': report.client.firstname} %}
+{% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+{% set transOptions = clientTransOptions | merge({'%group%': groupString, '%category%': categoryString}) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
