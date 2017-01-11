@@ -53,7 +53,7 @@ class Report
      * @JMS\Type("array<AppBundle\Entity\Report\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Account", mappedBy="report", cascade={"persist"})
      */
-    private $accounts;
+    private $bankAccounts;
 
     /**
      * @JMS\Groups({"money-transfer"})
@@ -292,7 +292,7 @@ class Report
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
-        $this->accounts = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
         $this->moneyTransactions = new ArrayCollection();
         $this->transactions = new ArrayCollection();
@@ -573,7 +573,7 @@ class Report
      */
     public function addAccount(Account $accounts)
     {
-        $this->accounts[] = $accounts;
+        $this->bankAccounts[] = $accounts;
 
         return $this;
     }
@@ -585,7 +585,7 @@ class Report
      */
     public function removeAccount(Account $accounts)
     {
-        $this->accounts->removeElement($accounts);
+        $this->bankAccounts->removeElement($accounts);
     }
 
     /**
@@ -593,9 +593,9 @@ class Report
      *
      * @return Account[]
      */
-    public function getAccounts()
+    public function getBankAccounts()
     {
-        return $this->accounts;
+        return $this->bankAccounts;
     }
 
     /**
@@ -1162,7 +1162,7 @@ class Report
     public function getAccountsOpeningBalanceTotal()
     {
         $ret = 0;
-        foreach ($this->getAccounts() as $a) {
+        foreach ($this->getBankAccounts() as $a) {
             if ($a->getOpeningBalance() === null) {
                 return;
             }
@@ -1185,7 +1185,7 @@ class Report
     public function getAccountsClosingBalanceTotal()
     {
         $ret = 0;
-        foreach ($this->getAccounts() as $a) {
+        foreach ($this->getBankAccounts() as $a) {
             if ($a->getClosingBalance() === null) {
                 return;
             }

@@ -99,7 +99,7 @@ class AccountControllerTest extends AbstractTestController
         $data = $this->assertJsonRequest('GET', $url.'?groups=account', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-        ])['data']['accounts'];
+        ])['data']['bank_accounts'];
         $this->assertCount(2, $data);
         $this->assertTrue($data[0]['id'] != $data[1]['id']);
         $this->assertArrayHasKey('bank', $data[0]);

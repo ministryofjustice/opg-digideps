@@ -127,7 +127,7 @@ class Account
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="accounts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="bankAccounts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
