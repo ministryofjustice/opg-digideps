@@ -84,6 +84,10 @@ class FixturesCommand extends AddSingleUserCommand
         $em->flush();
     }
 
+    /**
+     * @deprecated
+     * @param OutputInterface $output
+     */
     protected function transactionTypes(OutputInterface $output)
     {
         $em = $this->getContainer()->get('em');

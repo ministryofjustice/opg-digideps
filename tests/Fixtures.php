@@ -264,6 +264,7 @@ class Fixtures
     }
 
     /**
+     * @deprecated
      * @return EntityDir\Report\Transaction
      */
     public function createTransaction(EntityDir\Report\Report $report, $type, array $amounts, array $settersMap = [])

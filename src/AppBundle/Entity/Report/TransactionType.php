@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- *  @deprecated  REMOVE WHEN OTPP is merged and migrated
+ *  @deprecated  REMOVE WHEN OTPP is merged and migrated on production
  * @ORM\Entity
  * @ORM\Table(name="transaction_type")
  * @ORM\InheritanceType("SINGLE_TABLE")
@@ -109,7 +109,7 @@ abstract class TransactionType
      *
      * @var string
      */
-    private $type;
+//    private $type;
 
     /**
      * @var int
@@ -139,10 +139,10 @@ abstract class TransactionType
         return $this->id;
     }
 
-    public function getType()
-    {
-        return $this->type;
-    }
+//    public function getType()
+//    {
+//        return $this->type;
+//    }
 
     public function getHasMoreDetails()
     {
@@ -160,13 +160,13 @@ abstract class TransactionType
 
         return $this;
     }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
+//
+//    public function setType($type)
+//    {
+//        $this->type = $type;
+//
+//        return $this;
+//    }
 
     public function setHasMoreDetails($hasMoreDetails)
     {

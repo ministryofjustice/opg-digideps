@@ -64,8 +64,6 @@ class ReportController extends RestController
             ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
-        $this->getRepository('Report\Report')->warmUpArrayCacheTransactionTypes();
-
         $report = $this->findEntityBy('Report\Report', $id);
         /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -122,8 +120,6 @@ class ReportController extends RestController
     public function update(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $this->getRepository('Report\Report')->warmUpArrayCacheTransactionTypes();
 
         $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
         /* @var $report EntityDir\Report\Report */

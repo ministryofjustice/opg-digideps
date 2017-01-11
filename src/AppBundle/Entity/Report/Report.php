@@ -64,7 +64,7 @@ class Report
 
     /**
      * @deprecated REMOVE WHEN OTPP is merged and migrated
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"}, fetch="LAZY")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
@@ -951,6 +951,7 @@ class Report
     }
 
     /**
+     * @deprecated
      * @return Transaction[]
      */
     public function getTransactions()
