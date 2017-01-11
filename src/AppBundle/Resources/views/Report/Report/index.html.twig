@@ -9,8 +9,7 @@
      {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
  {% endblock %}
 {% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
-
-{% block bodyClasses %}reports-page{% endblock %} {# copied from old left-nav template #}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
     {#{{ macros.breadcrumbs('settings') }}#}
@@ -33,9 +32,6 @@
                     'form' : editReportDatesForm
                 } %}
         <hr class="item-list" />
-    {% else %}
-        <h3 class="heading-medium flush--top">{{ ('page.' ~ filter ~ '.pageSectionTitle') | trans({'%client%': client.firstname}) }}</h3>
-
     {% endif %}
 
     {% if not reportId and reports is not empty %}
