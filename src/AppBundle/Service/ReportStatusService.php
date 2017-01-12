@@ -186,8 +186,6 @@ class ReportStatusService
     /** @return bool */
     public function balanceMatches()
     {
-        var_dump($this->report->isTotalsMatch());
-        var_dump($this->report->getBalanceMismatchExplanation());
         return $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
     }
 
