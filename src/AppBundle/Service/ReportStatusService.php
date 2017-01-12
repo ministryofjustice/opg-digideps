@@ -135,16 +135,11 @@ class ReportStatusService
     {
         $hasDebts = $this->report->getHasDebts();
 
-        if (empty($hasDebts)) {
+        if (in_array($hasDebts, ['yes', 'no'])) {
+            return self::STATE_DONE;
+        } else {
             return self::STATE_NOT_STARTED;
         }
-
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
-        if ($debtsSectionComplete) {
-            return self::STATE_DONE;
-        }
-
-        return self::STATE_INCOMPLETE;
     }
 
     /** @return string */
@@ -191,9 +186,7 @@ class ReportStatusService
     /** @return bool */
     public function balanceMatches()
     {
-        $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
-
-        return $balanceValid;
+        return $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
     }
 
     /**
@@ -211,7 +204,6 @@ class ReportStatusService
         if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
-                'moneyTransfers' => $this->getMoneyTransferState(),
                 'moneyIn' => $this->getMoneyInState(),
                 'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),
