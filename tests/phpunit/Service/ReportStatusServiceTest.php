@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service;
 
-use Mockery as m;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService as StatusService;
+use Mockery as m;
 
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      *
      * @return ReportStatusService
      */
-    private function getReportMocked(array $reportMethods)
+    private function getStatusServiceWithReportMocked(array $reportMethods)
     {
         $report = m::mock(Report::class, $reportMethods + [
                 'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
@@ -31,6 +31,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'hasMoneyOut' => false,
                 'getHasDebts' => null,
                 'getDebts' => [],
+                'isTotalsMatch' => null,
+                'getBalanceMismatchExplanation' => null,
             ]);
 
         return new StatusService($report);
@@ -59,7 +61,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function decisions($mocks, $state)
     {
-        $object = $this->getReportMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getDecisionsState());
     }
 
@@ -81,26 +83,26 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function contacts($mocks, $state)
     {
-        $object = $this->getReportMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getContactsState());
     }
 
     public function visitsCareProvider()
     {
-        $visitsCareOk = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
-            'missingVisitsCareInfo' => false,
+        $visitsCareNotMissingInfo = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
+            'missingInfo' => false,
         ]);
 
-        $visitsCareErr = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
-            'missingVisitsCareInfo' => true,
+        $visitsCareMissingInfo = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
+            'missingInfo' => true,
         ]);
 
         return [
             // not started
             [[], StatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $visitsCareErr], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $visitsCareMissingInfo], StatusService::STATE_INCOMPLETE],
             // done
-            [['getVisitsCare' => $visitsCareOk], StatusService::STATE_DONE],
+            [['getVisitsCare' => $visitsCareNotMissingInfo], StatusService::STATE_DONE],
         ];
     }
 
@@ -110,109 +112,118 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function visitsCare($mocks, $state)
     {
-        $this->markTestIncomplete('update');
-        $object = $this->getReportMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getVisitsCareState());
     }
 
-    public function accountProvider()
+    public function bankAccountProvider()
     {
-        $accountOk = m::mock(\AppBundle\Entity\Report\Account::class, [
-            'hasClosingBalance' => true,
-            'hasMissingInformation' => false,
+        $account = m::mock(\AppBundle\Entity\Report\Account::class, [
         ]);
-
-        $accountClosingMissing = m::mock(\AppBundle\Entity\Report\Account::class, [
-            'hasClosingBalance' => false,
-            'hasMissingInformation' => false,
-        ]);
-
-        $accountMissingInfo = m::mock(\AppBundle\Entity\Report\Account::class, [
-            'hasClosingBalance' => true,
-            'hasMissingInformation' => true,
-        ]);
-
-        $transfer = m::mock(\AppBundle\Entity\MoneyTransfer::class);
-
-        $partial1 = [
-            'getBankAccounts' => [$accountOk, $accountOk],
-            'hasMoneyIn' => true,
-            'hasMoneyOut' => true,
-            'getBalanceMismatchExplanation' => null,
-            'isTotalsMatch' => false,
-            'getNoTransfersToAdd' => null,
-            'getMoneyTransfers' => [],
-        ];
 
         return [
-            // not started
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$accountClosingMissing]], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$accountMissingInfo]], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$accountOk]], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$accountOk], 'hasMoneyIn' => true], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$accountOk], 'hasMoneyOut' => true], StatusService::STATE_INCOMPLETE],
-            [['getMoneyTransfers' => [$transfer]] + $partial1, StatusService::STATE_INCOMPLETE],
-            [['getNoTransfersToAdd' => 'x'] + $partial1, StatusService::STATE_INCOMPLETE],
-            [['isTotalsMatch' => true] + $partial1, StatusService::STATE_INCOMPLETE],
-            [['getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_INCOMPLETE],
-            //done
-            [['getNoTransfersToAdd' => 'x', 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
-            [['getMoneyTransfers' => [$transfer], 'isTotalsMatch' => true] + $partial1, StatusService::STATE_DONE],
-            // one account does not require trnasfers or transfer explanation
-            [['getBankAccounts' => [$accountOk], 'getBalanceMismatchExplanation' => 'x'] + $partial1, StatusService::STATE_DONE],
+            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$account]], StatusService::STATE_DONE],
         ];
     }
 
     /**
      * @test
-     * @dataProvider accountProvider
+     * @dataProvider bankAccountProvider
      */
-    public function account($mocks, $state)
+    public function bankAccount($mocks, $state)
     {
-        $this->markTestIncomplete('');
-        $object = $this->getReportMocked($mocks);
-        $this->assertEquals($state, $object->getAccountsState());
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getBankAccountsState());
     }
 
-    public function assetsDebtsProvider()
+
+    public function moneyInProvider()
+    {
+        return [
+            [['hasMoneyIn' => false], StatusService::STATE_NOT_STARTED],
+            [['hasMoneyIn' => true], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider moneyInProvider
+     */
+    public function moneyIn($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getMoneyInState());
+    }
+
+    public function moneyOutProvider()
+    {
+        return [
+            [['hasMoneyOut' => false], StatusService::STATE_NOT_STARTED],
+            [['hasMoneyOut' => true], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider moneyOutProvider
+     */
+    public function moneyOut($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getMoneyOutState());
+    }
+
+    public function assetsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
 
         return [
-            [[], StatusService::STATE_NOT_STARTED],
-            // missing sth
-            [['getAssets' => [$asset], 'getHasDebts' => null], StatusService::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getAssets' => [], 'getHasDebts' => 'no'], StatusService::STATE_INCOMPLETE],
-            // done
-            [['getAssets' => [$asset], 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getHasDebts' => 'no'], StatusService::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'yes'], StatusService::STATE_DONE],
-            [['getNoAssetToAdd' => true, 'getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], StatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
+            [['getAssets' => [], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
         ];
     }
 
     /**
      * @test
-     * @dataProvider assetsDebtsProvider
+     * @dataProvider assetsProvider
      */
     public function assets($mocks, $state)
     {
-        $this->markTestIncomplete('');
-        $object = $this->getReportMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getAssetsState());
     }
 
+    public function debtsProvider()
+    {
+        return [
+            [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getHasDebts' => 'no'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider debtsProvider
+     */
+    public function debts($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getDebtsState());
+    }
+
+
     public function actionsProvider()
     {
-        $actionIncomplete = m::mock(\AppBundle\Entity\Action::class,[
+        $actionIncomplete = m::mock(\AppBundle\Entity\Action::class, [
             'getDoYouHaveConcerns' => true,
             'getDoYouExpectFinancialDecisions' => false
         ]);
 
-        $actionComplete = m::mock(\AppBundle\Entity\Action::class,[
+        $actionComplete = m::mock(\AppBundle\Entity\Action::class, [
             'getDoYouHaveConcerns' => true,
             'getDoYouExpectFinancialDecisions' => true
         ]);
@@ -231,28 +242,51 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function actions($mocks, $state)
     {
-        $object = $this->getReportMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getActionsState());
     }
+
+
+    public function balanceMatchesProvider()
+    {
+        return [
+            [['isTotalsMatch' => false, 'getBalanceMismatchExplanation'=>null], false],
+            [['isTotalsMatch' => true, 'getBalanceMismatchExplanation'=>'something'], true],
+            [['isTotalsMatch' => false, 'getBalanceMismatchExplanation'=>'something'], true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider balanceMatchesProvider
+     */
+    public function balanceMatches($mocks, $expected)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($expected, $object->balanceMatches());
+    }
+
 
     /**
      * @test
      */
     public function getRemainingSectionsEmpty()
     {
-        $this->markTestIncomplete('');
-        $object = $this->getReportMocked([]);
+        $object = $this->getStatusServiceWithReportMocked([]);
         $expected = [
             'decisions' => 'not-started',
             'contacts' => 'not-started',
             'visitsCare' => 'not-started',
-            'actions' => 'not-started',
-            'accounts' => 'not-started',
+            //
+            'bankAccounts' => 'not-started',
+            'moneyIn' => 'not-started',
+            'moneyOut' => 'not-started',
             'assets' => 'not-started',
+            'debts' => 'not-started',
+            //
+            'actions' => 'not-started',
         ];
         $this->assertEquals($expected, $object->getRemainingSections());
-
-        $this->assertFalse($object->isReadyToSubmit());
     }
 
     public function getRemainingSectionsPartialProvider()
@@ -262,8 +296,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->decisionsProvider())[0], 'decisions'],
             [array_pop($this->contactsProvider())[0], 'contacts'],
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
-            [array_pop($this->accountProvider())[0], 'accounts'],
-            [array_pop($this->assetsDebtsProvider())[0], 'assets'],
+            //
+            [array_pop($this->bankAccountProvider())[0], 'accounts'],
+            [array_pop($this->MoneyInProvider())[0], 'accounts'],
+            [array_pop($this->MoneyOutProvider())[0], 'accounts'],
+            [array_pop($this->assetsProvider())[0], 'assets'],
+            [array_pop($this->debtsProvider())[0], 'debts'],
+            //
             [array_pop($this->actionsProvider())[0], 'actions'],
         ];
     }
@@ -274,28 +313,62 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsPartial($provider, $keyRemoved)
     {
-        $this->markTestIncomplete('');
-        $object = $this->getReportMocked($provider);
+        $object = $this->getStatusServiceWithReportMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());
+    }
+
+    private function getReportCompleteMockData()
+    {
+        return array_pop($this->decisionsProvider())[0]
+        + array_pop($this->contactsProvider())[0]
+        + array_pop($this->visitsCareProvider())[0]
+        + array_pop($this->actionsProvider())[0]
+        //
+        + array_pop($this->bankAccountProvider())[0]
+        + array_pop($this->moneyInProvider())[0]
+        + array_pop($this->moneyOutProvider())[0]
+        + array_pop($this->assetsProvider())[0]
+        + array_pop($this->debtsProvider())[0]
+        //
+        + array_pop($this->actionsProvider())[0];
     }
 
     /**
      * @test
      */
-    public function getRemainingSectionsNone()
+    public function getRemainingSectionsNoneAndReadyToSubmit()
     {
-        $this->markTestIncomplete('');
-        $object = $this->getReportMocked(
-            array_pop($this->decisionsProvider())[0]
-            + array_pop($this->contactsProvider())[0]
-            + array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->accountProvider())[0]
-            + array_pop($this->assetsDebtsProvider())[0]
-            + array_pop($this->actionsProvider())[0]
-        );
+        $reportCompleteMock = $this->getReportCompleteMockData();
 
+        $object = $this->getStatusServiceWithReportMocked($reportCompleteMock);
         $this->assertEquals([], $object->getRemainingSections());
-        $this->assertTrue($object->isReadyToSubmit());
     }
+
+    public function isReadyToSubmitProvider()
+    {
+        return [
+            [['getRemainingSections' => ['s1'], 'balanceMatches' => false], false],
+            [['getRemainingSections' => [], 'balanceMatches' => false], false],
+            [['getRemainingSections' => [], 'balanceMatches' => true], true],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider isReadyToSubmitProvider
+     */
+    public function isReadyToSubmit($data, $expected)
+    {
+        $report = m::mock(Report::class);
+        $object = m::mock( ReportStatusService::class.'[getRemainingSections,balanceMatches]', [$report]);
+
+        foreach($data as $method=>$return) {
+            $object->shouldReceive($method)->andReturn($return);
+        }
+
+
+        $this->assertEquals($expected, $object->isReadyToSubmit());
+    }
+
 }

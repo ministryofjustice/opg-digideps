@@ -10,6 +10,9 @@ use AppBundle\Entity\Odr\VisitsCare;
 use AppBundle\Service\OdrStatusService as StatusService;
 use Mockery as m;
 
+/**
+ * //TODO consider using traits to re-use logic in ReportStatusServiceTest for common sections
+ */
 class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
