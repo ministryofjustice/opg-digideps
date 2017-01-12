@@ -18,6 +18,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $report = m::mock(Report::class, $reportMethods + [
                 'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
                 'getBankAccounts' => [],
+                'getMoneyTransfers' => [],
+                'getNoTransfersToAdd' => null,
                 'getAssets' => [],
                 'getDecisions' => [],
                 'getNoAssetToAdd' => null,
@@ -137,6 +139,31 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getBankAccountsState());
     }
 
+    public function moneyTransferProvider()
+    {
+        $account1 = m::mock(\AppBundle\Entity\Report\Account::class);
+        $account2 = m::mock(\AppBundle\Entity\Report\Account::class);
+        $mt1 = m::mock(\AppBundle\Entity\Report\MoneyTransfer::class);
+
+        return [
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers'=>[], 'getNoTransfersToAdd'=>null], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers'=>[$mt1], 'getNoTransfersToAdd'=>null], StatusService::STATE_DONE],
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers'=>[], 'getNoTransfersToAdd'=>true], StatusService::STATE_DONE],
+            // less than 2 accounts => done
+            [['getBankAccounts' => [$account1]], StatusService::STATE_DONE],
+            [['getBankAccounts' => []], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider moneyTransferProvider
+     */
+    public function moneyTransfer($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getMoneyTransferState());
+    }
 
     public function moneyInProvider()
     {
@@ -298,6 +325,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             //
             [array_pop($this->bankAccountProvider())[0], 'accounts'],
+            [array_pop($this->moneyTransferProvider())[0], 'moneyTransfers'],
             [array_pop($this->MoneyInProvider())[0], 'accounts'],
             [array_pop($this->MoneyOutProvider())[0], 'accounts'],
             [array_pop($this->assetsProvider())[0], 'assets'],
