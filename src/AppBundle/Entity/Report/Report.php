@@ -16,13 +16,17 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
+    const TYPE_102 = '102';
+    const TYPE_103 = '103';
+    const TYPE_104 = '104';
+
     /**
-     * 
+     * 104 report
      */
     const PERSONAL_WELFARE = 1;
 
     /**
-     * same sections as personal welfare, + accounts and assets.
+     * 102 report
      */
     const PROPERTY_AND_AFFAIRS = 2;
 
@@ -33,6 +37,15 @@ class Report
      * @var int
      */
     private $id;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * see TYPE_* constant
+     *
+     * @var string
+     */
+    private $type;
 
     /**
      * @Assert\NotBlank( message="report.startDate.notBlank")
@@ -358,6 +371,22 @@ class Report
         $this->id = $id;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**
