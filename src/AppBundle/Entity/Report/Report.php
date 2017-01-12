@@ -17,7 +17,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Report
 {
+    const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
+
+    const TYPE_102 = '102';
+    const TYPE_103 = '103';
+    const TYPE_104 = '104';
 
     /**
      * @var int
@@ -129,6 +134,8 @@ class Report
     private $mentalCapacity;
 
     /**
+     * @deprecated? Confirm with PO
+     *
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
@@ -1304,5 +1311,41 @@ class Report
             return false;
         }
         return $this->getEndDate()->add(new \DateInterval('P56D'));
+    }
+
+    /**
+     * Report type
+     * 102/103/104
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("type")
+     * @JMS\Groups({"report"})
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        /**
+         * Introduced by
+         * https://opgtransform.atlassian.net/browse/DDPB-757
+         * Remove when
+         * https://opgtransform.atlassian.net/browse/DDPB-758
+         * is implemented
+         */
+        /* @var $user User */
+        $user = $this->getClient()->getUsers()->first();
+        if ($user->getEmail() == 'laydeputy103@publicguardian.gsi.gov.uk') {
+            return self::TYPE_103;
+        }
+
+        // remove in case courtOrderTypeIsMoved into the deputyship. See comment on property
+        switch ($this->getCourtOrderTypeId()) {
+            case self::PROPERTY_AND_AFFAIRS:
+                return self::TYPE_102;
+            case self::HEALTH_WELFARE:
+                return self::TYPE_104;
+        }
+
+        throw new \RuntimeException('Report type not defined');
     }
 }
