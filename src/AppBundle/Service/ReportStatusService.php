@@ -201,7 +201,7 @@ class ReportStatusService
             'actions' => $this->getActionsState(),
         ];
 
-        if ($this->report->getCourtOrderTypeId() == Report::PROPERTY_AND_AFFAIRS) {
+        if (in_array($this->report->getType(), [Report::TYPE_102, Report::TYPE_103])) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
                 'moneyIn' => $this->getMoneyInState(),
@@ -209,6 +209,13 @@ class ReportStatusService
                 'assets' => $this->getAssetsState(),
                 'debts' => $this->getDebtsState(),
             ];
+
+            if ($this->report->getType() == Report::TYPE_102) {
+                $states += [
+                    'moneyTransfers' => $this->getMoneyTransferState(),
+                ];
+            }
+
         }
 
         return array_filter($states, function ($e) {

@@ -33,6 +33,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebts' => [],
                 'isTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
+                'getType' => Report::TYPE_102,
             ]);
 
         return new StatusService($report);
@@ -366,7 +367,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         foreach($data as $method=>$return) {
             $object->shouldReceive($method)->andReturn($return);
         }
-
 
         $this->assertEquals($expected, $object->isReadyToSubmit());
     }
