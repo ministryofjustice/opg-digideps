@@ -63,15 +63,17 @@
                 warning: true,
                 description: true
             } %}
-            {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'money_transfers',
-                report: report,
-                state: reportStatus.moneyTransferState,
-                nOfRecords: report.moneyTransfers | length,
-                warning: true,
-                description: true
-            } %}
+            {% if report.type != constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+                {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_transfers',
+                    report: report,
+                    state: reportStatus.moneyTransferState,
+                    nOfRecords: report.moneyTransfers | length,
+                    warning: true,
+                    description: true
+                } %}
+                {% endif %}
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'money_in',
