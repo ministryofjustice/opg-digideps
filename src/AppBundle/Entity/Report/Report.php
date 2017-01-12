@@ -37,6 +37,16 @@ class Report
     private $id;
 
     /**
+     * @var string
+     * see TYPE_ class constants
+     *
+     * @JMS\Groups({"report"})
+     * @JMS\Type("string")
+     * @ORM\Column(name="type", type="string", length=3, nullable=false)
+     */
+    private $type;
+
+    /**
      * @var int
      *
      * @JMS\Groups({"client"})
@@ -309,6 +319,22 @@ class Report
         $this->noAssetToAdd = null;
         $this->noTransfersToAdd = null;
         $this->reportSeen = true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**
@@ -1311,41 +1337,5 @@ class Report
             return false;
         }
         return $this->getEndDate()->add(new \DateInterval('P56D'));
-    }
-
-    /**
-     * Report type
-     * 102/103/104
-     *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("type")
-     * @JMS\Groups({"report"})
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        /**
-         * Introduced by
-         * https://opgtransform.atlassian.net/browse/DDPB-757
-         * Remove when
-         * https://opgtransform.atlassian.net/browse/DDPB-758
-         * is implemented
-         */
-        /* @var $user User */
-        $user = $this->getClient()->getUsers()->first();
-        if ($user->getEmail() == 'laydeputy103@publicguardian.gsi.gov.uk') {
-            return self::TYPE_103;
-        }
-
-        // remove in case courtOrderTypeIsMoved into the deputyship. See comment on property
-        switch ($this->getCourtOrderTypeId()) {
-            case self::PROPERTY_AND_AFFAIRS:
-                return self::TYPE_102;
-            case self::HEALTH_WELFARE:
-                return self::TYPE_104;
-        }
-
-        throw new \RuntimeException('Report type not defined');
     }
 }

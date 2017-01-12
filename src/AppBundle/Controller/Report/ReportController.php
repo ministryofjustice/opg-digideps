@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Report;
 
 class ReportController extends RestController
 {
@@ -28,12 +29,31 @@ class ReportController extends RestController
         $client = $this->findEntityBy('Client', $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $report = new EntityDir\Report\Report();
+        $report = new Report();
         $report->setClient($client);
 
-        // add court order type
+        // the below will change when it's decide where COT will be moved
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type_id']);
         $report->setCourtOrderType($courtOrderType);
+        if ($reportData['court_order_type_id'] == Report::PROPERTY_AND_AFFAIRS) {
+            /**
+             * Introduced by
+             * https://opgtransform.atlassian.net/browse/DDPB-757
+             * Remove when
+             * https://opgtransform.atlassian.net/browse/DDPB-758
+             * is implemented
+             */
+            if ($this->getUser()->getEmail() == 'laydeputy103@publicguardian.gsi.gov.uk') {
+                $report->setType(Report::TYPE_103);
+            } else {
+                $report->setType(Report::TYPE_102);
+            }
+
+        }
+        // disabled in the UX atm, but implemented for clarity
+        if ($reportData['court_order_type_id'] == Report::HEALTH_WELFARE) {
+            $report->setType(Report::TYPE_104);
+        }
 
         $this->validateArray($reportData, [
             'start_date' => 'notEmpty',
@@ -65,7 +85,7 @@ class ReportController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy('Report\Report', $id);
-        /* @var $report EntityDir\Report\Report */
+        /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $report;
@@ -80,7 +100,7 @@ class ReportController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $currentReport = $this->findEntityBy('Report\Report', $id, 'Report not found');
-        /* @var $currentReport EntityDir\Report\Report */
+        /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
         $user = $this->getUser();
         $client = $currentReport->getClient();
@@ -122,7 +142,7 @@ class ReportController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
-        /* @var $report EntityDir\Report\Report */
+        /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
@@ -147,11 +167,6 @@ class ReportController extends RestController
                 }
             }
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
-        }
-
-        if (array_key_exists('cot_id', $data)) {
-            $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
-            $report->setCourtOrderType($cot);
         }
 
         if (array_key_exists('start_date', $data)) {
