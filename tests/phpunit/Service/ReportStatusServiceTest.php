@@ -350,7 +350,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             // all missing
-            [[
+            [Report::TYPE_102, [
                 'getDecisionsState' => StatusService::STATE_INCOMPLETE,
                 'getContactsState' => StatusService::STATE_INCOMPLETE,
                 'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
@@ -375,7 +375,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'debts' => 'incomplete',
             ]],
             // all complete
-            [[
+            [Report::TYPE_102, [
                 'getDecisionsState' => StatusService::STATE_DONE,
                 'getContactsState' => StatusService::STATE_DONE,
                 'getVisitsCareState' => StatusService::STATE_DONE,
@@ -395,10 +395,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider getRemainingSectionsProvider
      */
-    public function getRemainingSections($mocks, $expected)
+    public function getRemainingSections($reportType, $mocks, $expected)
     {
         $report = m::mock(Report::class, [
             'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
+            'getType' => $reportType
         ]);
         $object = m::mock(ReportStatusService::class . '[' . implode(',', array_keys($mocks)) . ']', [$report]);
 
