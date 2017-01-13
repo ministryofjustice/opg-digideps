@@ -18,7 +18,8 @@
                         New deputy report overview</a>
 
                 {% else %}
-                    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                       class="behat-link-breadcrumbs-report-overview">
                         Deputy report overview</a>
                 {% endif %}
             </li>
@@ -52,50 +53,55 @@
 {% endmacro %}
 
 {% macro reportSectionPrevNext(report, currentSectionId) %}
-    {% set config = [
-    {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-    {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-    {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-    {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-    {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
-    {'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
-    {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
-    {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
-    {'section':'assets', 'link': path('assets', {'reportId': report.id})},
-    {'section':'debts', 'link': path('debts', {'reportId': report.id})},
-    {'section':'actions', 'link': path('actions', {'reportId': report.id})},
-    {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-    ] %}
+    {% if report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
+        {% set config = [
+        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
+        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
+        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+        {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
+        {'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
+        {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
+        {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
+        {'section':'assets', 'link': path('assets', {'reportId': report.id})},
+        {'section':'debts', 'link': path('debts', {'reportId': report.id})},
+        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        ] %}
+    {% elseif report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+        {% set config = [
+        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
+        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
+        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+        {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
+        {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
+        {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
+        {'section':'assets', 'link': path('assets', {'reportId': report.id})},
+        {'section':'debts', 'link': path('debts', {'reportId': report.id})},
+        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        ] %}
+    {% elseif report.type == 'ndr' %}
+        {% set config = [
+        {'section':'reportOverview', 'link': path('odr_overview')},
+        {'section':'visitsCare','link': path('odr_visits_care', {'odrId': report.id})},
+        {'section':'deputy_expenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
+        {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': report.id})},
+        {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': report.id})},
+        {'section':'assets','link': path('odr_assets', {'odrId': report.id})},
+        {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
+        {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
+        {'section':'other_info', 'link': path('odr_other_info', {'odrId': report.id})},
+        {'section':'reportOverview', 'link': path('odr_overview')},
+        ] %}
+    {% endif %}
 
-    {# TODO move template out from here #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
     'section': currentSectionId,
-    'config': config
+    'config': config,
     } %}
 {% endmacro %}
-
-{% macro odrSectionPrevNext(odr, currentSectionId) %}
-    {# update with new sections when implemented #}
-    {% set config = [
-    {'section':'reportOverview', 'link': path('odr_overview')},
-    {'section':'visitsCare','link': path('odr_visits_care', {'odrId': odr.id})},
-    {'section':'deputy_expenses','link': path('odr_deputy_expenses', {'odrId': odr.id})},
-    {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': odr.id})},
-    {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': odr.id})},
-    {'section':'assets','link': path('odr_assets', {'odrId': odr.id})},
-    {'section':'debts','link': path('odr_debts', {'odrId': odr.id})},
-    {'section':'actions', 'link': path('odr_actions', {'odrId': odr.id})},
-    {'section':'other_info', 'link': path('odr_other_info', {'odrId': odr.id})},
-    {'section':'reportOverview', 'link': path('odr_overview')},
-    ] %}
-
-    {# TODO move template out from here #}
-    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
-    'section': currentSectionId,
-    'config': config
-    } %}
-{% endmacro %}
-
 
 {% macro saveAndContinueButton(button) %}
     {{ form_submit(button, '', {

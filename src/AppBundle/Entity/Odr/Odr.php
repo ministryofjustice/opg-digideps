@@ -112,6 +112,16 @@ class Odr
      */
     private $noAssetToAdd;
 
+
+    /**
+     * Currently used only for bottom navigator
+     * @return string
+     */
+    public function getType()
+    {
+        return 'ndr';
+    }
+
     /**
      * @return decimal
      */
