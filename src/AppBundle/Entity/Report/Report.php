@@ -724,6 +724,11 @@ class Report
     /**
      * Get assets total value.
      *
+     * @JMS\VirtualProperty
+     * @JMS\Type("double")
+     * @JMS\SerializedName("assets_total_value")
+     * @JMS\Groups({"asset"})
+     *
      * @return float
      */
     public function getAssetsTotalValue()
