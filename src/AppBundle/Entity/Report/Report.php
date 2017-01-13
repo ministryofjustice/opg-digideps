@@ -24,7 +24,11 @@ class Report
     const TYPE_103 = '103';
     const TYPE_104 = '104';
 
-    const ASSETS_TOTAL_VALUE_THRESHOLD = 21000;
+    /**
+     * Reports with total amount of assets
+     * Threshold under which reports should be 103, and not 102
+     */
+    const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
 
     /**
      * @var int
