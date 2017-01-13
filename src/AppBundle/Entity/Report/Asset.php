@@ -65,6 +65,7 @@ abstract class Asset
     private $value;
 
     /**
+     * @JMS\Type("double")
      * @var float
      */
     private $valueTotal;
