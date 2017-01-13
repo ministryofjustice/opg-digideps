@@ -1,7 +1,7 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 
-<h1 class="heading-xlarge flush--bottom">
+<h1 class="heading-xlarge flush--bottom behat-region-report-title">
     {{ report.period }} {{ 'report.header.report' | trans }}
     {# implement specific key in translation file when the content is defined #}
     {% if report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
