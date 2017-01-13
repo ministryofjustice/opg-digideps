@@ -12,6 +12,7 @@ trait ReportTrait
     public function iChangeTheReportType($reportId, $reportType)
     {
         $this->visitBehatLink('report/'.$reportId.'/change-report-type/'.$reportType);
+        $this->getSession()->back();
     }
 
     /**
