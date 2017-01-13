@@ -75,15 +75,15 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/{secret}/report/{reportId}/change-report-cot/{cotId}")
+     * @Route("/behat/{secret}/report/{reportId}/change-report-type/{type}")
      * @Method({"GET"})
      */
-    public function reportChangeReportCot($reportId, $cotId)
+    public function reportChangeReportType($reportId, $type)
     {
         $this->securityChecks();
 
         $this->getRestClient()->put('behat/report/'.$reportId, [
-            'cotId' => $cotId,
+            'type' => $type,
         ]);
 
         return new Response('done');

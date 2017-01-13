@@ -7,13 +7,11 @@ use Behat\Gherkin\Node\TableNode;
 trait ReportTrait
 {
     /**
-     * @Given I change the report :reportId court order type to :cotName
+     * @Given I change the report :reportId type to :reportType
      */
-    public function iChangeTheReportCourtOrderTypeTo($reportId, $cotName)
+    public function iChangeTheReportType($reportId, $reportType)
     {
-        $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
-
-        $this->visitBehatLink('report/'.$reportId.'/change-report-cot/'.$cotNameToId[$cotName]);
+        $this->visitBehatLink('report/'.$reportId.'/change-report-type/'.$reportType);
     }
 
     /**
