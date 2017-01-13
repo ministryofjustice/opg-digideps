@@ -24,7 +24,7 @@ class BehatController extends RestController
      * @Route("/report/{reportId}")
      * @Method({"PUT"})
      */
-    public function reportChangeCotAction(Request $request, $reportId)
+    public function reportEditAction(Request $request, $reportId)
     {
         $this->securityChecks();
 
@@ -32,9 +32,8 @@ class BehatController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        if (!empty($data['cotId'])) {
-            $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
-            $report->setCourtOrderType($cot);
+        if (!empty($data['type'])) {
+            $report->setType($data['type']);
         }
 
         if (array_key_exists('submitted', $data)) {

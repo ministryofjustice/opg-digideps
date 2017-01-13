@@ -97,6 +97,7 @@ class Fixtures
 
         $report->setClient($client);
         $report->setCourtOrderType($cot);
+        $report->setType(EntityDir\Report\Report::TYPE_102);
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
         }

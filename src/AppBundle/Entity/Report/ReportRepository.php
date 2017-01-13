@@ -26,6 +26,8 @@ class ReportRepository extends EntityRepository
         $newReport = new EntityDir\Report\Report();
         $newReport->setClient($report->getClient());
         $newReport->setCourtOrderType($report->getCourtOrderType());
+        $newReport->setType($report->getType());
+        //TODO add the 103 21k assets check and type change
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);

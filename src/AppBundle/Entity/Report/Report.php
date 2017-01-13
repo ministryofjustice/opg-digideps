@@ -17,7 +17,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Report
 {
+    const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
+
+    const TYPE_102 = '102';
+    const TYPE_103 = '103';
+    const TYPE_104 = '104';
 
     /**
      * @var int
@@ -30,6 +35,16 @@ class Report
      * @ORM\SequenceGenerator(sequenceName="report_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
+
+    /**
+     * @var string
+     * see TYPE_ class constants
+     *
+     * @JMS\Groups({"report"})
+     * @JMS\Type("string")
+     * @ORM\Column(name="type", type="string", length=3, nullable=false)
+     */
+    private $type;
 
     /**
      * @var int
@@ -129,6 +144,8 @@ class Report
     private $mentalCapacity;
 
     /**
+     * @deprecated? Confirm with PO
+     *
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
@@ -302,6 +319,22 @@ class Report
         $this->noAssetToAdd = null;
         $this->noTransfersToAdd = null;
         $this->reportSeen = true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
     /**
