@@ -119,6 +119,14 @@ abstract class Asset
     }
 
     /**
+     * @return float|null
+     */
+    public function getValueTotal()
+    {
+        return $this->value;
+    }
+
+    /**
      * Set lastedit.
      *
      * @param \DateTime $lastedit

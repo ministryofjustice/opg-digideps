@@ -24,6 +24,8 @@ class Report
     const TYPE_103 = '103';
     const TYPE_104 = '104';
 
+    const ASSETS_TOTAL_VALUE_THRESHOLD = 21000;
+
     /**
      * @var int
      *
@@ -712,11 +714,26 @@ class Report
     /**
      * Get assets.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Asset[]
      */
     public function getAssets()
     {
         return $this->assets;
+    }
+
+    /**
+     * Get assets total value.
+     *
+     * @return float
+     */
+    public function getAssetsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getAssets() as $asset) {
+            $ret += $asset->getValueTotal();
+        }
+
+        return $ret;
     }
 
     /**
