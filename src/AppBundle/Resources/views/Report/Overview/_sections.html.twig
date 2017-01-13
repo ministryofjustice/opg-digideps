@@ -1,6 +1,10 @@
 {% set translationDomain = "overview" %}
 {% trans_default_domain translationDomain %}
 
+{% set is102 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
+{% set is103 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+{% set is104 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_104') %}
+
 <ul id="overview-sections" class="overview-sections">
 
     <li id="planning-section" class="overview-section">
@@ -38,7 +42,7 @@
         } %}
     </li>
 
-    {% if report.courtOrderTypeId == constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') %}
+    {% if is102 or is103 %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
             {% if not reportStatus.balanceMatches %}
@@ -63,7 +67,7 @@
                 warning: true,
                 description: true
             } %}
-            {% if report.type != constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+            {% if is102 %}
                 {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_transfers',
