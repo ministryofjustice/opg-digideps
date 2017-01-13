@@ -1,20 +1,5 @@
 Feature: deputy / report / edit and test tabs
     
-#    (enable if HW cot is re-enabled)
-#    @deputy
-#    Scenario: test tabs for "Health & Welfare" report
-#        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        And I save the page as "report-health-welfare-homepage"
-#        And I should see a "#edit-decisions" element
-#        And I should see a "#edit-contacts" element
-#        But I should not see a "#edit-bank_accounts" element
-#        And I should not see a "#edit-assets" element
-#        And I should see a "#edit-visits_care" element
-
-#    @deputy
-#    Scenario: change report type to "Property and Affairs"
-#        Given I change the report "1" court order type to "Property and Affairs"
-        
     @deputy
     Scenario: edit report dates
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -65,20 +50,34 @@ Feature: deputy / report / edit and test tabs
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I save the page as "report-property-affairs-homepage"
-        Then I should see a "#edit-contacts" element
-        And I should see a "#edit-decisions" element
-        And I should see a "#edit-bank_accounts" element
-        And I should see a "#edit-money_transfers" element
-        And I should see a "#edit-money_in" element
-        And I should see a "#edit-money_out" element
-        And I should see a "#edit-assets" element
+        Then I should see the "edit-decisions" link
+        Then I should see the "edit-contacts" link
+        Then I should see the "edit-debts" link
+        Then I should see the "edit-visits_care" link
+        Then I should see the "edit-bank_accounts" link
+        Then I should see the "edit-money_in" link
+        Then I should see the "edit-money_out" link
+        Then I should see the "edit-money_transfers" link
+        Then I should see the "edit-actions" link
 
-#    @deputy
-#    Scenario: Check report notification and submission warnings
-#        # set report due
-##        Given I set the report 1 end date to 3 days ago
-#        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#        # disabled element are not visible from behat
-#        And I should not see a "report_submit_submitReport" element
-#        And I should not see a ".report_submission_period" element
+    # evaluate using behat tags when 103 sections are implemented
+    @deputy
+    Scenario: Check 103 overview page
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "reports, report-2016"
+        # assert title changed
+        Then I should not see "(103)" in the "report-title" region
+        Given I change the report 1 type to "103"
+        Then I should see "(103)" in the "report-title" region
+        # assert sections
+        And I should see the "edit-decisions" link
+        Then I should see the "edit-contacts" link
+        Then I should see the "edit-debts" link
+        Then I should see the "edit-visits_care" link
+        Then I should see the "edit-bank_accounts" link
+        Then I should see the "edit-money_in" link
+        Then I should see the "edit-money_out" link
+        Then I should not see the "edit-money_transfers" link
+        Then I should see the "edit-actions" link
+        And I change the report 1 type to "102"
+

@@ -35,6 +35,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebts' => [],
                 'isTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
+                'getType' => Report::TYPE_102,
             ]);
 
         return new StatusService($report);
@@ -348,8 +349,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function getRemainingSectionsProvider()
     {
         return [
-            // all missing
-            [[
+            // 102 all missing
+            [Report::TYPE_102, [
                 'getDecisionsState' => StatusService::STATE_INCOMPLETE,
                 'getContactsState' => StatusService::STATE_INCOMPLETE,
                 'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
@@ -373,8 +374,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'assets' => 'incomplete',
                 'debts' => 'incomplete',
             ]],
-            // all complete
-            [[
+            // 102: all complete
+            [Report::TYPE_102, [
                 'getDecisionsState' => StatusService::STATE_DONE,
                 'getContactsState' => StatusService::STATE_DONE,
                 'getVisitsCareState' => StatusService::STATE_DONE,
@@ -387,6 +388,44 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getAssetsState' => StatusService::STATE_DONE,
                 'getDebtsState' => StatusService::STATE_DONE,
             ], []],
+            // 103 all missing
+            [Report::TYPE_103, [
+                'getDecisionsState' => StatusService::STATE_INCOMPLETE,
+                'getContactsState' => StatusService::STATE_INCOMPLETE,
+                'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
+                'getActionsState' => StatusService::STATE_INCOMPLETE,
+                'getActionsState' => StatusService::STATE_INCOMPLETE,
+                'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
+                //note: getMoneyTransferState not there
+                'getMoneyInState' => StatusService::STATE_INCOMPLETE,
+                'getMoneyOutState' => StatusService::STATE_INCOMPLETE,
+                'getAssetsState' => StatusService::STATE_INCOMPLETE,
+                'getDebtsState' => StatusService::STATE_INCOMPLETE,
+            ], [
+                'decisions' => 'incomplete',
+                'contacts' => 'incomplete',
+                'visitsCare' => 'incomplete',
+                'actions' => 'incomplete',
+                'bankAccounts' => 'incomplete',
+                // note: moneyTransfers not in 103
+                'moneyIn' => 'incomplete',
+                'moneyOut' => 'incomplete',
+                'assets' => 'incomplete',
+                'debts' => 'incomplete',
+            ]],
+            // 103: all complete
+            [Report::TYPE_103, [
+                'getDecisionsState' => StatusService::STATE_DONE,
+                'getContactsState' => StatusService::STATE_DONE,
+                'getVisitsCareState' => StatusService::STATE_DONE,
+                'getActionsState' => StatusService::STATE_DONE,
+                'getActionsState' => StatusService::STATE_DONE,
+                'getBankAccountsState' => StatusService::STATE_DONE,
+                'getMoneyInState' => StatusService::STATE_DONE,
+                'getMoneyOutState' => StatusService::STATE_DONE,
+                'getAssetsState' => StatusService::STATE_DONE,
+                'getDebtsState' => StatusService::STATE_DONE,
+            ], []],
         ];
     }
 
@@ -394,10 +433,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider getRemainingSectionsProvider
      */
-    public function getRemainingSections($mocks, $expected)
+    public function getRemainingSections($reportType, $mocks, $expected)
     {
         $report = m::mock(Report::class, [
             'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
+            'getType' => $reportType
         ]);
         $object = m::mock(ReportStatusService::class . '[' . implode(',', array_keys($mocks)) . ']', [$report]);
 
@@ -432,7 +472,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         foreach ($data as $method => $return) {
             $object->shouldReceive($method)->andReturn($return);
         }
-
 
         $this->assertEquals($expected, $object->isReadyToSubmit());
     }
