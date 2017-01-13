@@ -45,7 +45,7 @@
     {% if is102 or is103 %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
-            {% if not reportStatus.balanceMatches %}
+            {% if report.isDue() and not reportStatus.balanceMatches %}
 
                 <div class="error alert push-half--ends" id="cannot-submit-warning">
                     <span class="icon icon__notification"></span>
