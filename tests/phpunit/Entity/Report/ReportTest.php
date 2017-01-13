@@ -105,14 +105,4 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ['+1 year', false],
         ];
     }
-
-    public function testGetAssetsTotalValue()
-    {
-        $this->report->setAssets([
-            m::mock(AssetOther::class, ['getValueTotal'=>1]),
-            m::mock(AssetProperty::class, ['getValueTotal'=>2]),
-        ]);
-
-        $this->assertEquals(3, $this->report->getAssetsTotalValue());
-    }
 }

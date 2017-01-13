@@ -65,6 +65,11 @@ abstract class Asset
     private $value;
 
     /**
+     * @var float
+     */
+    private $valueTotal;
+
+    /**
      * @Assert\Date(message="asset.date.date")
      * @JMS\Type("DateTime")
      */
@@ -131,7 +136,7 @@ abstract class Asset
      */
     public function getValueTotal()
     {
-        return $this->value;
+        return $this->valueTotal;
     }
 
     /**
