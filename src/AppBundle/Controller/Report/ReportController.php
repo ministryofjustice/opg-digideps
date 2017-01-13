@@ -147,6 +147,10 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+        if (!empty($data['type'])) {
+            $report->setType($data['type']);
+        }
+
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
             $report->setHasDebts($data['has_debts']);
             // null debts
