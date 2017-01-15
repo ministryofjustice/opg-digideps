@@ -12,12 +12,6 @@ $(document).ready(function() {
         GOVUK.formatCurrency(event.target);
     });
 
-    // Removal of parent element (used on prototype of OTPP notification)
-    // Refactor
-    $('.js-remove').click(function(){
-    	$(this).parent().remove();
-    });
-
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
