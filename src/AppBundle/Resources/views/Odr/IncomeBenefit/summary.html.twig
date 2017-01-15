@@ -22,17 +22,17 @@
 
     {# Missing questions alerts #}
     {% if validator.countMissing() > 0 and comingFromLastStep%}
-        <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
-            <span class="icon icon-notification"></span>
-            <p>{{ 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common') }}</p>
-        </div>
+        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+            alertType: 'notice',
+            message: 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')
+        } %}
     {% endif %}
 
     {% if validator.countMissing() > 0 and not comingFromLastStep%}
-    <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
-        <span class="icon icon-notification"></span>
-        <p>{{ 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common') }}</p>
-    </div>
+        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+            alertType: 'notice',
+            message: 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')
+        } %}
     {% endif %}
 
     {# Return to overview link #}

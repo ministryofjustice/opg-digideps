@@ -68,7 +68,8 @@
     }
 }
 
-.alert {
+.alert,
+.alert-notice {
     @extend %alert-base;
     background-color: rgba($border-colour, .1);
 }
