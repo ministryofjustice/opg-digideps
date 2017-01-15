@@ -55,7 +55,9 @@
 
 // ALERT
 
-.alert {
+%alert-base {
+    max-width: 30em;
+
     .icon {
         margin-right: 10px;
         float: left;
@@ -66,11 +68,23 @@
     }
 }
 
-.alert-message {
-    overflow: hidden;
+.alert {
+    @extend %alert-base;
+    background-color: rgba($border-colour, .1);
+}
+
+.alert-success {
+    @extend %alert-base;
+    border-color: $turquoise;
+    background-color: rgba($turquoise, .1);
 }
 
 .alert-error {
+    @extend %alert-base;
     border-color: $error-colour;
+    background-color: rgba($error-colour, .1);
 }
 
+.alert-message {
+    overflow: hidden;
+}

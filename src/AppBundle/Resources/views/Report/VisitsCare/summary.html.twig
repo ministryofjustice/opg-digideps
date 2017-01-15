@@ -28,14 +28,14 @@
     {# Missing questions alerts #}
     {% if report.visitsCare.missingInfo() and comingFromLastStep%}
         <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
-            <span class="icon icon__notification"></span>
+            <span class="icon icon-notification"></span>
             <p>{{ 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common') }}</p>
         </div>
     {% endif %}
 
     {% if report.visitsCare.missingInfo() and not comingFromLastStep%}
     <div class="page-section-warning text flush--bottom" id="cannot-submit-warning">
-        <span class="icon icon__notification"></span>
+        <span class="icon icon-notification"></span>
         <p>{{ 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common') }}</p>
     </div>
     {% endif %}
