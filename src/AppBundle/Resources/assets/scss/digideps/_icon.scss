@@ -2,17 +2,6 @@
 // ICON
 // Reusable icons
 
-.icon-property {
-    @include icon(icon-property, 43, 39, 'icons');
-    background-size: contain;
-}
-
-.icon-finance {
-    @include icon(icon-finance, 41, 39, 'icons');
-    margin-right: 10px;
-    background-size: contain;
-}
-
 .icon-tick-white {
     @include icon(icon-tick-white, 40, 33, 'icons');
     margin-right: 10px;

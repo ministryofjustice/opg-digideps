@@ -125,6 +125,13 @@ class Report
     private $assets;
 
     /**
+     * @JMS\Type("double")
+     *
+     * @var float
+     */
+    private $assetsTotalValue;
+
+    /**
      * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
      *
      * @var Decision[]
@@ -680,12 +687,7 @@ class Report
      */
     public function getAssetsTotalValue()
     {
-        $ret = 0;
-        foreach ($this->getAssets() as $asset) {
-            $ret += $asset->getValueTotal();
-        }
-
-        return $ret;
+        return $this->assetsTotalValue;
     }
 
     /**

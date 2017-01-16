@@ -267,6 +267,9 @@ class Odr
      */
     public function getDueDate()
     {
+        if (!$this->getStartDate() instanceof \DateTime) {
+            return null;
+        }
         $dueDate = clone $this->getStartDate();
         $dueDate->modify('+40 days');
 
