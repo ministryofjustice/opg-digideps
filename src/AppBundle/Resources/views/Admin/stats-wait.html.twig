@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% trans_default_domain "admin" %}
 
@@ -6,13 +6,7 @@
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
 {% block title %}Upload users{% endblock %}
 
-{% block validationSummary %}
-{% endblock %}
-
-{% block pageNavigation %}
-{% endblock %}
-
-{% block pageBody %}
+{% block pageContent %}
 
     <h1 class="heading-medium">Deputy's analysis</h1>
 

@@ -1,14 +1,9 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}OPG Assisted Digital{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
-
-
-{% block pageBody %}
+{% block pageContent %}
     <div class="jump-to-user">
         <h1 class="form-title heading-large">
             ASSISTED DIGITAL

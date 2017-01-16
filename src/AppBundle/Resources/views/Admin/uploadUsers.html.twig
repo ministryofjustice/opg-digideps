@@ -1,18 +1,11 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% trans_default_domain "admin" %}
 
 {% block htmlTitle %}Administration - Upload users{% endblock %}
 {% block pageTitle %}Upload users{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
-
-{% block pageNavigation %}
-{% endblock %}
-
-{% block pageBody %}
+{% block pageContent %}
 
     <p>
         Number of users in the database: {{currentRecords}}.

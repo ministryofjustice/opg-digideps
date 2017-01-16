@@ -96,7 +96,7 @@ class AdminController extends AbstractController
      * @Route("/edit-user", name="admin_editUser")
      * @Method({"GET", "POST"})
      * @Template
-     * 
+     *
      * @param Request $request
      */
     public function editUserAction(Request $request)
@@ -143,7 +143,7 @@ class AdminController extends AbstractController
                 $updateUser = $form->getData();
                 $this->getRestClient()->put('user/'.$user->getId(), $updateUser, ['admin_add_user']);
 
-                $request->getSession()->getFlashBag()->add('action', 'action.message');
+                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
 
                 $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
             }
@@ -179,7 +179,7 @@ class AdminController extends AbstractController
             if ($odrForm->isValid()) {
                 $updateOdr = $odrForm->getData();
                 $this->getRestClient()->put('odr/' . $id, $updateOdr, ['start_date']);
-                $request->getSession()->getFlashBag()->add('action', 'action.message');
+                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
             }
         }
         /** @var EntityDir\Client $client */
@@ -215,7 +215,7 @@ class AdminController extends AbstractController
      * @Route("/delete/{id}", name="admin_delete")
      * @Method({"GET"})
      * @Template()
-     * 
+     *
      * @param int $id
      */
     public function deleteAction($id)
