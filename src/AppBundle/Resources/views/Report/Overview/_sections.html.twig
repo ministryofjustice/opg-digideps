@@ -45,7 +45,7 @@
     {% if is102 or is103 %}
         <li id="finances-section" class="overview-section">
             <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans() }}</h2>
-            {% if not reportStatus.balanceMatches %}
+            {% if report.isDue() and not reportStatus.balanceMatches %}
                 {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
                     alertType: 'notice',
                     message: 'balance.notBalancedWarning' | trans({
