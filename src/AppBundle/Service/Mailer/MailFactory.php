@@ -257,6 +257,7 @@ class MailFactory
 
         $viewParams = [
             'submittedReport' => $submittedReport,
+            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
