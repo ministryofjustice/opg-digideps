@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReportRepository extends EntityRepository
 {
+
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
@@ -26,8 +27,8 @@ class ReportRepository extends EntityRepository
         $newReport = new EntityDir\Report\Report();
         $newReport->setClient($report->getClient());
         $newReport->setCourtOrderType($report->getCourtOrderType());
-        $newReport->setType($report->getType());
-        //TODO add the 103 21k assets check and type change
+        $newReportType = $this->getReportTypeBasedOnOldReport($report);
+        $newReport->setType($newReportType);
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
@@ -118,5 +119,23 @@ class ReportRepository extends EntityRepository
 
         return $ret;
     }
+
+    /**
+     * @param Report $oldReport
+     * @return string
+     */
+    private function getReportTypeBasedOnOldReport(Report $oldReport)
+    {
+        if (in_array($oldReport->getType(), [Report::TYPE_102, Report::TYPE_103])) {
+            if ($oldReport->getAssetsTotalValue() <= Report::ASSETS_TOTAL_VALUE_103_THRESHOLD) {
+                return Report::TYPE_103;
+            }
+
+            return Report::TYPE_102;
+        }
+
+        return $oldReport->getType();
+    }
+
 
 }

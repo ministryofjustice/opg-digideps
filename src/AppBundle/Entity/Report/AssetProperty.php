@@ -343,6 +343,18 @@ class AssetProperty extends Asset
     }
 
     /**
+     * @return float|null
+     */
+    public function getValueTotal()
+    {
+        if ($this->getOwned() == self::OWNED_PARTLY) {
+            return $this->getValue() * $this->getOwnedPercentage() / 100;
+        }
+
+        return parent::getValueTotal();
+    }
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */

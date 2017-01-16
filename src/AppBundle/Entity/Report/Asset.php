@@ -119,6 +119,19 @@ abstract class Asset
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("float")
+     * @JMS\SerializedName("value_total")
+     * @JMS\Groups({"asset"})
+     *
+     * @return float|null
+     */
+    public function getValueTotal()
+    {
+        return $this->value;
+    }
+
+    /**
      * Set lastedit.
      *
      * @param \DateTime $lastedit

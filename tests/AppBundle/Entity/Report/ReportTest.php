@@ -3,8 +3,11 @@
 namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\AssetOther;
+use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\MoneyTransaction;
+use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
@@ -112,5 +115,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $reportDueDate = $this->report->getDueDate();
 
         $this->assertEquals($dueDate->format('Y-m-d'), $reportDueDate->format('Y-m-d'));
+    }
+
+
+    public function testgetAssetsTotalValue()
+    {
+        $this->assertEquals(0, $this->report->getAssetsTotalValue());
+
+        $this->report->addAsset(m::mock(AssetOther::class, ['getValueTotal'=>1]));
+        $this->report->addAsset(m::mock(AssetProperty::class, ['getValueTotal'=>1]));
+
+        $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
 }

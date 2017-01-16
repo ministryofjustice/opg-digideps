@@ -25,6 +25,12 @@ class Report
     const TYPE_104 = '104';
 
     /**
+     * Reports with total amount of assets
+     * Threshold under which reports should be 103, and not 102
+     */
+    const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
+
+    /**
      * @var int
      *
      * @JMS\Groups({"report"})
@@ -712,11 +718,31 @@ class Report
     /**
      * Get assets.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Asset[]
      */
     public function getAssets()
     {
         return $this->assets;
+    }
+
+    /**
+     * Get assets total value.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("double")
+     * @JMS\SerializedName("assets_total_value")
+     * @JMS\Groups({"asset"})
+     *
+     * @return float
+     */
+    public function getAssetsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getAssets() as $asset) {
+            $ret += $asset->getValueTotal();
+        }
+
+        return $ret;
     }
 
     /**
