@@ -1,0 +1,41 @@
+{# {% set transOptions = transOptions | default({}) %} #}
+
+{# <div class="page-section-warning" {% if id is defined %}id="{{ id }}"{% endif %}>
+    {% if iconClass is defined %}
+        <span class="{{ iconClass }}"></span>
+    {% endif %}
+    {% if transDomain is defined %}
+        <p>{{ pageSectionWarning }}</p>
+    {% else %}
+        {{ pageSectionWarning|raw }}
+    {% endif %}
+</div> #}
+
+{% if alertType is defined %}
+	{% if alertType == 'notice' %}
+		<div class="alert-notice panel panel-border-narrow">
+			<span class="icon icon-notification"></span>
+			<div class="alert-message"><p>{{ message | raw }}</p></div>
+		</div>
+	{% elseif alertType == 'success' %}
+		<div class="alert-success panel panel-border-narrow">
+			<span class="icon icon-tick"></span>
+			<div class="alert-message"><p>{{ message | raw }}</p></div>
+		</div>
+	{% elseif alertType == 'error' %}
+		<div class="alert-error panel panel-border-narrow">
+			<span class="icon icon-cross"></span>
+			<div class="alert-message"><p>{{ message | raw }}</p></div>
+		</div>
+	{% else %}
+		<div class="alert panel panel-border-narrow">
+			<div class="alert-message"><p>{{ message | raw }}</p></div>
+		</div>
+	{% endif %}
+{% else %}
+	<div class="alert panel panel-border-narrow">
+	    <div class="alert-message">
+	        <p>{{ message | raw }}</p>
+	    </div>
+	</div>
+{% endif %}

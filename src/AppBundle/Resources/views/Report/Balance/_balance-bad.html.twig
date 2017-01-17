@@ -48,18 +48,16 @@
 </div>
 
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
-<div class="alert panel panel-border-narrow text">
-    <span class="icon icon__notification"></span>
-    <div class="alert-message">
-        <p>{{ 'balance.bad.goBack' | trans({
-            '%client%': report.client.firstname,
-            '%accountsLink%': path('bank_accounts_summary', {'reportId': report.id}),
-            '%moneyInLink%': path('money_in_summary' , {'reportId': report.id}) ,
-            '%moneyOutLink%': path('money_out_summary' , {'reportId': report.id}),
-            '%paragraphBreak%': '<br/><br/>'
-        }) | raw }}</p>
-    </div>
-</div>
+{% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+    alertType: 'notice',
+    message: 'balance.bad.goBack' | trans({
+                '%client%': report.client.firstname,
+                '%accountsLink%': path('bank_accounts_summary', {'reportId': report.id}),
+                '%moneyInLink%': path('money_in_summary' , {'reportId': report.id}) ,
+                '%moneyOutLink%': path('money_out_summary' , {'reportId': report.id}),
+                '%paragraphBreak%': '<br/><br/>'
+            })
+} %}
 
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

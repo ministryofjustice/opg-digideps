@@ -153,10 +153,10 @@
         </ul>
 
         {% if not odrStatus.isReadyToSubmit  %}
-        <div class="page-section-warning" id="cannot-submit-warning">
-            <span class="icon icon__notification"></span>
-            <p>{{ 'cantSubmitUntilComplete' | trans()  }}</p>
-        </div>
+            {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+                alertType: 'notice',
+                message: 'cantSubmitUntilComplete' | trans()
+            } %}
         {% endif %}
 
     </div>

@@ -44,19 +44,15 @@
 
     {% if is102 or is103 %}
         <li id="finances-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.propFinance' | trans() }}</h2>
+            <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans() }}</h2>
             {% if report.isDue() and not reportStatus.balanceMatches %}
-
-                <div class="error alert push-half--ends" id="cannot-submit-warning">
-                    <span class="icon icon__notification"></span>
-                    <div class="alert-message">
-                        <p class="flush--bottom">Your accounts are not balanced.<br>
-                        <a href="{{ path('balance', {'reportId': report.id}) }}" class="behat-link-balance-view-details">View details</a></p>
-                    </div>
-                </div>
-
+                {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+                    alertType: 'notice',
+                    message: 'balance.notBalancedWarning' | trans({
+                        '%detailsLink%': path('balance', {'reportId': report.id
+                    }) })
+                } %}
             {% endif %}
-
 
             {% include 'AppBundle:Report/Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -163,23 +159,18 @@
     </li>
 </ul>
 
-{% if report.isDue == true and reportStatus.isReadyToSubmit == false %}
-    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionWarning: 'submitWhenReady',
-        iconClass: 'icon icon__notification',
-        id: 'cannot-submit-warning'
+{% if report.isDue == false and reportStatus.isReadyToSubmit == false %}
+    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+        alertType: 'notice',
+        message: 'submitWhenReady' | trans()
     } %}
 {% endif %}
 
-
-{% if report.isDue == false %}
+{% if report.isDue == true %}
     {% set endDate = report.getEndDate() | date(" d F Y")  %}
-    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionWarning: 'warningNotDue',
-    transOptions: {'%date%': endDate},
-    iconClass: 'icon icon__notification',
-    id: 'cannot-submit-warning'
+    {% set transOptions = {'%date%': endDate} %}
+    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+        alertType: 'notice',
+        message: 'warningNotDue' | trans(transOptions)
     } %}
 {% endif %}
