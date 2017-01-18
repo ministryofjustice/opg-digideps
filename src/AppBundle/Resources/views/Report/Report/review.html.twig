@@ -1,8 +1,9 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 {% set translationDomain = "report-display" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}Complete the deputy report{% endblock %}
+{% block htmlTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
 
@@ -12,8 +13,6 @@
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
-
-    <h1 class="heading-large">{{ 'page.pageSectionTitle' | trans }}</h1>
 
     {% if report.submitted == false %}
         {% if reportStatus.isReadyToSubmit and report.isDue %}

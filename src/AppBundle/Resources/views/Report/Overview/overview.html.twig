@@ -1,30 +1,42 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% set translationDomain = "overview" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{% endblock %}
+
 {% block contentClass %}page-report-content report-overview{% endblock %}
 
 {% block pageContent %}
-<div id="pagebody">
-    <div id="pagebody-left-content">
 
-        {% block pageHeader %}
-            {% include 'AppBundle:Report/Overview:_header.html.twig' %}
-        {% endblock %}
+    {% block pageHeader %}
+        {% include 'AppBundle:Report/Overview:_header.html.twig' %}
+    {% endblock %}
 
-        {%include 'AppBundle:Report/Overview:_period.html.twig' with {
-            report: report
-        } %}
+    <div class="grid-row">
+        <div class="column-one-half">
+            <ul>
+                <li>{{ 'reportingPeriod' | trans() }}:
+                    <span class="bold-small">{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</span>
+                </li>
+                <li>{{ 'dueDate' | trans() }}:
+                    <span class="bold-small">{{ report.dueDate | date(" d F Y") }}</span>
+                </li>
+                <li>Report status:
+                    <span class="bold-small">{{ reportStatus.status | trans() }}</span>
+                </li>
+            </ul>
+        </div>
 
-        {%include 'AppBundle:Report/Overview:_sections.html.twig' with {
-           report: report
-        } %}
+        <div class="column-one-half">
+            <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
+        </div>
     </div>
-    <div id="pagebody-right-content">
-        {%include 'AppBundle:Components:_helpline.html.twig' %}
-        {%include 'AppBundle:Report/Overview:_status.html.twig' with { report: report } %}
-    </div>
-</div>
+
+    {%include 'AppBundle:Report/Overview:_sections.html.twig' with {
+       report: report
+    } %}
+
+
 {% endblock %}
