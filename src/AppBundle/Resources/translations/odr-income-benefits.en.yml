@@ -60,6 +60,7 @@ form:
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
       label: Please tell us more about %client%'s other regular sources of income
+      hint: For example, who pays them and their frequency and amount
       labelSummaryPage: More about %client%'s other regular sources of income
   expectCompensationDamages:
     label: Are you expecting %client% to get any compensation awards or damages?
