@@ -61,8 +61,11 @@
       {% for entry in collector.calls %}
         <li>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)
           <br/><b>Request:</b> <pre>{{ entry.options }} </pre>
-          <br/><b>Response:</b>
+          <br/><b>Response body decoded:</b>
           <pre>{{ entry.responseBody }}</pre>
+
+          <br/><b>Response JSON:</b>
+          <pre>{{ entry.responseJson }}</pre>
         </li>
       {% endfor %}
       </ul>
