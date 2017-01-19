@@ -90,7 +90,7 @@ summaryPage:
   edit: Edit
   decisionTableColumnHeading1: Decision description
   decisionTableColumnHeading2: Was %client% involved?
-  decisionTableColumnHeading3: How was %client% involved?
+  decisionTableColumnHeading3: If not, explain why; if yes, provide detail
 
 form:
   title:
