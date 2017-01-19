@@ -1,16 +1,3 @@
-{# {% set transOptions = transOptions | default({}) %} #}
-
-{# <div class="page-section-warning" {% if id is defined %}id="{{ id }}"{% endif %}>
-    {% if iconClass is defined %}
-        <span class="{{ iconClass }}"></span>
-    {% endif %}
-    {% if transDomain is defined %}
-        <p>{{ pageSectionWarning }}</p>
-    {% else %}
-        {{ pageSectionWarning|raw }}
-    {% endif %}
-</div> #}
-
 {% if alertType is defined %}
 	{% if alertType == 'notice' %}
 		<div class="alert-notice panel panel-border-narrow">

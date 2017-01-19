@@ -1,14 +1,11 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% set transDomain = 'admin' %}
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
-
-
-{% block pageBody %}
+{% block pageContent %}
     <a href="{{ path('admin_homepage') }}">Back</a>
     <h1 class="form-title heading-medium">
         Edit user

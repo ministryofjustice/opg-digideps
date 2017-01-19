@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% trans_default_domain "admin" %}
 {% set currentSortOrder = app.request.query.get('sort_order') %}
@@ -7,7 +7,7 @@
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
 
-{% block pageBody %}
+{% block pageContent %}
 <style type="text/css">
     .user-table td {
     font-size: 0.8em;
