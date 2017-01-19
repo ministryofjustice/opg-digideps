@@ -66,6 +66,7 @@ form:
     label: Are you expecting %client% to get any compensation awards or damages?
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
+    hint: For example, what is being compensated for and who will be paying out the award
     labelSummaryPage: More about any damages or compensation paid to %client%
   oneOff:
     label: Which types of one-off payment has %client% received since the court order?

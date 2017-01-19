@@ -49,6 +49,7 @@ form:
     label: Are there any plans to move %client% to a new residence?
   planMoveNewResidenceDetails:
     label: Tell us more about your plans to move %client%
+    hint: For example, why it is in %client%'s best interests to move and the location of %client%'s new home
   choices:
     everyday: Every day
     once_a_week: At least once a week

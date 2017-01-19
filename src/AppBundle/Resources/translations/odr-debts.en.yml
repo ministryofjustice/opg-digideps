@@ -19,6 +19,7 @@ editPage:
   htmlTitle: "New deputy report - debts | GOV.UK"
   pageSectionTitle: Debts
   pageSectionDescription: Please tell us more about %client%'s debts.
+  hint: If %client% has a mortgage on a property, use the Assets section to tell us about it
 
 summaryPage:
   pageContent:
@@ -31,13 +32,15 @@ form:
   entries:
     care-fees:
       label: Outstanding care home fees
+      hint: Don't include fees charged against %client%'s property, that is, fees which will be paid off when the property is sold
     credit-cards:
       label: Credit cards
     loans:
       label: Loans
     other:
       label: Other
-      moreInformations: Give us more information about this debt
+      moreInformations: Please tell us more about this debt.
+      hint: For example, what costs it relates to and who it is owed to
     clientHasDebts:
       label: Does %client% have any debts ?
       hint: ""
