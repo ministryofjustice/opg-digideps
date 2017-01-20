@@ -16,8 +16,8 @@
     .heading {
         @include box-sizing(border-box);
         @include inline-block();
-        margin: 20px 10px 15px 5px;
-        width: 45%;
+        margin: 20px 10px 0 5px;
+        width: 65%;
         float: left;
         color: $black;
 
@@ -32,7 +32,7 @@
         @include box-sizing(border-box);
         @include core-19(1.6);
         @include inline-block();
-        margin: 20px 0 15px 0;
+        margin: 20px 0 0 0;
         float: right;
         width: auto;
         text-align: right;
@@ -49,7 +49,7 @@
     }
 
     .button {
-        margin: 20px 0 15px 0;
+        margin: 20px 0 0 0;
         float: right;
     }
 
