@@ -1,5 +1,8 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
-{% block pageTitle %}NDR{% endblock %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% block htmlTitle %}Review new deputy report{% endblock %}
+{% block pageTitle %}Review new deputy report{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
     {% if odr.submitted == false %}
@@ -27,11 +30,8 @@
     {% if odr.submitted == true %}
         <nav class="back-bar">
             <a id="overview-button" href="{{ path('homepage') }}" class="link-return">Return to Homepage</a>
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
-
-    <h1 class="heading-large">Review new deputy report</h1>
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
     <a name="pageBody"></a>
