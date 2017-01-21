@@ -10,7 +10,6 @@
     {% if report.submitted == true %}
         <nav class="back-bar">
             <a id="back-to-client" href="{{ path('reports', {'cot': report.courtOrderTypeId}) }}" class="link-return behat-link-back-to-reports">Back</a>
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
         </nav>
     {% endif %}
 
