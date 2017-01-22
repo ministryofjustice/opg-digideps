@@ -117,9 +117,9 @@ other_info:
 #    start: "Start actions"
 
 odr_add_further_info:
-    subSectionTitle: "Sign and submit"
-    edit: "Sign and submit"
-    start: "Sign and submit"
+    subSectionTitle: "Submit report"
+    edit: "Submit report"
+    start: "Submit report"
 
 
 additionalInformation:
