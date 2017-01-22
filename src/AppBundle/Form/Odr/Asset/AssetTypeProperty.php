@@ -40,7 +40,7 @@ class AssetTypeProperty extends AbstractType
 
         if ($this->step === 3) {
             $builder->add('owned', 'choice', array(
-                'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
+                'choices' => ['fully' => 'Fully-owned', 'partly' => 'Part-owned'],
                 'expanded' => true,
             ))
                 ->add('ownedPercentage', 'number', [
