@@ -197,8 +197,7 @@
             {% else %}
                 {# display one Off choices comma separated #}
                 {% for sb in odr.recordsPresent(odr.oneOff) %}
-                    {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
-                    {% if not loop.last %}, {% endif %}
+                    {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             {% endif %}
         </td>
