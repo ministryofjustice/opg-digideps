@@ -1,20 +1,18 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% set translationDomain = "user-activate" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'h1Title' | trans }}{% endblock %}
 
-{% block pageNavigation %}
+{% block progressBar %}
         {{ progress_bar_registration(user, 'password') }}
 {% endblock %}
 
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
+{% block helpline %}{% endblock %}
 
-
-{% block pageBody %}
+{% block pageContent %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
