@@ -178,7 +178,7 @@ form:
       label: Investment account purchased
       moreInformations: For each new investment enter the date, a description and the value
     purchase-over-1000:
-      label: Purchases over &pound;1,000
+      label: Purchases over £1,000
       moreInformations: Give us more information
     deputy-expenses:
       label: Deputy expenses

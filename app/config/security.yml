@@ -17,6 +17,9 @@ security:
         login:
             pattern:  ^/login$
             security: false
+
+
+
            
         passwordManaging:
             pattern:  ^/password-managing*
@@ -36,6 +39,10 @@ security:
             
         manageController:
             pattern:  ^/manage/*
+            security: false
+
+        error503:
+            pattern:  ^/error-503
             security: false
 
         secured_area:

@@ -1,3 +1,0 @@
-{% for flashMessage in app.session.flashbag.get('action') %}
-    <p class="flash">{{ flashMessage |trans({}, transDomain)|raw }}</p>
-{% endfor %}

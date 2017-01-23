@@ -9,11 +9,11 @@
     'total':  report.getMoneyInTotal
     }%}
     
-    {#<h3>Money out</h3>#}
-    {#{% include 'AppBundle:Report/Formatted:Accounts/_categories.html.twig' with {#}
-    {#'type': 'out',#}
-    {#'moneyType': 'moneyOut',#}
-    {#'transactions': report.transactionsOut,#}
-    {#'total':  report.getMoneyOutTotal#}
-    {#}%}#}
+    <h3>Money out</h3>
+    {% include 'AppBundle:Report/Formatted:Accounts/_categories.html.twig' with {
+    'type': 'out',
+    'moneyType': 'moneyOut',
+    'transactions': report.transactionsOut,
+    'total':  report.getMoneyOutTotal
+    }%}
 </div>

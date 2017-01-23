@@ -57,6 +57,9 @@ stepPageProperty:
 summaryPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
   pageSectionTitle: Assets
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
   edit: Edit
 
@@ -106,6 +109,7 @@ form:
       label: What is %client%’s share of the property?
     isSubjectToEquityRelease:
       label: Is this property subject to an equity release scheme?
+      hint: This means that %client%'s stake, or equity, in the property has been used to generate a lump sum or income
     value:
       label: What is the value of property?
       hint: This can be an estimate.

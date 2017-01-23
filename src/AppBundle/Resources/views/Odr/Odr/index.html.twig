@@ -14,24 +14,24 @@
 
         {% if odr.submitted %}
 
-            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+            {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {
                 reportActive: reportActive,
                 odr: odr,
             } %}
 
-            {% include 'AppBundle:Odr/Index:_report_history.html.twig' with {
+            {% include 'AppBundle:Odr/Odr:_report_history.html.twig' with {
                 reports: reportsSubmitted,
                 odr: odr,
             } %}
 
         {% else %}
 
-            {% include 'AppBundle:Odr/Index:_odr_row.html.twig' with {
+            {% include 'AppBundle:Odr/Odr:_odr_row.html.twig' with {
                 reports: reportsSubmitted,
                 odrStatus: odrStatus,
             } %}
 
-            {% include 'AppBundle:Odr/Index:_report_row.html.twig' with {
+            {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {
                 reportActive: reportActive,
                 odr: odr,
             } %}

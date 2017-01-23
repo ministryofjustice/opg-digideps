@@ -362,6 +362,7 @@ class UserController extends AbstractController
 
                 return $this->render('AppBundle:User:registration-thankyou.html.twig', [
                     'bodyText' => $bodyText,
+                    'email' => $email
                 ]);
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {

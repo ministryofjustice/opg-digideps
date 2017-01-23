@@ -5,7 +5,7 @@ page:
 links:
   clientDetails:
     label: %client%'s details
-    hint: Edit %client%'s contact details and choose how %client%'s name is displayed.
+    hint: Edit %client%'s contact details.
   userDetails:
     label: Your details
     hint: Edit your contact details.

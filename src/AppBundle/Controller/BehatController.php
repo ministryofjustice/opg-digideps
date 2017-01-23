@@ -160,14 +160,6 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/textarea")
-     */
-    public function textAreaTestPage()
-    {
-        return $this->render('AppBundle:Behat:textarea.html.twig');
-    }
-
-    /**
      * set token_date and registration_token on the user.
      * 
      * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")

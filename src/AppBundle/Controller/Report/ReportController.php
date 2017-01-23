@@ -147,7 +147,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     * @Template("AppBundle:Report/Overview:overview.html.twig")
+     * @Template()
      */
     public function overviewAction($reportId)
     {
