@@ -10,6 +10,8 @@ class Transaction
 {
     /**
      * Keep in sync with API
+     * No need to do a separate call to get the list
+     * Possible refactor would be moving some entities data into a shared library
      *
      * @JMS\Exclude
      */
@@ -135,6 +137,7 @@ class Transaction
      * @JMS\Groups({"transaction"})
      *
      * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-in-amount"})
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "moneyTransaction.form.amount.minMessage", maxMessage = "moneyTransaction.form.amount.maxMessage", groups={"transaction-in-amount"})
      */
     private $amount;
 
