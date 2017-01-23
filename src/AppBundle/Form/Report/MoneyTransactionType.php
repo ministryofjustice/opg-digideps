@@ -114,16 +114,6 @@ class MoneyTransactionType extends AbstractType
             $builder->add('description', 'textarea', [
                 'required' => $this->isDescriptionMandatory(),
             ]);
-//            $builder->add('amount', 'collection', [
-//                'entry_type' => 'number',
-//                'allow_add' => true, //allow new fields added with JS
-//                'entry_options' => [
-//                    'error_bubbling' => false,
-//                    'precision' => 2,
-//                    'grouping' => true,
-//                    'invalid_message' => 'moneyIn.form.amounts.type',
-//                ],
-//            ]);
 
             $builder->add('amount', 'number', [
                 'precision' => 2,
