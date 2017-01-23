@@ -1,10 +1,9 @@
 {# displayed when a non-404 exception is thrown.
 Available variables: status_code, status_text, exception, logger,currentContent #}
 
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% trans_default_domain "error" %}
-{% block bodyClasses %}error-page{% endblock %}
 
 {% block htmlTitle %} {{ message }} {% endblock %}
 
@@ -16,11 +15,7 @@ Available variables: status_code, status_text, exception, logger,currentContent 
         </p>
     </div>
 
-    <header class="page-header group">
-        <div class="hgroup">
-            <h1>{{ message }}</h1>
-        </div>
-    </header>
+    <h1 class="heading-large">{{ message }}</h1>
 
     <p>{{ description }}</p>
 
