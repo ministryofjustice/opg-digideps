@@ -150,15 +150,15 @@ class MoneyTransactionType extends AbstractType
                 $validationGroups = [];
 
                 if ($this->step === 1) {
-                    $validationGroups[] = 'transaction-in-group';
+                    $validationGroups[] = 'transaction-group';
                 }
                 if ($this->step === 2) {
-                    $validationGroups[] = 'transaction-in-category';
+                    $validationGroups[] = 'transaction-category';
                 }
                 if ($this->step === 3) {
-                    $validationGroups[] = 'transaction-in-amount';
+                    $validationGroups[] = 'transaction-amount';
                     if ($this->isDescriptionMandatory()) {
-                        $validationGroups[] = 'transaction-in-description';
+                        $validationGroups[] = 'transaction-description';
                     }
                 }
 
