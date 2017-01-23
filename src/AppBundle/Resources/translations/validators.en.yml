@@ -183,6 +183,17 @@ moneyTransaction:
     description:
       notBlank: Please give us some more information about this amount
 
+expenses:
+    paidForAnything.notBlank: Choose yes or no
+    addAnother.notBlank: Please specify if you want to add another expense
+    singleExpense:
+       notNumeric: Enter the amount of the expense in numbers
+    explanation:
+      notBlank: Please enter a description
+    amount:
+      notBlank: Please specify an amount
+      type: Enter a valid amount
+
 transfer:
     accountFrom:
         notBlank: Please choose the account you transfer money from

@@ -7,8 +7,6 @@
     {% set allowEdit = true %}
 {% endif %}
 
-{% set linkToSubSection = linkToSubSection | default('javascript:alert(\'not implemented\')') %}
-
 <div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
     <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">

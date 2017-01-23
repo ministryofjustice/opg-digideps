@@ -18,6 +18,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $report = m::mock(Report::class, $reportMethods + [
                 'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
                 'getBankAccounts' => [],
+                'getExpenses' => [],
+                'getPaidForAnything' => null,
                 'getMoneyTransfers' => [],
                 'getNoTransfersToAdd' => null,
                 'getAssets' => [],
@@ -202,6 +204,32 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getMoneyOutState());
     }
 
+
+    public function expensesProvider()
+    {
+        $expense = m::mock(Expense::class, [
+            'missingInfo' => false,
+        ]);
+
+        return [
+            [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
+            [['getPaidForAnything' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
+            [['getPaidForAnything' => 'no'], StatusService::STATE_DONE],
+            [['getExpenses' => [$expense], 'getPaidForAnything' => 'yes'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider expensesProvider
+     */
+    public function expenses($mocks, $state)
+    {
+        $object = $this->getOdrMocked($mocks);
+        $this->assertEquals($state, $object->getExpensesState());
+    }
+
+
     public function assetsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
@@ -305,6 +333,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'decisions' => 'not-started',
             'contacts' => 'not-started',
             'visitsCare' => 'not-started',
+            'deputyExpense' => 'not-started',
             //
             'bankAccounts' => 'not-started',
             'moneyIn' => 'not-started',

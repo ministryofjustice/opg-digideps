@@ -1,6 +1,5 @@
 {% macro breadcrumbs(report) %}
     {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
-    {% set isOdrReport = (report | class_name) == 'AppBundle\\Entity\\Odr\\Odr' %}
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
@@ -13,7 +12,7 @@
                 {% endif %}
             </li>
             <li>
-                {% if isOdrReport %}
+                {% if report.type == 'ndr' %}
                     <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">
                         New deputy report overview</a>
 

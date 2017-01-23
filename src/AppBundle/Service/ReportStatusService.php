@@ -223,6 +223,18 @@ class ReportStatusService
         });
     }
 
+    /**
+     * @return string
+     */
+    public function getExpensesState()
+    {
+        if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
     /** @return bool */
     public function isReadyToSubmit()
     {
