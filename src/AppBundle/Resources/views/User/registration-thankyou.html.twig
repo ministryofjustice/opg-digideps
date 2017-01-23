@@ -6,8 +6,7 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% set transOptions = {
     '%email%': email,
-    '%linkStart%': '<a href="' ~ path('login') ~ '" target="_blank">',
-    '%linkEnd%': '</a>',
+    '%link%': path('login')
 } %}
 
 {% block pageContent %}
@@ -17,9 +16,9 @@
     <div class="text">
         
         <p>{{ 'thankyou.pageDescription1' | trans(transOptions) | raw }}</p>
-        <p>{{ 'thankyou.pageDescription2' | trans(transOptions) | raw}}</p>
+        <p>{{ 'thankyou.pageDescription2' | trans(transOptions) | raw }}</p>
         <p>{{ 'thankyou.pageDescription3' | trans(transOptions) | raw }}</p>
-        <p>{{ 'thankyou.pageDescription4' | trans(transOptions) | raw}}</p>
+        <p>{{ 'thankyou.pageDescription4' | trans(transOptions) | raw }}</p>
     </div>
 
 {% endblock %}
