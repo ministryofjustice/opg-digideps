@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {
     '%client%': report.client.firstname,
-    '%startDate%': report.startDate | date("jS F Y"),
-    '%endDate%': report.endDate | date("jS F Y")
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y")
 } %}
 
 {# Page Titles #}

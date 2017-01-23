@@ -107,7 +107,8 @@ form:
     isSubjectToEquityRelease:
       label: Is this property subject to an equity release scheme?
     value:
-      label: What is the value of property? This can be an estimate.
+      label: What is the value of property?
+      hint: This can be an estimate.
     hasMortgage:
       label: Is there a mortgage on the property?
     mortgageOutstandingAmount:

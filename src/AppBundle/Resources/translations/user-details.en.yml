@@ -18,7 +18,7 @@ addressCountry:
     label: Country
     defaultOption: Please select ...
 phoneMain:
-    label: Main phone number
+    label: Phone number
 phoneAlternative:
     label: Alternative phone number
 submit:
@@ -47,7 +47,7 @@ yourDetails:
   editYourDetails: "Edit Your Details"
   edit: "Edit your details"
   address: "Address"
-  mainPhoneNumber: "Main phone number"
+  mainPhoneNumber: "Phone number"
   alternativePhoneNumber: "Alternative phone number"
   emailAddress: "Email address"
 form:
