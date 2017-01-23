@@ -57,6 +57,9 @@ stepPageProperty:
 summaryPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
   pageSectionTitle: Assets
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
   edit: Edit
 
