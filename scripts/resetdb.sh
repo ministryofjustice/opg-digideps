@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+# We need below to create the params file on container start
+run-parts /etc/my_init.d
 
 cd /app
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
