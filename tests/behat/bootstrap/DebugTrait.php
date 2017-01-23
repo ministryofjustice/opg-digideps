@@ -100,14 +100,6 @@ trait DebugTrait
     }
 
     /**
-     * @Given I am on the textarea test page
-     */
-    public function testAreaPage()
-    {
-        $this->visit('/behat/textarea');
-    }
-
-    /**
      * @Then the :elementId element has a height between :minSize px and :maxSize px
      */
     public function theElementHasAHeightBetweenPxAndPx($elementId, $minSize, $maxSize)
