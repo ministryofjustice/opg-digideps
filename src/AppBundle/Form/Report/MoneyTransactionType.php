@@ -119,7 +119,7 @@ class MoneyTransactionType extends AbstractType
                 'precision' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                'invalid_message' => 'moneyIn.form.amount.type',
+                'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
 //            $builder->add('createdAt', 'date', ['widget' => 'text',
