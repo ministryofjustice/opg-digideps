@@ -60,11 +60,13 @@ form:
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
       label: Please tell us more about %client%'s other regular sources of income
+      hint: For example, who pays them and their frequency and amount
       labelSummaryPage: More about %client%'s other regular sources of income
   expectCompensationDamages:
     label: Are you expecting %client% to get any compensation awards or damages?
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
+    hint: For example, what is being compensated for and who will be paying out the award
     labelSummaryPage: More about any damages or compensation paid to %client%
   oneOff:
     label: Which types of one-off payment has %client% received since the court order?
