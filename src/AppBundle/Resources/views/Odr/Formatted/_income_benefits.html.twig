@@ -6,7 +6,7 @@
         {% for st in odr.stateBenefits %}
             <div class=" right-label labelvalue">
                 <div class="checkbox">{{ st.present ? 'X' : '&nbsp;' }}</div>
-                <label>{{ ('stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
+                <label>{{ ('form.stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
                 {% if st.hasMoreDetails and st.moreDetails %}
                     <div class=" textarea">
                         {{ st.moreDetails | nl2br }}
@@ -85,7 +85,7 @@
         {% for st in odr.oneOff %}
             <div class=" right-label labelvalue">
                 <div class="checkbox">{{ st.present ? 'X' : '&nbsp;' }}</div>
-                <label>{{ ('oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
+                <label>{{ ('form.oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</label>
             </div>
         {% endfor %}
     </div>
