@@ -6,22 +6,22 @@ page:
 odr:
   notStarted:
     status: NOT STARTED
-    instructions: You only need to complete this report once.
+    instructions: The new deputy report tells us about %clien%’s circumstances at the time of your court order.
     buttonLabel: Start now
   notFinished:
     status: NOT FINISHED
-    instructions: You only need to complete this report once
+    instructions: The new deputy report tells us about %clien%’s circumstances at the time of your court order.
     buttonLabel: Continue
   readyToSubmit:
     status: READY TO SUBMIT
-    instructions: You only need to complete this report once.
+    instructions: The new deputy report tells us about %clien%’s circumstances at the time of your court order.
     buttonLabel: Continue
 
 report:
   due: "Due: "
   notAvailable:
     status: NOT AVAILABLE
-    instructions: This report will become available once the new deputy report is complete.
+    instructions: The annual deputy report will become available once the new deputy report is complete.
   notStarted:
     status: NOT STARTED
     buttonLabel: Start now
