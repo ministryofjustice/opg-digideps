@@ -18,6 +18,8 @@
 
     <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
 
+    <p class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     <div class="form-section push--bottom">
@@ -27,7 +29,8 @@
                 {{ form_input(debt.amount, 'amount', {
                     'inputPrefix' : '£',
                     'inputClass' : 'form-control__number js-more-info js-format-currency',
-                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname})
                 }) }}
 
                 {% if debt.moreDetails is defined %}
