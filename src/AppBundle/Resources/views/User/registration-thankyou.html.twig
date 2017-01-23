@@ -1,14 +1,20 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
 {% trans_default_domain "register" %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
-{% block pageBody %}
+{% block pageContent %}
 
     <h2 class="heading-medium flush--top">{{ 'thankyou.subheading' | trans }}</h2>
 
-    {{ bodyText |raw }}
-
+    <div class="text">
+        
+        <p>{{ 'thankyou.pageDescription1' | trans }}</p>
+        <p>{{ 'thankyou.pageDescription2' | trans }}</p>
+        <p>{{ 'thankyou.pageDescription3' | trans }}</p>
+        <p>{{ 'thankyou.pageDescription4' | trans }}</p>
+    </div>
 
 {% endblock %}
