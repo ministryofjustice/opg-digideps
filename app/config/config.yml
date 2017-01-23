@@ -41,6 +41,7 @@ twig:
         session_expires_seconds: %session_expire_seconds%
         session_popup_show_after: %session_popup_show_after%
         ga: %ga%
+        feedbackUrl: "http://www.smartsurvey.co.uk/s/GOR7N/"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form:

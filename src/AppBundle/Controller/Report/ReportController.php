@@ -266,7 +266,7 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
      * @Template()
      */
-    public function submitConfirmationAction($reportId)
+    public function submitConfirmationAction(Request $request, $reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
@@ -279,7 +279,6 @@ class ReportController extends AbstractController
         }
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
-        $request = $this->getRequest();
 
         $form->handleRequest($request);
 
