@@ -1,13 +1,8 @@
 {% trans_default_domain translationDomain %}
 
-<p>{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+<p class="text">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
-
-{% block validationSummary %}
-    {{ form_errors_list(form) }}
-{% endblock %}
-
-{{ form_start(form, {attr: {novalidate: 'novalidate',class: 'single-texta-area' }}) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
 {{ form_input(form.furtherInformation, 'form.furtherInformation', { 'labelClass': 'visuallyhidden' }) }}
 

@@ -1,55 +1,42 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% set translationDomain = "odr-submitted" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} report-submission report-overview js-report-assets-input{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans(clientTrans) }}{% endblock %}
 
 {% set clientTrans = {'%client%': odr.client.firstname} %}
 
 {% block pageContent %}
 
-    <div id="pagebody">
-        <div id="pagebody-left-content">
-
-            <h1 class="heading-large">{{ 'page.pageSectionTitle' | trans(clientTrans) }}</h1>
-
-            <div id="header-report-submit" class="hero">
-                <h2 class="heading">
-                    <span class="icon icon-tick-white"></span>
-                    {{ 'reportSubmitted' | trans }}
-                </h2>
-            </div>
-
-            <p class="">{{ 'weHaveSentEmail' | trans }}</p>
-
-            <!-- what happens next -->
-            <h3 class="heading-medium">{{ 'whatHappensNext.title' | trans }}</h3>
-            <div class="text">
-                <p>{{ 'whatHappensNext.body1' | trans }}</p>
-                <p>{{ 'whatHappensNext.body2' | trans }}</p>
-            </div>
-            <p>
-                <a href="{{ path('odr_index') }}" class="button behat-link-return-homepage">{{ 'whatHappensNext.returnButton' | trans }}</a>
-            </p>
-
-            <!-- Give us feedback -->
-            <h3 class="heading-medium">{{ 'giveUsFeedback.title' | trans }}</h3>
-            <div class="text">
-                <p>{{ 'giveUsFeedback.body1' | trans }}</p>
-                <p>{{ 'giveUsFeedback.body2' | trans({
-                        '%linkStart%': '<a href="' ~ feedbackUrl ~ '">',
-                        '%linkEnd%': '</a>'
-                    }) | raw }}</p>
-            </div>
-        </div>
-
-        <div id="pagebody-right-content">
-            <p id="helpline" class="push-half--bottom">Helpline<br>0115 934 2700</p>
-            {% include 'AppBundle:Odr/Odr:_status.html.twig' with {
-            showReviewButton: false
-            } %}
-        </div>
+    <div id="header-report-submit" class="hero">
+        <h2 class="heading">
+            <span class="icon icon-tick-white"></span>
+            {{ 'reportSubmitted' | trans }}
+        </h2>
     </div>
+
+    <p class="">{{ 'weHaveSentEmail' | trans }}</p>
+
+    <!-- what happens next -->
+    <h3 class="heading-medium">{{ 'whatHappensNext.title' | trans }}</h3>
+    <div class="text">
+        <p>{{ 'whatHappensNext.body1' | trans }}</p>
+        <p>{{ 'whatHappensNext.body2' | trans }}</p>
+    </div>
+    <p>
+        <a href="{{ path('odr_index') }}" class="button behat-link-return-homepage">{{ 'whatHappensNext.returnButton' | trans }}</a>
+    </p>
+
+    <!-- Give us feedback -->
+    <h3 class="heading-medium">{{ 'giveUsFeedback.title' | trans }}</h3>
+    <div class="text">
+        <p>{{ 'giveUsFeedback.body1' | trans }}</p>
+        <p>{{ 'giveUsFeedback.body2' | trans({
+                '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y">',
+                '%linkEnd%': '</a>'
+            }) | raw }}</p>
+    </div>
+
 {% endblock %}

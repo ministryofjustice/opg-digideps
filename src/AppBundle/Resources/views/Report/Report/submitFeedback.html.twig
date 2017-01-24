@@ -1,27 +1,17 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
-    {% set translationDomain = "report-submitted" %}
-    {% trans_default_domain translationDomain %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
+{% set translationDomain = "report-submitted" %}
+{% trans_default_domain translationDomain %}
 
-    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'thanks.thankYouForsubmitting' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-    {% block pageNavigation %}
-        {# no navigation bar for declaration #}
-    {% endblock %}
+{% block pageContent %}
 
-    {% block pageBody %}
+        <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
+            {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
+        </a><br>
+        <a href="{{ path('reports', {'cot': report.courtOrderTypeId})}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
 
-        <p class="flash">{{ 'thanks.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
-
-        <div class="link">
-            <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
-                {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
-            </a>
-        </div>
-        <div class="link">
-            <a href="{{ path('reports', {'cot': report.courtOrderTypeId})}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
-        </div>
-    {% endblock %}
-
-{% endembed %}
+{% endblock %}
