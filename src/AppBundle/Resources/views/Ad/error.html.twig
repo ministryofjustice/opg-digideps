@@ -1,14 +1,10 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% block pageTitle %}Administration - Users{% endblock %}
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
 {% block title %}Admin{% endblock %}
 
-{% block validationSummary %}
-{% endblock %}
-
-
-{% block pageBody %}
+{% block pageContent %}
     <h1 class="error heading-medium">
         {{ error }}
     </h1>

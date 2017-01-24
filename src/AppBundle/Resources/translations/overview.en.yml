@@ -5,7 +5,7 @@ pageSectionDescription: "Your report:"
 close: "Close"
 help: "Help"
 submitWhenReady: "You can't submit your report until the report is complete"
-warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
+warningNotDue: "You can't submit your report until %date%"
 reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
@@ -78,6 +78,9 @@ money_out:
 balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""
+    notBalancedWarning: |
+        Your accounts are not balanced.
+        <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
     edit: "Edit"
     start: "Start"
     label:
@@ -106,9 +109,9 @@ actions:
       done: "Finished"
 
 report_add_further_info:
-    subSectionTitle: "Sign and submit"
-    edit: "Start sign and submit"
-    start: "Start sign and submit"
+    subSectionTitle: "Submit report"
+    edit: "Start Submit report"
+    start: "Start Submit report"
 
 additionalInformation:
   subSectionTitle: More information

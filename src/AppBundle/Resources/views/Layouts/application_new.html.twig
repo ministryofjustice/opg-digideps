@@ -87,7 +87,7 @@
     <div class="phase-banner-beta">
         <p>
             <strong class="phase-tag">BETA</strong>
-            <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
+            <span>This is a new service – your <a href="{{ feedbackUrl }}">feedback</a> will help us to improve it.</span>
         </p>
     </div>
 
@@ -111,14 +111,14 @@
 
 
     {% block notification %}
-        {# To style #}
         {% for flashMessage in app.session.flashbag.get('notice') %}
-            <p class="flash version1 heading-large">
-                {{ flashMessage }}
-                <a href="#" class="remove js-remove">X</a>
-            </p>
+            <div class="push--top">
+                {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+                    alertType: 'success',
+                    message: flashMessage
+                } %}
+            </div>
         {% endfor %}
-
     {% endblock %}
 
 

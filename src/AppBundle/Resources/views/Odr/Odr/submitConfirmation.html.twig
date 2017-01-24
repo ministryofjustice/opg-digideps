@@ -39,7 +39,7 @@
             <div class="text">
                 <p>{{ 'giveUsFeedback.body1' | trans }}</p>
                 <p>{{ 'giveUsFeedback.body2' | trans({
-                        '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y">',
+                        '%linkStart%': '<a href="' ~ feedbackUrl ~ '">',
                         '%linkEnd%': '</a>'
                     }) | raw }}</p>
             </div>
@@ -47,7 +47,7 @@
 
         <div id="pagebody-right-content">
             <p id="helpline" class="push-half--bottom">Helpline<br>0115 934 2700</p>
-            {% include 'AppBundle:Odr/Index:_status.html.twig' with {
+            {% include 'AppBundle:Odr/Odr:_status.html.twig' with {
             showReviewButton: false
             } %}
         </div>

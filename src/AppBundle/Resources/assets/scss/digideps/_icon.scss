@@ -2,16 +2,6 @@
 // ICON
 // Reusable icons
 
-.icon__notification {
-    @include icon(icon-notification, 35, 35, 'icons');
-}
-
-.icon__notification_yellow_small {
-    @include icon(icon-notification-yellow-24, 24, 24, 'icons');
-    float: left;
-    margin: 0 5px;
-}
-
 .icon-tick-white {
     @include icon(icon-tick-white, 40, 33, 'icons');
     margin-right: 10px;
@@ -22,6 +12,33 @@
     @include icon(icon-plus, 24, 24, 'icons');
     margin-right: 3px;
     background-size: contain;
+}
+
+.icon-notification {
+    @include icon(icon-notification, 22, 22, 'icons');
+    @include media(mobile) {
+        @include icon(icon-notification, 16, 16);
+        margin-right: 6px;
+        background-size: contain;
+    }
+}
+
+.icon-tick {
+    @include icon(icon-tick, 22, 22, 'icons');
+    @include media(mobile) {
+        @include icon(icon-tick, 16, 16);
+        margin-right: 6px;
+        background-size: contain;
+    }
+}
+
+.icon-cross {
+    @include icon(icon-cross, 22, 22, 'icons');
+    @include media(mobile) {
+        @include icon(icon-cross, 16, 16);
+        margin-right: 6px;
+        background-size: contain;
+    }
 }
 
 //adjusting icon within a link

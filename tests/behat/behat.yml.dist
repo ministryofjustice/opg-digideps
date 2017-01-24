@@ -34,12 +34,6 @@ default:
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
 
-        components:
-            description: Tests related to textareas
-            paths:    [ %paths.base%/features/components ]
-            mink_session: default
-            contexts: [ DigidepsBehat\FeatureContext ]
-                
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:

@@ -15,8 +15,8 @@
         <div class="card-body">
             <p>
                 {% if reportActive %}
-                    {{ reportActive.startDate | date("jS F Y") }} -
-                    {{ reportActive.endDate | date("jS F Y") }}
+                    {{ reportActive.startDate | date("j F Y") }} -
+                    {{ reportActive.endDate | date("j F Y") }}
                 {% endif %}
             </p>
             <p class="text-secondary soft-half--top">

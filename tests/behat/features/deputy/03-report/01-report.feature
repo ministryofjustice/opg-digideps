@@ -72,12 +72,13 @@ Feature: deputy / report / edit and test tabs
         # assert sections
         And I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
-        Then I should see the "edit-debts" link
         Then I should see the "edit-visits_care" link
         Then I should see the "edit-bank_accounts" link
         Then I should see the "edit-money_in" link
         Then I should see the "edit-money_out" link
-        Then I should not see the "edit-money_transfers" link
+        Then I should see the "edit-assets" link
+        Then I should see the "edit-debts" link
         Then I should see the "edit-actions" link
+        Then I should not see the "edit-money_transfers" link
         And I change the report 1 type to "102"
 

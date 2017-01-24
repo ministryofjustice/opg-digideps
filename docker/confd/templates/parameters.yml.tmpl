@@ -19,8 +19,6 @@ parameters:
     ga: {{ getv "/frontend/ga" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     behat_controller_enabled: {{ getv "/frontend/behat/controller/enabled" }}
-    email_mock_address: {{ getv "/frontend/email/mock/address" }}
-    email_mock_path: {{ getv "/frontend/email/mock/path" }}
     email_send:
         from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
         to_email: -

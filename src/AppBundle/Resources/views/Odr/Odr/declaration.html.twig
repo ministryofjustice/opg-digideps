@@ -42,10 +42,10 @@
 
     {{ form_end(form) }}
 
-    <div class="page-section-warning push--top flush--bottom hard--bottom">
-        <span class="icon icon__notification"></span>
-        <p>{{ 'unableToEditAfterSubmission' | trans()  }}</p>
-    </div>
+    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+        alertType: 'notice',
+        message: 'unableToEditAfterSubmission' | trans()
+    } %}
 
     <script type="text/javascript">
         $(document).ready(function() {

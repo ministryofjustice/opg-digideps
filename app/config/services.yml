@@ -126,11 +126,10 @@ services:
     # mail sender accepting those the above-created swift mailer
     mailSender:
         class: AppBundle\Service\Mailer\MailSender
-        arguments: [ @validator, @logger ]
+        arguments: [ @validator, @logger, @snc_redis.default ]
         calls:
             - [ addSwiftMailer, [ "default", @mailer.swiftMailers.default] ]
             - [ addSwiftMailer, [ "secure-smtp" , @mailer.swiftMailers.secure] ]
-            - [ writeToFileEmailMatching, ["%email_mock_address%", "%email_mock_path%"] ]
     mailFactory:
         class: AppBundle\Service\Mailer\MailFactory
         arguments: [ @service_container ]

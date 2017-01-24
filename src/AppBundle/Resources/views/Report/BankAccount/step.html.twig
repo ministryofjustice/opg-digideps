@@ -59,12 +59,12 @@
 
     {% if step == 3 %}
         {{ form_input(form.openingBalance, '', {
-            'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("jS F Y")}, translationDomain),
+            'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'form-control--short js-format-currency'
         } ) }}
         {{ form_input(form.closingBalance, 'form.closingBalance', {
-            'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
+            'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'form-control--short js-format-currency'
         } ) }}
@@ -73,7 +73,7 @@
     {% if step == 4 %}
         {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
             'fieldSetClass' : 'inline',
-            'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("jS F Y")}, translationDomain),
+            'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'legendClass' : 'form-label text'
         }) }}
     {% endif %}
