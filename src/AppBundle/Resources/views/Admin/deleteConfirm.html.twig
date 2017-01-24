@@ -1,14 +1,9 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
-
-{# {% trans_default_domain "admin" %} #}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
 
-{% block validationSummary %}
-{% endblock %}
-
-{% block pageBody %}
+{% block pageContent %}
     <h1 class="form-title heading-medium">Delete user</h1>
     <p>Are you sure that you want to delete the user <span style="font-weight: bolder"> {{user.getFullname()}} </span> ?</p>
 

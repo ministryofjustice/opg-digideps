@@ -114,22 +114,12 @@ class MoneyTransactionType extends AbstractType
             $builder->add('description', 'textarea', [
                 'required' => $this->isDescriptionMandatory(),
             ]);
-//            $builder->add('amount', 'collection', [
-//                'entry_type' => 'number',
-//                'allow_add' => true, //allow new fields added with JS
-//                'entry_options' => [
-//                    'error_bubbling' => false,
-//                    'precision' => 2,
-//                    'grouping' => true,
-//                    'invalid_message' => 'moneyIn.form.amounts.type',
-//                ],
-//            ]);
 
             $builder->add('amount', 'number', [
                 'precision' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                'invalid_message' => 'moneyIn.form.amount.type',
+                'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
 //            $builder->add('createdAt', 'date', ['widget' => 'text',
@@ -160,15 +150,15 @@ class MoneyTransactionType extends AbstractType
                 $validationGroups = [];
 
                 if ($this->step === 1) {
-                    $validationGroups[] = 'transaction-in-group';
+                    $validationGroups[] = 'transaction-group';
                 }
                 if ($this->step === 2) {
-                    $validationGroups[] = 'transaction-in-category';
+                    $validationGroups[] = 'transaction-category';
                 }
                 if ($this->step === 3) {
-                    $validationGroups[] = 'transaction-in-amount';
+                    $validationGroups[] = 'transaction-amount';
                     if ($this->isDescriptionMandatory()) {
-                        $validationGroups[] = 'transaction-in-description';
+                        $validationGroups[] = 'transaction-description';
                     }
                 }
 

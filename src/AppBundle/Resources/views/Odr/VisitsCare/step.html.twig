@@ -117,7 +117,8 @@
                 <div id="plan-move-residence-details-textarea" class="panel panel-border-narrow  js-hidden">
                     {{ form_input(form.planMoveNewResidenceDetails, 'form.planMoveNewResidenceDetails', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': odr.client.firstname }
+                        'labelParameters': { '%client%': odr.client.firstname },
+                        'hintText' : 'form.planMoveNewResidenceDetails.hint' | trans({'%client%': odr.client.firstname}, translationDomain)
                     }) }}
                 </div>
             </div>

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Controller\AbstractController;
 
-class IndexController extends AbstractController
+class OdrController extends AbstractController
 {
     private static $odrGroupsForValidation = [
         'user',

@@ -10,6 +10,8 @@ class Transaction
 {
     /**
      * Keep in sync with API
+     * No need to do a separate call to get the list
+     * Possible refactor would be moving some entities data into a shared library
      *
      * @JMS\Exclude
      */
@@ -112,14 +114,14 @@ class Transaction
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-in-group"})
+     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-group"})
      */
     private $group;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
-     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-in-category"})
+     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-category"})
      */
     private $category;
 
@@ -134,7 +136,8 @@ class Transaction
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
      *
-     * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-in-amount"})
+     * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-amount"})
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "moneyTransaction.form.amount.minMessage", maxMessage = "moneyTransaction.form.amount.maxMessage", groups={"transaction-amount"})
      */
     private $amount;
 
@@ -142,7 +145,7 @@ class Transaction
      * @var string
      * @JMS\Groups({"transaction"})
      *
-     * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-in-description"})
+     * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
      *
      * @JMS\Type("string")
      */

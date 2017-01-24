@@ -1,18 +1,12 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 {% set translationDomain = "error-pages" %}
 {% trans_default_domain translationDomain %}
 
-
 {% block htmlTitle %}{{ 'errors.503.page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} error-page error-page--503{% endblock %}
 {% block pageTitle %}{% trans %}errors.503.page.pageSectionTitle{% endtrans %}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block validationSummary %}
-    {# {{ form_errors_list(form) }} #}
-{% endblock %}
-
-
-{% block pageBody %}
+{% block pageContent %}
 
 	<p>{{ 'errors.503.page.pageSectionDescription' | trans }}</p>
 

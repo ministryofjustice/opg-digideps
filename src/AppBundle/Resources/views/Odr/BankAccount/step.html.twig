@@ -59,7 +59,7 @@
 
     {% if step == 3 %}
         {{ form_input(form.balanceOnCourtOrderDate, '', {
-            'labelText': 'form.balanceOnCourtOrderDate.label' | trans({'%cotDate%': odr.client.courtDate | date("jS F Y")}, translationDomain),
+            'labelText': 'form.balanceOnCourtOrderDate.label' | trans({'%cotDate%': odr.client.courtDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'form-control--short js-format-currency'
         } ) }}

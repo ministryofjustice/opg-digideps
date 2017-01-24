@@ -34,13 +34,16 @@ save:
 
 thankyou:
     subheading: Please check your email
-    body: |
-        <p class="page-section-description">We've sent you a link to <b>{{ email }}</b> that you need to click to activate your deputy service account.</p>
-        <p class="page-section-description">You'll need to use this link within 48 hours, or enter your details again.</p>
-        <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or
-            junk email folder - it may have been mistakenly blocked by your email system.</p>
-        <p class="page-section-description">If you've already activated your account, you can {{ sign_in }}<p>
-
+    pageDescription1: |
+      We've sent you a link to <strong class="bold-small">%email%</strong> that you need to click to activate your deputy service account.
+    pageDescription2: |
+      You'll need to use this link within 48 hours, or enter your details again.
+    pageDescription3: |
+      If you haven't received the email within a few minutes, please check your spam,
+      bulk or junk email folder - it may have been mistakenly blocked by your email system.
+    pageDescription4: |
+      If you've already activated your account, you can <a href="%link%">sign in</a>.
+    
 formErrors:
     # the following is splitted in two lines otherwise the number gets splitted on two lines
     matching: |
