@@ -1,27 +1,74 @@
 htmlTitle: "Deputy report | GOV.UK"
 pageTitle: "Complete the deputy report"
-intro: |
-    This online service helps you as a deputy to tell the Office of the Public Guardian (OPG)
-    about decisions you've made on behalf of the client and who you've consulted with. It also
-    gives OPG official accounts and details of the client's assets.
+intro:
+  lede: |
+    Use this online service to fill in your deputy report and send it to the 
+    Office of the Public Guardian (OPG)
+  para01: You can save the report and then come back to add more information as often as you like.
+  para02: Once you've submitted your report, you can save it to your computer.
+  para03: For the moment, only property and financial affairs deputies can use this service.
 
 iwanttocreate: I want to register for the online deputy service
 createaccount: Create an account now
-
 whatyouneed: What you'll need to sign up
 whatyouneedListItem1: your case number (look for 'OPG reference' on letters from OPG)
 whatyouneedListItem2: your email address
 whatyouneedListItem3: your client's last name
 ialready: I already have a deputy account
-signtoaccess: Sign in to access your existing account
-makesure: "Make sure you've got:"
-makeListItem1: "your financial records (for example bank statements or spreadsheets)"
-makeListItem2: "your record of any decisions you've made for the client"
-makeListItem3: "your record of anyone you've contacted for the client"
-before: Before you begin
-beginsummary: "If you're new to the deputy service there are a few things that you may need to know. The help topics and quick questions below are a good place to start. You don't have to complete the deputy report in one go; you can save your details and come back later on"
-morethanone: More than one deputy?
-wemaystill: We may still need to contact you
-yourpriv: Your privacy
-youandclient: "You' and the 'client'"
+signtoaccess: Sign in to access your existing account.
+
+helpfulToKnow:
+  heading: Helpful to know
+  para01: |
+    It's OPG's responsibility to look after the client's best interests (the client 
+    is the person whose affairs you are looking after). Your deputy reports help us 
+    supervise your deputyship.
+  para02: You can also use your report to raise concerns and ask for support.
+  para03: |
+    We first ask you to complete a new deputy report, which records the client's 
+    circumstances at the time of your court order.
+  para04: |
+    You can then use this service to record your deputy decisions as you go along, 
+    for a report you send OPG at the end of every year of your deputyship.
+
+provideDetails:
+  heading: "You'll need to provide details of:"
+  listItem01: how the client is cared for
+  listItem02: purchases you've made on the client's behalf
+  listItem03: financial records relating to the client (for example bank statements)
+  listItem04: the client's assets and debts
+  listItem05: any big decisions you have made or are planning to make for the client
+  listItem06: friends, family and professionals you've contacted on behalf of the client
+
+hiddenText01:
+  summary: The client has more than one deputy
+  content:
+    para01: |
+      You'll only need to submit one deputy report for each reporting period. This applies 
+      if you make decisions together (usually called 'jointly') or separately and together 
+      (usually called 'jointly and severally').
+
+hiddenText02:
+  summary: What happens after I submit my report?
+  content:
+    para01: |
+      We'll review the report, and may still need to contact you for more information – by 
+      phone, email, in writing or by arranging a visit.
+
+hiddenText03:
+  summary: Health and welfare deputies
+  content:
+    para01: |
+      We are currently building a digital service for health and welfare deputies. In the 
+      meantime, please <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537794/OPG104-Deputy-report-form-health-and-welfare-decisions.pdf" target="_blank">
+      download and print</a> your annual report form.
+
+hiddenText04:
+  summary: Deputy fees remission or exemption
+  content:
+    para01: You pay OPG's fees for supervising your deputyship from the client's funds.
+    para02: |
+      Clients with a lower income may qualify for a <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">
+      remission or exemption</a>.
+
 signin: Sign in
