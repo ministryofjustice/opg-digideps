@@ -29,5 +29,7 @@ class Version101 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->addSql('ALTER TABLE odr_expense RENAME TO expense');
+        $this->addSql('ALTER SEQUENCE odr_expense_id_seq RENAME TO expense_id_seq');
     }
 }
