@@ -14,6 +14,9 @@ Feature: deputy / report / account transactions
     And the step with the following values CANNOT be submitted:
       | account_description |  |       |
       | account_amount      |  | [ERR] |
+    And the step with the following values CANNOT be submitted:
+      | account_description |  | 0   |
+      | account_amount      |  | [ERR] |
     And the step with the following values CAN be submitted:
       | account_description | pension received |
       | account_amount      | 12345.67         |

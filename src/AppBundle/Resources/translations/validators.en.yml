@@ -180,6 +180,8 @@ moneyTransaction:
     amount:
       notBlank: Please specify an amount
       type: Enter a valid amount
+      minMessage: Please input a value of at least £{{ limit }}
+      maxMessage: The amount must be less than £10,000,000,000
     description:
       notBlank: Please give us some more information about this amount
 
