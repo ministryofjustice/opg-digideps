@@ -15,7 +15,7 @@
         {% endif %}
 
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
-        <span class="status {{ state }}">
+        <span class="status flush--bottom {{ state }}">
             {% if state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
                 {{ (subSection ~ '.label.' ~ state) | transchoice(nOfRecords | default(0)) }}
             {% else %}

@@ -6,26 +6,13 @@
 {% block helpline %}{% endblock %}
 
 {% block breadcrumbs %}
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    {# {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
-    } %}
+    } %} #}
 {% endblock %}
 
 {% block pageContent %}
     <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
-
-    <!-- Top Nav -->
-    <div class="grid-row">
-        <h2 class="heading-large">Nav</h2>
-        <i>AppBundle:Components/Navigation:_report-nav.html.twig</i>
-        <div class="column">
-            <div class="example">
-                {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
-                'report': report
-                } %}
-            </div>
-        </div>
-    </div>
 
     <!-- Top Next Prev -->
     <div class="grid-row" id="nextprev">

@@ -1,9 +1,0 @@
-{% set translationDomain = "accounts" %}
-{% trans_default_domain translationDomain %}
-
-<dl class="financial-transactions-balance">
-    <dt class="financial-transactions-balance-label">{{ 'totalBalance' | trans }}</dt>
-    <dd class="financial-transactions-balance-value">
-       £{{ balance | money_format }}
-    </dd>
-</dl>

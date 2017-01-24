@@ -1,25 +1,22 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
-    {% set translationDomain = "report-further-information" %}
-    {% trans_default_domain translationDomain %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-    {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-    {% block contentClass %}{{ parent() }} report-declaration js-report-assets-input{% endblock %}
+{% set translationDomain = "report-further-information" %}
+{% trans_default_domain translationDomain %}
 
-    {% block pageNavigation %}
-        {# no navigation bar for declaration #}
-    {% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-    {% block pageBody %}
+{% block pageContent %}
 
-        {% if action == 'edit' %}
-          {% include 'AppBundle:Report/Report:_furtherInformationEdit.html.twig' %}
-        {% endif %}
+    {% if action == 'edit' %}
+      {% include 'AppBundle:Report/Report:_furtherInformationEdit.html.twig' %}
+    {% endif %}
 
-        {% if action == 'view' %}
-          {% include 'AppBundle:Report/Report:_furtherInformationView.html.twig' %}
-        {% endif %}
+    {% if action == 'view' %}
+      {% include 'AppBundle:Report/Report:_furtherInformationView.html.twig' %}
+    {% endif %}
 
-    {% endblock %}
+{% endblock %}
 
-{% endembed %}
+
