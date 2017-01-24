@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Traits;
 
 use AppBundle\Entity\Odr\Expense;
+use AppBundle\Entity\Odr\Odr;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,7 +39,7 @@ trait OdrExpensesTrait
     /**
      * @param string $paidForAnything
      *
-     * @return OdrExpensesTrait
+     * @return Odr
      */
     public function setPaidForAnything($paidForAnything)
     {
@@ -58,7 +59,7 @@ trait OdrExpensesTrait
     /**
      * @param Expense[]|null $expenses
      *
-     * @return OdrExpensesTrait
+     * @return Odr
      */
     public function setExpenses($expenses)
     {
@@ -70,7 +71,7 @@ trait OdrExpensesTrait
     /**
      * @param Expense $expense
      *
-     * @return OdrExpensesTrait
+     * @return Odr
      */
     public function addExpense(Expense $expense)
     {
