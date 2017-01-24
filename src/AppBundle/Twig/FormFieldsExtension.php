@@ -246,7 +246,8 @@ class FormFieldsExtension extends \Twig_Extension
         if ($legendTextTrans != $translationKey.'.legend') {
             $legendText = $legendTextTrans;
         } else {
-            $legendTextTrans = $this->translator->trans($translationKey.'.label', [], $domain);
+            // the
+            $legendTextTrans = $this->translator->trans($translationKey.'.label', $legendParams, $domain);
             if ($legendTextTrans != $translationKey.'.label') {
                 $legendText = $legendTextTrans;
             } else {
