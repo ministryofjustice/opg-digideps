@@ -18,7 +18,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_known_date(form.mentalAssessmentDate, 'mentalAssessment.form.mentalAssessmentDate', {'showDay': 'false'}) }}
+    {{ form_known_date(form.mentalAssessmentDate, 'mentalAssessment.form.mentalAssessmentDate', {
+        'showDay': 'false',
+        'legendParameters': transOptions,
+    }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 
