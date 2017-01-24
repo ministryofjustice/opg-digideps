@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\Mailer\MailSender;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,41 +37,19 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $mailPath = $this->getBehatMailFilePath();
-
-        if (!file_exists($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath not existing.");
-        }
-
-        if (!is_readable($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath unreadable.");
-        }
-
-        echo file_get_contents($mailPath);
-        die;
-
-        return new Response(file_get_contents($mailPath));
-    }
-
-    private function getBehatMailFilePath()
-    {
-        $this->securityChecks();
-
-        return $this->container->getParameter('email_mock_path');
+        echo $this->get('mailSender')->getMockedEmailsRaw();
+        die; //TODO check if works with response
     }
 
     /**
      * @Route("/behat/{secret}/email-reset")
      * @Method({"GET"})
      */
-    public function resetAction()
+    public function emailResetAction()
     {
         $this->securityChecks();
 
-        $mailPath = $this->getBehatMailFilePath();
-
-        file_put_contents($mailPath, '');
-
+        $this->get('mailSender')->resetMockedEmails();
         return new Response('Email reset successfully');
     }
 
