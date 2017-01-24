@@ -1,6 +1,6 @@
 Feature: deputy expenses
 
-  @odr
+  @deputy
   Scenario: deputy expenses
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-deputy_expenses, start"
