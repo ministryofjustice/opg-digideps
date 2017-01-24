@@ -12,10 +12,14 @@
         <p>{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
     </div>
 
-    <section class="help-item">
-      <h3 class="summary heading-medium">{{ 'moreThanOne' | trans }}</h3>
-      <p class="content text">{{ 'moreThanOneDescription' | trans | raw }}</p>
-    </section>
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ 'moreThanOne' | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <p class="text">{{ 'moreThanOneDescription' | trans | raw }}</p>
+        </div>
+    </details>
 
     {% set formClass = 'registration-form' %}
 
@@ -33,14 +37,4 @@
 
     {{ form_end(form) }}
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.help-item').each(function(index,item) {
-                opg.accordian({
-                    target:item,
-                    open: false
-                });
-            });
-        });
-    </script>
 {% endblock %}

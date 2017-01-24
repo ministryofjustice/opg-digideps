@@ -20,15 +20,24 @@
             <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
         </div>
         <div class="column-half">
-            <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
-            <div id="what-you-need" class="accordian help-item push--ends">
-                <h3 class="summary">{{ 'whatyouneed' |trans }}</h3>
-                <ul class="content list list-bullet">
-                    <li>{{ 'whatyouneedListItem1' | trans }}</li>
-                    <li>{{ 'whatyouneedListItem2' | trans }}</li>
-                    <li>{{ 'whatyouneedListItem3' | trans }}</li>
-                </ul>
-            </div>
+
+            <p>
+                <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+            </p>
+
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'whatyouneed' |trans }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <ul class="list list-bullet">
+                        <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                        <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                        <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                    </ul>
+                </div>
+            </details>
+
         </div>
     </div>
 
@@ -60,46 +69,43 @@
             <li>{{ 'provideDetails.listItem06' |trans }}</li>
         </ul>
 
-        <div class="accordian help-item">
-            <h3 class="summary">{{ 'hiddenText01.summary' |trans }}</h3>
-            <div class="content push-half--top">
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText01.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
                 <p>{{ 'hiddenText01.content.para01' |trans }}</p>
             </div>
-        </div>
+        </details>
 
-        <div class="accordian help-item push-half--top">
-            <h3 class="summary">{{ 'hiddenText02.summary' |trans }}</h3>
-            <div class="content push-half--top">
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText02.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
                 <p>{{ 'hiddenText02.content.para01' |trans }}</p>
             </div>
-        </div>
+        </details>
 
-        <div class="accordian help-item push-half--top">
-            <h3 class="summary">{{ 'hiddenText03.summary' |trans }}</h3>
-            <div class="content push-half--top">
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText03.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
                 <p>{{ 'hiddenText03.content.para01' |trans|raw }}</p>
             </div>
-        </div>
+        </details>
 
-        <div class="accordian help-item push-half--top">
-            <h3 class="summary">{{ 'hiddenText04.summary' |trans }}</h3>
-            <div class="content push-half--top">
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText04.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
                 <p>{{ 'hiddenText04.content.para01' |trans }}</p>
                 <p>{{ 'hiddenText04.content.para02' |trans|raw }}</p>
             </div>
-        </div>
+        </details>
 
     </div>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.accordian').each(function(index,item) {
-                opg.accordian({
-                    target:item,
-                    open: false
-                });
-            });
-        });
-    </script>
 
 {% endblock %}
