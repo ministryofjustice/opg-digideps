@@ -33,8 +33,6 @@ parameters:
     log_level: warning
     log_path: /var/log/app/application.log
     # the following two paramters can be set to null on production
-    email_mock_address: "/^behat-/i"
-    email_mock_path:  "/tmp/dd_behat_last_sent_email.json"
     email_send:
       from_email: no-reply@digideps.dsd.io
       # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
