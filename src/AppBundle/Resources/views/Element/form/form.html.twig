@@ -6,9 +6,9 @@
 {% block helpline %}{% endblock %}
 
 {% block breadcrumbs %}
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    {# {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
-    } %}
+    } %} #}
 {% endblock %}
 
 {% block pageContent %}
@@ -245,7 +245,7 @@
     <div class="grid-row">
         <div class="column">
             <h2 class="heading-large">Save Bar</h2>
-            <i>AppBundle:Components/ButtonBar:_save_bar.html.twig</i>
+            {# <i>AppBundle:Components/ButtonBar:_save_bar.html.twig</i> #}
             <div class="example">
                 <div class="save-bar button-bar">
                     <button type="submit" id="decision_save" name="decision[save]" class="button">Save</button>
