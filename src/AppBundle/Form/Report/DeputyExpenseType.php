@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Odr\Expense;
+use AppBundle\Entity\Report\Expense;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

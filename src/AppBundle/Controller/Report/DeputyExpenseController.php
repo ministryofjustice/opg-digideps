@@ -48,7 +48,7 @@ class DeputyExpenseController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            /* @var $data EntityDir\Odr\Odr */
+            /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
                 case 'yes':
                     return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from'=>'exist']);
@@ -77,24 +77,19 @@ class DeputyExpenseController extends AbstractController
     public function addAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
-        $expense = new EntityDir\Odr\Expense();
+        $expense = new EntityDir\Report\Expense();
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $data->setOdr($report);
+            $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['odr-expense']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expense']);
 
             return $this->redirect($this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]));
         }
-
-//        $backLink = $this->generateUrl('deputy_expenses_exist', ['reportId' => $reportId]);
-//        if ($request->get('from') == 'another') {
-//            $backLink = $this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]);
-//        }
 
         $backLinkRoute = 'deputy_expenses_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
@@ -142,7 +137,7 @@ class DeputyExpenseController extends AbstractController
     public function editAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
-        $expense = $this->getRestClient()->get('report/'.$report->getId().'/expense/' . $expenseId, 'Odr\Expense');
+        $expense = $this->getRestClient()->get('report/'.$report->getId().'/expense/' . $expenseId, 'Report\Expense');
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
         $form->handleRequest($request);
@@ -151,7 +146,7 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/expense/'.$expense->getId(), $data, ['odr-expense']);
+            $this->getRestClient()->put('report/' . $report->getId() . '/expense/'.$expense->getId(), $data, ['expense']);
 
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
 
