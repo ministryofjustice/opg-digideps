@@ -204,6 +204,7 @@ class ReportStatusService
         if (in_array($this->report->getType(), [Report::TYPE_102, Report::TYPE_103])) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
+                'deputyExpense' => $this->getExpensesState(),
                 'moneyIn' => $this->getMoneyInState(),
                 'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),

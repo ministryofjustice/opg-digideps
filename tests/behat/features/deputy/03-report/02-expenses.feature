@@ -2,8 +2,8 @@ Feature: NDR expenses
 
   @odr
   Scenario: NDR expenses
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-deputy_expenses, start"
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-2016, edit-deputy_expenses, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
