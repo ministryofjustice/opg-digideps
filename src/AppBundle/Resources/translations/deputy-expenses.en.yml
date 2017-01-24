@@ -38,7 +38,7 @@ addPage:
   pageSectionTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
-    Use this section to tell us about the money you spent on %client%'s care before your court order.
+    Use this section to tell us about the money you spent on %client%'s care during this reporting period .
     You can add one or more items of expense and come back to complete the section later.
 
 editPage:
