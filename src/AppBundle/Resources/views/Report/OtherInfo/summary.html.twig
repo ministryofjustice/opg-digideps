@@ -42,7 +42,7 @@
 
     {# Return to overview link #}
     <p class="text--right flush--bottom">
-        <a href="{{ path('overview', {'reportId': report.id}) }}" class="bold-small">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
             {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
         </a>
     </p>

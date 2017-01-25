@@ -326,6 +326,11 @@ action:
         notBlank: Choose yes or no
     doYouHaveConcernsDetails:
         notBlank: Please tell us more about any concerns you may have
+    # the following are now in a different section
+    actionMoreInfo:
+      notBlank: Choose yes or no
+    actionMoreInfoDetails:
+      notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
 
 
@@ -487,13 +492,15 @@ odr:
       notBlank: Choose yes or no
     actionGiveGiftsToClientDetails:
       notBlank: Give us more information about any gifts you plan to make on behalf of the client
-    actionMoreInfo:
-      notBlank: Choose yes or no
-    actionMoreInfoDetails:
-      notBlank: Tell us more about any questions or concerns you may have about your deputyship
     actionPropertyMaintenance:
       notBlank: Choose yes or no
     actionPropertySellingRent:
       notBlank: Choose yes or no
     actionPropertyBuy:
       notBlank: Choose yes or no
+    # the following are now in a new section
+    actionMoreInfo:
+      notBlank: Choose yes or no
+    actionMoreInfoDetails:
+      notBlank: Tell us more about any questions or concerns you may have about your deputyship
+
