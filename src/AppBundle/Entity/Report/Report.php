@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Traits as ReportTraits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
@@ -16,6 +17,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
+    use ReportTraits\MoreInfoTrait;
+
     const TYPE_102 = '102';
     const TYPE_103 = '103';
     const TYPE_104 = '104';
