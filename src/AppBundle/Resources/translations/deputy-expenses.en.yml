@@ -50,8 +50,7 @@ summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
   pageSectionDescription: |
-    In this section we ask you to tell us about things you paid for on %client%'s behalf before your
-    court order.
+    In this section, we asked you about your expenses for things you have to do to carry out your role.
   addButton: Add a deputy expense
   edit: Edit
 
