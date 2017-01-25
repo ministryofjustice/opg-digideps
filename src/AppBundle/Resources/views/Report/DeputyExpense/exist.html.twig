@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "deputy-expenses" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+    {{ form_checkbox_group(form.paidForAnything, 'existPage.form.paidForAnything', {
+        'fieldSetClass' : 'inline',
+        'labelParameters': { '%client%': report.client.firstname },
+        'legendClass' : 'form-label-bold text',
+        'formGroupClass': 'flush--bottom'
+    }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

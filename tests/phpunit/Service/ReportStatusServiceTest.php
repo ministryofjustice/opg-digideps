@@ -18,6 +18,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $report = m::mock(Report::class, $reportMethods + [
                 'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
                 'getBankAccounts' => [],
+                'getExpenses' => [],
+                'getPaidForAnything' => null,
                 'getMoneyTransfers' => [],
                 'getNoTransfersToAdd' => null,
                 'getAssets' => [],
@@ -202,6 +204,32 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getMoneyOutState());
     }
 
+
+    public function expensesProvider()
+    {
+        $expense = m::mock(Expense::class, [
+            'missingInfo' => false,
+        ]);
+
+        return [
+            [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
+            [['getPaidForAnything' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
+            [['getPaidForAnything' => 'no'], StatusService::STATE_DONE],
+            [['getExpenses' => [$expense], 'getPaidForAnything' => 'yes'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider expensesProvider
+     */
+    public function expenses($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getExpensesState());
+    }
+
+
     public function assetsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
@@ -305,6 +333,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'decisions' => 'not-started',
             'contacts' => 'not-started',
             'visitsCare' => 'not-started',
+            'deputyExpense' => 'not-started',
             //
             'bankAccounts' => 'not-started',
             'moneyIn' => 'not-started',
@@ -326,6 +355,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
             //
             [array_pop($this->bankAccountProvider())[0], 'accounts'],
+            [array_pop($this->expensesProvider())[0], 'deputyExpense'],
             [array_pop($this->moneyTransferProvider())[0], 'moneyTransfers'],
             [array_pop($this->MoneyInProvider())[0], 'accounts'],
             [array_pop($this->MoneyOutProvider())[0], 'accounts'],
@@ -357,6 +387,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
+                'getExpensesState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyTransferState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyInState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyOutState' => StatusService::STATE_INCOMPLETE,
@@ -368,6 +399,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'visitsCare' => 'incomplete',
                 'actions' => 'incomplete',
                 'bankAccounts' => 'incomplete',
+                'deputyExpense' => 'incomplete',
                 'moneyTransfers' => 'incomplete',
                 'moneyIn' => 'incomplete',
                 'moneyOut' => 'incomplete',
@@ -382,6 +414,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getActionsState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
                 'getBankAccountsState' => StatusService::STATE_DONE,
+                'getExpensesState' => StatusService::STATE_DONE,
                 'getMoneyTransferState' => StatusService::STATE_DONE,
                 'getMoneyInState' => StatusService::STATE_DONE,
                 'getMoneyOutState' => StatusService::STATE_DONE,
@@ -396,6 +429,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
+                'getExpensesState' => StatusService::STATE_INCOMPLETE,
                 //note: getMoneyTransferState not there
                 'getMoneyInState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyOutState' => StatusService::STATE_INCOMPLETE,
@@ -407,6 +441,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'visitsCare' => 'incomplete',
                 'actions' => 'incomplete',
                 'bankAccounts' => 'incomplete',
+                'deputyExpense' => 'incomplete',
                 // note: moneyTransfers not in 103
                 'moneyIn' => 'incomplete',
                 'moneyOut' => 'incomplete',
@@ -421,6 +456,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getActionsState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
                 'getBankAccountsState' => StatusService::STATE_DONE,
+                'getExpensesState' => StatusService::STATE_DONE,
                 'getMoneyInState' => StatusService::STATE_DONE,
                 'getMoneyOutState' => StatusService::STATE_DONE,
                 'getAssetsState' => StatusService::STATE_DONE,

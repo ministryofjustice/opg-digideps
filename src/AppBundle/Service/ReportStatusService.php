@@ -204,6 +204,7 @@ class ReportStatusService
         if (in_array($this->report->getType(), [Report::TYPE_102, Report::TYPE_103])) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
+                'deputyExpense' => $this->getExpensesState(),
                 'moneyIn' => $this->getMoneyInState(),
                 'moneyOut' => $this->getMoneyOutState(),
                 'assets' => $this->getAssetsState(),
@@ -221,6 +222,18 @@ class ReportStatusService
         return array_filter($states, function ($e) {
             return $e != self::STATE_DONE;
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpensesState()
+    {
+        if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
     }
 
     /** @return bool */

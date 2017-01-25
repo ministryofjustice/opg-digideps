@@ -80,10 +80,19 @@
                     {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
                         alertType: 'notice',
                         message: 'balance.notBalancedWarning' | trans({
-                            '%detailsLink%': path('balance', {'reportId': report.id
-                        }) })
+                            '%detailsLink%': path('balance', {'reportId': report.id}) })
                     } %}
                 {% endif %}
+
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'deputy_expenses',
+                    report: report,
+                    state: reportStatus.expensesState,
+                    nOfRecords: report.expenses | length,
+                    linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
+                    description: true
+                } %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,

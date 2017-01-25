@@ -92,11 +92,6 @@ class DeputyExpenseController extends AbstractController
             return $this->redirect($this->generateUrl('odr_deputy_expenses_add_another', ['odrId' => $odrId]));
         }
 
-//        $backLink = $this->generateUrl('odr_deputy_expenses_exist', ['odrId' => $odrId]);
-//        if ($request->get('from') == 'another') {
-//            $backLink = $this->generateUrl('odr_deputy_expenses_add_another', ['odrId' => $odrId]);
-//        }
-
         $backLinkRoute = 'odr_deputy_expenses_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['odrId'=>$odrId]) : '';
 

@@ -1,18 +1,19 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Traits\HasOdrTrait;
+use AppBundle\Entity\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Expense
 {
-    use HasOdrTrait;
+    use HasReportTrait;
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"odr-expense"})
+     * @JMS\Groups({"expense"})
      *
      * @var int
      */
@@ -22,9 +23,9 @@ class Expense
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expense"})
+     * @JMS\Groups({"expense"})
      *
-     * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"odr-deputy-expense"})
+     * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"deputy-expense"})
      */
     private $explanation;
 
@@ -32,11 +33,11 @@ class Expense
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expense"})
+     * @JMS\Groups({"expense"})
      *
-     * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"odr-deputy-expense"})
-     * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"odr-deputy-expense"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"odr-deputy-expense"})
+     * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"deputy-expense"})
+     * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"deputy-expense"})
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"deputy-expense"})
      * @var string
      */
     private $amount;
