@@ -24,7 +24,7 @@ class Expense
      * @JMS\Type("string")
      * @JMS\Groups({"odr-expense"})
      *
-     * @Assert\NotBlank(message="odr.expenses.explanation.notBlank", groups={"odr-deputy-expense"})
+     * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"odr-deputy-expense"})
      */
     private $explanation;
 
@@ -34,9 +34,9 @@ class Expense
      * @JMS\Type("string")
      * @JMS\Groups({"odr-expense"})
      *
-     * @Assert\NotBlank(message="odr.expenses.amount.notBlank", groups={"odr-deputy-expense"})
-     * @Assert\Type(type="numeric", message="odr.expenses.amount.type", groups={"odr-deputy-expense"})
-     *
+     * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"odr-deputy-expense"})
+     * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"odr-deputy-expense"})
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"odr-deputy-expense"})
      * @var string
      */
     private $amount;

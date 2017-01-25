@@ -22,6 +22,9 @@ Feature: NDR expenses
     And the step with the following values CANNOT be submitted:
       | expenses_single_explanation |                | [ERR] |
       | expenses_single_amount      | invalid number | [ERR] |
+    And the step with the following values CANNOT be submitted:
+      | expenses_single_explanation |                | [ERR] |
+      | expenses_single_amount      | 0.0 | [ERR] |
     And the step with the following values CAN be submitted:
       | expenses_single_explanation | taxi from hospital on 3 november |
       | expenses_single_amount      | 35                               |
