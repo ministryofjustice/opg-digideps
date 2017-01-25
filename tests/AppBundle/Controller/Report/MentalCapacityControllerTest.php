@@ -75,7 +75,7 @@ class MentalCapacityControllerTest extends AbstractTestController
             'data' => [
                 'has_capacity_changed' => MentalCapacity::CAPACITY_CHANGED,
                 'has_capacity_changed_details' => 'ccd',
-                'capacity_assessment_date' => '01-01-2017',
+                'mental_assessment_date' => '2015-12-31',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
@@ -85,6 +85,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
+        $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()->format('Y-m-d'));
 
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
@@ -93,7 +94,7 @@ class MentalCapacityControllerTest extends AbstractTestController
             'data' => [
                 'has_capacity_changed' => MentalCapacity::CAPACITY_STAYED_SAME,
                 'has_capacity_changed_details' => 'should no tbe saved',
-                'capacity_assessment_date' => '01-01-2017',
+                'mental_assessment_date' => '2016-01-01',
             ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
@@ -101,5 +102,6 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
+        $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()->format('Y-m-d'));
     }
 }

@@ -53,11 +53,11 @@ class MentalCapacity
 
     /**
      * @var \Date
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"mental-capacity"})
      * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
      */
-    private $mentalAssessmentDate = null;
+    private $mentalAssessmentDate;
 
     /**
      * @param Report $report
