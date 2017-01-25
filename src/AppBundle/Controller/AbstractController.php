@@ -107,7 +107,7 @@ class AbstractController extends Controller
      *
      * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, array $groups = [])
+    protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {

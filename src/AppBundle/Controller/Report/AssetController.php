@@ -30,7 +30,7 @@ class AssetController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAssets()) > 0 || $report->getNoAssetToAdd()) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -46,7 +46,7 @@ class AssetController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
             $report->setNoAssetToAdd(0);
         }
@@ -82,7 +82,7 @@ class AssetController extends AbstractController
      */
     public function typeAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm('asset_title', new EntityDir\Report\AssetOther(), [
         ]);
         $form->handleRequest($request);
@@ -111,7 +111,7 @@ class AssetController extends AbstractController
      */
     public function otherAddAction(Request $request, $reportId, $title)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
         $asset = new Report\AssetOther();
         $asset->setTitle($title);
         $asset->setReport($report);
@@ -140,7 +140,7 @@ class AssetController extends AbstractController
      */
     public function otherEditAction(Request $request, $reportId, $assetId = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
         if ($assetId) {
             $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Report\\Asset');
         } else {
@@ -176,7 +176,7 @@ class AssetController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
 
         $form = $this->createForm(new FormDir\Report\Asset\AssetAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -211,7 +211,7 @@ class AssetController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -331,7 +331,7 @@ class AssetController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAssets()) == 0 && $report->getNoAssetToAdd() === null) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
@@ -348,7 +348,7 @@ class AssetController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $assetId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->hasAssetWithId($assetId)) {
             $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");

@@ -28,7 +28,7 @@ class MoneyOutController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->hasMoneyOut()) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
@@ -52,7 +52,7 @@ class MoneyOutController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -131,7 +131,7 @@ class MoneyOutController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
 
         $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -161,7 +161,7 @@ class MoneyOutController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->hasMoneyOut()) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
@@ -181,7 +181,7 @@ class MoneyOutController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = array_filter($report->gettransactionsOut(), function($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });

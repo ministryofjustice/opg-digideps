@@ -28,7 +28,7 @@ class BalanceController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
