@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Odr\Odr;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-trait OdrIncomeBenefitSingleTrait
+trait IncomeBenefitSingleTrait
 {
     /**
      * @var string
@@ -135,8 +135,6 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $hasMoreDetails
-     *
-     * @return OdrIncomeBenefitSingleTrait
      */
     public function setHasMoreDetails($hasMoreDetails)
     {
@@ -155,8 +153,6 @@ trait OdrIncomeBenefitSingleTrait
 
     /**
      * @param string $moreDetails
-     *
-     * @return OdrIncomeBenefitSingleTrait
      */
     public function setMoreDetails($moreDetails)
     {

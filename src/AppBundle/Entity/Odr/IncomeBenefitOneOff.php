@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\Traits\OdrIncomeBenefitSingleTrait;
+use AppBundle\Entity\Odr\Traits\IncomeBenefitSingleTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class IncomeBenefitOneOff
 {
-    use OdrIncomeBenefitSingleTrait;
+    use IncomeBenefitSingleTrait;
 
     public static $oneOffKeys = [
         'bequest_or_inheritance' => false,

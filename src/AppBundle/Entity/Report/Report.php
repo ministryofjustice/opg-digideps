@@ -4,7 +4,7 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrderType;
-use AppBundle\Entity\Traits\ExpensesTrait;
+use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -18,7 +18,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Report
 {
-    use ExpensesTrait;
+    use ReportTraits\MoreInfoTrait;
+    use ReportTraits\ExpensesTrait;
 
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;

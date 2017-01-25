@@ -1,12 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace AppBundle\Entity\Odr\Traits;
 
-use AppBundle\Entity\Traits\HasOdrTrait;
-use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\Traits\HasOdrTrait;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
-trait OdrActionTrait
+trait ActionTrait
 {
     /**
      * @var string
@@ -56,24 +57,6 @@ trait OdrActionTrait
 
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-more-info"})
-     * @ORM\Column(name="action_more_info", type="string", length=3, nullable=true)
-     */
-    private $actionMoreInfo;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-more-info"})
-     * @ORM\Column(name="action_more_info_details", type="text", nullable=true)
-     */
-    private $actionMoreInfoDetails;
-
-    /**
      * @return string
      */
     public function getActionGiveGiftsToClient()
@@ -83,11 +66,12 @@ trait OdrActionTrait
 
     /**
      * @param string $actionGiveGiftsToClient
-     * @return OdrActionTrait
+     * @return Odr
      */
     public function setActionGiveGiftsToClient($actionGiveGiftsToClient)
     {
         $this->actionGiveGiftsToClient = $actionGiveGiftsToClient;
+
         return $this;
     }
 
@@ -101,11 +85,12 @@ trait OdrActionTrait
 
     /**
      * @param string $actionGiveGiftsToClientDetails
-     * @return OdrActionTrait
+     * @return Odr
      */
     public function setActionGiveGiftsToClientDetails($actionGiveGiftsToClientDetails)
     {
         $this->actionGiveGiftsToClientDetails = $actionGiveGiftsToClientDetails;
+
         return $this;
     }
 
@@ -119,11 +104,12 @@ trait OdrActionTrait
 
     /**
      * @param string $actionPropertyMaintenance
-     * @return OdrActionTrait
+     * @return Odr
      */
     public function setActionPropertyMaintenance($actionPropertyMaintenance)
     {
         $this->actionPropertyMaintenance = $actionPropertyMaintenance;
+
         return $this;
     }
 
@@ -137,11 +123,12 @@ trait OdrActionTrait
 
     /**
      * @param string $actionPropertySellingRent
-     * @return OdrActionTrait
+     * @return Odr
      */
     public function setActionPropertySellingRent($actionPropertySellingRent)
     {
         $this->actionPropertySellingRent = $actionPropertySellingRent;
+
         return $this;
     }
 
@@ -155,47 +142,13 @@ trait OdrActionTrait
 
     /**
      * @param string $actionPropertyBuy
-     * @return OdrActionTrait
+     * @return Odr
      */
     public function setActionPropertyBuy($actionPropertyBuy)
     {
         $this->actionPropertyBuy = $actionPropertyBuy;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getActionMoreInfo()
-    {
-        return $this->actionMoreInfo;
-    }
-
-    /**
-     * @param string $actionMoreInfo
-     * @return OdrActionTrait
-     */
-    public function setActionMoreInfo($actionMoreInfo)
-    {
-        $this->actionMoreInfo = $actionMoreInfo;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getActionMoreInfoDetails()
-    {
-        return $this->actionMoreInfoDetails;
-    }
-
-    /**
-     * @param string $actionMoreInfoDetails
-     * @return OdrActionTrait
-     */
-    public function setActionMoreInfoDetails($actionMoreInfoDetails)
-    {
-        $this->actionMoreInfoDetails = $actionMoreInfoDetails;
-        return $this;
-    }
 }

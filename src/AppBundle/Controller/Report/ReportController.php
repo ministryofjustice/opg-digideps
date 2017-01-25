@@ -232,6 +232,15 @@ class ReportController extends RestController
             $report->setMetadata($data['metadata']);
         }
 
+        if (array_key_exists('action_more_info', $data)) {
+            $report->setActionMoreInfo($data['action_more_info']);
+            if (array_key_exists('action_more_info_details', $data)) {
+                $report->setActionMoreInfoDetails(
+                    $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
+                );
+            }
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
