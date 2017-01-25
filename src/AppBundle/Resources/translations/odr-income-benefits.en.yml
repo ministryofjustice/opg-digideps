@@ -17,6 +17,9 @@ stepPage:
   backLink: Back
 
 summaryPage:
+  pageContent:
+    weAskAbout: |
+      In this section, we ask you about %client%'s income and benefits.
   htmlTitle: "Deputy report - income and benefits | GOV.UK"
   pageSectionTitle: Income and benefits
   supportTitle: ""

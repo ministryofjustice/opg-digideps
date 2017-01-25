@@ -117,7 +117,7 @@ form:
       label: Are there any other charges on the property?
       hint: For example, from the local authority to recover care fees
     isRentedOut:
-      label: Is the property rented out? (partly or fully)
+      label: Is the property rented out (either partly or fully)? 
     rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: (MM/YYYY)
