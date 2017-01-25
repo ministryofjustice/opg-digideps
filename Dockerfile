@@ -1,4 +1,4 @@
-FROM registry.service.opg.digital/opguk/php-fpm:0.1.198
+FROM registry.service.opg.digital/opguk/php-fpm:0.1.198-edit
 
 # adds nodejs pkg repository
 RUN  curl --silent --location https://deb.nodesource.com/setup_4.x | bash -
