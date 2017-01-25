@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity\Odr\Traits;
+namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Odr\Expense;
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Report;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,15 +14,15 @@ trait ExpensesTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"expenses"})
      * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
     private $paidForAnything;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\Expense>")
-     * @JMS\Groups({"odr-expenses"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Expense", mappedBy="odr", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\Expense>")
+     * @JMS\Groups({"expenses"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Expense", mappedBy="report", cascade={"persist"})
      *
      * @var Expense[]
      */
@@ -39,7 +39,7 @@ trait ExpensesTrait
     /**
      * @param string $paidForAnything
      *
-     * @return Odr
+     * @return Report
      */
     public function setPaidForAnything($paidForAnything)
     {
@@ -59,7 +59,7 @@ trait ExpensesTrait
     /**
      * @param Expense[]|null $expenses
      *
-     * @return Odr
+     * @return Report
      */
     public function setExpenses($expenses)
     {
@@ -71,7 +71,7 @@ trait ExpensesTrait
     /**
      * @param Expense $expense
      *
-     * @return Odr
+     * @return Report
      */
     public function addExpense(Expense $expense)
     {

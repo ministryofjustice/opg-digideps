@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Report
 {
     use ReportTraits\MoreInfoTrait;
+    use ReportTraits\ExpensesTrait;
 
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
