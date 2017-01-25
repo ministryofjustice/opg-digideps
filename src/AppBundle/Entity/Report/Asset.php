@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Traits\HasReportTrait;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,12 +14,12 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
+    use HasReportTrait;
+
     /**
      * @JMS\Exclude
      */
     protected $type;
-
-    use HasReportTrait;
 
     /**
      * @param string $type
