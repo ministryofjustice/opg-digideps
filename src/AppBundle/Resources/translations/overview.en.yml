@@ -4,7 +4,7 @@ pageSectionTitle: "The deputy report"
 pageSectionDescription: "Your report:"
 close: "Close"
 help: "Help"
-submitWhenReady: "You can't submit your report until the report is complete"
+submitWhenReady: "You can't submit your report until it's complete"
 warningNotDue: "You can't submit your report until %date%"
 reportingPeriod: "Reporting period"
 edit: "Edit"
@@ -25,14 +25,14 @@ labels:
 heading.decisionsContacts: "Decisions and contacts"
 decisions:
     subSectionTitle: "Decisions"
-    subSectionDescription: "Add the significant decisions you've made for %client%"
+    subSectionDescription: "Tell us about the significant decisions you've made for %client%"
     edit: "Edit"
     start: "Start"
     label:
       done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
 contacts:
     subSectionTitle: "Contacts"
-    subSectionDescription: "Give us the details of people you consulted about %client%"
+    subSectionDescription: "Give us details of the people you consulted about %client%"
     edit: "Edit"
     start: "Start"
     label:
@@ -41,7 +41,7 @@ contacts:
 heading.healthAndWelfare: "Health and welfare"
 visits_care:
     subSectionTitle: "Visits and care"
-    subSectionDescription: "To safeguard %client%'s welfare, we need to know about your involvement in their care"
+    subSectionDescription: "Give us an overview of who is looking after %client%"
     edit: "Edit"
     start: "Start"
     label:
@@ -49,28 +49,28 @@ visits_care:
 heading.propFinance: "Property and finance"
 bank_accounts:
     subSectionTitle: "Accounts"
-    subSectionDescription: "Add %client%'s building society and savings accounts"
+    subSectionDescription: "Add %client%’s bank, building society and savings accounts"
     edit: "Edit"
     start: "Start"
     label:
       done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
 money_transfers:
     subSectionTitle: "Money transfers"
-    subSectionDescription: "Tell us about money transferred between %client%'s accounts"
+    subSectionDescription: "Provide details of money transferred between %client%’s accounts"
     edit: "Edit"
     start: "Start"
     label:
        done: "{0} no transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
 money_in:
     subSectionTitle: "Money in"
-    subSectionDescription: "Tell us about money paid into %client%’s accounts"
+    subSectionDescription: "Enter details of money paid into %client%’s accounts"
     edit: "Edit"
     start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 money_out:
     subSectionTitle: "Money out"
-    subSectionDescription: "Tell us about money you have spent on %client%’s living and welfare costs"
+    subSectionDescription: "Enter details of money you’ve spent on %client%’s living and other costs"
     edit: "Edit"
     start: "Start"
     label:
@@ -87,7 +87,7 @@ balance:
       done: "Finished"
 assets:
     subSectionTitle: "Assets"
-    subSectionDescription: "Tell us about %client%’s assets, including property"
+    subSectionDescription: "Tell us about %client%’s property, investments and other valuables"
     edit: "Edit"
     start: "Start"
     label:
@@ -102,7 +102,7 @@ debts:
 heading.other: "Other"
 actions:
     subSectionTitle: "Actions you plan to take"
-    subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
+    subSectionDescription: "What major decisions will you need to take for %client% in the next year?"
     edit: "Edit"
     start: "Start"
     label:
