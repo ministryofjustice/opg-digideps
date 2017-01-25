@@ -1,7 +1,7 @@
-Feature: NDR any other info
+Feature: any other info
 
-  @odr
-  Scenario: NDR any other info
+  @deputy
+  Scenario: any other info
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-other_info, start"
      # step 1
