@@ -1,6 +1,6 @@
 <div id="form-group-{{ element.vars.id }}" class="form-group form-date {% if not element.vars.valid %}error{% endif %}">
     <fieldset>
-        <legend class="form-label {% if legendClass is defined %} {{legendClass}}{% endif %}">
+        <legend class="form-label text {% if legendClass is defined %} {{legendClass}}{% endif %}">
             {% if legendTextJS %}
                 <span class="legend-none-js">
                     {% if legendTextRaw is defined %}
