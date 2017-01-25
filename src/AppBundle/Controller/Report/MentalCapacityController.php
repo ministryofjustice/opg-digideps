@@ -70,7 +70,7 @@ class MentalCapacityController extends RestController
             $mc->setHasCapacityChangedDetails($data['has_capacity_changed_details']);
         }
 
-        if (array_key_exists('mental_assessment_date', $data) && isset($data['mental_assessment_date'])) {
+        if (array_key_exists('mental_assessment_date', $data)) {
             $mc->setMentalAssessmentDate(new \DateTime($data['mental_assessment_date']));
         }
 
