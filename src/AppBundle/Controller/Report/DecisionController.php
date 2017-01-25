@@ -28,7 +28,7 @@ class DecisionController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $decisionValid = count($report->getDecisions()) > 0 || !empty($report->getReasonForNoDecisions());
         if ($decisionValid || $report->getMentalCapacity()) {
@@ -46,7 +46,7 @@ class DecisionController extends AbstractController
      */
     public function mentalCapacityAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         $mc = $report->getMentalCapacity();
@@ -85,7 +85,7 @@ class DecisionController extends AbstractController
      */
     public function mentalAssessmentAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
         $routeForward = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_exist';
         $routeBack = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_mental_capacity';
@@ -125,7 +125,7 @@ class DecisionController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\DecisionExistType(), $report);
         $form->handleRequest($request);
 
@@ -160,7 +160,7 @@ class DecisionController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new EntityDir\Report\Decision();
         $from = $request->get('from');
 
@@ -192,7 +192,7 @@ class DecisionController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Report\DecisionAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -219,7 +219,7 @@ class DecisionController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $decisionId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = $this->getRestClient()->get('report/decision/'.$decisionId, 'Report\\Decision');
         $decision->setReport($report);
 
@@ -256,7 +256,7 @@ class DecisionController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->getMentalCapacity()) {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }

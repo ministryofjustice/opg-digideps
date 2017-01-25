@@ -24,7 +24,7 @@ class BankAccountController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getBankAccounts())) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
@@ -48,7 +48,7 @@ class BankAccountController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
@@ -151,7 +151,7 @@ class BankAccountController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
 
         $form = $this->createForm(new FormDir\Report\BankAccountAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -181,7 +181,7 @@ class BankAccountController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getBankAccounts()) === 0) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
@@ -201,7 +201,7 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $accountId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

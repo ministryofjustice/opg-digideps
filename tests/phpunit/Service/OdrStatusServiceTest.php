@@ -20,7 +20,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      *
      * @return StatusService
      */
-    private function getOdrMocked(array $odrMethods)
+    private function getStatusServiceWithReportMocked(array $odrMethods)
     {
         $odr = m::mock(Odr::class, $odrMethods + [
                 'getVisitsCare' => [],
@@ -71,7 +71,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function visitsCare($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getVisitsCareState());
     }
 
@@ -96,7 +96,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function expenses($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getExpensesState());
     }
 
@@ -125,7 +125,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function incomeBenefits($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getIncomeBenefitsState());
     }
 
@@ -144,7 +144,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function debts($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getDebtsState());
     }
 
@@ -165,7 +165,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function banks($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getBankAccountsState());
     }
 
@@ -188,7 +188,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function assets($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getAssetsState());
     }
 
@@ -218,7 +218,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function actions($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getActionsState());
     }
 
@@ -237,7 +237,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function otherinfo($mocks, $state)
     {
-        $object = $this->getOdrMocked($mocks);
+        $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getOtherInfoState());
     }
 
@@ -247,7 +247,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsAll()
     {
-        $object = $this->getOdrMocked([]);
+        $object = $this->getStatusServiceWithReportMocked([]);
         $rs = $object->getRemainingSections();
         $this->assertEquals('not-started', $rs['visitsCare']);
         $this->assertEquals('not-started', $rs['expenses']);
@@ -280,7 +280,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getRemainingSectionsPartial($provider, $keyRemoved)
     {
-        $object = $this->getOdrMocked($provider);
+        $object = $this->getStatusServiceWithReportMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
     }
@@ -291,9 +291,9 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function getReadyToSubmit()
     {
-        $this->assertFalse($this->getOdrMocked([])->isReadyToSubmit());
+        $this->assertFalse($this->getStatusServiceWithReportMocked([])->isReadyToSubmit());
 
-        $object = $this->getOdrMocked(
+        $object = $this->getStatusServiceWithReportMocked(
             array_pop($this->visitsCareProvider())[0]
             + array_pop($this->expensesProvider())[0]
             + array_pop($this->incomeBenefitsProvider())[0]

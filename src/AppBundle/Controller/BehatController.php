@@ -69,23 +69,6 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/{secret}/report/{reportId}/set-sumbmitted/{value}")
-     * @Method({"GET"})
-     */
-//    public function reportChangeSubmitted($reportId, $value)
-//    {
-//        $this->securityChecks();
-//
-//        $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
-//
-//        $this->getRestClient()->put('behat/report/'.$reportId, [
-//            'submitted' => $submitted,
-//        ]);
-//
-//        return new Response('done');
-//    }
-
-    /**
      * @Route("/behat/{secret}/report/{reportId}/change-report-end-date/{dateYmd}")
      * @Method({"GET"})
      */

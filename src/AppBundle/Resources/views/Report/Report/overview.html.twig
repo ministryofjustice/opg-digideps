@@ -175,6 +175,15 @@
                 state: reportStatus.actionsState,
                 list: true
             } %}
+            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('other_info', {reportId: report.id}),
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.otherInfoState,
+            } %}
 
             {% if reportStatus.isReadyToSubmit and report.isDue %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {

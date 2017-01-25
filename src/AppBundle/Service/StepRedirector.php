@@ -166,7 +166,7 @@ class StepRedirector
 
     public function getSkipLink()
     {
-        if (!empty($this->fromPage)) {
+        if (!empty($this->fromPage) || $this->totalSteps == 1) {
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {

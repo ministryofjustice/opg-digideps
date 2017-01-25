@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace AppBundle\Entity\Odr\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 use AppBundle\Entity\Odr\Odr;

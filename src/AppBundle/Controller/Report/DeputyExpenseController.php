@@ -25,7 +25,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (count($report->getExpenses()) > 0 || $report->getPaidForAnything() !== null) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
@@ -42,7 +42,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\DeputyExpenseExistType(), $report);
         $form->handleRequest($request);
 
@@ -76,7 +76,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
@@ -109,7 +109,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -136,7 +136,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $expenseId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('report/'.$report->getId().'/expense/' . $expenseId, 'Report\Expense');
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
@@ -170,7 +170,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getExpenses()) === 0 && $report->getPaidForAnything() === null) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
@@ -190,7 +190,7 @@ class DeputyExpenseController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $expenseId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $this->getRestClient()->delete('report/'.$report->getId().'/expense/'.$expenseId);
 

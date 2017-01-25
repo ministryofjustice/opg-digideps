@@ -21,7 +21,7 @@ class DebtController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getHasDebts() != null) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
@@ -37,7 +37,7 @@ class DebtController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\DebtsExistType(), $report);
         $form->handleRequest($request);
 
@@ -71,7 +71,7 @@ class DebtController extends AbstractController
      */
     public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
@@ -106,7 +106,7 @@ class DebtController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getHasDebts() == null) {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }

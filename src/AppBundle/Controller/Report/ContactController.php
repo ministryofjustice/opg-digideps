@@ -27,7 +27,7 @@ class ContactController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (count($report->getContacts()) > 0 || !empty($report->getReasonForNoContacts())) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
@@ -44,7 +44,7 @@ class ContactController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\ContactExistType(), $report);
         $form->handleRequest($request);
 
@@ -79,7 +79,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = new EntityDir\Report\Contact();
 
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
@@ -112,7 +112,7 @@ class ContactController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\Report\ContactAddAnotherType(), $report);
         $form->handleRequest($request);
@@ -139,7 +139,7 @@ class ContactController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $contactId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
         $contact->setReport($report);
 
@@ -175,7 +175,7 @@ class ContactController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         return [
             'report' => $report,

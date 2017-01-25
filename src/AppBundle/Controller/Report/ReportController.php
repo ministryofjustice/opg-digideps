@@ -19,6 +19,7 @@ class ReportController extends AbstractController
         'account',
         'expenses',
         'action',
+        'action-more-info',
         'asset',
         'debt',
         'balance',
@@ -153,7 +154,7 @@ class ReportController extends AbstractController
     public function overviewAction($reportId)
     {
         // get all the groups (needed by ReportStatusService
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
         $reportStatusService = new ReportStatusService($report);
 
         return [
@@ -173,7 +174,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator = $this->get('translator');
@@ -219,7 +220,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator = $this->get('translator');
