@@ -173,6 +173,15 @@ class ReportController extends RestController
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
 
+        if (array_key_exists('paid_for_anything', $data)) {
+            $report->setPaidForAnything($data['paid_for_anything']);
+            if ($report->getPaidForAnything() === 'no') { // remove existing expenses
+                foreach ($report->getExpenses() as $e) {
+                    $this->getEntityManager()->remove($e);
+                }
+            }
+        }
+
         if (array_key_exists('start_date', $data)) {
             $report->setStartDate(new \DateTime($data['start_date']));
         }
@@ -223,7 +232,7 @@ class ReportController extends RestController
             $report->setMetadata($data['metadata']);
         }
 
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
     }

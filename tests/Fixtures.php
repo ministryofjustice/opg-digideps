@@ -247,6 +247,20 @@ class Fixtures
     }
 
     /**
+     * @return EntityDir\Report\Expense
+     */
+    public function createReportExpense($type, EntityDir\Report\Report $report, array $settersMap = [])
+    {
+        $record = new EntityDir\Report\Expense($report);
+        foreach ($settersMap as $k => $v) {
+            $record->$k($v);
+        }
+        $this->em->persist($record);
+
+        return $record;
+    }
+
+    /**
      * @return EntityDir\Report\Decision
      */
     public function createDecision(EntityDir\Report\Report $report, array $settersMap = [])

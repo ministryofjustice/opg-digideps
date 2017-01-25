@@ -1,32 +1,32 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="odr_expense")
+ * @ORM\Table(name="expense")
  */
 class Expense
 {
     /**
      * @var int
      *
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"expenses"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_expense_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="expense_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"expenses"})
      * @ORM\Column(name="explanation", type="text", nullable=false)
      */
     private $explanation;
@@ -35,7 +35,7 @@ class Expense
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"expenses"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
@@ -43,23 +43,23 @@ class Expense
     private $amount;
 
     /**
-     * @var Odr
+     * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="expenses")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="expenses")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
-    private $odr;
+    private $report;
 
     /**
      * Expense constructor.
      *
-     * @param Odr    $odr
+     * @param Report    $report
      * @param string $explanation
      * @param $amount
      */
-    public function __construct(Odr $odr)
+    public function __construct(Report $report)
     {
-        $this->odr = $odr;
+        $this->report = $report;
     }
 
     /**
@@ -120,19 +120,19 @@ class Expense
     }
 
     /**
-     * @return Odr
+     * @return Report
      */
-    public function getOdr()
+    public function getReport()
     {
-        return $this->odr;
+        return $this->report;
     }
 
     /**
-     * @param Odr $odr
+     * @param Report $report
      */
-    public function setOdr($odr)
+    public function setReport($report)
     {
-        $this->odr = $odr;
+        $this->report = $report;
     }
 
 }
