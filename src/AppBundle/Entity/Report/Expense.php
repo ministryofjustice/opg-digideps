@@ -2,8 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Traits\HasOdrTrait;
-use AppBundle\Entity\Traits\HasReportTrait;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
