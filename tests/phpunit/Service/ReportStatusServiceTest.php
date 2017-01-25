@@ -28,6 +28,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getReasonForNoDecisions' => null,
                 'getVisitsCare' => null,
                 'getAction' => null,
+                'getActionMoreInfo' => null,
                 'getMentalCapacity' => null,
                 'hasMoneyIn' => false,
                 'hasMoneyOut' => false,
@@ -274,6 +275,24 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getActionsState());
     }
 
+    public function otherInfoProvider()
+    {
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [['getActionMoreInfo' => 'mr'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider otherInfoProvider
+     */
+    public function otherinfo($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getOtherInfoState());
+    }
+
 
     public function balanceMatchesProvider()
     {
@@ -313,6 +332,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             'debts' => 'not-started',
             //
             'actions' => 'not-started',
+            'otherInfo' => 'not-started',
         ];
         $this->assertEquals($expected, $object->getRemainingSections());
     }
@@ -333,6 +353,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [array_pop($this->debtsProvider())[0], 'debts'],
             //
             [array_pop($this->actionsProvider())[0], 'actions'],
+            [array_pop($this->otherInfoProvider())[0], 'otherInfo'],
         ];
     }
 
@@ -356,6 +377,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
+                'getOtherInfoState' => StatusService::STATE_INCOMPLETE,
                 'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyTransferState' => StatusService::STATE_INCOMPLETE,
                 'getMoneyInState' => StatusService::STATE_INCOMPLETE,
@@ -367,6 +389,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'contacts' => 'incomplete',
                 'visitsCare' => 'incomplete',
                 'actions' => 'incomplete',
+                'otherInfo' => 'incomplete',
                 'bankAccounts' => 'incomplete',
                 'moneyTransfers' => 'incomplete',
                 'moneyIn' => 'incomplete',
@@ -381,6 +404,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getVisitsCareState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
+                'getOtherInfoState' => StatusService::STATE_DONE,
                 'getBankAccountsState' => StatusService::STATE_DONE,
                 'getMoneyTransferState' => StatusService::STATE_DONE,
                 'getMoneyInState' => StatusService::STATE_DONE,
@@ -395,6 +419,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
                 'getActionsState' => StatusService::STATE_INCOMPLETE,
+                'getOtherInfoState' => StatusService::STATE_INCOMPLETE,
                 'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
                 //note: getMoneyTransferState not there
                 'getMoneyInState' => StatusService::STATE_INCOMPLETE,
@@ -406,6 +431,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'contacts' => 'incomplete',
                 'visitsCare' => 'incomplete',
                 'actions' => 'incomplete',
+                'otherInfo' => 'incomplete',
                 'bankAccounts' => 'incomplete',
                 // note: moneyTransfers not in 103
                 'moneyIn' => 'incomplete',
@@ -420,6 +446,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getVisitsCareState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
                 'getActionsState' => StatusService::STATE_DONE,
+                'getOtherInfoState' => StatusService::STATE_DONE,
                 'getBankAccountsState' => StatusService::STATE_DONE,
                 'getMoneyInState' => StatusService::STATE_DONE,
                 'getMoneyOutState' => StatusService::STATE_DONE,

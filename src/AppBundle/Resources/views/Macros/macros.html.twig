@@ -66,6 +66,7 @@
         {'section':'assets', 'link': path('assets', {'reportId': report.id})},
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'otherInfo', 'link': path('other_info', {'odrId': report.id})},
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
@@ -80,6 +81,7 @@
         {'section':'assets', 'link': path('assets', {'reportId': report.id})},
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'otherInfo', 'link': path('other_info', {'odrId': report.id})},
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == 'ndr' %}
@@ -92,7 +94,7 @@
         {'section':'assets','link': path('odr_assets', {'odrId': report.id})},
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
-        {'section':'other_info', 'link': path('odr_other_info', {'odrId': report.id})},
+        {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
         {'section':'reportOverview', 'link': path('odr_overview')},
         ] %}
     {% endif %}

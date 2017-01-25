@@ -2,9 +2,9 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "odr-more-info" %}
+{% set translationDomain = "report-more-info" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname} %}
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
@@ -12,7 +12,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
-{% block breadcrumbs %}{{ macros.breadcrumbs(odr) }}{% endblock %}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
@@ -26,14 +26,14 @@
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Missing questions alerts #}
-    {% if odr.actionMoreInfo is null and comingFromLastStep%}
+    {% if report.actionMoreInfo is null and comingFromLastStep%}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')
         } %}
     {% endif %}
 
-    {% if odr.actionMoreInfo is null and not comingFromLastStep%}
+    {% if report.actionMoreInfo is null and not comingFromLastStep%}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')
@@ -42,16 +42,16 @@
 
     {# Return to overview link #}
     <p class="text--right flush--bottom">
-        <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="bold-small">
+        <a href="{{ path('overview', {'reportId': report.id}) }}" class="bold-small">
             {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
         </a>
     </p>
 
     {# Questions and answers table #}
-    {% include 'AppBundle:Odr/OtherInfo:_answers.html.twig' %}
+    {% include 'AppBundle:Report/OtherInfo:_answers.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(odr, 'otherInfo') }}
+    {{ macros.reportSectionPrevNext(report, 'otherInfo') }}
 
 {% endblock %}
 

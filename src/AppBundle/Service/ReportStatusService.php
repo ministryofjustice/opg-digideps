@@ -169,6 +169,18 @@ class ReportStatusService
         return false;
     }
 
+    /**
+     * @return string
+     */
+    public function getOtherInfoState()
+    {
+        if ($this->report->getActionMoreInfo() === null) {
+            return self::STATE_NOT_STARTED;
+        }
+
+        return self::STATE_DONE;
+    }
+
     /** @return bool */
     private function missingDecisions()
     {
@@ -199,6 +211,7 @@ class ReportStatusService
             'contacts' => $this->getContactsState(),
             'visitsCare' => $this->getVisitsCareState(),
             'actions' => $this->getActionsState(),
+            'otherInfo' => $this->getOtherInfoState(),
         ];
 
         if (in_array($this->report->getType(), [Report::TYPE_102, Report::TYPE_103])) {

@@ -1,10 +1,9 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Report;
 
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -15,52 +14,52 @@ class OtherInfoController extends AbstractController
 {
     private static $jmsGroups = [
         'client-cot',
-        'odr-action-more-info',
+        'action-more-info',
     ];
 
 
     /**
-     * @Route("/odr/{odrId}/any-other-info", name="odr_other_info")
+     * @Route("/report/{reportId}/any-other-info", name="other_info")
      * @Template()
      */
-    public function startAction(Request $request, $odrId)
+    public function startAction(Request $request, $reportId)
     {
-        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->getActionMoreInfo() !== null) {
-            return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getActionMoreInfo() !== null) {
+            return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
         return [
-            'odr' => $odr,
+            'report' => $report,
         ];
     }
 
     /**
-     * @Route("/odr/{odrId}/any-other-info/step/{step}", name="odr_other_info_step")
+     * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
      * @Template()
      */
-    public function stepAction(Request $request, $odrId, $step)
+    public function stepAction(Request $request, $reportId, $step)
     {
         $totalSteps = 1; //only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
+            return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
-        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
         $stepRedirector = $this->get('stepRedirector')
-            ->setRoutes('odr_other_info', 'odr_other_info_step', 'odr_other_info_summary')
+            ->setRoutes('other_info', 'other_info_step', 'other_info_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['odrId' => $odrId]);
+            ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Odr\OtherInfoType(), $odr);
+        $form = $this->createForm(new FormDir\Report\OtherInfoType(), $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('odr/' . $odrId , $data, ['more-info']);
+            $this->getRestClient()->put('report/' . $reportId , $data, ['more-info']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -73,7 +72,7 @@ class OtherInfoController extends AbstractController
         }
 
         return [
-            'odr'       => $odr,
+            'report'       => $report,
             'step'         => $step,
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
@@ -82,21 +81,21 @@ class OtherInfoController extends AbstractController
     }
 
     /**
-     * @Route("/odr/{odrId}/any-other-info/summary", name="odr_other_info_summary")
+     * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
      * @Template()
      */
-    public function summaryAction(Request $request, $odrId)
+    public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        //$this->flagSectionStarted($odr, self::SECTION_ID);
-        if ($odr->getActionMoreInfo() === null && $fromPage != 'skip-step') {
-            return $this->redirectToRoute('odr_other_info', ['odrId' => $odrId]);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        //$this->flagSectionStarted($report, self::SECTION_ID);
+        if ($report->getActionMoreInfo() === null && $fromPage != 'skip-step') {
+            return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'odr'             => $odr,
+            'report'             => $report,
         ];
     }
 }
