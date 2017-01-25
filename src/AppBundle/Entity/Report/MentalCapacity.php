@@ -41,7 +41,7 @@ class MentalCapacity
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"mental-capacity"})
+     * @JMS\Groups({"mental-assessment-date"})
      *
      * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"mental-assessment-date"})
      */

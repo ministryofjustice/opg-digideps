@@ -103,7 +103,7 @@ class DecisionController extends AbstractController
 
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
