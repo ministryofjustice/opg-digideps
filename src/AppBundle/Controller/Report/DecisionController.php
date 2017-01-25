@@ -79,6 +79,7 @@ class DecisionController extends AbstractController
     }
 
     /**
+     * //TODO consider to merge this as a step of mentalCapacity action above
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template()
      */
@@ -102,7 +103,7 @@ class DecisionController extends AbstractController
 
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -256,6 +257,9 @@ class DecisionController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (!$report->getMentalCapacity()) {
+            return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
+        }
 
         return [
             'report' => $report,

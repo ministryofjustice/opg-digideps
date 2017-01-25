@@ -38,11 +38,6 @@ mentalCapacity:
       hint: ""
     hasCapacityChangedDetails:
       label: "Tell us more"
-
-mentalAssessment:
-  htmlTitle: "Deputy report - mental assessment | GOV.UK"
-  pageSectionTitle: "Mental assessment"
-  form:
     mentalAssessmentDate:
       legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
       hint: "(MM/YYYY)"
