@@ -14,7 +14,6 @@ class MentalAssessment extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('mentalAssessmentDate', 'date', ['widget' => 'text',
-            'mapped' => true, // Not in the model
             'input' => 'datetime',
             'format' => 'dd-MM-yyyy',
             'invalid_message' => 'Enter a valid date',

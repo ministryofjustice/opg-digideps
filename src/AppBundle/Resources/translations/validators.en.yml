@@ -138,8 +138,16 @@ decision:
     clientInvolvedDetails:
         notBlank: Tell us if you involved the client
         length: This description must be at least {{ limit }} letters long
-#    no-decision-reason:
-#        notBlank: Enter a reason here
+
+# currently a subsection of decisions
+mentalCapacity:
+    hasCapacityChanged:
+        notBlank: Select one option
+    hasCapacityChangedDetails:
+        notBlank: You must tell us how the client's mental capacity has changed
+    mentalAssessmentDate:
+        notBlank: Please enter the last assessment date
+
 account:
     addAnother.notBlank: Please specify if you want to add another contact
     bank:
@@ -318,16 +326,8 @@ action:
         notBlank: Choose yes or no
     doYouHaveConcernsDetails:
         notBlank: Please tell us more about any concerns you may have
-mentalCapacity:
-    hasCapacityChanged:
-        notBlank: Select one option
-    hasCapacityChangedDetails:
-        notBlank: You must tell us how the client's mental capacity has changed
 
-mentalAssessment:
-  mentalAssessmentDate:
-    notBlank: Please enter the last assessment date
-    invalidMessage: Enter the date in this format:  MM/YYYY
+
 
 feedbackAfterReport:
     satisfactionLevel:

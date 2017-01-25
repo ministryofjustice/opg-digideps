@@ -40,10 +40,10 @@ class MentalCapacity
     private $hasCapacityChangedDetails;
 
     /**
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"mental-capacity"})
      *
-     * @Assert\NotBlank(message="mentalAssessment.mentalAssessmentDate.notBlank", groups={"capacity-assessment"})
+     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"capacity-assessment"})
      */
     private $mentalAssessmentDate = null;
 

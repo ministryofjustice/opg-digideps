@@ -79,6 +79,7 @@ class DecisionController extends AbstractController
     }
 
     /**
+     * //TODO consider to merge this as a step of mentalCapacity action above
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template()
      */
