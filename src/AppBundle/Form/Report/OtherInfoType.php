@@ -10,6 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OtherInfoType extends AbstractType
 {
+    protected $translationDomain = 'report-more-info';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -37,7 +39,7 @@ class OtherInfoType extends AbstractType
 
                 return $validationGroups;
             },
-            'translation_domain' => 'report-more-info',
+            'translation_domain' => $this->translationDomain,
         ]);
     }
 
