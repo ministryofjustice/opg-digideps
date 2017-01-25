@@ -13,9 +13,22 @@
 
 {% block pageContent %}
 
-    <p class="text">
-        {{ 'startPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}
-    </p>
+	<div class="text">
+	    <p>
+	        {{ 'startPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}
+	    </p>
+
+	    <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans({'%client%': odr.client.firstname}, translationDomain) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+            </div>
+        </details>
+		
+	</div>
+
 
     <a href="{{ path('odr_income_benefits_step', { 'odrId': odr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 

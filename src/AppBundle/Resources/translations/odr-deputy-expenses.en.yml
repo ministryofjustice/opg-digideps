@@ -8,7 +8,17 @@ startPage:
     Over the course of your deputyship, you can claim expenses for things you have to do to
     carry out your role, like phone calls, postage and travel costs.
     You claim for these expenses at the end of every year you are a deputy.
-
+  hiddenText01:
+    summary: More about what you can and can't claim for
+    content:
+      para01: |
+        The opening deputy report you are now filling in allows you to claim back money for 
+        expenses which date from before your court order. 
+      para02: |
+        On the anniversary of your court order, you'll submit an annual deputy report. This 
+        will give you the opportunity to claim back money you've spent carrying out your duties as a deputy. 
+      para03: OPG's 'How to be a deputy' (SD3) booklet gives detailed advice on what you can and can't claim for. 
+      para04: You can read, download and print out the guide <a href="#">here</a>. 
   startButton: Start deputy expenses
 
 existPage:

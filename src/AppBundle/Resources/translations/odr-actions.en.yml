@@ -5,7 +5,24 @@ startPage:
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
   pageSectionDescription2: |
-    Your actions might include making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%.
+    Your actions might include making a large gift, maintenance and alterations to %client%'s 
+    home, or buying and selling property for %client%.
+  hiddenText01:
+    summary: Making decisions on the client's behalf 
+    content:
+      para01: |
+        You should refer to your court order for a reminder of what you can and can't do 
+        on behalf of your client. 
+      para02: "When you're making a decision or planning future actions as a deputy, you must:"
+      listItem01: make sure it's in the client's best interests
+      listItem02: consider what they've done in the past
+      listItem03: |
+        apply a high standard of care – this might mean involving other people, for example 
+        getting advice from relatives and professionals like doctors
+      para03: |
+        OPG's 'How to be a deputy' (SD3) booklet gives detailed advice on taking financial 
+        decisions on behalf of someone who lacks mental capacity. 
+      para04: You can read, download and print out the guide <a href="#">here</a>. 
   startButton: Start actions
 
 stepPage:
@@ -17,8 +34,36 @@ stepPage:
       Your court order will say if you can buy gifts or give gifts of money on %client%'s behalf.
     pageSectionDescription2: |
       Gifts must be reasonable – you need to make sure they don’t reduce the level of care %client% can afford.
+    hiddenText01:
+      summary: More guidance on giving gifts on behalf of the client 
+      content:
+        para01: |
+          Gifts you make on behalf of %client% may include a 21st birthday present, charitable 
+          donations, help with university fees or allowing someone to live 'rent-free' at a 
+          house owned by %client%. 
+        para02: |
+          However there are strict limits on gift-giving as a deputy. These rules help to look 
+          after %client%'s best interests. 
+        para03: |
+          OPG's 'Giving gifts for someone else' (OPG2) booklet gives detailed advice on giving 
+          gifts as a deputy. 
+        para04: You can read, download and print out the guide <a href="#">here</a>. 
   property:
     pageSectionTitle: Property
+    selling:
+      hiddenText01:
+        summary: Selling property on behalf of your client 
+        content:
+          para01: |
+            Unless your court order already gives you authority to sell property %client% owns or 
+            has a share in, you need to apply to the Court of Protection for permission. 
+          para02: |
+            It costs £400 to apply – paid from the client's funds – and there may be additional 
+            costs if there's a court hearing. 
+          para03: |
+            You can also to apply to pay less or no fee for an application to the court if the 
+            client has a small estate (low funds). 
+          para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
   backLink: Back
 
 

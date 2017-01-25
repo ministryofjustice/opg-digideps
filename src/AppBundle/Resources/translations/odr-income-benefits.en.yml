@@ -4,6 +4,12 @@ startPage:
   pageSectionDescription: |
     As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
     This includes making sure %client%'s full entitlement of benefits is claimed.
+  hiddenText01:
+    summary: Find out what benefits %client% is entitled to
+    content:
+      para01: |
+        You can use a <a href="https://www.entitledto.co.uk/" target="_blank">benefits calculator</a> 
+        to work out which benefits Sally could be claiming. 
   startButton: Start income and benefits
 
 stepPage:
