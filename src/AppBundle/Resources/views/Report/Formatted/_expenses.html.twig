@@ -1,0 +1,40 @@
+{% if report.paidForAnything %}
+    <div class="section" id="expenses-section">
+        <h2 class="section-heading">Expenses</h2>
+
+        <div class="dont-break">
+            <div class="box">
+                <div class="checkboxes horizontal">
+                    <div class="question">Have you claimed any deputy expenses during this reporting period?</div>
+
+                    <table class="yesno small">
+                        <tr>
+                            <td class="checkbox"
+                                data-checkbox="">{% if report.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">Yes</td>
+                            <td class="checkbox"
+                                data-checkbox="">{% if report.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">No</td>
+                        </tr>
+                    </table>
+                </div>
+                {% if report.paidForAnything == 'yes' %}
+                    <div class="category">
+                        <ul class="transactions">
+                            {% for expense in report.expenses %}
+                                <li class="transaction ">
+                                    <div class="label">{{ expense.explanation }}</div>
+                                    <div class="value">&pound; {{ expense.amount | money_format }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
+

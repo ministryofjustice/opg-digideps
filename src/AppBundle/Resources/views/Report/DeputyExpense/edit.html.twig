@@ -1,0 +1,26 @@
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "deputy-expenses" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% include 'AppBundle:Report/DeputyExpense:_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'form': form
+    } %}
+{% endblock %}

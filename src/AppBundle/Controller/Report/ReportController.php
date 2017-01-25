@@ -17,6 +17,7 @@ class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
         'account',
+        'expenses',
         'action',
         'action-more-info',
         'asset',

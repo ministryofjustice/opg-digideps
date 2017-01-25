@@ -47,6 +47,13 @@ visits_care:
     label:
       done: "Finished"
 heading.propFinance: "Property and finance"
+deputy_expenses:
+    subSectionTitle: "Deputy expenses"
+    subSectionDescription: "Claim for things you paid for on %client%'s behalf"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add %client%'s building society and savings accounts"

@@ -42,10 +42,10 @@ trait ReportTrait
     /**
      * @Given I change the report :reportId submitted to :value
      */
-    public function iChangeTheReportToNotSubmitted($reportId, $value)
-    {
-        $this->visitBehatLink('report/'.$reportId.'/set-sumbmitted/'.$value);
-    }
+//    public function iChangeTheReportToNotSubmitted($reportId, $value)
+//    {
+//        $this->visitBehatLink('report/'.$reportId.'/set-sumbmitted/'.$value);
+//    }
 
     /**
      * @Then the :arg1 asset group should be :arg2

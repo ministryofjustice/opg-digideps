@@ -18,6 +18,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Report
 {
     use ReportTraits\MoreInfoTrait;
+    use ReportTraits\DeputyExpenseTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';

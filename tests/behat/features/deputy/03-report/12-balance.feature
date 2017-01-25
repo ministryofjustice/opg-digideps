@@ -21,8 +21,9 @@ Feature: deputy / report / balance
         And I click on "breadcrumbs-report-overview"
         # assert balance is now good
         Then I should not see the "balance-bad" region
-        And the report should be submittable
-
+        # assert report can be sumbmitted
+        # When I set the report 1 end date to 3 days ago
+        Then the report should be submittable
 
     @deputy
     Scenario: balance explanation

@@ -15,6 +15,7 @@ report:
         submit:
           label: "Ready to submit report"
 
+# TODO normalise names in camelCase, not with_underscores
 prevNextLinks:
   next: Next section
   previous: Previous section
