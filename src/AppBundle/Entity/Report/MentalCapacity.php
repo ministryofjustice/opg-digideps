@@ -57,7 +57,7 @@ class MentalCapacity
      * @JMS\Groups({"mental-capacity"})
      * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
      */
-    private $mentalAssessmentDate = null;
+    private $mentalAssessmentDate;
 
     /**
      * @param Report $report
