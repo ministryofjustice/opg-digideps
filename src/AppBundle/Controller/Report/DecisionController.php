@@ -257,6 +257,9 @@ class DecisionController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        if (!$report->getMentalCapacity()) {
+            return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
+        }
 
         return [
             'report' => $report,
