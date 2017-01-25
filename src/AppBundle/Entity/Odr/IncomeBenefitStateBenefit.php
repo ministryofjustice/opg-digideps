@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\Traits\OdrIncomeBenefitSingleTrait;
+use AppBundle\Entity\Odr\Traits\IncomeBenefitSingleTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class IncomeBenefitStateBenefit
 {
-    use OdrIncomeBenefitSingleTrait;
+    use IncomeBenefitSingleTrait;
 
     public static $stateBenefitsKeys = [
         'contributions_based_allowance' => false,

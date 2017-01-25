@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Traits;
+namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Odr\Expense;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
 
-trait OdrExpensesTrait
+trait ExpensesTrait
 {
     /**
      * @var string

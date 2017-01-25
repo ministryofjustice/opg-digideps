@@ -6,12 +6,12 @@
  * Time: 15:46.
  */
 
-namespace AppBundle\Entity\Traits;
+namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Odr\IncomeBenefitOneOff;
 use AppBundle\Entity\Odr\IncomeBenefitStateBenefit;
 
-trait OdrIncomeBenefitTrait
+trait IncomeBenefitTrait
 {
     /**
      * @var IncomeBenefit[]
