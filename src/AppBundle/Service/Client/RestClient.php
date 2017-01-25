@@ -457,6 +457,7 @@ class RestClient
             'options' => print_r($options, true),
             'responseCode' => $response ? $response->getStatusCode() : null,
             'responseBody' => $response ? print_r(json_decode((string) $response->getBody(), true), true) : $response,
+            'responseRaw' => $response ? (string) $response->getBody() : 'n.a.',
         ];
     }
 
