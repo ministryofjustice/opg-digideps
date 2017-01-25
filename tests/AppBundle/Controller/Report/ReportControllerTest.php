@@ -338,4 +338,31 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(0, $data['debts_total_amount']);
         $this->assertEquals('no', $data['has_debts']);
     }
+
+    public function testActions()
+    {
+        $url = '/report/' . self::$report1->getId();
+
+        // PUT
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'action_more_info' => 'yes',
+                'action_more_info_details' => 'md2',
+            ],
+        ]);
+
+        // GET and assert
+        $q = http_build_query(['groups' => [
+            'action-more-info',
+        ]]);
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertEquals('yes', $data['action_more_info']);
+        $this->assertEquals('md2', $data['action_more_info_details']);
+    }
 }
