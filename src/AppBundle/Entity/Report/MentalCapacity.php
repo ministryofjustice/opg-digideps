@@ -43,9 +43,9 @@ class MentalCapacity
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"mental-capacity"})
      *
-     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"capacity-assessment"})
+     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"mental-assessment-date"})
      */
-    private $mentalAssessmentDate = null;
+    private $mentalAssessmentDate;
 
     public function getId()
     {

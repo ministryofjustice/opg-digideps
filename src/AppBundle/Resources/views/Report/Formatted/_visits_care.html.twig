@@ -76,6 +76,7 @@
         </div>
     </div>
 
+    {% if visitsCare.doesClientHaveACarePlan %}
     <div class="dont-break">
         <h3 class="fieldset-outer-title">Care plan</h3>
         <div class="box" id="care-plan-subsection">
@@ -94,5 +95,6 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
 
 </div>

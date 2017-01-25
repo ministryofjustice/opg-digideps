@@ -36,7 +36,7 @@ class MentalAssessment extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'validation_groups' => ['capacity-assessment']
+            'validation_groups' => ['mental-assessment-date']
         ]);
     }
 
