@@ -1,168 +1,182 @@
-{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
 {% set translationDomain = "odr-overview" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}page-report-content report-overview odr-overview{% endblock %}
+{% block pageTitle %}{{ client.fullname }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
+{% endblock %}
 
 {% block pageContent %}
-<div id="pagebody">
-    <div id="pagebody-left-content">
 
-        <h1 class="heading-xlarge">
-            <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
-            {{ client.fullname }}
-        </h1>
+    {% if odrStatus.isReadyToSubmit %}
+        <div id="header-report-submit" class="hero">
+            <h2 class="heading">{{ 'odrReady' | trans }}</h2>
+            <div class="message"><a class="button-grey submit-link behat-link-odr-submit" href="{{ path('odr_review') }}">{{ 'signAndSubmit' | trans() }}</a></div>
+        </div>
+    {% endif %}
 
-        {% if odrStatus.isReadyToSubmit %}
-            <div id="header-report-submit" class="hero">
-                <h2 class="heading">{{ 'odrReady' | trans }}</h2>
-                <div class="message"><a class="button-grey submit-link behat-link-odr-submit" href="{{ path('odr_review') }}">{{ 'signAndSubmit' | trans() }}</a></div>
-            </div>
-        {% endif %}
+    {% set showReviewButton = showReviewButton is defined ? showReviewButton : true %}
 
-        <div id="report-period-due">
-            <div id="report-due" class="labelvalue">
-                <div class="label">{{ 'dueDate' | trans() }}:</div>
-                <div class="value">{{ odr.getDueDate() | date("j M Y") }}</div>
-            </div>
+    <div class="grid-row">
+        <div class="column-one-half">
+            <ul>
+                {% if odr.getSubmitted %}
+                    <li>
+                        Submitted:
+                        <span class="bold-small">{{ odr.submitDate | date("j F Y") }}</span>
+
+ 
+                        <p class="flush--bottom">
+                            <a href="{{ path('odr_pdf') }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
+                            <a href="{{ path('odr_review') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
+                        </p>
+                    </li>
+                {% else %}
+                    <li>{{ 'dueDate' | trans() }}:
+                        <span class="bold-small">{{ odr.getDueDate() | date("j M Y") }}</span>
+                    </li>
+                    <li>Report status:
+                        <span class="bold-small">{{ ('status.' ~ odrStatus.status) | trans() }}</span>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
 
-        {#
-        http://hzaiwi.axshare.com/#g=1&p=odr_report_overview_-_not_started_-_first_time_use
-        #}
+        <div class="column-one-half">
+            {% if showReviewButton %}
+                <a class="button right" href="{{ path('odr_review') }}">Review report</a>
+            {% endif %}
+        </div>
+    </div>
 
-        <ul id="overview-sections" class="overview-sections">
+    <ul id="overview-sections" class="overview-sections">
 
-            <li id="visits-and-actions" class="overview-section">
-                <h2 class="heading">Health and Welfare</h2>
-                {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'visits_care',
-                linkToSubSection: path('odr_visits_care', {odrId: odr.id}),
-                odr: odr,
-                info: true,
-                description: true,
-                state: odrStatus.visitsCareState,
-                } %}
-            </li>
-
-
-            <li id="finances-and-assets" class="overview-section">
-            <h2 class="heading">Property and finance</h2>
+        <li id="visits-and-actions" class="overview-section">
+            <h2 class="heading">Health and Welfare</h2>
             {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'deputy_expenses',
+            subSection: 'visits_care',
+            linkToSubSection: path('odr_visits_care', {odrId: odr.id}),
             odr: odr,
-            state: odrStatus.expensesState,
-            nOfRecords: odr.expenses | length,
-            linkToSubSection: path('odr_deputy_expenses', {odrId: odr.id}),
-            description: true
+            info: true,
+            description: true,
+            state: odrStatus.visitsCareState,
+            } %}
+        </li>
+
+
+        <li id="finances-and-assets" class="overview-section">
+        <h2 class="heading">Property and finance</h2>
+        {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'deputy_expenses',
+        odr: odr,
+        state: odrStatus.expensesState,
+        nOfRecords: odr.expenses | length,
+        linkToSubSection: path('odr_deputy_expenses', {odrId: odr.id}),
+        description: true
+        } %}
+        {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'income_benefits',
+        odr: odr,
+        state: odrStatus.incomeBenefitsState,
+        linkToSubSection: path('odr_income_benefits', {odrId: odr.id}),
+        description: true
+        } %}
+        {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'bank_accounts',
+        odr: odr,
+        state: odrStatus.bankAccountsState,
+        nOfRecords: odr.bankAccounts | length,
+        linkToSubSection: path('odr_bank_accounts', {odrId: odr.id}),
+        description: true
+        } %}
+        {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'assets',
+        odr: odr,
+        state: odrStatus.assetsState,
+        nOfRecords: odr.assets | length,
+        linkToSubSection: path('odr_assets', {odrId: odr.id}),
+        description: true
+        } %}
+        {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'debts',
+        odr: odr,
+        description: false,
+        state: odrStatus.getDebtsState,
+        nOfRecords: odr.debtsWithValidAmount | length,
+        linkToSubSection: path('odr_debts', {odrId: odr.id}),
+        description: true
+        } %}
+        {#{% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {#}
+        {#transDomain: translationDomain,#}
+        {#subSection: 'finances',#}
+        {#odr: odr,#}
+        {#description: false,#}
+        {#state: odrStatus.getFinanceState,#}
+        {#linkToSubSection: path('odr-expenses', {odrId: odr.id}),#}
+        {#} %}#}
+        </li>
+
+        <li id="visits-and-actions" class="overview-section">
+            <h2 class="heading">Other</h2>
+            {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'actions',
+            linkToSubSection: path('odr_actions', {odrId: odr.id}),
+            odr: odr,
+            info: true,
+            description: true,
+            state: odrStatus.actionsState,
             } %}
             {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
-            subSection: 'income_benefits',
+            subSection: 'other_info',
+            linkToSubSection: path('odr_other_info', {odrId: odr.id}),
             odr: odr,
-            state: odrStatus.incomeBenefitsState,
-            linkToSubSection: path('odr_income_benefits', {odrId: odr.id}),
-            description: true
+            info: true,
+            description: true,
+            state: odrStatus.otherInfoState,
             } %}
-            {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
+        </li>
+
+        <li id="report-submit-section" class="overview-section">
+            <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+            {% set sectionParams = {
             transDomain: translationDomain,
-            subSection: 'bank_accounts',
+            subSection: 'odr_add_further_info',
             odr: odr,
-            state: odrStatus.bankAccountsState,
-            nOfRecords: odr.bankAccounts | length,
-            linkToSubSection: path('odr_bank_accounts', {odrId: odr.id}),
-            description: true
-            } %}
-            {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            odr: odr,
-            state: odrStatus.assetsState,
-            nOfRecords: odr.assets | length,
-            linkToSubSection: path('odr_assets', {odrId: odr.id}),
-            description: true
-            } %}
-            {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'debts',
-            odr: odr,
+            linkToSubSection: path('odr_declaration'),
             description: false,
-            state: odrStatus.getDebtsState,
-            nOfRecords: odr.debtsWithValidAmount | length,
-            linkToSubSection: path('odr_debts', {odrId: odr.id}),
-            description: true
+            state: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
+            editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',
             } %}
-            {#{% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {#}
-            {#transDomain: translationDomain,#}
-            {#subSection: 'finances',#}
-            {#odr: odr,#}
-            {#description: false,#}
-            {#state: odrStatus.getFinanceState,#}
-            {#linkToSubSection: path('odr-expenses', {odrId: odr.id}),#}
-            {#} %}#}
-            </li>
+            {% if odrStatus.isReadyToSubmit  %}
+                {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
+                editLinkClass: 'button',
+                }) %}
+            {%  else %}
+                {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
+                disableedit: true ,
+                }) %}
+            {%  endif %}
+        </li>
 
-            <li id="visits-and-actions" class="overview-section">
-                <h2 class="heading">Other</h2>
-                {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'actions',
-                linkToSubSection: path('odr_actions', {odrId: odr.id}),
-                odr: odr,
-                info: true,
-                description: true,
-                state: odrStatus.actionsState,
-                } %}
-                {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'other_info',
-                linkToSubSection: path('odr_other_info', {odrId: odr.id}),
-                odr: odr,
-                info: true,
-                description: true,
-                state: odrStatus.otherInfoState,
-                } %}
-            </li>
+    </ul>
 
-            <li id="report-submit-section" class="overview-section">
-                <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
-                {% set sectionParams = {
-                transDomain: translationDomain,
-                subSection: 'odr_add_further_info',
-                odr: odr,
-                linkToSubSection: path('odr_declaration'),
-                description: false,
-                state: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
-                editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',
-                } %}
-                {% if odrStatus.isReadyToSubmit  %}
-                    {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
-                    editLinkClass: 'button',
-                    }) %}
-                {%  else %}
-                    {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
-                    disableedit: true ,
-                    }) %}
-                {%  endif %}
-            </li>
+    {% if not odrStatus.isReadyToSubmit  %}
+        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+            alertType: 'notice',
+            message: 'cantSubmitUntilComplete' | trans()
+        } %}
+    {% endif %}
 
-        </ul>
-
-        {% if not odrStatus.isReadyToSubmit  %}
-            {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-                alertType: 'notice',
-                message: 'cantSubmitUntilComplete' | trans()
-            } %}
-        {% endif %}
-
-    </div>
-    <div id="pagebody-right-content">
-        {%include 'AppBundle:Components:_helpline.html.twig' %}
-        {%include 'AppBundle:Odr/Odr:_status.html.twig' with { odr: odr } %}
-    </div>
-</div>
 {% endblock %}

@@ -21,17 +21,21 @@
         <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>
     </ul>
 
-    <div class="accordian help-item push--ends">
-        <h3 class="summary">{{ 'startPage.whyweneedthisSummary' | trans }}</h3>
-        <div class="content text">
+    <details>
+        <summary>
+            <span class="summary">{{ 'startPage.whyweneedthisSummary' | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
             <p>{{ 'startPage.whyweneedthisPara1' | trans(transOptions) }}</p>
             <p>{{ 'startPage.whyweneedthisPara2' | trans(transOptions) }}</p>
         </div>
-    </div>
+    </details>
 
-    <div class="accordian help-item push--ends">
-        <h3 class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</h3>
-        <div class="content text">
+    <details>
+        <summary>
+            <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
             <p>{{ 'startPage.whatisdecisionPara1' | trans(transOptions) }}</p>
             <p>{{ 'startPage.whatisdecisionPara2' | trans(transOptions) }}</p>
             <ul class="list list-bullet">
@@ -44,22 +48,11 @@
                 <li>{{ 'startPage.whatisdecisionListItem7' | trans(transOptions) }}</li>
             </ul>
         </div>
-    </div>
+    </details>
 
     <p class="text">{{ 'startPage.description2' | trans }}</p>
 
     <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
        class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.accordian').each(function(index,item) {
-                opg.accordian({
-                    target:item,
-                    open: false
-                });
-            });
-        });
-    </script>
 
 {% endblock %}

@@ -1,3 +1,6 @@
+/* globals jQuery */
+var opg = opg || {};
+
 /*jshint browser: true */
 (function () {
     "use strict";

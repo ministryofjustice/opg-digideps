@@ -16,7 +16,7 @@
         <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
     {% endif %}
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
-    <span class="status {{ state }}">
+    <span class="status flush--bottom {{ state }}">
         {% if state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
             {{ (subSection ~ '.label.' ~ state) | transchoice(nOfRecords | default(0)) }}
         {% else %}
