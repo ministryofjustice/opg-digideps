@@ -208,6 +208,7 @@ class Report
     private $submitted;
 
     /**
+     * @deprecated
      * @JMS\Type("boolean")
      * @JMS\Groups({"reviewed"})
      * @Assert\True(message="report.submissionExceptions.reviewedAndChecked", groups={"reviewedAndChecked"})
@@ -225,6 +226,7 @@ class Report
     private $furtherInformation;
 
     /**
+     * @deprecated remove from view as well if not used
      * @JMS\Type("boolean")
      *
      * @var bool
