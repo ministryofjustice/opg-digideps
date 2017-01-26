@@ -110,7 +110,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @param array                  $data
+     * @param array                       $data
      * @param EntityDir\Report\VisitsCare $visitsCare
      *
      * @return \AppBundle\Entity\Report\Report $report

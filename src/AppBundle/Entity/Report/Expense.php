@@ -53,7 +53,7 @@ class Expense
     /**
      * Expense constructor.
      *
-     * @param Report    $report
+     * @param Report $report
      * @param string $explanation
      * @param $amount
      */

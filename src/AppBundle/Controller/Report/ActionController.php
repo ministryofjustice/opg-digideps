@@ -55,7 +55,7 @@ class ActionController extends RestController
     }
 
     /**
-     * @param array            $data
+     * @param array                   $data
      * @param EntityDir\Report\Action $action
      *
      * @return \AppBundle\Entity\Report\Report $report

@@ -38,5 +38,8 @@ return PhpCsFixer\Config::create()
         'phpdoc_separation' => true,
         'phpdoc_single_line_var_spacing' => true,
         'single_quote' => true,
+        'phpdoc_align' => true,
+        'phpdoc_annotation_without_dot' => true,
+        'phpdoc_indent' => true,
     ])
     ->setFinder($finder);

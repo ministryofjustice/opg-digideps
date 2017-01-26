@@ -49,7 +49,7 @@ class Report
 
     /**
      * @var string
-     * see TYPE_ class constants
+     *             see TYPE_ class constants
      *
      * @JMS\Groups({"report"})
      * @JMS\Type("string")

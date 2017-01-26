@@ -55,7 +55,7 @@ class MentalCapacityController extends RestController
     }
 
     /**
-     * @param array                    $data
+     * @param array                           $data
      * @param EntityDir\Report\MentalCapacity $mc
      *
      * @return \AppBundle\Entity\Report\Report $report

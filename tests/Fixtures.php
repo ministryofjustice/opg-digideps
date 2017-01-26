@@ -62,7 +62,7 @@ class Fixtures
 
     /**
      * @param EntityDir\Client $client
-     * @param array $settersMap
+     * @param array            $settersMap
      *
      * @return EntityDir\Odr\Odr
      */
@@ -184,7 +184,7 @@ class Fixtures
 
     /**
      * @param EntityDir\Odr\Odr $odr
-     * @param array $settersMap
+     * @param array             $settersMap
      *
      * @return EntityDir\Odr\VisitsCare
      */
