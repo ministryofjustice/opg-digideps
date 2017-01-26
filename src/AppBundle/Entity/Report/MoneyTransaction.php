@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-class Transaction
+class MoneyTransaction
 {
     /**
      * Keep in sync with API
@@ -16,7 +16,7 @@ class Transaction
      * @JMS\Exclude
      */
     public static $categories = [
-        // id | hasMoreDetails | order | category | in/out
+        // category | hasMoreDetails | order | group | type (in/out)
 
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],

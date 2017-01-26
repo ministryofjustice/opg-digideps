@@ -57,7 +57,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
-        $this->report->setTransactionsIn([$transaction1, $transaction2]);
+        $this->report->setMoneyTransactionsIn([$transaction1, $transaction2]);
 
         $this->assertEquals(true, $this->report->hasMoneyIn());
     }
@@ -65,14 +65,14 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function hasMoneyInWhenThereIsNoMoneyIn()
     {
-        $this->report->setTransactionsIn([]);
+        $this->report->setMoneyTransactionsIn([]);
         $this->assertEquals(false, $this->report->hasMoneyIn());
 
         $transaction1 = m::mock(MoneyTransfer::class)
             ->shouldIgnoreMissing(true)
             ->getMock();
 
-        $this->report->setTransactionsIn([$transaction1]);
+        $this->report->setMoneyTransactionsIn([$transaction1]);
 
         $this->assertEquals(true, $this->report->hasMoneyIn());
     }

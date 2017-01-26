@@ -15,7 +15,7 @@
     </div>
 </div>
 
-{% for groupId, groupData in report.groupByGroup(report.transactionsIn) %}
+{% for groupId, groupData in report.groupMoneyTransactionsByGroup(report.moneyTransactionsIn) %}
 
 <h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
