@@ -51,7 +51,7 @@ class Gift
     private $report;
 
     /**
-     * Expense constructor.
+     * Gift constructor.
      *
      * @param Report    $report
      * @param string $explanation
@@ -90,7 +90,7 @@ class Gift
     /**
      * @param mixed $explanation
      *
-     * @return Expense
+     * @return Gift
      */
     public function setExplanation($explanation)
     {
@@ -110,7 +110,7 @@ class Gift
     /**
      * @param string $amount
      *
-     * @return Expense
+     * @return Gift
      */
     public function setAmount($amount)
     {
