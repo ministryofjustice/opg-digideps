@@ -66,7 +66,7 @@ class StatsControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $deputy = array_filter($data, function($user){
+        $deputy = array_filter($data, function ($user) {
             return $user['email'] == 'deputy@example.org';
         });
         $deputy = array_shift($deputy);

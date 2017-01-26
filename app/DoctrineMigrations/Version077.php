@@ -23,7 +23,6 @@ class Version077 extends AbstractMigration
         $this->addSql('ALTER TABLE debt ADD CONSTRAINT FK_DBBF0A834BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
 
         $this->addSql('ALTER TABLE report ADD has_debts VARCHAR(5) DEFAULT NULL');
-
     }
 
     /**

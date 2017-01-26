@@ -48,7 +48,6 @@ class ReportController extends RestController
             } else {
                 $report->setType(Report::TYPE_102);
             }
-
         }
         // disabled in the UX atm, but implemented for clarity
         if ($reportData['court_order_type_id'] == Report::HEALTH_WELFARE) {

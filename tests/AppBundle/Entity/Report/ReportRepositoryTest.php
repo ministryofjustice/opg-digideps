@@ -29,7 +29,6 @@ class ReportRepositoryTest extends WebTestCase
         $em->clear();
 
         self::$repo = self::$fixtures->getRepo('Report\Report'); /** @var self::$repo ReportRepository */
-
     }
 
     /**

@@ -76,7 +76,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
         // in
         $this->assertCount(2, $data['money_transactions_in']);
-        $this->assertArrayHasKey('id',  $data['money_transactions_in'][0]);
+        $this->assertArrayHasKey('id', $data['money_transactions_in'][0]);
         $this->assertEquals('dividends', $data['money_transactions_in'][0]['category']);
         $this->assertEquals('123.45', $data['money_transactions_in'][0]['amount']);
         $this->assertArrayHasKey('id', $data['money_transactions_in'][1]);
@@ -146,5 +146,4 @@ class MoneyTransactionControllerTest extends AbstractTestController
         $this->assertEquals('d-changed', $t->getDescription());
         $this->assertEquals('dividends', $t->getCategory());
     }
-
 }

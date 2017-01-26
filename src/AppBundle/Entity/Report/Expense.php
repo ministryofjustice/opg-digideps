@@ -134,5 +134,4 @@ class Expense
     {
         $this->report = $report;
     }
-
 }

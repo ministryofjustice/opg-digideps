@@ -262,7 +262,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
         $this->assertEquals('md', $data['metadata']);
-
     }
 
     public function testDebts()

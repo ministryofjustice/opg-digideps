@@ -134,5 +134,4 @@ class Gift
     {
         $this->report = $report;
     }
-
 }

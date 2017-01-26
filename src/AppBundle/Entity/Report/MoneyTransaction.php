@@ -279,5 +279,4 @@ class MoneyTransaction
 
         return null;
     }
-
 }

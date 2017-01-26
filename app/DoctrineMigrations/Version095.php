@@ -16,7 +16,6 @@ class Version095 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
     }
 
     /**
@@ -25,7 +24,5 @@ class Version095 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-
     }
 }

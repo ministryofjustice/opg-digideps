@@ -258,7 +258,7 @@ class Report
 
     /**
      * @deprecated
-     * 
+     *
      * @var bool
      * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
@@ -979,7 +979,7 @@ class Report
      */
     public function getMoneyTransactionsIn()
     {
-        return $this->moneyTransactions->filter(function($t) {
+        return $this->moneyTransactions->filter(function ($t) {
             return $t->getType() == 'in';
         });
     }
@@ -994,7 +994,7 @@ class Report
      */
     public function getMoneyTransactionsOut()
     {
-        return $this->moneyTransactions->filter(function($t) {
+        return $this->moneyTransactions->filter(function ($t) {
             return $t->getType() == 'out';
         });
     }

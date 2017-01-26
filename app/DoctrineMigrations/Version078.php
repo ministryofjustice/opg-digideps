@@ -24,7 +24,7 @@ class Version078 extends AbstractMigration implements ContainerAwareInterface
      */
     public function up(Schema $schema)
     {
-        ini_set('memory_limit','1024M');
+        ini_set('memory_limit', '1024M');
 
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');

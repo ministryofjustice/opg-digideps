@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\AppBundle\Entity;
+
 use AppBundle\Entity\Client;
 
 /**

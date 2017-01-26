@@ -136,6 +136,4 @@ class ReportRepository extends EntityRepository
 
         return $oldReport->getType();
     }
-
-
 }

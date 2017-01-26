@@ -65,5 +65,4 @@ trait MoreInfoTrait
 
         return $this;
     }
-
 }
