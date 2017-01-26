@@ -199,10 +199,6 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
         }
 
-        if (array_key_exists('reviewed', $data)) {
-            $report->setReviewed((boolean) $data['reviewed']);
-        }
-
         if (array_key_exists('report_seen', $data)) {
             $report->setReportSeen((boolean) $data['report_seen']);
         }

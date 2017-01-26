@@ -251,15 +251,6 @@ class Report
      */
     private $submitted;
 
-    /**
-     * @deprecated
-     *
-     * @var bool
-     * @JMS\Groups({"report"})
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="reviewed", type="boolean", nullable=true)
-     */
-    private $reviewed;
 
     /**
      * @deprecated
@@ -495,24 +486,6 @@ class Report
     public function getSubmitted()
     {
         return $this->submitted;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getReviewed()
-    {
-        return $this->reviewed;
-    }
-
-    /**
-     * @param bool $reviewed
-     */
-    public function setReviewed($reviewed)
-    {
-        $this->reviewed = $reviewed;
-
-        return $this;
     }
 
     /**
