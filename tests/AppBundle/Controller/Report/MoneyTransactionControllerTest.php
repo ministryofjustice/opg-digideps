@@ -9,12 +9,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $report1;
-    private static $account1;
     private static $deputy2;
     private static $report2;
-    private static $account2;
-    private static $account3;
-    private static $transfer1;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -79,18 +75,18 @@ class MoneyTransactionControllerTest extends AbstractTestController
         ])['data'];
 
         // in
-        $this->assertCount(2, $data['transactions_in']);
-        $this->assertArrayHasKey('id',  $data['transactions_in'][0]);
-        $this->assertEquals('dividends', $data['transactions_in'][0]['category']);
-        $this->assertEquals('123.45', $data['transactions_in'][0]['amount']);
-        $this->assertArrayHasKey('id', $data['transactions_in'][1]);
-        $this->assertEquals('dividends', $data['transactions_in'][1]['category']);
-        $this->assertEquals('789.12', $data['transactions_in'][1]['amount']);
+        $this->assertCount(2, $data['money_transactions_in']);
+        $this->assertArrayHasKey('id',  $data['money_transactions_in'][0]);
+        $this->assertEquals('dividends', $data['money_transactions_in'][0]['category']);
+        $this->assertEquals('123.45', $data['money_transactions_in'][0]['amount']);
+        $this->assertArrayHasKey('id', $data['money_transactions_in'][1]);
+        $this->assertEquals('dividends', $data['money_transactions_in'][1]['category']);
+        $this->assertEquals('789.12', $data['money_transactions_in'][1]['amount']);
         // out
-        $this->assertCount(1, $data['transactions_out']);
-        $this->assertArrayHasKey('id', $data['transactions_out'][2]);
-        $this->assertEquals('loans', $data['transactions_out'][2]['category']);
-        $this->assertEquals('5000.59', $data['transactions_out'][2]['amount']);
+        $this->assertCount(1, $data['money_transactions_out']);
+        $this->assertArrayHasKey('id', $data['money_transactions_out'][2]);
+        $this->assertEquals('loans', $data['money_transactions_out'][2]['category']);
+        $this->assertEquals('5000.59', $data['money_transactions_out'][2]['amount']);
     }
 
     public function testAddEditTransaction()

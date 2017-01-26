@@ -245,13 +245,6 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'start_date' => '2015-01-29',
                 'end_date' => '2015-12-29',
-//                'transactions_in' => [
-//                    ['id' => 'dividends', 'amounts' => [1200.10, 400], 'more_details' => ''],
-//                    ['id' => 'salary-or-wages', 'amounts' => [760]],
-//                ],
-//                'transactions_out' => [
-//                    ['id' => 'accommodation-other', 'amounts' => [24.50], 'more_details' => 'extra service charge'],
-//                ],
                 'balance_mismatch_explanation' => 'bme',
                 'metadata' => 'md',
             ],
