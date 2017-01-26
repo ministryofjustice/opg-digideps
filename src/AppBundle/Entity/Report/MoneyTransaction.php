@@ -12,12 +12,18 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyTransaction
 {
     /**
-     * Keep in sync with client
+     * Static list of possible money transaction categories
+     *
+     * hasMoreDetails, order are not used any longer,
+     *  but are left here for simplicity on future refactors / changes
+     *
+     * 'category' identifies the group and type
+     * getGroup() and getType() use this array
      *
      * @JMS\Exclude
      */
     public static $categories = [
-        // id | hasMoreDetails | order | category | in/out
+        // category | hasMoreDetails | order | group | type (in/out)
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
@@ -90,7 +96,6 @@ class MoneyTransaction
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
         ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
         ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],
-
     ];
 
     /**
@@ -125,7 +130,7 @@ class MoneyTransaction
 
     /**
      * @var array
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
@@ -234,7 +239,7 @@ class MoneyTransaction
     }
 
     /**
-     * Get the type (in/out) based on the category
+     * Get the group based on the category
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("group")
@@ -244,7 +249,7 @@ class MoneyTransaction
      */
     public function getGroup()
     {
-        foreach (self::$categories as $cat){
+        foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($this->getCategory() == $categoryId) {
                 return $groupId;
@@ -265,7 +270,7 @@ class MoneyTransaction
      */
     public function getType()
     {
-        foreach (self::$categories as $cat){
+        foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($this->getCategory() == $categoryId) {
                 return $type;
