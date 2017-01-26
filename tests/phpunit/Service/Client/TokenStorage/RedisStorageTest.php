@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service\Client\TokenStorage;
 
-use Predis\Client as PredisClient;
 use Mockery as m;
+use Predis\Client as PredisClient;
 
 class RedisStorageTest extends \PHPUnit_Framework_TestCase
 {

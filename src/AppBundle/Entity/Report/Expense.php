@@ -37,6 +37,7 @@ class Expense
      * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"deputy-expense"})
      * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"deputy-expense"})
      * @Assert\Range(min=0.01, max=10000000, minMessage = "expenses.amount.minMessage", maxMessage = "expenses.amount.maxMessage", groups={"deputy-expense"})
+     *
      * @var string
      */
     private $amount;
@@ -56,7 +57,6 @@ class Expense
     {
         $this->id = $id;
     }
-
 
     /**
      * @return mixed

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Odr;
 
-use AppBundle\Entity\Account;
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +17,7 @@ class ActionType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -3,12 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use AppBundle\Entity\User;
 use MockeryStub as m;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class RedirectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -68,7 +68,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
     public function testgetFirstPageAfterLogin($grantedRole, $userMocks, $expectedRouteAndParams)
     {
         $this->markTestIncomplete('fix when specs are 100% defined');
-        
+
         $this->security->shouldIgnoreMissing();
         $this->security->shouldReceive('isGranted')->with($grantedRole)->andReturn(true);
         foreach ($userMocks as $k => $v) {

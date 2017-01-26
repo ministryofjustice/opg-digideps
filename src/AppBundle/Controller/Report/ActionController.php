@@ -8,9 +8,9 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\SectionValidator\ActionsValidator;
 use AppBundle\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
@@ -63,7 +63,7 @@ class ActionController extends AbstractController
             /* @var $data EntityDir\Report\Action */
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/' . $reportId . '/action', $data);
+            $this->getRestClient()->put('report/'.$reportId.'/action', $data);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

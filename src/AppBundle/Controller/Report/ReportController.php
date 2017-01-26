@@ -177,7 +177,7 @@ class ReportController extends AbstractController
         /** @var \AppBundle\Entity\Report $report */
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -223,7 +223,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -273,7 +273,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -307,7 +307,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status

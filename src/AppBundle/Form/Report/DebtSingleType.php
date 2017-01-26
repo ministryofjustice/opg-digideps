@@ -2,13 +2,13 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Debt;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use AppBundle\Entity\Report\Debt;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DebtSingleType extends AbstractType
 {

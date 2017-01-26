@@ -3,11 +3,11 @@
 namespace AppBundle\EventListener;
 
 //use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use AppBundle\Service\Redirector;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
  * Login listener.

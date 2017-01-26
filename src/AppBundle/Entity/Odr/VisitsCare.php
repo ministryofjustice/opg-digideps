@@ -3,8 +3,8 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Odr\Traits\HasOdrTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class VisitsCare
 {

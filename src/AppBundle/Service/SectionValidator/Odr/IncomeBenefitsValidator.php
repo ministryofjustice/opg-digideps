@@ -21,6 +21,7 @@ class IncomeBenefitsValidator
 
     /**
      * @param $question
+     *
      * @return bool
      */
     public function missing($question)

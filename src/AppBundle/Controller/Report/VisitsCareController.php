@@ -6,10 +6,10 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\SectionValidator\VisitsCareValidator;
 use AppBundle\Service\StepRedirector;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
@@ -33,7 +33,6 @@ class VisitsCareController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
@@ -69,7 +68,7 @@ class VisitsCareController extends AbstractController
             if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
+                $this->getRestClient()->put('report/visits-care/'.$visitsCare->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary') {

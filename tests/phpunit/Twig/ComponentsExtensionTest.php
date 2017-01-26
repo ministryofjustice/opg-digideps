@@ -190,7 +190,6 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('need to mock environemnt to test');
     }
 
-
     /**
      * @test
      */

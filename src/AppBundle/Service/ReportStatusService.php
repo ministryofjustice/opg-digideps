@@ -33,7 +33,6 @@ class ReportStatusService
         }
     }
 
-
     /** @return string */
     public function getContactsState()
     {

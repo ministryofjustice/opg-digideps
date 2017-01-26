@@ -16,7 +16,6 @@ class ContactController extends AbstractController
         'contact',
     ];
 
-
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
      * @Template()
@@ -53,9 +52,9 @@ class ContactController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
+                    $this->get('rest_client')->put('report/'.$reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach ($report->getContacts() as $contact) {
-                        $this->getRestClient()->delete("/report/contact/".$contact->getId());
+                        $this->getRestClient()->delete('/report/contact/'.$contact->getId());
                     }
                     return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
             }
@@ -95,7 +94,7 @@ class ContactController extends AbstractController
             return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'contacts_' . $request->get('from');
+        $backLinkRoute = 'contacts_'.$request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
         return [
@@ -104,7 +103,6 @@ class ContactController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
@@ -132,7 +130,6 @@ class ContactController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
      * @Template()
@@ -140,7 +137,7 @@ class ContactController extends AbstractController
     public function editAction(Request $request, $reportId, $contactId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
+        $contact = $this->getRestClient()->get('report/contact/'.$contactId, 'Report\\Contact');
         $contact->setReport($report);
 
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
@@ -163,7 +160,6 @@ class ContactController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
      * @Template()
@@ -180,7 +176,6 @@ class ContactController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")

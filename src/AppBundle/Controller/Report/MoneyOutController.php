@@ -8,9 +8,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,8 +17,6 @@ class MoneyOutController extends AbstractController
     private static $jmsGroups = [
         'transactionsOut',
     ];
-
-
 
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
@@ -188,7 +184,7 @@ class MoneyOutController extends AbstractController
         if (!$transaction) {
             throw new \RuntimeException('Transaction not found');
         }
-        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/' . $transactionId);
+        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/'.$transactionId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

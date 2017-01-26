@@ -5,8 +5,6 @@ namespace AppBundle\Entity\Report\Traits;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 trait AssetTrait
 {
@@ -23,7 +21,6 @@ trait AssetTrait
      * @var float
      */
     private $assetsTotalValue;
-
 
     /**
      * @param array $assets
@@ -54,7 +51,6 @@ trait AssetTrait
     {
         return $this->assetsTotalValue;
     }
-
 
     /**
      * Used in the list view
@@ -98,7 +94,6 @@ trait AssetTrait
 
         return $ret;
     }
-
 
     /**
      * @param int $id

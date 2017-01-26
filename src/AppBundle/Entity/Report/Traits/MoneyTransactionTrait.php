@@ -2,9 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Gift;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait MoneyTransactionTrait
 {
@@ -41,6 +39,7 @@ trait MoneyTransactionTrait
 
     /**
      * //TODO improve this
+     *
      * @return Transaction[]
      */
 //    public function getValidTransactions($moneyTransactions)
@@ -124,6 +123,7 @@ trait MoneyTransactionTrait
 
     /**
      * Group money transactions by Group
+     *
      * @param Transaction[] $moneyTransactions
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]

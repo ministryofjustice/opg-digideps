@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait AgreeTrait
 {

@@ -2,21 +2,20 @@
 
 namespace AppBundle\Resources\views\Report;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Account;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Decision;
 use AppBundle\Entity\Report\MoneyTransfer;
-use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Report\Report as Report;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DomCrawler\Crawler;
+use AppBundle\Entity\User;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
 
 class FormattedTest extends WebTestCase
 {
@@ -206,6 +205,7 @@ class FormattedTest extends WebTestCase
         $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-list'));
         $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-list'));
     }
+
     public function testMoneyTransfers()
     {
         $this->assertContains('12,345.00', $this->html($this->crawler, '#money-transfers-table'));

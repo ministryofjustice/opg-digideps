@@ -34,7 +34,6 @@ trait DebtsTrait
      */
     private $debtsTotalAmount;
 
-
     /**
      * Get debts total value.
      *
@@ -50,9 +49,9 @@ trait DebtsTrait
         return $ret;
     }
 
-
     /**
      * @param $debtId
+     *
      * @return Debt|null
      */
     public function getDebtById($debtId)
@@ -120,7 +119,6 @@ trait DebtsTrait
         return $this;
     }
 
-
     /**
      * @param ExecutionContextInterface $context
      */
@@ -130,7 +128,6 @@ trait DebtsTrait
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }
-
 
     /**
      * @return Debt[]

@@ -26,7 +26,7 @@ class ActionType extends AbstractType
      */
     public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
         $this->translator = $translator;
         $this->clientFirstName = $clientFirstName;
     }

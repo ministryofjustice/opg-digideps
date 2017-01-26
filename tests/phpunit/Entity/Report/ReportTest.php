@@ -6,10 +6,10 @@ use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  Report $report */
+    /** @var Report $report */
     private $report;
 
-    /** @var  Account $account */
+    /** @var Account $account */
     private $account;
 
     protected function setUp()
@@ -41,8 +41,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $actual);
     }
-
-
 
     /** @test */
     public function hasMoneyInWhenThereIsMoneyIn()

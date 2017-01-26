@@ -7,8 +7,8 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends AbstractController
 {
@@ -53,7 +53,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('odr_assets_type', ['odrId' => $odrId,]);
                 case 1: //no
-                    $this->get('rest_client')->put('odr/' . $odrId, $odr, ['noAssetsToAdd']);
+                    $this->get('rest_client')->put('odr/'.$odrId, $odr, ['noAssetsToAdd']);
                     return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
             }
         }
@@ -162,7 +162,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/odr/{odrId}/assets/add_another", name="odr_assets_add_another")
      * @Template()
@@ -188,7 +187,6 @@ class AssetController extends AbstractController
             'odr' => $odr,
         ];
     }
-
 
     /**
      * @Route("/odr/{odrId}/assets/property/step{step}/{assetId}", name="odr_assets_property_step", requirements={"step":"\d+"})
@@ -309,7 +307,6 @@ class AssetController extends AbstractController
             'skipLink' => null,
         ];
     }
-
 
     /**
      * @Route("/odr/{odrId}/assets/summary", name="odr_assets_summary")

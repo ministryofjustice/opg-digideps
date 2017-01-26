@@ -13,6 +13,7 @@ class ActionsValidator
 
     /**
      * VisitsCareValidator constructor.
+     *
      * @param VisitsCare $action
      */
     public function __construct(Action $action)
@@ -22,6 +23,7 @@ class ActionsValidator
 
     /**
      * @param $question
+     *
      * @return bool
      */
     public function missing($question)

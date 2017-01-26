@@ -6,12 +6,12 @@ use Mockery as m;
 
 class OdrTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var  Odr $report */
+    /** @var Odr $report */
     private $odr;
 
     protected function setUp()
     {
-        $this->odr = new Odr;
+        $this->odr = new Odr();
         $this->incomeTicked = new IncomeBenefit('t1', true);
         $this->incomeUnticked = new IncomeBenefit('t2', false);
     }
@@ -32,7 +32,7 @@ class OdrTest extends \PHPUnit_Framework_TestCase
 
     public function testgetStateBenefitOther()
     {
-        $odr = new Odr;
+        $odr = new Odr();
 
         $odr->setStateBenefits([]);
         $this->assertNull($odr->getStateBenefitOther());

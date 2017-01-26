@@ -57,6 +57,7 @@ class StepRedirector
 
     /**
      * StepRedirector constructor.
+     *
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
@@ -65,11 +66,11 @@ class StepRedirector
         $this->stepUrlAdditionalParams = [];
     }
 
-
     /**
      * @param $step1BackLink
      * @param $routeStep
      * @param $routeSummary
+     *
      * @return $this
      */
     public function setRoutes($step1BackLink, $routeStep, $routeSummary)
@@ -81,9 +82,9 @@ class StepRedirector
         return $this;
     }
 
-
     /**
      * @param mixed $this ->fromPage
+     *
      * @return StepRedirector
      */
     public function setFromPage($fromPage)
@@ -92,14 +93,14 @@ class StepRedirector
         return $this;
     }
 
-
     /**
      * @param mixed $currentStep
+     *
      * @return StepRedirector
      */
     public function setCurrentStep($currentStep)
     {
-        $this->currentStep = (int)$currentStep;
+        $this->currentStep = (int) $currentStep;
         return $this;
     }
 
@@ -108,12 +109,13 @@ class StepRedirector
      */
     public function setTotalSteps($totalSteps)
     {
-        $this->totalSteps = (int)$totalSteps;
+        $this->totalSteps = (int) $totalSteps;
         return $this;
     }
 
     /**
      * @param array $routeBaseParams
+     *
      * @return StepRedirector
      */
     public function setRouteBaseParams(array $routeBaseParams)
@@ -122,9 +124,9 @@ class StepRedirector
         return $this;
     }
 
-
     /**
      * @param mixed $stepUrlAdditionalParams
+     *
      * @return StepRedirector
      */
     public function setStepUrlAdditionalParams(array $stepUrlAdditionalParams)
@@ -132,7 +134,6 @@ class StepRedirector
         $this->stepUrlAdditionalParams = $stepUrlAdditionalParams;
         return $this;
     }
-
 
     public function getRedirectLinkAfterSaving()
     {
@@ -179,7 +180,6 @@ class StepRedirector
             'step' => $this->currentStep + 1
         ]);
     }
-
 
     private function generateUrl($route, array $params = [])
     {

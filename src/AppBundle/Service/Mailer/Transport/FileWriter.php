@@ -2,10 +2,10 @@
 
 namespace AppBundle\Service\Mailer\Transport;
 
-use Swift_Transport;
+use AppBundle\Service\Mailer\MessageUtils;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
-use AppBundle\Service\Mailer\MessageUtils;
+use Swift_Transport;
 
 /**
  * Mock transport used for BDD testing.

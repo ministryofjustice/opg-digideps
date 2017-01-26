@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service;
 
-use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Service\Client\RestClient;
 use Mockery as m;
+use Symfony\Bridge\Monolog\Logger;
 
 class DeputyProviderTest extends \PHPUnit_Framework_TestCase
 {

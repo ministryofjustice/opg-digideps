@@ -208,7 +208,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getMoneyOutState());
     }
 
-
     public function expensesProvider()
     {
         $expense = m::mock(Expense::class, [
@@ -296,7 +295,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getDebtsState());
     }
 
-
     public function actionsProvider()
     {
         $actionIncomplete = m::mock(\AppBundle\Entity\Action::class, [
@@ -345,7 +343,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getOtherInfoState());
     }
 
-
     public function balanceMatchesProvider()
     {
         return [
@@ -372,7 +369,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $ret += array_pop($this->decisionsProvider())[0];
         $ret += array_pop($this->contactsProvider())[0];
         $ret += array_pop($this->visitsCareProvider())[0];
-            //
+
         $ret += array_pop($this->actionsProvider())[0];
         $ret += array_pop($this->otherInfoProvider())[0];
         $ret += array_pop($this->giftsProvider())[0];
@@ -427,7 +424,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function isReadyToSubmitBalance($data, $expected)
     {
         $report = m::mock(Report::class);
-        $object = m::mock(ReportStatusService::class . '[getRemainingSections,balanceMatches]', [$report]);
+        $object = m::mock(ReportStatusService::class.'[getRemainingSections,balanceMatches]', [$report]);
 
         foreach ($data as $method => $return) {
             $object->shouldReceive($method)->andReturn($return);

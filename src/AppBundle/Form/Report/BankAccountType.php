@@ -22,7 +22,7 @@ class BankAccountType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

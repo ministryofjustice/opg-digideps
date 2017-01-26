@@ -18,9 +18,8 @@ class AssetTypeProperty extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
-
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -144,7 +143,6 @@ class AssetTypeProperty extends AbstractType
             ][$this->step];
         };
     }
-
 
     public function getName()
     {

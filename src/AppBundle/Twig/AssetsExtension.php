@@ -9,7 +9,7 @@ namespace AppBundle\Twig;
  */
 class AssetsExtension extends \Twig_Extension
 {
-    /** @var  string $tag */
+    /** @var string $tag */
     private $tag;
 
     /** @var string $rootDir */

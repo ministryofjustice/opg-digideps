@@ -42,7 +42,6 @@ trait ActionTrait
      */
     private $actionPropertyBuy;
 
-
     /**
      * @return bool
      */

@@ -2,17 +2,17 @@
 
 namespace AppBundle\Service\Client;
 
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Exception\RequestException;
-use JMS\Serializer\SerializerInterface;
-use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Bridge\Monolog\Logger;
-use AppBundle\Exception as AppException;
 use AppBundle\Entity\User;
-use GuzzleHttp\Message\ResponseInterface;
+use AppBundle\Exception as AppException;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Message\ResponseInterface;
+use JMS\Serializer\SerializerInterface;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
@@ -149,9 +149,10 @@ class RestClient
      *
      * @param string $token
      *
+     * @throws UsernameNotFoundException
+     *
      * @return \AppBundle\Entity\User $user
      *
-     * @throws UsernameNotFoundException
      */
     public function loadUserByToken($token)
     {
@@ -254,9 +255,10 @@ class RestClient
      * @param type $expectedResponseType
      * @param type $options
      *
+     * @throws \InvalidArgumentException
+     *
      * @return type
      *
-     * @throws \InvalidArgumentException
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -288,6 +290,7 @@ class RestClient
             throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
         }
     }
+
     /**
      * Performs HTTP client call
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.

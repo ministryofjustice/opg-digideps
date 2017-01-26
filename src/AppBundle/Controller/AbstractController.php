@@ -31,7 +31,7 @@ class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
+        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -39,7 +39,7 @@ class AbstractController extends Controller
      */
     protected function getFirstClient($groups = ['user', 'client'])
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
+        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $groups);
         /* @var $user User */
         $clients = $user->getClients();
 
@@ -60,7 +60,6 @@ class AbstractController extends Controller
 
         return $choices;
     }
-
 
     /**
      * @param Client $client
@@ -84,7 +83,6 @@ class AbstractController extends Controller
         return $ret;
     }
 
-
     /**
      * @param int $reportId
      * @param array $groups
@@ -100,13 +98,13 @@ class AbstractController extends Controller
         return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
     }
 
-
     /**
      * @param int $reportId
      *
+     * @throws \RuntimeException if report is submitted
+     *
      * @return Report
      *
-     * @throws \RuntimeException if report is submitted
      */
     protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
@@ -117,7 +115,6 @@ class AbstractController extends Controller
 
         return $report;
     }
-
 
     /**
      * @param int $odrId
@@ -137,9 +134,10 @@ class AbstractController extends Controller
     /**
      * @param int $reportId
      *
+     * @throws \RuntimeException if report is submitted
+     *
      * @return Odr
      *
-     * @throws \RuntimeException if report is submitted
      */
     protected function getOdrIfNotSubmitted($reportId, array $groups = [])
     {
@@ -150,7 +148,6 @@ class AbstractController extends Controller
 
         return $report;
     }
-
 
     /**
      * @return \AppBundle\Service\Mailer\MailFactory
@@ -170,7 +167,8 @@ class AbstractController extends Controller
 
     /**
      * @param $route
-     * @return boolean
+     *
+     * @return bool
      */
     protected function routeExists($route)
     {

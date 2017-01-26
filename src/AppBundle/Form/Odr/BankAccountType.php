@@ -2,14 +2,14 @@
 
 namespace AppBundle\Form\Odr;
 
+use AppBundle\Entity\Account;
 use AppBundle\Entity\Odr\BankAccount;
+use AppBundle\Form\Type\SortCodeType;
+use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Entity\Account;
-use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -23,7 +23,7 @@ class BankAccountType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

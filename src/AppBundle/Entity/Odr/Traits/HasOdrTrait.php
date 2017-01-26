@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use JMS\Serializer\Annotation as JMS;
 use AppBundle\Entity\Odr\Odr;
+use JMS\Serializer\Annotation as JMS;
 
 trait HasOdrTrait
 {

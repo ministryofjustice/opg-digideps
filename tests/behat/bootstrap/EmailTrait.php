@@ -95,9 +95,10 @@ trait EmailTrait
     /**
      * @param string $regexpr
      *
+     * @throws \Exception
+     *
      * @return string link matching the given pattern
      *
-     * @throws \Exception
      */
     private function getFirstLinkInEmailMatching($regexpr)
     {

@@ -7,8 +7,6 @@ namespace AppBundle\Service\Mailer;
  */
 class MessageUtils
 {
-    /**
-     */
     protected static $fieldsToSerialize = [
         'to',
         'from',

@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Traits\LoginInfoTrait;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -342,9 +342,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    /**
-     *
-     */
     public function getSalt()
     {
         return;
@@ -698,7 +695,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOdrEnabled()
     {
@@ -706,7 +703,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param boolean $odrEnabled
+     * @param bool $odrEnabled
      */
     public function setOdrEnabled($odrEnabled)
     {
@@ -714,7 +711,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAdManaged()
     {
@@ -722,7 +719,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param boolean $adManaged
+     * @param bool $adManaged
      */
     public function setAdManaged($adManaged)
     {

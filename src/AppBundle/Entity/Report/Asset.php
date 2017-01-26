@@ -3,8 +3,8 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Traits\HasReportTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @JMS\Discriminator(field = "type", map = {
@@ -66,6 +66,7 @@ abstract class Asset
 
     /**
      * @JMS\Type("double")
+     *
      * @var float
      */
     private $valueTotal;

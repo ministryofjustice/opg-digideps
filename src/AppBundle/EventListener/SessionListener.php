@@ -2,12 +2,12 @@
 
 namespace AppBundle\EventListener;
 
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bridge\Monolog\Logger;
 
 /**
  * Redirect to login page when session is Idle for more than `idleTimeout` amount in seconds.

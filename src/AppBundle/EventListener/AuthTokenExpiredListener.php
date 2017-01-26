@@ -2,9 +2,9 @@
 
 namespace AppBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class AuthTokenExpiredListener
 {

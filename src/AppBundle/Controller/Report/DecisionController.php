@@ -7,8 +7,8 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class DecisionController extends AbstractController
 {
@@ -16,7 +16,6 @@ class DecisionController extends AbstractController
         'decision',
         'mental-capacity'
     ];
-
 
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
@@ -80,6 +79,7 @@ class DecisionController extends AbstractController
 
     /**
      * //TODO consider to merge this as a step of mentalCapacity action above
+     *
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template()
      */
@@ -134,9 +134,9 @@ class DecisionController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
+                    $this->get('rest_client')->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
                     foreach ($report->getDecisions() as $decision) {
-                        $this->getRestClient()->delete("/report/decision/".$decision->getId());
+                        $this->getRestClient()->delete('/report/decision/'.$decision->getId());
                     }
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -185,7 +185,6 @@ class DecisionController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
      * @Template()
@@ -211,7 +210,6 @@ class DecisionController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
@@ -244,7 +242,6 @@ class DecisionController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
      * @Template()
@@ -264,7 +261,6 @@ class DecisionController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")

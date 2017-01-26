@@ -2,11 +2,11 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Validator\Constraints\DUserPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\DUserPassword;
 
 class ChangePasswordType extends AbstractType
 {

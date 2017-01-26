@@ -18,7 +18,6 @@ class OdrStatusService
         $this->odr = $odr;
     }
 
-
     /** @return string */
     public function getVisitsCareState()
     {
@@ -30,7 +29,6 @@ class OdrStatusService
         }
         return self::STATE_DONE;
     }
-
 
     /**
      * @return string
@@ -145,7 +143,6 @@ class OdrStatusService
         return self::STATE_DONE;
     }
 
-
     /**
      * @return array
      */
@@ -175,6 +172,7 @@ class OdrStatusService
 
     /**
      * //TODO replace with isReadyToSubmit
+     *
      * @return string $status | null
      */
     public function getStatus()

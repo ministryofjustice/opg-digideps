@@ -5,9 +5,9 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form\Report\Gift as FormDir;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class GiftController extends AbstractController
 {
@@ -53,7 +53,7 @@ class GiftController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('gifts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/' . $reportId, $data, ['gifts-exist']);
+                    $this->get('rest_client')->put('report/'.$reportId, $data, ['gifts-exist']);
                     return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
             }
         }
@@ -86,12 +86,12 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift']);
+            $this->getRestClient()->post('report/'.$report->getId().'/gift', $data, ['gift']);
 
             return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'gifts_' . $request->get('from');
+        $backLinkRoute = 'gifts_'.$request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
 
@@ -101,7 +101,6 @@ class GiftController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/gifts/add_another", name="gifts_add_another")
@@ -129,7 +128,6 @@ class GiftController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/gifts/edit/{giftId}", name="gifts_edit")
      * @Template()
@@ -137,7 +135,7 @@ class GiftController extends AbstractController
     public function editAction(Request $request, $reportId, $giftId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $gift = $this->getRestClient()->get('report/'.$report->getId().'/gift/' . $giftId, 'Report\Gift');
+        $gift = $this->getRestClient()->get('report/'.$report->getId().'/gift/'.$giftId, 'Report\Gift');
 
         $form = $this->createForm(new FormDir\GiftType(), $gift);
         $form->handleRequest($request);
@@ -146,7 +144,7 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/gift/'.$gift->getId(), $data, ['gift']);
+            $this->getRestClient()->put('report/'.$report->getId().'/gift/'.$gift->getId(), $data, ['gift']);
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
@@ -157,7 +155,6 @@ class GiftController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/gifts/summary", name="gifts_summary")
@@ -178,7 +175,6 @@ class GiftController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/gifts/{giftId}/delete", name="gifts_delete")

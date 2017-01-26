@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller\Report;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Controller\AbstractController;
 
 class OtherInfoController extends AbstractController
 {
@@ -16,7 +15,6 @@ class OtherInfoController extends AbstractController
         'client-cot',
         'action-more-info',
     ];
-
 
     /**
      * @Route("/report/{reportId}/any-other-info", name="other_info")
@@ -59,7 +57,7 @@ class OtherInfoController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('report/' . $reportId, $data, ['more-info']);
+            $this->getRestClient()->put('report/'.$reportId, $data, ['more-info']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

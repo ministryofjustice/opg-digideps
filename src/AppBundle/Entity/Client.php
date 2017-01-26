@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**

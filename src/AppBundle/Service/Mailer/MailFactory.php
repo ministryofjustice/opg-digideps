@@ -257,7 +257,7 @@ class MailFactory
 
         $viewParams = [
             'submittedReport' => $submittedReport,
-            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
+            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
@@ -290,7 +290,7 @@ class MailFactory
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
+            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
             'pdfLink' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'odr_pdf'),
         ];
 

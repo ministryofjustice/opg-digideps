@@ -7,8 +7,6 @@ use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
@@ -42,7 +40,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('rest_client')->put('report/' . $reportId, $report, ['debt']);
+            $this->get('rest_client')->put('report/'.$reportId, $report, ['debt']);
 
             if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
@@ -77,7 +75,7 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isValid()) {
-            $this->get('rest_client')->put('report/' . $report->getId(), $form->getData(), ['debt']);
+            $this->get('rest_client')->put('report/'.$report->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');

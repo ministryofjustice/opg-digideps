@@ -33,7 +33,7 @@ class IncomeBenefitType extends AbstractType
      */
     public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
         $this->translator = $translator;
         $this->clientFirstName = $clientFirstName;
     }
@@ -85,7 +85,7 @@ class IncomeBenefitType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            //
+
 
             $event->setData($data);
         });

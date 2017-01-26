@@ -7,10 +7,10 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
@@ -61,7 +61,7 @@ class BankAccountController extends AbstractController
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
-            $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\BankAccount');
+            $account = $this->getRestClient()->get('report/account/'.$accountId, 'Report\\BankAccount');
         } else {
             $account = new EntityDir\Report\BankAccount();
             $account->setReport($report);
@@ -113,7 +113,7 @@ class BankAccountController extends AbstractController
             // last step: save
             if ($isLastStep) {
                 if ($accountId) {
-                    $this->getRestClient()->put('/account/' . $accountId, $account, self::$jmsGroups);
+                    $this->getRestClient()->put('/account/'.$accountId, $account, self::$jmsGroups);
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Bank account edited'
@@ -121,7 +121,7 @@ class BankAccountController extends AbstractController
 
                     return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
                 } else {
-                    $this->getRestClient()->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
+                    $this->getRestClient()->post('report/'.$reportId.'/account', $account, self::$jmsGroups);
 
                     return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
                 }

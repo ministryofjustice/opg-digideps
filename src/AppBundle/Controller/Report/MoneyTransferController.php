@@ -6,10 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends AbstractController
 {
@@ -60,7 +59,7 @@ class MoneyTransferController extends AbstractController
                 case false:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
-                    $this->get('rest_client')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
+                    $this->get('rest_client')->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
@@ -76,7 +75,6 @@ class MoneyTransferController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
@@ -140,11 +138,11 @@ class MoneyTransferController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
+                    $this->getRestClient()->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
 
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+                    $this->getRestClient()->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
                     return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
                 }
             }
@@ -166,7 +164,6 @@ class MoneyTransferController extends AbstractController
             'skipLink' => null,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
@@ -213,7 +210,6 @@ class MoneyTransferController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")

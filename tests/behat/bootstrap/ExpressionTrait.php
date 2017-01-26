@@ -37,9 +37,10 @@ trait ExpressionTrait
      *
      * @param string $expression
      *
+     * @throws \RuntimeException if the expression is not recognised
+     *
      * @return string
      *
-     * @throws \RuntimeException if the expression is not recognised
      */
     private static function expressionToValue($expression)
     {

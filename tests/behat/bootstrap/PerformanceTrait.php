@@ -2,8 +2,8 @@
 
 namespace DigidepsBehat;
 
-use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 use Behat\Behat\Hook\Scope\AfterFeatureScope;
+use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 
 trait PerformanceTrait
 {

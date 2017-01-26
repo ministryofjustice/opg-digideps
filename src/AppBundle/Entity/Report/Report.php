@@ -4,9 +4,8 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
@@ -591,7 +590,6 @@ class Report
         return $this;
     }
 
-
     /**
      * @param ExecutionContextInterface $context
      */
@@ -904,7 +902,6 @@ class Report
         return $this;
     }
 
-
     /**
      * @return float
      */
@@ -1052,7 +1049,6 @@ class Report
             || !$this->hasAccounts()
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
-
 
     /**
      * @param int $id

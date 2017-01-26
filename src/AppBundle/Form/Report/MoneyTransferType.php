@@ -15,17 +15,18 @@ class MoneyTransferType extends AbstractType
 
     /**
      * MoneyTransferType constructor.
+     *
      * @param $step
      * @param \BankAccount[] $banks
      */
     public function __construct($step, array $banks)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
         $this->banks = [];
 
         foreach ($banks as $bank) {
             /* $var $bank \AppBundle\Entity\Report\BankAccount */
-            $this->banks[$bank->getId()] = $bank->getBank() . ' ' . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
+            $this->banks[$bank->getId()] = $bank->getBank().' '.$bank->getAccountTypeText().' (****'.$bank->getAccountNumber().')';
         }
     }
 

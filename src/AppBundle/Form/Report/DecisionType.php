@@ -5,7 +5,6 @@ namespace AppBundle\Form\Report;
 use AppBundle\Entity\Report\Decision;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DecisionType extends AbstractType

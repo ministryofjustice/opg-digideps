@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\VisitsCareValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
@@ -16,7 +15,6 @@ class VisitsCareController extends AbstractController
     private static $jmsGroups = [
         'visits-care',
     ];
-
 
     /**
      * @Route("/odr/{odrId}/visits-care", name="odr_visits_care")
@@ -33,7 +31,6 @@ class VisitsCareController extends AbstractController
             'odr' => $odr,
         ];
     }
-
 
     /**
      * @Route("/odr/{odrId}/visits-care/step/{step}", name="odr_visits_care_step")

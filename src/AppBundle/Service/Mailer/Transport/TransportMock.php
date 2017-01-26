@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service\Mailer\Transport;
 
-use Swift_Transport;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
+use Swift_Transport;
 
 class TransportMock implements Swift_Transport
 {

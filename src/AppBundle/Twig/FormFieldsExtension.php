@@ -2,8 +2,8 @@
 
 namespace AppBundle\Twig;
 
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FormFieldsExtension extends \Twig_Extension

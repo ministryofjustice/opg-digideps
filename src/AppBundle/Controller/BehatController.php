@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Mailer\MailSender;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -155,7 +154,6 @@ class BehatController extends AbstractController
 
         return new Response($data);
     }
-
 
     /**
      * Display emails into a webpage

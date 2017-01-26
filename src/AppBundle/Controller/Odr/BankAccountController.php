@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
@@ -9,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Controller\AbstractController;
 
 class BankAccountController extends AbstractController
 {
@@ -58,7 +58,7 @@ class BankAccountController extends AbstractController
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
-            $account = $this->getRestClient()->get('odr/account/' . $accountId, 'Odr\\BankAccount');
+            $account = $this->getRestClient()->get('odr/account/'.$accountId, 'Odr\\BankAccount');
         } else {
             $account = new EntityDir\Odr\BankAccount();
             $account->setOdr($odr);
@@ -99,7 +99,7 @@ class BankAccountController extends AbstractController
                         'notice',
                         'Bank account edited'
                     );
-                    
+
                     return $this->redirectToRoute('odr_bank_accounts_summary', ['odrId' => $odrId]);
                 } else {
                     $this->getRestClient()->post('odr/'.$odrId.'/account', $account, ['bank-account']);

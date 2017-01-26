@@ -8,9 +8,9 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
 use AppBundle\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class IncomeBenefitController extends AbstractController
 {
@@ -39,7 +39,6 @@ class IncomeBenefitController extends AbstractController
             'odr' => $odr,
         ];
     }
-
 
     /**
      * @Route("/odr/{odrId}/income-benefits/step/{step}", name="odr_income_benefits_step")
@@ -75,7 +74,7 @@ class IncomeBenefitController extends AbstractController
                 5 => ['odr-one-off'],
             ];
 
-            $this->getRestClient()->put('odr/' . $odrId, $data, $stepToJmsGroup[$step]);
+            $this->getRestClient()->put('odr/'.$odrId, $data, $stepToJmsGroup[$step]);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

@@ -110,9 +110,9 @@ class Odr
      */
     private $noAssetToAdd;
 
-
     /**
      * Currently used only for bottom navigator
+     *
      * @return string
      */
     public function getType()
@@ -328,6 +328,7 @@ class Odr
 
     /**
      * @param $debtId
+     *
      * @return Debt|null
      */
     public function getDebtById($debtId)

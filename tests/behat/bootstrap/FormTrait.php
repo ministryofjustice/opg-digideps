@@ -88,8 +88,6 @@ trait FormTrait
         }
     }
 
-
-
     /**
      * Fills in form field with specified id|name|label|value.
      *

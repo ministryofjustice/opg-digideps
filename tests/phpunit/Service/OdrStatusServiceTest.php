@@ -47,7 +47,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         return new StatusService($odr);
     }
 
-
     public function visitsCareProvider()
     {
         $visitsCareNotMissinginfo = m::mock(VisitsCare::class, [
@@ -75,7 +74,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getVisitsCareState());
     }
 
-
     public function expensesProvider()
     {
         $expense = m::mock(Expense::class, [
@@ -99,7 +97,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getExpensesState());
     }
-
 
     public function incomeBenefitsProvider()
     {
@@ -222,7 +219,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getActionsState());
     }
 
-
     public function otherInfoProvider()
     {
         return [
@@ -240,7 +236,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getOtherInfoState());
     }
-
 
     /**
      * @test
@@ -284,7 +279,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
     }
-
 
     /**
      * @test

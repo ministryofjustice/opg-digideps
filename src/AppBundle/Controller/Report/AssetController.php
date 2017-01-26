@@ -6,9 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -59,7 +57,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId,]);
                 case 1: //no
-                    $this->get('rest_client')->put('report/' . $reportId, $report, ['noAssetsToAdd']);
+                    $this->get('rest_client')->put('report/'.$reportId, $report, ['noAssetsToAdd']);
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
         }
@@ -168,7 +166,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/assets/add_another", name="assets_add_another")
      * @Template()
@@ -194,7 +191,6 @@ class AssetController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/assets/property/step{step}/{assetId}", name="assets_property_step", requirements={"step":"\d+"})
@@ -317,7 +313,6 @@ class AssetController extends AbstractController
             'skipLink' => null,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/assets/summary", name="assets_summary")
