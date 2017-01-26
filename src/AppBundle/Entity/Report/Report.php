@@ -17,9 +17,10 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
-    use ReportTraits\MoreInfoTrait;
+    use ReportTraits\MoneyTransactionTrait;
     use ReportTraits\DeputyExpenseTrait;
     use ReportTraits\GiftTrait;
+    use ReportTraits\MoreInfoTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';
@@ -248,35 +249,6 @@ class Report
      */
     private $agreedBehalfDeputyExplanation;
 
-    /**
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
-     * @JMS\Groups({"transactionsIn"})
-     *
-     * @var Transaction[]
-     */
-    private $transactionsIn;
-
-    /**
-     * @JMS\Type("array<AppBundle\Entity\Report\Transaction>")
-     * @JMS\Groups({"transactionsOut"})
-     *
-     * @var Transaction[]
-     */
-    private $transactionsOut;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $moneyInTotal;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $moneyOutTotal;
 
     /**
      * @JMS\Type("double")
@@ -1073,144 +1045,6 @@ class Report
         return $this;
     }
 
-    /**
-     * @return Transaction[]
-     */
-    public function getTransactionsIn()
-    {
-        return $this->transactionsIn;
-    }
-
-    /**
-     * //TODO improve this
-     * @return Transaction[]
-     */
-    public function getValidTransactions($transactions)
-    {
-        return array_filter($transactions, function($t){
-            return $t->getAmounts()[0] > 0;
-        });
-    }
-
-    /**
-     * //TODO improve this
-     * @return Transaction[]
-     */
-    public function getTransactionsInWithId($id)
-    {
-        return array_filter($transactions, function($t) use ($id) {
-            return $t->getId() == $id;
-        });
-    }
-
-    /**
-     * @param Transaction[] $transactionsIn
-     */
-    public function setTransactionsIn($transactionsIn)
-    {
-        $this->transactionsIn = $transactionsIn;
-
-        return $this;
-    }
-
-    /**
-     * @return Transaction[]
-     */
-    public function getTransactionsOut()
-    {
-        return $this->transactionsOut;
-    }
-
-    /**
-     * @param Transaction[] $transactionsOut
-     */
-    public function setTransactionsOut($transactionsOut)
-    {
-        $this->transactionsOut = $transactionsOut;
-
-        return $this;
-    }
-
-    public function getTransactionCategories(array $transactions)
-    {
-        $ret = [];
-        foreach ($transactions as $id => $transaction) {
-            $ret[$transaction->getCategory()] = 'form.category.entries.' . $transaction->getCategory();
-        }
-        $ret = array_unique($ret);
-
-        return $ret;
-    }
-
-    public function getTransactionIds(array $transactions, $category)
-    {
-        $ret = [];
-        foreach ($transactions as $id => $transaction) {
-            if ($category == $transaction->getCategory()) {
-                $ret[$transaction->getId()] = 'form.id.entries.' . $transaction->getId() . '.label';
-            }
-        }
-        $ret = array_unique($ret);
-
-        return $ret;
-    }
-
-    /**
-     * @param Transaction[] $transactions
-     *
-     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
-     */
-    public function groupByGroup(array $transactions)
-    {
-        $ret = [];
-
-        foreach ($transactions as $id => $transaction) {
-            $group = $transaction->getGroup();
-            if (!isset($ret[$group])) {
-                $ret[$group] = ['entries' => [], 'amountTotal' => 0];
-            }
-            $ret[$group]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$group]['amountTotal'] += $transaction->getAmount();
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyInTotal()
-    {
-        return $this->moneyInTotal;
-    }
-
-    /**
-     * @param float $moneyInTotal
-     */
-    public function setMoneyInTotal($moneyInTotal)
-    {
-        $this->moneyInTotal = $moneyInTotal;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyOutTotal()
-    {
-        return $this->moneyOutTotal;
-    }
-
-    /**
-     * @param float $moneyOutTotal
-     */
-    public function setMoneyOutTotal($moneyOutTotal)
-    {
-        $this->moneyOutTotal = $moneyOutTotal;
-
-        return $this;
-    }
 
     /**
      * @return float
@@ -1327,7 +1161,7 @@ class Report
      */
     public function hasMoneyIn()
     {
-        return count($this->getTransactionsIn()) > 0;
+        return count($this->getMoneyTransactionsIn()) > 0;
     }
 
     /**
@@ -1335,7 +1169,7 @@ class Report
      */
     public function hasMoneyOut()
     {
-        return count($this->getTransactionsOut()) > 0;
+        return count($this->getMoneyTransactionsOut()) > 0;
     }
 
     /**

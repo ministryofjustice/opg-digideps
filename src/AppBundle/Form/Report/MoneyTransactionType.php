@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\Transaction;
+use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,7 +50,7 @@ class MoneyTransactionType extends AbstractType
     {
         $ret = [];
 
-        foreach(Transaction::$categories as $cat){
+        foreach(MoneyTransaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($type == $this->type) {
                 $ret[$groupId] = $this->translate('form.group.entries.' . $groupId);
@@ -64,7 +64,7 @@ class MoneyTransactionType extends AbstractType
     {
         $ret = [];
 
-        foreach(Transaction::$categories as $cat){
+        foreach(MoneyTransaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($groupId == $this->selectedGroup) {
                 $ret[$categoryId] = $this->translate('form.category.entries.' . $categoryId . '.label');
@@ -79,7 +79,7 @@ class MoneyTransactionType extends AbstractType
      */
     private function isDescriptionMandatory()
     {
-        foreach(Transaction::$categories as $cat){
+        foreach(MoneyTransaction::$categories as $cat){
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
@@ -145,7 +145,7 @@ class MoneyTransactionType extends AbstractType
             'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Report\Transaction */
+                /* @var $data \AppBundle\Entity\Report\MoneyTransaction */
 
                 $validationGroups = [];
 

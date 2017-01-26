@@ -65,12 +65,12 @@ class MoneyOutController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
-            $transaction = array_filter($report->gettransactionsOut(), function($t) use ($transactionId) {
+            $transaction = array_filter($report->getMoneyTransactionsOut(), function($t) use ($transactionId) {
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
         } else {
-            $transaction = new EntityDir\Report\Transaction();
+            $transaction = new EntityDir\Report\MoneyTransaction();
         }
 
         // add URL-data into model
@@ -182,7 +182,7 @@ class MoneyOutController extends AbstractController
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = array_filter($report->gettransactionsOut(), function($t) use ($transactionId) {
+        $transaction = array_filter($report->getMoneyTransactionsOut(), function($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });
         if (!$transaction) {

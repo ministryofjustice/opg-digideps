@@ -10,7 +10,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Decision;
 use AppBundle\Entity\Report\MoneyTransfer;
-use AppBundle\Entity\Report\Transaction;
+use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Report\Report as Report;
@@ -118,8 +118,8 @@ class FormattedTest extends WebTestCase
             ->setEndDate(new \Datetime('2015-12-31'))
             ->setAccounts([$this->account1, $this->account2])
             ->setMoneyTransfers([$this->transfer1, $this->transfer2])
-            ->setTransactionsIn([$this->transactionIn1, $this->transactionIn2])
-            ->setTransactionsOut([$this->transactionOut1])
+            ->setMoneyTransactionsIn([$this->transactionIn1, $this->transactionIn2])
+            ->setMoneyTransactionsOut([$this->transactionOut1])
             ->setMoneyInTotal(1234 + 45)
             ->setMoneyOutTotal(1233)
             ->setAction($this->action1)

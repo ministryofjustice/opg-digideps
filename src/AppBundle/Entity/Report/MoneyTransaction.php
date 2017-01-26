@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-class Transaction
+class MoneyTransaction
 {
     /**
      * Keep in sync with API
@@ -16,7 +16,7 @@ class Transaction
      * @JMS\Exclude
      */
     public static $categories = [
-        // id | hasMoreDetails | order | category | in/out
+        // category | hasMoreDetails | order | group | type (in/out)
 
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
@@ -232,30 +232,4 @@ class Transaction
     {
         $this->description = $description;
     }
-
-
-    /**
-     * flag moreDetails invalid if amount is given and moreDetails is empty
-     * flag amount invalid if moreDetails is given and amount is empty.
-     * 
-     * @param ExecutionContextInterface $context
-     */
-//    public function moreDetailsValidate(ExecutionContextInterface $context)
-//    {
-//        // if the transaction required no moreDetails, no validation is needed
-//        if (!$this->getHasMoreDetails()) {
-//            return;
-//        }
-//
-//        $hasAtLeastOneAmount = count($this->getNotNullAmounts()) > 0;
-//        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
-//
-//        if ($hasAtLeastOneAmount && !$hasMoreDetails) {
-//            $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
-//        }
-//
-//        if ($hasMoreDetails && !$hasAtLeastOneAmount) {
-//            $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
-//        }
-//    }
 }
