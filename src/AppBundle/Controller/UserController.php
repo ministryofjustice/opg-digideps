@@ -70,7 +70,7 @@ class UserController extends AbstractController
 
             // login user into API
             //TODO try move at the beginning
-            $this->get('deputyprovider')->login(['token' => $token]);
+            $this->get('deputy_provider')->login(['token' => $token]);
 
             // set password for user
             $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
@@ -91,7 +91,7 @@ class UserController extends AbstractController
 
             // after password reset
             if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
-                $redirectUrl = $this->get('redirectorService')->getFirstPageAfterLogin();
+                $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
             } else { // activate:  o to 2nd step
                 $redirectUrl = $this->generateUrl('user_details');
             }

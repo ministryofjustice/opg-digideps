@@ -7,7 +7,7 @@ security:
 
     providers:
         deputy:
-           id: deputyprovider
+           id: deputy_provider
 
     firewalls:
         dev:
@@ -18,9 +18,6 @@ security:
             pattern:  ^/login$
             security: false
 
-
-
-           
         passwordManaging:
             pattern:  ^/password-managing*
             security: false   

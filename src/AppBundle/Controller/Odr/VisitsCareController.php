@@ -50,7 +50,7 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->get('step_redirector')
             ->setRoutes('odr_visits_care', 'odr_visits_care_step', 'odr_visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

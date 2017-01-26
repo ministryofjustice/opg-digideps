@@ -49,7 +49,7 @@ class OtherInfoController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->get('step_redirector')
             ->setRoutes('odr_other_info', 'odr_other_info_step', 'odr_other_info_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

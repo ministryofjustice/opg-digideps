@@ -60,7 +60,7 @@ class MoneyTransferController extends AbstractController
                 case false:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
-                    $this->get('restClient')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
+                    $this->get('rest_client')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
@@ -96,7 +96,7 @@ class MoneyTransferController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->get('step_redirector')
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

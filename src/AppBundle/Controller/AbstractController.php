@@ -16,7 +16,7 @@ class AbstractController extends Controller
      */
     protected function getRestClient()
     {
-        return $this->get('restClient');
+        return $this->get('rest_client');
     }
 
     /**
@@ -156,7 +156,7 @@ class AbstractController extends Controller
      */
     protected function getMailFactory()
     {
-        return $this->get('mailFactory');
+        return $this->get('mail_factory');
     }
 
     /**
@@ -164,7 +164,7 @@ class AbstractController extends Controller
      */
     protected function getMailSender()
     {
-        return $this->get('mailSender');
+        return $this->get('mail_sender');
     }
 
     /**

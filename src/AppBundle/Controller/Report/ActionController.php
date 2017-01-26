@@ -49,7 +49,7 @@ class ActionController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->get('step_redirector')
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

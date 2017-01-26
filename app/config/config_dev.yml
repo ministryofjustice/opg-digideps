@@ -17,7 +17,7 @@ assetic:
 services:
     data_collector.apiCollectorss:
         class: AppBundle\Service\ApiCollector
-        arguments: [@restClient]
+        arguments: ["@rest_client"]
         tags:
             - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
 

@@ -41,7 +41,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
             ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 
-        static::$kernel->getContainer()->set('restClient', $this->restClient);
+        static::$kernel->getContainer()->set('rest_client', $this->restClient);
     }
 
     /**

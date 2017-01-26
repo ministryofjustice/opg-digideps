@@ -53,7 +53,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('odr_assets_type', ['odrId' => $odrId,]);
                 case 1: //no
-                    $this->get('restClient')->put('odr/' . $odrId, $odr, ['noAssetsToAdd']);
+                    $this->get('rest_client')->put('odr/' . $odrId, $odr, ['noAssetsToAdd']);
                     return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
             }
         }
@@ -209,7 +209,7 @@ class AssetController extends AbstractController
         $fromPage = $request->get('from');
 
         /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->get('step_redirector')
             ->setRoutes('odr_assets_type', 'odr_assets_property_step', 'odr_assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
