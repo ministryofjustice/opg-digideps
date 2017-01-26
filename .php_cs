@@ -8,8 +8,7 @@ $finder = PhpCsFixer\Finder::create()
  
  return PhpCsFixer\Config::create()
     ->setUsingCache(false)
-//     ->setIndent("\t")
-//     ->setLineEnding("\r\n")
+    ->setLineEnding("\r\n")
     ->setRules(array(
             '@PSR2' => true,
             'array_syntax' => array('syntax' => 'short'),
