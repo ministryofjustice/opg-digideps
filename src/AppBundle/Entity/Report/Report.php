@@ -90,6 +90,7 @@ class Report
 
     /**
      * @deprecated REMOVE WHEN OTPP is merged and migrated
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"}, fetch="LAZY")
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -971,12 +972,12 @@ class Report
     /**
      *
      * @JMS\VirtualProperty
-     * @JMS\SerializedName("transactions_in")
+     * @JMS\SerializedName("money_transactions_in")
      * @JMS\Groups({"transactionsIn"})
      *
      * @return MoneyTransaction[]
      */
-    public function getTransactionsIn()
+    public function getMoneyTransactionsIn()
     {
         return $this->moneyTransactions->filter(function($t) {
             return $t->getType() == 'in';
@@ -986,12 +987,12 @@ class Report
     /**
      *
      * @JMS\VirtualProperty
-     * @JMS\SerializedName("transactions_out")
+     * @JMS\SerializedName("money_transactions_out")
      * @JMS\Groups({"transactionsOut"})
      *
      * @return MoneyTransaction[]
      */
-    public function getTransactionsOut()
+    public function getMoneyTransactionsOut()
     {
         return $this->moneyTransactions->filter(function($t) {
             return $t->getType() == 'out';
