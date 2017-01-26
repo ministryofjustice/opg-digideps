@@ -8,9 +8,9 @@ default:
             paths:    [ %paths.base%/features/prechecks ]
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
             {{ end }}
 
         deputy:
@@ -20,9 +20,9 @@ default:
                 tags: "@deputy&&~@javascript"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps', autoDbSnapshot: false }]
             {{ end }}
 
         admin:
@@ -32,9 +32,9 @@ default:
                 tags: "~@javascript"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, autoDbSnapshot: false }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: "api", autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", autoDbSnapshot: false }]
             {{ end }}
 
         deputyodr:
@@ -44,9 +44,9 @@ default:
                 tags: "@odr"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
             {{ end }}
 
         components:
