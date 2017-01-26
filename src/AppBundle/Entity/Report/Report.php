@@ -154,8 +154,6 @@ class Report
     private $mentalCapacity;
 
     /**
-     * @deprecated? Confirm with PO
-     *
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
@@ -163,6 +161,8 @@ class Report
     private $courtOrderType;
 
     /**
+     * @deprecated
+     *
      * @var string
      *
      * @JMS\Groups({"report"})
@@ -262,6 +262,8 @@ class Report
     private $submitted;
 
     /**
+     * @deprecated
+     *
      * @var bool
      * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
@@ -270,6 +272,8 @@ class Report
     private $reviewed;
 
     /**
+     * @deprecated
+     * 
      * @var bool
      * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
