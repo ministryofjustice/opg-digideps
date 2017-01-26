@@ -2,16 +2,14 @@ startPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Decisions
   startButton: Start decisions
-  description1: "We need to know about:"
+  description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you’ve made on %client%'s behalf."
   description2: |
-    You don't need to include small, day-to-day decisions like buying food or toiletries
-  descriptionListItem1: %client%'s mental capacity to make financial decisions
-  descriptionListItem2: Significant decisions you have made for %client% during the reporting period
+    You don't need to include small, day-to-day decisions like buying food or toiletries.
   whatisdecisionSummary: What counts as a significant decision?
   whatisdecisionPara1: |
     Significant decisions are any important decisions you make for %client% - not
-    just financial decisions. We need to know about any decisions that have a big
-    impact on %client%'s wellbeing or circumstances.
+    just financial ones. We need to know about any decisions that have a big
+    impact on %client%'s well-being or circumstances.
   whatisdecisionPara2: "Your significant decisions might include:"
   whatisdecisionListItem1: buying, selling or renting property
   whatisdecisionListItem2: buying or selling investments or shares
@@ -29,7 +27,8 @@ mentalCapacity:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
       hint: ""
     hasCapacityChangedDetails:
-      label: "Tell us more"
+      label: "Please tell us more."
+      hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
     save:
       label: "Save and continue"
 
@@ -59,8 +58,8 @@ addAnotherPage:
   pageSectionTitle: Decisions
   form:
     addAnother:
-      label: The significant decision has been saved. Would you like to add another significant decision now?
-      hint: If you prefer, you can come back to this section later to add more significant decisions
+      label: The decision has been saved. Would you like to add another decision now?
+      hint: If you prefer, you can come back to this section later to add more decisions
     save:
        label: Continue
 
@@ -68,7 +67,7 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: As you have made significant decisions for %client% we need to know the details.
+  pageSectionDescription: We need to know the details of the significant decisions you’ve made for %client%. Describe the first decision here. You’ll be able to add more decisions later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
@@ -76,6 +75,8 @@ editPage:
   pageSectionTitle: Edit decision
 
 summaryPage:
+  weAskAbout: |
+      In this section, we ask about %client%’s mental capacity and the significant decisions you've made for %client% over the reporting period.
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Decisions
   addButton: Add significant decision
@@ -90,10 +91,11 @@ form:
     hint: Add a title to help you identify the decision.
   description:
     heading: Description
-    label: Give details of the significant decision here.
+    label: Please give us some details about the significant decision here.
   clientInvolvedBoolean:
     heading: %client%'s involvement
     label: Did you involve %client% in this decision?
+    hint: "You must help the client make all or part of a decision, if they can"
     defaultOption: Please select...
   clientInvolvedDetails:
     label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.

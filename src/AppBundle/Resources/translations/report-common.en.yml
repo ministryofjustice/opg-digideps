@@ -8,7 +8,7 @@ report:
     dueDate: "Due date:"
     caseNumber: "Case number:"
     form:
-      readyMessage: "Your report will be ready to submit when you've completed all tasks"
+      readyMessage: "Your report will be ready to submit when you've completed all the sections"
       controls:
         reviewed_n_checked:
           label: "I have reviewed and checked this report"

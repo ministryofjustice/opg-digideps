@@ -2,7 +2,8 @@ startPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
   pageSectionTitle: Actions you plan to take
   pageSectionDescription1: |
-    Tell us about any concerns you may have now, and changes you think may happen in the next reporting period.
+    Use this section to tell us about any significant financial and other decisions you plan to make on %client%'s behalf in the next 12 months.
+Your actions might include making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for John.
   pageSectionDescription2: |
     We’ll read what you’ve written and get in touch if we can help.
   startButton: Start actions
@@ -17,7 +18,7 @@ summaryPage:
   pageSectionTitle: Actions you plan to take
   supportTitle: ""
   pageContent:
-    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+    weAskAbout: In this section, we ask you about significant decisions you may have to take on %client%'s behalf over the coming year.
 
 form:
   save:
