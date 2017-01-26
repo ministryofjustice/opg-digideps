@@ -4,9 +4,9 @@ namespace AppBundle\Controller\Odr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class OdrController extends RestController
 {
@@ -18,7 +18,7 @@ class OdrController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $groups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['odr'];
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['odr'];
         $this->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Odr\Odr */
@@ -64,7 +64,6 @@ class OdrController extends RestController
         //response to pass back
         return [];
     }
-
 
     /**
      * @Route("/odr/{id}")

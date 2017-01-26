@@ -6,9 +6,9 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\CourtOrderType;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Reports.
@@ -534,6 +534,7 @@ class Report
 
         return $this;
     }
+
     /**
      * Remove contacts.
      *
@@ -962,6 +963,7 @@ class Report
 
     /**
      * @deprecated
+     *
      * @return Transaction[]
      */
     public function getTransactions()
@@ -1027,6 +1029,7 @@ class Report
 
     /**
      * @deprecated
+     *
      * @param Transaction $transaction
      */
     public function addTransaction(Transaction $transaction)
@@ -1037,8 +1040,6 @@ class Report
 
         return $this;
     }
-
-
 
     /**
      * @param mixed $debts

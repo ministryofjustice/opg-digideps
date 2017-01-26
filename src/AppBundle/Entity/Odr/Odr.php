@@ -2,11 +2,11 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\Client;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
@@ -427,6 +427,7 @@ class Odr
 
     /**
      * @param string $agreedBehalfDeputy
+     *
      * @return Odr
      */
     public function setAgreedBehalfDeputy($agreedBehalfDeputy)
@@ -445,6 +446,7 @@ class Odr
 
     /**
      * @param string $agreedBehalfDeputyExplanation
+     *
      * @return Odr
      */
     public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)

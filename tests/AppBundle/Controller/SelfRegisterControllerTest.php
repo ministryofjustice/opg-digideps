@@ -3,8 +3,8 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Controller\SelfRegisterController;
-use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\CasRec;
+use AppBundle\Model\SelfRegisterData;
 use Mockery as m;
 
 class SelfRegisterControllerTest extends AbstractTestController

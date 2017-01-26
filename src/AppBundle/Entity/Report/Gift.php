@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
-use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity()
@@ -77,7 +77,6 @@ class Gift
     {
         $this->id = $id;
     }
-
 
     /**
      * @return mixed

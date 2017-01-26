@@ -2,11 +2,11 @@
 
 namespace Tests\AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
-use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\Report\Report;
 use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
@@ -116,7 +116,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($dueDate->format('Y-m-d'), $reportDueDate->format('Y-m-d'));
     }
-
 
     public function testgetAssetsTotalValue()
     {

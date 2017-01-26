@@ -2,12 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Exception as AppException;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
-use AppBundle\Exception as AppException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/auth")

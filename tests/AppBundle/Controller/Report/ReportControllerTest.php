@@ -333,7 +333,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testActions()
     {
-        $url = '/report/' . self::$report1->getId();
+        $url = '/report/'.self::$report1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -349,7 +349,7 @@ class ReportControllerTest extends AbstractTestController
         $q = http_build_query(['groups' => [
             'action-more-info',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];

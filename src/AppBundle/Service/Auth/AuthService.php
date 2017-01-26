@@ -2,10 +2,10 @@
 
 namespace AppBundle\Service\Auth;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthService
 {

@@ -3,9 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Odr\Odr;
-use AppBundle\Entity\Odr\Traits\HasOdrTrait;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait MoreInfoTrait
 {
@@ -38,6 +36,7 @@ trait MoreInfoTrait
 
     /**
      * @param string $actionMoreInfo
+     *
      * @return Odr
      */
     public function setActionMoreInfo($actionMoreInfo)
@@ -57,6 +56,7 @@ trait MoreInfoTrait
 
     /**
      * @param string $actionMoreInfoDetails
+     *
      * @return Odr
      */
     public function setActionMoreInfoDetails($actionMoreInfoDetails)

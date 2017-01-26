@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller\Odr;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Controller\RestController;
+use AppBundle\Entity as EntityDir;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
 {

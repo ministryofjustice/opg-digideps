@@ -4,9 +4,8 @@ namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Odr\Expense;
 use AppBundle\Entity\Odr\Odr;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 trait ExpensesTrait
 {

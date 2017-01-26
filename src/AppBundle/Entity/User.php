@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Users.
@@ -803,7 +803,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getOdrEnabled()
     {
@@ -811,7 +811,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param boolean $odrEnabled
+     * @param bool $odrEnabled
      */
     public function setOdrEnabled($odrEnabled)
     {
@@ -821,7 +821,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAdManaged()
     {
@@ -829,7 +829,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param boolean $adManaged
+     * @param bool $adManaged
      */
     public function setAdManaged($adManaged)
     {

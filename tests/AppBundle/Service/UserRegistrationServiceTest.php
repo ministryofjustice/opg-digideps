@@ -3,8 +3,8 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
+use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\UserRegistrationService;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;

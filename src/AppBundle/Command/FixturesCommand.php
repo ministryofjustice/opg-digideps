@@ -2,13 +2,13 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\CourtOrderType;
-use AppBundle\Entity\Role;
 use AppBundle\Entity\Report\TransactionType;
 use AppBundle\Entity\Report\TransactionTypeIn;
 use AppBundle\Entity\Report\TransactionTypeOut;
+use AppBundle\Entity\Role;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @codeCoverageIgnore
@@ -86,6 +86,7 @@ class FixturesCommand extends AddSingleUserCommand
 
     /**
      * @deprecated
+     *
      * @param OutputInterface $output
      */
     protected function transactionTypes(OutputInterface $output)

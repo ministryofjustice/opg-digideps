@@ -2,24 +2,24 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
-use AppBundle\Model\SelfRegisterData;
-use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
+use AppBundle\Entity\User;
+use AppBundle\Model\SelfRegisterData;
+use Doctrine\ORM\EntityManager;
 
 class UserRegistrationService
 {
     /** @var EntityManager */
     private $em;
 
-    /** @var \Doctrine\ORM\EntityRepository*/
+    /** @var \Doctrine\ORM\EntityRepository */
     private $userRepository;
 
     /** @var \Doctrine\ORM\EntityRepository */
     private $roleRepository;
 
-    /** @var \Doctrine\ORM\EntityRepository  */
+    /** @var \Doctrine\ORM\EntityRepository */
     private $casRecRepo;
 
     public function __construct($em)

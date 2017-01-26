@@ -3,9 +3,7 @@
 namespace AppBundle\Entity\Odr\Traits;
 
 use AppBundle\Entity\Odr\Odr;
-use AppBundle\Entity\Odr\Traits\HasOdrTrait;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait ActionTrait
 {
@@ -55,7 +53,6 @@ trait ActionTrait
      */
     private $actionPropertyBuy;
 
-
     /**
      * @return string
      */
@@ -66,6 +63,7 @@ trait ActionTrait
 
     /**
      * @param string $actionGiveGiftsToClient
+     *
      * @return Odr
      */
     public function setActionGiveGiftsToClient($actionGiveGiftsToClient)
@@ -85,6 +83,7 @@ trait ActionTrait
 
     /**
      * @param string $actionGiveGiftsToClientDetails
+     *
      * @return Odr
      */
     public function setActionGiveGiftsToClientDetails($actionGiveGiftsToClientDetails)
@@ -104,6 +103,7 @@ trait ActionTrait
 
     /**
      * @param string $actionPropertyMaintenance
+     *
      * @return Odr
      */
     public function setActionPropertyMaintenance($actionPropertyMaintenance)
@@ -123,6 +123,7 @@ trait ActionTrait
 
     /**
      * @param string $actionPropertySellingRent
+     *
      * @return Odr
      */
     public function setActionPropertySellingRent($actionPropertySellingRent)
@@ -142,6 +143,7 @@ trait ActionTrait
 
     /**
      * @param string $actionPropertyBuy
+     *
      * @return Odr
      */
     public function setActionPropertyBuy($actionPropertyBuy)

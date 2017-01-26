@@ -120,6 +120,7 @@ class MoneyTransaction
 
     /**
      * Category (e.g. "dividends") identifies group (income and dividends) and type (in)
+     *
      * @var TransactionType
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})

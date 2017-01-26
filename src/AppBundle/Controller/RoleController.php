@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Role;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * @Route("/role")
@@ -13,6 +13,7 @@ class RoleController extends RestController
 {
     /**
      * //TODO consider hardcoding roles in model, no need to store them in the DB
+     *
      * @Route("")
      * @Method({"GET"})
      */

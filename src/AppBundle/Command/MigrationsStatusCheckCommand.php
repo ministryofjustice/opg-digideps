@@ -2,11 +2,11 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Command\Proxy\DoctrineCommandHelper;
 use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
+use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Throws exception if you have previously executed migrations in the database that are not registered migrations.

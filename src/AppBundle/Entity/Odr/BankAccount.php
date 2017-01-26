@@ -147,8 +147,7 @@ class BankAccount
         return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
     }
 
-    /**
-     */
+
     public function getLastEdit()
     {
         return $this->lastEdit;

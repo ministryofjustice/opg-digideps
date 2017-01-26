@@ -31,7 +31,7 @@ class Version099 extends AbstractMigration
         WHERE t.amounts is not null
         ';
         $oldTrans = $this->connection->fetchAll($sql);
-        echo count($oldTrans) . " transactions to migrate: ";
+        echo count($oldTrans)." transactions to migrate: ";
         $this->connection->beginTransaction();
 
         $i = 0;

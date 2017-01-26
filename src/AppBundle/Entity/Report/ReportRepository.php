@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReportRepository extends EntityRepository
 {
-
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
@@ -122,6 +121,7 @@ class ReportRepository extends EntityRepository
 
     /**
      * @param Report $oldReport
+     *
      * @return string
      */
     private function getReportTypeBasedOnOldReport(Report $oldReport)

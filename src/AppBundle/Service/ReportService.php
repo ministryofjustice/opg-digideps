@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class ReportService
 {
-    /** @var  EntityRepository */
+    /** @var EntityRepository */
     protected $reportRepository;
 
     public function __construct(EntityRepository $reportRepository)

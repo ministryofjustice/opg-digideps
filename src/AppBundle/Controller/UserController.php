@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html

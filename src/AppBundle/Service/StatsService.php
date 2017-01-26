@@ -2,17 +2,13 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\CasRec;
-use Doctrine\ORM\EntityRepository;
 
 class StatsService
 {
-    /** @var  EntityManager */
+    /** @var EntityManager */
     protected $em;
 
     public function __construct(EntityManager $em)
@@ -22,7 +18,7 @@ class StatsService
     }
 
     /**
-     * @param integer $maxResults
+     * @param int $maxResults
      *
      * @return array
      */
@@ -88,7 +84,7 @@ class StatsService
     }
 
     /**
-     * @param integer $maxResults
+     * @param int $maxResults
      *
      * @return string
      */

@@ -2,16 +2,16 @@
 
 namespace AppBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializationContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use AppBundle\Exception\HasDataInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class RestInputOuputFormatter
 {

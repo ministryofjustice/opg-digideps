@@ -160,6 +160,7 @@ abstract class TransactionType
 
         return $this;
     }
+
 //
 //    public function setType($type)
 //    {

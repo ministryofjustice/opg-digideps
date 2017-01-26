@@ -2,12 +2,12 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use AppBundle\Entity\User;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * @codeCoverageIgnore

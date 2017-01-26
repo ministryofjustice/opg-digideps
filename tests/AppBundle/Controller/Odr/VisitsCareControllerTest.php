@@ -2,8 +2,8 @@
 
 namespace Tests\AppBundle\Controller\Odr;
 
-use Tests\AppBundle\Controller\AbstractTestController;
 use AppBundle\Entity\Odr\VisitsCare;
+use Tests\AppBundle\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
@@ -76,7 +76,6 @@ class VisitsCareControllerTest extends AbstractTestController
         $url2 = '/odr/visits-care/'.self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
-
 
     public function testGetOneByIdData()
     {

@@ -3,11 +3,11 @@
 namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Report\Report;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReportRepositoryTest extends WebTestCase
 {
@@ -118,6 +118,7 @@ class ReportRepositoryTest extends WebTestCase
 
     /**
      * //TODO avoid setUp being called for this method
+     *
      * @test
      * @dataProvider createNextYearReportChangesTypeProvider
      */

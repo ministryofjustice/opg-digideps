@@ -4,9 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\StatsService;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/stats")
@@ -40,7 +40,7 @@ class StatsController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $file = '/tmp/stats' . $timestamp . '.csv';
+        $file = '/tmp/stats'.$timestamp.'.csv';
 
         if (file_exists($file)) {
             echo file_get_contents($file);

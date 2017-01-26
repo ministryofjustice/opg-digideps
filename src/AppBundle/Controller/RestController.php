@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\NotFound;
 use AppBundle\Service\Auth\AuthService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity as EntityDir;
 
 abstract class RestController extends Controller
 {

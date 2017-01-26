@@ -99,6 +99,7 @@ class Transaction
 
     /**
      * @deprecated
+     *
      * @return string
      */
     public function getTransactionClass()

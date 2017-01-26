@@ -2,10 +2,10 @@
 
 namespace AppBundle\Command;
 
+use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 
 /**
  * command that launches doctrine migration,

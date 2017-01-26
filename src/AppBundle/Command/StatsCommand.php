@@ -4,7 +4,6 @@ namespace AppBundle\Command;
 
 use AppBundle\Service\StatsService;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**

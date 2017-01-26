@@ -63,6 +63,7 @@ class Fixtures
     /**
      * @param EntityDir\Client $client
      * @param array $settersMap
+     *
      * @return EntityDir\Odr\Odr
      */
     public function createOdr(EntityDir\Client $client, array $settersMap = [])
@@ -184,6 +185,7 @@ class Fixtures
     /**
      * @param EntityDir\Odr\Odr $odr
      * @param array $settersMap
+     *
      * @return EntityDir\Odr\VisitsCare
      */
     public function createOdrVisitsCare(EntityDir\Odr\Odr $odr, array $settersMap = [])
@@ -280,6 +282,7 @@ class Fixtures
 
     /**
      * @deprecated
+     *
      * @return EntityDir\Report\Transaction
      */
     public function createTransaction(EntityDir\Report\Report $report, $type, array $amounts, array $settersMap = [])

@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Roles.
@@ -22,6 +22,7 @@ class Role implements RoleInterface
     /**
      * Added via digideps:fixtures command.
      * //TODO remove this table, role name should be used inside user table with no joins
+     *
      * @JMS\Exclude
      */
     public static $fixtures = [
@@ -82,8 +83,6 @@ class Role implements RoleInterface
     {
         return self::$fixtures[$this->getId()][0];
     }
-
-
 
     public function getRole()
     {
