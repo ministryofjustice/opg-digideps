@@ -20,6 +20,7 @@ class Report
 {
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\ExpensesTrait;
+    use ReportTraits\GiftsTrait;
 
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;

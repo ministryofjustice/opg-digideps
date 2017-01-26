@@ -8,27 +8,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 
-class ExpenseController extends RestController
+class GiftController extends RestController
 {
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($reportId, $expenseId)
+    public function getOneById($reportId, $giftId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
-        $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
+        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
-        return $expense;
+        return $gift;
     }
 
     /**
-     * @Route("/report/{reportId}/expense", requirements={"reportId":"\d+"})
+     * @Route("/report/{reportId}/gift", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
     public function add(Request $request, $reportId)
@@ -43,22 +43,22 @@ class ExpenseController extends RestController
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $expense = new EntityDir\Report\Expense($report);
+        $gift = new EntityDir\Report\Gift($report);
 
-        $this->updateEntityWithData($expense, $data);
-        $report->setPaidForAnything('yes');
+        $this->updateEntityWithData($gift, $data);
+        $report->setGiftsExist('yes');
 
-        $this->persistAndFlush($expense);
+        $this->persistAndFlush($gift);
         $this->persistAndFlush($report);
 
-        return ['id' => $expense->getId()];
+        return ['id' => $gift->getId()];
     }
 
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
      * @Method({"PUT"})
      */
-    public function edit(Request $request, $reportId, $expenseId)
+    public function edit(Request $request, $reportId, $giftId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
@@ -67,43 +67,43 @@ class ExpenseController extends RestController
         $report = $this->findEntityBy('Report\Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
-        $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
+        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
-        $this->updateEntityWithData($expense, $data);
+        $this->updateEntityWithData($gift, $data);
 
-        $this->getEntityManager()->flush($expense);
+        $this->getEntityManager()->flush($gift);
 
-        return ['id' => $expense->getId()];
+        return ['id' => $gift->getId()];
     }
 
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
      * @Method({"DELETE"})
      */
-    public function delete($reportId, $expenseId)
+    public function delete($reportId, $giftId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
-        $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
-        $this->getEntityManager()->remove($expense);
+        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
+        $this->getEntityManager()->remove($gift);
 
-        if (count($report->getExpenses()) === 0) {
-            $report->setPaidForAnything(null); // reset choice
+        if (count($report->getGifts()) === 0) {
+            $report->setGiftsExist(null); // reset choice
         }
         $this->getEntityManager()->flush();
 
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Expense $expense, array $data)
+    private function updateEntityWithData(EntityDir\Report\Gift $gift, array $data)
     {
         // common props
-        $this->hydrateEntityWithArrayData($expense, $data, [
+        $this->hydrateEntityWithArrayData($gift, $data, [
             'amount' => 'setAmount',
             'explanation' => 'setExplanation',
         ]);
