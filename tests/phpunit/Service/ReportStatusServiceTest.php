@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
@@ -20,6 +21,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getBankAccounts' => [],
                 'getExpenses' => [],
                 'getPaidForAnything' => null,
+                'getGifts' => [],
+                'getGiftsExist' => [],
                 'getMoneyTransfers' => [],
                 'getNoTransfersToAdd' => null,
                 'getAssets' => [],
@@ -154,8 +157,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], StatusService::STATE_DONE],
             [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], StatusService::STATE_DONE],
             // less than 2 accounts => done
-            [['getBankAccounts' => [$account1]], StatusService::STATE_DONE],
             [['getBankAccounts' => []], StatusService::STATE_DONE],
+            [['getBankAccounts' => [$account1]], StatusService::STATE_DONE],
         ];
     }
 
@@ -230,6 +233,27 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getExpensesState());
     }
 
+    public function giftsProvider()
+    {
+        $expense = m::mock(Gift::class);
+
+        return [
+            [['getGifts' => []], StatusService::STATE_NOT_STARTED],
+            [['getGiftsExist' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
+            [['getGiftsExist' => 'no'], StatusService::STATE_DONE],
+            [['getGifts' => [$expense], 'getGiftsExist' => 'yes'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider giftsProvider
+     */
+    public function gifts($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getGiftsState());
+    }
 
     public function assetsProvider()
     {
@@ -341,180 +365,53 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $object->balanceMatches());
     }
 
-
-    /**
-     * @test
-     */
-    public function getRemainingSectionsEmpty()
+    public function mockedMethodsCompletingReport($type)
     {
-        $object = $this->getStatusServiceWithReportMocked([]);
-        $expected = [
-            'decisions' => 'not-started',
-            'contacts' => 'not-started',
-            'visitsCare' => 'not-started',
-            'deputyExpense' => 'not-started',
+        $ret = [];
+
+        $ret += array_pop($this->decisionsProvider())[0];
+        $ret += array_pop($this->contactsProvider())[0];
+        $ret += array_pop($this->visitsCareProvider())[0];
             //
-            'bankAccounts' => 'not-started',
-            'moneyIn' => 'not-started',
-            'moneyOut' => 'not-started',
-            'assets' => 'not-started',
-            'debts' => 'not-started',
-            //
-            'actions' => 'not-started',
-            'otherInfo' => 'not-started',
-        ];
-        $this->assertEquals($expected, $object->getRemainingSections());
-    }
+        $ret += array_pop($this->actionsProvider())[0];
+        $ret += array_pop($this->otherInfoProvider())[0];
+        $ret += array_pop($this->giftsProvider())[0];
 
-    public function getRemainingSectionsPartialProvider()
-    {
-        return [
-            // create using last DONE section of each provider
-            [array_pop($this->decisionsProvider())[0], 'decisions'],
-            [array_pop($this->contactsProvider())[0], 'contacts'],
-            [array_pop($this->visitsCareProvider())[0], 'visitsCare'],
-            //
-            [array_pop($this->bankAccountProvider())[0], 'accounts'],
-            [array_pop($this->expensesProvider())[0], 'deputyExpense'],
-            [array_pop($this->moneyTransferProvider())[0], 'moneyTransfers'],
-            [array_pop($this->MoneyInProvider())[0], 'accounts'],
-            [array_pop($this->MoneyOutProvider())[0], 'accounts'],
-            [array_pop($this->assetsProvider())[0], 'assets'],
-            [array_pop($this->debtsProvider())[0], 'debts'],
-            //
-            [array_pop($this->actionsProvider())[0], 'actions'],
-            [array_pop($this->otherInfoProvider())[0], 'otherInfo'],
-        ];
-    }
+        if ($type == Report::TYPE_102 || $type ==  Report::TYPE_103) {
+            $ret += array_pop($this->bankAccountProvider())[0];
+            $ret += array_pop($this->expensesProvider())[0];
+            $ret += array_pop($this->MoneyInProvider())[0];
+            $ret += array_pop($this->MoneyOutProvider())[0];
+            $ret += array_pop($this->assetsProvider())[0];
+            $ret += array_pop($this->debtsProvider())[0];
 
-    /**
-     * @test
-     * @dataProvider getRemainingSectionsPartialProvider
-     */
-    public function getRemainingSectionsPartial($provider, $keyRemoved)
-    {
-        $object = $this->getStatusServiceWithReportMocked($provider);
-        $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
-    }
-
-    public function getRemainingSectionsProvider()
-    {
-        return [
-            // 102 all missing
-            [Report::TYPE_102, [
-                'getDecisionsState' => StatusService::STATE_INCOMPLETE,
-                'getContactsState' => StatusService::STATE_INCOMPLETE,
-                'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
-                'getActionsState' => StatusService::STATE_INCOMPLETE,
-                'getActionsState' => StatusService::STATE_INCOMPLETE,
-                'getOtherInfoState' => StatusService::STATE_INCOMPLETE,
-                'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
-                'getExpensesState' => StatusService::STATE_INCOMPLETE,
-                'getMoneyTransferState' => StatusService::STATE_INCOMPLETE,
-                'getMoneyInState' => StatusService::STATE_INCOMPLETE,
-                'getMoneyOutState' => StatusService::STATE_INCOMPLETE,
-                'getAssetsState' => StatusService::STATE_INCOMPLETE,
-                'getDebtsState' => StatusService::STATE_INCOMPLETE,
-            ], [
-                'decisions' => 'incomplete',
-                'contacts' => 'incomplete',
-                'visitsCare' => 'incomplete',
-                'actions' => 'incomplete',
-                'otherInfo' => 'incomplete',
-                'bankAccounts' => 'incomplete',
-                'deputyExpense' => 'incomplete',
-                'moneyTransfers' => 'incomplete',
-                'moneyIn' => 'incomplete',
-                'moneyOut' => 'incomplete',
-                'assets' => 'incomplete',
-                'debts' => 'incomplete',
-            ]],
-            // 102: all complete
-            [Report::TYPE_102, [
-                'getDecisionsState' => StatusService::STATE_DONE,
-                'getContactsState' => StatusService::STATE_DONE,
-                'getVisitsCareState' => StatusService::STATE_DONE,
-                'getActionsState' => StatusService::STATE_DONE,
-                'getActionsState' => StatusService::STATE_DONE,
-                'getOtherInfoState' => StatusService::STATE_DONE,
-                'getBankAccountsState' => StatusService::STATE_DONE,
-                'getExpensesState' => StatusService::STATE_DONE,
-                'getMoneyTransferState' => StatusService::STATE_DONE,
-                'getMoneyInState' => StatusService::STATE_DONE,
-                'getMoneyOutState' => StatusService::STATE_DONE,
-                'getAssetsState' => StatusService::STATE_DONE,
-                'getDebtsState' => StatusService::STATE_DONE,
-            ], []],
-            // 103 all missing
-            [Report::TYPE_103, [
-                'getDecisionsState' => StatusService::STATE_INCOMPLETE,
-                'getContactsState' => StatusService::STATE_INCOMPLETE,
-                'getVisitsCareState' => StatusService::STATE_INCOMPLETE,
-                'getActionsState' => StatusService::STATE_INCOMPLETE,
-                'getActionsState' => StatusService::STATE_INCOMPLETE,
-                'getOtherInfoState' => StatusService::STATE_INCOMPLETE,
-                'getBankAccountsState' => StatusService::STATE_INCOMPLETE,
-                'getExpensesState' => StatusService::STATE_INCOMPLETE,
-                //note: getMoneyTransferState not there
-                'getMoneyInState' => StatusService::STATE_INCOMPLETE,
-                'getMoneyOutState' => StatusService::STATE_INCOMPLETE,
-                'getAssetsState' => StatusService::STATE_INCOMPLETE,
-                'getDebtsState' => StatusService::STATE_INCOMPLETE,
-            ], [
-                'decisions' => 'incomplete',
-                'contacts' => 'incomplete',
-                'visitsCare' => 'incomplete',
-                'actions' => 'incomplete',
-                'otherInfo' => 'incomplete',
-                'bankAccounts' => 'incomplete',
-                'deputyExpense' => 'incomplete',
-                // note: moneyTransfers not in 103
-                'moneyIn' => 'incomplete',
-                'moneyOut' => 'incomplete',
-                'assets' => 'incomplete',
-                'debts' => 'incomplete',
-            ]],
-            // 103: all complete
-            [Report::TYPE_103, [
-                'getDecisionsState' => StatusService::STATE_DONE,
-                'getContactsState' => StatusService::STATE_DONE,
-                'getVisitsCareState' => StatusService::STATE_DONE,
-                'getActionsState' => StatusService::STATE_DONE,
-                'getActionsState' => StatusService::STATE_DONE,
-                'getOtherInfoState' => StatusService::STATE_DONE,
-                'getBankAccountsState' => StatusService::STATE_DONE,
-                'getExpensesState' => StatusService::STATE_DONE,
-                'getMoneyInState' => StatusService::STATE_DONE,
-                'getMoneyOutState' => StatusService::STATE_DONE,
-                'getAssetsState' => StatusService::STATE_DONE,
-                'getDebtsState' => StatusService::STATE_DONE,
-            ], []],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider getRemainingSectionsProvider
-     */
-    public function getRemainingSections($reportType, $mocks, $expected)
-    {
-        $report = m::mock(Report::class, [
-            'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
-            'getType' => $reportType
-        ]);
-        $object = m::mock(ReportStatusService::class . '[' . implode(',', array_keys($mocks)) . ']', [$report]);
-
-        foreach ($mocks as $method => $return) {
-            $object->shouldReceive($method)->times(1)->andReturn($return);
+            if ($type == Report::TYPE_102) {
+                $ret += array_pop($this->moneyTransferProvider())[0];
+            }
         }
 
-        $actual = $object->getRemainingSections();
-        ksort($actual);
-        ksort($expected);
-        $this->assertEquals($expected, $actual);
+        return $ret;
     }
 
-    public function isReadyToSubmitProvider()
+    /**
+     * @test
+     */
+    public function getRemainingSections()
+    {
+        // all empty
+        $object = $this->getStatusServiceWithReportMocked([]);
+        $this->assertNotEquals([], $object->getRemainingSections());
+
+        // all complete 102
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102));
+        $this->assertEquals([], $object->getRemainingSections());
+
+        // all complete 103
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
+        $this->assertEquals([], $object->getRemainingSections());
+    }
+
+    public function isReadyToSubmitBalanceProvider()
     {
         return [
             [['getRemainingSections' => ['s1'], 'balanceMatches' => false], false],
@@ -525,9 +422,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider isReadyToSubmitProvider
+     * @dataProvider isReadyToSubmitBalanceProvider
      */
-    public function isReadyToSubmit($data, $expected)
+    public function isReadyToSubmitBalance($data, $expected)
     {
         $report = m::mock(Report::class);
         $object = m::mock(ReportStatusService::class . '[getRemainingSections,balanceMatches]', [$report]);

@@ -95,6 +95,16 @@
                 } %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'gifts',
+                report: report,
+                state: reportStatus.giftsState,
+                nOfRecords: report.gifts | length,
+                linkToSubSection: path('gifts', {'reportId': report.id}),
+                description: true
+                } %}
+
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'bank_accounts',
                     report: report,

@@ -54,6 +54,13 @@ deputy_expenses:
     start: "Start"
     label:
       done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+gifts:
+    subSectionTitle: "Gifts"
+    subSectionDescription: "Gifts you have given to other people on behalf of %client%"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add %client%'s building society and savings accounts"
