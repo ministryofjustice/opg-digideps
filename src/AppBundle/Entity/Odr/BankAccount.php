@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="odr_account")
  * @ORM\Entity()
  */
-class Account
+class BankAccount
 {
     /**
      * Keep in sync with client.
@@ -157,7 +157,7 @@ class Account
     /**
      * @param null $lastEdit
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setLastEdit($lastEdit)
     {
@@ -177,7 +177,7 @@ class Account
     /**
      * @param int $id
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setId($id)
     {
@@ -197,7 +197,7 @@ class Account
     /**
      * @param string $bank
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setBank($bank)
     {
@@ -217,7 +217,7 @@ class Account
     /**
      * @param string $accountType
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setAccountType($accountType)
     {
@@ -237,7 +237,7 @@ class Account
     /**
      * @param string $sortCode
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setSortCode($sortCode)
     {
@@ -257,7 +257,7 @@ class Account
     /**
      * @param string $accountNumber
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setAccountNumber($accountNumber)
     {
@@ -277,7 +277,7 @@ class Account
     /**
      * @param \DateTime $createdAt
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setCreatedAt($createdAt)
     {
@@ -297,7 +297,7 @@ class Account
     /**
      * @param decimal $balanceOnCourtOrderDate
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setBalanceOnCourtOrderDate($balanceOnCourtOrderDate)
     {
@@ -317,7 +317,7 @@ class Account
     /**
      * @param Odr $odr
      *
-     * @return Account
+     * @return BankAccount
      */
     public function setOdr($odr)
     {
@@ -334,7 +334,7 @@ class Account
     /**
      * @param string $isJointAccount yes/no/null
      *
-     * @return \AppBundle\Entity\Report\Account
+     * @return \AppBundle\Entity\Report\BankAccount
      */
     public function setIsJointAccount($isJointAccount)
     {

@@ -33,7 +33,7 @@ class MoneyTransfer
      * @var Account
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountFrom")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Account", inversedBy="transfersFrom")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount", inversedBy="transfersFrom")
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
     private $from;
@@ -42,7 +42,7 @@ class MoneyTransfer
      * @var Account
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountTo")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Account", inversedBy="transfersTo")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount", inversedBy="transfersTo")
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
     private $to;
@@ -89,7 +89,7 @@ class MoneyTransfer
     }
 
     /**
-     * @return Account
+     * @return BankAccount
      */
     public function getFrom()
     {
@@ -97,7 +97,7 @@ class MoneyTransfer
     }
 
     /**
-     * @return Account
+     * @return BankAccount
      */
     public function getTo()
     {
@@ -105,11 +105,11 @@ class MoneyTransfer
     }
 
     /**
-     * @param Account $from
+     * @param BankAccount $from
      *
      * @return MoneyTransfer
      */
-    public function setFrom(Account $from)
+    public function setFrom(BankAccount $from)
     {
         $this->from = $from;
 
@@ -117,11 +117,11 @@ class MoneyTransfer
     }
 
     /**
-     * @param Account $to
+     * @param BankAccount $to
      *
      * @return MoneyTransfer
      */
-    public function setTo(Account $to)
+    public function setTo(BankAccount $to)
     {
         $this->to = $to;
 

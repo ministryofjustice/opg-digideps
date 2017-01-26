@@ -46,7 +46,7 @@ class ReportRepository extends EntityRepository
         //  opening balance = closing balance
         //  opening date = closing date
         foreach ($report->getBankAccounts() as $account) {
-            $newAccount = new EntityDir\Report\Account();
+            $newAccount = new EntityDir\Report\BankAccount();
             $newAccount->setBank($account->getBank());
             $newAccount->setAccountType($account->getAccountType());
             $newAccount->setSortCode($account->getSortCode());

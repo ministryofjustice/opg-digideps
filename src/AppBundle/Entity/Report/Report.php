@@ -76,8 +76,8 @@ class Report
 
     /**
      * @JMS\Groups({"account"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Account>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Account", mappedBy="report", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Report\BankAccount>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\BankAccount", mappedBy="report", cascade={"persist"})
      */
     private $bankAccounts;
 
@@ -557,11 +557,11 @@ class Report
     /**
      * Add accounts.
      *
-     * @param Account $accounts
+     * @param BankAccount $accounts
      *
      * @return Report
      */
-    public function addAccount(Account $accounts)
+    public function addAccount(BankAccount $accounts)
     {
         $this->bankAccounts[] = $accounts;
 
@@ -571,9 +571,9 @@ class Report
     /**
      * Remove accounts.
      *
-     * @param Account $accounts
+     * @param BankAccount $accounts
      */
-    public function removeAccount(Account $accounts)
+    public function removeAccount(BankAccount $accounts)
     {
         $this->bankAccounts->removeElement($accounts);
     }
@@ -581,7 +581,7 @@ class Report
     /**
      * Get accounts.
      *
-     * @return Account[]
+     * @return BankAccount[]
      */
     public function getBankAccounts()
     {

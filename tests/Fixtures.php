@@ -108,11 +108,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Account
+     * @return EntityDir\Report\BankAccount
      */
     public function createAccount(EntityDir\Report\Report $report, array $settersMap = [])
     {
-        $ret = new EntityDir\Report\Account();
+        $ret = new EntityDir\Report\BankAccount();
         $ret->setReport($report);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
@@ -128,11 +128,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Odr\Account
+     * @return EntityDir\Odr\BankAccount
      */
     public function createOdrAccount(EntityDir\Odr\Odr $odr, array $settersMap = [])
     {
-        $ret = new EntityDir\Odr\Account();
+        $ret = new EntityDir\Odr\BankAccount();
         $ret->setOdr($odr);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
@@ -364,6 +364,6 @@ class Fixtures
 
     public static function deleteReportsData()
     {
-        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table deputy_case, report, odr  RESTART IDENTITY cascade";');
+        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table deputy_case, report, audit_log_entry, odr  RESTART IDENTITY cascade";');
     }
 }

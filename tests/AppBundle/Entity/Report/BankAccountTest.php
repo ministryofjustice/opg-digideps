@@ -2,17 +2,13 @@
 
 namespace Tests\AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\BankAccount;
 
-class AccountTest extends \PHPUnit_Framework_TestCase
+class BankAccountTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-    }
-
     public function testSetterGetters()
     {
-        $account = new Account();
+        $account = new BankAccount();
         $account->setLastEdit(new \DateTime('2015-01-01'));
         $this->assertEquals('123456', $account->setAccountNumber('123456')->getAccountNumber());
         $this->assertEquals('123456', $account->setBank('123456')->getBank());

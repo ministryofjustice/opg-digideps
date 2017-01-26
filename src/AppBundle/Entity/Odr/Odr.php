@@ -55,8 +55,8 @@ class Odr
      * @var Account[]
      *
      * @JMS\Groups({"odr-account"})
-     * @JMS\Type("array<AppBundle\Entity\Odr\Account>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Account", mappedBy="odr", cascade={"persist"})
+     * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\BankAccount", mappedBy="odr", cascade={"persist"})
      */
     private $bankAccounts;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\Report;
@@ -47,9 +47,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
 
-        $this->report->addAccount((new Account())->setBank('bank1')->setOpeningBalance(1));
-        $this->report->addAccount((new Account())->setBank('bank2')->setOpeningBalance(3));
-        $this->report->addAccount((new Account())->setBank('bank3')->setOpeningBalance(0));
+        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount((new BankAccount())->setBank('bank2')->setOpeningBalance(3));
+        $this->report->addAccount((new BankAccount())->setBank('bank3')->setOpeningBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
     }
@@ -58,12 +58,12 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new Account())->setBank('bank1')->setClosingBalance(1));
+        $this->report->addAccount((new BankAccount())->setBank('bank1')->setClosingBalance(1));
 
         $this->assertEquals(1, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new Account())->setBank('bank2')->setClosingBalance(3));
-        $this->report->addAccount((new Account())->setBank('bank3')->setClosingBalance(0));
+        $this->report->addAccount((new BankAccount())->setBank('bank2')->setClosingBalance(3));
+        $this->report->addAccount((new BankAccount())->setBank('bank3')->setClosingBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
@@ -72,7 +72,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
-        $this->report->addAccount((new Account())->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
 
         $this->assertEquals(1, $this->report->getCalculatedBalance());
 
@@ -91,7 +91,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $this->report->addAccount((new Account())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
+        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1500));//in
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(400));//out
 

@@ -26,7 +26,7 @@ class AccountController extends RestController
         $odr = $this->findEntityBy('Odr\Odr', $id);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $accounts = $this->getRepository('Odr\Account')->findByOdr($odr, [
+        $accounts = $this->getRepository('Odr\BankAccount')->findByOdr($odr, [
             'id' => 'DESC',
         ]);
 
@@ -51,7 +51,7 @@ class AccountController extends RestController
         $data = $this->deserializeBodyContent($request, [
         ]);
 
-        $account = new EntityDir\Odr\Account();
+        $account = new EntityDir\Odr\BankAccount();
         $account->setOdr($odr);
 
         $this->fillAccountData($account, $data);
@@ -73,7 +73,7 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
 
-        $account = $this->findEntityBy('Odr\Account', $id, 'Account not found');
+        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found');
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         return $account;
@@ -87,7 +87,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Odr\Account', $id, 'Account not found'); /* @var $account EntityDir\Odr\Account*/
+        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount*/
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         $data = $this->deserializeBodyContent($request);
@@ -109,7 +109,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Odr\Account', $id, 'Account not found'); /* @var $account EntityDir\Odr\Account */
+        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount */
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         $this->getEntityManager()->remove($account);
@@ -119,7 +119,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Odr\Account $account, array $data)
+    private function fillAccountData(EntityDir\Odr\BankAccount $account, array $data)
     {
         if (array_key_exists('bank', $data)) {
             $account->setBank($data['bank']);

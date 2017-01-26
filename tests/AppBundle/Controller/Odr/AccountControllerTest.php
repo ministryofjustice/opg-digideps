@@ -101,7 +101,7 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $account = self::fixtures()->getRepo('Odr\Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Odr\Account */
+        $account = self::fixtures()->getRepo('Odr\BankAccount')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Odr\BankAccount */
         $this->assertEquals('hsbc', $account->getBank());
         $this->assertEquals('savings', $account->getAccountType());
         $this->assertEquals('123456', $account->getSortCode());
@@ -156,7 +156,7 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->getRepo('Odr\Account')->find(self::$account1->getId());
+        $account = self::fixtures()->getRepo('Odr\BankAccount')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
         $this->assertEquals('yes', $account->getIsJointAccount());
@@ -189,6 +189,6 @@ class AccountControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Odr\Account')->find($account1Id));
+        $this->assertTrue(null === self::fixtures()->getRepo('Odr\BankAccount')->find($account1Id));
     }
 }
