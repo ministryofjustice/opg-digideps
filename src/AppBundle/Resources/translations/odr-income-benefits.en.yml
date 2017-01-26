@@ -9,7 +9,7 @@ startPage:
     content:
       para01: |
         You can use a <a href="https://www.entitledto.co.uk/" target="_blank">benefits calculator</a> 
-        to work out which benefits Sally could be claiming. 
+        to work out which benefits %client% could be claiming. 
   startButton: Start income and benefits
 
 stepPage:
