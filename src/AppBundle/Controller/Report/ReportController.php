@@ -182,6 +182,15 @@ class ReportController extends RestController
             }
         }
 
+        if (array_key_exists('gifts_exist', $data)) {
+            $report->setGiftsExist($data['gifts_exist']);
+            if ($report->getGiftsExist() === 'no') { // remove existing gift
+                foreach ($report->getGifts() as $e) {
+                    $this->getEntityManager()->remove($e);
+                }
+            }
+        }
+
         if (array_key_exists('start_date', $data)) {
             $report->setStartDate(new \DateTime($data['start_date']));
         }
