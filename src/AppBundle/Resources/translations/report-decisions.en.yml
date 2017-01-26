@@ -4,28 +4,20 @@ startPage:
   startButton: Start decisions
   description1: "We need to know about:"
   description2: |
-    Decisions you do not need to include here are small, day-to-day decisions
-    such as about buying food or toiletries
+    You don't need to include small, day-to-day decisions like buying food or toiletries
   descriptionListItem1: %client%'s mental capacity to make financial decisions
   descriptionListItem2: Significant decisions you have made for %client% during the reporting period
-  whyweneedthisSummary: Why do we need to know this?
-  whyweneedthisPara1: |
-    We need to know the important decisions you've made to help us understand
-    how you're looking after %client%'s finances and wellbeing.
-  whyweneedthisPara2: |
-    This is because we have a responsibility to protect people who don't have
-    the mental capacity to make decisions for themselves.
-  whatisdecisionSummary: What is a significant decision?
+  whatisdecisionSummary: What counts as a significant decision?
   whatisdecisionPara1: |
     Significant decisions are any important decisions you make for %client% - not
     just financial decisions. We need to know about any decisions that have a big
     impact on %client%'s wellbeing or circumstances.
-  whatisdecisionPara2: "Significant decisions might be:"
-  whatisdecisionListItem1: buying or selling or renting property
+  whatisdecisionPara2: "Your significant decisions might include:"
+  whatisdecisionListItem1: buying, selling or renting property
   whatisdecisionListItem2: buying or selling investments or shares
   whatisdecisionListItem3: holidays or frequent day trips
   whatisdecisionListItem4: home improvements
-  whatisdecisionListItem5: making gifts
+  whatisdecisionListItem5: making gifts on %client%'s behalf
   whatisdecisionListItem6: moving %client% to another nursing or care home
   whatisdecisionListItem7: changing day centres
 
