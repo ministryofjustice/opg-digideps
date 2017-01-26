@@ -155,6 +155,9 @@ class Report
     private $mentalCapacity;
 
     /**
+     * @deprecated in favour of report.type
+     * Do not remove until the new frontend logic (102,103,104) is implemented
+     *
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
