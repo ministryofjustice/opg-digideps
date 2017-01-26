@@ -8,6 +8,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
         alias: doctrine.orm.entity_manager
+
     doctrine.listener:
         class: AppBundle\EventListener\DoctrineListener
         tags:
@@ -24,5 +25,5 @@ services:
 
     stats_service:
         class: AppBundle\Service\StatsService
-        arguments: ["@em"]
+        arguments: [ "@em" ]
 
