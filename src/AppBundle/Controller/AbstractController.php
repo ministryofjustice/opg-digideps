@@ -63,7 +63,7 @@ class AbstractController extends Controller
 
     /**
      * @param Client $client
-     * @param array $groups
+     * @param array  $groups
      *
      * @return Report[]
      */
@@ -84,7 +84,7 @@ class AbstractController extends Controller
     }
 
     /**
-     * @param int $reportId
+     * @param int   $reportId
      * @param array $groups
      *
      * @return Report
@@ -117,7 +117,7 @@ class AbstractController extends Controller
     }
 
     /**
-     * @param int $odrId
+     * @param int   $odrId
      * @param array $groups
      *
      * @return Odr

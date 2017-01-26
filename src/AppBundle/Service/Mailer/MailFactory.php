@@ -245,12 +245,12 @@ class MailFactory
     }
 
     /**
- * @param EntityDir\User          $user
- * @param EntityDir\Report\Report $submittedReport
- * @param EntityDir\Report        $newReport
- *
- * @return ModelDir\Email
- */
+     * @param EntityDir\User          $user
+     * @param EntityDir\Report\Report $submittedReport
+     * @param EntityDir\Report        $newReport
+     *
+     * @return ModelDir\Email
+     */
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
@@ -278,9 +278,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
-     * @param EntityDir\Odr\Odr       $odr
-     * @param EntityDir\Report        $newReport
+     * @param EntityDir\User    $user
+     * @param EntityDir\Odr\Odr $odr
+     * @param EntityDir\Report  $newReport
      *
      * @return ModelDir\Email
      */

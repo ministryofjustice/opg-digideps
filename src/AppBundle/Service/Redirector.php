@@ -52,7 +52,7 @@ class Redirector
 
     /**
      * @param \AppBundle\Service\SecurityContext $security
-     * @param type $router
+     * @param type                               $router
      */
     public function __construct(
         SecurityContextInterface $security,

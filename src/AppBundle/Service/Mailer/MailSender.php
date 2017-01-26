@@ -48,8 +48,8 @@ class MailSender
      * MailSender constructor.
      *
      * @param ValidatorInterface $validator
-     * @param LoggerInterface $logger
-     * @param PredisClient $redis
+     * @param LoggerInterface    $logger
+     * @param PredisClient       $redis
      */
     public function __construct(ValidatorInterface $validator, LoggerInterface $logger, PredisClient $redis)
     {
@@ -60,7 +60,7 @@ class MailSender
     }
 
     /**
-     * @param string $name
+     * @param string       $name
      * @param Swift_Mailer $mailer
      */
     public function addSwiftMailer($name, Swift_Mailer $mailer)
@@ -120,7 +120,7 @@ class MailSender
 
     /**
      * @param Swift_Message $swiftMessage
-     * @param Email $email
+     * @param Email         $email
      */
     private function fillSwiftMessageWithEmailData(\Swift_Message $swiftMessage, Email $email)
     {
