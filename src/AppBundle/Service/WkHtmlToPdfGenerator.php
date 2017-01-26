@@ -41,9 +41,9 @@ class WkHtmlToPdfGenerator
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); //timeout in seconds        
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); //timeout in seconds
         curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/json']); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $body = json_encode([
             'contents' => base64_encode($html),

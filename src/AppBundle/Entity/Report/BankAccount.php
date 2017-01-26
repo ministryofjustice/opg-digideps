@@ -84,7 +84,7 @@ class BankAccount
      * @JMS\Type("string")
      *
      * @JMS\Groups({"account"})
-     * 
+     *
      * @var string
      */
     private $sortCode;
@@ -108,7 +108,7 @@ class BankAccount
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
      * @Assert\Range(max=1000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
      * @JMS\Groups({"account"})
-     * 
+     *
      * @var decimal
      */
     private $closingBalance;
@@ -126,7 +126,7 @@ class BankAccount
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
      * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
-     * 
+     *
      * @var string
      */
     private $isJointAccount;
@@ -148,7 +148,7 @@ class BankAccount
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
-     * 
+     *
      * @var string
      */
     private $meta;
@@ -352,7 +352,7 @@ class BankAccount
     /**
      * Only for partial account created during migrations
      * e.g. asset -> bank account.
-     * 
+     *
      * @return bool
      */
     public function hasMissingInformation()

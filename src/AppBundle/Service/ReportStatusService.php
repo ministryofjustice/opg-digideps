@@ -206,7 +206,6 @@ class ReportStatusService
      */
     public function getRemainingSections()
     {
-
         $states = [
             'decisions' => $this->getDecisionsState(),
             'contacts' => $this->getContactsState(),

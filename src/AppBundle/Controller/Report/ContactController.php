@@ -54,7 +54,7 @@ class ContactController extends AbstractController
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
                     $this->get('rest_client')->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
-                    foreach($report->getContacts() as $contact) {
+                    foreach ($report->getContacts() as $contact) {
                         $this->getRestClient()->delete("/report/contact/".$contact->getId());
                     }
                     return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
@@ -62,7 +62,7 @@ class ContactController extends AbstractController
         }
 
         $backLink = $this->generateUrl('contacts', ['reportId'=>$reportId]);
-        if ( $request->get('from') == 'summary') {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('contacts_summary', ['reportId'=>$reportId]);
         }
 
@@ -92,7 +92,7 @@ class ContactController extends AbstractController
             // update contact. The API will also delete reason for no contact
                 $this->getRestClient()->post('report/contact', $data, ['contact', 'report-id']);
 
-                return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
         }
 
         $backLinkRoute = 'contacts_' . $request->get('from');
@@ -154,7 +154,6 @@ class ContactController extends AbstractController
 
             $this->getRestClient()->put('report/contact', $data);
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
-
         }
 
         return [

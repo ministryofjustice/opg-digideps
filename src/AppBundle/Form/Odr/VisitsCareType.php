@@ -41,27 +41,27 @@ class VisitsCareType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->step === 1) {
-            $builder->add('doYouLiveWithClient', 'choice', array(
+            $builder->add('doYouLiveWithClient', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
             $builder->add('howOftenDoYouContactClient', 'textarea');
         }
 
         if ($this->step === 2) {
-            $builder->add('doesClientReceivePaidCare', 'choice', array(
+            $builder->add('doesClientReceivePaidCare', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
 
-            $builder->add('howIsCareFunded', 'choice', array(
+            $builder->add('howIsCareFunded', 'choice', [
                 'choices' => [
                     'client_pays_for_all' => $this->translate('form.howIsCareFunded.choices.client_pays_for_all'),
                     'client_gets_financial_help' => $this->translate('form.howIsCareFunded.choices.client_gets_financial_help'),
                     'all_care_is_paid_by_someone_else' => $this->translate('form.howIsCareFunded.choices.all_care_is_paid_by_someone_else'),
                 ],
                 'expanded' => true,
-            ));
+            ]);
         }
 
 
@@ -70,10 +70,10 @@ class VisitsCareType extends AbstractType
         }
 
         if ($this->step === 4) {
-            $builder->add('doesClientHaveACarePlan', 'choice', array(
+            $builder->add('doesClientHaveACarePlan', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
 
             $builder->add('whenWasCarePlanLastReviewed', 'date', ['widget' => 'text',
                 'input' => 'datetime',
@@ -84,10 +84,10 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 5) {
             $builder
-                ->add('planMoveNewResidence', 'choice', array(
+                ->add('planMoveNewResidence', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
-                ))
+                ])
                 ->add('planMoveNewResidenceDetails', 'textarea');
         }
 
@@ -95,7 +95,6 @@ class VisitsCareType extends AbstractType
 
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
             $data = $event->getData();
 
             if ($this->step == 4) {
@@ -126,7 +125,6 @@ class VisitsCareType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'odr-visits-care',
             'validation_groups' => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data VisitsCare */
                 $validationGroups = [

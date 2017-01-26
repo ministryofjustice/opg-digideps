@@ -50,7 +50,7 @@ class AssetProperty extends Asset
      * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property-occupants"})
      *
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      */
     private $occupants;
@@ -58,17 +58,17 @@ class AssetProperty extends Asset
     /**
      * @var string fully/partly
      * @Assert\NotBlank(message="asset.property.owned.notBlank", groups={"property-owned"})
-     * 
+     *
      * @JMS\Type("string")
      */
     private $owned;
 
     /**
      * @var float 0-100
-     * 
+     *
      * @Assert\NotBlank(message="asset.property.ownedPercentage.notBlank", groups={"property-owned-partly"})
      * @Assert\Range(min=1, max=100, minMessage = "asset.property.ownedPercentage.type", maxMessage = "asset.property.ownedPercentage.type", groups={"property-owned-partly"})
-     * 
+     *
      * @JMS\Type("float")
      */
     private $ownedPercentage;
@@ -91,7 +91,7 @@ class AssetProperty extends Asset
      * @Assert\NotBlank(message="asset.property.mortgageOutstandingAmount.notBlank", groups={"property-mortgage-outstanding-amount"})
      * @Assert\Type( type="numeric", message="asset.property.mortgageOutstandingAmount.type", groups={"property-mortgage-outstanding-amount"})
      * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
-     * 
+     *
      * @var string
      * @JMS\Type("integer")
      */
@@ -101,7 +101,7 @@ class AssetProperty extends Asset
      * @Assert\NotBlank(message="asset.property.hasCharges.notBlank", groups={"property-has-charges"})
      *
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      */
     private $hasCharges;
@@ -110,7 +110,7 @@ class AssetProperty extends Asset
      * @Assert\NotBlank(message="asset.property.isRentedOut.notBlank", groups={"property-rented-out"})
      *
      * @var string
-     * 
+     *
      * @JMS\Type("string")
      */
     private $isRentedOut;
@@ -127,7 +127,7 @@ class AssetProperty extends Asset
      * @Assert\NotBlank(message="asset.property.rentIncomeMonth.notBlank", groups={"property-rent-income-month"})
      * @Assert\Type( type="numeric", message="asset.property.rentIncomeMonth.type", groups={"property-rent-income-month"})
      * @Assert\Range(min=0, max=1000000000, maxMessage = "asset.property.rentIncomeMonth.outOfRange", groups={"property-rent-income-month"})
-     * 
+     *
      * @var float
      * @JMS\Type("float")
      */

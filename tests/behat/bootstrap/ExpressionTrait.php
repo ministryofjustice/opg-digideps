@@ -34,7 +34,7 @@ trait ExpressionTrait
      * 3 days ago, DD
      * 10 days ahead, month
      * 1 day ahead, year.
-     * 
+     *
      * @param string $expression
      *
      * @return string

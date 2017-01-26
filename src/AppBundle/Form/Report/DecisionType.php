@@ -14,10 +14,10 @@ class DecisionType extends AbstractType
     {
         $builder/*->add('title', 'text')*/
         ->add('description', 'textarea')
-            ->add('clientInvolvedBoolean', 'choice', array(
+            ->add('clientInvolvedBoolean', 'choice', [
                 'choices' => [1 => 'Yes', 0 => 'No'],
                 'expanded' => true,
-            ))
+            ])
             ->add('clientInvolvedDetails', 'textarea')
             ->add('save', 'submit');
     }

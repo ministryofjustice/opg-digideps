@@ -16,10 +16,10 @@ class OtherInfoType extends AbstractType
     {
         $builder
             ->add('id', 'hidden')
-            ->add('actionMoreInfo', 'choice', array(
+            ->add('actionMoreInfo', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ))
+            ])
             ->add('actionMoreInfoDetails', 'textarea')
             ->add('save', 'submit');
     }
@@ -28,7 +28,6 @@ class OtherInfoType extends AbstractType
     {
         $resolver->setDefaults([
             'validation_groups' => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data Report */
                 $validationGroups = ['more-info'];

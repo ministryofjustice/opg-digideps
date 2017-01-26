@@ -135,7 +135,7 @@ class DecisionController extends AbstractController
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
                     $this->get('rest_client')->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
-                    foreach($report->getDecisions() as $decision) {
+                    foreach ($report->getDecisions() as $decision) {
                         $this->getRestClient()->delete("/report/decision/".$decision->getId());
                     }
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
@@ -143,7 +143,7 @@ class DecisionController extends AbstractController
         }
 
         $backLink = $this->generateUrl('decisions_mental_assessment', ['reportId'=>$reportId]);
-        if ( $request->get('from') == 'summary') {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('decisions_summary', ['reportId'=>$reportId]);
         }
 
@@ -235,7 +235,6 @@ class DecisionController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
             return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
-
         }
 
         return [

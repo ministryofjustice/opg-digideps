@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator\Odr;
+
 use AppBundle\Entity\Odr\Odr;
 
 class IncomeBenefitsValidator
@@ -51,5 +52,4 @@ class IncomeBenefitsValidator
             count($this->odr->recordsPresent($this->odr->getOneOff())) === 0,
         ]));
     }
-
 }

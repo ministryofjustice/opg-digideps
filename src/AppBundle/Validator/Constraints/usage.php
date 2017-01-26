@@ -11,7 +11,7 @@ $constraint2 = new Chain([
     'stopOnError' => true,
 ]);
 
-// Symfony Validator Component v2.x has an issue with nested constraints, 
+// Symfony Validator Component v2.x has an issue with nested constraints,
 // see https://github.com/symfony/Validator/blob/fc0650c1825c842f9dcc4819a2eaff9922a07e7c/ConstraintValidatorFactory.php#L48.
 // If you plan to use nested `Chain` constraints, consider using the `NoCacheConstraintValidatorFactory` decorator.
 // Here is a usage example for the Silex application:

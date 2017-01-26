@@ -9,7 +9,7 @@ class MessageUtils
 {
     /**
      */
-    protected static $fieldsToSerialize = array(
+    protected static $fieldsToSerialize = [
         'to',
         'from',
         'bcc',
@@ -19,7 +19,7 @@ class MessageUtils
         'subject',
         'body',
         'sender',
-    );
+    ];
 
     /**
      * @param Swift_Mime_Message $message
@@ -28,19 +28,19 @@ class MessageUtils
      */
     public static function messageToArray(\Swift_Mime_Message $message)
     {
-        $ret = array();
+        $ret = [];
         foreach (self::$fieldsToSerialize as $field) {
             $method = 'get'.ucfirst($field);
             $ret[$field] = $message->$method();
         }
 
         // add parts
-        $ret['parts'] = array();
+        $ret['parts'] = [];
         foreach ($message->getChildren() as $child) {
-            $ret['parts'][] = array(
+            $ret['parts'][] = [
                 'body' => base64_encode($child->getBody()),
                 'contentType' => $child->getContentType(),
-            );
+            ];
         }
 
         return $ret;
@@ -48,7 +48,7 @@ class MessageUtils
 
     /**
      * @param array $array
-     * 
+     *
      * @return \Swift_Mime_Message
      */
     public static function arrayToMessage($array)

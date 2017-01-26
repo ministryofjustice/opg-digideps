@@ -147,9 +147,9 @@ class OdrController extends AbstractController
 
     private function getPdfBinaryContent($odr)
     {
-        $html = $this->render('AppBundle:Odr/Formatted:formatted_body.html.twig', array(
+        $html = $this->render('AppBundle:Odr/Formatted:formatted_body.html.twig', [
             'odr' => $odr, 'adLoggedAsDeputy' => $this->isGranted(Role::AD)
-        ))->getContent();
+        ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }

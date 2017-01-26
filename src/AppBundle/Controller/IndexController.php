@@ -179,7 +179,7 @@ class IndexController extends AbstractController
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;
-        $progressSteps_arr = array();
+        $progressSteps_arr = [];
         if (is_array($array)) {
             $soa = count($array);
 

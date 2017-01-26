@@ -152,7 +152,6 @@ class AssetController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
-
         }
 
         return [
@@ -246,7 +245,6 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-
             $asset = $form->getData();
             /* @var $asset EntityDir\Odr\AssetProperty */
 
@@ -349,5 +347,4 @@ class AssetController extends AbstractController
 
         return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
     }
-
 }

@@ -132,7 +132,7 @@ class MoneyTransaction
 
     /**
      * @var array
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
      *

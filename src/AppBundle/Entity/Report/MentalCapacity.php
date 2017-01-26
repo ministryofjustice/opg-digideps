@@ -34,7 +34,7 @@ class MentalCapacity
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"mental-capacity"})
-     * 
+     *
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
      */
     private $hasCapacityChangedDetails;

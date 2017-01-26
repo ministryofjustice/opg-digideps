@@ -319,7 +319,7 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @param FormView $elementsFormView
-     * 
+     *
      * @return array
      */
     private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
@@ -342,7 +342,7 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * get form errors list and render them inside Components/Alerts:error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}.
-     * 
+     *
      * @param FormView $form
      */
     public function renderFormErrorsList(FormView $form)
@@ -382,7 +382,7 @@ class FormFieldsExtension extends \Twig_Extension
      * @param string                           $elementName
      * @param array                            $vars
      * @param string|null                      $transIndex
-     * 
+     *
      * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
      */
     private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)

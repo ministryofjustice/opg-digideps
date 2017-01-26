@@ -155,7 +155,7 @@ class StepRedirector
     {
         if ($this->fromPage === 'summary') {
             return $this->generateUrl($this->routeSummary, ['from'=>'skip-step']);
-        } else if ($this->currentStep == 1) {
+        } elseif ($this->currentStep == 1) {
             return $this->generateUrl($this->step1BackLink);
         }
 
@@ -185,5 +185,4 @@ class StepRedirector
     {
         return $this->router->generate($route, $this->routeBaseParams + $params);
     }
-
 }

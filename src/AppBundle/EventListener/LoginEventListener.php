@@ -43,7 +43,7 @@ class LoginEventListener
 
     /**
      * On login determine user role and redirect appropiately.
-     * 
+     *
      * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)

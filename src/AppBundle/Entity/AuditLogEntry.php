@@ -57,7 +57,7 @@ class AuditLogEntry
 
     /**
      * @var \DateTime
-     * 
+     *
      * @JMS\Groups({"audit_log","audit_log_save"})
      * @JMS\Type("DateTime")
      */

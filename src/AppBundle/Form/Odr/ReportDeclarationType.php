@@ -17,7 +17,7 @@ class ReportDeclarationType extends AbstractType
                 ->add('agree', 'checkbox', [
                      'constraints' => new NotBlank(['message' => 'report-declaration.agree.notBlank']),
                  ])
-                 ->add('agreedBehalfDeputy', 'choice', array(
+                 ->add('agreedBehalfDeputy', 'choice', [
                     'choices' => [
                         // api models contains those keys too. Change them accordingly if needed
                         'only_deputy' => 'agreedBehalfDeputy.only_deputy',
@@ -27,7 +27,7 @@ class ReportDeclarationType extends AbstractType
                     'choice_translation_domain' => 'report-declaration',
                     'translation_domain' => 'report-declaration',
                     'expanded' => true,
-                ))
+                ])
                 ->add('agreedBehalfDeputyExplanation', 'textarea')
                 ->add('save', 'submit');
     }
@@ -37,7 +37,6 @@ class ReportDeclarationType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'odr-declaration',
             'validation_groups' => function (FormInterface $form) {
-
                 $data = $form->getData();
                 $validationGroups = ['declare'];
 

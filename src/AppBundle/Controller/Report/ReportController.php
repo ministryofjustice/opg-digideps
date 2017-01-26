@@ -103,8 +103,8 @@ class ReportController extends AbstractController
      * Create report
      * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
      * action "add" will instead add another report.
-     * 
-     * 
+     *
+     *
      * @Route("/report/{action}/{clientId}", name="report_create",
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
@@ -165,9 +165,9 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/add_further_information/{action}", 
-     *  name="report_add_further_info", 
-     *  defaults={"action": "view"}, 
+     * @Route("/report/{reportId}/add_further_information/{action}",
+     *  name="report_add_further_info",
+     *  defaults={"action": "view"},
      *  requirements={"action": "(view|edit)"}
      * )
      * @Template()
@@ -373,9 +373,9 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', array(
+        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
-            ))->getContent();
+            ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }

@@ -15,7 +15,7 @@ class SelfRegisterDataType extends AbstractType
             ->add('firstname', 'text')
             ->add('lastname', 'text')
             ->add('postcode', 'text')
-            ->add('email', 'repeated',  [
+            ->add('email', 'repeated', [
                 'type' => 'email',
                 'invalid_message' => 'user.email.doesNotMatch',
             ])

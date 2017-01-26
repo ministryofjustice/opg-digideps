@@ -46,7 +46,7 @@ class SendGridTransport implements Swift_Transport
 
     /**
      * @param Swift_Events_EventListener $plugin
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function registerPlugin(Swift_Events_EventListener $plugin)
@@ -78,7 +78,7 @@ class SendGridTransport implements Swift_Transport
 
     /**
      * @param Swift_Mime_Message $message
-     * 
+     *
      * @return Email
      */
     protected function createSendGridMessageFromSwiftMessage(Swift_Mime_Message $message)

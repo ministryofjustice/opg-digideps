@@ -13,11 +13,11 @@ class GiftExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('giftsExist', 'choice', array(
+            ->add('giftsExist', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
 //                'constraints' => [new NotBlank(['message' => 'gifts.giftsExist.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

@@ -10,7 +10,7 @@ class AssetOther extends Asset
     /**
      * @Assert\NotBlank(message="odr.asset.description.notBlank")
      * @Assert\Length(min=3, minMessage="odr.asset.description.length")
-     * 
+     *
      * @JMS\Type("string")
      */
     private $description;

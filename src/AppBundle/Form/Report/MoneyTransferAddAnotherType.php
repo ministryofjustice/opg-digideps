@@ -12,5 +12,4 @@ class MoneyTransferAddAnotherType extends AbstractAddAnotherType
 {
     protected $missingMessage = 'transfer.addAnother.notBlank';
     protected $translationDomain = 'report-money-transfer';
-
 }

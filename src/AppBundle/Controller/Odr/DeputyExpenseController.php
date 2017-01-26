@@ -150,7 +150,6 @@ class DeputyExpenseController extends AbstractController
             $this->getRestClient()->put('odr/' . $odr->getId() . '/expense/'.$expense->getId(), $data, ['odr-expense']);
 
             return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
-
         }
 
         return [

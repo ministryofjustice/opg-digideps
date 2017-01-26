@@ -26,7 +26,7 @@ class RestClient
     /**
      * Keep here a list of options for the methods
      * Needed on the rawSafeCall.
-     * 
+     *
      * @var array
      */
     private static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
@@ -44,7 +44,7 @@ class RestClient
     /**
      * Used to keep the user auth token.
      * UserId is used as a key.
-     * 
+     *
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -116,9 +116,9 @@ class RestClient
      * Call /auth/login endpoints passing email and password
      * Stores AuthToken in storage
      * Returns user.
-     * 
+     *
      * @param array $credentials with keys "token" or "email" and "password"
-     * 
+     *
      * @return User
      */
     public function login(array $credentials)
@@ -146,7 +146,7 @@ class RestClient
 
     /**
      * Finds user by email.
-     * 
+     *
      * @param string $token
      *
      * @return \AppBundle\Entity\User $user
@@ -161,7 +161,7 @@ class RestClient
     /**
      * @param string $email
      * @param string $type
-     * 
+     *
      * @return \AppBundle\Entity\User
      */
     public function userRecreateToken($email, $type = 'pass-reset')
@@ -193,7 +193,7 @@ class RestClient
      * @param string              $endpoint  e.g. /user
      * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
-     * 
+     *
      * @return string response body
      */
     public function put($endpoint, $mixed, array $jmsGroups = [])
@@ -210,7 +210,7 @@ class RestClient
      * @param string        $endpoint  e.g. /user
      * @param string|object $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array         $jmsGroups deserialise_groups
-     * 
+     *
      * @return string response body
      */
     public function post($endpoint, $mixed, array $jmsGroups = [])
@@ -237,9 +237,9 @@ class RestClient
 
     /**
      * Call POST /selfregister passing client secret.
-     * 
+     *
      * @param SelfRegisterData $selfRegData
-     * 
+     *
      * @return \AppBundle\Entity\User
      */
     public function registerUser(SelfRegisterData $selfRegData)
@@ -291,11 +291,11 @@ class RestClient
     /**
      * Performs HTTP client call
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
-     * 
+     *
      * In case of connect/HTTP failure:
      * - throws DisplayableException using self::ERROR_CONNECT as a message, keeping exception code
      * - logs the full error message with with warning priority
-     * 
+     *
      * @return ResponseInterface
      */
     private function rawSafeCall($method, $url, $options)
@@ -351,10 +351,10 @@ class RestClient
 
     /**
      * Return the 'data' array from the response.
-     * 
+     *
      * @param type              $class
      * @param ResponseInterface $response
-     * 
+     *
      * @return array content of "data" key from response
      */
     private function extractDataArray(ResponseInterface $response)
@@ -378,7 +378,7 @@ class RestClient
     /**
      * @param string $class full class name of the class to deserialise to
      * @param array  $data  "data" returned from the RESTful server
-     * 
+     *
      * @return object of type $class
      */
     private function arrayToEntity($class, array $data)
@@ -392,7 +392,7 @@ class RestClient
     /**
      * @param string $class full class name of the class to deserialise to
      * @param array  $data  "data" returned from the RESTful server
-     * 
+     *
      * @return array of type $class
      */
     private function arrayToEntitities($class, array $data)

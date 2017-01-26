@@ -149,7 +149,6 @@ class GiftController extends AbstractController
             $this->getRestClient()->put('report/' . $report->getId() . '/gift/'.$gift->getId(), $data, ['gift']);
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
-
         }
 
         return [

@@ -72,7 +72,7 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, ['visits-care', 'odr-id']);
             }
 
-            if ($fromPage == 'summary')  {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Record edited'

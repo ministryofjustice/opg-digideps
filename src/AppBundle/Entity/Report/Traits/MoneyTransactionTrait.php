@@ -179,5 +179,4 @@ trait MoneyTransactionTrait
 
         return $this;
     }
-
 }

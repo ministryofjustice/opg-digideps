@@ -140,14 +140,10 @@ class AdController extends AbstractController
                 ]);
 
             return $this->redirect($redirectUrl);
-
-
         } catch (\Exception $e) {
             return $this->render('AppBundle:Ad:error.html.twig', [
                 'error' => $e->getMessage(),
             ]);
         }
-
-
     }
 }

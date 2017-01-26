@@ -162,5 +162,4 @@ class MoneyTransfer
     {
         $this->accountToId = $accountToId;
     }
-
 }

@@ -13,11 +13,11 @@ class AssetExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('noAssetToAdd', 'choice', array(
+            ->add('noAssetToAdd', 'choice', [
                 'choices' => [0 => 'Yes', 1 => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'asset.exist.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

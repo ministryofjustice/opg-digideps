@@ -59,8 +59,7 @@ class Redirector
         RouterInterface $router,
         Session $session,
         $env
-    )
-    {
+    ) {
         $this->security = $security;
         $this->router = $router;
         $this->session = $session;

@@ -149,7 +149,6 @@ class DeputyExpenseController extends AbstractController
             $this->getRestClient()->put('report/' . $report->getId() . '/expense/'.$expense->getId(), $data, ['expense']);
 
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
-
         }
 
         return [

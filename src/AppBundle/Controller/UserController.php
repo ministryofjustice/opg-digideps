@@ -17,9 +17,9 @@ class UserController extends AbstractController
 {
     /**
      * Landing page to let the user access the app and selecting a password.
-     * 
+     *
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
-     * 
+     *
      * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
      *   "action" = "(activate|password-reset)"
      * })
@@ -235,7 +235,7 @@ class UserController extends AbstractController
     /**
      * - change user data
      * - chang user password.
-     * 
+     *
      * @Route("/user-account/user-show", name="user_show")
      * @Template()
      **/
@@ -254,7 +254,7 @@ class UserController extends AbstractController
     /**
      * - change user data
      * - chang user password.
-     * 
+     *
      * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
      **/

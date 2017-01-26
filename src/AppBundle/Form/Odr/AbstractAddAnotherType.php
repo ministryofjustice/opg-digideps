@@ -16,12 +16,12 @@ class AbstractAddAnotherType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('addAnother', 'choice', array(
+            ->add('addAnother', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
                 'constraints' => [new NotBlank(['message' => $this->missingMessage])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

@@ -30,7 +30,6 @@ class AddUserType extends AbstractType
 
         if (!empty($this->options['roleIdSetTo'])) {
             $roleIdOptions['data'] = $this->options['roleIdSetTo'];
-
         }
 
         if (!empty($this->options['roleIdDisabled'])) {

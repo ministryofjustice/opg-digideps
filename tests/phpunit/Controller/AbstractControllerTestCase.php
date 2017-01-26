@@ -50,10 +50,10 @@ abstract class AbstractControllerTestCase extends WebTestCase
      * @param array  $parameters
      * @param array  $files
      * @param array  $server
-     * 
+     *
      * @return Response
      */
-    protected function ajaxRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    protected function ajaxRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
         $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With' => 'XMLHttpRequest'] + $server);
 
@@ -69,7 +69,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
      *
      * @return Response
      */
-    protected function httpRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    protected function httpRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
         $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
 

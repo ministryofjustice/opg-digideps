@@ -13,11 +13,11 @@ class ContactExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasContacts', 'choice', array(
+            ->add('hasContacts', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'contact.noContactsChoice.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('reasonForNoContacts', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
     }

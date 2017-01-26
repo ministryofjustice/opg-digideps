@@ -158,7 +158,6 @@ class AssetController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
-
         }
 
         return [
@@ -254,7 +253,6 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-
             $asset = $form->getData();
             /* @var $asset Report\AssetProperty */
 
@@ -357,5 +355,4 @@ class AssetController extends AbstractController
 
         return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
     }
-
 }

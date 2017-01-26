@@ -41,7 +41,6 @@ class DebtSingleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Odr\Debt',
             'validation_groups' => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Odr\Debt */
                 $validationGroups = ['debts'];

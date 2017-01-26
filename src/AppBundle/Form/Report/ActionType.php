@@ -56,7 +56,6 @@ class ActionType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-actions',
             'validation_groups'  => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data Action */
                 $validationGroups = [];

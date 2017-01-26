@@ -65,7 +65,7 @@ class MoneyInController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
-            $transaction = array_filter($report->getMoneyTransactionsIn(), function($t) use ($transactionId) {
+            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
@@ -91,9 +91,9 @@ class MoneyInController extends AbstractController
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['group'] = $transaction->getGroup();
-            } else if ($step == 2) {
+            } elseif ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
-            } else if ($step == $totalSteps) {
+            } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',
@@ -182,7 +182,7 @@ class MoneyInController extends AbstractController
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = array_filter($report->getMoneyTransactionsIn(), function($t) use ($transactionId) {
+        $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });
         if (!$transaction) {

@@ -13,11 +13,11 @@ class MoneyTransferExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('noTransfersToAdd', 'choice', array(
+            ->add('noTransfersToAdd', 'choice', [
                 'choices' => [0 => 'Yes', 1 => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'transfer.exist.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

@@ -41,7 +41,7 @@ class MailFactory
      * @param string $area      deputy|admin
      * @param string $routeName must be in YML config under email.routes
      * @param array  $params
-     * 
+     *
      * @return string calculated route
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
@@ -126,7 +126,7 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
-     * 
+     *
      * @return ModelDir\Email
      */
     public function createChangePasswordEmail(EntityDir\User $user)
@@ -223,7 +223,7 @@ class MailFactory
 
     /**
      * @param string $response
-     * 
+     *
      * @return ModelDir\Email
      */
     public function createFeedbackEmail($response)
@@ -308,7 +308,7 @@ class MailFactory
 
     /**
      * @param string $key
-     * 
+     *
      * @return string
      */
     private function translate($key)

@@ -55,6 +55,4 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assetProp->setValue($value)->setOwned($owned)->setOwnedPercentage($ownPercentage);
         $this->assertEquals($expected, $this->assetProp->getValueTotal());
     }
-
-
 }

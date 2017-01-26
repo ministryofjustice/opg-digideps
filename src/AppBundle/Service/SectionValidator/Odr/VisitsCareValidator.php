@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator\Odr;
+
 use AppBundle\Entity\Odr\VisitsCare;
 
 class VisitsCareValidator
@@ -52,5 +53,4 @@ class VisitsCareValidator
             $this->visitsCare->getPlanMoveNewResidence() === null,
         ]));
     }
-
 }

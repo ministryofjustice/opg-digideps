@@ -42,7 +42,6 @@ class BalanceController extends AbstractController
 //            );
 
             return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
-
         }
 
         return [

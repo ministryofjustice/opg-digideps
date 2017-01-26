@@ -78,7 +78,7 @@ class DebtController extends AbstractController
         if ($form->isValid()) {
             $this->get('rest_client')->put('odr/' . $odr->getId(), $form->getData(), ['debt']);
 
-            if ($fromPage == 'summary')  {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
             }
 

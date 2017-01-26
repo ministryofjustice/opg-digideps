@@ -51,7 +51,6 @@ class MoneyTransferType extends AbstractType
 
         $builder
             ->add('save', 'submit');
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

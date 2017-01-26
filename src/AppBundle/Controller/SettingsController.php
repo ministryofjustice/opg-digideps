@@ -28,5 +28,4 @@ class SettingsController extends AbstractController
             'client' => $client,
         ];
     }
-
 }

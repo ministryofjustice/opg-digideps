@@ -123,7 +123,7 @@ class BehatController extends AbstractController
 
     /**
      * set token_date and registration_token on the user.
-     * 
+     *
      * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */

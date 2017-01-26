@@ -6,9 +6,9 @@ class StringUtils
 {
     /**
      * Transforms 3900 into "1 hour and 5 minutes".
-     * 
+     *
      * @param int $seconds
-     * 
+     *
      * @return string
      */
     public static function secondsToHoursMinutes($seconds)
@@ -29,7 +29,7 @@ class StringUtils
             return $minutesString;
         }
 
-        // X hours 
+        // X hours
         if ($minutes === 0) {
             return $hoursString;
         }

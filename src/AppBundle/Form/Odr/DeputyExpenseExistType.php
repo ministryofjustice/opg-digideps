@@ -13,11 +13,11 @@ class DeputyExpenseExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('paidForAnything', 'choice', array(
+            ->add('paidForAnything', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
 //                'constraints' => [new NotBlank(['message' => 'odr.expenses.paidForAnything.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

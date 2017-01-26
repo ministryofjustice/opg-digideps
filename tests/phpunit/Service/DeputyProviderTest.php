@@ -42,7 +42,9 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
         $this->restClient->shouldReceive('login')->once()->with($credentials)->andReturn($user);
         $this->restClient->shouldReceive('setLoggedUserId')->once()->with(1);
 
-        $this->logger->shouldReceive('info')->andReturnUsing(function ($e) {  throw new \Exception($e); });
+        $this->logger->shouldReceive('info')->andReturnUsing(function ($e) {
+            throw new \Exception($e);
+        });
 
         $this->object->login($credentials);
     }

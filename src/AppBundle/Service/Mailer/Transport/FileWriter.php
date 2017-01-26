@@ -9,7 +9,7 @@ use AppBundle\Service\Mailer\MessageUtils;
 
 /**
  * Mock transport used for BDD testing.
- * 
+ *
  * saves email into a class property, no real mail are sent
  */
 class FileWriter implements Swift_Transport
@@ -29,11 +29,11 @@ class FileWriter implements Swift_Transport
     /**
      * @var array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * @see Swift_Transport::isStarted
-     * 
+     *
      * @return bool always true
      */
     public function isStarted()
@@ -56,7 +56,7 @@ class FileWriter implements Swift_Transport
      *
      * @param Swift_Mime_Message $message
      * @param array              &$failedRecipients
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @see Swift_Transport::send
@@ -83,7 +83,7 @@ class FileWriter implements Swift_Transport
 
     /**
      * Empty implementation.
-     * 
+     *
      * @see Swift_Transport::stop
      * @codeCoverageIgnore
      */
@@ -93,7 +93,7 @@ class FileWriter implements Swift_Transport
 
     /**
      * Get messages added with "send".
-     * 
+     *
      * @return array
      */
     public function getMessages()
@@ -114,7 +114,7 @@ class FileWriter implements Swift_Transport
      *
      * @param type $subject
      * @param type $to
-     * 
+     *
      * @return Swift_Message|null
      */
     public function findMessage($subject, $to)

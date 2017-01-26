@@ -219,18 +219,18 @@ class Report
      */
     private $agree;
 
-    /** 
+    /**
      * @var string
-     *              
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
 
-    /** 
+    /**
      * @var string
-     *              
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
@@ -337,7 +337,7 @@ class Report
 
     /**
      * @param \DateTime $startDate
-     * 
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setStartDate(\DateTime $startDate = null)
@@ -360,7 +360,7 @@ class Report
 
     /**
      * Return the date 8 weeks after the end date.
-     * 
+     *
      * @return string $dueDate
      */
     public function getDueDate()
@@ -420,7 +420,7 @@ class Report
     /**
      * Return string representation of the start-end date period
      * e.g. 2004 to 2005.
-     * 
+     *
      * @return string $period
      */
     public function getPeriod()
@@ -499,7 +499,7 @@ class Report
      */
     public function getAccountWithId($id)
     {
-        foreach($this->bankAccounts as $account) {
+        foreach ($this->bankAccounts as $account) {
             if ($account->getId() == $id) {
                 return $account;
             }
@@ -646,7 +646,7 @@ class Report
 
     public function hasContacts()
     {
-        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null){
+        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;
         }
 
@@ -661,7 +661,7 @@ class Report
 
     public function hasDecisions()
     {
-        if (empty($this->getDecisions()) && $this->getReasonForNoDecisions() === null){
+        if (empty($this->getDecisions()) && $this->getReasonForNoDecisions() === null) {
             return null;
         }
 
@@ -1056,7 +1056,7 @@ class Report
 
     /**
      * @param int $id
-     * 
+     *
      * @return bool
      */
     public function hasAccountWithId($id)
@@ -1069,6 +1069,4 @@ class Report
 
         return false;
     }
-
-
 }

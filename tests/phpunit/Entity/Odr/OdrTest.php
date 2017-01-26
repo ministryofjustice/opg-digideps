@@ -59,7 +59,6 @@ class OdrTest extends \PHPUnit_Framework_TestCase
         $this->odr->setOneOff([$this->incomeUnticked]);
 
         $this->assertEquals('done', $this->odr->incomeBenefitsStatus());
-        
     }
 
     public function testGetAssetsTotalValue()

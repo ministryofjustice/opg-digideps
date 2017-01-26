@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator;
+
 use AppBundle\Entity\Report\VisitsCare;
 
 class VisitsCareValidator
@@ -49,5 +50,4 @@ class VisitsCareValidator
             $this->visitsCare->getDoesClientHaveACarePlan() === null,
         ]));
     }
-
 }

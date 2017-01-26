@@ -72,7 +72,7 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
-            if ($fromPage == 'summary')  {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Record edited'

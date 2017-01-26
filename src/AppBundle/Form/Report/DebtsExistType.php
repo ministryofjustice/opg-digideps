@@ -13,11 +13,11 @@ class DebtsExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasDebts', 'choice', array(
+            ->add('hasDebts', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'debt.noDebtsChoice.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 

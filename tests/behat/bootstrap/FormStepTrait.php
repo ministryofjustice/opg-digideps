@@ -49,7 +49,6 @@ trait FormStepTrait
             default:
                 throw new \RuntimeException("invalid value: only 'can|cannot' are acceoted");
         }
-
     }
 
     /**

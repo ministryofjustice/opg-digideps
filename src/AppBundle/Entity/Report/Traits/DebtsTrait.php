@@ -143,5 +143,4 @@ trait DebtsTrait
 
         return $debtsWithAValidAmount;
     }
-
 }

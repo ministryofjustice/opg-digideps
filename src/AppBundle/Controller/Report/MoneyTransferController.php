@@ -134,7 +134,7 @@ class MoneyTransferController extends AbstractController
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
                 $stepUrlData['to-id'] = $transfer->getAccountToId();
-            } else if ($step == $totalSteps) {
+            } elseif ($step == $totalSteps) {
                 if ($transferId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',
@@ -233,5 +233,4 @@ class MoneyTransferController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator;
+
 use AppBundle\Entity\Report\Action;
 
 class ActionsValidator
@@ -43,5 +44,4 @@ class ActionsValidator
             $this->action->getDoYouHaveConcerns() === null,
         ]));
     }
-
 }

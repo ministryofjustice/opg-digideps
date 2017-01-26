@@ -149,7 +149,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterUser()
     {
-        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) { echo $e;});
+        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
+            echo $e;
+        });
         $user = m::mock('AppBundle\Entity\User');
 
         $data = ['id' => 1];
@@ -449,7 +451,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->container->shouldReceive('get')->with('request')->andReturn($request);
 
-        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) { echo $e;});
+        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
+            echo $e;
+        });
 
         $this->client->shouldReceive('get')->with('/', [
                 'headers' => [

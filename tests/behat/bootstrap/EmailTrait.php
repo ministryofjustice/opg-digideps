@@ -29,7 +29,7 @@ trait EmailTrait
     /**
      * @param bool $throwExceptionIfNotFound
      * @param int  $index                    = last (default), 1=second last
-     * 
+     *
      * @return array|null
      */
     private function getEmailMock($throwExceptionIfNotFound = true, $index = 'last')
@@ -96,7 +96,7 @@ trait EmailTrait
      * @param string $regexpr
      *
      * @return string link matching the given pattern
-     * 
+     *
      * @throws \Exception
      */
     private function getFirstLinkInEmailMatching($regexpr)

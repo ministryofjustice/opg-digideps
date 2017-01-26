@@ -6,9 +6,9 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
 {
     public function testmessageToArray()
     {
-        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', array('getSubject'));
+        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', ['getSubject']);
 
-        $child = $this->getMock('stdClass', array('getBody', 'getContentType'));
+        $child = $this->getMock('stdClass', ['getBody', 'getContentType']);
         $child->expects($this->once())->method('getBody')->will($this->returnValue('b'));
         $child->expects($this->once())->method('getContentType')->will($this->returnValue('ct'));
 
@@ -18,7 +18,7 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
 
         $message->expects($this->once())
                 ->method('getChildren')
-                ->will($this->returnValue(array($child)));
+                ->will($this->returnValue([$child]));
 
         $array = MessageUtils::messageToArray($message);
 
@@ -29,12 +29,12 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testarrayToMessage()
     {
-        $array = array(
+        $array = [
             'subject' => 's',
-            'parts' => array(
-                array('body' => 'b', 'contentType' => 'c'),
-            ),
-        );
+            'parts' => [
+                ['body' => 'b', 'contentType' => 'c'],
+            ],
+        ];
         $message = MessageUtils::arrayToMessage($array);
 
         $this->assertInstanceOf('\Swift_Message', $message);
@@ -45,13 +45,13 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testarrayToString()
     {
-        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', array('getSubject'));
+        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', ['getSubject']);
 
-        $child1 = $this->getMock('stdClass', array('getBody', 'getContentType'));
+        $child1 = $this->getMock('stdClass', ['getBody', 'getContentType']);
         $child1->expects($this->once())->method('getBody')->will($this->returnValue('<b>test</b>'));
         $child1->expects($this->once())->method('getContentType')->will($this->returnValue('text/html'));
 
-        $child2 = $this->getMock('stdClass', array('getBody', 'getContentType'));
+        $child2 = $this->getMock('stdClass', ['getBody', 'getContentType']);
         $child2->expects($this->once())->method('getBody')->will($this->returnValue('testPlain'));
         $child2->expects($this->once())->method('getContentType')->will($this->returnValue('text/plain'));
 

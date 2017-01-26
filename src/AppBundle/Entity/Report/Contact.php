@@ -72,7 +72,7 @@ class Contact
 
     /**
      * Reason for contact.
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"contact"})
      *
@@ -83,7 +83,7 @@ class Contact
 
     /**
      * Relationship to the client.
-     * 
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"contact"})
      *

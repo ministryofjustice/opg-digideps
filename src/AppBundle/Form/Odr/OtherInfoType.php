@@ -11,5 +11,4 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class OtherInfoType extends OtherInfoTypeReport
 {
     protected $translationDomain = 'odr-more-info';
-
 }

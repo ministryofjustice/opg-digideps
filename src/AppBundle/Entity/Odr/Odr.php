@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
@@ -347,7 +346,7 @@ class Odr
      */
     public function getDebtsWithValidAmount()
     {
-        $debtsWithAValidAmount = array_filter($this->debts, function($debt) {
+        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
             return !empty($debt->getAmount());
         });
 
