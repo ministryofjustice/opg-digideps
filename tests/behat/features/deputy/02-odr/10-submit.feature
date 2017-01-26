@@ -56,8 +56,8 @@ Feature: odr / report submit
         Then I should be on "/odr"
         # check emails
         And the "last" email should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
-        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
-        And the second_last email should contain a PDF of at least 40 kb
+#        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
+#        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "odr-submit-confirmation"
 
 
