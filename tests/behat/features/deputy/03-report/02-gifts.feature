@@ -1,7 +1,7 @@
-Feature: deputy gifts
+Feature: gifts
 
   @deputy
-  Scenario: deputy gifts
+  Scenario: gifts
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-gifts, start"
     # chose "no records"
