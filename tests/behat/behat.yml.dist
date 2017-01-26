@@ -8,7 +8,7 @@ default:
             description: Pre checks and init
             paths:    [ %paths.base%/features/prechecks ]
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
         deputy:
             description: End to end journey for Lay deputy user
@@ -16,7 +16,7 @@ default:
             filters:
                 tags: "@deputy&&~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
         admin:
             description: End to end journey for Admin user
@@ -24,7 +24,7 @@ default:
             filters:
                 tags: "~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
         deputyodr:
             description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
@@ -32,7 +32,7 @@ default:
             filters:
                 tags: "@odr"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
     extensions:
         Behat\Symfony2Extension: ~
