@@ -105,9 +105,9 @@ class Report
     private $period;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\Account>")
+     * @JMS\Type("array<AppBundle\Entity\Report\BankAccount>")
      *
-     * @var Account[]
+     * @var BankAccount[]
      */
     private $bankAccounts;
 
@@ -1032,12 +1032,12 @@ class Report
     }
 
     /**
-     ** @return Account[]
+     ** @return BankAccount[]
      */
     public function getAccountsWithNoClosingBalance()
     {
         return array_filter($this->getBankAccounts(), function ($account) {
-            /* @var $account Account */
+            /* @var $account BankAccount */
             return $account->getClosingBalance() === null;
         });
     }

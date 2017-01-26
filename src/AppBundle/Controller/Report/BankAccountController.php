@@ -63,7 +63,7 @@ class BankAccountController extends AbstractController
         if ($accountId) {
             $account = $this->getRestClient()->get('report/account/' . $accountId, 'Report\\Account');
         } else {
-            $account = new EntityDir\Report\Account();
+            $account = new EntityDir\Report\BankAccount();
             $account->setReport($report);
         }
 

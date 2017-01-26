@@ -15,7 +15,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->report = new Report();
-        $this->account = m::mock('AppBundle\Entity\Report\Account');
+        $this->account = m::mock('AppBundle\Entity\Report\BankAccount');
         $this->account->shouldIgnoreMissing();
     }
 

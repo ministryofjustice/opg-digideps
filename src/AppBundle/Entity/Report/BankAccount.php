@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
-class Account
+class BankAccount
 {
     use HasReportTrait;
 
