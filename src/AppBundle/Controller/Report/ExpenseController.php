@@ -37,7 +37,7 @@ class ExpenseController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Odr\Odr */
+        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'explanation' => 'mustExist',
@@ -85,7 +85,7 @@ class ExpenseController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Odr\Odr */
+        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $expense = $this->findEntityBy('Report\Expense', $expenseId);
