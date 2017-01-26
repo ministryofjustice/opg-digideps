@@ -95,8 +95,8 @@ class MoneyTransferController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('step_redirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

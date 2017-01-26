@@ -49,8 +49,8 @@ class VisitsCareController extends AbstractController
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('step_redirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('visits_care', 'visits_care_step', 'visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

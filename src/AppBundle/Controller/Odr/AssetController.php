@@ -208,13 +208,11 @@ class AssetController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('step_redirector')
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_assets_type', 'odr_assets_property_step', 'odr_assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId' => $odrId, 'assetId' => $assetId]);
-
 
         if ($assetId) { // edit asset
             $assets = array_filter($odr->getAssets(), function ($t) use ($assetId) {

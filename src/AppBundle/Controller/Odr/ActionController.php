@@ -51,8 +51,7 @@ class ActionController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('step_redirector')
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_actions', 'odr_actions_step', 'odr_actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
