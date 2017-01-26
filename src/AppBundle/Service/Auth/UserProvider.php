@@ -47,9 +47,10 @@ class UserProvider implements UserProviderInterface
      *
      * @param string $username token (String)
      *
+     * @throws RuntimeException with specific codes, in order to avoid being wrapped and losing their` type
+     *
      * @return User
      *
-     * @throws RuntimeException with specific codes, in order to avoid being wrapped and losing their` type
      */
     public function loadUserByUsername($username)
     {

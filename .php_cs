@@ -34,7 +34,7 @@ return PhpCsFixer\Config::create()
         'no_whitespace_in_blank_line' => true,
         'ordered_imports' => true,
         'phpdoc_no_empty_return' => true,
-//        'phpdoc_order' => true,
+        'phpdoc_order' => true,
         'phpdoc_scalar' => true,
         'phpdoc_separation' => true,
         'phpdoc_single_line_var_spacing' => true,
