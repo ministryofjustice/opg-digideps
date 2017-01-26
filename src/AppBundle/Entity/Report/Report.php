@@ -19,6 +19,7 @@ class Report
 {
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DeputyExpenseTrait;
+    use ReportTraits\GiftTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';

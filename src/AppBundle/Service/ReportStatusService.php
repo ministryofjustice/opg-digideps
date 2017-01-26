@@ -206,15 +206,18 @@ class ReportStatusService
      */
     public function getRemainingSections()
     {
+
         $states = [
             'decisions' => $this->getDecisionsState(),
             'contacts' => $this->getContactsState(),
             'visitsCare' => $this->getVisitsCareState(),
             'actions' => $this->getActionsState(),
             'otherInfo' => $this->getOtherInfoState(),
+            'gifts' => $this->getGiftsState(),
         ];
 
-        if (in_array($this->report->getType(), [Report::TYPE_102, Report::TYPE_103])) {
+        $type = $this->report->getType();
+        if ($type == Report::TYPE_102 || $type ==  Report::TYPE_103) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
                 'deputyExpense' => $this->getExpensesState(),
@@ -224,12 +227,11 @@ class ReportStatusService
                 'debts' => $this->getDebtsState(),
             ];
 
-            if ($this->report->getType() == Report::TYPE_102) {
+            if ($type == Report::TYPE_102) {
                 $states += [
                     'moneyTransfers' => $this->getMoneyTransferState(),
                 ];
             }
-
         }
 
         return array_filter($states, function ($e) {
@@ -243,6 +245,18 @@ class ReportStatusService
     public function getExpensesState()
     {
         if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGiftsState()
+    {
+        if (count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no') {
             return self::STATE_DONE;
         }
 
