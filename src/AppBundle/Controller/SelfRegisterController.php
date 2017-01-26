@@ -37,7 +37,7 @@ class SelfRegisterController extends RestController
         }
 
         try {
-            $user = $this->container->get('app.service.user_registration_service')->selfRegisterUser($selfRegisterData);
+            $user = $this->container->get('user_registration_service')->selfRegisterUser($selfRegisterData);
             $this->get('logger')->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Exception $e) {
             $this->get('logger')->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);

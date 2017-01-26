@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -11,15 +12,13 @@ use Doctrine\ORM\EntityRepository;
 
 class StatsService
 {
-    /** @var  EntityRepository */
-    protected $userRepository;
-    /** @var  ReportService */
-    protected $reportService;
+    /** @var  EntityManager */
+    protected $em;
 
-    public function __construct(EntityRepository $userRepository, ReportService $reportService)
+    public function __construct(EntityManager $em)
     {
-        $this->userRepository = $userRepository;
-        $this->reportService = $reportService;
+        $this->userRepository = $em->getRepository(User::class);
+        $this->reportRepository = $em->getRepository(Report::class);
     }
 
     /**
@@ -47,20 +46,20 @@ class StatsService
         foreach ($users as $user) {
             /* @var $user User */
             $row = [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'name' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'registration_date' => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
-                'report_date_due' => 'n/a',
-                'report_date_submitted' => 'n/a',
-                'last_logged_in' => $user->getLastLoggedIn() ? $user->getLastLoggedIn()->format('Y-m-d H:i:s') : '-',
-                'client_name' => 'n.a.',
-                'client_lastname' => 'n.a.',
-                'client_casenumber' => 'n.a.',
+                'id'                      => $user->getId(),
+                'email'                   => $user->getEmail(),
+                'name'                    => $user->getFirstname(),
+                'lastname'                => $user->getLastname(),
+                'registration_date'       => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
+                'report_date_due'         => 'n/a',
+                'report_date_submitted'   => 'n/a',
+                'last_logged_in'          => $user->getLastLoggedIn() ? $user->getLastLoggedIn()->format('Y-m-d H:i:s') : '-',
+                'client_name'             => 'n.a.',
+                'client_lastname'         => 'n.a.',
+                'client_casenumber'       => 'n.a.',
                 'client_court_order_date' => 'n.a.',
-                'total_reports' => 0,
-                'active_reports' => 0,
+                'total_reports'           => 0,
+                'active_reports'          => 0,
             ];
 
             foreach ($user->getClients() as $client) {
@@ -78,7 +77,7 @@ class StatsService
             }
             $activeReportId = $user->getActiveReportId();
             if ($activeReportId) {
-                $report = $this->reportService->findById($activeReportId);
+                $report = $this->reportRepository->find($activeReportId);
                 $row['report_date_due'] = $report->getDueDate()->format('Y-m-d');
             }
 
