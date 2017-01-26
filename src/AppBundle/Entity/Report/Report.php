@@ -162,17 +162,6 @@ class Report
     private $courtOrderType;
 
     /**
-     * @deprecated
-     *
-     * @var string
-     *
-     * @JMS\Groups({"report"})
-     * @JMS\Type("string")
-     * @ORM\Column(name="title", type="string", length=150, nullable=true)
-     */
-    private $title;
-
-    /**
      * @var \Date
      *
      * @JMS\Groups({"report"})
@@ -360,30 +349,6 @@ class Report
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return Report
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
