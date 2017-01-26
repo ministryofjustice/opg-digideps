@@ -40,7 +40,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('rest_client')->put('odr/'.$odrId, $odr, ['debt']);
+            $this->getRestClient()->put('odr/'.$odrId, $odr, ['debt']);
 
             if ($odr->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('odr_debts_edit', ['odrId' => $odrId]);
@@ -75,7 +75,7 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isValid()) {
-            $this->get('rest_client')->put('odr/'.$odr->getId(), $form->getData(), ['debt']);
+            $this->getRestClient()->put('odr/'.$odr->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');

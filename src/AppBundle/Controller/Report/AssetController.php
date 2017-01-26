@@ -57,7 +57,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId,]);
                 case 1: //no
-                    $this->get('rest_client')->put('report/'.$reportId, $report, ['noAssetsToAdd']);
+                    $this->getRestClient()->put('report/'.$reportId, $report, ['noAssetsToAdd']);
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
         }

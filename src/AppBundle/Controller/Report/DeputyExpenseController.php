@@ -53,7 +53,7 @@ class DeputyExpenseController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/'.$reportId, $data, ['expenses-paid-anything']);
+                    $this->getRestClient()->put('report/'.$reportId, $data, ['expenses-paid-anything']);
                     return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
             }
         }

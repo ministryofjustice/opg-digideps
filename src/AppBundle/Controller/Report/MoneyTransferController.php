@@ -59,7 +59,7 @@ class MoneyTransferController extends AbstractController
                 case false:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
-                    $this->get('rest_client')->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
+                    $this->getRestClient()->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }

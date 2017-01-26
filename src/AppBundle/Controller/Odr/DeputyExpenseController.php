@@ -54,7 +54,7 @@ class DeputyExpenseController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('odr_deputy_expenses_add', ['odrId' => $odrId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('rest_client')->put('odr/'.$odrId, $data, ['odr-expenses-paid-anything']);
+                    $this->getRestClient()->put('odr/'.$odrId, $data, ['odr-expenses-paid-anything']);
                     return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
             }
         }

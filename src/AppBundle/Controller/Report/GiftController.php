@@ -53,7 +53,7 @@ class GiftController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('gifts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/'.$reportId, $data, ['gifts-exist']);
+                    $this->getRestClient()->put('report/'.$reportId, $data, ['gifts-exist']);
                     return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
             }
         }

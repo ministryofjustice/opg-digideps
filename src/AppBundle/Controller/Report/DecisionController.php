@@ -134,7 +134,7 @@ class DecisionController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
-                    $this->get('rest_client')->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
+                    $this->getRestClient()->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
                     foreach ($report->getDecisions() as $decision) {
                         $this->getRestClient()->delete('/report/decision/'.$decision->getId());
                     }
