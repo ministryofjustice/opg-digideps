@@ -1,0 +1,14 @@
+services:
+    security.validator.d_user_password:
+        class: AppBundle\Validator\Constraints\DUserPasswordValidator
+        arguments: [ "@security.context", "@rest_client" ]
+        tags:
+            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
+
+    redis_token_storage:
+        class: AppBundle\Service\Client\TokenStorage\RedisStorage
+        arguments: ["@snc_redis.default", "redis_token_storage_dd"]
+
+    deputy_provider:
+        class:  AppBundle\Service\DeputyProvider
+        arguments: [ @rest_client, @logger ]

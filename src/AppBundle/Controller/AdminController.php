@@ -78,7 +78,7 @@ class AdminController extends AbstractController
                         'An activation email has been sent to the user.'
                     );
 
-                    $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
+                    $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
                     return $this->redirect($this->generateUrl('admin_homepage'));
                 } catch (RestClientException $e) {
@@ -222,7 +222,7 @@ class AdminController extends AbstractController
     {
         $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
 
-        $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
+        $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 
         $this->getRestClient()->delete('user/'.$id);
 

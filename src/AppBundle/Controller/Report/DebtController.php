@@ -42,7 +42,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/' . $reportId, $report, ['debt']);
+            $this->get('rest_client')->put('report/' . $reportId, $report, ['debt']);
 
             if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
@@ -77,7 +77,7 @@ class DebtController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isValid()) {
-            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), ['debt']);
+            $this->get('rest_client')->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary')  {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');

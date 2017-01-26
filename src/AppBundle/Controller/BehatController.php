@@ -37,7 +37,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        echo $this->get('mailSender')->getMockedEmailsRaw();
+        echo $this->get('mail_sender')->getMockedEmailsRaw();
         die; //TODO check if works with response
     }
 
@@ -49,7 +49,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('mailSender')->resetMockedEmails();
+        $this->get('mail_sender')->resetMockedEmails();
         return new Response('Email reset successfully');
     }
 

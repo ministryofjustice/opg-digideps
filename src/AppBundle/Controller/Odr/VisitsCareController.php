@@ -49,8 +49,8 @@ class VisitsCareController extends AbstractController
         $visitsCare = $odr->getVisitsCare() ?: new EntityDir\Odr\VisitsCare();
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_visits_care', 'odr_visits_care_step', 'odr_visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)

@@ -7,6 +7,7 @@ use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AbstractController extends Controller
@@ -16,7 +17,7 @@ class AbstractController extends Controller
      */
     protected function getRestClient()
     {
-        return $this->get('restClient');
+        return $this->get('rest_client');
     }
 
     /**
@@ -156,7 +157,7 @@ class AbstractController extends Controller
      */
     protected function getMailFactory()
     {
-        return $this->get('mailFactory');
+        return $this->get('mail_factory');
     }
 
     /**
@@ -164,7 +165,7 @@ class AbstractController extends Controller
      */
     protected function getMailSender()
     {
-        return $this->get('mailSender');
+        return $this->get('mail_sender');
     }
 
     /**
@@ -174,5 +175,13 @@ class AbstractController extends Controller
     protected function routeExists($route)
     {
         return $this->get('router')->getRouteCollection()->get($route) ? true : false;
+    }
+
+    /**
+     * @return StepRedirector
+     */
+    protected function stepRedirector()
+    {
+        return $this->get('step_redirector');
     }
 }

@@ -53,7 +53,7 @@ class ContactController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->get('restClient')->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
+                    $this->get('rest_client')->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach($report->getContacts() as $contact) {
                         $this->getRestClient()->delete("/report/contact/".$contact->getId());
                     }
