@@ -3,19 +3,19 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     pageSectionDescription1: |
-      Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+      Pleas tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
       You can enter a total for each type of income, or you can enter
       individual amounts and we'll add them up for you.
     pageSectionDescription3: |
       Be sure to enter each individual source of income into one category only,
-      so we don’t count them twice when we do the calculation
+      so we don’t count them twice when we do the calculation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
-      Tell us about money you have spent on %client%'s day-to-day living
+      Use this section to tell us about money you have spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
     pageSectionDescription2: |
       You can enter a total for each type of expense, or you can enter
@@ -68,30 +68,17 @@ summaryPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     # similar to start page, but expecting to evolve differently
-    pageSectionDescription1: |
-      Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
-    pageSectionDescription2: |
-      You can enter a total for each type of income,
-      or you can enter individual amounts and we'll add them up for you.
-    pageSectionDescription3: |
-      Be sure to enter each individual source of income into one category only,
-      so we don’t count them twice when we do the calculation.
+    supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about money paid into %client%'s account between %startDate% and %endDate%.
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
-    # similar to start page, but expecting to evolve differently
-    pageSectionDescription1: |
-      Tell us about money you have spent on %client%'s day-to-day living
+    supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about money you've spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
-    pageSectionDescription2: |
-      You can enter a total for each type of expense, or you can enter
-      individual amounts and we'll add them up for you.
-    pageSectionDescription3: |
-      Be sure to enter each individual expense into one category only,
-      so we don’t count them twice when we do the calculation.
-
-
-
+    # similar to start page, but expecting to evolve differently
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
@@ -185,7 +172,7 @@ form:
       moving-money:
         label: Moving money
       refunds:
-        label: Refunds
+        label: Refund
       anything-else:
         label: Anything else
         moreInformations: Give us more information
