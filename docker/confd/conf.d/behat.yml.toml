@@ -1,0 +1,7 @@
+[template]
+src = "behat.yml.tmpl"
+dest = "/app/tests/behat/behat.yml"
+keys = [
+    "/api/database/name",
+    "/frontend/nonadmin/host",
+]
