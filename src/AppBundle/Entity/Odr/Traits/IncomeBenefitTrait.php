@@ -2,17 +2,18 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use AppBundle\Entity\Odr\IncomeBenefit;
+use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\StateBenefit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait IncomeBenefitTrait
 {
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\IncomeBenefit>")
+     * @JMS\Type("array<AppBundle\Entity\Odr\StateBenefit>")
      * @JMS\Groups({"odr-state-benefits"})
      *
-     * @var IncomeBenefit[]
+     * @var StateBenefit[]
      */
     private $stateBenefits;
 
@@ -62,15 +63,15 @@ trait IncomeBenefitTrait
     private $expectCompensationDamagesDetails;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\IncomeBenefit>")
+     * @JMS\Type("array<AppBundle\Entity\Odr\OneOff>")
      * @JMS\Groups({"odr-one-off"})
      *
-     * @var IncomeBenefit[]
+     * @var OneOff[]
      */
     private $oneOff;
 
     /**
-     * @return IncomeBenefit[]
+     * @return StateBenefit[]
      */
     public function getStateBenefits()
     {
@@ -78,7 +79,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @return IncomeBenefit
+     * @return StateBenefit
      */
     public function getStateBenefitOther()
     {
@@ -90,7 +91,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @param IncomeBenefit $stateBenefits
+     * @param StateBenefit[] $stateBenefits
      *
      * @return Odr
      */
@@ -190,7 +191,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $expectCompensationDamagesDetails
      *
-     * @return OdrIncomeBenefitTrait
+     * @return Odr
      */
     public function setExpectCompensationDamagesDetails($expectCompensationDamagesDetails)
     {
@@ -200,7 +201,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @return IncomeBenefit[]
+     * @return OneOff[]
      */
     public function getOneOff()
     {
@@ -208,7 +209,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @param IncomeBenefit[] $oneOff
+     * @param OneOff[] $oneOff
      *
      * @return OdrIncomeBenefitTrait
      */
@@ -220,7 +221,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @param IncomeBenefit[] $elements
+     * @param OneOff[]|StateBenefit[] $elements
      *
      * @return int
      */
@@ -231,7 +232,7 @@ trait IncomeBenefitTrait
         }
 
         return array_filter($elements, function ($st) {
-            return $st instanceof IncomeBenefit && $st->isPresent();
+            return method_exists($st, 'isPresent') && $st->isPresent();
         });
     }
 

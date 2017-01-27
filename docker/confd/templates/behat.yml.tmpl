@@ -1,14 +1,17 @@
-# behat.yml
 default:
-    #http://docs.behat.org/en/latest/guides/6.profiles.html#custom-autoloading
     autoload:
         '': %paths.base%/bootstrap
     suites:
+
         prechecks:
             description: Pre checks and init
             paths:    [ %paths.base%/features/prechecks ]
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ end }}
 
         deputy:
             description: End to end journey for Lay deputy user
@@ -16,7 +19,11 @@ default:
             filters:
                 tags: "@deputy&&~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ end }}
 
         admin:
             description: End to end journey for Admin user
@@ -24,7 +31,11 @@ default:
             filters:
                 tags: "~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, autoDbSnapshot: false }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", autoDbSnapshot: false }]
+            {{ end }}
 
         deputyodr:
             description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
@@ -32,7 +43,17 @@ default:
             filters:
                 tags: "@odr"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
+            {{ end }}
+
+        components:
+            description: Tests related to textareas
+            paths:    [ %paths.base%/features/components ]
+            mink_session: default
+            contexts: [ DigidepsBehat\FeatureContext ]
 
     extensions:
         Behat\Symfony2Extension: ~
@@ -146,5 +167,9 @@ headless:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte: ~
-            base_url: http://digideps-client.local/
+        {{ if exists "/frontend/nonadmin/host" }}
+            base_url: {{ getv "/frontend/nonadmin/host" }}
+        {{ else }}
+            base_url: "http://digideps-client.local/"
+        {{ end }}
 

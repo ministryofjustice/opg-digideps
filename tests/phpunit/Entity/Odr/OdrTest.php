@@ -12,8 +12,8 @@ class OdrTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->odr = new Odr();
-        $this->incomeTicked = new IncomeBenefit('t1', true);
-        $this->incomeUnticked = new IncomeBenefit('t2', false);
+        $this->incomeTicked = new StateBenefit('t1', true);
+        $this->incomeUnticked = new StateBenefit('t2', false);
     }
 
     public function tearDown()
@@ -37,7 +37,7 @@ class OdrTest extends \PHPUnit_Framework_TestCase
         $odr->setStateBenefits([]);
         $this->assertNull($odr->getStateBenefitOther());
 
-        $odr->setStateBenefits([new IncomeBenefit('other_benefits', true)]);
+        $odr->setStateBenefits([new StateBenefit('other_benefits', true)]);
         $this->assertEquals('other_benefits', $odr->getStateBenefitOther()->getTypeId());
     }
 
