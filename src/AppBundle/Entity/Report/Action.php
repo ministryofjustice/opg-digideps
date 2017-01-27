@@ -159,11 +159,11 @@ class Action
 
     public function cleanUpUnusedData()
     {
-        if ($this->doYouExpectFinancialDecisions == self::NO) {
+        if ($this->doYouExpectFinancialDecisions == 'no') {
             $this->doYouExpectFinancialDecisionsDetails = null;
         }
 
-        if ($this->doYouHaveConcerns == self::NO) {
+        if ($this->doYouHaveConcerns == 'no') {
             $this->doYouHaveConcernsDetails = null;
         }
     }

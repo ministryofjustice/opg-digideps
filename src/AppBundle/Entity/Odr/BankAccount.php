@@ -106,7 +106,8 @@ class BankAccount
     private $odr;
 
     /**
-     * @var string
+     * @var string yes|no|null
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-account"})
      *

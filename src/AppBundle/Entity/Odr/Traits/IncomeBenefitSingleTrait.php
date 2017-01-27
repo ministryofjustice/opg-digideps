@@ -26,6 +26,7 @@ trait IncomeBenefitSingleTrait
 
     /**
      * @var string
+     *
      * @JMS\Groups({"odr-income-benefits"})
      * @ORM\Column(name="has_more_details", type="string", nullable=false)
      */

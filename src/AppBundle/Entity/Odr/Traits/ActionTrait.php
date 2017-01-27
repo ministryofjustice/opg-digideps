@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 trait ActionTrait
 {
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-action-give-gifts"})
@@ -27,7 +27,7 @@ trait ActionTrait
 
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-action-property"})
@@ -36,7 +36,7 @@ trait ActionTrait
     private $actionPropertyMaintenance;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-action-property"})
@@ -45,7 +45,7 @@ trait ActionTrait
     private $actionPropertySellingRent;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-action-property"})

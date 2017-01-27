@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 trait ExpensesTrait
 {
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-expenses"})

@@ -368,7 +368,7 @@ class BankAccount
     /**
      * @return bool
      */
-    public function isIsClosed()
+    public function getIsClosed()
     {
         return $this->isClosed;
     }
@@ -435,6 +435,8 @@ class BankAccount
 
         return $this;
     }
+
+
 
     public function getMeta()
     {
