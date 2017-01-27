@@ -2,10 +2,8 @@ startPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageSectionTitle: Contacts
   pageSectionDescription1: |
-    Give details of people who helped you make significant decisions as a deputy, such as a GP,
-    solicitor, accountant, family member or care worker.
-  pageSectionDescription2: |
-    Example: John Smith, accountant, to prepare accounts for the deputy report.
+    Please give us details of people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
+  
 
   startButton: Start contacts
 
@@ -15,7 +13,7 @@ existPage:
   form:
     hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
-      hint: For example, this could be a GP, solicitor, accountant, family member or care worker
+      hint: For example, John Smith, accountant, to prepare accounts for the deputy report
     reasonForNoContacts:
       label: Please give us an explanation
     save:
@@ -26,8 +24,8 @@ addAnotherPage:
   pageSectionTitle: Contacts
   form:
     addAnother:
-      label: The contact has been saved. Would you like to add another contact now?
-      hint: If you prefer, you can come back to this section later to add more contacts
+      label: The person you consulted has been saved. Would you like to add another person now?
+      hint: If you prefer, you can come back to this section later to add more people
     save:
        label: Continue
 
@@ -36,8 +34,7 @@ addPage:
   pageSectionTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
-    As someone has helped you make decisions for %client% we need to know their details.
-    Start by adding the first contact for %client%. You can add other contacts later.
+    Please tell us more about the people you’ve consulted for your deputyship. Start by adding the first person; you’ll be able to add more people later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
@@ -50,7 +47,7 @@ summaryPage:
   addButton: Add a contact
   edit: Edit
   relationship: Their relationship to %client%
-  reasonForContact: Reason for contact
+  reasonForContact: Your reason for consulting them
 
 form:
   contactName:

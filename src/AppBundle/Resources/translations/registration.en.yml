@@ -49,9 +49,9 @@ courtOrderTypeId:
     label: Report Type
 form:
   newReportForm:
-    subSectionTitle: "Create a new report"
-    subSectionDescription: "In the first year, your reporting period starts on the date your court order is made. For all subsequent reports use the anniversary of that date."
-    subSectionDescription-2: "The reporting period is usually for a 12-month period. Set the end date now for a 12-month period. If OPG need you to send a report before this, we will let you know."
+    subSectionTitle: "Add the reporting period"
+    subSectionDescription: "The reporting period for your annual report starts on the date your court order was issued and is usually 12 months in length. That means, for a 12-month reporting period, your annual deputy report and all subsequent reports will fall due on the anniversary of your court order."
+    subSectionDescription-2: "Set your end date to 12 months from the date of your court order. The Office of the Public Guardian (OPG) will let you know if we need a report before this."
     controls:
       createNewReportLink:
         label: "Create new report"

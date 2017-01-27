@@ -44,12 +44,12 @@ addAnotherPage:
        label: Continue
 
 summaryPage:
-  #totalBalance: Total balance on %endDate%: £%amount%
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts
-  pageSectionDescription1: |
-    In this section, we ask you about %client%'s bank accounts, building society
-    accounts, savings accounts and ISAs.
+  pageContent:
+    weAskAbout: |
+      In this section, we ask you about %client%'s bank accounts, building society
+      accounts, savings accounts and ISAs.
 form:
   accountType:
       label: What type of account is it?
