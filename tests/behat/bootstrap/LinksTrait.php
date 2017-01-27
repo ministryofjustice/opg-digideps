@@ -54,7 +54,7 @@ trait LinksTrait
 
     /**
      * Click on element with attribute [behat-link=:link].
-     * 
+     *
      * @When I click on ":link"
      */
     public function clickOnBehatLink($link)
@@ -104,7 +104,7 @@ trait LinksTrait
 
     /**
      * Click on element with attribute [behat-link=:link].
-     * 
+     *
      * @When I click on link with text :text
      */
     public function clickOnLinkWithText($text)
@@ -126,7 +126,7 @@ trait LinksTrait
 
     /**
      * Click on element with attribute [behat-link=:link].
-     * 
+     *
      * @When I click on link with text :text in region :region
      * @When I press :text in region :region
      * @When I press :text in the :region
@@ -167,7 +167,7 @@ trait LinksTrait
 
     /**
      * Click on element with attribute [behat-link=:link] inside the element with attribute [behat-region=:region].
-     * 
+     *
      * @When I click on :link in the :region region
      */
     public function clickLinkInsideElement($link, $region)

@@ -42,7 +42,6 @@ trait ActionTrait
      */
     private $actionPropertyBuy;
 
-
     /**
      * @return bool
      */
@@ -161,6 +160,4 @@ trait ActionTrait
 
         return $this;
     }
-
-
 }

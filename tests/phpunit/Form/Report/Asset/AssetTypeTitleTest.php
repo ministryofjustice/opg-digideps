@@ -9,7 +9,9 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function ($a) { return $a.'-TRANSLATED';});
+        $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function ($a) {
+            return $a.'-TRANSLATED';
+        });
     }
 
     public function titleChoices()
@@ -28,7 +30,7 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
     {
         $this->object = new AssetTypeTitle($input, $this->translator, 'domain');
 
-        $this->assertEquals($expectedOutput,  $this->object->getTitleChoices());
+        $this->assertEquals($expectedOutput, $this->object->getTitleChoices());
     }
 
     public function tearDown()

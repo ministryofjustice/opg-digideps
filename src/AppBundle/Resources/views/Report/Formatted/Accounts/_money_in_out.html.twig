@@ -5,7 +5,7 @@
     {% include 'AppBundle:Report/Formatted:Accounts/_categories.html.twig' with {
     'type': 'in',
     'moneyType': 'moneyIn',
-    'transactions': report.transactionsIn,
+    'transactions': report.moneyTransactionsIn,
     'total':  report.getMoneyInTotal
     }%}
     
@@ -13,7 +13,7 @@
     {% include 'AppBundle:Report/Formatted:Accounts/_categories.html.twig' with {
     'type': 'out',
     'moneyType': 'moneyOut',
-    'transactions': report.transactionsOut,
+    'transactions': report.moneyTransactionsOut,
     'total':  report.getMoneyOutTotal
     }%}
 </div>

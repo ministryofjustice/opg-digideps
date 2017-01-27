@@ -3,13 +3,9 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class BalanceController extends AbstractController
@@ -28,7 +24,7 @@ class BalanceController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\ReasonForBalanceType(), $report);
         $form->handleRequest($request);
 
@@ -42,7 +38,6 @@ class BalanceController extends AbstractController
 //            );
 
             return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
-
         }
 
         return [

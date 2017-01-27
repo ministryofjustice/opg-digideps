@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application_new.html.twig' %}
 
-{% set translationDomain = "overview" %}
+{% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 
 {% set is102 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
@@ -80,10 +80,29 @@
                     {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
                         alertType: 'notice',
                         message: 'balance.notBalancedWarning' | trans({
-                            '%detailsLink%': path('balance', {'reportId': report.id
-                        }) })
+                            '%detailsLink%': path('balance', {'reportId': report.id}) })
                     } %}
                 {% endif %}
+
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'deputy_expenses',
+                    report: report,
+                    state: reportStatus.expensesState,
+                    nOfRecords: report.expenses | length,
+                    linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
+                    description: true
+                } %}
+
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'gifts',
+                report: report,
+                state: reportStatus.giftsState,
+                nOfRecords: report.gifts | length,
+                linkToSubSection: path('gifts', {'reportId': report.id}),
+                description: true
+                } %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -110,7 +129,7 @@
                     subSection: 'money_in',
                     report: report,
                     state: reportStatus.moneyInState,
-                    nOfRecords: report.transactionsIn | length,
+                    nOfRecords: report.moneyTransactionsIn | length,
                     warning: true,
                     description: true
                 } %}
@@ -119,7 +138,7 @@
                     subSection: 'money_out',
                     report: report,
                     state: reportStatus.moneyOutState,
-                    nOfRecords: report.transactionsOut | length,
+                    nOfRecords: report.moneyTransactionsOut | length,
                     warning: true,
                     description: true
                 } %}
@@ -165,6 +184,15 @@
                 description: true,
                 state: reportStatus.actionsState,
                 list: true
+            } %}
+            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('other_info', {reportId: report.id}),
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.otherInfoState,
             } %}
 
             {% if reportStatus.isReadyToSubmit and report.isDue %}

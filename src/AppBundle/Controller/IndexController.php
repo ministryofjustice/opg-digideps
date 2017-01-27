@@ -4,12 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Model as ModelDir;
+use AppBundle\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
-use AppBundle\Service\StringUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -23,7 +22,7 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-        if ($url = $this->get('redirectorService')->getHomepageRedirect()) {
+        if ($url = $this->get('redirector_service')->getHomepageRedirect()) {
             return $this->redirect($url);
         }
 
@@ -51,7 +50,7 @@ class IndexController extends AbstractController
             $data = $form->getData();
 
             try {
-                $user = $this->get('deputyprovider')->login($data);
+                $user = $this->get('deputy_provider')->login($data);
             } catch (\Exception $e) {
                 $error = $e->getMessage();
 
@@ -90,7 +89,7 @@ class IndexController extends AbstractController
 
             $session->set('lastLoggedIn', $user->getLastLoggedIn());
 
-            $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
+            $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
 
         // different page version for timeout and manual logout
@@ -120,7 +119,7 @@ class IndexController extends AbstractController
     {
         $user = $this->getRestClient()->loadUserByToken($userToken); /* @var $user EntityDir\User*/
 
-        $this->get('deputyprovider')->login(['token' => $userToken]);
+        $this->get('deputy_provider')->login(['token' => $userToken]);
 
         $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
         $this->get('security.context')->setToken($clientToken); //now the user is logged in
@@ -131,7 +130,7 @@ class IndexController extends AbstractController
         $session->set('_adFirstname', $adFirstname);
         $session->set('_adLastname', $adLastname);
 
-        $url = $this->get('redirectorService')->getHomepageRedirect();
+        $url = $this->get('redirector_service')->getHomepageRedirect();
 
         return $this->redirect($url);
     }
@@ -179,7 +178,7 @@ class IndexController extends AbstractController
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;
-        $progressSteps_arr = array();
+        $progressSteps_arr = [];
         if (is_array($array)) {
             $soa = count($array);
 

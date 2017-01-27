@@ -39,7 +39,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             [AssetProperty::OWNED_PARTLY, 100000, 0, 0],
             [AssetProperty::OWNED_PARTLY, 100000, 60, 60000],
             [AssetProperty::OWNED_PARTLY, null, null, null],
-            //
+
             [AssetProperty::OWNED_FULLY, 100000, 0, 100000],
             [AssetProperty::OWNED_FULLY, 100000, 60, 100000],
             [AssetProperty::OWNED_FULLY, null, null, null],
@@ -55,6 +55,4 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assetProp->setValue($value)->setOwned($owned)->setOwnedPercentage($ownPercentage);
         $this->assertEquals($expected, $this->assetProp->getValueTotal());
     }
-
-
 }

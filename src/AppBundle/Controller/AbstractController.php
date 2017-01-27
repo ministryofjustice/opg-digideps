@@ -7,6 +7,7 @@ use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AbstractController extends Controller
@@ -16,7 +17,7 @@ class AbstractController extends Controller
      */
     protected function getRestClient()
     {
-        return $this->get('restClient');
+        return $this->get('rest_client');
     }
 
     /**
@@ -30,7 +31,7 @@ class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
+        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -38,7 +39,7 @@ class AbstractController extends Controller
      */
     protected function getFirstClient($groups = ['user', 'client'])
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
+        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $groups);
         /* @var $user User */
         $clients = $user->getClients();
 
@@ -60,10 +61,9 @@ class AbstractController extends Controller
         return $choices;
     }
 
-
     /**
      * @param Client $client
-     * @param array $groups
+     * @param array  $groups
      *
      * @return Report[]
      */
@@ -83,9 +83,8 @@ class AbstractController extends Controller
         return $ret;
     }
 
-
     /**
-     * @param int $reportId
+     * @param int   $reportId
      * @param array $groups
      *
      * @return Report
@@ -99,15 +98,15 @@ class AbstractController extends Controller
         return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
     }
 
-
     /**
      * @param int $reportId
      *
+     * @throws \RuntimeException if report is submitted
+     *
      * @return Report
      *
-     * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, array $groups = [])
+    protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {
@@ -117,9 +116,8 @@ class AbstractController extends Controller
         return $report;
     }
 
-
     /**
-     * @param int $odrId
+     * @param int   $odrId
      * @param array $groups
      *
      * @return Odr
@@ -136,9 +134,10 @@ class AbstractController extends Controller
     /**
      * @param int $reportId
      *
+     * @throws \RuntimeException if report is submitted
+     *
      * @return Odr
      *
-     * @throws \RuntimeException if report is submitted
      */
     protected function getOdrIfNotSubmitted($reportId, array $groups = [])
     {
@@ -150,13 +149,12 @@ class AbstractController extends Controller
         return $report;
     }
 
-
     /**
      * @return \AppBundle\Service\Mailer\MailFactory
      */
     protected function getMailFactory()
     {
-        return $this->get('mailFactory');
+        return $this->get('mail_factory');
     }
 
     /**
@@ -164,15 +162,24 @@ class AbstractController extends Controller
      */
     protected function getMailSender()
     {
-        return $this->get('mailSender');
+        return $this->get('mail_sender');
     }
 
     /**
      * @param $route
-     * @return boolean
+     *
+     * @return bool
      */
     protected function routeExists($route)
     {
         return $this->get('router')->getRouteCollection()->get($route) ? true : false;
+    }
+
+    /**
+     * @return StepRedirector
+     */
+    protected function stepRedirector()
+    {
+        return $this->get('step_redirector');
     }
 }

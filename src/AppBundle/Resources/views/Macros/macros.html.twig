@@ -1,6 +1,5 @@
 {% macro breadcrumbs(report) %}
     {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
-    {% set isOdrReport = (report | class_name) == 'AppBundle\\Entity\\Odr\\Odr' %}
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
@@ -13,7 +12,7 @@
                 {% endif %}
             </li>
             <li>
-                {% if isOdrReport %}
+                {% if report.type == 'ndr' %}
                     <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">
                         New deputy report overview</a>
 
@@ -59,6 +58,8 @@
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
         {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
         {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+        {'section':'deputyExpenses','link': path('deputy_expenses', {'reportId': report.id})},
+        {'section':'gifts','link': path('gifts', {'reportId': report.id})},
         {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
         {'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
         {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
@@ -66,6 +67,7 @@
         {'section':'assets', 'link': path('assets', {'reportId': report.id})},
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
@@ -74,25 +76,28 @@
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
         {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
         {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+        {'section':'deputyExpenses','link': path('deputy_expenses', {'reportId': report.id})},
+        {'section':'gifts','link': path('gifts', {'reportId': report.id})},
         {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
         {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
         {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
         {'section':'assets', 'link': path('assets', {'reportId': report.id})},
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == 'ndr' %}
         {% set config = [
         {'section':'reportOverview', 'link': path('odr_overview')},
         {'section':'visitsCare','link': path('odr_visits_care', {'odrId': report.id})},
-        {'section':'deputy_expenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
+        {'section':'deputyExpenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
         {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': report.id})},
         {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': report.id})},
         {'section':'assets','link': path('odr_assets', {'odrId': report.id})},
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
-        {'section':'other_info', 'link': path('odr_other_info', {'odrId': report.id})},
+        {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
         {'section':'reportOverview', 'link': path('odr_overview')},
         ] %}
     {% endif %}

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\Account;
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
@@ -22,7 +22,7 @@ class BankAccountType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -31,7 +31,7 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('accountType', 'choice', [
-                'choices'     => Account::$types,
+                'choices'     => BankAccount::$types,
                 'expanded'    => true,
                 'empty_value' => 'Please select',
             ]);

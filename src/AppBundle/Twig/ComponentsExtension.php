@@ -67,7 +67,6 @@ class ComponentsExtension extends \Twig_Extension
             }),
             // convert 'Very Random "string" !!" into "very-random-string"
             'behat_namify' => new \Twig_SimpleFilter('behat_namify', function ($string) {
-
                 $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unneeded chars
                 $string = str_replace('_', ' ', $string);             // treat underscores as spaces
                 $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
@@ -184,7 +183,7 @@ class ComponentsExtension extends \Twig_Extension
     {
         if (in_array($user->getRole()['role'], ['ROLE_ADMIN', 'ROLE_AD'])) {
             $availableStepIds = ['password', 'user_details'];
-        } else if ($user->isOdrEnabled()) {
+        } elseif ($user->isOdrEnabled()) {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details', 'create_report'];

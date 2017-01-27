@@ -2,8 +2,8 @@
 
 namespace AppBundle\Twig;
 
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FormFieldsExtension extends \Twig_Extension
@@ -147,14 +147,14 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * @DEPRECATED
      * form_checkbox_group(element, 'allowedCourtOrderTypes', {.
-    'legendClass' : 'form-label-bold',
-    'fieldSetClass' : 'inline',
-    'vertical': true,
-    'items': [
-    {'labelClass': 'block-label', 'elementClass': 'checkbox' },
-    {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
-    ]
-    })
+     'legendClass' : 'form-label-bold',
+     'fieldSetClass' : 'inline',
+     'vertical': true,
+     'items': [
+     {'labelClass': 'block-label', 'elementClass': 'checkbox' },
+     {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
+     ]
+     })
      */
     public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
     {
@@ -319,7 +319,7 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @param FormView $elementsFormView
-     * 
+     *
      * @return array
      */
     private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
@@ -342,7 +342,7 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * get form errors list and render them inside Components/Alerts:error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}.
-     * 
+     *
      * @param FormView $form
      */
     public function renderFormErrorsList(FormView $form)
@@ -382,7 +382,7 @@ class FormFieldsExtension extends \Twig_Extension
      * @param string                           $elementName
      * @param array                            $vars
      * @param string|null                      $transIndex
-     * 
+     *
      * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
      */
     private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)

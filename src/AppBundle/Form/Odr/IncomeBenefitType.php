@@ -33,7 +33,7 @@ class IncomeBenefitType extends AbstractType
      */
     public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
         $this->translator = $translator;
         $this->clientFirstName = $clientFirstName;
     }
@@ -49,26 +49,26 @@ class IncomeBenefitType extends AbstractType
         }
 
         if ($this->step === 2) {
-            $builder->add('receiveStatePension', 'choice', array(
+            $builder->add('receiveStatePension', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
         }
 
         if ($this->step === 3) {
             $builder
-                ->add('receiveOtherIncome', 'choice', array(
+                ->add('receiveOtherIncome', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
-                ))
+                ])
                 ->add('receiveOtherIncomeDetails', 'textarea');
         }
 
         if ($this->step === 4) {
-            $builder->add('expectCompensationDamages', 'choice', array(
+            $builder->add('expectCompensationDamages', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ))
+            ])
                 ->add('expectCompensationDamagesDetails', 'textarea');
         }
 
@@ -83,10 +83,9 @@ class IncomeBenefitType extends AbstractType
 
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
             $data = $event->getData();
 
-            //
+
 
             $event->setData($data);
         });

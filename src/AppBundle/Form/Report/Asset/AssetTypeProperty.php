@@ -9,7 +9,6 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
 class AssetTypeProperty extends AbstractType
 {
     private $step;
@@ -19,9 +18,8 @@ class AssetTypeProperty extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
-
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -39,10 +37,10 @@ class AssetTypeProperty extends AbstractType
         }
 
         if ($this->step === 3) {
-            $builder->add('owned', 'choice', array(
+            $builder->add('owned', 'choice', [
                 'choices' => ['fully' => 'Fully-owned', 'partly' => 'Part-owned'],
                 'expanded' => true,
-            ))
+            ])
                 ->add('ownedPercentage', 'number', [
                     'grouping' => false,
                     'precision' => 0,
@@ -146,7 +144,6 @@ class AssetTypeProperty extends AbstractType
         };
     }
 
-
     public function getName()
     {
         return 'asset';
@@ -159,5 +156,4 @@ class AssetTypeProperty extends AbstractType
             'validation_groups' => $this->getValidationGroups(),
         ]);
     }
-
 }

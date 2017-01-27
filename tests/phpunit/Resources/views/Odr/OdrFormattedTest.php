@@ -9,11 +9,10 @@ use AppBundle\Entity\Odr\BankAccount;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Odr\VisitsCare;
 use AppBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * //TODO add more coverage
@@ -125,7 +124,6 @@ class OdrFormattedTest extends WebTestCase
         $this->assertContains('sw1', $this->html($this->crawler, '#assets-section'));
         $this->assertContains('£560,000.00', $this->html($this->crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
     }
-
 
     public function tearDown()
     {

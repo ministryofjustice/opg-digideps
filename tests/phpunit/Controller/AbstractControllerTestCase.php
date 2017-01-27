@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractControllerTestCase extends WebTestCase
@@ -41,7 +41,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
             ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 
-        static::$kernel->getContainer()->set('restClient', $this->restClient);
+        static::$kernel->getContainer()->set('rest_client', $this->restClient);
     }
 
     /**
@@ -50,10 +50,10 @@ abstract class AbstractControllerTestCase extends WebTestCase
      * @param array  $parameters
      * @param array  $files
      * @param array  $server
-     * 
+     *
      * @return Response
      */
-    protected function ajaxRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    protected function ajaxRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
         $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With' => 'XMLHttpRequest'] + $server);
 
@@ -69,7 +69,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
      *
      * @return Response
      */
-    protected function httpRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    protected function httpRequest($method, $uri, array $parameters = [], array $files = [], array $server = [])
     {
         $this->frameworkBundleClient->request($method, $uri, $parameters, $files, $server);
 

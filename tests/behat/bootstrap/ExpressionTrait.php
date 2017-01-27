@@ -34,12 +34,13 @@ trait ExpressionTrait
      * 3 days ago, DD
      * 10 days ahead, month
      * 1 day ahead, year.
-     * 
+     *
      * @param string $expression
+     *
+     * @throws \RuntimeException if the expression is not recognised
      *
      * @return string
      *
-     * @throws \RuntimeException if the expression is not recognised
      */
     private static function expressionToValue($expression)
     {

@@ -2,11 +2,12 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\MoneyTransaction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TransactionSingleType extends AbstractType
 {
@@ -39,7 +40,7 @@ class TransactionSingleType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-             'data_class' => 'AppBundle\Entity\Report\Transaction',
+             'data_class' => MoneyTransaction::class,
              'validation_groups' => ['transactions'],
              'translation_domain' => 'report-transactions',
         ]);

@@ -3,7 +3,6 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
-use Symfony\Component\Console\Helper\Table;
 
 /**
  * Behat steps to test OTPP forms
@@ -35,7 +34,7 @@ trait FormStepTrait
             }
             $this->fillField($field, $value);
         }
-        
+
         $this->iSubmitTheStep();
         switch (strtolower($what)) {
             case 'can':
@@ -49,7 +48,6 @@ trait FormStepTrait
             default:
                 throw new \RuntimeException("invalid value: only 'can|cannot' are acceoted");
         }
-
     }
 
     /**
@@ -68,7 +66,7 @@ trait FormStepTrait
                 $this->fillField('add_another_addAnother_1', 'no');
                 break;
             default:
-                throw new \RuntimeException("invalid value");
+                throw new \RuntimeException('invalid value');
         }
         $this->clickOnBehatLink('save-and-continue');
     }

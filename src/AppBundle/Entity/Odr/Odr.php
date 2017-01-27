@@ -3,12 +3,10 @@
 namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Traits\ActionTrait;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
-
 
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
@@ -112,9 +110,9 @@ class Odr
      */
     private $noAssetToAdd;
 
-
     /**
      * Currently used only for bottom navigator
+     *
      * @return string
      */
     public function getType()
@@ -330,6 +328,7 @@ class Odr
 
     /**
      * @param $debtId
+     *
      * @return Debt|null
      */
     public function getDebtById($debtId)
@@ -348,7 +347,7 @@ class Odr
      */
     public function getDebtsWithValidAmount()
     {
-        $debtsWithAValidAmount = array_filter($this->debts, function($debt) {
+        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
             return !empty($debt->getAmount());
         });
 

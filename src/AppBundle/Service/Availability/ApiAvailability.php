@@ -9,7 +9,7 @@ class ApiAvailability extends ServiceAvailabilityAbstract
     public function __construct(ContainerInterface $container)
     {
         try {
-            $data = $container->get('restClient')->get('manage/availability', 'array');
+            $data = $container->get('rest_client')->get('manage/availability', 'array');
             // API not healtyh
             if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
                 $this->isHealthy = false;

@@ -1,4 +1,4 @@
-{% set translationDomain = "overview" %}
+{% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 
 {% if disableedit is defined and disableedit == true %}
@@ -7,9 +7,13 @@
     {% set allowEdit = true %}
 {% endif %}
 
+{% if linkToSubSection is not defined %}
+    {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
+{% endif %}
+
 <div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
-        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
     {% endif %}
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
     <span class="status flush--bottom {{ state }}">
@@ -20,7 +24,7 @@
         {% endif %}
     </span>
 
-    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ path(subSection, {reportId: report.id}) }}"{% endif %} >
+    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %} >
         {% if state == 'not-started' %}
             {{ (subSection ~ '.start') | trans }}
         {% else %}

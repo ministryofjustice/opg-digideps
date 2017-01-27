@@ -52,9 +52,9 @@ trait FormTrait
     }
 
     /**
-     * Check if the given elements (input/textarea inside each .behat-region-form-errors) 
+     * Check if the given elements (input/textarea inside each .behat-region-form-errors)
      *  are the only ones with errors.
-     * 
+     *
      * @Then the following fields should have an error:
      */
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
@@ -87,8 +87,6 @@ trait FormTrait
             $this->assertFieldContains($field, $value);
         }
     }
-
-
 
     /**
      * Fills in form field with specified id|name|label|value.
@@ -164,5 +162,4 @@ EOT;
             $elementsFound[0]->setValue($value);
         }
     }
-
 }

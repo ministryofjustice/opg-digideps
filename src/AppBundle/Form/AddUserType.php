@@ -38,11 +38,11 @@ class AddUserType extends AbstractType
         $builder->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
-                 ->add('roleId', 'choice', array(
+                 ->add('roleId', 'choice', [
                     'choices' => $this->roleChoices,
                     'empty_value' => $this->roleIdEmptyValue,
                     'disabled' => $this->roleIdDisabled,
-                  ))
+                  ])
                  ->add('odrEnabled', 'checkbox')
                  ->add('save', 'submit');
     }

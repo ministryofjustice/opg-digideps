@@ -15,11 +15,11 @@ class FeedbackReportType extends AbstractType
         $satisfactionLevel = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
 
         $builder
-                 ->add('satisfactionLevel', 'choice', array(
+                 ->add('satisfactionLevel', 'choice', [
                     'choices' => array_combine($satisfactionLevel, $satisfactionLevel),
                     'expanded' => true,
                     'multiple' => false,
-                  ))
+                  ])
                    ->add('save', 'submit');
     }
 

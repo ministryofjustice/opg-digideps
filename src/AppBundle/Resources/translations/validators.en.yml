@@ -193,6 +193,31 @@ moneyTransaction:
     description:
       notBlank: Please give us some more information about this amount
 
+expenses:
+    paidForAnything.notBlank: Choose yes or no
+    addAnother.notBlank: Please specify if you want to add another expense
+    singleExpense:
+       notNumeric: Enter the amount of the expense in numbers
+    explanation:
+      notBlank: Please enter a description
+    amount:
+      notBlank: Please specify an amount
+      type: Enter a valid amount
+      minMessage: Please input a value of at least £{{ limit }}
+      maxMessage: The amount must be less than £10,000,000,000
+
+gifts:
+    giftsExist.notBlank: Choose yes or no
+    addAnother.notBlank: Please specify if you want to add another gift
+    explanation:
+      notBlank: Please enter a description
+    amount:
+      notBlank: Please specify an amount
+      type: Enter a valid amount
+      minMessage: Please input a value of at least £{{ limit }}
+      maxMessage: The amount must be less than £10,000,000,000
+
+
 transfer:
     accountFrom:
         notBlank: Please choose the account you transfer money from
@@ -326,6 +351,11 @@ action:
         notBlank: Choose yes or no
     doYouHaveConcernsDetails:
         notBlank: Please tell us more about any concerns you may have
+    # the following are now in a different section
+    actionMoreInfo:
+      notBlank: Choose yes or no
+    actionMoreInfoDetails:
+      notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
 
 
@@ -472,28 +502,22 @@ odr:
           notBlank: Please tick this box as more information are given
       moreDetails:
           notBlank: Please give us some more information
-  expenses:
-    paidForAnything.notBlank: Choose yes or no
-    addAnother.notBlank: Please specify if you want to add another expense
-    singleExpense:
-       notNumeric: Enter the amount of the expense in numbers
-    explanation:
-      notBlank: Please enter a description
-    amount:
-      notBlank: Please specify an amount
-      type: Enter a valid amount
+
   action:
     actionGiveGiftsToClient:
       notBlank: Choose yes or no
     actionGiveGiftsToClientDetails:
       notBlank: Give us more information about any gifts you plan to make on behalf of the client
-    actionMoreInfo:
-      notBlank: Choose yes or no
-    actionMoreInfoDetails:
-      notBlank: Tell us more about any questions or concerns you may have about your deputyship
     actionPropertyMaintenance:
       notBlank: Choose yes or no
     actionPropertySellingRent:
       notBlank: Choose yes or no
     actionPropertyBuy:
       notBlank: Choose yes or no
+    # the following are now in a new section
+    actionMoreInfo:
+      notBlank: Choose yes or no
+    actionMoreInfoDetails:
+      notBlank: Tell us more about any questions or concerns you may have about your deputyship
+
+    #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr

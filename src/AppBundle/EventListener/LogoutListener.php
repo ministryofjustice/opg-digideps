@@ -2,14 +2,14 @@
 
 namespace AppBundle\EventListener;
 
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Entity\AuditLogEntry;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Service\AuditLogger;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
 {

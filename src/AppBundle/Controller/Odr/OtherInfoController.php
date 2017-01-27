@@ -2,14 +2,12 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Controller\AbstractController;
 
 class OtherInfoController extends AbstractController
 {
@@ -17,7 +15,6 @@ class OtherInfoController extends AbstractController
         'client-cot',
         'odr-action-more-info',
     ];
-
 
     /**
      * @Route("/odr/{odrId}/any-other-info", name="odr_other_info")
@@ -48,8 +45,8 @@ class OtherInfoController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_other_info', 'odr_other_info_step', 'odr_other_info_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -60,7 +57,7 @@ class OtherInfoController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('odr/' . $odrId , $data, ['more-info']);
+            $this->getRestClient()->put('odr/'.$odrId, $data, ['more-info']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -75,7 +72,6 @@ class OtherInfoController extends AbstractController
         return [
             'odr'       => $odr,
             'step'         => $step,
-            'odrStatus' => new OdrStatusService($odr),
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
             'skipLink'     => $stepRedirector->getSkipLink(),
@@ -98,7 +94,6 @@ class OtherInfoController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr'             => $odr,
-            'validator'          => new ActionsValidator($odr),
         ];
     }
 }

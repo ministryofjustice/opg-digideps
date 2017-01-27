@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service;
 
-use Mockery as m;
 use AppBundle\Entity as EntityDir;
+use Mockery as m;
 
 class AuditLoggerTest extends \PHPUnit_Framework_TestCase
 {

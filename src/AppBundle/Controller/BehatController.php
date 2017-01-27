@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Mailer\MailSender;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -37,7 +36,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        echo $this->get('mailSender')->getMockedEmailsRaw();
+        echo $this->get('mail_sender')->getMockedEmailsRaw();
         die; //TODO check if works with response
     }
 
@@ -49,7 +48,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->get('mailSender')->resetMockedEmails();
+        $this->get('mail_sender')->resetMockedEmails();
         return new Response('Email reset successfully');
     }
 
@@ -63,23 +62,6 @@ class BehatController extends AbstractController
 
         $this->getRestClient()->put('behat/report/'.$reportId, [
             'type' => $type,
-        ]);
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/report/{reportId}/set-sumbmitted/{value}")
-     * @Method({"GET"})
-     */
-    public function reportChangeSubmitted($reportId, $value)
-    {
-        $this->securityChecks();
-
-        $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
-
-        $this->getRestClient()->put('behat/report/'.$reportId, [
-            'submitted' => $submitted,
         ]);
 
         return new Response('done');
@@ -140,7 +122,7 @@ class BehatController extends AbstractController
 
     /**
      * set token_date and registration_token on the user.
-     * 
+     *
      * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */
@@ -172,7 +154,6 @@ class BehatController extends AbstractController
 
         return new Response($data);
     }
-
 
     /**
      * Display emails into a webpage

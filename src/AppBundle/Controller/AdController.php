@@ -4,10 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/ad")
@@ -132,7 +132,7 @@ class AdController extends AbstractController
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');
-            $redirectUrl = $deputyBaseUrl . $this->generateUrl('ad_login', [
+            $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
                     'adId' => $adUser->getId(),
                     'userToken' => $deputy->getRegistrationToken(),
                     'adFirstname' => $adUser->getFirstname(),
@@ -140,14 +140,10 @@ class AdController extends AbstractController
                 ]);
 
             return $this->redirect($redirectUrl);
-
-
         } catch (\Exception $e) {
             return $this->render('AppBundle:Ad:error.html.twig', [
                 'error' => $e->getMessage(),
             ]);
         }
-
-
     }
 }

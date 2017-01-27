@@ -3,9 +3,9 @@
 namespace AppBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class AuthenticationHandler implements AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
 {

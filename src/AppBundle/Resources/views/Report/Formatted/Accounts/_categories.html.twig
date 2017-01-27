@@ -1,5 +1,5 @@
 <div class="financial-categories" id="{{ moneyType }}-transactions">
-    {% for categoryId, transactionGroup in report.groupByGroup(transactions) %}
+    {% for categoryId, transactionGroup in report.groupMoneyTransactionsByGroup(transactions) %}
         
         {% include 'AppBundle:Report/Formatted:Accounts/_category.html.twig' with {
         'categoryId': categoryId,

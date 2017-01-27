@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Odr;
 
-use AppBundle\Entity\Account;
 use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +17,7 @@ class ActionType extends AbstractType
      */
     public function __construct($step)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -28,32 +27,32 @@ class ActionType extends AbstractType
 
         if ($this->step === 1) {
             $builder
-                ->add('actionGiveGiftsToClient', 'choice', array(
+                ->add('actionGiveGiftsToClient', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
-                ))
+                ])
                 ->add('actionGiveGiftsToClientDetails', 'textarea');
         }
 
         if ($this->step === 2) {
-            $builder->add('actionPropertyMaintenance', 'choice', array(
+            $builder->add('actionPropertyMaintenance', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
         }
 
         if ($this->step === 3) {
-            $builder->add('actionPropertySellingRent', 'choice', array(
+            $builder->add('actionPropertySellingRent', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
         }
 
         if ($this->step === 4) {
-            $builder->add('actionPropertyBuy', 'choice', array(
+            $builder->add('actionPropertyBuy', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ));
+            ]);
         }
 
         $builder->add('save', 'submit');
@@ -69,7 +68,6 @@ class ActionType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'odr-actions',
             'validation_groups' => function (FormInterface $form) {
-
                 $odr = $form->getData();
                 /* @var $odr Odr */
 

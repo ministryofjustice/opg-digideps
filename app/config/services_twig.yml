@@ -1,0 +1,21 @@
+services:
+    twig.form_fields_extension:
+        class: AppBundle\Twig\FormFieldsExtension
+        public: false
+        arguments: [ @translator ]
+        tags:
+            - { name: twig.extension }
+
+    twig.components_extension:
+        class: AppBundle\Twig\ComponentsExtension
+        public: false
+        arguments: [  "@translator" ]
+        tags:
+            - { name: twig.extension }
+
+    twig.assets_extension:
+        class: AppBundle\Twig\AssetsExtension
+        public: false
+        arguments: [  "%kernel.root_dir%" ]
+        tags:
+            - { name: twig.extension }

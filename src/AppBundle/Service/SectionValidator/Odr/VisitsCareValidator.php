@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator\Odr;
+
 use AppBundle\Entity\Odr\VisitsCare;
 
 class VisitsCareValidator
@@ -12,6 +13,7 @@ class VisitsCareValidator
 
     /**
      * VisitsCareValidator constructor.
+     *
      * @param VisitsCare $visitsCare
      */
     public function __construct(VisitsCare $visitsCare)
@@ -21,6 +23,7 @@ class VisitsCareValidator
 
     /**
      * @param $question
+     *
      * @return bool
      */
     public function missing($question)
@@ -52,5 +55,4 @@ class VisitsCareValidator
             $this->visitsCare->getPlanMoveNewResidence() === null,
         ]));
     }
-
 }

@@ -60,25 +60,43 @@ Feature: deputy / report / edit and test tabs
         Then I should see the "edit-money_transfers" link
         Then I should see the "edit-actions" link
 
-    # evaluate using behat tags when 103 sections are implemented
     @deputy
-    Scenario: Check 103 overview page
+    Scenario: Check 102, 103 sections presence on overview page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016"
-        # assert title changed
+        # assert 102
+        And I save the page as "report-102-overview-empty"
         Then I should not see "(103)" in the "report-title" region
-        Given I change the report 1 type to "103"
-        Then I should see "(103)" in the "report-title" region
-        # assert sections
         And I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
         Then I should see the "edit-visits_care" link
+        Then I should see the "edit-deputy_expenses" link
+        Then I should see the "edit-gifts" link
         Then I should see the "edit-bank_accounts" link
+        Then I should see the "edit-money_transfers" link
         Then I should see the "edit-money_in" link
         Then I should see the "edit-money_out" link
         Then I should see the "edit-assets" link
         Then I should see the "edit-debts" link
         Then I should see the "edit-actions" link
+        Then I should see the "edit-other_info" link
+        # assert 103 sections
+        Given I change the report 1 type to "103"
+        And I save the page as "report-103-overview-empty"
+        Then I should see "(103)" in the "report-title" region
+        And I should see the "edit-decisions" link
+        Then I should see the "edit-contacts" link
+        Then I should see the "edit-visits_care" link
+        Then I should see the "edit-deputy_expenses" link
+        Then I should see the "edit-gifts" link
+        Then I should see the "edit-bank_accounts" link
         Then I should not see the "edit-money_transfers" link
+        Then I should see the "edit-money_in" link
+        Then I should see the "edit-money_out" link
+        Then I should see the "edit-assets" link
+        Then I should see the "edit-debts" link
+        Then I should see the "edit-actions" link
+        Then I should see the "edit-other_info" link
+        # change back to 102 for future tests
         And I change the report 1 type to "102"
 

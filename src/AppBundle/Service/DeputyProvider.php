@@ -2,13 +2,13 @@
 
 namespace AppBundle\Service;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class DeputyProvider implements UserProviderInterface
 {
@@ -73,9 +73,10 @@ class DeputyProvider implements UserProviderInterface
      *
      * @param UserInterface $user
      *
+     * @throws UnsupportedUserException
+     *
      * @return \AppBundle\Entity\User
      *
-     * @throws UnsupportedUserException
      */
     public function refreshUser(UserInterface $user)
     {

@@ -190,7 +190,6 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('need to mock environemnt to test');
     }
 
-
     /**
      * @test
      */
@@ -201,7 +200,8 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $f(0));
         $this->assertEquals(null, $f([]));
         $this->assertEquals(null, $f(''));
-        $this->assertEquals('Closure', $f(function(){}));
+        $this->assertEquals('Closure', $f(function () {
+        }));
         $this->assertEquals('DateTime', $f(new \DateTime()));
     }
 
@@ -218,5 +218,4 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('aBCd', $f('ABCd'));
         $this->assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
     }
-
 }

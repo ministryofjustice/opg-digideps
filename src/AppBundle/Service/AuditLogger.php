@@ -2,12 +2,12 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
 use AppBundle\Entity\AuditLogEntry;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\Container;
+use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class AuditLogger
 {

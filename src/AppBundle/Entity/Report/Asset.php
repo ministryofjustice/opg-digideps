@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Traits\HasReportTrait;
-use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @JMS\Discriminator(field = "type", map = {
@@ -14,12 +14,12 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
+    use HasReportTrait;
+
     /**
      * @JMS\Exclude
      */
     protected $type;
-
-    use HasReportTrait;
 
     /**
      * @param string $type
@@ -55,17 +55,18 @@ abstract class Asset
      * @Assert\NotBlank(message="asset.value.notBlank")
      * @Assert\Type( type="numeric", message="asset.value.type")
      * @Assert\Range(min=0, max=100000000000, maxMessage = "asset.value.outOfRange")
-     * 
+     *
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
      * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property-value"})
      * @Assert\Range(min=0, max=10000000000, maxMessage = "asset.property.value.outOfRange", groups={"property-value"})
-     * 
+     *
      * @JMS\Type("string")
      */
     private $value;
 
     /**
      * @JMS\Type("double")
+     *
      * @var float
      */
     private $valueTotal;

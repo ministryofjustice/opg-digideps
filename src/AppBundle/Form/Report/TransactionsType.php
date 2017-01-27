@@ -27,7 +27,7 @@ class TransactionsType extends AbstractType
     {
         $builder
                  ->add('id', 'hidden')
-                 ->add($this->property,  'collection', ['type' => new TransactionSingleType()])
+                 ->add($this->property, 'collection', ['type' => new TransactionSingleType()])
                  ->add('save', 'submit')
                 ;
     }

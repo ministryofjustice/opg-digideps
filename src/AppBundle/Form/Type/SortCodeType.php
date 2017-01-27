@@ -2,9 +2,9 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Form\DataTransformer\ArrayToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use AppBundle\Form\DataTransformer\ArrayToStringTransformer;
 
 class SortCodeType extends AbstractType
 {
@@ -20,6 +20,7 @@ class SortCodeType extends AbstractType
     {
         return 'form';
     }
+
     public function getName()
     {
         return 'sort_code';

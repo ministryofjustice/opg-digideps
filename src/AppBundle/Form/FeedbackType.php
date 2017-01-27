@@ -21,21 +21,21 @@ class FeedbackType extends AbstractType
 
         $builder->add('difficulty', 'textarea')
             ->add('ideas', 'textarea')
-            ->add('satisfactionLevel', 'choice', array(
+            ->add('satisfactionLevel', 'choice', [
                 'choices' => array_combine($satisfactionLevelChoices, $satisfactionLevelChoices),
                 'expanded' => true,
                 'multiple' => false,
-            ))
-            ->add('help', 'choice', array(
+            ])
+            ->add('help', 'choice', [
                 'choices' => array_combine($helpChoices, $helpChoices),
                 'expanded' => true,
                 'multiple' => false,
-            ))
-            ->add('emailYesNo', 'choice', array(
+            ])
+            ->add('emailYesNo', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
-            ))
+            ])
             ->add('email', 'email', [
                 'constraints' => [
                     new Constraints\Email(['message' => 'login.email.inValid']),

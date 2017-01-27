@@ -4,16 +4,16 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
+use AppBundle\Service\DataImporter\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Service\DataImporter\CsvToArray;
-use Symfony\Component\Form\FormError;
-use AppBundle\Exception\RestClientException;
 
 /**
  * @Route("/admin")
@@ -78,7 +78,7 @@ class AdminController extends AbstractController
                         'An activation email has been sent to the user.'
                     );
 
-                    $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
+                    $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
                     return $this->redirect($this->generateUrl('admin_homepage'));
                 } catch (RestClientException $e) {
@@ -171,14 +171,14 @@ class AdminController extends AbstractController
      */
     public function editOdrAction(Request $request, $id)
     {
-        $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'user']);
+        $odr = $this->getRestClient()->get('odr/'.$id, 'Odr\Odr', ['odr', 'client', 'user']);
         $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
         if ($request->getMethod() == 'POST') {
             $odrForm->handleRequest($request);
 
             if ($odrForm->isValid()) {
                 $updateOdr = $odrForm->getData();
-                $this->getRestClient()->put('odr/' . $id, $updateOdr, ['start_date']);
+                $this->getRestClient()->put('odr/'.$id, $updateOdr, ['start_date']);
                 $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
             }
         }
@@ -222,7 +222,7 @@ class AdminController extends AbstractController
     {
         $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
 
-        $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
+        $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 
         $this->getRestClient()->delete('user/'.$id);
 
@@ -312,7 +312,7 @@ class AdminController extends AbstractController
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
         $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-'.date('Y-m-d').'.csv";');
         $response->sendHeaders();
         $response->setContent($rawCsv);
 

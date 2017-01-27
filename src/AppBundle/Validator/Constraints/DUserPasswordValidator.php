@@ -2,11 +2,11 @@
 
 namespace AppBundle\Validator\Constraints;
 
-use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;
+use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
-use AppBundle\Service\Client\RestClient;
 
 class DUserPasswordValidator extends UserPasswordValidator
 {

@@ -41,7 +41,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ini_set('max_nesting_level', $maxNestingLevel);
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
-        self::$autoDbSnapshot = isset($options['autoDbSnapshot']) ? $options['autoDbSnapshot'] : false;
+        // set this to true for temporary local debugging
+        self::$autoDbSnapshot = false;
     }
 
     public function setKernel(\AppKernel $kernel)

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator\Odr;
+
 use AppBundle\Entity\Odr\Odr;
 
 class ActionsValidator
@@ -44,5 +45,4 @@ class ActionsValidator
             $this->odr->getActionPropertyBuy() === null,
         ]));
     }
-
 }

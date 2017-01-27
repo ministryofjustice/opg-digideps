@@ -46,9 +46,10 @@ class MailSender
 
     /**
      * MailSender constructor.
+     *
      * @param ValidatorInterface $validator
-     * @param LoggerInterface $logger
-     * @param PredisClient $redis
+     * @param LoggerInterface    $logger
+     * @param PredisClient       $redis
      */
     public function __construct(ValidatorInterface $validator, LoggerInterface $logger, PredisClient $redis)
     {
@@ -59,7 +60,7 @@ class MailSender
     }
 
     /**
-     * @param string $name
+     * @param string       $name
      * @param Swift_Mailer $mailer
      */
     public function addSwiftMailer($name, Swift_Mailer $mailer)
@@ -67,20 +68,20 @@ class MailSender
         $this->mailers[$name] = $mailer;
     }
 
-
     /**
      * @param Email $email
      * @param array $groups
      *
+     * @throws \Exception
+     *
      * @return type
      *
-     * @throws \Exception
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
         $errors = $this->validator->validate($email, $groups);
         if (count($errors) > 0) {
-            $errorsString = (string)$errors;
+            $errorsString = (string) $errors;
             throw new \RuntimeException($errorsString);
         }
 
@@ -108,7 +109,7 @@ class MailSender
         $this->logger->log($result ? 'info' : 'error', 'Email sent: ', ['extra' => [
             'page' => 'mail_sender',
             'transport' => $transport,
-            'to' => '***' . substr($to, 3),
+            'to' => '***'.substr($to, 3),
             'result' => $result,
             'failedRecipients' => $failedRecipients ? implode(',', $failedRecipients) : '',
         ]]);
@@ -119,7 +120,7 @@ class MailSender
 
     /**
      * @param Swift_Message $swiftMessage
-     * @param Email $email
+     * @param Email         $email
      */
     private function fillSwiftMessageWithEmailData(\Swift_Message $swiftMessage, Email $email)
     {
@@ -178,6 +179,7 @@ class MailSender
 
     /**
      * reset mail mock (redis key)
+     *
      * @return mixed
      */
     public function resetMockedEmails()

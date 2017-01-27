@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Asset form.
- * 
+ *
  * note: title is hidden (filled from the controller based on AssetTypeTitle form)
  */
 abstract class AbstractAssetType extends AbstractType

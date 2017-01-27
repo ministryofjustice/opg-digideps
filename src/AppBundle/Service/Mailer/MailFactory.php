@@ -41,7 +41,7 @@ class MailFactory
      * @param string $area      deputy|admin
      * @param string $routeName must be in YML config under email.routes
      * @param array  $params
-     * 
+     *
      * @return string calculated route
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
@@ -126,7 +126,7 @@ class MailFactory
 
     /**
      * @param EntityDir\User $user
-     * 
+     *
      * @return ModelDir\Email
      */
     public function createChangePasswordEmail(EntityDir\User $user)
@@ -223,7 +223,7 @@ class MailFactory
 
     /**
      * @param string $response
-     * 
+     *
      * @return ModelDir\Email
      */
     public function createFeedbackEmail($response)
@@ -245,19 +245,19 @@ class MailFactory
     }
 
     /**
- * @param EntityDir\User          $user
- * @param EntityDir\Report\Report $submittedReport
- * @param EntityDir\Report        $newReport
- *
- * @return ModelDir\Email
- */
+     * @param EntityDir\User          $user
+     * @param EntityDir\Report\Report $submittedReport
+     * @param EntityDir\Report        $newReport
+     *
+     * @return ModelDir\Email
+     */
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
 
         $viewParams = [
             'submittedReport' => $submittedReport,
-            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
+            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
@@ -278,9 +278,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
-     * @param EntityDir\Odr\Odr       $odr
-     * @param EntityDir\Report        $newReport
+     * @param EntityDir\User    $user
+     * @param EntityDir\Odr\Odr $odr
+     * @param EntityDir\Report  $newReport
      *
      * @return ModelDir\Email
      */
@@ -290,7 +290,7 @@ class MailFactory
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
+            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
             'pdfLink' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'odr_pdf'),
         ];
 
@@ -308,7 +308,7 @@ class MailFactory
 
     /**
      * @param string $key
-     * 
+     *
      * @return string
      */
     private function translate($key)

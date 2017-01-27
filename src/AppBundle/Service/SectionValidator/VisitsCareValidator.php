@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Service\SectionValidator;
+
 use AppBundle\Entity\Report\VisitsCare;
 
 class VisitsCareValidator
@@ -12,6 +13,7 @@ class VisitsCareValidator
 
     /**
      * VisitsCareValidator constructor.
+     *
      * @param VisitsCare $visitsCare
      */
     public function __construct(VisitsCare $visitsCare)
@@ -21,6 +23,7 @@ class VisitsCareValidator
 
     /**
      * @param $question
+     *
      * @return bool
      */
     public function missing($question)
@@ -49,5 +52,4 @@ class VisitsCareValidator
             $this->visitsCare->getDoesClientHaveACarePlan() === null,
         ]));
     }
-
 }

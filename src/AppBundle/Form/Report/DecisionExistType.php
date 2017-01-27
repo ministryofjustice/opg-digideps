@@ -13,11 +13,11 @@ class DecisionExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasDecisions', 'choice', array(
+            ->add('hasDecisions', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['exist']])],
-            ))
+            ])
             ->add('reasonForNoDecisions', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
     }
