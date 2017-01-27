@@ -98,7 +98,7 @@ class BankAccount
     private $createdAt;
 
     /**
-     * @var decimal
+     * @var float
      * @JMS\Groups({"account"})
      * @JMS\Type("string")
      *
@@ -107,7 +107,7 @@ class BankAccount
     private $openingBalance;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
@@ -133,17 +133,8 @@ class BankAccount
     private $report;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="from", cascade={"remove"})
-     */
-    private $transfersFrom;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="to", cascade={"remove"})
-     */
-    private $transfersTo;
-
-    /**
-     * @var string
+     * @var string yes|no|null
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
      *
@@ -152,6 +143,8 @@ class BankAccount
     private $isJointAccount;
 
     /**
+     * @deprecated hold information about previous data migration
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
      *
@@ -372,11 +365,19 @@ class BankAccount
         return $this->closingBalance;
     }
 
-    public function getIsClosed()
+    /**
+     * @return bool
+     */
+    public function isIsClosed()
     {
         return $this->isClosed;
     }
 
+    /**
+     * @param bool $isClosed
+     *
+     * @return BankAccount
+     */
     public function setIsClosed($isClosed)
     {
         $this->isClosed = $isClosed;
@@ -426,7 +427,7 @@ class BankAccount
     /**
      * @param string $isJointAccount yes/no/null
      *
-     * @return \AppBundle\Entity\Report\BankAccount
+     * @return BankAccount
      */
     public function setIsJointAccount($isJointAccount)
     {

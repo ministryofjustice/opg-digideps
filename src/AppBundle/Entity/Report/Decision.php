@@ -27,6 +27,7 @@ class Decision
 
     /**
      * @var string
+     *
      * @JMS\Groups({"decision"})
      * @JMS\Type("string")
      * @ORM\Column(type="text")
@@ -35,6 +36,7 @@ class Decision
 
     /**
      * @var bool
+     *
      * @JMS\Groups({"decision"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="client_involved_boolean", type="boolean")
@@ -42,6 +44,8 @@ class Decision
     private $clientInvolvedBoolean;
 
     /**
+     * @var string
+     *
      * @JMS\Groups({"decision"})
      * @JMS\Type("string")
      * @ORM\Column(name="client_involved_details", type="text", nullable=true)

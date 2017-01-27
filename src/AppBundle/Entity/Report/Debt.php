@@ -29,6 +29,7 @@ class Debt
 
     /**
      * @var int
+     *
      * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -47,7 +48,8 @@ class Debt
     private $report;
 
     /**
-     * @var string
+     * @var string a value in self:$debtTypeIds
+     *
      * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="debt_type_id", type="string", nullable=false)
@@ -55,7 +57,7 @@ class Debt
     private $debtTypeId;
 
     /**
-     * @var string
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
@@ -66,6 +68,7 @@ class Debt
 
     /**
      * @var bool
+     *
      * @JMS\Groups({"debt"})
      * @JMS\Type("boolean")
      *
@@ -75,6 +78,7 @@ class Debt
 
     /**
      * @var string
+     *
      * @JMS\Groups({"debt"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
@@ -82,11 +86,9 @@ class Debt
     private $moreDetails;
 
     /**
-     * Debt constructor.
-     *
      * @param Report $report
      * @param string $debtTypeId
-     * @param boole  $hasMoreDetails
+     * @param bool  $hasMoreDetails
      * @param float  $amount
      */
     public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount)

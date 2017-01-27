@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 trait GiftsTrait
 {
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"gifts"})
@@ -19,11 +19,12 @@ trait GiftsTrait
     private $giftsExist;
 
     /**
+     * @var Gift[]
+     *
      * @JMS\Type("array<AppBundle\Entity\Report\Gift>")
      * @JMS\Groups({"gifts"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Gift", mappedBy="report", cascade={"persist"})
      *
-     * @var Gift[]
      */
     private $gifts;
 

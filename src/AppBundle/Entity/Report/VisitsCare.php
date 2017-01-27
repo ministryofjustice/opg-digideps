@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Reports.
- *
  * @ORM\Table(name="safeguarding")
  * @ORM\Entity
  */
@@ -32,7 +30,7 @@ class VisitsCare
     private $report;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
@@ -41,13 +39,6 @@ class VisitsCare
     private $doYouLiveWithClient;
 
     /**
-     * New textarea replacing deprecated values
-     * how_often_do_you_visit
-     * how_often_do_you_phone_or_video_call
-     * how_often_do_you_write_email_or_letter
-     * how_often_does_client_see_other_people
-     * anything_else_to_tell.
-     *
      * @var string
      *
      * @JMS\Type("string")
@@ -57,7 +48,7 @@ class VisitsCare
     private $howOftenDoYouContactClient;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
@@ -66,7 +57,7 @@ class VisitsCare
     private $doesClientReceivePaidCare;
 
     /**
-     * @var string
+     * @var string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
@@ -75,7 +66,7 @@ class VisitsCare
     private $howIsCareFunded;
 
     /**
-     * @var type
+     * @var string
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
@@ -84,7 +75,7 @@ class VisitsCare
     private $whoIsDoingTheCaring;
 
     /**
-     * @var type
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
@@ -93,7 +84,7 @@ class VisitsCare
     private $doesClientHaveACarePlan;
 
     /**
-     * @var date
+     * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"visits-care"})

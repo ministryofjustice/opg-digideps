@@ -29,6 +29,7 @@ class Debt
 
     /**
      * @var int
+     *
      * @JMS\Groups({"odr-debt"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)

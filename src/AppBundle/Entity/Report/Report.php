@@ -97,6 +97,8 @@ class Report
     private $transactions;
 
     /**
+     * @var MoneyTransaction[]
+     *
      * @JMS\Groups({"transaction"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
@@ -104,6 +106,8 @@ class Report
     private $moneyTransactions;
 
     /**
+     * @var Debt[]
+     *
      * @JMS\Groups({"debt"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
@@ -111,6 +115,8 @@ class Report
     private $debts;
 
     /**
+     * @var string yes|no|null
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
@@ -121,6 +127,8 @@ class Report
     private $hasDebts;
 
     /**
+     * @var Decision[]
+     *
      * @JMS\Groups({"decision"})
      * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist"})
@@ -128,6 +136,8 @@ class Report
     private $decisions;
 
     /**
+     * @var Asset[]
+     *
      * @JMS\Groups({"asset"})
      * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Asset", mappedBy="report", cascade={"persist"})
@@ -135,6 +145,8 @@ class Report
     private $assets;
 
     /**
+     * @var VisitsCare
+     *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist"})
@@ -142,13 +154,17 @@ class Report
     private $visitsCare;
 
     /**
-     * @JMS\Groups({ "action"})
+     * @var Action
+     *
+     * @JMS\Groups({"action"})
      * @JMS\Type("AppBundle\Entity\Report\Action")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist"})
      **/
     private $action;
 
     /**
+     * @var MentalCapacity
+     *
      * @JMS\Groups({ "mental-capacity"})
      * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist"})
@@ -213,7 +229,8 @@ class Report
     private $furtherInformation;
 
     /**
-     * @var bool
+     * @var bool deputy declaration saying there are no assets. Required (true/false) if no decisions are added
+     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"report"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
@@ -221,7 +238,8 @@ class Report
     private $noAssetToAdd;
 
     /**
-     * @var bool
+     * @var bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
+     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"report", "money-transfer"})
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
@@ -229,7 +247,7 @@ class Report
     private $noTransfersToAdd;
 
     /**
-     * @var string
+     * @var string deputy reason for not having contacts. Required if no contacts are added
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report"})
@@ -238,7 +256,7 @@ class Report
     private $reasonForNoContacts;
 
     /**
-     * @var string
+     * @var string deputy reason for not having decision. Required if no decisions are added
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report","decision"})
@@ -247,7 +265,7 @@ class Report
     private $reasonForNoDecisions;
 
     /**
-     * @var bool
+     * @var bool whether the report is submitted or not
      *
      * @JMS\Groups({"report"})
      * @JMS\Type("boolean")
@@ -257,7 +275,7 @@ class Report
 
 
     /**
-     * @deprecated
+     * @deprecated client shouldn't need this anymore
      *
      * @var bool
      * @JMS\Groups({"report"})
@@ -267,7 +285,8 @@ class Report
     private $reportSeen;
 
     /**
-     * @var string
+     * @var string reason required if balance calculation mismatches
+     *
      * @JMS\Groups({"balance"})
      * @JMS\Type("string")
      *
@@ -276,7 +295,7 @@ class Report
     private $balanceMismatchExplanation;
 
     /**
-     * @var string
+     * @var string only_deputy|more_deputies_behalf|more_deputies_not_behalf
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report"})
@@ -285,7 +304,7 @@ class Report
     private $agreedBehalfDeputy;
 
     /**
-     * @var string
+     * @var string required if agreedBehalfDeputy == more_deputies_not_behalf
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report"})
@@ -294,6 +313,8 @@ class Report
     private $agreedBehalfDeputyExplanation;
 
     /**
+     * @deprecated data needed for previous data migration
+     *
      * @var string
      *
      * @JMS\Type("string")

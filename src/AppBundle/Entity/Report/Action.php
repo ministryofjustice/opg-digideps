@@ -11,9 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Action
 {
-    const YES = 'yes';
-    const NO = 'no';
-
     /**
      * @var int
      *
@@ -34,7 +31,7 @@ class Action
     private $report;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"action"})
@@ -43,7 +40,7 @@ class Action
     private $doYouExpectFinancialDecisions;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"action"})
@@ -52,7 +49,7 @@ class Action
     private $doYouExpectFinancialDecisionsDetails;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"action"})
@@ -61,7 +58,7 @@ class Action
     private $doYouHaveConcerns;
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"action"})

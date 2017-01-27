@@ -95,7 +95,7 @@ class AssetProperty extends Asset
     private $hasMortgage;
 
     /**
-     * @var decimal
+     * @var float
      * @JMS\Groups({"odr-asset"})
      * @JMS\Type("integer")
      * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)

@@ -11,14 +11,18 @@ use JMS\Serializer\Annotation as JMS;
 class AssetOther extends Asset
 {
     /**
-     * @var string
+     * @var string type of the asset
+     *             Vehicles | Jewellery etc...
+     *             (needs refactor into an enum, as it originally was a freetext)
+     *
      * @JMS\Groups({"asset"})
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
     private $title;
 
     /**
-     * @var string
+     * @var string more info about asset
+     *
      * @JMS\Groups({"asset"})
      * @ORM\Column(name="description", type="text", nullable=true)
      */
@@ -26,6 +30,7 @@ class AssetOther extends Asset
 
     /**
      * @var \Date
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"asset"})
      * @ORM\Column(name="valuation_date", type="date", nullable=true)

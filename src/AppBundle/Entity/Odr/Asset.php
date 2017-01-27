@@ -33,7 +33,7 @@ abstract class Asset
     private $id;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @JMS\Groups({"odr-asset"})
      * @JMS\Type("string")

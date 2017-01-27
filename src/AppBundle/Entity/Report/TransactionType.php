@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  *  @deprecated  REMOVE WHEN OTPP is merged and migrated on production
+ *
  * @ORM\Entity
  * @ORM\Table(name="transaction_type")
  * @ORM\InheritanceType("SINGLE_TABLE")

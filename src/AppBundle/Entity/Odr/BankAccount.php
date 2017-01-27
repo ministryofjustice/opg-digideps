@@ -89,7 +89,7 @@ class BankAccount
     private $createdAt;
 
     /**
-     * @var decimal
+     * @var float
      * @JMS\Groups({"odr-account"})
      * @JMS\Type("string")
      *

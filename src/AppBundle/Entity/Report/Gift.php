@@ -25,6 +25,7 @@ class Gift
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"gifts"})
      * @ORM\Column(name="explanation", type="text", nullable=false)

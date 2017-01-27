@@ -34,7 +34,7 @@ class MentalCapacity
     private $report;
 
     /**
-     * @var string
+     * @var string changed | stayedSame (see constants)
      *
      * @JMS\Type("string")
      * @JMS\Groups({"mental-capacity"})
@@ -53,6 +53,7 @@ class MentalCapacity
 
     /**
      * @var \Date
+     *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"mental-capacity"})
      * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)

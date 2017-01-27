@@ -119,9 +119,10 @@ class MoneyTransaction
     private $report;
 
     /**
-     * Category (e.g. "dividends") identifies group (income and dividends) and type (in)
+     * Category (e.g. "dividends")
+     * Once the category is known, group (income and dividends) and type (in) are known as well, see self::$categories
      *
-     * @var TransactionType
+     * @var string
      *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
@@ -130,7 +131,7 @@ class MoneyTransaction
     private $category;
 
     /**
-     * @var array
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
@@ -141,12 +142,18 @@ class MoneyTransaction
 
     /**
      * @var string
+     *
      * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
+    /**
+     * MoneyTransaction constructor.
+     *
+     * @param Report $report
+     */
     public function __construct(Report $report)
     {
         $this->report = $report;

@@ -9,7 +9,7 @@ trait MoreInfoTrait
 {
 
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"action-more-info"})

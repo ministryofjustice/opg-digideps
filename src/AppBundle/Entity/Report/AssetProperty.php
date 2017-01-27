@@ -16,30 +16,30 @@ class AssetProperty extends Asset
     const OWNED_PARTLY = 'partly';
 
     /**
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
-     *
-     * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
 
     /**
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
-     *
-     * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
 
     /**
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
-     *
-     * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
      */
@@ -95,7 +95,7 @@ class AssetProperty extends Asset
     private $hasMortgage;
 
     /**
-     * @var decimal
+     * @var float
      * @JMS\Groups({"asset"})
      * @JMS\Type("integer")
      * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)

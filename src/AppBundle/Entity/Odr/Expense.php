@@ -25,6 +25,7 @@ class Expense
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"odr-expenses"})
      * @ORM\Column(name="explanation", type="text", nullable=false)

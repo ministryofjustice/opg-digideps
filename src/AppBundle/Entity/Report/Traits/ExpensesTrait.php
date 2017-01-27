@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
 trait ExpensesTrait
 {
     /**
-     * @var string
+     * @var string yes|no|null
      *
      * @JMS\Type("string")
      * @JMS\Groups({"expenses"})
@@ -19,6 +19,8 @@ trait ExpensesTrait
     private $paidForAnything;
 
     /**
+     * @var Expense[]
+     *
      * @JMS\Type("array<AppBundle\Entity\Report\Expense>")
      * @JMS\Groups({"expenses"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Expense", mappedBy="report", cascade={"persist"})

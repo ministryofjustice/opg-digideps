@@ -33,7 +33,7 @@ abstract class Asset
     private $id;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
@@ -59,6 +59,8 @@ abstract class Asset
     private $report;
 
     /**
+     * Discriminator field
+     *
      * @var string
      * @JMS\Exclude
      */
