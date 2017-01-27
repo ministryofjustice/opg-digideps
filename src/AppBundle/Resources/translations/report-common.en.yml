@@ -15,7 +15,6 @@ report:
         submit:
           label: "Ready to submit report"
 
-# TODO normalise names in camelCase, not with_underscores
 prevNextLinks:
   next: Next section
   previous: Previous section
@@ -34,7 +33,7 @@ prevNextLinks:
     actions: Actions
     otherInfo: Any other information
     incomeBenefits: Income and benefits
-    deputy_expenses: Deputy expenses
+    deputyExpenses: Deputy expenses
     gifts: Gifts
 
 
