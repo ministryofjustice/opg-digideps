@@ -11,8 +11,7 @@ startPage:
   hiddenText01:
     summary: More about what you can and can't claim for
     content:
-      para01: OPG's 'How to be a deputy' (SD3) booklet gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy. 
-      para02: You can read, download and print out the guide <a href="#">here</a>.
+      para01: OPG’S <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet </a> gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy. 
   startButton: Start deputy expenses
 
 existPage:
