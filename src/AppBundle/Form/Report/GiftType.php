@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Report\Gift;
+namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Gift;
 use Symfony\Component\Form\AbstractType;

@@ -111,7 +111,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Odr\DeputyExpenseAddAnotherType(), $odr);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-deputy-expenses'), $odr);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

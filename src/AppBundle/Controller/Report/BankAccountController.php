@@ -153,7 +153,7 @@ class BankAccountController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\BankAccountAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-bank-accounts'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -110,7 +110,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Report\DeputyExpenseAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-deputy-expenses'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

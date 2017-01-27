@@ -170,7 +170,7 @@ class AssetController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetAddAnotherType(), $odr);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-assets'), $odr);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

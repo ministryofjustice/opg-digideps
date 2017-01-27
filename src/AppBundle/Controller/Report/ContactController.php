@@ -112,7 +112,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Report\ContactAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-contacts'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

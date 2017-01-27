@@ -1,21 +1,34 @@
 <?php
 
-namespace AppBundle\Form\Report\Gift;
+namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class GiftExistType extends AbstractType
+class AddAnotherRecordType extends AbstractType
 {
+    protected $translationDomain;
+
+    /**
+     * AddAnotherRecordType constructor.
+     *
+     * @param string $translationDomain
+     */
+    public function __construct($translationDomain)
+    {
+        $this->translationDomain = $translationDomain;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('giftsExist', 'choice', [
+            ->add('addAnother', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-//                'constraints' => [new NotBlank(['message' => 'gifts.giftsExist.notBlank', 'groups' => ['exist']])],
+                'mapped' => false,
+                'constraints' => [new NotBlank(['message' => 'Please choose yes or no'])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -23,13 +36,12 @@ class GiftExistType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-gifts',
-            'validation_groups' => ['gifts-exist'],
+            'translation_domain' => $this->translationDomain,
         ]);
     }
 
     public function getName()
     {
-        return 'gift_exist';
+        return 'add_another';
     }
 }

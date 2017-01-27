@@ -129,7 +129,7 @@ class MoneyInController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transaction'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

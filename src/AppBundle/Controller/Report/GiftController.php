@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Form\Report\Gift as FormDir;
+use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +43,7 @@ class GiftController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\GiftExistType(), $report);
+        $form = $this->createForm(new FormDir\Report\GiftExistType(), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -79,7 +79,7 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
 
-        $form = $this->createForm(new FormDir\GiftType(), $gift);
+        $form = $this->createForm(new FormDir\Report\GiftType(), $gift);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -110,7 +110,7 @@ class GiftController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\GiftAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-gifts'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -137,7 +137,7 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = $this->getRestClient()->get('report/'.$report->getId().'/gift/'.$giftId, 'Report\Gift');
 
-        $form = $this->createForm(new FormDir\GiftType(), $gift);
+        $form = $this->createForm(new FormDir\Report\GiftType(), $gift);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -1,25 +1,21 @@
 <?php
 
-namespace AppBundle\Form\Odr;
+namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class AbstractAddAnotherType extends AbstractType
+class GiftExistType extends AbstractType
 {
-    protected $missingMessage = 'Choose one';
-    protected $translationDomain = 'common';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('addAnother', 'choice', [
+            ->add('giftsExist', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'mapped' => false,
-                'constraints' => [new NotBlank(['message' => $this->missingMessage])],
+//                'constraints' => [new NotBlank(['message' => 'gifts.giftsExist.notBlank', 'groups' => ['exist']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -27,12 +23,13 @@ class AbstractAddAnotherType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => $this->translationDomain,
+            'translation_domain' => 'report-gifts',
+            'validation_groups' => ['gifts-exist'],
         ]);
     }
 
     public function getName()
     {
-        return 'add_another';
+        return 'gift_exist';
     }
 }

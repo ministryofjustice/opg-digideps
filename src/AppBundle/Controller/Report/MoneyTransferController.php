@@ -173,7 +173,7 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Report\MoneyTransferAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transfer'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

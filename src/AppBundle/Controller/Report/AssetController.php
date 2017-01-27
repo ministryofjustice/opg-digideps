@@ -174,7 +174,7 @@ class AssetController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\Asset\AssetAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-assets'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
