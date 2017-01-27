@@ -23,7 +23,7 @@
                 <span class="summary">{{ 'startPage.hiddenText01.summary' | trans({'%client%': odr.client.firstname}, translationDomain) }}</span>
             </summary>
             <div class="panel panel-border-narrow">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans({'%client%': odr.client.firstname}, translationDomain)|raw }}</p>
             </div>
         </details>
 		
