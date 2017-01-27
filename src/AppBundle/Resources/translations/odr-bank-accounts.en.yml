@@ -48,14 +48,8 @@ summaryPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts
   pageSectionDescription1: |
-    In this section we ask you about %client%'s bank accounts, building society
+    In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
-  pageSectionDescription2: |
-      Use this section to tell us about all of %client%'s bank accounts, building society
-      accounts, savings accounts and ISAs.
-  pageSectionDescription3: |
-      We will also need to know the balance of each account.
-
 form:
   accountType:
       label: What type of account is it?
