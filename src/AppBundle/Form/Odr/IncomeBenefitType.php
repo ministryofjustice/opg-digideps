@@ -44,7 +44,7 @@ class IncomeBenefitType extends AbstractType
             $builder
                 ->add('id', 'hidden')
                 ->add('stateBenefits', 'collection', [
-                    'type' => new IncomeBenefitSingleType(),
+                    'type' => new StateBenefitType(),
                 ]);
         }
 
@@ -74,21 +74,12 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 5) {
             $builder->add('oneOff', 'collection', [
-                'type' => new IncomeBenefitSingleType(),
+                'type' => new OneOffType(),
             ]);
         }
 
 
         $builder->add('save', 'submit');
-
-
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-
-
-
-            $event->setData($data);
-        });
     }
 
     private function translate($key)

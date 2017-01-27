@@ -16,11 +16,10 @@ class IncomeBenefitController extends AbstractController
 {
     private static $jmsGroups = [
         'client-cot',
-        'odr-income-benefits',
-        'odr-income-state-benefits',
-        'odr-income-pension',
-        'odr-income-damages',
-        'odr-income-one-off',
+        'state-benefits',
+        'pension',
+        'damages',
+        'one-off',
     ];
 
     /**
