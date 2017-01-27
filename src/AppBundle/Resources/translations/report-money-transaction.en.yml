@@ -69,13 +69,11 @@ summaryPage:
     pageSectionTitle: Money in
     # similar to start page, but expecting to evolve differently
     supportTitle: ""
-  pageContent:
     weAskAbout: In this section, we ask you about money paid into %client%'s account between %startDate% and %endDate%.
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     supportTitle: ""
-  pageContent:
     weAskAbout: |
       In this section, we ask you about money you've spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.

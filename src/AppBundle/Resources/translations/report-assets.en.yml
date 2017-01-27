@@ -58,8 +58,7 @@ summaryPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageSectionTitle: Assets
   supportTitle: ""
-  pageContent:
-    weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
+  weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
   addButton: Add an asset
   edit: Edit
 

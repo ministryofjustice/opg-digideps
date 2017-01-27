@@ -15,27 +15,13 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'startPage.description1' | trans }}</p>
-    <ul class="list list-bullet">
-        <li>{{ 'startPage.descriptionListItem1' | trans(transOptions) }}</li>
-        <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>
-    </ul>
-
-    <details>
-        <summary>
-            <span class="summary">{{ 'startPage.whyweneedthisSummary' | trans }}</span>
-        </summary>
-        <div class="panel panel-border-narrow">
-            <p>{{ 'startPage.whyweneedthisPara1' | trans(transOptions) }}</p>
-            <p>{{ 'startPage.whyweneedthisPara2' | trans(transOptions) }}</p>
-        </div>
-    </details>
+    <p class="text">{{ 'startPage.description1' | trans(transOptions) }}</p>
 
     <details>
         <summary>
             <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
         </summary>
-        <div class="panel panel-border-narrow">
+        <div class="text panel panel-border-narrow">
             <p>{{ 'startPage.whatisdecisionPara1' | trans(transOptions) }}</p>
             <p>{{ 'startPage.whatisdecisionPara2' | trans(transOptions) }}</p>
             <ul class="list list-bullet">
