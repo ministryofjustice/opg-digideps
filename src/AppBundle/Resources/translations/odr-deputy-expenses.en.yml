@@ -2,13 +2,16 @@ startPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
   pageSectionDescription1: |
-    You can use your new deputy report to claim back money for things you paid for on
-    %client%'s behalf before your court order – for example, care home fees or domestic bills.
+    You can use your new deputy report to claim back money for things you paid for on %client%'s behalf before your court order – for example, care home fees or domestic bills.
   pageSectionDescription2: |
-    Over the course of your deputyship, you can claim expenses for things you have to do to
-    carry out your role, like phone calls, postage and travel costs.
-    You claim for these expenses at the end of every year you are a deputy.
-
+    Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
+  pageSectionDescription3: |
+    You can pay yourself back from %client%’s funds as you go along, but you must keep a record of the expenses for your annual deputy report, due on the anniversary of your court order.
+  hiddenText01:
+    summary: More about what you can and can't claim for
+    content:
+      para01: |
+        OPG’s <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet</a> gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy. 
   startButton: Start deputy expenses
 
 existPage:
