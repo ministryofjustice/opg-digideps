@@ -29,7 +29,7 @@ class DeputyExpenseType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Expense::class,
             'validation_groups' => ['deputy-expense'],
-            'translation_domain' => 'deputy-expenses',
+            'translation_domain' => 'report-deputy-expenses',
         ]);
     }
 

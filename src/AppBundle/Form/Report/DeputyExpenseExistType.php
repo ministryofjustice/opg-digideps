@@ -23,7 +23,7 @@ class DeputyExpenseExistType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'deputy-expenses',
+            'translation_domain' => 'report-deputy-expenses',
             'validation_groups' => ['expenses-paid-anything'],
         ]);
     }
