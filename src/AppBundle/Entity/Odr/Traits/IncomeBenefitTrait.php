@@ -221,7 +221,9 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @param OneOff[]|StateBenefit[] $elements
+     * Return element of array that have isPresent() = true
+     *
+     * @param array $elements
      *
      * @return int
      */

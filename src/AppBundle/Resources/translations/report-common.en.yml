@@ -28,7 +28,9 @@ prevNextLinks:
     bankAccounts: Bank Accounts
     moneyTransfers: Money transfers
     moneyIn: Money In
+    moneyInShort: Money In
     moneyOut: Money Out
+    moneyOutShort: Money Out
     assets: Assets
     debts: Debts
     actions: Actions

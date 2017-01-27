@@ -124,7 +124,8 @@
                         description: true
                     } %}
                     {% endif %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                {% if is102 %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
                     report: report,
@@ -132,8 +133,8 @@
                     nOfRecords: report.moneyTransactionsIn | length,
                     warning: true,
                     description: true
-                } %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    } %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out',
                     report: report,
@@ -141,7 +142,28 @@
                     nOfRecords: report.moneyTransactionsOut | length,
                     warning: true,
                     description: true
-                } %}
+                    } %}
+                {% endif %}
+                {% if is103 %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_in_short',
+                    report: report,
+                    state: reportStatus.moneyInState,
+                    nOfRecords: report.moneyShortCategoriesIn | length,
+                    warning: true,
+                    description: true
+                    } %}
+                    {#{% include 'AppBundle:Report/Report:_subsection.html.twig' with {#}
+                    {#transDomain: translationDomain,#}
+                    {#subSection: 'money_short_out',#}
+                    {#report: report,#}
+                    {#state: reportStatus.moneyOutState,#}
+                    {#nOfRecords: report.moneyShortTransactionsOut | length,#}
+                    {#warning: true,#}
+                    {#description: true#}
+                    {#} %}#}
+                {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
                 {% if report.balanceMismatchExplanation %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {

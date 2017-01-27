@@ -1,0 +1,39 @@
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-benefits">
+        <td>
+            {{ 'form.moneyShortCategoriesIn.label' | trans(transOptions) }}
+        </td>
+        <td>
+            {% set categories = report.recordsPresent(report.moneyShortCategoriesIn) %}
+            {% if categories | length == 0%}
+                None
+            {% else %}
+                {# display categories comma separated #}
+                {% for c in categories %}
+                    {{ ('form.moneyShortCategoriesIn.entries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
+        </td>
+        <td class="change-answer">
+            <a href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+

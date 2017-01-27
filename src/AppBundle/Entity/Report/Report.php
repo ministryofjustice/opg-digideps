@@ -18,6 +18,7 @@ class Report
 {
     use ReportTraits\AssetTrait;
     use ReportTraits\MoneyTransactionTrait;
+    use ReportTraits\ReportMoneyShortTrait;
     use ReportTraits\DeputyExpenseTrait;
     use ReportTraits\GiftTrait;
     use ReportTraits\MoreInfoTrait;

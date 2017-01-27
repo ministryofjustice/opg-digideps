@@ -1,0 +1,94 @@
+startPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageSectionTitle: Money in
+    pageSectionDescription1: |
+      Tell us about how you have managed %client%'s money during this reporting period. We need this information to understand the client’s financial situation.
+    startButton: Start money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money out
+    pageSectionDescription1: |
+      Tell us about money you have spent on %client%'s day-to-day living
+      and welfare costs between %startDate% and %endDate%.
+    pageSectionDescription2: |
+      You can enter a total for each type of expense, or you can enter
+      individual amounts and we'll add them up for you.
+    pageSectionDescription3: |
+      Be sure to enter each individual expense into one category only,
+      so we don’t count them twice when we do the calculation.
+    startButton: Start money out
+
+
+categoryPage:
+  backLink: Back
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+#    supportTitle: Money in
+    pageSectionTitle: Money in
+#    pageSectionTitle: Add an item of income
+#    pageSectionTitleWithCategory: Add an item of income: %group%
+#    pageSectionDescription:
+#       step1: You can add one or more items and come back to complete the section later.
+#  moneyOut:
+#      htmlTitle: "Deputy report - Money out | GOV.UK"
+#      supportTitle: Money out
+#      pageSectionTitle: Money in
+#      pageSectionTitle: Add an expense
+#      pageSectionTitleWithCategory: Add an expense: %group%
+#      pageSectionDescription:
+#         step1: You can add one or more items of expense and come back to complete the section later.
+
+addAnotherPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    pageSectionTitle: Add another item
+    form:
+      addAnother:
+        label: The item of income has been saved. Would you like to add another item of income now?
+        hint: If you prefer, you can come back to this section later to add more expenses
+      save:
+         label: Continue
+  moneyOut:
+    htmlTitle: "Deputy report - Add another expense | GOV.UK"
+    pageSectionTitle: Add an expense
+    form:
+      addAnother:
+        label: The expense has been saved. Would you like to add another expense now?
+        hint: If you prefer, you can come back to this section later to add more expenses
+      save:
+         label: Continue
+
+
+summaryPage:
+  edit: Edit
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageSectionTitle: Money in
+    pageSectionDescription1: |
+      In this section we asked you to tell us about how you have managed $client%'s money during this reporting period.
+
+
+form:
+  moneyShortCategoriesIn:
+    label: Tell us about the different categories of money paid into %client%'s accounts
+    hint: Please tick all that apply
+    entries:
+      # in
+      state_pension_and_benefit.label: State pension and benefits
+      bequests.label: Bequests, eg inheritance, gifts received
+      income_from_invesments_dividends_rental.label: Income from investments, dividends, property rental
+      sale_of_investments_property_assets.label: Sale of investments, property or assets
+      salary_or_wages.label: Salary or wages
+      compensations_and_damages_awards.label: Compensations and damages awards
+      personal_pension.label: Personal pension
+      # out
+      accomodation_costs:  Accommodation costs, eg rent, mortgage, service charges
+      care_fees: Care fees or local authority charges for care
+      holidays: Holidays and trips
+      households_bills: Household bills, eg water, gas, electricity, phone, council tax
+      personal_allowance: %client%’s personal allowance
+      professional_fees: Professional fees, eg solicitor or accountant fees
+      new_investments: New investments, eg buying shares, new bonds
+      travel_costs: Travel costs, eg bus, train, taxi fares
+
