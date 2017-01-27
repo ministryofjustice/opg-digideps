@@ -12,18 +12,12 @@ class DoctrineListener
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
 
-        // add empty transactions to report at creation time
-//        if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
-//            // @deprecated REMOVE WHEN OTPP is merged and migrated
-//            $entityManager->getRepository('AppBundle\Entity\Report\Report')->addTransactionsToReportIfMissing($entity);
-//        }
-
-        // add empty debts to report at creation time
         if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
-            $entityManager->getRepository('AppBundle\Entity\Report\Report')->addDebtsToReportIfMissing($entity);
+            $reportRepo = $entityManager->getRepository('AppBundle\Entity\Report\Report'); /* @var $reportRepo EntityDir\Report\ReportRepository */
+            $reportRepo->addDebtsToReportIfMissing($entity);
+            $reportRepo->addMoneyShortCategoriesIfMissing($entity);
         }
 
-        // create ODR + debts and income one off when client gets created
         if ($entity instanceof EntityDir\Odr\Odr && !$entity->getId()) {
             $odrRepo = $entityManager->getRepository('AppBundle\Entity\Odr\Odr');
             /* @var $odrRepo EntityDir\Odr\OdrRepository */

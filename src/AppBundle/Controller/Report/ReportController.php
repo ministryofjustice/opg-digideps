@@ -245,6 +245,28 @@ class ReportController extends RestController
             }
         }
 
+        if (array_key_exists('money_short_categories_in', $data)) {
+            foreach ($data['money_short_categories_in'] as $row) {
+                $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                    $e
+                        ->setPresent($row['present']);
+                    $this->getEntityManager()->flush($e);
+                }
+            }
+        }
+
+        if (array_key_exists('money_short_categories_out', $data)) {
+            foreach ($data['money_short_categories_out'] as $row) {
+                $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                    $e
+                        ->setPresent($row['present']);
+                    $this->getEntityManager()->flush($e);
+                }
+            }
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];

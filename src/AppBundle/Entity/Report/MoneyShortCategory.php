@@ -12,10 +12,40 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyShortCategory
 {
     /**
+     * @param $type in|out
+     * @return array
+     */
+    public static function getCategories($type)
+    {
+        return [
+            'in'  => [
+                // typeId => options
+                'state_pension_and_benefit'               => [],
+                'bequests'                                => [],
+                'income_from_invesments_dividends_rental' => [],
+                'sale_of_investments_property_assets'     => [],
+                'salary_or_wages'                         => [],
+                'compensations_and_damages_awards'        => [],
+                'personal_pension'                        => [],
+            ],
+            'out' => [
+                // typeId => options
+                'accomodation_costs' => [],
+                'care_fees' => [],
+                'holidays' => [],
+                'households_bills' => [],
+                'personal_allowance' => [],
+                'professional_fees' => [],
+                'new_investments' => [],
+                'travel_costs' => [],
+            ]][$type];
+    }
+
+    /**
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"money-short-category"})
+     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -33,31 +63,48 @@ class MoneyShortCategory
 
     /**
      * @var string
-     * @JMS\Groups({"money-short-category"})
+     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
     private $typeId;
 
     /**
-     * @var string
+     * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"money-short-category"})
+     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
     private $present;
 
 
     /**
+     * MoneyShortCategory constructor.
      * @param Report $report
      * @param string $typeId
-     * @param float $amount
+     * @param boolean $present
      */
-    public function __construct(Report $report, $typeId)
+    public function __construct(Report $report, $typeId, $present)
     {
         $this->report = $report;
         $this->typeId = $typeId;
-        $this->present = null;
+        $this->present = $present;
+    }
+
+    /**
+     * @return string in|out
+     */
+    public function getType()
+    {
+        foreach(['in', 'out'] as $type) {
+            foreach(self::getCategories($type) as $typeId => $options) {
+                if ($typeId == $this->typeId) {
+                    return $type;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
