@@ -57,6 +57,9 @@ stepPageProperty:
 summaryPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageSectionTitle: Assets
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
   addButton: Add an asset
   edit: Edit
 
@@ -70,9 +73,9 @@ form:
       property: Property
       investment_bonds: Investment bonds
       unit_trusts: Unit trusts
-      national_savings_certificates: National savings certificates
+      national_savings_certificates: National Savings certificates
       stocks_shares: Stocks and shares
-      premium_bonds: Premium bonds
+      premium_bonds: Premium Bonds
       vehicles: Vehicles
       artwork: Artwork
       antiques: Antiques
