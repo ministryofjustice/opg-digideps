@@ -1,16 +1,49 @@
 <?php
 
-namespace AppBundle\Entity\Odr\Traits;
+namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\Traits\PresentWithDetailsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-trait IncomeBenefitSingleTrait
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="odr_income_one_off")
+ */
+class OneOff
 {
+    public static $oneOffKeys = [
+        'bequest_or_inheritance' => false,
+        'cash_gift_received'     => false,
+        'refunds'                => false,
+        'sale_of_an_asset'       => false,
+        'sale_of_investment'     => false,
+        'sale_of_property'       => false,
+    ];
+
+    /**
+     * @var int
+     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"one-off"})
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\SequenceGenerator(sequenceName="odr_oneoff_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var Odr
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
+     */
+    private $odr;
+
     /**
      * @var string
-     * @JMS\Groups({"odr-income-benefits"})
+     * @JMS\Groups({"one-off"})
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
     private $typeId;
@@ -19,7 +52,7 @@ trait IncomeBenefitSingleTrait
      * @var string
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"odr-income-benefits"})
+     * @JMS\Groups({"one-off"})
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
     private $present;
@@ -27,24 +60,23 @@ trait IncomeBenefitSingleTrait
     /**
      * @var string
      *
-     * @JMS\Groups({"odr-income-benefits"})
+     * @JMS\Groups({"one-off"})
      * @ORM\Column(name="has_more_details", type="string", nullable=false)
      */
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"odr-income-benefits"})
+     * @JMS\Groups({"one-off"})
      * @ORM\Column(name="more_details", type="string", nullable=true)
      */
     private $moreDetails;
 
+
     /**
-     * Debt constructor.
-     *
-     * @param Odr    $odr
+     * @param Odr $odr
      * @param string $typeId
-     * @param float  $amount
+     * @param float $amount
      */
     public function __construct(Odr $odr, $typeId, $hasMoreDetails)
     {

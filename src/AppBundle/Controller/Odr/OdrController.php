@@ -106,7 +106,7 @@ class OdrController extends RestController
         if (array_key_exists('state_benefits', $data)) {
             foreach ($data['state_benefits'] as $row) {
                 $e = $odr->getStateBenefitByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Odr\IncomeBenefitStateBenefit) {
+                if ($e instanceof EntityDir\Odr\StateBenefit) {
                     $e
                         ->setPresent($row['present'])
                         ->setMoreDetails($row['present'] ? $row['more_details'] : null);
@@ -144,7 +144,7 @@ class OdrController extends RestController
         if (array_key_exists('one_off', $data)) {
             foreach ($data['one_off'] as $row) {
                 $e = $odr->getOneOffByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Odr\IncomeBenefitOneOff) {
+                if ($e instanceof EntityDir\Odr\OneOff) {
                     $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
                     $this->getEntityManager()->flush($e);
                 }

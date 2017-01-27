@@ -8,16 +8,16 @@
 
 namespace AppBundle\Entity\Odr\Traits;
 
-use AppBundle\Entity\Odr\IncomeBenefitOneOff;
-use AppBundle\Entity\Odr\IncomeBenefitStateBenefit;
+use AppBundle\Entity\Odr\OneOff;
+use AppBundle\Entity\Odr\StateBenefit;
 
 trait IncomeBenefitTrait
 {
     /**
-     * @var IncomeBenefit[]
+     * @var StateBenefit[]
      *
-     * @JMS\Groups({"odr-income-state-benefits"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\IncomeBenefitStateBenefit", mappedBy="odr")
+     * @JMS\Groups({"state-benefits"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\StateBenefit", mappedBy="odr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $stateBenefits;
@@ -26,7 +26,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
+     * @JMS\Groups({"pension"})
      * @ORM\Column(name="receive_state_pension", type="text", nullable=true)
      */
     private $receiveStatePension;
@@ -35,7 +35,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
+     * @JMS\Groups({"pension"})
      * @ORM\Column(name="receive_other_income", type="text", nullable=true)
      */
     private $receiveOtherIncome;
@@ -44,7 +44,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-pension"})
+     * @JMS\Groups({"pension"})
      * @ORM\Column(name="receive_other_income_details", type="text", nullable=true)
      */
     private $receiveOtherIncomeDetails;
@@ -53,7 +53,7 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-damages"})
+     * @JMS\Groups({"damages"})
      * @ORM\Column(name="expect_compensation_damages", type="text", nullable=true)
      */
     private $expectCompensationDamages;
@@ -62,22 +62,22 @@ trait IncomeBenefitTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-income-damages"})
+     * @JMS\Groups({"damages"})
      * @ORM\Column(name="expect_compensation_damages_details", type="text", nullable=true)
      */
     private $expectCompensationDamagesDetails;
 
     /**
-     * @var IncomeBenefit[]
+     * @var OneOff[]
      *
-     * @JMS\Groups({"odr-income-one-off"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\IncomeBenefitOneOff", mappedBy="odr")
+     * @JMS\Groups({"one-off"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\OneOff", mappedBy="odr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $oneOff;
 
     /**
-     * @return IncomeBenefitStateBenefit[]
+     * @return StateBenefit[]
      */
     public function getStateBenefits()
     {
@@ -199,7 +199,7 @@ trait IncomeBenefitTrait
     }
 
     /**
-     * @return IncomeBenefitOneOff[]
+     * @return OneOff[]
      */
     public function getOneOff()
     {
@@ -223,11 +223,11 @@ trait IncomeBenefitTrait
     /**
      * @param string $typeId
      *
-     * @return IncomeBenefitOneOff
+     * @return OneOff
      */
     public function getOneOffByTypeId($typeId)
     {
-        return $this->getOneOff()->filter(function (IncomeBenefitOneOff $incomeOneOff) use ($typeId) {
+        return $this->getOneOff()->filter(function (OneOff $incomeOneOff) use ($typeId) {
             return $incomeOneOff->getTypeId() == $typeId;
         })->first();
     }
@@ -235,11 +235,11 @@ trait IncomeBenefitTrait
     /**
      * @param string $typeId
      *
-     * @return IncomeBenefitStateBenefit
+     * @return StateBenefit
      */
     public function getStateBenefitByTypeId($typeId)
     {
-        return $this->getStateBenefits()->filter(function (IncomeBenefitStateBenefit $sb) use ($typeId) {
+        return $this->getStateBenefits()->filter(function (StateBenefit $sb) use ($typeId) {
             return $sb->getTypeId() == $typeId;
         })->first();
     }

@@ -47,8 +47,8 @@ class OdrRepository extends EntityRepository
         $ret = 0;
 
         if (count($odr->getStateBenefits()) === 0) {
-            foreach (IncomeBenefitStateBenefit::$stateBenefitsKeys as $typeId => $hasMoreDetails) {
-                $incomeBenefit = new IncomeBenefitStateBenefit($odr, $typeId, $hasMoreDetails);
+            foreach (StateBenefit::$stateBenefitsKeys as $typeId => $hasMoreDetails) {
+                $incomeBenefit = new StateBenefit($odr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);
                 $odr->addStateBenefits($incomeBenefit);
                 ++$ret;
@@ -56,8 +56,8 @@ class OdrRepository extends EntityRepository
         }
 
         if (count($odr->getOneOff()) === 0) {
-            foreach (IncomeBenefitOneOff::$oneOffKeys as $typeId => $hasMoreDetails) {
-                $incomeBenefit = new IncomeBenefitOneOff($odr, $typeId, $hasMoreDetails);
+            foreach (OneOff::$oneOffKeys as $typeId => $hasMoreDetails) {
+                $incomeBenefit = new OneOff($odr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);
                 $odr->addOneOff($incomeBenefit);
                 ++$ret;
