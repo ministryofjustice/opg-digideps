@@ -1,0 +1,27 @@
+services:
+    app.form.type.report.asset_title:
+        class: AppBundle\Form\Report\Asset\AssetTypeTitle
+        arguments: ["%asset_dropdown%", "@translator", "report-assets", "other_assets"]
+        tags:
+            - { name: form.type, alias: asset_title }
+
+    app.form.type.odr.asset_title:
+            class: AppBundle\Form\Odr\Asset\AssetTypeTitle
+            arguments: ["%asset_dropdown%", "@translator", "odr-assets", "other_assets"]
+            tags:
+                - { name: form.type, alias: odr_asset_title }
+
+    app.form.type.feedback:
+        class: AppBundle\Form\FeedbackType
+        calls:
+            - [ setTranslator, ["@translator"] ]
+            - [ setSecurityContext, ["@security.context"] ]
+        tags:
+            - { name: form.type, alias: feedback }
+
+    app.form.type.feedback_report:
+        class: AppBundle\Form\FeedbackReportType
+        calls:
+            - [ setTranslator, ["@translator"] ]
+        tags:
+            - { name: form.type, alias: feedback_report }

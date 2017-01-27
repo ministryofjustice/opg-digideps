@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MentalAssessment extends AbstractType
@@ -14,7 +13,6 @@ class MentalAssessment extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('mentalAssessmentDate', 'date', ['widget' => 'text',
-            'mapped' => true, // Not in the model
             'input' => 'datetime',
             'format' => 'dd-MM-yyyy',
             'invalid_message' => 'Enter a valid date',
@@ -37,7 +35,7 @@ class MentalAssessment extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'validation_groups' => ['capacity-assessment']
+            'validation_groups' => ['mental-assessment-date']
         ]);
     }
 

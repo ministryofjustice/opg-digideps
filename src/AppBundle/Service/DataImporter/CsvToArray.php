@@ -65,7 +65,7 @@ class CsvToArray
 
     /**
      * Returns.
-     * 
+     *
      * @return array
      */
     public function getData()

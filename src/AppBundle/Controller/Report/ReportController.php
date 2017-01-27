@@ -17,7 +17,10 @@ class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
         'account',
+        'expenses',
+        'gifts',
         'action',
+        'action-more-info',
         'asset',
         'debt',
         'balance',
@@ -100,8 +103,8 @@ class ReportController extends AbstractController
      * Create report
      * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
      * action "add" will instead add another report.
-     * 
-     * 
+     *
+     *
      * @Route("/report/{action}/{clientId}", name="report_create",
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
@@ -152,7 +155,7 @@ class ReportController extends AbstractController
     public function overviewAction($reportId)
     {
         // get all the groups (needed by ReportStatusService
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
         $reportStatusService = new ReportStatusService($report);
 
         return [
@@ -162,9 +165,9 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/add_further_information/{action}", 
-     *  name="report_add_further_info", 
-     *  defaults={"action": "view"}, 
+     * @Route("/report/{reportId}/add_further_information/{action}",
+     *  name="report_add_further_info",
+     *  defaults={"action": "view"},
      *  requirements={"action": "(view|edit)"}
      * )
      * @Template()
@@ -172,9 +175,9 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -218,9 +221,9 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -270,7 +273,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -304,7 +307,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        /** @var TranslatorInterface $translator*/
+        /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
@@ -370,9 +373,9 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
-        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', array(
+        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
-            ))->getContent();
+            ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }

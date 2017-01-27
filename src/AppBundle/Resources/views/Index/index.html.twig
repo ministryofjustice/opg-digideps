@@ -8,22 +8,36 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'intro' | trans }}</p>
+    <div class="text">
+        <p class="lede">{{ 'intro.lede' |trans }}</p>
+        <p>{{ 'intro.para01' |trans }}</p>
+        <p>{{ 'intro.para02' |trans }}</p>
+        <p>{{ 'intro.para03' |trans }}</p>   
+    </div>
 
     <div class="grid-row push--top">
         <div class="column-half">
             <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
         </div>
         <div class="column-half">
-            <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
-            <div id="what-you-need" class="accordian help-item push--ends">
-                <h3 class="summary">{{ 'whatyouneed' |trans }}</h3>
-                <ul class="content list list-bullet">
-                    <li>{{ 'whatyouneedListItem1' | trans }}</li>
-                    <li>{{ 'whatyouneedListItem2' | trans }}</li>
-                    <li>{{ 'whatyouneedListItem3' | trans }}</li>
-                </ul>
-            </div>
+
+            <p>
+                <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+            </p>
+
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'whatyouneed' |trans }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <ul class="list list-bullet">
+                        <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                        <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                        <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                    </ul>
+                </div>
+            </details>
+
         </div>
     </div>
 
@@ -37,22 +51,61 @@
         </div>
     </div>
 
-    <h2 class="heading-medium">{{ 'makesure' | trans }}</h2>
-    <ul class="list list-bullet">
-        <li>{{ 'makeListItem1' | trans }}</li>
-        <li>{{ 'makeListItem2' | trans }}</li>
-        <li>{{ 'makeListItem3' | trans }}</li>
-    </ul>
+    <div class="text">
+        
+        <h2 class="heading-medium">{{ 'helpfulToKnow.heading' |trans }}</h2>
+        <p>{{ 'helpfulToKnow.para01' |trans }}</p>
+        <p>{{ 'helpfulToKnow.para02' |trans }}</p>
+        <p>{{ 'helpfulToKnow.para03' |trans }}</p>
+        <p>{{ 'helpfulToKnow.para04' |trans }}</p>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.accordian').each(function(index,item) {
-                opg.accordian({
-                    target:item,
-                    open: false
-                });
-            });
-        });
-    </script>
+        <h2 class="heading-medium">{{ 'provideDetails.heading' |trans }}</h2>
+        <ul class="list list-bullet">
+            <li>{{ 'provideDetails.listItem01' |trans }}</li>
+            <li>{{ 'provideDetails.listItem02' |trans }}</li>
+            <li>{{ 'provideDetails.listItem03' |trans }}</li>
+            <li>{{ 'provideDetails.listItem04' |trans }}</li>
+            <li>{{ 'provideDetails.listItem05' |trans }}</li>
+            <li>{{ 'provideDetails.listItem06' |trans }}</li>
+        </ul>
+
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText01.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'hiddenText01.content.para01' |trans }}</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText02.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'hiddenText02.content.para01' |trans }}</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText03.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'hiddenText03.content.para01' |trans|raw }}</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>
+                <span class="summary">{{ 'hiddenText04.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'hiddenText04.content.para01' |trans }}</p>
+                <p>{{ 'hiddenText04.content.para02' |trans|raw }}</p>
+            </div>
+        </details>
+
+    </div>
 
 {% endblock %}

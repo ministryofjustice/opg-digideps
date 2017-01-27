@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Traits\LoginInfoTrait;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,7 +32,7 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $firstname;
@@ -42,7 +42,7 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $lastname;
@@ -65,7 +65,7 @@ class User implements AdvancedUserInterface
      *  @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
      *  @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
      *  @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
-     * 
+     *
      * @var string
      */
     private $password;
@@ -96,7 +96,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("integer")
      * @JMS\Groups({"admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
-     * 
+     *
      * @var int
      */
     private $roleId;
@@ -150,7 +150,7 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full"})
      * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full"} )
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $address1;
@@ -159,7 +159,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $address2;
@@ -168,7 +168,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $address3;
@@ -176,9 +176,9 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full"} )   
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full"} )
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $addressPostcode;
@@ -186,8 +186,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full"} )   
-     * 
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full"} )
+     *
      * @var string
      */
     private $addressCountry;
@@ -197,7 +197,7 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full"})
      * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full"} )
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $phoneMain;
@@ -206,7 +206,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
-     * 
+     *
      * @var string
      */
     private $phoneAlternative;
@@ -342,9 +342,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    /**
-     * 
-     */
     public function getSalt()
     {
         return;
@@ -546,7 +543,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @param int $hoursExpires e.g 48 if the token expires after 48h
-     * 
+     *
      * @return bool
      */
     public function isTokenSentInTheLastHours($hoursExpires)
@@ -698,7 +695,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOdrEnabled()
     {
@@ -706,7 +703,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param boolean $odrEnabled
+     * @param bool $odrEnabled
      */
     public function setOdrEnabled($odrEnabled)
     {
@@ -714,7 +711,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAdManaged()
     {
@@ -722,12 +719,10 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param boolean $adManaged
+     * @param bool $adManaged
      */
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
     }
-
-
 }

@@ -6,10 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends AbstractController
 {
@@ -28,7 +27,7 @@ class MoneyTransferController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getBankAccounts()) < 2) {
             return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
@@ -51,7 +50,7 @@ class MoneyTransferController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\MoneyTransferExistType(), $report);
         $form->handleRequest($request);
 
@@ -60,7 +59,7 @@ class MoneyTransferController extends AbstractController
                 case false:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
-                    $this->get('restClient')->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
+                    $this->getRestClient()->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
@@ -77,7 +76,6 @@ class MoneyTransferController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/money-transfers/step{step}/{transferId}", name="money_transfers_step", requirements={"step":"\d+"})
      * @Template()
@@ -92,11 +90,11 @@ class MoneyTransferController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -134,17 +132,17 @@ class MoneyTransferController extends AbstractController
             if ($step == 1) {
                 $stepUrlData['from-id'] = $transfer->getAccountFromId();
                 $stepUrlData['to-id'] = $transfer->getAccountToId();
-            } else if ($step == $totalSteps) {
+            } elseif ($step == $totalSteps) {
                 if ($transferId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
+                    $this->getRestClient()->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
 
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+                    $this->getRestClient()->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
                     return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
                 }
             }
@@ -167,16 +165,15 @@ class MoneyTransferController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/money-transfers/add_another", name="money_transfers_add_another")
      * @Template()
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Report\MoneyTransferAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transfer'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -204,7 +201,7 @@ class MoneyTransferController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getMoneyTransfers()) == 0 && $report->getNoTransfersToAdd() === null) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
@@ -213,7 +210,6 @@ class MoneyTransferController extends AbstractController
             'report' => $report,
         ];
     }
-
 
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
@@ -233,5 +229,4 @@ class MoneyTransferController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
     }
-
 }

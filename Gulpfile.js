@@ -146,6 +146,7 @@ gulp.task('js.prod', ['lint.js'], () => {
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
+            config.jsSrc + '/govuk/polyfill/*.js',
             config.jsSrc + '/modules/*.js',
             config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
@@ -161,6 +162,7 @@ gulp.task('js.debug', function () {
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
+            config.jsSrc + '/govuk/polyfill/*.js',
             config.jsSrc + '/modules/*.js',
             config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
@@ -187,7 +189,7 @@ gulp.task('lint.sass', function() {
 
 // Check javascript follows some good guidelines and check for obvious errors.
 gulp.task('lint.js', function () {
-    gulp.src(config.jsSrc + '/**/*.js')
+    gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });

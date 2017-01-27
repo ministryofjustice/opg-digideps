@@ -2,14 +2,14 @@
 
 namespace AppBundle\Twig;
 
-// todo remove assetic from config and use it's 
+// todo remove assetic from config and use it's
 
 /**
  * Class AssetsExtension.
  */
 class AssetsExtension extends \Twig_Extension
 {
-    /** @var  string $tag */
+    /** @var string $tag */
     private $tag;
 
     /** @var string $rootDir */
@@ -42,7 +42,7 @@ class AssetsExtension extends \Twig_Extension
         if (!$this->tag) {
             // List the files in the web/assets folder
             $assetRoot = $this->rootDir.'/../web/assets';
-            $assetContents = array_diff(scandir($assetRoot), array('..', '.'));
+            $assetContents = array_diff(scandir($assetRoot), ['..', '.']);
 
             // set the value to the folder we find.
             $this->tag = array_values($assetContents)[0];
@@ -53,9 +53,9 @@ class AssetsExtension extends \Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('assetUrl', array($this, 'assetUrlFilter')),
-        );
+        return [
+            new \Twig_SimpleFilter('assetUrl', [$this, 'assetUrlFilter']),
+        ];
     }
 
     public function getName()

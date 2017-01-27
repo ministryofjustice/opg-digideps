@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * MoneyTransfer.
@@ -28,9 +28,9 @@ class MoneyTransfer
     private $amount;
 
     /**
-     * @var Account
+     * @var BankAccount
      * @JMS\SerializedName("accountFrom")
-     * @JMS\Type("AppBundle\Entity\Report\Account")
+     * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      */
     private $accountFrom;
 
@@ -43,9 +43,9 @@ class MoneyTransfer
     private $accountFromId;
 
     /**
-     * @var Account
+     * @var BankAccount
      * @JMS\SerializedName("accountTo")
-     * @JMS\Type("AppBundle\Entity\Report\Account")
+     * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      */
     private $accountTo;
 
@@ -92,7 +92,7 @@ class MoneyTransfer
     }
 
     /**
-     * @return Account
+     * @return BankAccount
      */
     public function getAccountFrom()
     {
@@ -100,7 +100,7 @@ class MoneyTransfer
     }
 
     /**
-     * @return Account
+     * @return BankAccount
      */
     public function getAccountTo()
     {
@@ -108,7 +108,7 @@ class MoneyTransfer
     }
 
     /**
-     * @param Account $from
+     * @param BankAccount $from
      *
      * @return MoneyTransfer
      */
@@ -120,7 +120,7 @@ class MoneyTransfer
     }
 
     /**
-     * @param Account $to
+     * @param BankAccount $to
      *
      * @return MoneyTransfer
      */
@@ -162,5 +162,4 @@ class MoneyTransfer
     {
         $this->accountToId = $accountToId;
     }
-
 }

@@ -8,9 +8,9 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\SectionValidator\ActionsValidator;
 use AppBundle\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends AbstractController
 {
@@ -24,7 +24,7 @@ class ActionController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getAction() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
@@ -44,12 +44,12 @@ class ActionController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $action = $report->getAction() ?: new EntityDir\Report\Action();
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -63,7 +63,7 @@ class ActionController extends AbstractController
             /* @var $data EntityDir\Report\Action */
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/' . $reportId . '/action', $data);
+            $this->getRestClient()->put('report/'.$reportId.'/action', $data);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -92,7 +92,7 @@ class ActionController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         //$this->flagSectionStarted($report, self::SECTION_ID);
         if (!$report->getAction() && $fromPage != 'skip-step') {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);

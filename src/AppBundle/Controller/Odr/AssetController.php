@@ -7,8 +7,8 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends AbstractController
 {
@@ -53,7 +53,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('odr_assets_type', ['odrId' => $odrId,]);
                 case 1: //no
-                    $this->get('restClient')->put('odr/' . $odrId, $odr, ['noAssetsToAdd']);
+                    $this->getRestClient()->put('odr/'.$odrId, $odr, ['noAssetsToAdd']);
                     return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
             }
         }
@@ -152,7 +152,6 @@ class AssetController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
-
         }
 
         return [
@@ -163,7 +162,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/odr/{odrId}/assets/add_another", name="odr_assets_add_another")
      * @Template()
@@ -172,7 +170,7 @@ class AssetController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetAddAnotherType(), $odr);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-assets'), $odr);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -189,7 +187,6 @@ class AssetController extends AbstractController
             'odr' => $odr,
         ];
     }
-
 
     /**
      * @Route("/odr/{odrId}/assets/property/step{step}/{assetId}", name="odr_assets_property_step", requirements={"step":"\d+"})
@@ -208,13 +205,11 @@ class AssetController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_assets_type', 'odr_assets_property_step', 'odr_assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId' => $odrId, 'assetId' => $assetId]);
-
 
         if ($assetId) { // edit asset
             $assets = array_filter($odr->getAssets(), function ($t) use ($assetId) {
@@ -248,7 +243,6 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-
             $asset = $form->getData();
             /* @var $asset EntityDir\Odr\AssetProperty */
 
@@ -314,7 +308,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/odr/{odrId}/assets/summary", name="odr_assets_summary")
      * @Template()
@@ -351,5 +344,4 @@ class AssetController extends AbstractController
 
         return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
     }
-
 }

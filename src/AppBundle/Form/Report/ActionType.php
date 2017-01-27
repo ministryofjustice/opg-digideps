@@ -26,7 +26,7 @@ class ActionType extends AbstractType
      */
     public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
-        $this->step = (int)$step;
+        $this->step = (int) $step;
         $this->translator = $translator;
         $this->clientFirstName = $clientFirstName;
     }
@@ -56,7 +56,6 @@ class ActionType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-actions',
             'validation_groups'  => function (FormInterface $form) {
-
                 $data = $form->getData();
                 /* @var $data Action */
                 $validationGroups = [];

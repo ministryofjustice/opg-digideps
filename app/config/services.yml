@@ -1,148 +1,28 @@
+imports:
+    - { resource: services_mail.yml }
+    - { resource: services_forms.yml }
+    - { resource: services_twig.yml }
+    - { resource: services_api.yml }
+    - { resource: services_listeners.yml }
+    - { resource: services_login.yml }
+
 services:
-    security.validator.d_user_password:
-        class: AppBundle\Validator\Constraints\DUserPasswordValidator
-        arguments: [ @security.context, @restClient ]
-        tags:
-            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-    guzzleJsonHttpClient:
-        class: GuzzleHttp\Client
-        arguments: 
-          config:
-            base_url: "%api_base_url%"
-            defaults:
-                # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
-                version: "1.0"
-                headers:
-                    Content-Type: application/json
-                verify: false
-                timeout: 10
-                allow_redirects: false
-    redisTokenStorage:
-        class: AppBundle\Service\Client\TokenStorage\RedisStorage
-        arguments: [@snc_redis.default, "redis_token_storage_dd"]
-    restClient:
-        class:  AppBundle\Service\Client\RestClient
-        arguments: [@service_container, @guzzleJsonHttpClient, @redisTokenStorage, "%api_client_secret%"]
-    deputyprovider:
-        class:  AppBundle\Service\DeputyProvider
-        arguments: [ @restClient, @logger ]
-    formFieldsExtension:
-        class: AppBundle\Twig\FormFieldsExtension
-        public: false
-        arguments: [ @translator ]
-        tags:
-            - { name: twig.extension }
-    componentsExtension:
-        class: AppBundle\Twig\ComponentsExtension
-        public: false
-        arguments: [  @translator ]
-        tags:
-            - { name: twig.extension }
-    assetsExtension:
-        class: AppBundle\Twig\AssetsExtension
-        public: false
-        arguments: [  "%kernel.root_dir%" ]
-        tags:
-            - { name: twig.extension }
-    redirectorService:
+    redirector_service:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session, "%env%" ]
-    kernel.listener.login_listener:
-        class: AppBundle\EventListener\LoginEventListener
-        arguments: [ @event_dispatcher, @redirectorService ]
-        tags:
-            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
-    kernel.listener.session_listener:
-        class: AppBundle\EventListener\SessionListener
-        arguments: [ @router , @logger, {idleTimeout: %session_expire_seconds%}]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    logout_listener:
-      class:   AppBundle\EventListener\LogoutListener
-      arguments:  [@security.context, @restClient, @router, @auditLogger]
-    response_nocache_listener:
-       class:   AppBundle\EventListener\ResponseNoCacheListener
-       tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-    form.reportSubmit: 
-        class: AppBundle\Form\ReportSubmitType
-        arguments:  [@translator]
-    auditLogger:
+        arguments: [ "@security.context", "@router", "@session", "%env%" ]
+
+    audit_logger:
         class: AppBundle\Service\AuditLogger
-        arguments: [@restClient, @security.context, @service_container]
-    app.form.type.report.assetTitle:
-        class: AppBundle\Form\Report\Asset\AssetTypeTitle
-        arguments: [%asset_dropdown%, @translator, "report-assets", "other_assets"]
-        tags:
-            - { name: form.type, alias: asset_title }
-    app.form.type.odr.assetTitle:
-            class: AppBundle\Form\Odr\Asset\AssetTypeTitle
-            arguments: [%asset_dropdown%, @translator, "odr-assets", "other_assets"]
-            tags:
-                - { name: form.type, alias: odr_asset_title }
-    app.form.type.feedback:
-        class: AppBundle\Form\FeedbackType
-        calls:
-            - [ setTranslator, [@translator] ]
-            - [ setSecurityContext, [@security.context] ]
-        tags:
-            - { name: form.type, alias: feedback }
-    app.form.type.feedbackReport:
-        class: AppBundle\Form\FeedbackReportType
-        calls:
-            - [ setTranslator, [@translator] ]
-        tags:
-            - { name: form.type, alias: feedback_report }        
-    kernel.listener.authTokenExpiredListener:
-        class: AppBundle\EventListener\AuthTokenExpiredListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-    monolog.processor.add_request_id:
-        class: AppBundle\Service\RequestIdLoggerProcessor
-        arguments:  [ @service_container ]
-        tags:
-            - { name: monolog.processor, method: processRecord }
-    formErrorsFormatter:
-            class: AppBundle\Service\FormErrorsFormatter
-    
-    # default transport + swift mailer
-    mailer.transport.smtp.default:
-        class: Swift_SmtpTransport
-        arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
-        calls:
-            - [ setEncryption, [ "tls"]]
-            - [ setUsername, [ %smtp_default_user%]]
-            - [ setPassword, [ %smtp_default_password%]]
-    mailer.swiftMailers.default:
-        class: Swift_Mailer
-        arguments: [ @mailer.transport.smtp.default ]
-    # secure transport + swift mailer
-    mailer.transport.smtp.secure:
-        class: Swift_SmtpTransport
-        arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
-    mailer.swiftMailers.secure:
-        class: Swift_Mailer
-        arguments: [ @mailer.transport.smtp.secure ]
-    # mail sender accepting those the above-created swift mailer
-    mailSender:
-        class: AppBundle\Service\Mailer\MailSender
-        arguments: [ @validator, @logger ]
-        calls:
-            - [ addSwiftMailer, [ "default", @mailer.swiftMailers.default] ]
-            - [ addSwiftMailer, [ "secure-smtp" , @mailer.swiftMailers.secure] ]
-            - [ writeToFileEmailMatching, ["%email_mock_address%", "%email_mock_path%"] ]
-    mailFactory:
-        class: AppBundle\Service\Mailer\MailFactory
-        arguments: [ @service_container ]
-    
+        arguments: ["@rest_client", "@security.context", "@service_container"]
+
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator
         arguments:  
            url: "http://wkhtmltopdf:80"
            timeoutSeconds: 30
 
-    stepRedirector:
+    step_redirector:
       class: AppBundle\Service\StepRedirector
-      arguments: [ @router ]
+      arguments: [ "@router" ]
 
     

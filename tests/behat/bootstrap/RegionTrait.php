@@ -2,7 +2,6 @@
 
 namespace DigidepsBehat;
 
-use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
 /**
@@ -74,8 +73,6 @@ trait RegionTrait
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
-
-
     /**
      * @Then each text should be present in the corresponding region:
      */
@@ -85,7 +82,6 @@ trait RegionTrait
             $this->iShouldSeeInTheRegion($text, $region);
         }
     }
-
 
     /**
      * @Then I should see :text in :section section
@@ -134,7 +130,6 @@ trait RegionTrait
 
         $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
-
 
     public static function behatElementToCssSelector($element, $type)
     {

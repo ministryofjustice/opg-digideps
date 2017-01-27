@@ -36,41 +36,19 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $mailPath = $this->getBehatMailFilePath();
-
-        if (!file_exists($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath not existing.");
-        }
-
-        if (!is_readable($mailPath)) {
-            throw new \RuntimeException("Mail log $mailPath unreadable.");
-        }
-
-        echo file_get_contents($mailPath);
-        die;
-
-        return new Response(file_get_contents($mailPath));
-    }
-
-    private function getBehatMailFilePath()
-    {
-        $this->securityChecks();
-
-        return $this->container->getParameter('email_mock_path');
+        echo $this->get('mail_sender')->getMockedEmailsRaw();
+        die; //TODO check if works with response
     }
 
     /**
      * @Route("/behat/{secret}/email-reset")
      * @Method({"GET"})
      */
-    public function resetAction()
+    public function emailResetAction()
     {
         $this->securityChecks();
 
-        $mailPath = $this->getBehatMailFilePath();
-
-        file_put_contents($mailPath, '');
-
+        $this->get('mail_sender')->resetMockedEmails();
         return new Response('Email reset successfully');
     }
 
@@ -84,23 +62,6 @@ class BehatController extends AbstractController
 
         $this->getRestClient()->put('behat/report/'.$reportId, [
             'type' => $type,
-        ]);
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/report/{reportId}/set-sumbmitted/{value}")
-     * @Method({"GET"})
-     */
-    public function reportChangeSubmitted($reportId, $value)
-    {
-        $this->securityChecks();
-
-        $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
-
-        $this->getRestClient()->put('behat/report/'.$reportId, [
-            'submitted' => $submitted,
         ]);
 
         return new Response('done');
@@ -161,7 +122,7 @@ class BehatController extends AbstractController
 
     /**
      * set token_date and registration_token on the user.
-     * 
+     *
      * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */
@@ -193,7 +154,6 @@ class BehatController extends AbstractController
 
         return new Response($data);
     }
-
 
     /**
      * Display emails into a webpage

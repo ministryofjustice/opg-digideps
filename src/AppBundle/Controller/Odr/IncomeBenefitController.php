@@ -8,9 +8,9 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
 use AppBundle\Service\StepRedirector;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class IncomeBenefitController extends AbstractController
 {
@@ -40,7 +40,6 @@ class IncomeBenefitController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/odr/{odrId}/income-benefits/step/{step}", name="odr_income_benefits_step")
      * @Template()
@@ -54,8 +53,8 @@ class IncomeBenefitController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_income_benefits', 'odr_income_benefits_step', 'odr_income_benefits_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -75,7 +74,7 @@ class IncomeBenefitController extends AbstractController
                 5 => ['odr-one-off'],
             ];
 
-            $this->getRestClient()->put('odr/' . $odrId, $data, $stepToJmsGroup[$step]);
+            $this->getRestClient()->put('odr/'.$odrId, $data, $stepToJmsGroup[$step]);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -108,7 +107,7 @@ class IncomeBenefitController extends AbstractController
 
         // not started -> go back to start page
         $oss = new OdrStatusService($odr);
-        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step' ) {
+        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
             return $this->redirectToRoute('odr_income_benefits', ['odrId' => $odrId]);
         }
 
@@ -118,5 +117,4 @@ class IncomeBenefitController extends AbstractController
             'validator' => new IncomeBenefitsValidator($odr),
         ];
     }
-
 }

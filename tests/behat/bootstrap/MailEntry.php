@@ -46,7 +46,7 @@ class MailEntry
         }
         $value = trim($m[2], "\n \r\n");
         switch ($m[1]) {
-            case 'Subject';
+            case 'Subject':
                 if (!$this->subject) {
                     $this->subject = $value;
                 }

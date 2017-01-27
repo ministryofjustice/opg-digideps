@@ -6,9 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,7 +28,7 @@ class AssetController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAssets()) > 0 || $report->getNoAssetToAdd()) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -46,7 +44,7 @@ class AssetController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
             $report->setNoAssetToAdd(0);
         }
@@ -59,7 +57,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId,]);
                 case 1: //no
-                    $this->get('restClient')->put('report/' . $reportId, $report, ['noAssetsToAdd']);
+                    $this->getRestClient()->put('report/'.$reportId, $report, ['noAssetsToAdd']);
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
         }
@@ -82,7 +80,7 @@ class AssetController extends AbstractController
      */
     public function typeAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm('asset_title', new EntityDir\Report\AssetOther(), [
         ]);
         $form->handleRequest($request);
@@ -111,7 +109,7 @@ class AssetController extends AbstractController
      */
     public function otherAddAction(Request $request, $reportId, $title)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
         $asset = new Report\AssetOther();
         $asset->setTitle($title);
         $asset->setReport($report);
@@ -140,7 +138,7 @@ class AssetController extends AbstractController
      */
     public function otherEditAction(Request $request, $reportId, $assetId = null)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
         if ($assetId) {
             $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Report\\Asset');
         } else {
@@ -158,7 +156,6 @@ class AssetController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
-
         }
 
         return [
@@ -169,16 +166,15 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/assets/add_another", name="assets_add_another")
      * @Template()
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\Asset\AssetAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-assets'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -196,7 +192,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/assets/property/step{step}/{assetId}", name="assets_property_step", requirements={"step":"\d+"})
      * @Template("AppBundle:Report/Asset/Property:step.html.twig")
@@ -211,11 +206,11 @@ class AssetController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('assets_type', 'assets_property_step', 'assets_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -254,7 +249,6 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-
             $asset = $form->getData();
             /* @var $asset Report\AssetProperty */
 
@@ -320,7 +314,6 @@ class AssetController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/assets/summary", name="assets_summary")
      * @Template()
@@ -331,7 +324,7 @@ class AssetController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (count($report->getAssets()) == 0 && $report->getNoAssetToAdd() === null) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
@@ -348,7 +341,7 @@ class AssetController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $assetId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->hasAssetWithId($assetId)) {
             $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");
@@ -357,5 +350,4 @@ class AssetController extends AbstractController
 
         return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Traits\HasReportTrait;
-use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @JMS\ExclusionPolicy("none")
@@ -34,18 +34,18 @@ class MentalCapacity
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"mental-capacity"})
-     * 
+     *
      * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
      */
     private $hasCapacityChangedDetails;
 
     /**
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"mental-capacity"})
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"mental-assessment-date"})
      *
-     * @Assert\NotBlank(message="mentalAssessment.mentalAssessmentDate.notBlank", groups={"capacity-assessment"})
+     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"mental-assessment-date"})
      */
-    private $mentalAssessmentDate = null;
+    private $mentalAssessmentDate;
 
     public function getId()
     {

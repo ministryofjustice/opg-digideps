@@ -1,3 +1,4 @@
+#this section seem deprecated. remove if not needed
 report:
   header:
     report: "report"
@@ -31,9 +32,10 @@ prevNextLinks:
     assets: Assets
     debts: Debts
     actions: Actions
-    other_info: Any other information
+    otherInfo: Any other information
     incomeBenefits: Income and benefits
-    deputy_expenses: Deputy expenses
+    deputyExpenses: Deputy expenses
+    gifts: Gifts
 
 
 

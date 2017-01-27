@@ -2,12 +2,12 @@
 
 namespace AppBundle\Service\Mailer\Transport;
 
-use Swift_Transport;
+use SendGrid;
+use SendGrid\Email;
+use Swift_Attachment;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
-use Swift_Attachment;
-use SendGrid\Email;
-use SendGrid;
+use Swift_Transport;
 
 /**
  * Mailchimp transport layer
@@ -46,7 +46,7 @@ class SendGridTransport implements Swift_Transport
 
     /**
      * @param Swift_Events_EventListener $plugin
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function registerPlugin(Swift_Events_EventListener $plugin)
@@ -78,7 +78,7 @@ class SendGridTransport implements Swift_Transport
 
     /**
      * @param Swift_Mime_Message $message
-     * 
+     *
      * @return Email
      */
     protected function createSendGridMessageFromSwiftMessage(Swift_Mime_Message $message)
@@ -115,14 +115,10 @@ class SendGridTransport implements Swift_Transport
         return $email;
     }
 
-    /**
-     */
     public function start()
     {
     }
 
-    /**
-     */
     public function stop()
     {
         // clear temporary attachments if any

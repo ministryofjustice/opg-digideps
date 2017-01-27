@@ -3,8 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
@@ -17,7 +17,7 @@ class Client
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"edit"})
-     
+
      * @var int
      */
     private $id;
@@ -25,7 +25,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.firstname.notBlank" )
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
      *
@@ -57,7 +57,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.lastname.notBlank" )
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
      *
@@ -75,7 +75,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.caseNumber.notBlank")
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1")
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2")
@@ -88,7 +88,7 @@ class Client
      * @JMS\Accessor(setter="setCourtDateWithoutTime")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.courtDate.notBlank")
      * @Assert\Date( message="client.courtDate.message")
      *
@@ -108,7 +108,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.address.notBlank")
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      *
@@ -119,7 +119,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      *
      * @var string
@@ -129,7 +129,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\Length(max=75, maxMessage="client.county.maxMessage")
      *
      * @var string
@@ -139,10 +139,10 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\NotBlank( message="client.postcode.notBlank")
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
-     * 
+     *
      * @var string
      */
     private $postcode;
@@ -150,7 +150,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @var string
      */
     private $country;
@@ -158,7 +158,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
-     * 
+     *
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
      *
      * @var string

@@ -5,13 +5,6 @@
 {% block htmlTitle %}{{ 'Terms and Conditions' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'Terms and conditions' | trans }}{% endblock %}
 
-{% block pageNavigation %}
-    <nav class="back-bar">
-        <a id="overview-button" href="{{ app.request.headers.get('referer') }}" class="link-return">Return to deputy report</a>
-        {% include 'AppBundle:Components:_helpline.html.twig' %}
-    </nav>
-{% endblock %}
-
 {% block linkBack %}
   <a href="{{ app.request.headers.get('referer') }}" class="link-back behat-link-step-back">Back</a>
 {% endblock %}

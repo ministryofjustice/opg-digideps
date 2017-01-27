@@ -3,12 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use AppBundle\Entity\User;
 use MockeryStub as m;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class RedirectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,9 +38,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
         $this->router = m::mock('Symfony\Component\Routing\RouterInterface')
-            ->shouldReceive('generate')->andReturnUsing(function($route, $params = []) {
-            return [$route, $params];
-        })->getMock();
+            ->shouldReceive('generate')->andReturnUsing(function ($route, $params = []) {
+                return [$route, $params];
+            })->getMock();
         $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
 
         $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
@@ -68,10 +68,10 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
     public function testgetFirstPageAfterLogin($grantedRole, $userMocks, $expectedRouteAndParams)
     {
         $this->markTestIncomplete('fix when specs are 100% defined');
-        
+
         $this->security->shouldIgnoreMissing();
         $this->security->shouldReceive('isGranted')->with($grantedRole)->andReturn(true);
-        foreach($userMocks as $k => $v) {
+        foreach ($userMocks as $k => $v) {
             $this->user->shouldReceive($k)->andReturn($v);
         }
 

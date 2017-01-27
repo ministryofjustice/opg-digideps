@@ -8,7 +8,7 @@
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
@@ -17,7 +17,7 @@
 {% block pageContent %}
 
     {# Introduction text #}
-    <p class="text">{{ 'startPage.description1' | trans }}</p>
+    <p class="text">{{ 'startPage.description1' | trans(transOptions) }}</p>
     <ul class="list list-bullet">
         <li>{{ 'startPage.descriptionListItem1' | trans(transOptions) }}</li>
         <li>{{ 'startPage.descriptionListItem2' | trans(transOptions) }}</li>

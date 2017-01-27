@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service;
 
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use AppBundle\Service\Client\RestClient;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * @codeCoverageIgnore

@@ -5,7 +5,6 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 class SelfRegisterDataType extends AbstractType
 {
@@ -15,7 +14,7 @@ class SelfRegisterDataType extends AbstractType
             ->add('firstname', 'text')
             ->add('lastname', 'text')
             ->add('postcode', 'text')
-            ->add('email', 'repeated',  [
+            ->add('email', 'repeated', [
                 'type' => 'email',
                 'invalid_message' => 'user.email.doesNotMatch',
             ])

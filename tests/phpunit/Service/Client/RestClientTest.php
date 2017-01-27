@@ -2,12 +2,12 @@
 
 namespace AppBundle\Service\Client;
 
+use AppBundle\Entity\User;
+use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
-use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
-use Symfony\Bridge\Monolog\Logger;
-use AppBundle\Entity\User;
 use MockeryStub as m;
+use Symfony\Bridge\Monolog\Logger;
 
 class RestClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -149,7 +149,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterUser()
     {
-        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) { echo $e;});
+        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
+            echo $e;
+        });
         $user = m::mock('AppBundle\Entity\User');
 
         $data = ['id' => 1];
@@ -449,7 +451,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->container->shouldReceive('get')->with('request')->andReturn($request);
 
-        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) { echo $e;});
+        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
+            echo $e;
+        });
 
         $this->client->shouldReceive('get')->with('/', [
                 'headers' => [

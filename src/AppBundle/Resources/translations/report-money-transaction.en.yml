@@ -3,7 +3,7 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     pageSectionDescription1: |
-      Pleas tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+      Please tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
       You can enter a total for each type of income, or you can enter
       individual amounts and we'll add them up for you.
@@ -76,7 +76,8 @@ summaryPage:
     pageSectionTitle: Money out
     supportTitle: ""
   pageContent:
-    weAskAbout: In this section, we ask you about money you've spent on %client%'s day-to-day living
+    weAskAbout: |
+      In this section, we ask you about money you've spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
     # similar to start page, but expecting to evolve differently
 form:

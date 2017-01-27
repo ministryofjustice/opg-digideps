@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\VisitsCareValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class VisitsCareController extends AbstractController
@@ -16,7 +15,6 @@ class VisitsCareController extends AbstractController
     private static $jmsGroups = [
         'visits-care',
     ];
-
 
     /**
      * @Route("/odr/{odrId}/visits-care", name="odr_visits_care")
@@ -34,7 +32,6 @@ class VisitsCareController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/odr/{odrId}/visits-care/step/{step}", name="odr_visits_care_step")
      * @Template()
@@ -49,8 +46,8 @@ class VisitsCareController extends AbstractController
         $visitsCare = $odr->getVisitsCare() ?: new EntityDir\Odr\VisitsCare();
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_visits_care', 'odr_visits_care_step', 'odr_visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -72,7 +69,7 @@ class VisitsCareController extends AbstractController
                 $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, ['visits-care', 'odr-id']);
             }
 
-            if ($fromPage == 'summary')  {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Record edited'

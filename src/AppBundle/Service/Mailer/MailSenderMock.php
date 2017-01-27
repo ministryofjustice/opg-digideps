@@ -2,12 +2,12 @@
 
 namespace AppBundle\Service\Mailer;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Validator\Validator;
 use AppBundle\Model\Email;
-use Symfony\Component\DependencyInjection\Container;
-use Swift_Message;
 use Swift_Attachment;
+use Swift_Message;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Validator\Validator;
 
 class MailSenderMock extends MailSender
 {
@@ -47,9 +47,10 @@ class MailSenderMock extends MailSender
      * @param Email $email
      * @param array $groups
      *
+     * @throws \Exception
+     *
      * @return type
      *
-     * @throws \Exception
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {

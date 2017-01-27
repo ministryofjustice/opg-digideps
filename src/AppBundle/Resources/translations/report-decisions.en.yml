@@ -27,20 +27,11 @@ mentalCapacity:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
       hint: ""
     hasCapacityChangedDetails:
-      label: "Please tell us more."
-      hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
-    save:
-      label: "Save and continue"
-
-mentalAssessment:
-  htmlTitle: "Deputy report - mental assessment | GOV.UK"
-  pageSectionTitle: "Mental assessment"
-  form:
+        label: "Please tell us more."
+        hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
     mentalAssessmentDate:
-      label: "When was %client%’s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
-      hint: "(MM/YYYY)"
-    save:
-      label: "Save and continue"
+        legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
+        hint: "(MM/YYYY)"
 
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
@@ -50,8 +41,6 @@ existPage:
       label: Have you made any significant decisions for %client% during this reporting period?
     reasonForNoDecisions:
       label: Please give us an explanation
-    save:
-      label: Save and continue
 
 addAnotherPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"

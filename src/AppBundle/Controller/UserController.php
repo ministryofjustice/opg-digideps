@@ -17,9 +17,9 @@ class UserController extends AbstractController
 {
     /**
      * Landing page to let the user access the app and selecting a password.
-     * 
+     *
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
-     * 
+     *
      * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
      *   "action" = "(activate|password-reset)"
      * })
@@ -70,7 +70,7 @@ class UserController extends AbstractController
 
             // login user into API
             //TODO try move at the beginning
-            $this->get('deputyprovider')->login(['token' => $token]);
+            $this->get('deputy_provider')->login(['token' => $token]);
 
             // set password for user
             $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
@@ -91,7 +91,7 @@ class UserController extends AbstractController
 
             // after password reset
             if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
-                $redirectUrl = $this->get('redirectorService')->getFirstPageAfterLogin();
+                $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
             } else { // activate:  o to 2nd step
                 $redirectUrl = $this->generateUrl('user_details');
             }
@@ -205,7 +205,7 @@ class UserController extends AbstractController
             $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
-            $request->getSession()->getFlashBag()->add('notice', "Password edited");
+            $request->getSession()->getFlashBag()->add('notice', 'Password edited');
 
             return $this->redirect($this->generateUrl('user_password_edit_done'));
         }
@@ -235,7 +235,7 @@ class UserController extends AbstractController
     /**
      * - change user data
      * - chang user password.
-     * 
+     *
      * @Route("/user-account/user-show", name="user_show")
      * @Template()
      **/
@@ -254,7 +254,7 @@ class UserController extends AbstractController
     /**
      * - change user data
      * - chang user password.
-     * 
+     *
      * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
      **/
@@ -278,7 +278,7 @@ class UserController extends AbstractController
              * the api
              */
             $this->getRestClient()->put('user/'.$user->getId(), $formData, ['user_details_full']);
-            $request->getSession()->getFlashBag()->add('notice', "Your details edited");
+            $request->getSession()->getFlashBag()->add('notice', 'Your details edited');
 
             return $this->redirect($this->generateUrl('user_show'));
         }

@@ -8,9 +8,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,15 +18,13 @@ class MoneyInController extends AbstractController
         'transactionsIn',
     ];
 
-
-
     /**
      * @Route("/report/{reportId}/money-in", name="money_in")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -52,11 +48,11 @@ class MoneyInController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_in', 'money_in_step', 'money_in_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -65,12 +61,12 @@ class MoneyInController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
-            $transaction = array_filter($report->getTransactionsIn(), function($t) use ($transactionId) {
+            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
         } else {
-            $transaction = new EntityDir\Report\Transaction();
+            $transaction = new EntityDir\Report\MoneyTransaction();
         }
 
         // add URL-data into model
@@ -91,9 +87,9 @@ class MoneyInController extends AbstractController
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
                 $stepUrlData['group'] = $transaction->getGroup();
-            } else if ($step == 2) {
+            } elseif ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
-            } else if ($step == $totalSteps) {
+            } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit
                     $request->getSession()->getFlashBag()->add(
                         'notice',
@@ -131,9 +127,9 @@ class MoneyInController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionAddAnotherType(), $report);
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transaction'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -161,7 +157,7 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (!$report->hasMoneyIn()) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
@@ -181,14 +177,14 @@ class MoneyInController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = array_filter($report->getTransactionsIn(), function($t) use ($transactionId) {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });
         if (!$transaction) {
             throw new \RuntimeException('Transaction not found');
         }
-        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/' . $transactionId);
+        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/'.$transactionId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

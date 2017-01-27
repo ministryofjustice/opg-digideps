@@ -11,7 +11,7 @@ trait UserTrait
 
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
-     * 
+     *
      * @When I create a new :odrType :role user :firstname :lastname with email :email
      */
     public function iCreateTheUserWithEmail($odrType, $role, $firstname, $lastname, $email)
@@ -22,7 +22,7 @@ trait UserTrait
         $this->fillField('admin_lastname', $lastname);
         $roleId = self::$roleNameToRoleId[strtolower($role)];
         $this->fillField('admin_roleId', $roleId);
-        switch($odrType) {
+        switch ($odrType) {
             case 'ODR-enabled':
                 $this->checkOption('admin_odrEnabled');
                 break;

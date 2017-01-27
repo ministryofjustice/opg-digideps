@@ -2,15 +2,13 @@
 
 namespace AppBundle\Form\Report\Asset;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
 /**
  * Asset form.
- * 
+ *
  * note: title is hidden (filled from the controller based on AssetTypeTitle form)
  */
 class AssetTypeOther extends AbstractType

@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'mentalAssessment.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'mentalAssessment.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'mentalCapacity.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'mentalCapacity.pageSectionTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -18,7 +18,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_known_date(form.mentalAssessmentDate, 'mentalAssessment.form.mentalAssessmentDate', {'showDay': 'false'}) }}
+    {{ form_known_date(form.mentalAssessmentDate, 'mentalCapacity.form.mentalAssessmentDate', {
+        'showDay': 'false',
+        'legendParameters': transOptions,
+    }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

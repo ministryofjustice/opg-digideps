@@ -31,7 +31,7 @@ trait StatusSnapshotTrait
 
     /**
      * @param string $name
-     * 
+     *
      * @return string
      */
     private static function getSnapshotPath($name)

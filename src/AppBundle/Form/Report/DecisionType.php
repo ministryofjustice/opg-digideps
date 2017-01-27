@@ -5,7 +5,6 @@ namespace AppBundle\Form\Report;
 use AppBundle\Entity\Report\Decision;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DecisionType extends AbstractType
@@ -14,10 +13,10 @@ class DecisionType extends AbstractType
     {
         $builder/*->add('title', 'text')*/
         ->add('description', 'textarea')
-            ->add('clientInvolvedBoolean', 'choice', array(
+            ->add('clientInvolvedBoolean', 'choice', [
                 'choices' => [1 => 'Yes', 0 => 'No'],
                 'expanded' => true,
-            ))
+            ])
             ->add('clientInvolvedDetails', 'textarea')
             ->add('save', 'submit');
     }

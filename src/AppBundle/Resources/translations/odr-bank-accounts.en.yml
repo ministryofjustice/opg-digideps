@@ -33,7 +33,7 @@ summaryPage:
   pageContent:
     weAskAbout: |
       In this section, we ask you about %client%'s bank accounts, building society
-    accounts, savings accounts and ISAs.
+      accounts, savings accounts and ISAs.
   #totalBalance: Total balance on %endDate%: £%amount%
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts

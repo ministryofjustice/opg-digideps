@@ -20,8 +20,8 @@ class Chain extends Constraint
     public function __construct($options = null)
     {
         // no known options set? $options is the constraints array
-        if (is_array($options) && !array_intersect(array_keys($options), array('groups', 'constraints', 'stopOnError'))) {
-            $options = array('constraints' => $options);
+        if (is_array($options) && !array_intersect(array_keys($options), ['groups', 'constraints', 'stopOnError'])) {
+            $options = ['constraints' => $options];
         }
 
         parent::__construct($options);
@@ -43,6 +43,6 @@ class Chain extends Constraint
 
     public function getRequiredOptions()
     {
-        return array('constraints');
+        return ['constraints'];
     }
 }

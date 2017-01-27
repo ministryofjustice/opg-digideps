@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Odr;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
@@ -9,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Controller\AbstractController;
 
 class ActionController extends AbstractController
 {
@@ -20,7 +20,6 @@ class ActionController extends AbstractController
         'odr-action-property',
         'odr-action-more-info',
     ];
-
 
     /**
      * @Route("/odr/{odrId}/actions", name="odr_actions")
@@ -51,8 +50,7 @@ class ActionController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-        /* @var $stepRedirector StepRedirector */
-        $stepRedirector = $this->get('stepRedirector')
+        $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_actions', 'odr_actions_step', 'odr_actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
@@ -63,7 +61,7 @@ class ActionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('odr/' . $odrId , $data, ['action']);
+            $this->getRestClient()->put('odr/'.$odrId, $data, ['action']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

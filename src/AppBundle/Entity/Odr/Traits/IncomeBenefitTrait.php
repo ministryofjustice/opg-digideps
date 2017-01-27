@@ -82,7 +82,7 @@ trait IncomeBenefitTrait
      */
     public function getStateBenefitOther()
     {
-        foreach($this->stateBenefits as $st) {
+        foreach ($this->stateBenefits as $st) {
             if ($st->getTypeId() == 'other_benefits') {
                 return $st;
             }
@@ -261,5 +261,4 @@ trait IncomeBenefitTrait
 
         return 'incomplete';
     }
-
 }
