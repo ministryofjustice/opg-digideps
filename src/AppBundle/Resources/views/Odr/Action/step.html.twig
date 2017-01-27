@@ -33,12 +33,22 @@
     {# step 1 (gifts) #}
     {% if step == 1 %}
 
-        <p class="text">
-            {{ 'stepPage.gifts.pageSectionDescription1' | trans(transOptions) }}
-        </p>
-        <p class="text">
-            {{ 'stepPage.gifts.pageSectionDescription2' | trans(transOptions) }}
-        </p>
+        <div class="text">
+            <p>{{ 'stepPage.gifts.pageSectionDescription1' | trans(transOptions) }}</p>
+            <p>{{ 'stepPage.gifts.pageSectionDescription2' | trans(transOptions) }}</p>
+
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'stepPage.gifts.hiddenText01.summary' | trans(transOptions) }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <p>{{ 'stepPage.gifts.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                    <p>{{ 'stepPage.gifts.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                    <p>{{ 'stepPage.gifts.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                </div>
+            </details>
+        </div>
+
 
         <div class="form-section push--bottom">
             <div class="form-group flush--bottom {% if not form.actionGiveGiftsToClient.vars.valid %}error{% endif %}">
@@ -77,6 +87,18 @@
             'legendClass' : 'form-label',
             'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain)
         }) }}
+
+        <details class="text push--bottom">
+            <summary>
+                <span class="summary">{{ 'stepPage.property.selling.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'stepPage.property.selling.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p>{{ 'stepPage.property.selling.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p>{{ 'stepPage.property.selling.hiddenText01.content.para03' |trans(transOptions) }}</p>
+                <p>{{ 'stepPage.property.selling.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
     {% endif %}
 
     {% if step == 4 %}
