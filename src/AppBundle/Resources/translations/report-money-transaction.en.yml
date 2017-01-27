@@ -93,13 +93,13 @@ form:
       moneyin-other: Other
       # money out
       household-bills: Household bills
-      accommodation: Accommodation
-      care-and-medical: Care and medical
+      accommodation: Accommodation (mortgage or rent)
+      care-and-medical: Care and medical bills
       client-expenses: Client's expenses
-      fees: Fees
+      fees: Professional fees or expenses
       major-purchases: Major purchases
-      spending-on-other-people: Spending on other people
-      debt-and-charges: Debts and charges
+      spending-on-other-people: Gifts for other people
+      debt-and-charges: Tax, debts and charges
       moving-money: Moving money
       moneyout-other: Other
   amount:
