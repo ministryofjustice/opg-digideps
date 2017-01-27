@@ -3,17 +3,12 @@
 namespace AppBundle\Entity\Odr;
 
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"odr-state-benefits", "odr-one-off"})
- */
-class IncomeBenefit
+class OneOff
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
+     * @JMS\Groups({"odr-one-off"})
      */
     private $typeId;
 
@@ -21,7 +16,7 @@ class IncomeBenefit
      * @var bool
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
+     * @JMS\Groups({"odr-one-off"})
      */
     private $present;
 
@@ -33,7 +28,7 @@ class IncomeBenefit
 
     /**
      * @var string
-     * @JMS\Groups({"odr-state-benefits", "odr-one-off"})
+     * @JMS\Groups({"odr-one-off"})
      * @JMS\Type("string")
      */
     private $moreDetails;
@@ -116,31 +111,5 @@ class IncomeBenefit
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
-    }
-
-    /**
-     * flag moreDetails invalid if amount is given and moreDetails is empty
-     * flag amount invalid if moreDetails is given and amount is empty.
-     *
-     * @param ExecutionContextInterface $context
-     */
-    public function moreDetailsValidate(ExecutionContextInterface $context)
-    {
-        // if the transaction required no moreDetails, no validation is needed
-        if (!$this->getHasMoreDetails()) {
-            return;
-        }
-
-        $isPresent = $this->isPresent();
-        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
-
-        if ($isPresent && !$hasMoreDetails) {
-            $context->addViolationAt('moreDetails', 'odr.incomeBenefit.moreDetails.notBlank');
-        }
-
-        // require checkbox if textarea is filled. Disabled as there is a JS toggle now
-//        if (!$isPresent && $hasMoreDetails) {
-//            $context->addViolationAt('present', 'odr.incomeBenefit.present.notBlank');
-//        }
     }
 }
