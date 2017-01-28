@@ -7,7 +7,7 @@ use AppBundle\Entity\Report\MoneyTransactionShortIn;
 use AppBundle\Entity\Report\MoneyTransactionShortOut;
 use Tests\AppBundle\Controller\AbstractTestController;
 
-class MoneyShortTransactionControllerTest extends AbstractTestController
+class MoneyTransactionShortControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $report1;
