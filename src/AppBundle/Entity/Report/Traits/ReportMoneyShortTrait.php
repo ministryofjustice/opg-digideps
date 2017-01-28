@@ -26,6 +26,24 @@ trait ReportMoneyShortTrait
     private $moneyTransactionsShort;
 
     /**
+     * @var string yes|no|null
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"money_transactions_short_in"})
+     * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
+     */
+    private $moneyTransactionsShortInExist;
+
+    /**
+     * @var string yes|no|null
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"money_transactions_short_out"})
+     * @ORM\Column(name="money_transactions_short_out_exist", type="string", length=3, nullable=true)
+     */
+    private $moneyTransactionsShortOutExist;
+
+    /**
      * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategories()
@@ -113,4 +131,37 @@ trait ReportMoneyShortTrait
             return $t instanceof MoneyTransactionShortOut;
         });
     }
+
+    /**
+     * @return string
+     */
+    public function getMoneyTransactionsShortInExist()
+    {
+        return $this->moneyTransactionsShortInExist;
+    }
+
+    /**
+     * @param string $moneyTransactionsShortInExist
+     */
+    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist)
+    {
+        $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoneyTransactionsShortOutExist()
+    {
+        return $this->moneyTransactionsShortOutExist;
+    }
+
+    /**
+     * @param string $moneyTransactionsShortOutExist
+     */
+    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist)
+    {
+        $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
+    }
+
 }

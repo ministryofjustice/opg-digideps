@@ -207,7 +207,7 @@ class ExpenseControllerTest extends AbstractTestController
      */
     public function testPaidAnything()
     {
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getReportById(self::$report1->getId());
         $this->assertCount(1, $report->getExpenses());
         $this->assertEquals('yes', $report->getPaidForAnything());
 
@@ -221,7 +221,7 @@ class ExpenseControllerTest extends AbstractTestController
         ]);
 
         self::fixtures()->clear();
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getReportById(self::$report1->getId());
         $this->assertEquals('no', $report->getPaidForAnything());
         $this->assertCount(0, $report->getExpenses());
     }

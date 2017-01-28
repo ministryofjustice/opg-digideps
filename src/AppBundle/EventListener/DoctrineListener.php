@@ -24,5 +24,32 @@ class DoctrineListener
             $odrRepo->addDebtsToOdrIfMissing($entity);
             $odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
         }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortIn && !$entity->getId()) {
+            $entity->getReport()->setMoneyTransactionsShortInExist('yes');
+        }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortOut && !$entity->getId()) {
+            $entity->getReport()->setMoneyTransactionsShortOutExist('yes');
+        }
+    }
+
+    public function preRemove(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortIn) {
+            $report = $entity->getReport();
+            if (count($report->getMoneyTransactionsShortIn()) === 1) {
+                $report->setMoneyTransactionsShortInExist('no');
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransactionShortOut) {
+            $report = $entity->getReport();
+            if (count($report->getMoneyTransactionsShortOut()) === 1) {
+                $report->setMoneyTransactionsShortOutExist('no');
+            }
+        }
     }
 }

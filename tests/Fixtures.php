@@ -338,6 +338,16 @@ class Fixtures
         return $this->em->getRepository("AppBundle\\Entity\\{$entity}");
     }
 
+    /**
+     * @param $id
+     *
+     * @return EntityDir\Report\Report
+     */
+    public function getReportById($id)
+    {
+        return $this->getRepo('Report\Report')->find($id);
+    }
+
     public function getConnection()
     {
         return $this->em->getConnection();

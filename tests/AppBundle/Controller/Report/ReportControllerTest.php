@@ -90,7 +90,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert creation
-        $report = self::fixtures()->getRepo('Report\Report')->find($reportId);
+        $report = self::fixtures()->getReportById($reportId);
         /* @var $report \AppBundle\Entity\Report\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));

@@ -18,7 +18,7 @@ class MoneyTransactionShortController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -31,7 +31,7 @@ class MoneyTransactionShortController extends RestController
         $this->fillData($t, $data);
 
         $this->getEntityManager()->persist($t);
-        $this->getEntityManager()->flush($t);
+        $this->getEntityManager()->flush();
 
         $this->persistAndFlush($t);
 
@@ -69,13 +69,13 @@ class MoneyTransactionShortController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findReportById($reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $t = $this->findEntityBy('Report\MoneyTransactionShort', $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
-
         $this->getEntityManager()->remove($t);
+
         $this->getEntityManager()->flush();
 
         return [];

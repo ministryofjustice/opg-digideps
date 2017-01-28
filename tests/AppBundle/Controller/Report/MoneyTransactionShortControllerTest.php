@@ -10,6 +10,8 @@ use Tests\AppBundle\Controller\AbstractTestController;
 class MoneyTransactionShortControllerTest extends AbstractTestController
 {
     private static $deputy1;
+    private static $transaction1;
+    private static $transaction3;
     private static $report1;
     private static $deputy2;
     private static $report2;
@@ -33,11 +35,11 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         self::$report2 = self::fixtures()->createReport($client2);
 
         // transactions. 2 in, 1 out. one out for report 2
-        $t1 = new MoneyTransactionShortIn(self::$report1);
+        self::$transaction1 = $t1 = new MoneyTransactionShortIn(self::$report1);
         $t1->setAmount(123.45)->setDescription('d1')->setDate(new \DateTime('2015-12-31'));
         $t2 = new MoneyTransactionShortIn(self::$report1);
         $t2->setAmount(789.12)->setDescription('d2');
-        $t3 = new MoneyTransactionShortOut(self::$report1);
+        self::$transaction3 = $t3 = new MoneyTransactionShortOut(self::$report1);
         $t3->setAmount(5000.59)->setDescription('d3');
         $t4 = new MoneyTransactionShortIn(self::$report2);
         $t4->setAmount(123)->setDescription('belongs to report2');
@@ -146,5 +148,51 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
         $this->assertEquals('2014-04-06', $t->getDate()->format('Y-m-d'));
+    }
+
+    public function testDelete()
+    {
+        $url = '/report/'.self::$report1->getId().'/money-transaction-short/'.self::$transaction3->getId();
+        $url2 = '/report/'.self::$report2->getId().'/money-transfers/99';
+
+        $this->assertEquals('yes', self::$report1->getMoneyTransactionsShortOutExist());
+
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+
+        self::fixtures()->clear();
+        self::$report1 = self::fixtures()->getReportById(self::$report1->getId());
+
+        $t = self::fixtures()->getRepo('Report\MoneyTransactionShort')->find(self::$transaction3->getId());
+        $this->assertTrue(null === $t);
+        $this->assertCount(0, self::$report1->getMoneyTransactionsShortOut());
+        $this->assertEquals('no', self::$report1->getMoneyTransactionsShortOutExist());
+    }
+
+    public function testExist()
+    {
+        $report = self::fixtures()->getReportById(self::$report1->getId());
+        $this->assertTrue(count($report->getMoneyTransactionsShortIn()) > 0);
+        $this->assertEquals('yes', $report->getMoneyTransactionsShortInExist());
+
+        $url = '/report/'.self::$report1->getId() ;
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data' => [
+                'money_transactions_short_in_exist' => 'no'
+            ]
+        ]);
+
+        self::fixtures()->clear();
+        $report = self::fixtures()->getReportById(self::$report1->getId());
+        $this->assertEquals('no', $report->getMoneyTransactionsShortInExist());
+        $this->assertCount(0, $report->getMoneyTransactionsShortIn());
     }
 }
