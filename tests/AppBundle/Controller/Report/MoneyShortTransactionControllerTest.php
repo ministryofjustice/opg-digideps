@@ -1,0 +1,150 @@
+<?php
+
+namespace Tests\AppBundle\Controller\Report;
+
+use AppBundle\Entity\Report\MoneyTransactionShort;
+use AppBundle\Entity\Report\MoneyTransactionShortIn;
+use AppBundle\Entity\Report\MoneyTransactionShortOut;
+use Tests\AppBundle\Controller\AbstractTestController;
+
+class MoneyShortTransactionControllerTest extends AbstractTestController
+{
+    private static $deputy1;
+    private static $report1;
+    private static $deputy2;
+    private static $report2;
+    private static $tokenAdmin = null;
+    private static $tokenDeputy = null;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+
+        $client1 = self::fixtures()->createClient(self::$deputy1);
+        self::fixtures()->flush();
+
+        self::$report1 = self::fixtures()->createReport($client1);
+
+        // deputy 2
+        self::$deputy2 = self::fixtures()->createUser();
+        $client2 = self::fixtures()->createClient(self::$deputy2);
+        self::$report2 = self::fixtures()->createReport($client2);
+
+        // transactions. 2 in, 1 out. one out for report 2
+        $t1 = new MoneyTransactionShortIn(self::$report1);
+        $t1->setAmount(123.45)->setDescription('d1')->setDate(new \DateTime('2015-12-31'));
+        $t2 = new MoneyTransactionShortIn(self::$report1);
+        $t2->setAmount(789.12)->setDescription('d2');
+        $t3 = new MoneyTransactionShortOut(self::$report1);
+        $t3->setAmount(5000.59)->setDescription('d3');
+        $t4 = new MoneyTransactionShortIn(self::$report2);
+        $t4->setAmount(123)->setDescription('belongs to report2');
+        self::fixtures()->persist($t1, $t2, $t3, $t4);
+
+        self::fixtures()->flush()->clear();
+    }
+
+    /**
+     * clear fixtures.
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
+    }
+
+    public function setUp()
+    {
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
+    }
+
+    public function testGetTransactions()
+    {
+        $url = '/report/'.self::$report1->getId()
+            .'?'.http_build_query(['groups' => ['transactionsShortIn', 'transactionsShortOut']]);
+
+        // assert data is retrieved
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        // in
+        $this->assertCount(2, $data['money_transactions_short_in']);
+        $this->assertArrayHasKey('id', $data['money_transactions_short_in'][0]);
+        $this->assertEquals('123.45', $data['money_transactions_short_in'][0]['amount']);
+        $this->assertEquals('d1', $data['money_transactions_short_in'][0]['description']);
+        $this->assertEquals('2015-12-31', $data['money_transactions_short_in'][0]['date']);
+        // out
+        $this->assertCount(1, $data['money_transactions_short_out']);
+        $this->assertArrayHasKey('id', $data['money_transactions_short_out'][2]);
+        $this->assertEquals('d3', $data['money_transactions_short_out'][2]['description']);
+        $this->assertEquals('5000.59', $data['money_transactions_short_out'][2]['amount']);
+    }
+
+    public function testAddEditTransaction()
+    {
+        $url = '/report/'.self::$report1->getId().'/money-transaction-short';
+        $url2 = '/report/'.self::$report2->getId().'/money-transaction-short';
+
+        $this->assertEndpointNeedsAuth('POST', $url);
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
+
+        $data = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'type' => 'in',
+                'amount' => 123.45,
+                'description' => 'd',
+                'date' => '2014-04-05',
+            ],
+        ])['data'];
+
+        self::fixtures()->clear();
+
+        $t = self::fixtures()->getRepo('Report\MoneyTransactionShortIn')->find($data['id']); /* @var $t MoneyTransactionShortIn */
+        $this->assertEquals(123.45, $t->getAmount());
+        $this->assertEquals('d', $t->getDescription());
+        $this->assertEquals('2014-04-05', $t->getDate()->format('Y-m-d'));
+
+        return $t->getId();
+    }
+
+    /**
+     * @depends testAddEditTransaction
+     */
+    public function testEditTransaction($transactionId)
+    {
+        $url = '/report/'.self::$report1->getId().'/money-transaction-short/'.$transactionId;
+        $url2 = '/report/'.self::$report2->getId().'/money-transaction-short/'.$transactionId;
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+
+        $data = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'amount' => 124.46,
+                'description' => 'd-changed',
+                'date' => '2014-04-06',
+            ],
+        ])['data'];
+
+        self::fixtures()->clear();
+
+        $t = self::fixtures()->getRepo('Report\MoneyTransactionShort')->find($data['id']); /* @var $t MoneyTransactionShort */
+        $this->assertEquals(124.46, $t->getAmount());
+        $this->assertEquals('d-changed', $t->getDescription());
+        $this->assertEquals('2014-04-06', $t->getDate()->format('Y-m-d'));
+    }
+}

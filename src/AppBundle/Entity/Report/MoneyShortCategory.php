@@ -13,6 +13,7 @@ class MoneyShortCategory
 {
     /**
      * @param $type in|out
+     *
      * @return array
      */
     public static function getCategories($type)
@@ -69,7 +70,7 @@ class MoneyShortCategory
     private $typeId;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
@@ -77,12 +78,12 @@ class MoneyShortCategory
      */
     private $present;
 
-
     /**
      * MoneyShortCategory constructor.
+     *
      * @param Report $report
      * @param string $typeId
-     * @param boolean $present
+     * @param bool   $present
      */
     public function __construct(Report $report, $typeId, $present)
     {
@@ -96,8 +97,8 @@ class MoneyShortCategory
      */
     public function getType()
     {
-        foreach(['in', 'out'] as $type) {
-            foreach(self::getCategories($type) as $typeId => $options) {
+        foreach (['in', 'out'] as $type) {
+            foreach (self::getCategories($type) as $typeId => $options) {
                 if ($typeId == $this->typeId) {
                     return $type;
                 }
@@ -174,5 +175,4 @@ class MoneyShortCategory
 
         return $this;
     }
-
 }

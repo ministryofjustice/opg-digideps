@@ -133,7 +133,7 @@ class ReportRepository extends EntityRepository
         if (count($report->getMoneyShortCategories()) > 0) {
             return $ret;
         }
-        
+
         if ($report->getType() == Report::TYPE_103) {
             $cats = MoneyShortCategory::getCategories('in') + MoneyShortCategory::getCategories('out');
             foreach ($cats as $typeId => $options) {

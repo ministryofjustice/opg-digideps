@@ -363,7 +363,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testMoneyCategories()
     {
-        $url = '/report/' . self::$report103->getId();
+        $url = '/report/'.self::$report103->getId();
 
         //refresh
         self::$report103 = self::fixtures()->getRepo('REport\Report')->find(self::$report103->getId());
@@ -406,7 +406,7 @@ class ReportControllerTest extends AbstractTestController
             'money-short-categories-in',
             'money-short-categories-out',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];

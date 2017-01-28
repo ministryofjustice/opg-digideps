@@ -1,0 +1,219 @@
+<?php
+
+namespace AppBundle\Entity\Report;
+
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
+
+/**
+ * @ORM\Table(name="money_transaction_short")
+ * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *      "in"   = "AppBundle\Entity\Report\MoneyTransactionShortIn",
+ *      "out"  = "AppBundle\Entity\Report\MoneyTransactionShortOut"
+ * })
+ */
+abstract class MoneyTransactionShort
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\SequenceGenerator(sequenceName="money_transaction_short_id_seq", allocationSize=1, initialValue=1)
+     *
+     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     */
+    private $id;
+
+    /**
+     * @var Report
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="moneyTransactionsShort")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     */
+    private $report;
+
+    /**
+     * @var float
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     *
+     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
+     */
+    private $amount;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     *
+     * @ORM\Column(name="date", type="date", nullable=true, options={ "default": null })
+     */
+    private $date;
+
+    /**
+     * Discriminator field
+     *
+     * @var string
+     * @JMS\Exclude
+     */
+    private $type;
+
+    /**
+     * @param $type in|out
+     * @param Report $report
+     *
+     * @return MoneyTransactionShort
+     */
+    public static function factory($type, Report $report)
+    {
+        switch ($type) {
+            case 'in':
+                return new MoneyTransactionShortIn($report);
+            case 'out':
+                return new MoneyTransactionShortOut($report);
+        }
+        throw new \InvalidArgumentException(__METHOD__.': type not recognised');
+    }
+
+    /**
+     * MoneyTransactionShort constructor.
+     *
+     * @param Report $report
+     */
+    public function __construct(Report $report)
+    {
+        $this->report = $report;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return MoneyTransactionShort
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report $report
+     *
+     * @return MoneyTransactionShort
+     */
+    public function setReport($report)
+    {
+        $this->report = $report;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param float $amount
+     *
+     * @return MoneyTransactionShort
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return MoneyTransactionShort
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param DateTime $date
+     *
+     * @return MoneyTransactionShort
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+}
