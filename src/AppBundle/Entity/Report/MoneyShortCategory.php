@@ -10,7 +10,7 @@ class MoneyShortCategory
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      */
     private $typeId;
 
@@ -18,7 +18,7 @@ class MoneyShortCategory
      * @var bool
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      */
     private $present;
 

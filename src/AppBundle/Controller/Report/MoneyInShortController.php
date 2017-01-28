@@ -18,7 +18,7 @@ class MoneyInShortController extends AbstractController
 {
     private static $jmsGroups = [
         'client-cot',
-        'money-short-categories-in',
+        'moneyShortCategoriesIn',
         'transactionsShortIn',
     ];
 
@@ -53,7 +53,7 @@ class MoneyInShortController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
 
-            $this->getRestClient()->put('report/'.$reportId, $data, ['money-short-categories-in']);
+            $this->getRestClient()->put('report/'.$reportId, $data, ['moneyShortCategoriesIn']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
