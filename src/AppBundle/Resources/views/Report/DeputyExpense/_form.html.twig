@@ -1,0 +1,14 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_input(form.explanation, 'form.explanation', {
+        'formGroupClass': 'explanation',
+    }) }}
+    {{ form_input(form.amount, 'form.amount', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number js-more-info js-format-currency',
+        'formGroupClass': ' form-group-value'
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}
