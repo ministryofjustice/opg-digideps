@@ -39,6 +39,41 @@ categoryPage:
 #      pageSectionDescription:
 #         step1: You can add one or more items of expense and come back to complete the section later.
 
+
+
+existPage:
+  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  pageSectionTitle: Deputy expenses
+  form:
+    moneyTransactionsShortInExist:
+      label: Have there been any items of income over £1,000?
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  pageSectionTitle: Add an expense
+  supportTitle: Deputy expenses
+  form:
+    addAnother:
+      label: The expense has been saved. Would you like to add another expense now?
+      hint: If you prefer, you can come back to this section later to add more expenses
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  pageSectionTitle: Add an expense
+  supportTitle: Deputy expenses
+  pageSectionDescription: |
+    Use this section to tell us about the money you spent on %client%'s care during this reporting period .
+    You can add one or more items of expense and come back to complete the section later.
+
+editPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  supportTitle: Deputy expenses
+  pageSectionTitle: Edit deputy expense
+
 addAnotherPage:
   moneyIn:
     htmlTitle: "Deputy report - Add another item of income | GOV.UK"

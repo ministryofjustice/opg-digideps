@@ -37,3 +37,29 @@
     </tbody>
 </table>
 
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-paid-for-anything">
+        <td>
+            {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions)  }}
+        </td>
+        <td>
+            {{ report.moneyTransactionsShortInExist | capitalize }}
+        </td>
+        <td class="change-answer">
+            <a href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
