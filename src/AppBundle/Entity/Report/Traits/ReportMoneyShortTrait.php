@@ -35,7 +35,7 @@ trait ReportMoneyShortTrait
      * @JMS\Type("string")
      * @JMS\Groups({"money-transactions-short-in-exist"})
      *
-     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"money-transactions-short-in-exist"})
+     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
      */
     private $moneyTransactionsShortInExist;
 
