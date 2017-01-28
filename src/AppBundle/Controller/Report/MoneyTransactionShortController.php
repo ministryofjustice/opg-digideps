@@ -96,7 +96,7 @@ class MoneyTransactionShortController extends RestController
         $record = $this->findEntityBy('Report\MoneyTransactionShort', $transactionId);
         $this->denyAccessIfReportDoesNotBelongToUser($record->getReport());
 
-        $this->setJmsSerialiserGroups(["transactionsShortIn", "transactionsShortOut"]);
+        $this->setJmsSerialiserGroups(["moneyTransactionsShortIn", "moneyTransactionsShortOut"]);
 
         return $record;
     }

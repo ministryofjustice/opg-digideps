@@ -11,7 +11,6 @@ trait ReportMoneyShortTrait
     /**
      * @var MoneyShortCategory[]
      *
-     * @JMS\Groups({"money-short-categories"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyShortCategory", mappedBy="report")
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -29,7 +28,7 @@ trait ReportMoneyShortTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactionsShortIn"})
+     * @JMS\Groups({"moneyShortCategoriesIn"})
      * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
      */
     private $moneyTransactionsShortInExist;
@@ -38,7 +37,7 @@ trait ReportMoneyShortTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"money_transactions_short_out"})
+     * @JMS\Groups({"moneyShortCategoriesOut"})
      * @ORM\Column(name="money_transactions_short_out_exist", type="string", length=3, nullable=true)
      */
     private $moneyTransactionsShortOutExist;
@@ -54,7 +53,7 @@ trait ReportMoneyShortTrait
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_short_categories_in")
-     * @JMS\Groups({"money-short-categories-in"})
+     * @JMS\Groups({"moneyShortCategoriesIn"})
      */
     public function getMoneyShortCategoriesIn()
     {
@@ -66,7 +65,7 @@ trait ReportMoneyShortTrait
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_short_categories_out")
-     * @JMS\Groups({"money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesOut"})
      */
     public function getMoneyShortCategoriesOut()
     {
@@ -107,7 +106,7 @@ trait ReportMoneyShortTrait
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_short_in")
-     * @JMS\Groups({"transactionsShortIn"})
+     * @JMS\Groups({"moneyTransactionsShortIn"})
      *
      * @return MoneyTransactionShort[]
      */
@@ -121,7 +120,7 @@ trait ReportMoneyShortTrait
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_short_out")
-     * @JMS\Groups({"transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionsShortOut"})
      *
      * @return MoneyTransactionShort[]
      */

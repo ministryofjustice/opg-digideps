@@ -46,7 +46,7 @@ class MoneyShortCategory
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -64,7 +64,7 @@ class MoneyShortCategory
 
     /**
      * @var string
-     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      * @ORM\Column(name="type_id", type="string", nullable=false)
      */
     private $typeId;
@@ -73,7 +73,7 @@ class MoneyShortCategory
      * @var bool
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"money-short-categories-in", "money-short-categories-out"})
+     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      * @ORM\Column(name="present", type="boolean", nullable=true)
      */
     private $present;

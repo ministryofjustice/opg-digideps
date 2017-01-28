@@ -69,7 +69,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
     public function testGetTransactions()
     {
         $url = '/report/'.self::$report1->getId()
-            .'?'.http_build_query(['groups' => ['transactionsShortIn', 'transactionsShortOut']]);
+            .'?'.http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [

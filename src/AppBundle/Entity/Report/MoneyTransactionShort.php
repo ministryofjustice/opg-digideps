@@ -25,7 +25,7 @@ abstract class MoneyTransactionShort
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="money_transaction_short_id_seq", allocationSize=1, initialValue=1)
      *
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      */
     private $id;
 
@@ -41,7 +41,7 @@ abstract class MoneyTransactionShort
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=false)
      */
@@ -50,7 +50,7 @@ abstract class MoneyTransactionShort
     /**
      * @var string
      *
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
@@ -60,7 +60,7 @@ abstract class MoneyTransactionShort
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionsShortIn", "moneyTransactionsShortOut"})
      *
      * @ORM\Column(name="date", type="date", nullable=true, options={ "default": null })
      */

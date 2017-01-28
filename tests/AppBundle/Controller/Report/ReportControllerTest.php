@@ -372,8 +372,8 @@ class ReportControllerTest extends AbstractTestController
 
         // check default
         $q = http_build_query(['groups' => [
-            'money-short-categories-in',
-            'money-short-categories-out',
+            'moneyShortCategoriesIn',
+            'moneyShortCategoriesOut',
         ]]);
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
@@ -403,8 +403,8 @@ class ReportControllerTest extends AbstractTestController
 
         // GET and assert
         $q = http_build_query(['groups' => [
-            'money-short-categories-in',
-            'money-short-categories-out',
+            'moneyShortCategoriesIn',
+            'moneyShortCategoriesOut',
         ]]);
         $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
             'mustSucceed' => true,
@@ -414,10 +414,10 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('state_pension_and_benefit', $data['money_short_categories_in'][0]['type_id']);
         $this->assertEquals(true, $data['money_short_categories_in'][0]['present']);
 
-        $this->assertEquals('accomodation_costs', $data['money_short_categories_out'][0]['type_id']);
-        $this->assertEquals(true, $data['money_short_categories_out'][0]['present']);
+        $this->assertEquals('accomodation_costs', $data['money_short_categories_out'][7]['type_id']);
+        $this->assertEquals(true, $data['money_short_categories_out'][7]['present']);
 
-        $this->assertEquals('care_fees', $data['money_short_categories_out'][7]['type_id']);
-        $this->assertEquals(false, $data['money_short_categories_out'][7]['present']);
+        $this->assertEquals('care_fees', $data['money_short_categories_out'][8]['type_id']);
+        $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
     }
 }
