@@ -82,12 +82,32 @@ class MoneyTransactionShortController extends RestController
     }
 
 
+    /**
+     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"})
+     * @Method({"GET"})
+     */
+    public function getOneById($reportId, $transactionId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report\Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $record = $this->findEntityBy('Report\MoneyTransactionShort', $transactionId);
+        $this->denyAccessIfReportDoesNotBelongToUser($record->getReport());
+
+        $this->setJmsSerialiserGroups(["transactionsShortIn", "transactionsShortOut"]);
+
+        return $record;
+    }
+
     private function fillData(EntityDir\Report\MoneyTransactionShort $t, array $data)
     {
         $t->setDescription($data['description']);
         $t->setAmount($data['amount']);
-        if (isset($data['date'])) {
-            $t->setDate(new \DateTime($data['date']));
+
+        if (array_key_exists('date', $data)) {
+            $t->setDate($data['date'] ? new \DateTime($data['date']) : null);
         }
     }
 

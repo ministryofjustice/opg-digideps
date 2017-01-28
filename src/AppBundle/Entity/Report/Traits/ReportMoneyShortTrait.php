@@ -29,7 +29,7 @@ trait ReportMoneyShortTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"money_transactions_short_in"})
+     * @JMS\Groups({"transactionsShortIn"})
      * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
      */
     private $moneyTransactionsShortInExist;
