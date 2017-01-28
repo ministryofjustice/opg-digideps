@@ -20,13 +20,13 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'addPage.pageSectionDescription1' | trans(transOptions) }}</p>
+    <p class="heading-small">{{ 'addPage.pageSectionDescription1' | trans(transOptions) }}</p>
     <p class="text">{{ 'addPage.pageSectionDescription2' | trans(transOptions) }}</p>
     <p class="text">{{ 'addPage.pageSectionDescription3' | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/MoneyInShort:_form.html.twig' with {
-	    'translationDomain': translationDomain,
-	    'form': form
+    'translationDomain': translationDomain,
+    'form': form
     } %}
 
 {% endblock %}

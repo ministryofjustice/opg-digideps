@@ -26,8 +26,17 @@ trait ReportMoneyShortTrait
 
     /**
      * @var MoneyTransactionShort[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransactionShort>")
      */
-    private $moneyTransactionsShort;
+    private $moneyTransactionsShortIn;
+
+    /**
+     * @var MoneyTransactionShort[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransactionShort>")
+     */
+    private $moneyTransactionsShortOut;
 
     /**
      * @var string yes|no|null
@@ -100,17 +109,33 @@ trait ReportMoneyShortTrait
     /**
      * @return \AppBundle\Entity\Report\MoneyTransactionShort[]
      */
-    public function getMoneyTransactionsShort()
+    public function getMoneyTransactionsShortIn()
     {
-        return $this->moneyTransactionsShort;
+        return $this->moneyTransactionsShortIn;
     }
 
     /**
-     * @param \AppBundle\Entity\Report\MoneyTransactionShort[] $moneyTransactionsShort
+     * @param \AppBundle\Entity\Report\MoneyTransactionShort[] $moneyTransactionsShortIn
      */
-    public function setMoneyTransactionsShort($moneyTransactionsShort)
+    public function setMoneyTransactionsShortIn($moneyTransactionsShortIn)
     {
-        $this->moneyTransactionsShort = $moneyTransactionsShort;
+        $this->moneyTransactionsShortIn = $moneyTransactionsShortIn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMoneyTransactionsShortOut()
+    {
+        return $this->moneyTransactionsShortOut;
+    }
+
+    /**
+     * @param mixed $moneyTransactionsShortOut
+     */
+    public function setMoneyTransactionsShortOut($moneyTransactionsShortOut)
+    {
+        $this->moneyTransactionsShortOut = $moneyTransactionsShortOut;
     }
 
     /**
@@ -143,6 +168,20 @@ trait ReportMoneyShortTrait
     public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist)
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
+    }
+
+    /**
+     * @param MoneyTransactionShort[] $records
+     * @return int
+     */
+    public function getTotalValue(array $records)
+    {
+        $ret = 0;
+        foreach ($records as $expense) {
+            $ret += $expense->getAmount();
+        }
+
+        return $ret;
     }
 
 }

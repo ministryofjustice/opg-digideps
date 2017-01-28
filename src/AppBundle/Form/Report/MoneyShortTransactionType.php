@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\MoneyTransactionShort;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -31,8 +32,8 @@ class MoneyShortTransactionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-//            'data_class' => Expense::class,
-            'validation_groups'  => ['xxxx'],
+            'data_class' => MoneyTransactionShort::class,
+            'validation_groups'  => ['money-transaction-short'],
             'translation_domain' => 'report-money-short',
         ]);
     }

@@ -3,11 +3,13 @@
 namespace AppBundle\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MoneyTransactionShort
 {
     /**
      * @var int
+     * @JMS\Type("integer")
      *
      * @JMS\Groups({"moneyTransactionShort"})
      */
@@ -23,13 +25,21 @@ class MoneyTransactionShort
      *
      * @JMS\Type("string")
      * @JMS\Groups({"moneyTransactionShort"})
+     *
+     * @Assert\NotBlank(message="moneyTransactionShort.amount.notBlank", groups={"money-transaction-short"})
+     * @Assert\Type(type="numeric", message="moneyTransactionShort.amount.type", groups={"money-transaction-short"})
+     * @Assert\Range(min=1000, max=10000000, minMessage = "moneyTransactionShort.amount.minMessage", maxMessage = "moneyTransactionShort.amount.maxMessage", groups={"money-transaction-short"})
+     *
      */
     private $amount;
 
     /**
      * @var string
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"moneyTransactionShort"})
+     *
+     * @Assert\NotBlank(message="moneyTransactionShort.description.notBlank", groups={"money-transaction-short"})
      */
     private $description;
 
@@ -38,6 +48,8 @@ class MoneyTransactionShort
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"moneyTransactionShort"})
+     *
+     * @Assert\Date(message="moneyTransactionShort.date.notValid", groups={"money-transaction-short"})
      */
     private $date;
 

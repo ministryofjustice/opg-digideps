@@ -56,9 +56,11 @@ addPage:
   pageSectionTitle: Add an item of income
   supportTitle: Money in
   pageSectionDescription1: |
-    List all one-off ...
-  pageSectionDescription2: You may ...
-  pageSectionDescription3: You can ...
+    List all one-off items of income over £1,000
+  pageSectionDescription2: |
+    You may find it easier to use %client%'s bank statements to find this information.
+  pageSectionDescription3: |
+    You can add one or more items of income and come back to complete the section later.
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
@@ -72,8 +74,8 @@ addAnotherPage:
     pageSectionTitle: Add another item
     form:
       addAnother:
-        label: The item of income has been saved. Would you like to add another item of income now?
-        hint: If you prefer, you can come back to this section later to add more expenses
+        label: The item of income has been saved. Would you like to add another item of income over £1000 now?
+        hint: If you prefer, you can come back to this section later to add more items of income
       save:
          label: Continue
   moneyOut:
@@ -81,14 +83,15 @@ addAnotherPage:
     pageSectionTitle: Add an expense
     form:
       addAnother:
-        label: The expense has been saved. Would you like to add another expense now?
-        hint: If you prefer, you can come back to this section later to add more expenses
+        label: ...
+        hint: ...
       save:
          label: Continue
 
 
 summaryPage:
   edit: Edit
+  addButton: Add an item of income over £1,000
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
