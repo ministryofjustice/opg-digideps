@@ -197,6 +197,10 @@ class ReportStatusService
     /** @return bool */
     public function balanceMatches()
     {
+        if ($this->report->getType() == Report::TYPE_103) {
+            return true;
+        }
+
         return $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
     }
 

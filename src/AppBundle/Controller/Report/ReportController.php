@@ -36,8 +36,8 @@ class ReportController extends AbstractController
         'transactionsOut',
         'moneyShortCategoriesIn',
         'moneyShortCategoriesOut',
-        'transactionsShortIn',
-        'transactionsShortOut',
+        'moneyTransactionsShortIn',
+        'moneyTransactionsShortOut',
     ];
 
     /**

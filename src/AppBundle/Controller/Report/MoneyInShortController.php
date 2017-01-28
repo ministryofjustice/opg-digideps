@@ -19,7 +19,7 @@ class MoneyInShortController extends AbstractController
     private static $jmsGroups = [
         'client-cot',
         'moneyShortCategoriesIn',
-        'transactionsShortIn',
+        'moneyTransactionsShortIn',
     ];
 
     /**

@@ -7,6 +7,10 @@
 {% set deputy = app.user %}
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+{% set is102 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
+{% set is103 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+{% set is104 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_104') %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}
@@ -25,24 +29,55 @@
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
         {% if report.mentalCapacity is not null %}
             {% include 'AppBundle:Report/Formatted:_mental-capacity.html.twig' with {
-                'mentalCapacity': report.mentalCapacity
+            'mentalCapacity': report.mentalCapacity
             } %}
         {% endif %}
         {% include 'AppBundle:Report/Formatted:_contacts.html.twig' %}
         {% if report.visitsCare is not null %}
             {% include 'AppBundle:Report/Formatted:_visits_care.html.twig' with {
-                'visitsCare': report.visitsCare
+            'visitsCare': report.visitsCare
             } %}
         {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
-        {% include 'AppBundle:Report/Formatted:Accounts/_accounts.html.twig' %}
+
+        <div class="section" id="accounts-section">
+            <h2 class="section-heading">Accounts</h2>
+            {% if is102 %}
+                {% if report.bankAccounts | length > 0 %}
+                    {% if report.totalsMatch %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
+                    {% else %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' %}
+                    {% endif %}
+
+                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
+                    {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
+                {% endif %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
+            {% endif %}
+
+            {% if is103 %}
+                {% if report.bankAccounts | length > 0 %}
+                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
+                {% endif %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
+                'title': 'Money in',
+                'moneyShortCategories': report.moneyShortCategoriesIn,
+                'titleItems': 'Items of income',
+                } %}
+            {% endif %}
+
+        </div>
+
+
         {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
 
         {% if report.action is not null %}
             {% include 'AppBundle:Report/Formatted:_action.html.twig' with {
-                'action': report.action
+            'action': report.action
             } %}
         {% endif %}
 
