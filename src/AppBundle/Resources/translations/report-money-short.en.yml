@@ -42,32 +42,23 @@ categoryPage:
 
 
 existPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageSectionTitle: Deputy expenses
+  htmlTitle: "Deputy report - Money in | GOV.UK"
+  pageSectionTitle: Money in
   form:
     moneyTransactionsShortInExist:
       label: Have there been any items of income over £1,000?
     save:
       label: Save and continue
 
-addAnotherPage:
-  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageSectionTitle: Add an expense
-  supportTitle: Deputy expenses
-  form:
-    addAnother:
-      label: The expense has been saved. Would you like to add another expense now?
-      hint: If you prefer, you can come back to this section later to add more expenses
-    save:
-       label: Continue
 
 addPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  pageSectionTitle: Add an expense
-  supportTitle: Deputy expenses
-  pageSectionDescription: |
-    Use this section to tell us about the money you spent on %client%'s care during this reporting period .
-    You can add one or more items of expense and come back to complete the section later.
+  htmlTitle: "Deputy report - money in | GOV.UK"
+  pageSectionTitle: Add an item of income
+  supportTitle: Money in
+  pageSectionDescription1: |
+    List all one-off ...
+  pageSectionDescription2: You may ...
+  pageSectionDescription3: You can ...
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
@@ -77,6 +68,7 @@ editPage:
 addAnotherPage:
   moneyIn:
     htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    supportTitle: Money in
     pageSectionTitle: Add another item
     form:
       addAnother:
@@ -103,12 +95,14 @@ summaryPage:
     pageSectionDescription1: |
       In this section we asked you to tell us about how you have managed $client%'s money during this reporting period.
 
-
 form:
-  moneyShortCategoriesIn:
+  categoriesIn:
     label: Tell us about the different categories of money paid into %client%'s accounts
     hint: Please tick all that apply
-    entries:
+  categoriesOut:
+      label: ...
+      hint: Please tick all that apply
+  categoriesEntries:
       # in
       state_pension_and_benefit.label: State pension and benefits
       bequests.label: Bequests, eg inheritance, gifts received
@@ -126,4 +120,18 @@ form:
       professional_fees: Professional fees, eg solicitor or accountant fees
       new_investments: New investments, eg buying shares, new bonds
       travel_costs: Travel costs, eg bus, train, taxi fares
+
+  transactionsIn:
+      description:
+        label: Description of item
+      amount:
+        label: Amount
+      date:
+         label: What date did this money come in ? (optional)
+         hint: (DD/MM/YYYY)
+      addAnother:
+        label: Add another expense
+      save:
+          label: Save expense
+
 

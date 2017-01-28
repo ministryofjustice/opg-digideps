@@ -15,7 +15,7 @@
     <tbody>
     <tr class="behat-region-benefits">
         <td>
-            {{ 'form.moneyShortCategoriesIn.label' | trans(transOptions) }}
+            {{ 'form.categoriesIn.label' | trans(transOptions) }}
         </td>
         <td>
             {% set categories = report.recordsPresent(report.moneyShortCategoriesIn) %}
@@ -24,7 +24,7 @@
             {% else %}
                 {# display categories comma separated #}
                 {% for c in categories %}
-                    {{ ('form.moneyShortCategoriesIn.entries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
+                    {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
             {% endif %}

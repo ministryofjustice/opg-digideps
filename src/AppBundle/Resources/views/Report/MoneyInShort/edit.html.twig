@@ -2,7 +2,7 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "report-deputy-expenses" %}
+{% set translationDomain = "report-money-short" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
@@ -19,7 +19,7 @@
 
 {% block pageContent %}
 
-    {% include 'AppBundle:Report/DeputyExpense:_form.html.twig' with {
+    {% include 'AppBundle:Report/MoneyInShort:_form.html.twig' with {
     'translationDomain': translationDomain,
     'form': form
     } %}

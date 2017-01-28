@@ -9,7 +9,7 @@ class MoneyTransactionShort
     /**
      * @var int
      *
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionShort"})
      */
     private $id;
 
@@ -22,14 +22,14 @@ class MoneyTransactionShort
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionShort"})
      */
     private $amount;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"transactionsShortIn", "transactionsShortOut"})
+     * @JMS\Groups({"moneyTransactionShort"})
      */
     private $description;
 
@@ -37,6 +37,7 @@ class MoneyTransactionShort
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"moneyTransactionShort"})
      */
     private $date;
 
@@ -44,19 +45,21 @@ class MoneyTransactionShort
      * Discriminator field
      *
      * @var string
-     * @JMS\Exclude
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"moneyTransactionShort"})
      */
     private $type;
 
     /**
      * MoneyTransactionShort constructor.
-     *
-     * @param Report $report
+     * @param string $type
      */
-    public function __construct(Report $report)
+    public function __construct($type)
     {
-        $this->report = $report;
+        $this->type = $type;
     }
+
 
     /**
      * @return int

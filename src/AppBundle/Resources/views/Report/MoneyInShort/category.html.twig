@@ -11,7 +11,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+    {{ macros.linkBackStep(backLink, 'categoryPage.backLink' | trans) }}
 {% endblock %}
 
 {% block pageContent %}
@@ -19,13 +19,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <p class="text">
-        {{ 'form.moneyShortCategoriesIn.label' | trans(transOptions) }}
+        {{ 'form.categoriesIn.label' | trans(transOptions) }}
     </p>
     <p class="form-hint">
-        {{ 'form.moneyShortCategoriesIn.hint' | trans(transOptions) }}
+        {{ 'form.categoriesIn.hint' | trans(transOptions) }}
     </p>
     {% include 'AppBundle:Report/MoneyInShort:_checkboxes_list.html.twig' with {
-    'categoryKey': 'form.moneyShortCategoriesIn',
     'elements': form.moneyShortCategoriesIn,
     } %}
 
