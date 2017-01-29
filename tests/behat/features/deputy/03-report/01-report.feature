@@ -91,8 +91,8 @@ Feature: deputy / report / edit and test tabs
         Then I should see the "edit-gifts" link
         Then I should see the "edit-bank_accounts" link
         Then I should not see the "edit-money_transfers" link
-        Then I should see the "edit-money_in" link
-        Then I should see the "edit-money_out" link
+        Then I should see the "edit-money_in_short" link
+#        Then I should see the "edit-money_out__short" link
         Then I should see the "edit-assets" link
         Then I should see the "edit-debts" link
         Then I should see the "edit-actions" link

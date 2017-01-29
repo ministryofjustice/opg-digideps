@@ -15,7 +15,7 @@ class AssetExistType extends AbstractType
             ->add('noAssetToAdd', 'choice', [
                 'choices' => [0 => 'Yes', 1 => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'asset.exist.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'asset.exist.notBlank', 'groups' => ['asset-exist']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -24,7 +24,7 @@ class AssetExistType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-            'validation_groups' => ['exist'],
+            'validation_groups' => ['asset-exist'],
         ]);
     }
 

@@ -49,7 +49,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr class="behat-region-paid-for-anything">
+    <tr class="behat-region-records-exist">
         <td>
             {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions)  }}
         </td>
@@ -93,7 +93,7 @@
         </thead>
         <tbody>
         {% for tr in report.moneyTransactionsShortIn %}
-            <tr class="behat-region-expense-{{ tr.description | behat_namify }}">
+            <tr class="behat-region-transaction-{{ tr.description | behat_namify }}">
                 <td class="">
                     {{ tr.description }}<br/>
                 </td>
@@ -115,7 +115,7 @@
                 <span class="bold-small">Total money in</span>
             </td>
             <td class="numeric-small">
-                <span class="bold-small behat-region-expense-total">£{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</span>
+                <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</span>
             </td>
             <td></td>
         </tr>

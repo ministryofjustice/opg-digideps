@@ -106,3 +106,4 @@ Feature: deputy / report / account
       | 445566                | account-02ca |
       | £101.40               | account-02ca |
       | £201.50               | account-02ca |
+    Given I save the application status into "temp"

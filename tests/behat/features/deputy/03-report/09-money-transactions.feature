@@ -1,4 +1,4 @@
-Feature: deputy / report / account transactions
+Feature: deputy / report / money transactions
 
   @deputy
   Scenario: money in

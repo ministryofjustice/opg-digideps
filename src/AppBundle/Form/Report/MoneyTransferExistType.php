@@ -15,7 +15,7 @@ class MoneyTransferExistType extends AbstractType
             ->add('noTransfersToAdd', 'choice', [
                 'choices' => [0 => 'Yes', 1 => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'transfer.exist.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'transfer.exist.notBlank', 'groups' => ['money-transfer-exist']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -24,7 +24,7 @@ class MoneyTransferExistType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-money-transfer',
-            'validation_groups' => ['exist'],
+            'validation_groups' => ['money-transfer-exist'],
         ]);
     }
 

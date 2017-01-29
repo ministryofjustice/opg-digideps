@@ -15,7 +15,7 @@ class DebtsExistType extends AbstractType
             ->add('hasDebts', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'debt.noDebtsChoice.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'debt.noDebtsChoice.notBlank', 'groups' => ['debt-exist']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -24,7 +24,7 @@ class DebtsExistType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-debts',
-            'validation_groups' => ['exist'],
+            'validation_groups' => ['debt-exist'],
         ]);
     }
 
