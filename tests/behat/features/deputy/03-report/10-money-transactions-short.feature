@@ -25,9 +25,8 @@ Feature: deputy / report / money transactions 103
         # summary page check
     And each text should be present in the corresponding region:
       | State pension and benefits | categories    |
-      | Personal pension           | categories    |
+      |  Compensations and damages awards           | categories    |
       | No                         | records-exist |
-
         # select there are records (from summary page link)
     Given I click on "edit" in the "records-exist" region
     And the step with the following values CAN be submitted:
