@@ -149,8 +149,6 @@ class MoneyTransaction
      */
     private $description;
 
-
-
     /**
      * MoneyTransaction constructor.
      *

@@ -162,5 +162,4 @@ trait ReportMoneyShortTrait
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
     }
-
 }
