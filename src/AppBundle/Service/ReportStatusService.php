@@ -95,6 +95,24 @@ class ReportStatusService
         return self::STATE_NOT_STARTED;
     }
 
+    public function getMoneyInShortState()
+    {
+        if ($this->report->getMoneyTransactionsShortInExist()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyOutShortState()
+    {
+        if ($this->report->getMoneyTransactionsShortOutExist()) {
+            return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
     public function getBalanceState()
     {
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
@@ -219,21 +237,30 @@ class ReportStatusService
         ];
 
         $type = $this->report->getType();
-        if ($type == Report::TYPE_102 || $type ==  Report::TYPE_103) {
+
+
+        if ($type == Report::TYPE_102) {
             $states += [
                 'bankAccounts' => $this->getBankAccountsState(),
                 'deputyExpense' => $this->getExpensesState(),
                 'moneyIn' => $this->getMoneyInState(),
                 'moneyOut' => $this->getMoneyOutState(),
+                'moneyTransfers' => $this->getMoneyTransferState(),
+                'assets' => $this->getAssetsState(),
+                'debts' => $this->getDebtsState(),
+            ];
+        }
+
+        if ($type ==  Report::TYPE_103) {
+            $states += [
+                'bankAccounts' => $this->getBankAccountsState(),
+                'deputyExpense' => $this->getExpensesState(),
+                'moneyInShort' => $this->getMoneyInShortState(),
+                'moneyOutShort' => $this->getMoneyOutShortState(),
                 'assets' => $this->getAssetsState(),
                 'debts' => $this->getDebtsState(),
             ];
 
-            if ($type == Report::TYPE_102) {
-                $states += [
-                    'moneyTransfers' => $this->getMoneyTransferState(),
-                ];
-            }
         }
 
         return array_filter($states, function ($e) {
