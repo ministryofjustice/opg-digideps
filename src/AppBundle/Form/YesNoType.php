@@ -56,6 +56,6 @@ class YesNoType extends AbstractType
 
     public function getName()
     {
-        return 'expense_exist';
+        return 'yes_no';
     }
 }
