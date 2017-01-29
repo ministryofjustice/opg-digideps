@@ -2,6 +2,7 @@ Feature: deputy / report / account transactions
 
   @deputy
   Scenario: money in
+    Given I save the application status into "money-transactions-before"
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-money_in, start"
     # add transaction n.1 and check validation
@@ -147,6 +148,7 @@ Feature: deputy / report / account transactions
       | Anything else                | transaction-some-money-found-on-the-road |
       | Some money found on the road | transaction-some-money-found-on-the-road |
       | £51.00                       | transaction-some-money-found-on-the-road |
+    And I save the application status into "money-transactions-after"
 
 
 
