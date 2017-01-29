@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

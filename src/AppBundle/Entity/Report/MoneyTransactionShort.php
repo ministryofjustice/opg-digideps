@@ -72,7 +72,6 @@ class MoneyTransactionShort
         $this->type = $type;
     }
 
-
     /**
      * @return int
      */

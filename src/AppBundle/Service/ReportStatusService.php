@@ -260,7 +260,6 @@ class ReportStatusService
                 'assets' => $this->getAssetsState(),
                 'debts' => $this->getDebtsState(),
             ];
-
         }
 
         return array_filter($states, function ($e) {

@@ -2,15 +2,9 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Odr\Odr;
-use AppBundle\Form\Report\MoneyShortCategoryType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyShortType extends AbstractType
 {

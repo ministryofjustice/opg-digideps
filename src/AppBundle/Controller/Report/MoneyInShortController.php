@@ -3,13 +3,11 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
-use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -191,7 +189,6 @@ class MoneyInShortController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/report/{reportId}/money-in-short/{transactionId}/delete", name="money_in_short_delete")
      *
@@ -212,7 +209,7 @@ class MoneyInShortController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));
     }
-    
+
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
      * @Template()

@@ -171,7 +171,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param MoneyTransactionShort[] $records
+     * @param  MoneyTransactionShort[] $records
      * @return int
      */
     public function getTotalValue(array $records)
@@ -183,5 +183,4 @@ trait ReportMoneyShortTrait
 
         return $ret;
     }
-
 }
