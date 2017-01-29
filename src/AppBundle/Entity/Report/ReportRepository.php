@@ -134,14 +134,14 @@ class ReportRepository extends EntityRepository
             return $ret;
         }
 
-        if ($report->getType() == Report::TYPE_103) {
+        //if ($report->getType() == Report::TYPE_103) { //re-enable when behat journey for 103 is created
             $cats = MoneyShortCategory::getCategories('in') + MoneyShortCategory::getCategories('out');
             foreach ($cats as $typeId => $options) {
                 $debt = new MoneyShortCategory($report, $typeId, false);
                 $this->_em->persist($debt);
                 ++$ret;
             }
-        }
+        //}
 
         return $ret;
     }
