@@ -246,7 +246,14 @@ class AdminController extends AbstractController
             $fileName = $form->get('file')->getData();
             try {
                 $data = (new CsvToArray($fileName, true))
-                    ->setExpectedColumns(['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode'])
+                    ->setExpectedColumns([
+                        'Case',
+                        'Surname',
+                        'Deputy No',
+                        'Dep Surname',
+                        'Dep Postcode',
+                        'Typeofrep'
+                    ])
                     ->getData();
 
                 $count = count($data);
@@ -256,7 +263,7 @@ class AdminController extends AbstractController
 
                 $compressedData = base64_encode(gzcompress(json_encode($data), 9));
 
-                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add/1', $compressedData);
+                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     sprintf('%d record uploaded, %d failed', $ret['added'], count($ret['errors']))
