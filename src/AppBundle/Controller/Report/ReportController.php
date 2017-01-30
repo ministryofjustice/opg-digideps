@@ -26,6 +26,7 @@ class ReportController extends RestController
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
+        /** @var $client EntityDir\Client */
         $client = $this->findEntityBy('Client', $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
@@ -49,9 +50,17 @@ class ReportController extends RestController
                 $report->setType(Report::TYPE_102);
             }
         }
-        // disabled in the UX atm, but implemented for clarity
-        if ($reportData['court_order_type_id'] == Report::HEALTH_WELFARE) {
-            $report->setType(Report::TYPE_104);
+
+        // set report type based on casrec
+        $casRec = $this->getRepository('CasRec')->findOneBy(['caseNumber'=>$client->getCaseNumber()]); /* @var $casRec EntityDir\CasRec */
+        switch ($casRec ? $casRec->getTypeOfReport() : null) {
+            case 'OPG103':
+                $report->setType(Report::TYPE_103);
+                break;
+            case 'OPG102':
+            default:
+                $report->setType(Report::TYPE_103);
+                break;
         }
 
         $this->validateArray($reportData, [
