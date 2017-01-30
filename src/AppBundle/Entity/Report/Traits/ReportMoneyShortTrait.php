@@ -65,6 +65,16 @@ trait ReportMoneyShortTrait
     }
 
     /**
+     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     */
+    public function getMoneyShortCategoriesInPresent()
+    {
+        return array_filter($this->moneyShortCategoriesIn ?: [], function ($st) {
+            return method_exists($st, 'isPresent') && $st->isPresent();
+        });
+    }
+
+    /**
      * @param \AppBundle\Entity\Report\MoneyShortCategory[] $moneyShortCategoriesIn
      */
     public function setMoneyShortCategoriesIn($moneyShortCategoriesIn)
@@ -78,6 +88,16 @@ trait ReportMoneyShortTrait
     public function getMoneyShortCategoriesOut()
     {
         return $this->moneyShortCategoriesOut;
+    }
+
+    /**
+     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     */
+    public function getMoneyShortCategoriesOutPresent()
+    {
+        return array_filter($this->moneyShortCategoriesOut ?: [], function ($st) {
+            return method_exists($st, 'isPresent') && $st->isPresent();
+        });
     }
 
     /**
@@ -95,7 +115,7 @@ trait ReportMoneyShortTrait
      *
      * @return int
      */
-    public function recordsPresent($elements)
+    private function recordsPresent($elements)
     {
         if (empty($elements) || !is_array($elements)) {
             return [];

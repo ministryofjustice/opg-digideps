@@ -65,7 +65,7 @@
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
                 'title': 'Money in',
-                'categories': report.recordsPresent(report.moneyShortCategoriesIn),
+                'categories': report.moneyShortCategoriesInPresent,
                 'transactions': report.moneyTransactionsShortIn,
                 'transactionsExist': report.moneyTransactionsShortInExist,
                 'transactionsTitle': 'Items of income over £1,000',

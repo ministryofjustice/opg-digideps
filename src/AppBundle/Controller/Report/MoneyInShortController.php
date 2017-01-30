@@ -27,7 +27,7 @@ class MoneyInShortController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getMoneyTransactionsShortInExist()) {
+        if ($report->getMoneyTransactionsShortInExist() || $report->getMoneyShortCategoriesInPresent()) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
         }
 
@@ -218,21 +218,10 @@ class MoneyInShortController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (!$report->getMoneyTransactionsShortInExist()) {
-            return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
-        }
-
-
-        // not started -> go back to start page
-//        $oss = new OdrStatusService($report);
-//        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
-//            return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
-//        }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
-//            'validator' => new IncomeBenefitsValidator($report),
         ];
     }
 }

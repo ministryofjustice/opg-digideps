@@ -52,6 +52,7 @@ class ReportStatusService
         if ($this->report->getVisitsCare()->missingInfo()) {
             return self::STATE_INCOMPLETE;
         }
+
         return self::STATE_DONE;
     }
 
@@ -97,8 +98,15 @@ class ReportStatusService
 
     public function getMoneyInShortState()
     {
-        if ($this->report->getMoneyTransactionsShortInExist()) {
+        $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
+        $exist = in_array($this->report->getMoneyTransactionsShortInExist(), ['yes', 'no']);
+
+        if ($exist) {
             return self::STATE_DONE;
+        }
+
+        if ($categoriesCount) {
+            return self::STATE_INCOMPLETE;
         }
 
         return self::STATE_NOT_STARTED;
@@ -106,8 +114,15 @@ class ReportStatusService
 
     public function getMoneyOutShortState()
     {
-        if ($this->report->getMoneyTransactionsShortOutExist()) {
+        $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
+        $exist = in_array($this->report->getMoneyTransactionsShortOutExist(), ['yes', 'no']);
+
+        if ($exist) {
             return self::STATE_DONE;
+        }
+
+        if ($categoriesCount) {
+            return self::STATE_INCOMPLETE;
         }
 
         return self::STATE_NOT_STARTED;
@@ -228,12 +243,12 @@ class ReportStatusService
     public function getRemainingSections()
     {
         $states = [
-            'decisions' => $this->getDecisionsState(),
-            'contacts' => $this->getContactsState(),
+            'decisions'  => $this->getDecisionsState(),
+            'contacts'   => $this->getContactsState(),
             'visitsCare' => $this->getVisitsCareState(),
-            'actions' => $this->getActionsState(),
-            'otherInfo' => $this->getOtherInfoState(),
-            'gifts' => $this->getGiftsState(),
+            'actions'    => $this->getActionsState(),
+            'otherInfo'  => $this->getOtherInfoState(),
+            'gifts'      => $this->getGiftsState(),
         ];
 
         $type = $this->report->getType();
@@ -241,24 +256,24 @@ class ReportStatusService
 
         if ($type == Report::TYPE_102) {
             $states += [
-                'bankAccounts' => $this->getBankAccountsState(),
-                'deputyExpense' => $this->getExpensesState(),
-                'moneyIn' => $this->getMoneyInState(),
-                'moneyOut' => $this->getMoneyOutState(),
+                'bankAccounts'   => $this->getBankAccountsState(),
+                'deputyExpense'  => $this->getExpensesState(),
+                'moneyIn'        => $this->getMoneyInState(),
+                'moneyOut'       => $this->getMoneyOutState(),
                 'moneyTransfers' => $this->getMoneyTransferState(),
-                'assets' => $this->getAssetsState(),
-                'debts' => $this->getDebtsState(),
+                'assets'         => $this->getAssetsState(),
+                'debts'          => $this->getDebtsState(),
             ];
         }
 
-        if ($type ==  Report::TYPE_103) {
+        if ($type == Report::TYPE_103) {
             $states += [
-                'bankAccounts' => $this->getBankAccountsState(),
+                'bankAccounts'  => $this->getBankAccountsState(),
                 'deputyExpense' => $this->getExpensesState(),
-                'moneyInShort' => $this->getMoneyInShortState(),
+                'moneyInShort'  => $this->getMoneyInShortState(),
                 'moneyOutShort' => $this->getMoneyOutShortState(),
-                'assets' => $this->getAssetsState(),
-                'debts' => $this->getDebtsState(),
+                'assets'        => $this->getAssetsState(),
+                'debts'         => $this->getDebtsState(),
             ];
         }
 

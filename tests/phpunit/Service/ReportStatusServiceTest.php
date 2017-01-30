@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Gift;
+use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
@@ -41,8 +42,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebts' => [],
                 'isTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
+                // 103
+                'getMoneyShortCategoriesIn' => [],
+                'getMoneyShortCategoriesInPresent' => [],
                 'getMoneyTransactionsShortInExist' => null,
+                'getMoneyTransactionsShortIn' => [],
+                'getMoneyShortCategoriesOut' => [],
+                'getMoneyShortCategoriesOutPresent' => [],
                 'getMoneyTransactionsShortOutExist' => null,
+                'getMoneyTransactionsShortOut' => [],
                 'getType' => Report::TYPE_102,
             ]);
 
@@ -212,8 +220,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function moneyInShortProvider()
     {
+        $cat = m::mock(MoneyShortCategory::class);
+
         return [
             [['getMoneyTransactionsShortInExist' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
         ];
@@ -231,8 +242,11 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function moneyOutShortProvider()
     {
+        $cat = m::mock(MoneyShortCategory::class);
+
         return [
             [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
         ];
