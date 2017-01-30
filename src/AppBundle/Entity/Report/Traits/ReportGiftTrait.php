@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\Gift;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait GiftTrait
+trait ReportGiftTrait
 {
     /**
      * @var string

@@ -13,11 +13,11 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Odr
 {
-    use OdrTraits\IncomeBenefitTrait;
-    use OdrTraits\DeputyExpenseTrait;
-    use OdrTraits\ActionTrait;
-    use OdrTraits\MoreInfoTrait;
-    use OdrTraits\AgreeTrait;
+    use OdrTraits\ReportIncomeBenefitTrait;
+    use OdrTraits\ReportDeputyExpenseTrait;
+    use OdrTraits\ReportActionTrait;
+    use OdrTraits\ReportMoreInfoTrait;
+    use OdrTraits\ReportAgreeTrait;
 
     /**
      * @JMS\Type("integer")

@@ -6,7 +6,7 @@ use AppBundle\Entity\Odr\Expense;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait DeputyExpenseTrait
+trait ReportDeputyExpenseTrait
 {
     /**
      * @var string

@@ -4,7 +4,7 @@ namespace AppBundle\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 
-trait MoneyTransactionTrait
+trait ReportMoneyTransactionTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransaction>")

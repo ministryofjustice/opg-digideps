@@ -5,7 +5,7 @@ namespace AppBundle\Entity\Report\Traits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait MoreInfoTrait
+trait ReportMoreInfoTrait
 {
 
     /**

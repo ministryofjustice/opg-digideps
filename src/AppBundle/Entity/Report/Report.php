@@ -16,13 +16,13 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
-    use ReportTraits\AssetTrait;
-    use ReportTraits\MoneyTransactionTrait;
+    use ReportTraits\ReportAssetTrait;
+    use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoneyShortTrait;
-    use ReportTraits\DeputyExpenseTrait;
-    use ReportTraits\GiftTrait;
-    use ReportTraits\MoreInfoTrait;
-    use ReportTraits\DebtsTrait;
+    use ReportTraits\ReportDeputyExpenseTrait;
+    use ReportTraits\ReportGiftTrait;
+    use ReportTraits\ReportMoreInfoTrait;
+    use ReportTraits\ReportDebtsTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';

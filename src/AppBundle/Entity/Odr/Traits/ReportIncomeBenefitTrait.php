@@ -7,7 +7,7 @@ use AppBundle\Entity\Odr\StateBenefit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait IncomeBenefitTrait
+trait ReportIncomeBenefitTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Odr\StateBenefit>")
