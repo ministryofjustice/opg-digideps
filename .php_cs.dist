@@ -12,7 +12,7 @@ return PhpCsFixer\Config::create()
         'array_syntax'     => ['syntax' => 'short'],
         'full_opening_tag' => true,
         'cast_spaces'      => true,
-        'concat_space' => true,
+        'concat_space' => ['spacing'=>'one'],
         'function_typehint_space' => true,
         'function_declaration' => true,
         'line_ending' => true,

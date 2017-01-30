@@ -51,7 +51,7 @@ class MoneyInShortController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
 
-            $this->getRestClient()->put('report/'.$reportId, $data, ['moneyShortCategoriesIn']);
+            $this->getRestClient()->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
@@ -92,7 +92,7 @@ class MoneyInShortController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/'.$reportId, $data, ['money-transactions-short-in-exist']);
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['money-transactions-short-in-exist']);
                     return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
             }
         }
@@ -119,12 +119,12 @@ class MoneyInShortController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->post('report/'.$report->getId().'/money-transaction-short', $data, ['moneyTransactionShort']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/money-transaction-short', $data, ['moneyTransactionShort']);
 
             return $this->redirect($this->generateUrl('money_in_short_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'money_in_short_'.$request->get('from');
+        $backLinkRoute = 'money_in_short_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
 
@@ -168,7 +168,7 @@ class MoneyInShortController extends AbstractController
     public function editAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = $this->getRestClient()->get('report/'.$report->getId().'/money-transaction-short/'.$transactionId, 'Report\MoneyTransactionShort');
+        $transaction = $this->getRestClient()->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
 
         $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $transaction);
         $form->handleRequest($request);
@@ -177,7 +177,7 @@ class MoneyInShortController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
-            $this->getRestClient()->put('report/'.$report->getId().'/money-transaction-short/'.$transaction->getId(), $data, ['moneyTransactionShort']);
+            $this->getRestClient()->put('report/' . $report->getId() . '/money-transaction-short/' . $transaction->getId(), $data, ['moneyTransactionShort']);
 
             return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));
         }
@@ -200,7 +200,7 @@ class MoneyInShortController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('report/'.$report->getId().'/money-transaction-short/'.$transactionId);
+        $this->getRestClient()->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',
