@@ -43,7 +43,7 @@ class CasRecControllerTest extends AbstractTestController
 
     public function testAddBulkAuth()
     {
-        $url = '/casrec/bulk-add/1';
+        $url = '/casrec/bulk-add';
 
         $this->assertEndpointNeedsAuth('POST', $url);
 
@@ -57,11 +57,12 @@ class CasRecControllerTest extends AbstractTestController
 
     public function testAddBulk()
     {
-        $casRec = new CasRec('case', 'Surname', 'Deputy No', 'Dep Surname', 'SW1');
+        // just to check it gets truncated
+        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
-        $this->assertJsonRequest('POST', '/casrec/bulk-add/1', [
+        $this->assertJsonRequest('POST', '/casrec/bulk-add', [
             'rawData' => $this->compress([
                 [
                     'Case' => '11',
@@ -69,6 +70,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Deputy No' => 'DN1',
                     'Dep Surname' => 'R2',
                     'Dep Postcode' => 'SW1 aH3',
+                    'Typeofrep' => 'OPG102',
                 ],
                 [
                     'Case' => '22',
@@ -76,6 +78,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Deputy No' => 'DN2',
                     'Dep Surname' => 'H2',
                     'Dep Postcode' => '',
+                    'Typeofrep' => 'OPG103',
                 ],
 
             ]),
@@ -83,39 +86,25 @@ class CasRecControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ]);
 
-        $users = $this->fixtures()->clear()->getRepo('CasRec')->findBy([], ['id' => 'ASC']);
+        $records = $this->fixtures()->clear()->getRepo('CasRec')->findBy([], ['id' => 'ASC']);
 
-        $this->assertCount(2, $users);
+        $this->assertCount(2, $records);
+        $record1 = $records[0]; /* @var $record1 CasRec */
+        $record2 = $records[1]; /* @var $record2 CasRec */
 
-        $this->assertEquals('11', $users[0]->getCaseNumber());
-        $this->assertEquals('r1', $users[0]->getClientLastname());
-        $this->assertEquals('dn1', $users[0]->getDeputyNo());
-        $this->assertEquals('r2', $users[0]->getDeputySurname());
-        $this->assertEquals('sw1ah3', $users[0]->getDeputyPostCode());
+        $this->assertEquals('11', $record1->getCaseNumber());
+        $this->assertEquals('r1', $record1->getClientLastname());
+        $this->assertEquals('dn1', $record1->getDeputyNo());
+        $this->assertEquals('r2', $record1->getDeputySurname());
+        $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
+        $this->assertEquals('OPG102', $record1->getTypeOfReport());
 
-        $this->assertEquals('22', $users[1]->getCaseNumber());
-        $this->assertEquals('h1', $users[1]->getClientLastname());
-        $this->assertEquals('dn2', $users[1]->getDeputyNo());
-        $this->assertEquals('h2', $users[1]->getDeputySurname());
-        $this->assertEquals('', $users[1]->getDeputyPostCode());
-
-        // assert no-truncate
-        $this->assertJsonRequest('POST', '/casrec/bulk-add/0', [
-            'rawData' => $this->compress([
-                [
-                    'Case' => '33',
-                    'Surname' => 'R3',
-                    'Deputy No' => 'DN3',
-                    'Dep Surname' => 'R3',
-                    'Dep Postcode' => 'SW1',
-                ],
-
-            ]),
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ]);
-
-        $this->assertCount(3, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+        $this->assertEquals('22', $record2->getCaseNumber());
+        $this->assertEquals('h1', $record2->getClientLastname());
+        $this->assertEquals('dn2', $record2->getDeputyNo());
+        $this->assertEquals('h2', $record2->getDeputySurname());
+        $this->assertEquals('', $record2->getDeputyPostCode());
+        $this->assertEquals('OPG103', $record2->getTypeOfReport());
     }
 
     public function testCountAuth()
@@ -144,6 +133,6 @@ class CasRecControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertEquals(3, $data);
+        $this->assertEquals(2, $data);
     }
 }
