@@ -7,14 +7,14 @@ Feature: deputy / report / account transfers
       # chose "no records"
     Given the step cannot be submitted without making a selection
     Then the step with the following values CAN be submitted:
-      | money_transfer_exist_noTransfersToAdd_1 | 1 |
+      | yes_no_noTransfersToAdd_1 | 1 |
       # summary page check
     And each text should be present in the corresponding region:
       | No | no-transfers-to-add |
       # select there are records (from summary page link)
     Given I click on "edit" in the "no-transfers-to-add" region
     Then the step with the following values CAN be submitted:
-      | money_transfer_exist_noTransfersToAdd_0 | 0 |
+      | yes_no_noTransfersToAdd_0 | 0 |
       # add transfer n.1 (and validate form)
     And the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
