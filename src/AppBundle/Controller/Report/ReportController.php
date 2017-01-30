@@ -33,24 +33,6 @@ class ReportController extends RestController
         $report = new Report();
         $report->setClient($client);
 
-        // the below will change when it's decide where COT will be moved
-        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type_id']);
-        $report->setCourtOrderType($courtOrderType);
-        if ($reportData['court_order_type_id'] == Report::PROPERTY_AND_AFFAIRS) {
-            /**
-             * Introduced by
-             * https://opgtransform.atlassian.net/browse/DDPB-757
-             * Remove when
-             * https://opgtransform.atlassian.net/browse/DDPB-758
-             * is implemented
-             */
-            if ($this->getUser()->getEmail() == 'laydeputy103@publicguardian.gsi.gov.uk') {
-                $report->setType(Report::TYPE_103);
-            } else {
-                $report->setType(Report::TYPE_102);
-            }
-        }
-
         // set report type based on casrec
         $casRec = $this->getRepository('CasRec')->findOneBy(['caseNumber'=>$client->getCaseNumber()]); /* @var $casRec EntityDir\CasRec */
         switch ($casRec ? $casRec->getTypeOfReport() : null) {

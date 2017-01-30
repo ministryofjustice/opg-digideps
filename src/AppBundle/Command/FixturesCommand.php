@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\CourtOrderType;
 use AppBundle\Entity\Report\TransactionType;
 use AppBundle\Entity\Report\TransactionTypeIn;
 use AppBundle\Entity\Report\TransactionTypeOut;
@@ -28,9 +27,6 @@ class FixturesCommand extends AddSingleUserCommand
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $em->clear();
 
-        // court order type
-        $this->cot($output);
-
         // transaction types
         $this->transactionTypes($output);
 
@@ -43,25 +39,6 @@ class FixturesCommand extends AddSingleUserCommand
         $em->flush();
     }
 
-    protected function cot(OutputInterface $output)
-    {
-        $em = $this->getContainer()->get('em');
-        $cotRepo = $em->getRepository('AppBundle\Entity\CourtOrderType');
-        foreach (CourtOrderType::$fixtures as $id => $name) {
-            $output->write("COT $id ($name): ");
-            if ($cotRepo->find($id)) {
-                $output->writeln('skip');
-            } else {
-                $cot = new CourtOrderType();
-                $cot
-                        ->setId($id)
-                        ->setName($name);
-                $em->persist($cot);
-                $output->writeln('added');
-            }
-        }
-        $em->flush();
-    }
 
     protected function roles(OutputInterface $output)
     {

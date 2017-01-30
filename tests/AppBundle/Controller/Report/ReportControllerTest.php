@@ -69,7 +69,6 @@ class ReportControllerTest extends AbstractTestController
     }
 
     private $fixedData = [
-        'court_order_type_id' => 1,
         'start_date' => '2015-01-01',
         'end_date' => '2015-12-31',
     ];
@@ -121,7 +120,6 @@ class ReportControllerTest extends AbstractTestController
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-        $this->assertArrayHasKey('court_order_type_id', $data);
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
         $this->assertArrayNotHasKey('debts', $data);
