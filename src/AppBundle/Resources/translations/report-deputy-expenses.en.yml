@@ -2,14 +2,11 @@ startPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
   pageSectionDescription1: |
-    You can use your new deputy report to claim back money for things you 
-    paid for on %client%'s behalf during this reporting period – 
-    for example, care home fees or domestic bills.
+    Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
   pageSectionDescription2: |
-    Over the course of your deputyship, you can claim expenses for 
-    things you have to do to carry out your role, like phone calls, 
-    postage and travel costs. 
-    You claim for these expenses at the end of every year you are a deputy.
+    You can pay yourself back from %client%’s funds as you go along, but you need to keep an accurate record of your spending.
+  pageSectionDescription3: |
+    Use this section to tell us about your expenses between %startDate% and %endDate%.
 
   startButton: Start deputy expenses
 
@@ -38,8 +35,7 @@ addPage:
   pageSectionTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
-    Use this section to tell us about the money you spent on %client%'s care during this reporting period .
-    You can add one or more items of expense and come back to complete the section later.
+    Start by giving us details of the first item of expense you've claimed for. You'll be able to add more expenses if you need to.
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
@@ -50,7 +46,7 @@ summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageSectionTitle: Deputy expenses
   pageSectionDescription: |
-    In this section, we asked you about your expenses for things you have to do to carry out your role.
+    In this section, we ask you to give us details of expenses you've claimed as a deputy.
   addButton: Add a deputy expense
   edit: Edit
 

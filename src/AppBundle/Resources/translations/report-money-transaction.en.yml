@@ -3,25 +3,25 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     pageSectionDescription1: |
-      Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+      Please tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
       You can enter a total for each type of income, or you can enter
       individual amounts and we'll add them up for you.
     pageSectionDescription3: |
       Be sure to enter each individual source of income into one category only,
-      so we don’t count them twice when we do the calculation
+      so we don’t count them twice when we do the calculation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
-      Tell us about money you have spent on %client%'s day-to-day living
+      Use this section to tell us about money you have spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
     pageSectionDescription2: |
-      You can enter a total for each type of expense, or you can enter
+      You can enter a total for each type of payment, or you can enter
       individual amounts and we'll add them up for you.
     pageSectionDescription3: |
-      Be sure to enter each individual expense into one category only,
+      Be sure to enter each individual payment into one category only,
       so we don’t count them twice when we do the calculation.
     startButton: Start money out
 
@@ -37,10 +37,10 @@ stepPage:
   moneyOut:
       htmlTitle: "Deputy report - Money out | GOV.UK"
       supportTitle: Money out
-      pageSectionTitle: Add an expense
+      pageSectionTitle: Add a payment
       pageSectionTitleWithCategory: Add an expense: %group%
       pageSectionDescription:
-         step1: You can add one or more items of expense and come back to complete the section later.
+         step1: You can add one or more types of payment and come back to complete the section later.
 
 addAnotherPage:
   moneyIn:
@@ -49,16 +49,16 @@ addAnotherPage:
     form:
       addAnother:
         label: The item of income has been saved. Would you like to add another item of income now?
-        hint: If you prefer, you can come back to this section later to add more expenses
+        hint: If you prefer, you can come back to this section later to add more items of income
       save:
          label: Continue
   moneyOut:
-    htmlTitle: "Deputy report - Add another expense | GOV.UK"
-    pageSectionTitle: Add an expense
+    htmlTitle: "Deputy report - Add another payment | GOV.UK"
+    pageSectionTitle: Add a payment
     form:
       addAnother:
-        label: The expense has been saved. Would you like to add another expense now?
-        hint: If you prefer, you can come back to this section later to add more expenses
+        label: The payment has been saved. Would you like to add another payment now?
+        hint: If you prefer, you can come back to this section later to add more types of payment
       save:
          label: Continue
 
@@ -68,34 +68,20 @@ summaryPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     # similar to start page, but expecting to evolve differently
-    pageSectionDescription1: |
-      Tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
-    pageSectionDescription2: |
-      You can enter a total for each type of income,
-      or you can enter individual amounts and we'll add them up for you.
-    pageSectionDescription3: |
-      Be sure to enter each individual source of income into one category only,
-      so we don’t count them twice when we do the calculation.
+    supportTitle: ""
+    weAskAbout: In this section, we ask you about money paid into %client%'s account between %startDate% and %endDate%.
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
-    # similar to start page, but expecting to evolve differently
-    pageSectionDescription1: |
-      Tell us about money you have spent on %client%'s day-to-day living
+    supportTitle: ""
+    weAskAbout: |
+      In this section, we ask you about money you've spent on %client%'s day-to-day living
       and welfare costs between %startDate% and %endDate%.
-    pageSectionDescription2: |
-      You can enter a total for each type of expense, or you can enter
-      individual amounts and we'll add them up for you.
-    pageSectionDescription3: |
-      Be sure to enter each individual expense into one category only,
-      so we don’t count them twice when we do the calculation.
-
-
-
+    # similar to start page, but expecting to evolve differently
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
-    moneyOut.legend: What category does the expense come under?
+    moneyOut.legend: What category does the payment come under?
     entries:
       # money in
       income-and-earnings: Income from investments
@@ -106,14 +92,13 @@ form:
       moneyin-other: Other
       # money out
       household-bills: Household bills
-      accommodation: Accommodation
-      care-and-medical: Care and medical
-      client-expenses: Client's expenses
-      fees: Fees
+      accommodation: Accommodation (mortgage or rent)
+      care-and-medical: Care and medical bills
+      client-expenses: Client's personal expenses
+      fees: Professional fees
       major-purchases: Major purchases
-      spending-on-other-people: Spending on other people
-      debt-and-charges: Debts and charges
-      moving-money: Moving money
+      spending-on-other-people: Gifts for other people
+      debt-and-charges: Tax, debts and charges
       moneyout-other: Other
   amount:
       label: Amount
@@ -137,7 +122,7 @@ form:
         label: Salary or wages
       other-incomes:
         label: Other
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       income-from-property-rental:
         label: Income from property rental
       attendance-allowance:
@@ -168,14 +153,14 @@ form:
         label: State Pension
       compensation-or-damages-award:
         label: Compensation or damages award
-        moreInformations: For each amount, give the date and a description of the award
+        moreInformations: For each amount, please give the date and a description of the award
       bequest-or-inheritance:
         label: Bequest or inheritance
       cash-gift-received:
         label: Cash gift received
       sale-of-property:
         label: Sale of property
-        moreInformations: For each property, give the address, the date it was sold and the value
+        moreInformations: For each property, please give the address, the date it was sold and the value
       sale-of-investment:
         label: Sale of investment
         moreInformations: For each investment, give a description, the date it was sold and the value
@@ -185,10 +170,10 @@ form:
       moving-money:
         label: Moving money
       refunds:
-        label: Refunds
+        label: Refund
       anything-else:
         label: Anything else
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       broadband:
           label: Broadband
       food:
@@ -208,10 +193,10 @@ form:
       council-tax:
         label:
         label:
-        label: Council Tax
+        label: Council tax
       property-maintenance-improvement:
         label: Property maintenance/improvement
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       tv-services:
         label: TV services
       rent:
@@ -237,10 +222,10 @@ form:
         label: Medical insurance
       other-benefits:
         label: Other benefits
-        moreInformations: Enter the type of benefit %client% gets
+        moreInformations: Please enter the type of benefit %client% gets
       households-bills-other:
         label: Other
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       client-transport-bus-train-taxi-fares:
         label: Transport eg bus, train, taxi fares
       food:
@@ -259,59 +244,59 @@ form:
         label: Tax payments to HMRC
       debt-and-charges-other:
         label: Other
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       deputy-security-bond:
         label: Deputy security bond
       solicitor-fees:
-        label: Solicitor fees
+        label: Solicitor's fees
       other-fees:
         label: Other fees
-        moreInformations: For each fee tell us the date, the amount and what it was for
+        moreInformations: For each fee, please tell us the date, the amount and what it was for
       accountant-fees:
-        label: Accountant fees
+        label: Accountant's fees
       professional-fees-eg-solicitor-accountant:
         label: Professional fees, eg solicitor or accountant fees
-        moreInformations: For each fee enter the date, the amount and what it was for
+        moreInformations: For each fee, please enter the date, the amount and what it was for
       your-deputy-expenses:
         label: Your deputy expenses
-        moreInformations: For each expense enter the date, the amount and what it was for
+        moreInformations: For each expense, please enter the date, the amount and what it was for
       opg-fees:
-        label: OPG fees
+        label: OPG's fees
       stocks-and-shares-purchased:
         label: Stocks and shares purchased
-        moreInformations: For stocks and shares enter the date, a description and the value
+        moreInformations: For stocks and shares, please enter the date, a description and the value
       investment-bonds-purchased:
         label: Investment bond purchased
-        moreInformations: For each bond enter the date and the value
+        moreInformations: For each bond, please enter the date and the value
       investment-account-purchased:
         label: Investment account purchased
-        moreInformations: For each new investment enter the date, a description and the value
+        moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
         label: Purchases over £1,000
-        moreInformations: Give us more information
+        moreInformations: Please give us more information
       deputy-expenses:
         label: Deputy expenses
       gifts:
         label: Gifts
-        moreInformations: For each gift enter the date, the amount and what it was for
+        moreInformations: For each gift, please enter the date, the amount and what it was for
       bank-charges:
-        label: Bank charges
+        label: Bank charge
       loans:
         label: Loans
       credit-cards-charges:
-        label: Credit cards charges
+        label: Credit card charge
       unpaid-care-fees:
-        label: Unpaid care fees
+        label: Unpaid care fee
       arrears:
         label: Arrears
       tax-payments-to-hmrc:
-        label: Tax payments to HMRC
+        label: Tax payment to HMRC
       transfers-out-to-other-accounts:
         label: Transfers from %client%'s account to other accounts
-        moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
+        moreInformations: Please enter the bank or building society name, the last 4 digits of the account number and the amount transferred
       cash-withdrawn:
         label: Cash withdrawn from %client%'s account
-        moreInformations: For each withdrawal enter the date, the amount and what it was for
+        moreInformations: For each withdrawal, please enter the date, the amount and what it was for
       anything-else-paid-out:
         label: Anything else paid out
         moreInformations: Give us more information

@@ -2,9 +2,10 @@ startPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
   pageSectionTitle: Actions you plan to take
   pageSectionDescription1: |
-    Tell us about any concerns you may have now, and changes you think may happen in the next reporting period.
+    Use this section to tell us about any significant financial decisions you plan to
+    make on %client%'s behalf in the next 12 months.
   pageSectionDescription2: |
-    We’ll read what you’ve written and get in touch if we can help.
+    Your actions might include making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%. 
   startButton: Start actions
 
 stepPage:
@@ -17,7 +18,7 @@ summaryPage:
   pageSectionTitle: Actions you plan to take
   supportTitle: ""
   pageContent:
-    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+    weAskAbout: In this section, we ask you about significant decisions you may have to take on %client%'s behalf over the coming year.
 
 form:
   save:
@@ -27,11 +28,7 @@ form:
           Do you expect to make any significant financial decisions on
           behalf of %client% in the next 12 months?
       hint: |
-          For example, moving to other accommodation,
-          buying or selling property or making adaptations to %client%'s home,
-          changing investments, taking funds out of the Courts Funds Office,
-          seeking NHS continuing care funding, making large gifts
-          (such as a 21st birthday present for a relative)
+          For example, making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%.
   doYouExpectFinancialDecisionsDetails:
       label: Tell us more
   doYouHaveConcerns:

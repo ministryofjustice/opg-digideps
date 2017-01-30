@@ -1,10 +1,10 @@
 startPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageSectionTitle: Money transfers
-  pageSectionDescription: |
-    Tell us about money transferred between %client%'s accounts.
-    If you've made more than one transfer from one account to another,
-    you can give us a total for the reporting period.
+  pageSectionDescription1: |
+    Use this section to tell us about money you’ve transferred between %client%’s accounts.
+  pageSectionDescription2: |
+    If you've made more than one transfer from one account to another, you can give us a total for the reporting period.
 
   startButton: Start money transfers
 
@@ -44,7 +44,7 @@ errorPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageSectionTitle: Money transfers
   errors:
-    atLeastTwoBankAccounts: You don't need to complete this section if you have less than two bank accounts
+    atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
   backToOverview: Back to overview page
 
 
