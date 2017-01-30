@@ -79,6 +79,16 @@ trait ReportIncomeBenefitTrait
     }
 
     /**
+     * @return StateBenefit[]
+     */
+    public function getStateBenefitsPresent()
+    {
+        return array_filter($this->stateBenefits ?: [], function ($st) {
+            return method_exists($st, 'isPresent') && $st->isPresent();
+        });
+    }
+
+    /**
      * @return StateBenefit
      */
     public function getStateBenefitOther()
@@ -209,6 +219,16 @@ trait ReportIncomeBenefitTrait
     }
 
     /**
+     * @return StateBenefit[]
+     */
+    public function getOneOffPresent()
+    {
+        return array_filter($this->oneOff ?: [], function ($st) {
+            return method_exists($st, 'isPresent') && $st->isPresent();
+        });
+    }
+
+    /**
      * @param OneOff[] $oneOff
      *
      * @return OdrIncomeBenefitTrait
@@ -221,32 +241,14 @@ trait ReportIncomeBenefitTrait
     }
 
     /**
-     * Return element of array that have isPresent() = true
-     *
-     * @param array $elements
-     *
-     * @return int
-     */
-    public function recordsPresent($elements)
-    {
-        if (empty($elements) || !is_array($elements)) {
-            return [];
-        }
-
-        return array_filter($elements, function ($st) {
-            return method_exists($st, 'isPresent') && $st->isPresent();
-        });
-    }
-
-    /**
      * Used from OdrStatusService.
      *
      * @return string not-started/incomplete/done
      */
     public function incomeBenefitsStatus()
     {
-        $stCount = count($this->recordsPresent($this->getStateBenefits()));
-        $ooCount = count($this->recordsPresent($this->getOneOff()));
+        $stCount = count($this->getStateBenefitsPresent());
+        $ooCount = count($this->getOneOffPresent());
         $statePens = $this->getReceiveStatePension();
         $otherInc = $this->getReceiveOtherIncome();
         $compensDamag = $this->getExpectCompensationDamages();

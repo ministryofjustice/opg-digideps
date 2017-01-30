@@ -108,23 +108,6 @@ trait ReportMoneyShortTrait
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
     }
 
-    /**
-     * Return element of array that have isPresent() = true
-     *
-     * @param array $elements
-     *
-     * @return int
-     */
-    private function recordsPresent($elements)
-    {
-        if (empty($elements) || !is_array($elements)) {
-            return [];
-        }
-
-        return array_filter($elements, function ($st) {
-            return method_exists($st, 'isPresent') && $st->isPresent();
-        });
-    }
 
     /**
      * @return \AppBundle\Entity\Report\MoneyTransactionShort[]

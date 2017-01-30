@@ -23,7 +23,7 @@
                 None
             {% else %}
                 {# display state benefits choices comma separated #}
-                {% for sb in odr.recordsPresent(odr.stateBenefits) %}
+                {% for sb in odr.stateBenefitsPresent %}
                     {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
                     {% if not loop.last %}, {% endif %}
                 {% endfor %}
@@ -196,7 +196,7 @@
                 None
             {% else %}
                 {# display one Off choices comma separated #}
-                {% for sb in odr.recordsPresent(odr.oneOff) %}
+                {% for sb in odr.oneOffPresent %}
                     {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             {% endif %}
