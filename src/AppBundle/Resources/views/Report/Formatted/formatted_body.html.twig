@@ -65,8 +65,12 @@
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
                 'title': 'Money in',
-                'moneyShortCategories': report.moneyShortCategoriesIn,
-                'titleItems': 'Items of income',
+                'categories': report.recordsPresent(report.moneyShortCategoriesIn),
+                'transactions': report.moneyTransactionsShortIn,
+                'transactionsExist': report.moneyTransactionsShortInExist,
+                'transactionsTitle': 'Items of income over £1,000',
+                'existQuestion' : 'Have there been any items of income over £1,000? ',
+
                 } %}
             {% endif %}
 

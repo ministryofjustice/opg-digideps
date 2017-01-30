@@ -1,9 +1,8 @@
 <div id="money in">
-    <h2 class="section-heading sub-title" id="working-out-title">{{ title }}</h2>
+    <h3 class="fieldset-outer-title">{{ title }}</h3>
 
-    <h3 class="fieldset-outer-title">Categories</h3>
-    <div class="box contact-item no-contact">
-        {% set categories = report.recordsPresent(moneyShortCategories) %}
+    <div class="box">
+        <h4>Categories: </h4>
         {% if categories | length == 0 %}
             None
         {% else %}
@@ -15,27 +14,31 @@
         {% endif %}
     </div>
 
-    <div class="financial-categories">
-        <div class="category">
-            <h3>{{ titleItems }}</h3>
-            <ul class="transactions">
-                {% for t in report.moneyTransactionsShortIn %}
-                    <li class="transaction">
-                        <div class="label">
-                            {{ t.description }}
-                            ({{ t.date | date("d / m / Y") }})
-                        </div>
-                        <div class="value">&pound;{{ t.amount | money_format }}</div>
-                    </li>
-                {% endfor %}
-            </ul>
+
+    {% if transactions | length %}
+        <div class="financial-categories">
+            <div class="category">
+                <h3>{{ transactionsTitle }}</h3>
+                <ul class="transactions">
+                    {% for t in transactions %}
+                        <li class="transaction">
+                            <div class="label">
+                                {{ t.description }}
+                                ({{ t.date | date("d / m / Y") }})
+                            </div>
+                            <div class="value">&pound;{{ t.amount | money_format }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="transaction total">
+                <div class="label">Total</div>
+                <div class="value">{{ report.totalValue(transactions) | money_format }}</div>
+            </div>
         </div>
 
-        <div class="transaction total">
-            <div class="label">Total</div>
-            <div class="value">{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</div>
-        </div>
-    </div>
+    {% endif %}
 
 
 </div>
