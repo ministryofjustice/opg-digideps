@@ -25,7 +25,7 @@ class CsvToArray
 
     /**
      * @param string $file              path to file
-     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode']
+     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No' ...]
      * @param bool   $normaliseNewLines
      *
      * @throws \RuntimeException
