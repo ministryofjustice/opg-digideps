@@ -36,7 +36,7 @@ class DebtController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Report\DebtsExistType(), $report);
+        $form = $this->createForm(new FormDir\YesNoType('hasDebts', 'report-debts'), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
