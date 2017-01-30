@@ -32,7 +32,6 @@ Feature: Browser - add and activate user
             | name | Peter | White |
             | caseNumber | 12345ABC |
             | courtDate | 1 | 1 | 2014 |
-            | allowedCourtOrderTypes_0 | 1 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
         And I pause

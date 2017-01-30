@@ -73,7 +73,6 @@ class ClientController extends AbstractController
             $client->addUser($this->getUser()->getId());
         }
 
-        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions(); //TODO inject into form
         $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client);
 
         $form->handleRequest($request);

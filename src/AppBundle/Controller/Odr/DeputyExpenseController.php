@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 class DeputyExpenseController extends AbstractController
 {
     private static $jmsGroups = [
-        'client-cot',
         'odr-expenses',
     ];
 

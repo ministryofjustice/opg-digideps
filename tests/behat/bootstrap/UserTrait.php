@@ -104,12 +104,6 @@ trait UserTrait
         $this->fillField('client_courtDate_day', $rows['courtDate'][0]);
         $this->fillField('client_courtDate_month', $rows['courtDate'][1]);
         $this->fillField('client_courtDate_year', $rows['courtDate'][2]);
-        if (isset($rows['allowedCourtOrderTypes_0'][0])) {
-            $this->fillField('client_allowedCourtOrderTypes_0', $rows['allowedCourtOrderTypes_0'][0]);
-        }
-        if (isset($rows['allowedCourtOrderTypes_1'][0])) {
-            $this->fillField('client_allowedCourtOrderTypes_1', $rows['allowedCourtOrderTypes_1'][0]);
-        }
         $this->fillField('client_address', $rows['address'][0]);
         $this->fillField('client_address2', $rows['address'][1]);
         $this->fillField('client_county', $rows['address'][2]);

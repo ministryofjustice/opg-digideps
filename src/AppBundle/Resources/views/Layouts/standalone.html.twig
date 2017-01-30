@@ -1,6 +1,6 @@
 {% set page = 'reportPeriod' %}
 {% set translationDomain = "report-overview" %}
-{% if constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderTypeId %}
+{% if constant('AppBundle\\Entity\\Report\\Report::TYPE_102') == report.type %}
     {% set reportType = "propertyAndAffairs" %}
 {% else %}
     {% set reportType = "healthAndWelfare" %}

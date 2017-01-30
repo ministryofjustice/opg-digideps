@@ -8,7 +8,7 @@
                 {% if isUserOdrEnabled %}
                     <a href="{{ path('odr_index') }}">Deputy Reports</a>
                 {% else %}
-                    <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
+                    <a href="{{ path('reports', {'type': '102'}) }}">Deputy Reports</a>
                 {% endif %}
             </li>
             <li>
@@ -30,7 +30,7 @@
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
-                <a href="{{ path('reports', {'cot': 2}) }}">Deputy Reports</a>
+                <a href="{{ path('reports', {'type': : '102'}) }}">Deputy Reports</a>
             </li>
             {% if section != 'home' %}
                 <li>

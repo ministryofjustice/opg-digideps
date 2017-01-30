@@ -90,13 +90,6 @@ class Report
     private $client;
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @var int
-     */
-    private $courtOrderTypeId;
-
-    /**
      * @JMS\Exclude
      *
      * @var string
@@ -461,26 +454,6 @@ class Report
     public function setClient(Client $client)
     {
         $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCourtOrderTypeId()
-    {
-        return $this->courtOrderTypeId;
-    }
-
-    /**
-     * @param int $courtOrderTypeId
-     *
-     * @return \AppBundle\Entity\Report
-     */
-    public function setCourtOrderTypeId($courtOrderTypeId)
-    {
-        $this->courtOrderTypeId = $courtOrderTypeId;
 
         return $this;
     }

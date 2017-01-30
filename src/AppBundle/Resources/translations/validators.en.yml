@@ -58,10 +58,6 @@ client:
         maxMessage: The address can't be longer than {{ limit }} letters
     county:
         maxMessage: The county can't be longer than {{ limit }} letters
-    allowedCourtOrderTypes:
-        notBlank: |
-            Property and finance deputy? Select property and affairs.
-            We’re working on a service for people with health and welfare orders, but it’s not available yet.
     postcode:
         notBlank: Enter the client's postcode
         minMessage: The postcode must be at least {{ limit }} letters long

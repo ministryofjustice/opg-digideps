@@ -97,15 +97,6 @@ class Client
     private $courtDate;
 
     /**
-     * @JMS\Accessor(setter="setAllowedCourtOrderTypes")
-     * @JMS\Type("array")
-     * @Assert\NotBlank( message = "client.allowedCourtOrderTypes.notBlank")
-     *
-     * @var array allowedCourtOrderTypes
-     */
-    private $allowedCourtOrderTypes;
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
      *
@@ -167,7 +158,6 @@ class Client
 
     public function __construct()
     {
-        $this->allowedCourtOrderTypes = [];
         $this->users = [];
         $this->reports = [];
     }
@@ -304,31 +294,7 @@ class Client
                 new \DateTime($courtDate->format('Y-m-d')) : null;
     }
 
-    /**
-     * @param array $allowedCourtOrderType
-     */
-    public function addAllowedCourtOrderType($allowedCourtOrderType)
-    {
-        $this->allowedCourtOrderTypes[] = $allowedCourtOrderType;
-    }
 
-    /**
-     * @param array $allowedCourtOrderType
-     *
-     * @return bool
-     */
-    public function removeAllowedCourtOrderType($allowedCourtOrderType)
-    {
-        $key = array_search($allowedCourtOrderType, $this->allowedCourtOrderTypes);
-
-        if ($key) {
-            unset($this->allowedCourtOrderTypes[$key]);
-
-            return true;
-        }
-
-        return false;
-    }
 
     public function isValidCourtDate(ExecutionContextInterface $context)
     {
@@ -439,25 +405,6 @@ class Client
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getAllowedCourtOrderTypes()
-    {
-        return $this->allowedCourtOrderTypes;
-    }
-
-    /**
-     * @param array $allowedCourtOrderTypes
-     *
-     * @return Client
-     */
-    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
-    {
-        $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
-
-        return $this;
-    }
 
     /**
      * @return string

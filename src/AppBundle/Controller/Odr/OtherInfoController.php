@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 class OtherInfoController extends AbstractController
 {
     private static $jmsGroups = [
-        'client-cot',
         'odr-action-more-info',
     ];
 
