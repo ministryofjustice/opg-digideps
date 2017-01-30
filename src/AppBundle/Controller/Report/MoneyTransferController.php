@@ -51,7 +51,7 @@ class MoneyTransferController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('noTransfersToAdd', 'report-money-transfer'), $report);
+        $form = $this->createForm(new FormDir\YesNoType('noTransfersToAdd', 'report-money-transfer', ['yes' => 'Yes', 'no' => 'No']), $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

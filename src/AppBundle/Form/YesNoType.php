@@ -26,21 +26,28 @@ class YesNoType extends AbstractType
     private $translationDomain;
 
     /**
+     * @var array
+     */
+    private $choices;
+
+    /**
      * YesNoType constructor.
      * @param $field
      * @param string $translationDomain
+     * @param array $choices
      */
-    public function __construct($field, $translationDomain)
+    public function __construct($field, $translationDomain, array $choices)
     {
         $this->field = $field;
         $this->translationDomain = $translationDomain;
+        $this->choices = $choices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add($this->field, 'choice', [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => $this->choices,
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'Please choose Yes or No'])],
             ])

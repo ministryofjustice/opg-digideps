@@ -48,7 +48,7 @@ class AssetController extends AbstractController
         if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
             $report->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(new FormDir\YesNoType('noAssetToAdd', 'report-assets'), $report);
+        $form = $this->createForm(new FormDir\YesNoType('noAssetToAdd', 'report-assets', [0 => 'Yes', 1 => 'No']), $report);
 
         $form->handleRequest($request);
 
