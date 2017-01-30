@@ -14,6 +14,22 @@
         {% endif %}
     </div>
 
+    <div class="dont-break">
+        <div class="box" id="safeguarding-contact">
+            <div id="do-you-live-with-the-client" class="checkboxes horizontal">
+                <div class="question">{{ existQuestion }}</div>
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if transactionsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if transactionsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
 
     {% if transactions | length %}
         <div class="financial-categories">
