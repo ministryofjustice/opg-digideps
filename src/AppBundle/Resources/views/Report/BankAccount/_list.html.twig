@@ -38,7 +38,7 @@
                         Sort code: {{ account.sortCode }}<br/>
                     {% endif %}
                     Account number: ****{{ account.accountNumber }}<br/>
-                    Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                    Joint account: {{ account.isJointAccount | capitalize }}<br/>
                     Closed: {{ account.isClosed ? 'Yes' : 'No' }}
                 </p>
             </td>
