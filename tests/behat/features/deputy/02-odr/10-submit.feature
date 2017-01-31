@@ -5,7 +5,7 @@ Feature: odr / report submit
         Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # go to review page
         When I click on "odr-start, odr-submit"
-        Then the URL should match "/odr/review"
+        Then the URL should match "/odr/\d+/review"
         # quick check sections are presented. An unit test asserts
         And I should see an "#visits-care-section" element
         And I should see an "#assets-section" element
@@ -22,7 +22,7 @@ Feature: odr / report submit
         And I reset the email log
         And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "odr-start, odr-submit, sign-and-submit"
-        Then the URL should match "/odr/declaration"
+        Then the URL should match "/odr/\d+/declaration"
         And I save the application status into "odr-submit-pre"
         #
         # empty form
