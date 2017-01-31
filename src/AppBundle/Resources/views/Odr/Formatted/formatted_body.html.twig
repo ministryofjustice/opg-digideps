@@ -21,13 +21,7 @@
         {% include 'AppBundle:Odr/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_actions.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_any_other_info.html.twig' %}
-        {% if odr.bankAccounts | length > 0 %}
-            <div class="section" id="accounts-section">
-                <h2 class="section-heading">Accounts</h2>
-                {% include 'AppBundle:Odr/Formatted/Accounts:_summary.html.twig' %}
-            </div>
-        {% endif %}
-
+        {% include 'AppBundle:Odr/Formatted:_accounts.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_submission_declaration.html.twig' %}
     </div>
 </div>
