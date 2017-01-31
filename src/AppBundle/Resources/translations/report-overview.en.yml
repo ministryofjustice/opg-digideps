@@ -12,8 +12,9 @@ dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
-readyToSubmit: "Ready to submit"
+notStarted: "Not started"
 notFinished: "Not finished"
+readyToSubmit: "Ready to submit"
 sectionsRemaining: "sections remaining"
 overview: Report overview
 

@@ -242,6 +242,16 @@ class ReportStatusService
      */
     public function getRemainingSections()
     {
+        return array_filter($this->getSectionStatus(), function ($e) {
+            return $e != self::STATE_DONE;
+        });
+    }
+
+    /**
+     * @return array
+     */
+    private function getSectionStatus()
+    {
         $states = [
             'decisions'  => $this->getDecisionsState(),
             'contacts'   => $this->getContactsState(),
@@ -260,10 +270,15 @@ class ReportStatusService
                 'deputyExpense'  => $this->getExpensesState(),
                 'moneyIn'        => $this->getMoneyInState(),
                 'moneyOut'       => $this->getMoneyOutState(),
-                'moneyTransfers' => $this->getMoneyTransferState(),
                 'assets'         => $this->getAssetsState(),
                 'debts'          => $this->getDebtsState(),
             ];
+
+            if (count($this->report->getBankAccounts())) {
+                $states += [
+                    'moneyTransfers' => $this->getMoneyTransferState(),
+                ];
+            }
         }
 
         if ($type == Report::TYPE_103) {
@@ -277,9 +292,7 @@ class ReportStatusService
             ];
         }
 
-        return array_filter($states, function ($e) {
-            return $e != self::STATE_DONE;
-        });
+        return $states;
     }
 
     /**
@@ -317,6 +330,14 @@ class ReportStatusService
      */
     public function getStatus()
     {
+        $startedSections = array_filter($this->getSectionStatus(), function($e) {
+            return $e != self::STATE_NOT_STARTED;
+        });
+
+        if (count($startedSections) === 0) {
+            return 'notStarted';
+        }
+
         if ($this->isReadyToSubmit() && $this->report->isDue() && $this->balanceMatches()) {
             return 'readyToSubmit';
         } else {

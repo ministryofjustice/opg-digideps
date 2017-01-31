@@ -177,8 +177,6 @@ class OdrStatusService
     }
 
     /**
-     * //TODO replace with isReadyToSubmit
-     *
      * @return string $status | null
      */
     public function getStatus()
