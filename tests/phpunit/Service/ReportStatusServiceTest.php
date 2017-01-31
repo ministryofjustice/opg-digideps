@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Gift;
+use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
@@ -41,6 +42,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebts' => [],
                 'isTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
+                // 103
+                'getMoneyShortCategoriesIn' => [],
+                'getMoneyShortCategoriesInPresent' => [],
+                'getMoneyTransactionsShortInExist' => null,
+                'getMoneyTransactionsShortIn' => [],
+                'getMoneyShortCategoriesOut' => [],
+                'getMoneyShortCategoriesOutPresent' => [],
+                'getMoneyTransactionsShortOutExist' => null,
+                'getMoneyTransactionsShortOut' => [],
                 'getType' => Report::TYPE_102,
             ]);
 
@@ -208,6 +218,50 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getMoneyOutState());
     }
 
+    public function moneyInShortProvider()
+    {
+        $cat = m::mock(MoneyShortCategory::class);
+
+        return [
+            [['getMoneyTransactionsShortInExist' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider moneyInShortProvider
+     */
+    public function moneyInShort($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getMoneyInShortState());
+    }
+
+    public function moneyOutShortProvider()
+    {
+        $cat = m::mock(MoneyShortCategory::class);
+
+        return [
+            [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
+            [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider moneyOutShortProvider
+     */
+    public function moneyOutShort($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getMoneyOutShortState());
+    }
+
     public function expensesProvider()
     {
         $expense = m::mock(Expense::class, [
@@ -364,27 +418,32 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function mockedMethodsCompletingReport($type)
     {
-        $ret = [];
+        $ret = ['getType'=>$type];
 
         $ret += array_pop($this->decisionsProvider())[0];
         $ret += array_pop($this->contactsProvider())[0];
         $ret += array_pop($this->visitsCareProvider())[0];
-
         $ret += array_pop($this->actionsProvider())[0];
         $ret += array_pop($this->otherInfoProvider())[0];
         $ret += array_pop($this->giftsProvider())[0];
 
-        if ($type == Report::TYPE_102 || $type ==  Report::TYPE_103) {
+        if ($type == Report::TYPE_102) {
             $ret += array_pop($this->bankAccountProvider())[0];
             $ret += array_pop($this->expensesProvider())[0];
-            $ret += array_pop($this->MoneyInProvider())[0];
-            $ret += array_pop($this->MoneyOutProvider())[0];
             $ret += array_pop($this->assetsProvider())[0];
             $ret += array_pop($this->debtsProvider())[0];
+            $ret += array_pop($this->moneyTransferProvider())[0];
+            $ret += array_pop($this->MoneyInProvider())[0];
+            $ret += array_pop($this->MoneyOutProvider())[0];
+        }
 
-            if ($type == Report::TYPE_102) {
-                $ret += array_pop($this->moneyTransferProvider())[0];
-            }
+        if ($type == Report::TYPE_103) {
+            $ret += array_pop($this->bankAccountProvider())[0];
+            $ret += array_pop($this->expensesProvider())[0];
+            $ret += array_pop($this->assetsProvider())[0];
+            $ret += array_pop($this->debtsProvider())[0];
+            $ret += array_pop($this->MoneyInShortProvider())[0];
+            $ret += array_pop($this->MoneyOutShortProvider())[0];
         }
 
         return $ret;

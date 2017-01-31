@@ -47,11 +47,11 @@ class OdrStatusService
      */
     public function getIncomeBenefitsState()
     {
-        $stCount = count($this->odr->recordsPresent($this->odr->getStateBenefits()));
+        $stCount = count($this->odr->getStateBenefitsPresent());
         $statePens = $this->odr->getReceiveStatePension();
         $otherInc = $this->odr->getReceiveOtherIncome();
         $compensDamag = $this->odr->getExpectCompensationDamages();
-        $ooCount = count($this->odr->recordsPresent($this->odr->getOneOff()));
+        $ooCount = count($this->odr->getOneOffPresent());
 
         if ($stCount === 0
             && $statePens == null && $otherInc == null && $compensDamag == null

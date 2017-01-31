@@ -59,7 +59,8 @@
      <h2>Api Requests for this page</h2>
      <ul>
       {% for entry in collector.calls %}
-        <li>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)
+        <li>
+            <h1>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)  </h1>
           <br/><b>Request:</b> <pre>{{ entry.options }} </pre>
           <br/><b>Response body decoded:</b>
           <pre>{{ entry.responseBody }}</pre>

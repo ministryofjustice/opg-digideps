@@ -28,7 +28,7 @@ class IncomeBenefitsValidator
     {
         switch ($question) {
             case 'stateBenefits':
-                return count($this->odr->recordsPresent($this->odr->getStateBenefits())) === 0;
+                return count($this->odr->getStateBenefitsPresent()) === 0;
             case 'receiveStatePension':
                 return $this->odr->getReceiveStatePension() === null;
             case 'receiveOtherIncome':
@@ -36,7 +36,7 @@ class IncomeBenefitsValidator
             case 'expectCompensationDamages':
                 return $this->odr->getExpectCompensationDamages() === null;
             case 'oneOff':
-                return count($this->odr->recordsPresent($this->odr->getOneOff())) === 0;
+                return count($this->odr->getOneOffPresent()) === 0;
         }
     }
 
@@ -46,11 +46,11 @@ class IncomeBenefitsValidator
     public function countMissing()
     {
         return count(array_filter([
-            count($this->odr->recordsPresent($this->odr->getStateBenefits())) === 0,
+            count($this->odr->getStateBenefitsPresent()) === 0,
             $this->odr->getReceiveStatePension() === null,
             $this->odr->getReceiveOtherIncome() === null,
             $this->odr->getExpectCompensationDamages() === null,
-            count($this->odr->recordsPresent($this->odr->getOneOff())) === 0,
+            count($this->odr->getOneOffPresent()) === 0,
         ]));
     }
 }

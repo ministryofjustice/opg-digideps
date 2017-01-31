@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use JMS\Serializer\Annotation as JMS;
 
-trait AssetTrait
+trait ReportAssetTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Asset>")

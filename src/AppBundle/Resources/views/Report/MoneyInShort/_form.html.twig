@@ -1,0 +1,16 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_input(form.description, 'form.transactionsIn.description', {
+        'formGroupClass': 'explanation',
+    }) }}
+    {{ form_input(form.amount, 'form.transactionsIn.amount', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number js-more-info js-format-currency',
+        'formGroupClass': ' form-group-value'
+    }) }}
+
+    {{ form_known_date(form.date, 'form.transactionsIn.date') }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

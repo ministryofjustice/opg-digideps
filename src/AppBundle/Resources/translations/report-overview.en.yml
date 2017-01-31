@@ -89,6 +89,25 @@ money_out:
     start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+
+money_in_short:
+    subSectionTitle: "Money in"
+    subSectionDescription: "Tell us about money paid into %client%’s accounts"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+money_out_short:
+    subSectionTitle: "Money out"
+    subSectionDescription: "Tell us about money you have spent on %client%’s living and welfare costs"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+
+
+
+
 balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""

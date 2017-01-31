@@ -52,6 +52,7 @@ class ReportStatusService
         if ($this->report->getVisitsCare()->missingInfo()) {
             return self::STATE_INCOMPLETE;
         }
+
         return self::STATE_DONE;
     }
 
@@ -90,6 +91,38 @@ class ReportStatusService
     {
         if ($this->report->hasMoneyOut()) {
             return self::STATE_DONE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyInShortState()
+    {
+        $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
+        $exist = in_array($this->report->getMoneyTransactionsShortInExist(), ['yes', 'no']);
+
+        if ($exist) {
+            return self::STATE_DONE;
+        }
+
+        if ($categoriesCount) {
+            return self::STATE_INCOMPLETE;
+        }
+
+        return self::STATE_NOT_STARTED;
+    }
+
+    public function getMoneyOutShortState()
+    {
+        $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
+        $exist = in_array($this->report->getMoneyTransactionsShortOutExist(), ['yes', 'no']);
+
+        if ($exist) {
+            return self::STATE_DONE;
+        }
+
+        if ($categoriesCount) {
+            return self::STATE_INCOMPLETE;
         }
 
         return self::STATE_NOT_STARTED;
@@ -197,6 +230,10 @@ class ReportStatusService
     /** @return bool */
     public function balanceMatches()
     {
+        if ($this->report->getType() == Report::TYPE_103) {
+            return true;
+        }
+
         return $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
     }
 
@@ -206,30 +243,38 @@ class ReportStatusService
     public function getRemainingSections()
     {
         $states = [
-            'decisions' => $this->getDecisionsState(),
-            'contacts' => $this->getContactsState(),
+            'decisions'  => $this->getDecisionsState(),
+            'contacts'   => $this->getContactsState(),
             'visitsCare' => $this->getVisitsCareState(),
-            'actions' => $this->getActionsState(),
-            'otherInfo' => $this->getOtherInfoState(),
-            'gifts' => $this->getGiftsState(),
+            'actions'    => $this->getActionsState(),
+            'otherInfo'  => $this->getOtherInfoState(),
+            'gifts'      => $this->getGiftsState(),
         ];
 
         $type = $this->report->getType();
-        if ($type == Report::TYPE_102 || $type ==  Report::TYPE_103) {
-            $states += [
-                'bankAccounts' => $this->getBankAccountsState(),
-                'deputyExpense' => $this->getExpensesState(),
-                'moneyIn' => $this->getMoneyInState(),
-                'moneyOut' => $this->getMoneyOutState(),
-                'assets' => $this->getAssetsState(),
-                'debts' => $this->getDebtsState(),
-            ];
 
-            if ($type == Report::TYPE_102) {
-                $states += [
-                    'moneyTransfers' => $this->getMoneyTransferState(),
-                ];
-            }
+
+        if ($type == Report::TYPE_102) {
+            $states += [
+                'bankAccounts'   => $this->getBankAccountsState(),
+                'deputyExpense'  => $this->getExpensesState(),
+                'moneyIn'        => $this->getMoneyInState(),
+                'moneyOut'       => $this->getMoneyOutState(),
+                'moneyTransfers' => $this->getMoneyTransferState(),
+                'assets'         => $this->getAssetsState(),
+                'debts'          => $this->getDebtsState(),
+            ];
+        }
+
+        if ($type == Report::TYPE_103) {
+            $states += [
+                'bankAccounts'  => $this->getBankAccountsState(),
+                'deputyExpense' => $this->getExpensesState(),
+                'moneyInShort'  => $this->getMoneyInShortState(),
+                'moneyOutShort' => $this->getMoneyOutShortState(),
+                'assets'        => $this->getAssetsState(),
+                'debts'         => $this->getDebtsState(),
+            ];
         }
 
         return array_filter($states, function ($e) {

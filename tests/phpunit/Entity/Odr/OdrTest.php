@@ -21,15 +21,6 @@ class OdrTest extends \PHPUnit_Framework_TestCase
         m::close();
     }
 
-    public function testCountRecordsPresent()
-    {
-        $this->assertCount(0, $this->odr->recordsPresent(null));
-        $this->assertCount(0, $this->odr->recordsPresent([]));
-        $this->assertCount(0, $this->odr->recordsPresent([$this->incomeUnticked, $this->incomeUnticked]));
-        $this->assertCount(1, $this->odr->recordsPresent([$this->incomeTicked, $this->incomeUnticked]));
-        $this->assertCount(1, $this->odr->recordsPresent([$this->incomeTicked]));
-    }
-
     public function testgetStateBenefitOther()
     {
         $odr = new Odr();

@@ -16,7 +16,7 @@ class DecisionExistType extends AbstractType
             ->add('hasDecisions', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['decisions-exist']])],
             ])
             ->add('reasonForNoDecisions', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
@@ -27,7 +27,7 @@ class DecisionExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['exist'];
+                $validationGroups = ['decisions-exist'];
                 if ($form['hasDecisions']->getData() === 'no') {
                     $validationGroups = ['reason-no-decisions'];
                 }

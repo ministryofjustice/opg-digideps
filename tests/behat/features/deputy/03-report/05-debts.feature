@@ -7,14 +7,14 @@ Feature: Report debts
         # chose "no records"
         Given the step cannot be submitted without making a selection
         And the step with the following values CAN be submitted:
-            | debt_exist_hasDebts_1 | no |
+            | yes_no_hasDebts_1 | no |
         # summary page check
         And each text should be present in the corresponding region:
             | No      | has-debts       |
         # select there are records (from summary page link)
         Given I click on "edit" in the "has-debts" region
         And the step with the following values CAN be submitted:
-            | debt_exist_hasDebts_0 | yes |
+            | yes_no_hasDebts_0 | yes |
         # edit debts
         And the step cannot be submitted without making a selection
         And the step with the following values CANNOT be submitted:

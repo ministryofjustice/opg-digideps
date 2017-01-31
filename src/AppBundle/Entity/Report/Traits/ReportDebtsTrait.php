@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-trait DebtsTrait
+trait ReportDebtsTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Debt>")

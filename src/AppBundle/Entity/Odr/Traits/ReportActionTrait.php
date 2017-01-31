@@ -5,7 +5,7 @@ namespace AppBundle\Entity\Odr\Traits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait ActionTrait
+trait ReportActionTrait
 {
     /**
      * @JMS\Type("string")

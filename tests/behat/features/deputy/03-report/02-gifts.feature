@@ -7,14 +7,14 @@ Feature: gifts
     # chose "no records"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
-      | gift_exist_giftsExist_1 | no |
+      | yes_no_giftsExist_1 | no |
         # summary page check
     And each text should be present in the corresponding region:
       | No | gifts-exist |
         # select there are records (from summary page link)
     Given I click on "edit" in the "gifts-exist" region
     And the step with the following values CAN be submitted:
-      | gift_exist_giftsExist_0 | yes |
+      | yes_no_giftsExist_0 | yes |
         # add expense n.1 (and validate form)
     And the step with the following values CANNOT be submitted:
       | gifts_single_explanation |  | [ERR] |

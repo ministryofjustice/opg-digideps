@@ -7,14 +7,14 @@ Feature: NDR assets
       # chose "no records"
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
-      | odr_asset_exist_noAssetToAdd_1 | 1 |
+      | yes_no_noAssetToAdd_1 | 1 |
       # summary page check
     And each text should be present in the corresponding region:
       | No | has-assets |
       # select there are records (from summary page link)
     Given I click on "edit" in the "has-assets" region
     And the step with the following values CAN be submitted:
-      | odr_asset_exist_noAssetToAdd_0 | 0 |
+      | yes_no_noAssetToAdd_0 | 0 |
       # add asset n.1 Vehicle (and validate form)
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:

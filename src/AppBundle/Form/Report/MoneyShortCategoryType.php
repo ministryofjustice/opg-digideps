@@ -2,28 +2,31 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\MoneyShortCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class NoTransfersToAddType extends AbstractType
+class MoneyShortCategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('noTransfersToAdd', 'checkbox', [
-                 ])
-                 ->add('saveNoTransfer', 'submit');
+        $builder
+                 ->add('typeId', 'hidden')
+                 ->add('present', 'checkbox');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain' => 'report-transfers',
+             'data_class' => MoneyShortCategory::class,
+             'validation_groups' => ['TODO'],
+             'translation_domain' => 'report-money-short',
         ]);
     }
 
     public function getName()
     {
-        return 'report_no_transfers';
+        return 'state_benefit';
     }
 }

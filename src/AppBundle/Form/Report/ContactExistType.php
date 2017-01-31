@@ -16,7 +16,7 @@ class ContactExistType extends AbstractType
             ->add('hasContacts', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'contact.noContactsChoice.notBlank', 'groups' => ['exist']])],
+                'constraints' => [new NotBlank(['message' => 'contact.noContactsChoice.notBlank', 'groups' => ['contact-exist']])],
             ])
             ->add('reasonForNoContacts', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
@@ -27,7 +27,7 @@ class ContactExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-contacts',
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['exist'];
+                $validationGroups = ['contact-exist'];
                 if ($form['hasContacts']->getData() === 'no') {
                     $validationGroups = ['reasonForNoContacts'];
                 }

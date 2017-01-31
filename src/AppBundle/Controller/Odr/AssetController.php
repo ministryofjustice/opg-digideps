@@ -44,7 +44,7 @@ class AssetController extends AbstractController
         if ($request->getMethod() == 'GET' && $odr->getAssets()) { // if assets are added, set form default to "Yes"
             $odr->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetExistType(), $odr);
+        $form = $this->createForm(new FormDir\YesNoType('noAssetToAdd', 'odr-assets', [0 => 'Yes', 1 => 'No']), $odr);
 
         $form->handleRequest($request);
 
