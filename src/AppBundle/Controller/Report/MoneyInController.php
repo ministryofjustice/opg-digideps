@@ -95,10 +95,10 @@ class MoneyInController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/'.$reportId.'/money-transaction', $transaction, ['transaction']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }
@@ -184,7 +184,7 @@ class MoneyInController extends AbstractController
         if (!$transaction) {
             throw new \RuntimeException('Transaction not found');
         }
-        $this->getRestClient()->delete('/report/'.$reportId.'/money-transaction/'.$transactionId);
+        $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

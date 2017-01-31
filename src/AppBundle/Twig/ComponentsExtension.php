@@ -60,7 +60,7 @@ class ComponentsExtension extends \Twig_Extension
             }),
             'pad_day_month' => new \Twig_SimpleFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
-                    return '0'.(int) $value;
+                    return '0' . (int) $value;
                 }
 
                 return $value;
@@ -107,22 +107,22 @@ class ComponentsExtension extends \Twig_Extension
         $secondsDiff = $to->getTimestamp() - $from->getTimestamp();
 
         if ($secondsDiff < 60) {
-            return $this->translator->trans($translationPrefix.'lessThenAMinuteAgo', [], $translationDomain);
+            return $this->translator->trans($translationPrefix . 'lessThenAMinuteAgo', [], $translationDomain);
         }
 
         if ($secondsDiff < 3600) {
             $minutes = (int) round($secondsDiff / 60, 0);
 
-            return $this->translator->transChoice($translationPrefix.'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
+            return $this->translator->transChoice($translationPrefix . 'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
         }
 
         if ($secondsDiff < 86400) {
             $hours = (int) round($secondsDiff / 3600, 0);
 
-            return $this->translator->transChoice($translationPrefix.'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
+            return $this->translator->transChoice($translationPrefix . 'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
         }
 
-        return $this->translator->trans($translationPrefix.'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
+        return $this->translator->trans($translationPrefix . 'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
     }
 
     /**
@@ -195,8 +195,8 @@ class ComponentsExtension extends \Twig_Extension
         foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
             $progressSteps[$availableStepId] = [
                 'class' => (($selectedStepNumber == $currentStepNumber) ? ' progress--active ' : '')
-                    .(($currentStepNumber < $selectedStepNumber) ? ' progress--completed ' : '')
-                    .(($currentStepNumber == $selectedStepNumber - 1) ? ' progress--previous ' : ''),
+                    . (($currentStepNumber < $selectedStepNumber) ? ' progress--completed ' : '')
+                    . (($currentStepNumber == $selectedStepNumber - 1) ? ' progress--previous ' : ''),
             ];
         }
 

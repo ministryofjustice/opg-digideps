@@ -24,7 +24,7 @@ trait AuthenticationTrait
     public function iAmLoggedInToAdminAsWithPassword($email, $password)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl.'/logout');
+        $this->visitPath($adminUrl . '/logout');
         $this->iAmAtAdminLogin();
         $this->fillField('login_email', $email);
         $this->fillField('login_password', $password);
@@ -64,7 +64,7 @@ trait AuthenticationTrait
     public function iAmAtAdminLogin()
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl.'/login');
+        $this->visitPath($adminUrl . '/login');
     }
 
     /**

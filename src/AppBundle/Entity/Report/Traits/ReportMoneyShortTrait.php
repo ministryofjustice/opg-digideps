@@ -108,7 +108,6 @@ trait ReportMoneyShortTrait
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
     }
 
-
     /**
      * @return \AppBundle\Entity\Report\MoneyTransactionShort[]
      */

@@ -16,13 +16,13 @@ class BehatController extends AbstractController
             return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
         }
 
-        $expectedSecretParam = md5('behat-dd-'.$this->container->getParameter('secret'));
+        $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
         $secret = $this->getRequest()->get('secret');
 
         if ($secret !== $expectedSecretParam) {
 
             // log access
-            $this->get('logger')->error($this->getRequest()->getPathInfo().": $expectedSecretParam secret expected. 404 will be returned.");
+            $this->get('logger')->error($this->getRequest()->getPathInfo() . ": $expectedSecretParam secret expected. 404 will be returned.");
 
             throw $this->createNotFoundException('Not found');
         }
@@ -60,7 +60,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->getRestClient()->put('behat/report/'.$reportId, [
+        $this->getRestClient()->put('behat/report/' . $reportId, [
             'type' => $type,
         ]);
 
@@ -75,7 +75,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->getRestClient()->put('behat/report/'.$reportId, [
+        $this->getRestClient()->put('behat/report/' . $reportId, [
             'end_date' => $dateYmd,
         ]);
 
@@ -130,7 +130,7 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
-        $this->getRestClient()->put('behat/user/'.$email, [
+        $this->getRestClient()->put('behat/user/' . $email, [
             'token_date' => $date,
             'registration_token' => $token,
         ]);
@@ -149,7 +149,7 @@ class BehatController extends AbstractController
         $data = $this->getRestClient()->get('behat/check-app-params', 'array');
 
         if ($data != 'valid') {
-            throw new \RuntimeException('Invalid API params. Response: '.print_r($data, 1));
+            throw new \RuntimeException('Invalid API params. Response: ' . print_r($data, 1));
         }
 
         return new Response($data);
@@ -164,7 +164,7 @@ class BehatController extends AbstractController
      */
     public function emailViewerAction($action)
     {
-        $emailToView = 'AppBundle:Email:'.$action.'.html.twig';
+        $emailToView = 'AppBundle:Email:' . $action . '.html.twig';
 
         return $this->render($emailToView, [
             'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',

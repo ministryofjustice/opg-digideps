@@ -17,7 +17,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
         $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine');
         $this->translator->shouldReceive('trans')->andReturnUsing(function ($input) {
-            return $input.' translated';
+            return $input . ' translated';
         });
 
         $this->container = m::mock('Symfony\Component\DependencyInjection\Container');

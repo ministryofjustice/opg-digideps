@@ -68,7 +68,7 @@ class AdminController extends AbstractController
                         throw new \RuntimeException('Cannot add admin from non-admin user');
                     }
                     $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
-                    $user = $this->getRestClient()->get('user/'.$response['id'], 'User');
+                    $user = $this->getRestClient()->get('user/' . $response['id'], 'User');
 
                     $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                     $this->getMailSender()->send($activationEmail, ['text', 'html']);
@@ -141,7 +141,7 @@ class AdminController extends AbstractController
 
             if ($form->isValid()) {
                 $updateUser = $form->getData();
-                $this->getRestClient()->put('user/'.$user->getId(), $updateUser, ['admin_add_user']);
+                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
 
@@ -171,14 +171,14 @@ class AdminController extends AbstractController
      */
     public function editOdrAction(Request $request, $id)
     {
-        $odr = $this->getRestClient()->get('odr/'.$id, 'Odr\Odr', ['odr', 'client', 'user']);
+        $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'user']);
         $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
         if ($request->getMethod() == 'POST') {
             $odrForm->handleRequest($request);
 
             if ($odrForm->isValid()) {
                 $updateOdr = $odrForm->getData();
-                $this->getRestClient()->put('odr/'.$id, $updateOdr, ['start_date']);
+                $this->getRestClient()->put('odr/' . $id, $updateOdr, ['start_date']);
                 $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
             }
         }
@@ -224,7 +224,7 @@ class AdminController extends AbstractController
 
         $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 
-        $this->getRestClient()->delete('user/'.$id);
+        $this->getRestClient()->delete('user/' . $id);
 
         return $this->redirect($this->generateUrl('admin_homepage'));
     }
@@ -319,7 +319,7 @@ class AdminController extends AbstractController
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
         $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-'.date('Y-m-d').'.csv";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
         $response->sendHeaders();
         $response->setContent($rawCsv);
 

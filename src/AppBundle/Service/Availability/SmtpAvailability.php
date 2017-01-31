@@ -27,6 +27,6 @@ class SmtpAvailability extends ServiceAvailabilityAbstract
 
     public function getName()
     {
-        return 'Smtp ('.$this->transportKey.')';
+        return 'Smtp (' . $this->transportKey . ')';
     }
 }

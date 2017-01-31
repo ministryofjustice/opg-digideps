@@ -11,7 +11,7 @@ trait ReportTrait
      */
     public function iChangeTheReportType($reportId, $reportType)
     {
-        $this->visitBehatLink('report/'.$reportId.'/change-report-type/'.$reportType);
+        $this->visitBehatLink('report/' . $reportId . '/change-report-type/' . $reportType);
     }
 
     /**
@@ -22,7 +22,7 @@ trait ReportTrait
         $endDate = new \DateTime();
         $endDate->modify("-{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/".$endDate->format('Y-m-d'));
+        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
         $this->visit('/');
     }
 
@@ -34,7 +34,7 @@ trait ReportTrait
         $endDate = new \DateTime();
         $endDate->modify("+{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/".$endDate->format('Y-m-d'));
+        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
         $this->visit('/');
     }
 
@@ -51,7 +51,7 @@ trait ReportTrait
      */
     public function theAssetGroupShouldBe($index, $text)
     {
-        $css = '#assets-section .asset-group:nth-child('.$index.')';
+        $css = '#assets-section .asset-group:nth-child(' . $index . ')';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
 
@@ -60,7 +60,7 @@ trait ReportTrait
      */
     public function theAssetInTheAssetGroupShouldHaveA($assetIndex, $group, $field, $text)
     {
-        $css = '#assets-section [data-group="'.$group.'"] .asset-item:nth-child('.$assetIndex.') .asset-'.$field.' .value';
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child(' . $assetIndex . ') .asset-' . $field . ' .value';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
 
@@ -69,7 +69,7 @@ trait ReportTrait
      */
     public function theAssetInTheAssetGroupShouldHaveEmpty($assetIndex, $group, $field)
     {
-        $css = '#assets-section [data-group="'.$group.'"] .asset-item:nth-child('.$assetIndex.') .asset-'.$field.' .value';
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child(' . $assetIndex . ') .asset-' . $field . ' .value';
 
         $elementsFound = $this->getSession()->getPage()->findAll('css', $css);
         if (count($elementsFound) === 0) {
@@ -77,7 +77,7 @@ trait ReportTrait
         }
 
         if ($elementsFound[0]->getText() != '') {
-            throw new \RuntimeException('Element should be empty but contains: '.$elementsFound[0]->getText());
+            throw new \RuntimeException('Element should be empty but contains: ' . $elementsFound[0]->getText());
         }
     }
 
@@ -106,7 +106,7 @@ trait ReportTrait
         if (count($reportNumberSplit) > 1) {
             $reportNumber = $reportNumberSplit[count($reportNumberSplit) - 1];
         }
-        $newUrl = '/report/'.$reportNumber.'/formatted';
+        $newUrl = '/report/' . $reportNumber . '/formatted';
 
         $this->visit($newUrl);
     }
@@ -314,7 +314,7 @@ trait ReportTrait
         $element = $this->getSession()->getPage()->find('css', $css);
 
         $reportId = $element->getAttribute('content');
-        $this->visit('/report/'.$reportId.'/overview');
+        $this->visit('/report/' . $reportId . '/overview');
 
         # more info page
         $this->clickLink('edit-report_add_further_info');
@@ -342,7 +342,7 @@ trait ReportTrait
      */
     public function theReportShouldIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
     {
-        $css = '[data-checkbox="'.$this->replace_dashes($checkboxname).'--'.$this->replace_dashes($checkboxvalue).'"]';
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
         $element = $this->getSession()->getPage()->find('css', $css);
 
         if (!isset($element)) {
@@ -359,7 +359,7 @@ trait ReportTrait
      */
     public function theReportShouldNotIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
     {
-        $css = '[data-checkbox="'.$this->replace_dashes($checkboxname).'--'.$this->replace_dashes($checkboxvalue).'"]';
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
         $element = $this->getSession()->getPage()->find('css', $css);
 
         if (!isset($element)) {
@@ -376,7 +376,7 @@ trait ReportTrait
      */
     public function theReportShouldIndicateThatTheCheckboxIsChecked($checkbox)
     {
-        $css = '[data-checkbox="'.$this->replace_dashes($checkbox).'"]';
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
         $element = $this->getSession()->getPage()->find('css', $css);
 
         if (!isset($element)) {
@@ -393,7 +393,7 @@ trait ReportTrait
      */
     public function theReportShouldNotIndicateThatTheCheckboxIsChecked($checkbox)
     {
-        $css = '[data-checkbox="'.$this->replace_dashes($checkbox).'"]';
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
         $element = $this->getSession()->getPage()->find('css', $css);
 
         if (!isset($element)) {
@@ -430,7 +430,7 @@ trait ReportTrait
         if (count($reportNumberSplit) > 1) {
             $reportNumber = $reportNumberSplit[count($reportNumberSplit) - 1];
         }
-        $newUrl = '/report/'.$reportNumber.'/display';
+        $newUrl = '/report/' . $reportNumber . '/display';
 
         $this->visit($newUrl);
     }
@@ -440,7 +440,7 @@ trait ReportTrait
      */
     public function theQuestionShouldBeAnsweredWith($question, $answer)
     {
-        $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="'.$question.'"]');
+        $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="' . $question . '"]');
 
         if (!isset($questionElement)) {
             throw new \RuntimeException("Can't find element with: $question");
@@ -466,12 +466,12 @@ trait ReportTrait
      */
     public function theQuestionInSectionShouldBeAnsweredWith($question, $section, $answer)
     {
-        $section = $this->getSession()->getPage()->find('css', '#'.$section.'-section');
+        $section = $this->getSession()->getPage()->find('css', '#' . $section . '-section');
         if (!isset($section)) {
             throw new \RuntimeException("Can't find section with: $section");
         }
 
-        $questionElement = $section->find('xpath', '//div[text()="'.$question.'"]');
+        $questionElement = $section->find('xpath', '//div[text()="' . $question . '"]');
 
         if (!isset($questionElement)) {
             throw new \RuntimeException("Can't find element with: $question");

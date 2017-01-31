@@ -109,7 +109,7 @@ class MailSender
         $this->logger->log($result ? 'info' : 'error', 'Email sent: ', ['extra' => [
             'page' => 'mail_sender',
             'transport' => $transport,
-            'to' => '***'.substr($to, 3),
+            'to' => '***' . substr($to, 3),
             'result' => $result,
             'failedRecipients' => $failedRecipients ? implode(',', $failedRecipients) : '',
         ]]);

@@ -483,7 +483,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function isReadyToSubmitBalance($data, $expected)
     {
         $report = m::mock(Report::class);
-        $object = m::mock(ReportStatusService::class.'[getRemainingSections,balanceMatches]', [$report]);
+        $object = m::mock(ReportStatusService::class . '[getRemainingSections,balanceMatches]', [$report]);
 
         foreach ($data as $method => $return) {
             $object->shouldReceive($method)->andReturn($return);

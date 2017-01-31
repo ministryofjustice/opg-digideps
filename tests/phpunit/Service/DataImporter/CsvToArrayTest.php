@@ -8,7 +8,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testgetData1()
     {
-        $object = new CsvToArray(__DIR__.'/csv1.csv', false);
+        $object = new CsvToArray(__DIR__ . '/csv1.csv', false);
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();
         $this->assertCount(24, $data);
@@ -31,7 +31,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataMissingFile()
     {
-        new CsvToArray(__DIR__.'/THISFILEDOESNOTEXIST.csv', false);
+        new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv', false);
     }
 
     /**
@@ -39,19 +39,19 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataInvalidFormat()
     {
-        $object = new CsvToArray(__DIR__.'/invalid.csv', false);
+        $object = new CsvToArray(__DIR__ . '/invalid.csv', false);
         $object->setExpectedColumns($this->columns);
         $object->getData();
     }
 
     public function testgetDataMissingColumns()
     {
-        $object = new CsvToArray(__DIR__.'/missing-columns.csv', false);
+        $object = new CsvToArray(__DIR__ . '/missing-columns.csv', false);
         $object->setExpectedColumns($this->columns);
 
         try {
             $object->getData();
-            $this->fail(__METHOD__.': expected exception');
+            $this->fail(__METHOD__ . ': expected exception');
         } catch (\RuntimeException $e) {
             $this->assertContains('Surname', $e->getMessage());
             $this->assertContains('Dep Surname', $e->getMessage());
@@ -60,7 +60,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testMixedNewLines()
     {
-        $object = new CsvToArray(__DIR__.'/broken-new-lines.csv', false);
+        $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', false);
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();
         $this->assertCount(23, $data);
@@ -68,7 +68,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testMixedNewLinesNormalise()
     {
-        $object = new CsvToArray(__DIR__.'/broken-new-lines.csv', true);
+        $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', true);
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();
         $this->assertCount(25, $data);

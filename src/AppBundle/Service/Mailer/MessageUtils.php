@@ -28,7 +28,7 @@ class MessageUtils
     {
         $ret = [];
         foreach (self::$fieldsToSerialize as $field) {
-            $method = 'get'.ucfirst($field);
+            $method = 'get' . ucfirst($field);
             $ret[$field] = $message->$method();
         }
 
@@ -55,7 +55,7 @@ class MessageUtils
 
         foreach (self::$fieldsToSerialize as $field) {
             if (!empty($array[$field])) {
-                $method = 'set'.ucfirst($field);
+                $method = 'set' . ucfirst($field);
                 $message->$method($array[$field]);
             }
         }
@@ -76,7 +76,7 @@ class MessageUtils
     {
         $ret = '';
         foreach (self::$fieldsToSerialize as $field) {
-            $method = 'get'.ucfirst($field);
+            $method = 'get' . ucfirst($field);
             $methodReturned = $message->$method();
             if (is_array($methodReturned)) {
                 $methodReturned = print_r($methodReturned, true);

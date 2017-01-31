@@ -66,7 +66,7 @@ class VisitsCareController extends AbstractController
             if ($visitsCare->getId() === null) {
                 $this->getRestClient()->post('/odr/visits-care', $data, ['visits-care', 'odr-id']);
             } else {
-                $this->getRestClient()->put('/odr/visits-care/'.$visitsCare->getId(), $data, ['visits-care', 'odr-id']);
+                $this->getRestClient()->put('/odr/visits-care/' . $visitsCare->getId(), $data, ['visits-care', 'odr-id']);
             }
 
             if ($fromPage == 'summary') {

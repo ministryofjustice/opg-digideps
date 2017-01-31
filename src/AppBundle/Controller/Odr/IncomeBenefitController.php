@@ -73,7 +73,7 @@ class IncomeBenefitController extends AbstractController
                 5 => ['odr-one-off'],
             ];
 
-            $this->getRestClient()->put('odr/'.$odrId, $data, $stepToJmsGroup[$step]);
+            $this->getRestClient()->put('odr/' . $odrId, $data, $stepToJmsGroup[$step]);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

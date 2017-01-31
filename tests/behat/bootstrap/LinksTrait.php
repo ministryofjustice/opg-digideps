@@ -9,7 +9,7 @@ trait LinksTrait
      */
     public function linkWithTextContains($text, $expectedLink)
     {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="'.$text.'"]');
+        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {
@@ -32,7 +32,7 @@ trait LinksTrait
      */
     public function visitBehatLink($link)
     {
-        $secret = md5('behat-dd-'.$this->getSymfonyParam('secret'));
+        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
 
         $this->visit("/behat/{$secret}/{$link}");
         // non-200 response -> debug content
@@ -46,10 +46,10 @@ trait LinksTrait
      */
     public function visitBehatAdminLink($link)
     {
-        $secret = md5('behat-dd-'.$this->getSymfonyParam('secret'));
+        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
 
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl."/behat/{$secret}/{$link}");
+        $this->visitPath($adminUrl . "/behat/{$secret}/{$link}");
     }
 
     /**
@@ -89,7 +89,7 @@ trait LinksTrait
 
     private function clickOnHashLink($link)
     {
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#'.$link);
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#' . $link);
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than a #$link element in the page. Interrupted");
         }
@@ -98,7 +98,7 @@ trait LinksTrait
         }
 
         // click on the found link
-        $this->scrollTo('#'.$link);
+        $this->scrollTo('#' . $link);
         $linksElementsFound[0]->click();
     }
 
@@ -109,7 +109,7 @@ trait LinksTrait
      */
     public function clickOnLinkWithText($text)
     {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="'.$text.'"]');
+        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {
@@ -135,7 +135,7 @@ trait LinksTrait
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->find('xpath', '//a[text()="'.$text.'"]');
+        $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {
@@ -153,7 +153,7 @@ trait LinksTrait
     private function findRegion($region)
     {
         // find region
-        $regionSelector = '#'.$region.', '.self::behatElementToCssSelector($region, 'region');
+        $regionSelector = '#' . $region . ', ' . self::behatElementToCssSelector($region, 'region');
         $regionsFound = $this->getSession()->getPage()->findAll('css', $regionSelector);
         if (count($regionsFound) > 1) {
             throw new \RuntimeException("Found more than one $regionSelector");
@@ -195,7 +195,7 @@ trait LinksTrait
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->find('xpath', '//a[text()="'.$text.'"]');
+        $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {

@@ -41,7 +41,7 @@ class CsvToArray
         // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
         if ($this->normaliseNewLines) {
             $content = str_replace(["\r\n", "\r"], ["\n", "\n"], file_get_contents($file));
-            $this->handle = fopen('data://text/plain,'.$content, 'r');
+            $this->handle = fopen('data://text/plain,' . $content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
             $this->handle = fopen($file, 'r');
@@ -79,7 +79,7 @@ class CsvToArray
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find header columns '.implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find header columns ' . implode(', ', $missingColumns));
         }
 
         // read rows

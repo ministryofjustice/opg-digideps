@@ -53,7 +53,7 @@ class GiftController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('gifts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/'.$reportId, $data, ['gifts-exist']);
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['gifts-exist']);
                     return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
             }
         }
@@ -86,12 +86,12 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/'.$report->getId().'/gift', $data, ['gift']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift']);
 
             return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'gifts_'.$request->get('from');
+        $backLinkRoute = 'gifts_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
 
@@ -135,7 +135,7 @@ class GiftController extends AbstractController
     public function editAction(Request $request, $reportId, $giftId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $gift = $this->getRestClient()->get('report/'.$report->getId().'/gift/'.$giftId, 'Report\Gift');
+        $gift = $this->getRestClient()->get('report/' . $report->getId() . '/gift/' . $giftId, 'Report\Gift');
 
         $form = $this->createForm(new FormDir\Report\GiftType(), $gift);
         $form->handleRequest($request);
@@ -144,7 +144,7 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
-            $this->getRestClient()->put('report/'.$report->getId().'/gift/'.$gift->getId(), $data, ['gift']);
+            $this->getRestClient()->put('report/' . $report->getId() . '/gift/' . $gift->getId(), $data, ['gift']);
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
@@ -187,7 +187,7 @@ class GiftController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('report/'.$report->getId().'/gift/'.$giftId);
+        $this->getRestClient()->delete('report/' . $report->getId() . '/gift/' . $giftId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

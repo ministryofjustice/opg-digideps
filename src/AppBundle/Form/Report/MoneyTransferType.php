@@ -26,7 +26,7 @@ class MoneyTransferType extends AbstractType
 
         foreach ($banks as $bank) {
             /* $var $bank \AppBundle\Entity\Report\BankAccount */
-            $this->banks[$bank->getId()] = $bank->getBank().' '.$bank->getAccountTypeText().' (****'.$bank->getAccountNumber().')';
+            $this->banks[$bank->getId()] = $bank->getBank() . ' ' . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
         }
     }
 

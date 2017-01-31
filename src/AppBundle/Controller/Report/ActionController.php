@@ -63,7 +63,7 @@ class ActionController extends AbstractController
             /* @var $data EntityDir\Report\Action */
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/action', $data);
+            $this->getRestClient()->put('report/' . $reportId . '/action', $data);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

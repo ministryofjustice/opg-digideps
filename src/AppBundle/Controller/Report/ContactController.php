@@ -52,9 +52,9 @@ class ContactController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/'.$reportId, $report, ['reasonForNoContacts', 'contacts']);
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach ($report->getContacts() as $contact) {
-                        $this->getRestClient()->delete('/report/contact/'.$contact->getId());
+                        $this->getRestClient()->delete('/report/contact/' . $contact->getId());
                     }
                     return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
             }
@@ -94,7 +94,7 @@ class ContactController extends AbstractController
             return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
         }
 
-        $backLinkRoute = 'contacts_'.$request->get('from');
+        $backLinkRoute = 'contacts_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
         return [
@@ -137,7 +137,7 @@ class ContactController extends AbstractController
     public function editAction(Request $request, $reportId, $contactId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->getRestClient()->get('report/contact/'.$contactId, 'Report\\Contact');
+        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
         $contact->setReport($report);
 
         $form = $this->createForm(new FormDir\Report\ContactType(), $contact);

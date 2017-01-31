@@ -22,7 +22,7 @@ class MockeryStub extends \Mockery
         } elseif (is_string($class)) {
             $mock = self::mock($class);
         } else {
-            throw new \InvalidArgumentException(__METHOD__.' first arument should be a mock or class fullname');
+            throw new \InvalidArgumentException(__METHOD__ . ' first arument should be a mock or class fullname');
         }
 
         foreach ($expectations as $shouldReceives => $andReturn) {
@@ -71,7 +71,7 @@ class MockeryStub extends \Mockery
     {
         preg_match('/^(?P<method>\w+)(\((?P<args>[^\(\)]*)\))?$/i', $shouldReceive, $matches);
         if (empty($matches['method'])) {
-            throw new \InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in '.$shouldReceive);
+            throw new \InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in ' . $shouldReceive);
         }
         if (!empty($matches['args'])) {
             $args = explode(',', $matches['args']);

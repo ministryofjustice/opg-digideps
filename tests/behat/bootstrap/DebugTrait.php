@@ -20,8 +20,8 @@ trait DebugTrait
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
             $filename = $feature
-                       ? '/tmp/behat/behat-response-'.$feature.'-'.$iPadded.'.html'
-                       : '/tmp/behat/behat-response-'.$iPadded.'.html';
+                       ? '/tmp/behat/behat-response-' . $feature . '-' . $iPadded . '.html'
+                       : '/tmp/behat/behat-response-' . $iPadded . '.html';
             if (!file_exists($filename)) {
                 break;
             }
@@ -29,7 +29,7 @@ trait DebugTrait
         $session = $this->getSession();
         $data = $session->getPage()->getContent();
         $bytes = file_put_contents($filename, $data);
-        echo '- Url: '.$session->getCurrentUrl()."\n";
+        echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
         //echo "- Page content: [".$data . ']';
@@ -40,7 +40,7 @@ trait DebugTrait
      */
     public function iSaveThePageAs($name)
     {
-        $filename = '/tmp/behat/behat-screenshot-'.$name.'.html';
+        $filename = '/tmp/behat/behat-screenshot-' . $name . '.html';
 
         $data = $this->getSession()->getPage()->getContent();
         if (!file_put_contents($filename, $data)) {
@@ -48,7 +48,7 @@ trait DebugTrait
         }
 
         $driver = $this->getSession()->getDriver();
-        $filename = '/tmp/behat/'.$name.'.png';
+        $filename = '/tmp/behat/' . $name . '.png';
         if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $image_data = $this->getSession()->getDriver()->getScreenshot();
             if (!file_put_contents($filename, $image_data)) {
@@ -104,14 +104,14 @@ trait DebugTrait
      */
     public function theElementHasAHeightBetweenPxAndPx($elementId, $minSize, $maxSize)
     {
-        $element = $this->getSession()->getPage()->find('css', '#'.$elementId);
+        $element = $this->getSession()->getPage()->find('css', '#' . $elementId);
 
         if ($element) {
-            $javascipt = "return $('#".$elementId."').height()";
+            $javascipt = "return $('#" . $elementId . "').height()";
             $height = $this->getSession()->evaluateScript($javascipt);
 
             if ($height < $minSize || $height > $maxSize) {
-                throw new \RuntimeException('Element height out of range: '.$height);
+                throw new \RuntimeException('Element height out of range: ' . $height);
             }
         } else {
             throw new \RuntimeException('Element not found');
@@ -123,14 +123,14 @@ trait DebugTrait
      */
     public function theElementHasAHeightGreaterThanPx($elementId, $minSize)
     {
-        $element = $this->getSession()->getPage()->find('css', '#'.$elementId);
+        $element = $this->getSession()->getPage()->find('css', '#' . $elementId);
 
         if ($element) {
-            $javascipt = "return $('#".$elementId."').height()";
+            $javascipt = "return $('#" . $elementId . "').height()";
             $height = $this->getSession()->evaluateScript($javascipt);
 
             if ($height < $minSize) {
-                throw new \RuntimeException('Element height out of range: '.$height);
+                throw new \RuntimeException('Element height out of range: ' . $height);
             }
         } else {
             throw new \RuntimeException('Element not found');

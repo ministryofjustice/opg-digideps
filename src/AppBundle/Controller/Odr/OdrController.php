@@ -136,7 +136,7 @@ class OdrController extends AbstractController
             $odr->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -181,7 +181,7 @@ class OdrController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->getRestClient()->put('odr/'.$odr->getId().'/submit', $odr, ['submit']);
+            $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($odr);
             $reportEmail = $this->getMailFactory()->createOdrEmail($this->getUser(), $odr, $pdfBinaryContent);

@@ -59,7 +59,7 @@ class MoneyTransferController extends AbstractController
                 case false:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
                 case true:
-                    $this->getRestClient()->put('report/'.$reportId, $report, ['money-transfers-no-transfers']);
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
         }
@@ -138,11 +138,11 @@ class MoneyTransferController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/'.$reportId.'/money-transfers/'.$transferId, $transfer, ['money-transfer']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
 
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/'.$reportId.'/money-transfers', $transfer, ['money-transfer']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
                     return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
                 }
             }

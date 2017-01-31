@@ -21,7 +21,7 @@ class RedisAvailability extends ServiceAvailabilityAbstract
                 $this->isHealthy = true;
             }
         } catch (\Exception $e) {
-            $this->errors = 'Redis Error: '.$e->getMessage();
+            $this->errors = 'Redis Error: ' . $e->getMessage();
         }
     }
 

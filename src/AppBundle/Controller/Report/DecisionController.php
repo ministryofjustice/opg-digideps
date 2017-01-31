@@ -60,7 +60,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -103,7 +103,7 @@ class DecisionController extends AbstractController
 
             $data->setReport($report);
 
-            $this->getRestClient()->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
+            $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -134,9 +134,9 @@ class DecisionController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from'=>'decisions_exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/'.$reportId, $report, ['reasonForNoDecisions']);
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoDecisions']);
                     foreach ($report->getDecisions() as $decision) {
-                        $this->getRestClient()->delete('/report/decision/'.$decision->getId());
+                        $this->getRestClient()->delete('/report/decision/' . $decision->getId());
                     }
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -218,7 +218,7 @@ class DecisionController extends AbstractController
     public function editAction(Request $request, $reportId, $decisionId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->getRestClient()->get('report/decision/'.$decisionId, 'Report\\Decision');
+        $decision = $this->getRestClient()->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
 
         $form = $this->createForm(new FormDir\Report\DecisionType(), $decision);

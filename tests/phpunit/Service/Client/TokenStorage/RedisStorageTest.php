@@ -30,7 +30,7 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
         $value = 'v';
         $id = 1;
 
-        $this->redis->shouldReceive('get')->with($this->prefix.$id)->andReturn($value);
+        $this->redis->shouldReceive('get')->with($this->prefix . $id)->andReturn($value);
 
         $this->assertEquals($value, $this->object->get($id));
     }
@@ -41,7 +41,7 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
         $returnValue = 'rv';
         $id = 1;
 
-        $this->redis->shouldReceive('set')->with($this->prefix.$id, $value)->andReturn($returnValue);
+        $this->redis->shouldReceive('set')->with($this->prefix . $id, $value)->andReturn($returnValue);
 
         $this->assertEquals($returnValue, $this->object->set($id, $value));
     }

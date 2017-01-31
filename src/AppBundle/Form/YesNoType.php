@@ -34,7 +34,7 @@ class YesNoType extends AbstractType
      * YesNoType constructor.
      * @param $field
      * @param string $translationDomain
-     * @param array $choices
+     * @param array  $choices
      */
     public function __construct($field, $translationDomain, array $choices)
     {

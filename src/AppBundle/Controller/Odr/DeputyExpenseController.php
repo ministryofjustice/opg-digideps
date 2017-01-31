@@ -54,7 +54,7 @@ class DeputyExpenseController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('odr_deputy_expenses_add', ['odrId' => $odrId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('odr/'.$odrId, $data, ['odr-expenses-paid-anything']);
+                    $this->getRestClient()->put('odr/' . $odrId, $data, ['odr-expenses-paid-anything']);
                     return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
             }
         }
@@ -87,12 +87,12 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $data->setOdr($odr);
 
-            $this->getRestClient()->post('odr/'.$odr->getId().'/expense', $data, ['odr-expense']);
+            $this->getRestClient()->post('odr/' . $odr->getId() . '/expense', $data, ['odr-expense']);
 
             return $this->redirect($this->generateUrl('odr_deputy_expenses_add_another', ['odrId' => $odrId]));
         }
 
-        $backLinkRoute = 'odr_deputy_expenses_'.$request->get('from');
+        $backLinkRoute = 'odr_deputy_expenses_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['odrId'=>$odrId]) : '';
 
 
@@ -136,7 +136,7 @@ class DeputyExpenseController extends AbstractController
     public function editAction(Request $request, $odrId, $expenseId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        $expense = $this->getRestClient()->get('odr/'.$odr->getId().'/expense/'.$expenseId, 'Odr\Expense');
+        $expense = $this->getRestClient()->get('odr/' . $odr->getId() . '/expense/' . $expenseId, 'Odr\Expense');
 
         $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
         $form->handleRequest($request);
@@ -145,7 +145,7 @@ class DeputyExpenseController extends AbstractController
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Record edited');
 
-            $this->getRestClient()->put('odr/'.$odr->getId().'/expense/'.$expense->getId(), $data, ['odr-expense']);
+            $this->getRestClient()->put('odr/' . $odr->getId() . '/expense/' . $expense->getId(), $data, ['odr-expense']);
 
             return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
         }
@@ -188,7 +188,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('odr/'.$odr->getId().'/expense/'.$expenseId);
+        $this->getRestClient()->delete('odr/' . $odr->getId() . '/expense/' . $expenseId);
 
         $request->getSession()->getFlashBag()->add(
             'notice',

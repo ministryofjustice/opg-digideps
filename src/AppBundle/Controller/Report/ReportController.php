@@ -71,7 +71,7 @@ class ReportController extends AbstractController
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $this->getRestClient()->put('report/'.$reportId, $report, ['startEndDates']);
+                $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
 
                 return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
             }
@@ -85,7 +85,7 @@ class ReportController extends AbstractController
                 $reportObj = $this->getReport($report->getId(), ['transactions']);
                 //update report to say message has been seen
                 $reportObj->setReportSeen(true);
-                $this->getRestClient()->put('report/'.$report->getId(), $reportObj);
+                $this->getRestClient()->put('report/' . $report->getId(), $reportObj);
             }
         }
 
@@ -115,7 +115,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->getRestClient()->get('client/'.$clientId, 'Client', ['client']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client']);
 
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
 
@@ -196,7 +196,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->getRestClient()->put('report/'.$report->getId(), $report, ['furtherInformation']);
+            $this->getRestClient()->put('report/' . $report->getId(), $report, ['furtherInformation']);
 
             // next or save: redirect to report declration
             if ($form->get('saveAndContinue')->isClicked()) {
@@ -243,13 +243,13 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $newReportId = $this->getRestClient()->put('report/'.$report->getId().'/submit', $report, ['submit']);
+            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
             $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
 
-            $newReport = $this->getRestClient()->get('report/'.$newReportId['newReportId'], 'Report\\Report');
+            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
 
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
@@ -354,7 +354,7 @@ class ReportController extends AbstractController
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
-        $name = 'OPG102-'.$report->getClient()->getCaseNumber().'-'.date_format($report->getEndDate(), 'Y').'.pdf';
+        $name = 'OPG102-' . $report->getClient()->getCaseNumber() . '-' . date_format($report->getEndDate(), 'Y') . '.pdf';
 
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
@@ -362,7 +362,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 //        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything

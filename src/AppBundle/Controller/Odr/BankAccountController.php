@@ -58,7 +58,7 @@ class BankAccountController extends AbstractController
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
-            $account = $this->getRestClient()->get('odr/account/'.$accountId, 'Odr\\BankAccount');
+            $account = $this->getRestClient()->get('odr/account/' . $accountId, 'Odr\\BankAccount');
         } else {
             $account = new EntityDir\Odr\BankAccount();
             $account->setOdr($odr);
@@ -94,7 +94,7 @@ class BankAccountController extends AbstractController
             // last step: save
             if ($step == $totalSteps) {
                 if ($accountId) {
-                    $this->getRestClient()->put('/odr/account/'.$accountId, $account, ['bank-account']);
+                    $this->getRestClient()->put('/odr/account/' . $accountId, $account, ['bank-account']);
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Bank account edited'
@@ -102,7 +102,7 @@ class BankAccountController extends AbstractController
 
                     return $this->redirectToRoute('odr_bank_accounts_summary', ['odrId' => $odrId]);
                 } else {
-                    $this->getRestClient()->post('odr/'.$odrId.'/account', $account, ['bank-account']);
+                    $this->getRestClient()->post('odr/' . $odrId . '/account', $account, ['bank-account']);
 
                     return $this->redirectToRoute('odr_bank_accounts_add_another', ['odrId' => $odrId]);
                 }

@@ -58,7 +58,7 @@ trait RegionTrait
      */
     public function iShouldSeeTheSubsection($subsection)
     {
-        $elementsFound = $this->getSession()->getPage()->findAll('css', '#'.$subsection.'-subsection');
+        $elementsFound = $this->getSession()->getPage()->findAll('css', '#' . $subsection . '-subsection');
         if (count($elementsFound) === 0) {
             throw new \RuntimeException("Subsection $subsection not found");
         }
@@ -88,7 +88,7 @@ trait RegionTrait
      */
     public function iShouldSeeInSection($text, $section)
     {
-        $this->assertSession()->elementTextContains('css', '#'.$section.'-section', $text);
+        $this->assertSession()->elementTextContains('css', '#' . $section . '-section', $text);
     }
 
     /**
@@ -99,7 +99,7 @@ trait RegionTrait
         $this->assertResponseStatus(200);
 
         //$this->assertResponseStatus(200);
-        $this->assertSession()->elementTextNotContains('css', '#'.$section.'-section', $text);
+        $this->assertSession()->elementTextNotContains('css', '#' . $section . '-section', $text);
     }
 
     /**
@@ -107,7 +107,7 @@ trait RegionTrait
      */
     public function iShouldSeeInTheContainer($text, $container)
     {
-        $this->assertSession()->elementTextContains('css', '#'.$container.', .'.$container, $text);
+        $this->assertSession()->elementTextContains('css', '#' . $container . ', .' . $container, $text);
     }
 
     /**
@@ -115,8 +115,8 @@ trait RegionTrait
      */
     public function theElementShouldBeEmpty($selector)
     {
-        $this->assertSession()->elementExists('css', '#'.$selector);
-        if (!empty($this->getSession()->getPage()->find('css', '#'.$selector)->getText())) {
+        $this->assertSession()->elementExists('css', '#' . $selector);
+        if (!empty($this->getSession()->getPage()->find('css', '#' . $selector)->getText())) {
             throw new \RuntimeException('Element Not Empty');
         }
     }
@@ -133,7 +133,7 @@ trait RegionTrait
 
     public static function behatElementToCssSelector($element, $type)
     {
-        return '.behat-'.$type.'-'.preg_replace('/\s+/', '-', $element);
+        return '.behat-' . $type . '-' . preg_replace('/\s+/', '-', $element);
     }
 
     /**

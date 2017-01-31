@@ -151,8 +151,8 @@ trait UserTrait
     {
         foreach ($table->getHash() as $row) {
             $row = array_map([$this, 'casRecNormaliseValue'], $row);
-            $query = sprintf('INSERT INTO casrec'.
-                '(client_case_number, client_lastname, deputy_no, deputy_lastname, deputy_postcode)'.
+            $query = sprintf('INSERT INTO casrec' .
+                '(client_case_number, client_lastname, deputy_no, deputy_lastname, deputy_postcode)' .
                 " VALUES('%s','%s','%s','%s','%s')",
                 $row['Case'], $row['Surname'], $row['Deputy No'], $row['Dep Surname'], $row['Dep Postcode']
             );

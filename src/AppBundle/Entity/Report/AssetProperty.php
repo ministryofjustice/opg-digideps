@@ -297,7 +297,7 @@ class AssetProperty extends Asset
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
+            throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;
@@ -373,6 +373,6 @@ class AssetProperty extends Asset
 
     public function getBehatIdentifier()
     {
-        return $this->getAddress().' '.$this->getPostcode();
+        return $this->getAddress() . ' ' . $this->getPostcode();
     }
 }

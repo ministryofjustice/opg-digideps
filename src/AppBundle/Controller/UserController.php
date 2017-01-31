@@ -73,7 +73,7 @@ class UserController extends AbstractController
             $this->get('deputy_provider')->login(['token' => $token]);
 
             // set password for user
-            $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
+            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
             ]));
@@ -162,7 +162,7 @@ class UserController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $this->getRestClient()->put('user/'.$user->getId(), $form->getData(), [
+                $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), [
                     $basicFormOnly ? 'user_details_basic' : 'user_details_full',
                 ]);
 
@@ -202,7 +202,7 @@ class UserController extends AbstractController
 
         if ($form->isValid()) {
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $this->getRestClient()->put('user/'.$user->getId().'/set-password', json_encode([
+            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $plainPassword,
             ]));
             $request->getSession()->getFlashBag()->add('notice', 'Password edited');
@@ -277,7 +277,7 @@ class UserController extends AbstractController
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            $this->getRestClient()->put('user/'.$user->getId(), $formData, ['user_details_full']);
+            $this->getRestClient()->put('user/' . $user->getId(), $formData, ['user_details_full']);
             $request->getSession()->getFlashBag()->add('notice', 'Your details edited');
 
             return $this->redirect($this->generateUrl('user_show'));
@@ -357,7 +357,7 @@ class UserController extends AbstractController
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
                 $signInText = $translator->trans('signin', [], 'register');
-                $signIn = '<a href="'.$this->generateUrl('login').'">'.$signInText.'</a>';
+                $signIn = '<a href="' . $this->generateUrl('login') . '">' . $signInText . '</a>';
                 $bodyText = str_replace('{{ sign_in }}', $signIn, $bodyText);
 
                 return $this->render('AppBundle:User:registration-thankyou.html.twig', [
@@ -386,7 +386,7 @@ class UserController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $this->get('logger')->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

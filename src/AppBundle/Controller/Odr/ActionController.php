@@ -61,7 +61,7 @@ class ActionController extends AbstractController
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            $this->getRestClient()->put('odr/'.$odrId, $data, ['action']);
+            $this->getRestClient()->put('odr/' . $odrId, $data, ['action']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(

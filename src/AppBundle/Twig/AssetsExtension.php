@@ -31,7 +31,7 @@ class AssetsExtension extends \Twig_Extension
      */
     public function assetUrlFilter($originalUrl)
     {
-        return '/assets/'.$this->getTag().'/'.$originalUrl;
+        return '/assets/' . $this->getTag() . '/' . $originalUrl;
     }
 
     /**
@@ -41,7 +41,7 @@ class AssetsExtension extends \Twig_Extension
     {
         if (!$this->tag) {
             // List the files in the web/assets folder
-            $assetRoot = $this->rootDir.'/../web/assets';
+            $assetRoot = $this->rootDir . '/../web/assets';
             $assetContents = array_diff(scandir($assetRoot), ['..', '.']);
 
             // set the value to the folder we find.

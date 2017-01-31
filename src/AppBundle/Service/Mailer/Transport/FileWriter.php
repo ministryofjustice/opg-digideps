@@ -65,7 +65,7 @@ class FileWriter implements Swift_Transport
     {
         $data = MessageUtils::messageToArray($message);
 
-        file_put_contents($this->path, json_encode($data).PHP_EOL, FILE_APPEND);
+        file_put_contents($this->path, json_encode($data) . PHP_EOL, FILE_APPEND);
 
         $this->messages[] = $message;
     }

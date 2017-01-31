@@ -48,9 +48,9 @@ class MailFactory
     {
         switch ($area) {
             case self::AREA_DEPUTY:
-                return $this->container->getParameter('non_admin_host').$this->router->generate($routeName, $params);
+                return $this->container->getParameter('non_admin_host') . $this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
-                return $this->container->getParameter('admin_host').$this->router->generate($routeName, $params);
+                return $this->container->getParameter('admin_host') . $this->router->generate($routeName, $params);
             default:
                 throw new \Exception("area $area not found");
         }
@@ -257,7 +257,7 @@ class MailFactory
 
         $viewParams = [
             'submittedReport' => $submittedReport,
-            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
+            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'cot' => EntityDir\Report\Report::PROPERTY_AND_AFFAIRS, //TODO take from $submittedReport ?
@@ -290,7 +290,7 @@ class MailFactory
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'deputyFirstName' => $user->getFirstname().' '.$user->getLastname(),
+            'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
             'pdfLink' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'odr_pdf'),
         ];
 

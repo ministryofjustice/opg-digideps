@@ -156,7 +156,7 @@ class RestClient
      */
     public function loadUserByToken($token)
     {
-        return $this->apiCall('get', 'user/get-by-token/'.$token, null, 'User', [], false);
+        return $this->apiCall('get', 'user/get-by-token/' . $token, null, 'User', [], false);
     }
 
     /**
@@ -167,7 +167,7 @@ class RestClient
      */
     public function userRecreateToken($email, $type = 'pass-reset')
     {
-        return $this->apiCall('put', 'user/recreate-token/'.$email.'/'.$type, null, 'User', [], false);
+        return $this->apiCall('put', 'user/recreate-token/' . $email . '/' . $type, null, 'User', [], false);
     }
 
     /**
@@ -283,11 +283,11 @@ class RestClient
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
-            return $this->arrayToEntitities('AppBundle\\Entity\\'.$expectedResponseType, $responseArray);
-        } elseif (class_exists('AppBundle\\Entity\\'.$expectedResponseType)) {
+            return $this->arrayToEntitities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
+        } elseif (class_exists('AppBundle\\Entity\\' . $expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray);
         } else {
-            throw new \InvalidArgumentException(__METHOD__.": invalid type of expected response, $expectedResponseType given.");
+            throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
         }
     }
 
@@ -332,7 +332,7 @@ class RestClient
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | Api not running ? | '.$url.' | '.$e->getMessage());
+            $this->logger->warning('RestClient | Api not running ? | ' . $url . ' | ' . $e->getMessage());
 
             $this->logRequest($url, $method, $start, $options, $e->getResponse());
 
@@ -341,12 +341,12 @@ class RestClient
             try {
                 $data = $e->getResponse() ? $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') : [];
             } catch (\Exception $e) {
-                $this->logger->warning('RestClient |  '.$url.' | '.$e->getMessage());
+                $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
             throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
         } catch (TransferException $e) {
-            $this->logger->warning('RestClient | '.$url.' | '.$e->getMessage());
+            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
             throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode());
         }
@@ -367,7 +367,7 @@ class RestClient
         try {
             $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
         } catch (\Exception $e) {
-            $this->logger->error(__METHOD__.': '.$e->getMessage().'. Api responded with invalid JSON. Body: '.$response->getBody());
+            $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . '. Api responded with invalid JSON. Body: ' . $response->getBody());
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT);
         }
 
@@ -387,7 +387,7 @@ class RestClient
     private function arrayToEntity($class, array $data)
     {
         $fullClassName = (strpos($class, 'AppBundle') !== false)
-                 ? $class : 'AppBundle\\Entity\\'.$class;
+                 ? $class : 'AppBundle\\Entity\\' . $class;
 
         return $this->serialiser->deserialize(json_encode($data), $fullClassName, 'json');
     }
@@ -511,6 +511,6 @@ class RestClient
 
     private function debugJsonString($jsonString)
     {
-        echo '<pre>'.json_encode(json_decode($jsonString), JSON_PRETTY_PRINT).'</pre>';
+        echo '<pre>' . json_encode(json_decode($jsonString), JSON_PRETTY_PRINT) . '</pre>';
     }
 }

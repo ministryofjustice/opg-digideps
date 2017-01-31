@@ -68,7 +68,7 @@ class VisitsCareController extends AbstractController
             if ($visitsCare->getId() == null) {
                 $this->getRestClient()->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/visits-care/'.$visitsCare->getId(), $data, self::$jmsGroups);
+                $this->getRestClient()->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary') {

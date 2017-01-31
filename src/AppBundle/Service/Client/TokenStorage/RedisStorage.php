@@ -24,17 +24,17 @@ class RedisStorage implements TokenStorageInterface
 
     public function get($id)
     {
-        return $this->redis->get($this->prefix.$id);
+        return $this->redis->get($this->prefix . $id);
     }
 
     public function set($id, $value)
     {
-        return $this->redis->set($this->prefix.$id, $value);
+        return $this->redis->set($this->prefix . $id, $value);
     }
 
     public function remove($id)
     {
-        $this->redis->set($this->prefix.$id, null);
-        $this->redis->expire($this->prefix.$id, 0);
+        $this->redis->set($this->prefix . $id, null);
+        $this->redis->expire($this->prefix . $id, 0);
     }
 }

@@ -29,7 +29,7 @@ trait FormTrait
         if ($page->has('css', '.form-group.error') ||
             $page->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('Errors found in elements: '
-                .implode(',', $this->getElementsIdsWithValidationErrors()));
+                . implode(',', $this->getElementsIdsWithValidationErrors()));
         }
     }
 
@@ -68,10 +68,10 @@ trait FormTrait
         if ($untriggeredField || $unexpectedFields) {
             $message = '';
             if ($untriggeredField) {
-                $message .= " - Form fields not throwing error as expected: \n      ".implode(', ', $untriggeredField)."\n";
+                $message .= " - Form fields not throwing error as expected: \n      " . implode(', ', $untriggeredField) . "\n";
             }
             if ($unexpectedFields) {
-                $message .= " - Form fields unexpectedly throwing errors: \n      ".implode(', ', $unexpectedFields)."\n";
+                $message .= " - Form fields unexpectedly throwing errors: \n      " . implode(', ', $unexpectedFields) . "\n";
             }
 
             throw new \RuntimeException($message);
@@ -102,7 +102,7 @@ trait FormTrait
         $value = $this->fixStepArgument($value);
 
         if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {

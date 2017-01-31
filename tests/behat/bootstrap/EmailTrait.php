@@ -56,7 +56,7 @@ trait EmailTrait
         $emailsArray = json_decode($emailsJson, true);
 
         if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
-            throw new \RuntimeException('No email has been sent. Api returned: '.$emailsJson);
+            throw new \RuntimeException('No email has been sent. Api returned: ' . $emailsJson);
         }
 
         // translate index into number
@@ -88,7 +88,7 @@ trait EmailTrait
     {
         $content = $this->getEmailMock(false);
         if ($content) {
-            throw new \RuntimeException("Found unexpected email with subject '".$content['subject']."'");
+            throw new \RuntimeException("Found unexpected email with subject '" . $content['subject'] . "'");
         }
     }
 
@@ -105,14 +105,14 @@ trait EmailTrait
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
 
         $filteredLinks = array_filter($links, function ($element) use ($regexpr) {
-            return preg_match('#'.$regexpr.'#i', $element);
+            return preg_match('#' . $regexpr . '#i', $element);
         });
 
         if (empty($filteredLinks)) {
             throw new \Exception("no link in the email's body. Filter: $regexpr . Body:\n $mailContent");
         }
         if (count(array_unique($filteredLinks)) > 1) {
-            throw new \Exception("more than one link found in the email's body. Filter: $regexpr . Links: ".implode("\n", $filteredLinks).". Body:\n $mailContent");
+            throw new \Exception("more than one link found in the email's body. Filter: $regexpr . Links: " . implode("\n", $filteredLinks) . ". Body:\n $mailContent");
         }
 
         return array_shift($filteredLinks);
@@ -141,7 +141,7 @@ trait EmailTrait
         } elseif ($area == 'deputy') {
             $linkToClick = str_replace($this->getAdminUrl(), $this->getSiteUrl(), $linkToClick);
         } else {
-            throw new \RuntimeException(__METHOD__.": $area not defined");
+            throw new \RuntimeException(__METHOD__ . ": $area not defined");
         }
 
         // visit the link
@@ -159,7 +159,7 @@ trait EmailTrait
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
-            throw new \RuntimeException("Addressee '".$mailTo."' does not match the expected '".$to."'");
+            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
         }
     }
 
@@ -172,7 +172,7 @@ trait EmailTrait
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
-            throw new \RuntimeException("Addressee '".$mailTo."' does not match the expected '".$to."'");
+            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
         }
     }
 

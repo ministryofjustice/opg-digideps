@@ -31,7 +31,7 @@ class AbstractController extends Controller
         $jmsGroups = array_unique($jmsGroups);
         sort($jmsGroups);
 
-        return $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $jmsGroups);
+        return $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $jmsGroups);
     }
 
     /**
@@ -39,7 +39,7 @@ class AbstractController extends Controller
      */
     protected function getFirstClient($groups = ['user', 'client'])
     {
-        $user = $this->getRestClient()->get('user/'.$this->getUser()->getId(), 'User', $groups);
+        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
         /* @var $user User */
         $clients = $user->getClients();
 

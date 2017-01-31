@@ -78,10 +78,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      {
          $suiteName = $scope->getSuite()->getName();
          echo "\n\n"
-              .strtoupper($suiteName)."\n"
-              .str_repeat('=', strlen($suiteName))."\n"
-              .$scope->getSuite()->getSetting('description')."\n"
-              ."\n";
+              . strtoupper($suiteName) . "\n"
+              . str_repeat('=', strlen($suiteName)) . "\n"
+              . $scope->getSuite()->getSetting('description') . "\n"
+              . "\n";
      }
 
     /**
@@ -114,7 +114,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $responseHeaders = $this->getSession()->getDriver()->getResponseHeaders();
 
         if (!isset($responseHeaders[$header])) {
-            throw new \Exception("Header $header not found in response. Headers found: ".implode(', ', array_keys($responseHeaders)));
+            throw new \Exception("Header $header not found in response. Headers found: " . implode(', ', array_keys($responseHeaders)));
         }
 
         // search in
@@ -125,7 +125,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             }
         }
         if (!$found) {
-            throw new \Exception("Header $header not found in response. Values: ".implode(', ', $responseHeaders[$header]));
+            throw new \Exception("Header $header not found in response. Values: " . implode(', ', $responseHeaders[$header]));
         }
     }
 

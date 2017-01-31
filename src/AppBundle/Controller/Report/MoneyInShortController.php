@@ -6,8 +6,6 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;

@@ -44,7 +44,7 @@ class AdController extends AbstractController
                 try {
                     $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User*/
                     // set email (needed to recreate token before login)
-                    $userToAdd->setEmail('ad'.$this->getUser()->getId().'-'.time().'@digital.justice.gov.uk');
+                    $userToAdd->setEmail('ad' . $this->getUser()->getId() . '-' . time() . '@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
                     $response = $this->getRestClient()->post('user', $userToAdd, ['ad_add_user']);
                     $request->getSession()->getFlashBag()->add(
@@ -125,14 +125,14 @@ class AdController extends AbstractController
 
             // flag as managed in order to retrieve it later
             $deputy->setAdManaged(true);
-            $this->getRestClient()->put('user/'.$deputy->getId(), $deputy, ['ad_managed']);
+            $this->getRestClient()->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
             $deputy = $this->getRestClient()->userRecreateToken($deputy->getEmail());
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');
-            $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
+            $redirectUrl = $deputyBaseUrl . $this->generateUrl('ad_login', [
                     'adId' => $adUser->getId(),
                     'userToken' => $deputy->getRegistrationToken(),
                     'adFirstname' => $adUser->getFirstname(),

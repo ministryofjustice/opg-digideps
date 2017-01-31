@@ -26,7 +26,7 @@ trait StatusSnapshotTrait
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
             throw new \RuntimeException($error);
         }
-        exec('psql '.self::$dbName." --quiet < {$sqlFile}");
+        exec('psql ' . self::$dbName . " --quiet < {$sqlFile}");
     }
 
     /**
@@ -37,8 +37,8 @@ trait StatusSnapshotTrait
     private static function getSnapshotPath($name)
     {
         return '/tmp/behat/behat-snapshot-'
-                .strtolower(preg_replace('/[^\w]+/', '-', $name))
-                .'.sql';
+                . strtolower(preg_replace('/[^\w]+/', '-', $name))
+                . '.sql';
     }
 
     /**
@@ -63,7 +63,7 @@ trait StatusSnapshotTrait
         }
 
         $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle())
-                        .'-before-auto';
+                        . '-before-auto';
 
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
@@ -78,7 +78,7 @@ trait StatusSnapshotTrait
         }
 
         $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle())
-                        .'-after-auto';
+                        . '-after-auto';
 
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
