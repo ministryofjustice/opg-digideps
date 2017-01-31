@@ -13,6 +13,6 @@
 	    <p>{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans(transOptions) }}</p>
     </div>
     <div class="card-actions">
-	    <a href="{{ path('odr_overview') }}" class="button right behat-link-odr-start">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+	    <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="button right behat-link-odr-start">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
     </div>
 </div>

@@ -291,7 +291,6 @@ class MailFactory
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
-            'pdfLink' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'odr_pdf'),
         ];
 
         $email

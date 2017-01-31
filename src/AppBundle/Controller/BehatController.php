@@ -170,7 +170,6 @@ class BehatController extends AbstractController
             'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',
             'domain' => 'https://complete-deputy-report.service.gov.uk/',
             'deputyFirstName' => 'Peter White',
-            'pdfLink' => '#',
             'link' => 'https://complete-deputy-report.service.gov.uk/',
             'submittedReport' => new Report(),
             'newReport' => new Report(),

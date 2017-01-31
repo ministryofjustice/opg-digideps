@@ -76,10 +76,10 @@ class OdrController extends AbstractController
     }
 
     /**
-     * @Route("/odr/overview", name="odr_overview")
+     * @Route("/odr/{odrId}/overview", name="odr_overview")
      * @Template()
      */
-    public function overviewAction()
+    public function overviewAction($odrId)
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
@@ -98,10 +98,10 @@ class OdrController extends AbstractController
     /**
      * Used for active and archived ODRs.
      *
-     * @Route("/odr/review", name="odr_review")
+     * @Route("/odr/{odrId}/review", name="odr_review")
      * @Template()
      */
-    public function reviewAction()
+    public function reviewAction($odrId)
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
@@ -118,9 +118,9 @@ class OdrController extends AbstractController
     }
 
     /**
-     * @Route("/odr/deputyodr.pdf", name="odr_pdf")
+     * @Route("/odr/{odrId}/deputyodr.pdf", name="odr_pdf")
      */
-    public function pdfViewAction()
+    public function pdfViewAction($odrId)
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
@@ -154,10 +154,10 @@ class OdrController extends AbstractController
     }
 
     /**
-     * @Route("/odr/declaration", name="odr_declaration")
+     * @Route("/odr/{odrId}/declaration", name="odr_declaration")
      * @Template()
      */
-    public function declarationAction(Request $request)
+    public function declarationAction(Request $request, $odrId)
     {
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();

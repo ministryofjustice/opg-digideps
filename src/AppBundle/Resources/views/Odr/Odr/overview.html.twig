@@ -15,7 +15,7 @@
     {% if odrStatus.isReadyToSubmit %}
         <div id="header-report-submit" class="hero">
             <h2 class="heading">{{ 'odrReady' | trans }}</h2>
-            <div class="message"><a class="button-grey submit-link behat-link-odr-submit" href="{{ path('odr_review') }}">{{ 'signAndSubmit' | trans() }}</a></div>
+            <div class="message"><a class="button-grey submit-link behat-link-odr-submit" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
         </div>
     {% endif %}
 
@@ -31,8 +31,8 @@
 
  
                         <p class="flush--bottom">
-                            <a href="{{ path('odr_pdf') }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
-                            <a href="{{ path('odr_review') }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
+                            <a href="{{ path('odr_pdf', {'odrId': odr.id}) }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
+                            <a href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
                         </p>
                     </li>
                 {% else %}
@@ -48,7 +48,7 @@
 
         <div class="column-one-half">
             {% if showReviewButton %}
-                <a class="button right" href="{{ path('odr_review') }}">Review report</a>
+                <a class="button right" href="{{ path('odr_review', {'odrId': odr.id}) }}">Review report</a>
             {% endif %}
         </div>
     </div>
@@ -154,7 +154,7 @@
             transDomain: translationDomain,
             subSection: 'odr_add_further_info',
             odr: odr,
-            linkToSubSection: path('odr_declaration'),
+            linkToSubSection: path('odr_declaration', {'odrId': odr.id}),
             description: false,
             state: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
             editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',

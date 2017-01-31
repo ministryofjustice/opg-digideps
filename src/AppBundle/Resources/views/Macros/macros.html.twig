@@ -13,7 +13,7 @@
             </li>
             <li>
                 {% if report.type == 'ndr' %}
-                    <a href="{{ path('odr_overview') }}" class="behat-link-breadcrumbs-odr-overview">
+                    <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
                         New deputy report overview</a>
 
                 {% else %}
@@ -88,7 +88,7 @@
         ] %}
     {% elseif report.type == 'ndr' %}
         {% set config = [
-        {'section':'reportOverview', 'link': path('odr_overview')},
+        {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
         {'section':'visitsCare','link': path('odr_visits_care', {'odrId': report.id})},
         {'section':'deputyExpenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
         {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': report.id})},
@@ -97,7 +97,7 @@
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
         {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'reportOverview', 'link': path('odr_overview')},
+        {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
         ] %}
     {% endif %}
 

@@ -8,9 +8,9 @@
     {% if odr.submitted == false %}
         {% if odrStatus.isReadyToSubmit %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("odr_overview" , {'odrId': odr.id }),
+            'previousLink': path("odr_overview" , {'odrId': odr.id}),
             'previousLabel': 'Edit new deputy report',
-            'nextLink': path("odr_declaration"),
+            'nextLink': path("odr_declaration", {'odrId': odr.id}),
             'nextLabel': 'Submit report',
             'position': position,
             'nextAdditionalClass': nextAdditionalClass,
@@ -37,7 +37,7 @@
     <a name="pageBody"></a>
 
     <div id="page-body">
-        <a class="pdflink" href="{{ path('odr_pdf') }}">Download as PDF</a>
+        <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
         {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
     </div>
 

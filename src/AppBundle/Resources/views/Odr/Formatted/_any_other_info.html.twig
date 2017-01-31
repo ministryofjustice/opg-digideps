@@ -1,29 +1,33 @@
-<div class="section" id="action-section">
-    <h2 class="section-heading">Any other information</h2>
+{% if odr.actionMoreInfo %}
+    <div class="section" id="action-section">
+        <h2 class="section-heading">Any other information</h2>
 
-    <div class="dont-break">
-        <h3 class="fieldset-outer-title">Further information</h3>
-        <div class="box">
-            <div class="checkboxes horizontal">
-                <div class="question">Is there anything else you'd like to tell us ?</div>
+        <div class="dont-break">
+            <h3 class="fieldset-outer-title">Further information</h3>
+            <div class="box">
+                <div class="checkboxes horizontal">
+                    <div class="question">Is there anything else you'd like to tell us ?</div>
 
-                <table class="yesno">
-                    <tr>
-                        <td class="checkbox" data-checkbox="">{% if odr.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox" data-checkbox="">{% if odr.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
-                    </tr>
-                </table>
+                    <table class="yesno">
+                        <tr>
+                            <td class="checkbox"
+                                data-checkbox="">{% if odr.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">Yes</td>
+                            <td class="checkbox"
+                                data-checkbox="">{% if odr.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">No</td>
+                        </tr>
+                    </table>
 
-            </div>
-            {% if odr.actionMoreInfo == 'yes' %}
-                <div class="form-group form-group-vertical">
-                    <div class="question">More details</div>
-                    <div class="value textarea">{{ odr.actionMoreInfoDetails | nl2br }}</div>
                 </div>
-            {% endif %}
+                {% if odr.actionMoreInfo == 'yes' %}
+                    <div class="form-group form-group-vertical">
+                        <div class="question">More details</div>
+                        <div class="value textarea">{{ odr.actionMoreInfoDetails | nl2br }}</div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
+{% endif %}
