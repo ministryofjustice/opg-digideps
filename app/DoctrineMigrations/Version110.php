@@ -18,8 +18,9 @@ class Version110 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report ADD money_transactions_short_in_exist VARCHAR(3) DEFAULT NULL');
-        $this->addSql('ALTER TABLE report ADD money_transactions_short_out_exist VARCHAR(3) DEFAULT NULL');
+        $this->addSql('CREATE TABLE money_transaction_short (id SERIAL NOT NULL, report_id INT DEFAULT NULL, amount NUMERIC(14, 2) NOT NULL, description TEXT DEFAULT NULL, date DATE DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_E712D1F64BD2A4C0 ON money_transaction_short (report_id)');
+        $this->addSql('ALTER TABLE money_transaction_short ADD CONSTRAINT FK_E712D1F64BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     /**
@@ -30,7 +31,6 @@ class Version110 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report DROP money_transactions_short_in_exist');
-        $this->addSql('ALTER TABLE report DROP money_transactions_short_out_exist');
+        $this->addSql('DROP TABLE money_transaction_short');
     }
 }

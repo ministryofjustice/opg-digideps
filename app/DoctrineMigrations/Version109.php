@@ -18,9 +18,9 @@ class Version109 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE money_transaction_short (id SERIAL NOT NULL, report_id INT DEFAULT NULL, amount NUMERIC(14, 2) NOT NULL, description TEXT DEFAULT NULL, date DATE DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_E712D1F64BD2A4C0 ON money_transaction_short (report_id)');
-        $this->addSql('ALTER TABLE money_transaction_short ADD CONSTRAINT FK_E712D1F64BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE TABLE money_short_category (id SERIAL NOT NULL, report_id INT DEFAULT NULL, type_id VARCHAR(255) NOT NULL, present BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_106370F74BD2A4C0 ON money_short_category (report_id)');
+        $this->addSql('ALTER TABLE money_short_category ADD CONSTRAINT FK_106370F74BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     /**
@@ -31,6 +31,6 @@ class Version109 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP TABLE money_transaction_short');
+        $this->addSql('DROP TABLE money_short_category');
     }
 }

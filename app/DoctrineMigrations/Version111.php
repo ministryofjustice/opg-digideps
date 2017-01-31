@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version108 extends AbstractMigration
+class Version111 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,9 +18,8 @@ class Version108 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE money_short_category (id SERIAL NOT NULL, report_id INT DEFAULT NULL, type_id VARCHAR(255) NOT NULL, present BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_106370F74BD2A4C0 ON money_short_category (report_id)');
-        $this->addSql('ALTER TABLE money_short_category ADD CONSTRAINT FK_106370F74BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE report ADD money_transactions_short_in_exist VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD money_transactions_short_out_exist VARCHAR(3) DEFAULT NULL');
     }
 
     /**
@@ -31,6 +30,7 @@ class Version108 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP TABLE money_short_category');
+        $this->addSql('ALTER TABLE report DROP money_transactions_short_in_exist');
+        $this->addSql('ALTER TABLE report DROP money_transactions_short_out_exist');
     }
 }
