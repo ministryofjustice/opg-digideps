@@ -134,7 +134,6 @@ class UserRegistrationService
         $user->setEmail($selfRegisterData->getEmail());
         $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
-        $user->setEmailConfirmed(false);
         $user->setRole($role);
         $user->setRegistrationDate(new \DateTime());
     }
