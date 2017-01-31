@@ -39,7 +39,7 @@
                     Account number: ****{{ account.accountNumber }}<br/>
                     {# property added later, so it could be null. remove the "if" from 2018 #}
                     {% if account.isJointAccount != '' %}
-                        Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                        Joint account: {{ account.isJointAccount | capitalize }}<br/>
                     {% endif %}
                 </p>
             </td>
