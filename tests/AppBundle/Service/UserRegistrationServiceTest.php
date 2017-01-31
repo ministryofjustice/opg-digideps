@@ -78,7 +78,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('zac@thetolleys.com', $user->getEmail());
         $this->assertFalse($user->getActive());
-        $this->assertFalse($user->getEmailConfirmed());
         $this->assertNotEmpty($user->getRegistrationToken());
         $this->assertNotNull($user->getTokenDate());
 
