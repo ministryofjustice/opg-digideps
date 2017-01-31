@@ -109,13 +109,6 @@ class User implements AdvancedUserInterface
     private $clients;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @var bool
-     */
-    private $emailConfirmed;
-
-    /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @var \DateTime
@@ -403,26 +396,6 @@ class User implements AdvancedUserInterface
     public function getClients()
     {
         return $this->clients;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEmailConfirmed()
-    {
-        return $this->emailConfirmed;
-    }
-
-    /**
-     * @param bool $emailConfirmed
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function setEmailConfirmed($emailConfirmed)
-    {
-        $this->emailConfirmed = $emailConfirmed;
-
-        return $this;
     }
 
     /**
