@@ -252,6 +252,8 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('not-started', $rs['debts']);
         $this->assertEquals('not-started', $rs['actions']);
         $this->assertEquals('not-started', $rs['otherInfo']);
+
+        $this->assertEquals('notStarted', $object->getStatus());
     }
 
     public function getRemainingSectionsPartialProvider()
@@ -278,6 +280,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = $this->getStatusServiceWithReportMocked($provider);
         $this->assertArrayNotHasKey($keyRemoved, $object->getRemainingSections());
         $this->assertFalse($object->isReadyToSubmit());// enable when other sections are added
+        $this->assertEquals('notFinished', $object->getStatus());
     }
 
     /**
@@ -300,5 +303,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([], $object->getRemainingSections());
         $this->assertTrue($object->isReadyToSubmit());
+        $this->assertEquals('readyToSubmit', $object->getStatus());
     }
 }

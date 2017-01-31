@@ -146,9 +146,9 @@ class OdrStatusService
     /**
      * @return array
      */
-    public function getRemainingSections()
+    private function getSectionStatus()
     {
-        $states = [
+        return [
             'visitsCare' => $this->getVisitsCareState(),
             'expenses' => $this->getExpensesState(),
             'incomeBenefits' => $this->getIncomeBenefitsState(),
@@ -158,8 +158,14 @@ class OdrStatusService
             'actions' => $this->getActionsState(),
             'otherInfo' => $this->getOtherInfoState(),
         ];
+    }
 
-        return array_filter($states, function ($e) {
+    /**
+     * @return array
+     */
+    public function getRemainingSections()
+    {
+        return array_filter($this->getSectionStatus(), function ($e) {
             return $e != self::STATE_DONE;
         });
     }
@@ -177,6 +183,13 @@ class OdrStatusService
      */
     public function getStatus()
     {
+        $startedSections = array_filter($this->getSectionStatus(), function($e) {
+            return $e != self::STATE_NOT_STARTED;
+        });
+        if (count($startedSections) === 0) {
+            return 'notStarted';
+        }
+
         if ($this->isReadyToSubmit()) {
             return 'readyToSubmit';
         } else {
