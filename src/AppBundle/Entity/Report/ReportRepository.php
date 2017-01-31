@@ -120,6 +120,33 @@ class ReportRepository extends EntityRepository
     }
 
     /**
+     * Called from doctrine listener.
+     *
+     * @param Report $report
+     *
+     * @return int changed records
+     */
+    public function addMoneyShortCategoriesIfMissing(Report $report)
+    {
+        $ret = 0;
+
+        if (count($report->getMoneyShortCategories()) > 0) {
+            return $ret;
+        }
+
+        //if ($report->getType() == Report::TYPE_103) { //re-enable when behat journey for 103 is created
+            $cats = MoneyShortCategory::getCategories('in') + MoneyShortCategory::getCategories('out');
+        foreach ($cats as $typeId => $options) {
+            $debt = new MoneyShortCategory($report, $typeId, false);
+            $this->_em->persist($debt);
+            ++$ret;
+        }
+        //}
+
+        return $ret;
+    }
+
+    /**
      * @param Report $oldReport
      *
      * @return string

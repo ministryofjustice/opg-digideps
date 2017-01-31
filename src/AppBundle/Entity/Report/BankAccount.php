@@ -436,8 +436,6 @@ class BankAccount
         return $this;
     }
 
-
-
     public function getMeta()
     {
         return $this->meta;

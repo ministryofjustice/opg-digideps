@@ -207,7 +207,7 @@ class GiftControllerTest extends AbstractTestController
      */
     public function testGiftsExist()
     {
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getReportById(self::$report1->getId());
         $this->assertCount(1, $report->getGifts());
         $this->assertEquals('yes', $report->getGiftsExist());
 
@@ -221,7 +221,7 @@ class GiftControllerTest extends AbstractTestController
         ]);
 
         self::fixtures()->clear();
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getReportById(self::$report1->getId());
         $this->assertEquals('no', $report->getGiftsExist());
         $this->assertCount(0, $report->getGifts());
     }

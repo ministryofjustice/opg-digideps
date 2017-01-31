@@ -116,7 +116,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report\Report */
+        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report\Report */
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);

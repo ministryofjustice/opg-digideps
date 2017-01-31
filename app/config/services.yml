@@ -13,6 +13,7 @@ services:
         class: AppBundle\EventListener\DoctrineListener
         tags:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+            - { name: doctrine.event_listener, event: preRemove, method: preRemove }
     user_registration_service:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em" ]

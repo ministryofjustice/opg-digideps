@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
@@ -9,6 +10,7 @@ class ReportControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $report1;
+    private static $report103;
     private static $deputy2;
     private static $client2;
     private static $report2;
@@ -25,6 +27,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$report103 = self::fixtures()->createReport(self::$client1, ['setType'=>Report::TYPE_103]);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
@@ -87,7 +90,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert creation
-        $report = self::fixtures()->getRepo('Report\Report')->find($reportId);
+        $report = self::fixtures()->getReportById($reportId);
         /* @var $report \AppBundle\Entity\Report\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
@@ -356,5 +359,65 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals('yes', $data['action_more_info']);
         $this->assertEquals('md2', $data['action_more_info_details']);
+    }
+
+    public function testMoneyCategories()
+    {
+        $url = '/report/'.self::$report103->getId();
+
+        //refresh
+        self::$report103 = self::fixtures()->getRepo('REport\Report')->find(self::$report103->getId());
+
+        $this->assertCount(15, self::$report103->getMoneyShortCategories());
+
+        // check default
+        $q = http_build_query(['groups' => [
+            'moneyShortCategoriesIn',
+            'moneyShortCategoriesOut',
+        ]]);
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertCount(7, $data['money_short_categories_in']);
+        $this->assertCount(8, $data['money_short_categories_out']);
+
+
+        // PUT
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'money_short_categories_in'                      => [
+                    ['type_id' => 'state_pension_and_benefit', 'present' => true],
+                    ['type_id' => 'bequests', 'present' => false],
+                ],
+                'money_short_categories_out'                      => [
+                    ['type_id' => 'accomodation_costs', 'present' => true],
+                    ['type_id' => 'care_fees', 'present' => false],
+                ],
+
+            ],
+        ]);
+
+        // GET and assert
+        $q = http_build_query(['groups' => [
+            'moneyShortCategoriesIn',
+            'moneyShortCategoriesOut',
+        ]]);
+        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertEquals('state_pension_and_benefit', $data['money_short_categories_in'][0]['type_id']);
+        $this->assertEquals(true, $data['money_short_categories_in'][0]['present']);
+
+        $this->assertEquals('accomodation_costs', $data['money_short_categories_out'][7]['type_id']);
+        $this->assertEquals(true, $data['money_short_categories_out'][7]['present']);
+
+        $this->assertEquals('care_fees', $data['money_short_categories_out'][8]['type_id']);
+        $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
     }
 }

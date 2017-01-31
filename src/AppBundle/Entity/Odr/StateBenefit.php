@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\Odr\Traits\PresentWithDetailsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -80,11 +79,10 @@ class StateBenefit
      */
     private $moreDetails;
 
-
     /**
-     * @param Odr $odr
+     * @param Odr    $odr
      * @param string $typeId
-     * @param float $amount
+     * @param float  $amount
      */
     public function __construct(Odr $odr, $typeId, $hasMoreDetails)
     {

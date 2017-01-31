@@ -85,6 +85,21 @@ abstract class RestController extends Controller
     }
 
     /**
+     * @param $reportId
+     *
+     * @return EntityDir\Report\Report
+     */
+    protected function findReportById($reportId)
+    {
+        $entity = $this->getRepository('Report\Report')->find($reportId);
+        if (!$entity) {
+            throw new NotFound('Report not found');
+        }
+
+        return $entity;
+    }
+
+    /**
      * @return \Doctrine\ORM\EntityManager
      */
     protected function getEntityManager()

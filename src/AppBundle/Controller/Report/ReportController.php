@@ -174,6 +174,7 @@ class ReportController extends RestController
 
         if (array_key_exists('paid_for_anything', $data)) {
             $report->setPaidForAnything($data['paid_for_anything']);
+            // TODO consider moving to a listener or service
             if ($report->getPaidForAnything() === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
                     $this->getEntityManager()->remove($e);
@@ -183,6 +184,7 @@ class ReportController extends RestController
 
         if (array_key_exists('gifts_exist', $data)) {
             $report->setGiftsExist($data['gifts_exist']);
+            // TODO consider moving to a listener or service
             if ($report->getGiftsExist() === 'no') { // remove existing gift
                 foreach ($report->getGifts() as $e) {
                     $this->getEntityManager()->remove($e);
@@ -208,6 +210,7 @@ class ReportController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
+            // TODO consider moving to a listener or service
             if ($report->getNoAssetToAdd()) {
                 foreach ($report->getAssets() as $asset) {
                     $this->getEntityManager()->remove($asset);
@@ -242,6 +245,48 @@ class ReportController extends RestController
                 $report->setActionMoreInfoDetails(
                     $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
                 );
+            }
+        }
+
+        if (array_key_exists('money_short_categories_in', $data)) {
+            foreach ($data['money_short_categories_in'] as $row) {
+                $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                    $e
+                        ->setPresent($row['present']);
+                    $this->getEntityManager()->flush($e);
+                }
+            }
+        }
+
+        if (array_key_exists('money_short_categories_out', $data)) {
+            foreach ($data['money_short_categories_out'] as $row) {
+                $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                    $e
+                        ->setPresent($row['present']);
+                    $this->getEntityManager()->flush($e);
+                }
+            }
+        }
+
+        if (array_key_exists('money_transactions_short_in_exist', $data)) {
+            $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
+            // TODO consider moving to a listener or service
+            if ($report->getMoneyTransactionsShortInExist() === 'no') { // remove existing
+                foreach ($report->getMoneyTransactionsShortIn() as $e) {
+                    $this->getEntityManager()->remove($e);
+                }
+            }
+        }
+
+        if (array_key_exists('money_transactions_short_out_exist', $data)) {
+            $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
+            // TODO consider moving to a listener or service
+            if ($report->getMoneyTransactionsShortOutExist() === 'no') { // remove existing
+                foreach ($report->getMoneyTransactionsShortOut() as $e) {
+                    $this->getEntityManager()->remove($e);
+                }
             }
         }
 
