@@ -51,18 +51,18 @@ abstract class RestController extends Controller
                     break;
 
                 default:
-                    throw new \InvalidArgumentException(__METHOD__.": {$validation} not recognised.");
+                    throw new \InvalidArgumentException(__METHOD__ . ": {$validation} not recognised.");
             }
         }
 
         if (!empty($errors)) {
-            throw new \InvalidArgumentException('Errors('.count($errors).'): '.implode(', ', $errors));
+            throw new \InvalidArgumentException('Errors(' . count($errors) . '): ' . implode(', ', $errors));
         }
     }
 
     protected function getRepository($entityClass)
     {
-        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\'.$entityClass);
+        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\' . $entityClass);
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class RestController extends Controller
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
         if (!$entity) {
-            throw new NotFound($errorMessage ?: $entityClass.' not found');
+            throw new NotFound($errorMessage ?: $entityClass . ' not found');
         }
 
         return $entity;

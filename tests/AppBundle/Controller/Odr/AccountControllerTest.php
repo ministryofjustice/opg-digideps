@@ -56,21 +56,21 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetAccountsAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/accounts';
+        $url = '/odr/' . self::$odr1->getId() . '/accounts';
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
     public function testgetAccountsAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId().'/accounts';
+        $url2 = '/odr/' . self::$odr2->getId() . '/accounts';
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetAccounts()
     {
         // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', '/odr/'.self::$odr1->getId().'/accounts', [
+        $data = $this->assertJsonRequest('GET', '/odr/' . self::$odr1->getId() . '/accounts', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -81,7 +81,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testaddAccount()
     {
-        $url = '/odr/'.self::$odr1->getId().'/account';
+        $url = '/odr/' . self::$odr1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
@@ -109,7 +109,7 @@ class AccountControllerTest extends AbstractTestController
 
 
         // assert cannot create account for a odr not belonging to logged user
-        $url2 = '/odr/'.self::$odr2->getId().'/account';
+        $url2 = '/odr/' . self::$odr2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
         return $account->getId();
@@ -117,7 +117,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetOneById()
     {
-        $url = '/odr/account/'.self::$account1->getId();
+        $url = '/odr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
 
@@ -132,7 +132,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals(self::$odr1->getId(), $data['odr']['id']);
 
         // assert  user2 cannot read the account
-        $url2 = '/odr/account/'.self::$account2->getId();
+        $url2 = '/odr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
@@ -141,7 +141,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testEdit()
     {
-        $url = '/odr/account/'.self::$account1->getId();
+        $url = '/odr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
@@ -162,7 +162,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('yes', $account->getIsJointAccount());
 
         // assert user cannot modify another users' account
-        $url2 = '/odr/account/'.self::$account2->getId();
+        $url2 = '/odr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
@@ -172,8 +172,8 @@ class AccountControllerTest extends AbstractTestController
     public function testaccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $url = '/odr/account/'.$account1Id;
-        $url2 = '/odr/account/'.self::$account2->getId();
+        $url = '/odr/account/' . $account1Id;
+        $url2 = '/odr/account/' . self::$account2->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);

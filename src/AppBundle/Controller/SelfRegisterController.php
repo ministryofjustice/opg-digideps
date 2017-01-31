@@ -32,7 +32,7 @@ class SelfRegisterController extends RestController
         $errors = $validator->validate($selfRegisterData);
 
         if (count($errors) > 0) {
-            throw new \RuntimeException('Invalid registration data: '.$errors);
+            throw new \RuntimeException('Invalid registration data: ' . $errors);
         }
 
         try {

@@ -306,7 +306,7 @@ class Contact
     {
         $space = ' ';
 
-        return $this->getFirstname().$space.$this->getLastname();
+        return $this->getFirstname() . $space . $this->getLastname();
     }
 
     /**

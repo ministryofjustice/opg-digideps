@@ -88,6 +88,6 @@ class AttemptsInTimeChecker
 
     private function keyToRedisId($key)
     {
-        return $this->redisPrefix.$key;
+        return $this->redisPrefix . $key;
     }
 }

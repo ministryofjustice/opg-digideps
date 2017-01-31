@@ -48,10 +48,10 @@ class ManageController extends RestController
             // customise error message if possible
             $returnMessage = 'Database generic error';
             if ($e instanceof \PDOException && $e->getCode() === 7) {
-                $returnMessage = 'Database service not reachabe ('.$e->getMessage().')';
+                $returnMessage = 'Database service not reachabe (' . $e->getMessage() . ')';
             }
             if ($e instanceof \Doctrine\DBAL\DBALException) {
-                $returnMessage = 'Database schema error (dd_user table not found) ('.$e->getMessage().')';
+                $returnMessage = 'Database schema error (dd_user table not found) (' . $e->getMessage() . ')';
             }
 
             // log real error message

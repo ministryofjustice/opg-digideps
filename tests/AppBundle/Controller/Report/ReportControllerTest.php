@@ -99,7 +99,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testGetByIdAuth()
     {
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -107,7 +107,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testGetByIdAcl()
     {
-        $url2 = '/report/'.self::$report2->getId();
+        $url2 = '/report/' . self::$report2->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
@@ -117,10 +117,10 @@ class ReportControllerTest extends AbstractTestController
      */
     public function testGetById()
     {
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
 
         $q = http_build_query(['groups' => ['report', 'client']]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
@@ -134,21 +134,21 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('end_date', $data);
 
         // assert decisions
-        $data = $this->assertJsonRequest('GET', $url.'?groups=decision', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=decision', [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
         $this->assertArrayHasKey('decisions', $data);
 
         // assert assets
-        $data = $this->assertJsonRequest('GET', $url.'?groups=asset', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=asset', [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
         $this->assertArrayHasKey('assets', $data);
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=debt', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=debt', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -157,7 +157,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testSubmitAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/submit';
+        $url = '/report/' . self::$report1->getId() . '/submit';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -165,7 +165,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testSubmitAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/submit';
+        $url2 = '/report/' . self::$report2->getId() . '/submit';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
@@ -175,7 +175,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$report1->getSubmitted());
 
         $reportId = self::$report1->getId();
-        $url = '/report/'.$reportId.'/submit';
+        $url = '/report/' . $reportId . '/submit';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -200,7 +200,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$report1->getSubmitted());
 
         $reportId = self::$report1->getId();
-        $url = '/report/'.$reportId.'/submit';
+        $url = '/report/' . $reportId . '/submit';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -223,7 +223,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testUpdateAuth()
     {
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -231,7 +231,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testUpdateAcl()
     {
-        $url2 = '/report/'.self::$report2->getId();
+        $url2 = '/report/' . self::$report2->getId();
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
@@ -239,7 +239,7 @@ class ReportControllerTest extends AbstractTestController
     public function testUpdate()
     {
         $reportId = self::$report1->getId();
-        $url = '/report/'.$reportId;
+        $url = '/report/' . $reportId;
 
         // assert get
         $this->assertJsonRequest('PUT', $url, [
@@ -256,7 +256,7 @@ class ReportControllerTest extends AbstractTestController
         // both
         $q = http_build_query(['groups' => ['report'/*, 'transactionsIn', 'transactionsOut'*/]]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
@@ -270,7 +270,7 @@ class ReportControllerTest extends AbstractTestController
     public function testDebts()
     {
         $reportId = self::$report1->getId();
-        $url = '/report/'.$reportId;
+        $url = '/report/' . $reportId;
 
         // "yes"
         $this->assertJsonRequest('PUT', $url, [
@@ -289,7 +289,7 @@ class ReportControllerTest extends AbstractTestController
 
         $q = http_build_query(['groups' => ['debt']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -322,7 +322,7 @@ class ReportControllerTest extends AbstractTestController
                 'debts' => [],
             ],
         ]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -336,7 +336,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testActions()
     {
-        $url = '/report/'.self::$report1->getId();
+        $url = '/report/' . self::$report1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -352,7 +352,7 @@ class ReportControllerTest extends AbstractTestController
         $q = http_build_query(['groups' => [
             'action-more-info',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -363,7 +363,7 @@ class ReportControllerTest extends AbstractTestController
 
     public function testMoneyCategories()
     {
-        $url = '/report/'.self::$report103->getId();
+        $url = '/report/' . self::$report103->getId();
 
         //refresh
         self::$report103 = self::fixtures()->getRepo('REport\Report')->find(self::$report103->getId());
@@ -375,7 +375,7 @@ class ReportControllerTest extends AbstractTestController
             'moneyShortCategoriesIn',
             'moneyShortCategoriesOut',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -406,7 +406,7 @@ class ReportControllerTest extends AbstractTestController
             'moneyShortCategoriesIn',
             'moneyShortCategoriesOut',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];

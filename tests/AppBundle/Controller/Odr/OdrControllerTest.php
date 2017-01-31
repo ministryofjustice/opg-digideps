@@ -52,20 +52,20 @@ class OdrControllerTest extends AbstractTestController
 
     public function testGetOneByIdAuth()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testGetOneByIdAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId();
+        $url2 = '/odr/' . self::$odr2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testGetOneByIdData()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -77,7 +77,7 @@ class OdrControllerTest extends AbstractTestController
 
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url.'?groups=odr-debt', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=odr-debt', [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -86,7 +86,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testDebts()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // "yes"
         $this->assertJsonRequest('PUT', $url, [
@@ -105,7 +105,7 @@ class OdrControllerTest extends AbstractTestController
 
         $q = http_build_query(['groups' => ['odr-debt']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -138,7 +138,7 @@ class OdrControllerTest extends AbstractTestController
                 'debts'     => [],
             ],
         ]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -152,7 +152,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testIncomeBenefits()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -183,7 +183,7 @@ class OdrControllerTest extends AbstractTestController
             'damages',
             'one-off',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -240,7 +240,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testActions()
     {
-        $url = '/odr/'.self::$odr1->getId();
+        $url = '/odr/' . self::$odr1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -263,7 +263,7 @@ class OdrControllerTest extends AbstractTestController
             'odr-action-property',
             'odr-action-more-info',
         ]]);
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -279,7 +279,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testSubmitAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/submit';
+        $url = '/odr/' . self::$odr1->getId() . '/submit';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -287,7 +287,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testSubmitAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId().'/submit';
+        $url2 = '/odr/' . self::$odr2->getId() . '/submit';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
@@ -297,7 +297,7 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$odr1->getSubmitted());
 
         $odrId = self::$odr1->getId();
-        $url = '/odr/'.$odrId.'/submit';
+        $url = '/odr/' . $odrId . '/submit';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -322,7 +322,7 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$odr1->getSubmitted());
 
         $odrId = self::$odr1->getId();
-        $url = '/odr/'.$odrId.'/submit';
+        $url = '/odr/' . $odrId . '/submit';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

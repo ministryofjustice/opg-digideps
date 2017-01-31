@@ -44,7 +44,7 @@ class ActionController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $action = $this->findEntityBy('Report\Action', $id, 'Action with id:'.$id.' not found');
+        $action = $this->findEntityBy('Report\Action', $id, 'Action with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         $serialisedGroups = $request->query->has('groups')

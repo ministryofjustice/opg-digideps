@@ -65,7 +65,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testGetOneByIdAuth()
     {
-        $url = '/odr/visits-care/'.self::$visitsCare1->getId();
+        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -73,13 +73,13 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testGetOneByIdAcl()
     {
-        $url2 = '/odr/visits-care/'.self::$visitsCare2->getId();
+        $url2 = '/odr/visits-care/' . self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testGetOneByIdData()
     {
-        $url = '/odr/visits-care/'.self::$visitsCare1->getId();
+        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -133,7 +133,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testAddUpdateAuth()
     {
         $url = '/odr/visits-care';
-        $url2 = '/odr/visits-care/'.self::$visitsCare1->getId();
+        $url2 = '/odr/visits-care/' . self::$visitsCare1->getId();
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNeedsAuth('PUT', $url2);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -146,7 +146,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testAddUpdateAcl()
     {
         $url2post = '/odr/visits-care';
-        $url2put = '/odr/visits-care/'.self::$visitsCare2->getId();
+        $url2put = '/odr/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('POST', $url2post, self::$tokenDeputy, [
             'odr_id' => ['id' => self::$odr2->getId()],
@@ -159,7 +159,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testUpdate()
     {
-        $url = '/odr/visits-care/'.self::$visitsCare1->getId();
+        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -187,7 +187,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteAuth()
     {
-        $url = '/odr/visits-care/'.self::$visitsCare1->getId();
+        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -198,7 +198,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteAcl()
     {
-        $url2 = '/odr/visits-care/'.self::$visitsCare2->getId();
+        $url2 = '/odr/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
@@ -211,7 +211,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testDelete()
     {
         $id = self::$visitsCare1->getId();
-        $url = '/odr/visits-care/'.$id;
+        $url = '/odr/visits-care/' . $id;
 
         $data = $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,

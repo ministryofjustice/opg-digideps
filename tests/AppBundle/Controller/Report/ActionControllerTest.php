@@ -52,21 +52,21 @@ class ActionControllerTest extends AbstractTestController
 
     public function testupdateAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/action';
+        $url = '/report/' . self::$report1->getId() . '/action';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testupdateAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/action';
+        $url2 = '/report/' . self::$report2->getId() . '/action';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
     public function testupdate()
     {
-        $url = '/report/'.self::$report1->getId().'/action';
+        $url = '/report/' . self::$report1->getId() . '/action';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

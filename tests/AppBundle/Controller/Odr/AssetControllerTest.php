@@ -58,7 +58,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetAssetsAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/assets';
+        $url = '/odr/' . self::$odr1->getId() . '/assets';
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -66,14 +66,14 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetAssetsAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId().'/assets';
+        $url2 = '/odr/' . self::$odr2->getId() . '/assets';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetAssets()
     {
-        $url = '/odr/'.self::$odr1->getId().'/assets';
+        $url = '/odr/' . self::$odr1->getId() . '/assets';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -99,7 +99,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset1->getId();
+        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -107,13 +107,13 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset2->getId();
+        $url2 = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset1->getId();
+        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -127,7 +127,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testPostAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset';
+        $url = '/odr/' . self::$odr1->getId() . '/asset';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -135,14 +135,14 @@ class AssetControllerTest extends AbstractTestController
 
     public function testPostAcl()
     {
-        $url2 = '/odr/'.self::$odr2->getId().'/asset';
+        $url2 = '/odr/' . self::$odr2->getId() . '/asset';
 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
     }
 
     public function testPostOther()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset';
+        $url = '/odr/' . self::$odr1->getId() . '/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -168,7 +168,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testPostProperty()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset';
+        $url = '/odr/' . self::$odr1->getId() . '/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -218,7 +218,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset1->getId();
+        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -226,8 +226,8 @@ class AssetControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset2->getId();
-        $url3 = '/odr/'.self::$odr2->getId().'/asset/'.self::$asset2->getId();
+        $url2 = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset2->getId();
+        $url3 = '/odr/' . self::$odr2->getId() . '/asset/' . self::$asset2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -240,7 +240,7 @@ class AssetControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/odr/'.self::$odr1->getId().'/asset/'.self::$asset1->getId();
+        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

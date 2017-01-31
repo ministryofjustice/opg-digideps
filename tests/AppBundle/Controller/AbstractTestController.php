@@ -95,23 +95,23 @@ abstract class AbstractTestController extends WebTestCase
         );
         $response = self::$frameworkBundleClient->getResponse();
 
-        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: '.$response->headers);
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: ' . $response->headers);
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
-            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: ".print_r($return, true));
+            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
             if (!empty($options['assertId'])) {
                 $this->assertTrue($return['data']['id'] > 0);
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: ".print_r($return, true));
+            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: " . print_r($return, true));
         }
         if (!empty($options['assertCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $return['code'], 'Response: '.print_r($return, true));
+            $this->assertEquals($options['assertResponseCode'], $return['code'], 'Response: ' . print_r($return, true));
         }
         if (!empty($options['assertResponseCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: '.$response->getStatusCode().print_r($return, true));
+            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: ' . $response->getStatusCode() . print_r($return, true));
         }
 
         return $return;
@@ -128,7 +128,7 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
         // reset brute-force counters
-        $key = 'email'.$email;
+        $key = 'email' . $email;
         self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
         self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
 

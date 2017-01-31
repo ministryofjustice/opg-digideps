@@ -278,7 +278,7 @@ class AssetProperty extends Asset
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
+            throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;

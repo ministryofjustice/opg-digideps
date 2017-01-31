@@ -301,7 +301,7 @@ class UserController extends RestController
         $user = $this->findEntityBy('User', ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole().' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
 
         return $user;

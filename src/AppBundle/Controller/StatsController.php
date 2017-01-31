@@ -40,7 +40,7 @@ class StatsController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $file = '/tmp/stats'.$timestamp.'.csv';
+        $file = '/tmp/stats' . $timestamp . '.csv';
 
         if (file_exists($file)) {
             echo file_get_contents($file);

@@ -40,7 +40,7 @@ class CasRecController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $this->get('logger')->info('Received '.count($data).' records');
+        $this->get('logger')->info('Received ' . count($data) . ' records');
 
         $em = $this->getEntityManager();
         $validator = $this->get('validator');
@@ -62,14 +62,14 @@ class CasRecController extends RestController
 
                 $errors = $validator->validate($casRec);
                 if (count($errors) > 0) {
-                    $retErrors[] = 'ERROR IN LINE '.($dataIndex + 2).' :'.str_replace('Object(AppBundle\Entity\CasRec).', '', (string) $errors);
+                    $retErrors[] = 'ERROR IN LINE ' . ($dataIndex + 2) . ' :' . str_replace('Object(AppBundle\Entity\CasRec).', '', (string) $errors);
                     unset($casRec);
                 } else {
                     $em->persist($casRec);
                     if (($added++ % $persistEvery) === 0) {
                         $em->flush();
                         $em->clear();
-                        $this->get('logger')->info("saved $added / $count records. ".(memory_get_peak_usage() / 1024 / 1024).' MB of memory used');
+                        $this->get('logger')->info("saved $added / $count records. " . (memory_get_peak_usage() / 1024 / 1024) . ' MB of memory used');
                     }
                 }
             }

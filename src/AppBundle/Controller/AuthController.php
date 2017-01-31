@@ -31,7 +31,7 @@ class AuthController extends RestController
 
         //brute force checks
         $index = array_key_exists('token', $data) ? 'token' : 'email';
-        $key = $index.$data[$index];
+        $key = $index . $data[$index];
         $attemptsInTimechecker = $this->get('attemptsInTimeChecker');
         $incrementalWaitingTimechecker = $this->get('attemptsIncrementalWaitingChecker');
 
@@ -64,7 +64,7 @@ class AuthController extends RestController
             }
         }
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new AppException\UnauthorisedException($user->getRole()->getRole().' user role not allowed from this client.');
+            throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
 
         // reset counters at successful login

@@ -563,7 +563,7 @@ class Client
      */
     public function getFullName($space = '&nbsp;')
     {
-        return $this->getFirstname().$space.$this->getLastname();
+        return $this->getFirstname() . $space . $this->getLastname();
     }
 
     /**

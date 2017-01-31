@@ -41,7 +41,7 @@ class AttemptsIncrementalWaitingChecker
     public function addFreezingRule($maxAttempts, $freezeFor)
     {
         if (!$maxAttempts || !$freezeFor) {
-            throw new \InvalidArgumentException(__METHOD__.' : Invalid values');
+            throw new \InvalidArgumentException(__METHOD__ . ' : Invalid values');
         }
         $this->freezeRules[] = [$maxAttempts, $freezeFor];
 
@@ -100,7 +100,7 @@ class AttemptsIncrementalWaitingChecker
 
     private function keyToRedisId($key)
     {
-        return $this->redisPrefix.$key;
+        return $this->redisPrefix . $key;
     }
 
     public function getTimestamp()

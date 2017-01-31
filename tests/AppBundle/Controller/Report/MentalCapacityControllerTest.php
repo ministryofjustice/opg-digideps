@@ -53,21 +53,21 @@ class MentalCapacityControllerTest extends AbstractTestController
 
     public function testupdateAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/mental-capacity';
+        $url = '/report/' . self::$report1->getId() . '/mental-capacity';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testupdateAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/mental-capacity';
+        $url2 = '/report/' . self::$report2->getId() . '/mental-capacity';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
     public function testupdate()
     {
-        $url = '/report/'.self::$report1->getId().'/mental-capacity';
+        $url = '/report/' . self::$report1->getId() . '/mental-capacity';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

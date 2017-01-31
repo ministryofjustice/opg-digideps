@@ -77,7 +77,7 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
             'getId' => 123,
         ]);
 
-        $tokenMatchPattern = '/^123_'.'[0-9a-f]{5,40}'.'[\d]{1,}/';
+        $tokenMatchPattern = '/^123_' . '[0-9a-f]{5,40}' . '[\d]{1,}/';
 
         $this->redis->shouldReceive('set')->with(matchesPattern($tokenMatchPattern), 123)->atLeast(1);
         $this->redis->shouldReceive('expire')->with(matchesPattern($tokenMatchPattern), 7)->atLeast(1);

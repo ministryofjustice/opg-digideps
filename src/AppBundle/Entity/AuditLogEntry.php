@@ -161,7 +161,7 @@ class AuditLogEntry
     public function setAction($action)
     {
         if (!in_array($action, self::$allowedActions)) {
-            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: ".implode(',', self::$allowedActions));
+            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: " . implode(',', self::$allowedActions));
         }
         $this->action = $action;
 

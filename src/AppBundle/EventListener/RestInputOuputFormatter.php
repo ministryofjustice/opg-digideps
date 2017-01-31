@@ -90,7 +90,7 @@ class RestInputOuputFormatter
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
-                throw new \Exception("format $format not supported and  defaultFormat not defined. Supported formats: ".implode(',', $this->supportedFormats));
+                throw new \Exception("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
             }
         }
 
@@ -102,7 +102,7 @@ class RestInputOuputFormatter
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
-        $response->headers->set('Content-Type', 'application/'.$format);
+        $response->headers->set('Content-Type', 'application/' . $format);
         // response modifier
         foreach ($this->responseModifiers as $modifier) {
             $modifier($response);

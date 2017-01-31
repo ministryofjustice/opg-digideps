@@ -25,7 +25,7 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         $this
                 ->setName('doctrine:migrations:status-check')
                 ->setDescription('Throw exception (return !=0) if you have '
-                        .' previously executed migrations in the database that are not registered migrations')
+                        . ' previously executed migrations in the database that are not registered migrations')
                 ->setHelp(null)
         ;
     }
@@ -49,13 +49,13 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
 
         if (!empty($executedUnavailableMigrations)) {
             throw new \RuntimeException(
-            '<error>Status check: ERROR. You have '.count($executedUnavailableMigrations).' previously executed migrations'
-            .' in the database that are not registered migrations.</error>');
+            '<error>Status check: ERROR. You have ' . count($executedUnavailableMigrations) . ' previously executed migrations'
+            . ' in the database that are not registered migrations.</error>');
         }
 
         $migrationsToExecute = array_diff($availableMigrations, $executedMigrations);
         $toMigrate = $migrationsToExecute ? implode(',', $migrationsToExecute) : 'none';
 
-        $output->writeln('Status check: OK. Migration to execute:'.$toMigrate);
+        $output->writeln('Status check: OK. Migration to execute:' . $toMigrate);
     }
 }

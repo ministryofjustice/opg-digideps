@@ -88,7 +88,7 @@ abstract class MoneyTransactionShort
             case 'out':
                 return new MoneyTransactionShortOut($report);
         }
-        throw new \InvalidArgumentException(__METHOD__.': type not recognised');
+        throw new \InvalidArgumentException(__METHOD__ . ': type not recognised');
     }
 
     /**

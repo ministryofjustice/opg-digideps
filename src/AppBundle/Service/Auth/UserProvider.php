@@ -93,7 +93,7 @@ class UserProvider implements UserProviderInterface
      */
     public function generateRandomTokenAndStore(User $user)
     {
-        $token = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+        $token = $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
         $this->redis->set($token, $user->getId());
         $this->redis->expire($token, $this->timeoutSeconds);

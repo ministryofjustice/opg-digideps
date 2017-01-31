@@ -125,7 +125,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdAuth()
     {
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -133,7 +133,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdAcl()
     {
-        $url2 = '/client/'.self::$client2->getId();
+        $url2 = '/client/' . self::$client2->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
@@ -144,7 +144,7 @@ class ClientControllerTest extends AbstractTestController
      */
     public function testfindById()
     {
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
 
           // assert get
         $data = $this->assertJsonRequest('GET', $url, [

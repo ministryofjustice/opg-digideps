@@ -7,7 +7,7 @@ use MockeryStub as m;
 
 // create a simple predis Mock to just return keys
 
-require_once __DIR__.'/PredisMock.php';
+require_once __DIR__ . '/PredisMock.php';
 
 class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
 {

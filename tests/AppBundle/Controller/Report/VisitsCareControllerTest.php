@@ -62,7 +62,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/report/visits-care/'.self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -73,7 +73,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/visits-care/'.self::$visitsCare2->getId();
+        $url2 = '/report/visits-care/' . self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
@@ -82,7 +82,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testgetOneById()
     {
-        $url = '/report/visits-care/'.self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -99,7 +99,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testgetVisitsCareAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/visits-care';
+        $url = '/report/' . self::$report1->getId() . '/visits-care';
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -110,7 +110,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testgetVisitsCareAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/visits-care';
+        $url2 = '/report/' . self::$report2->getId() . '/visits-care';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
@@ -120,7 +120,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testgetVisitsCare()
     {
-        $url = '/report/'.self::$report1->getId().'/visits-care';
+        $url = '/report/' . self::$report1->getId() . '/visits-care';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -151,7 +151,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testAddUpdateAcl()
     {
         $url2post = '/report/visits-care';
-        $url2put = '/report/visits-care/'.self::$visitsCare2->getId();
+        $url2put = '/report/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('POST', $url2post, self::$tokenDeputy, [
             'report_id' => ['id' => self::$report2->getId()],
@@ -164,7 +164,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testUpdate()
     {
-        $url = '/report/visits-care/'.self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -187,7 +187,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteVisitsCareAuth()
     {
-        $url = '/report/visits-care/'.self::$visitsCare1->getId();
+        $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -198,7 +198,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteVisitsCareAcl()
     {
-        $url2 = '/report/visits-care/'.self::$visitsCare2->getId();
+        $url2 = '/report/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
@@ -211,7 +211,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testDeleteVisitsCare()
     {
         $id = self::$visitsCare1->getId();
-        $url = '/report/visits-care/'.$id;
+        $url = '/report/visits-care/' . $id;
 
         $data = $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,

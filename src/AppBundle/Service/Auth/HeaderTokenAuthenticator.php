@@ -54,7 +54,7 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
             );
         } else {
             throw new \InvalidArgumentException('The user provider must be an instance '
-            .'of UserByTokenProvider ('.get_class($userProvider).' was given).');
+            . 'of UserByTokenProvider (' . get_class($userProvider) . ' was given).');
         }
     }
 

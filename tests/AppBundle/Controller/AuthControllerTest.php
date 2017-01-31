@@ -46,7 +46,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginFailWrongPassword()
     {
-        $this->resetAttempts('email'.'user@mail.com-WRONG');
+        $this->resetAttempts('email' . 'user@mail.com-WRONG');
 
         $return = $this->assertJsonRequest('POST', '/auth/login', [
             'mustFail' => true,
@@ -68,7 +68,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginFailSecretPermissions()
     {
-        $this->resetAttempts('email'.'admin@example.org');
+        $this->resetAttempts('email' . 'admin@example.org');
 
         $return = $this->assertJsonRequest('POST', '/auth/login', [
             'mustFail' => true,
@@ -143,8 +143,8 @@ class AuthControllerTest extends AbstractTestController
      */
     public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference()
     {
-        $this->resetAttempts('email'.'deputy@example.org');
-        $this->resetAttempts('email'.'admin@example.org');
+        $this->resetAttempts('email' . 'deputy@example.org');
+        $this->resetAttempts('email' . 'admin@example.org');
 
         $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
@@ -196,7 +196,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testBruteForceSameEmail()
     {
-        $this->resetAttempts('email'.'deputy@example.org');
+        $this->resetAttempts('email' . 'deputy@example.org');
 
         // change in accordance with config_test.yml
 

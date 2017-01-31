@@ -106,7 +106,7 @@ class AccountMigration
         // add transactions
         $stmt = $this->pdo->prepare(
             'INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)'
-            .' VALUES(:id, :transaction_type_id, :amount, :md)');
+            . ' VALUES(:id, :transaction_type_id, :amount, :md)');
 
         $added = 0;
         foreach ($transactionsToInsert as $reportId => $row) {
@@ -128,7 +128,7 @@ class AccountMigration
         foreach ($explanationsToAdd as $reportId => $explanations) {
             $explanationStrings = [];
             foreach ($explanations as $bankAndExplanation) {
-                $explanationStrings[] = $bankAndExplanation[0].': '.$bankAndExplanation[1];
+                $explanationStrings[] = $bankAndExplanation[0] . ': ' . $bankAndExplanation[1];
             }
             $params = [
                 ':report_id' => $reportId,
@@ -145,7 +145,7 @@ class AccountMigration
         // add transactions
         $stmt = $this->pdo->prepare(
             'INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)'
-            .' VALUES(:id, :transaction_type_id, :amount, :md)');
+            . ' VALUES(:id, :transaction_type_id, :amount, :md)');
 
         $ret = [];
         $reports = $this->getReports();
@@ -174,7 +174,7 @@ class AccountMigration
 
     private function getTransactionNumber($reportId)
     {
-        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = '.$reportId)->fetch(\PDO::FETCH_COLUMN);
+        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = ' . $reportId)->fetch(\PDO::FETCH_COLUMN);
     }
 
     public function getReports()
@@ -187,12 +187,12 @@ class AccountMigration
                 $this->fetchAll('SELECT * from transaction  t
                         LEFT JOIN transaction_type at
                         ON t.transaction_type_id = at.id
-                        WHERE report_id = '.$report['id']);
+                        WHERE report_id = ' . $report['id']);
             $reports[$k]['transactions_new_sum'] =
                 $this->calculateAmountsTotal($reports[$k]['transactions_new']);
 
             // add accounts
-            $reports[$k]['accounts'] = $this->fetchAll('SELECT * from account WHERE report_id='.$report['id']);
+            $reports[$k]['accounts'] = $this->fetchAll('SELECT * from account WHERE report_id=' . $report['id']);
 
             // add old transaction to account
             foreach ($reports[$k]['accounts'] as $ka => $account) {
@@ -201,7 +201,7 @@ class AccountMigration
                         LEFT JOIN account_transaction_type att
                         ON at.account_transaction_type_id = att.id
 
-                        WHERE account_id = '.$account['id'], 'account_transaction_type_id');
+                        WHERE account_id = ' . $account['id'], 'account_transaction_type_id');
                 $reports[$k]['accounts'][$ka]['transactions_old_sum'] =
                     $this->calculateAmountsTotal($reports[$k]['accounts'][$ka]['transactions_old']);
             }

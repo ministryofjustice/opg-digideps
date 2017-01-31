@@ -28,10 +28,10 @@ class Fixtures
     {
         // add clent, cot, report, needed for assets
         $user = new EntityDir\User();
-        $user->setEmail('temp'.microtime(1).rand(100, 99999).'@temp.com');
+        $user->setEmail('temp' . microtime(1) . rand(100, 99999) . '@temp.com');
         $user->setPassword('temp@temp.com');
-        $user->setFirstname('name'.time());
-        $user->setLastname('surname'.time());
+        $user->setFirstname('name' . time());
+        $user->setLastname('surname' . time());
         foreach ($settersMap as $k => $v) {
             $user->$k($v);
         }
@@ -155,7 +155,7 @@ class Fixtures
     {
         $contact = new EntityDir\Report\Contact();
         $contact->setReport($report);
-        $contact->setAddress('address'.time());
+        $contact->setAddress('address' . time());
 
         foreach ($settersMap as $k => $v) {
             $contact->$k($v);
@@ -270,7 +270,7 @@ class Fixtures
         $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
         $decision->setClientInvolvedBoolean(true);
-        $decision->setDescription('description'.time());
+        $decision->setDescription('description' . time());
 
         foreach ($settersMap as $k => $v) {
             $decision->$k($v);
@@ -355,7 +355,7 @@ class Fixtures
 
     private static function pgCommand($cmd)
     {
-        exec(self::PG_EXPORT_COMMAND.$cmd);
+        exec(self::PG_EXPORT_COMMAND . $cmd);
     }
 
     public static function initDb()
@@ -364,15 +364,15 @@ class Fixtures
 
     public static function backupDb()
     {
-        self::pgCommand('pg_dump --clean > '.self::PG_DUMP_PATH);
+        self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
     }
 
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
+            throw new \RuntimeException(self::PG_DUMP_PATH . ' not found');
         }
-        self::pgCommand('psql < '.self::PG_DUMP_PATH);
+        self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
     public static function deleteReportsData()
