@@ -103,14 +103,6 @@ class User implements UserInterface
     private $registrationToken;
 
     /**
-     * @var bool
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="email_confirmed", type="boolean", nullable=true)
-     */
-    private $emailConfirmed;
-
-    /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"user"})
@@ -416,30 +408,6 @@ class User implements UserInterface
     public function getRegistrationToken()
     {
         return $this->registrationToken;
-    }
-
-    /**
-     * Set emailConfirmed.
-     *
-     * @param bool $emailConfirmed
-     *
-     * @return User
-     */
-    public function setEmailConfirmed($emailConfirmed)
-    {
-        $this->emailConfirmed = $emailConfirmed;
-
-        return $this;
-    }
-
-    /**
-     * Get emailConfirmed.
-     *
-     * @return bool
-     */
-    public function getEmailConfirmed()
-    {
-        return $this->emailConfirmed;
     }
 
     /**
