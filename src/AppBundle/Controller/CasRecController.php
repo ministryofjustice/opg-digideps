@@ -16,10 +16,10 @@ class CasRecController extends RestController
      * Bulk insert
      * Max 10k otherwise failing (memory reach 128M).
      *
-     * @Route("/bulk-add/{truncate}")
+     * @Route("/bulk-add")
      * @Method({"POST"})
      */
-    public function addBulk(Request $request, $truncate)
+    public function addBulk(Request $request)
     {
         $maxRecords = 50000;
         $persistEvery = 5000;
@@ -47,9 +47,7 @@ class CasRecController extends RestController
 
         try {
             $em->beginTransaction();
-            if ($truncate) {
-                $em->getConnection()->query('TRUNCATE TABLE casrec');
-            }
+            $em->getConnection()->query('TRUNCATE TABLE casrec');
 
             $added = 1;
             foreach ($data as $dataIndex => $row) {
@@ -60,6 +58,7 @@ class CasRecController extends RestController
                     $row['Dep Surname'],
                     $row['Dep Postcode']
                 );
+                $casRec->setTypeOfReport($row['Typeofrep']);
 
                 $errors = $validator->validate($casRec);
                 if (count($errors) > 0) {

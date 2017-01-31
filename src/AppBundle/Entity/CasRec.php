@@ -78,6 +78,16 @@ class CasRec
     private $deputyPostCode;
 
     /**
+     * @var string OPG102|OPG103|empty string
+     *
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="type_of_report", type="string", length=10, nullable=true)
+     */
+    private $typeOfReport;
+
+
+    /**
      * @var array
      */
     private static $normalizeChars = [
@@ -172,5 +182,21 @@ class CasRec
     public function getDeputyPostCode()
     {
         return $this->deputyPostCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeOfReport()
+    {
+        return $this->typeOfReport;
+    }
+
+    /**
+     * @param string $typeOfReport
+     */
+    public function setTypeOfReport($typeOfReport)
+    {
+        $this->typeOfReport = $typeOfReport;
     }
 }
