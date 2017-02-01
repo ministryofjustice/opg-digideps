@@ -12,7 +12,7 @@ class GiftType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('explanation', 'text', [
+            ->add('explanation', 'textarea', [
                 'required' => true,
             ])
             ->add('amount', 'number', [
