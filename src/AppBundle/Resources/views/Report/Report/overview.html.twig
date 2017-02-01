@@ -211,7 +211,7 @@
                 report: report,
                 description: false,
                 state: reportStatus.submitState,
-                disableedit: true
+                disableedit: reportStatus.submitState.state != 'done'
             } %}
         </li>
     </ul>
