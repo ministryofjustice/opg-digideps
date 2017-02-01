@@ -11,16 +11,21 @@
                 
                 <ul class="box-list" id="decisions-list">
                     <li class="decision-item box-list-item">
-                        <h3 class="half-width first">Deputy decision</h3>
-                        <h3 class="half-width">Client involvement</h3>
+                        <h3 class="column-one-third">Deputy decision</h3>
+                        <h3 class="column-one-third">Was {{ client.firstName }} involved?</h3>
+                        <h3 class="column-one-third">Client involvement</h3>
                     </li>
                     {% for decision in decisions %}
                         <li class="decision-item box-list-item">
-                            <div class="half-width first">
+                            <div class="column-one-third">
                                 <div class="value textarea">{{ decision.description }}</div>
                             </div>
+
+                            <div class="column-one-third">
+                                <div class="value textarea">{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}</div>
+                            </div>
                             
-                            <div class="half-width">
+                            <div class="column-one-third">
                                 <div class="value textarea ">{{ decision.clientInvolvedDetails | nl2br }}</div>
                             </div>
                         </li>
