@@ -1,4 +1,6 @@
 # This file is a "template" of what your parameters.yml file should look like
+# parameters.yml is currently generated from docker files.
+# This is file is kept for potential use outside docker
 parameters:
     database_driver: pdo_pgsql
     database_host: 127.0.0.1
@@ -11,7 +13,6 @@ parameters:
     behat_controller_enabled: true
     anonymous: true
     redis_dsn: redis://localhost
-    # activation, change password, reset password emails (Amazon SES, needs @digideps.dsd.io sender )
     fixtures:
         admin@publicguardian.gsi.gov.uk:
             firstname: Admin
@@ -22,7 +23,7 @@ parameters:
         laydeputy@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy"
             lastname: User
-            password: PDEtnLay1234
+            password: Abcd1234
             roleId: 2
             activated: true
         ad@publicguardian.gsi.gov.uk:
@@ -39,6 +40,6 @@ parameters:
             permissions: [ROLE_ADMIN]
         123abc-both:
             permissions: [ROLE_ADMIN, ROLE_LAY_DEPUTY]
-         
+
     log_level: warning
     log_path: /var/log/app/application.log
