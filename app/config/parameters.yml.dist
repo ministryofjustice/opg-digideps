@@ -1,4 +1,6 @@
 # This file is a "template" of what your parameters.yml file should look like
+# parameters.yml is currently generated from docker files.
+# This is file is kept for potential use outside docker
 parameters:
     locale:   en
     secret:   setme

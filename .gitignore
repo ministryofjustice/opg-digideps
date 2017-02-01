@@ -30,3 +30,4 @@ web/images
 web/javascripts
 web/js
 web/stylesheets
+tests/behat/behat.yml
