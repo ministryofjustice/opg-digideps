@@ -26,7 +26,7 @@
                     <span class="bold-small">{{ report.dueDate | date(" d F Y") }}</span>
                 </li>
                 <li>Report status:
-                    <span class="bold-small">{{ reportStatus.status | trans() }}</span>
+                    <span class="bold-small">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
                 </li>
             </ul>
         </div>

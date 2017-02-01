@@ -12,11 +12,14 @@ dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
-notStarted: "Not started"
-notFinished: "Not finished"
-readyToSubmit: "Ready to submit"
+
 sectionsRemaining: "sections remaining"
 overview: Report overview
+
+status:
+  notStarted: "Not started"
+  notFinished: "Not finished"
+  readyToSubmit: "Ready to submit"
 
 labels:
     not-started: "Not started"
@@ -104,8 +107,6 @@ money_out_short:
     start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
-
-
 balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""

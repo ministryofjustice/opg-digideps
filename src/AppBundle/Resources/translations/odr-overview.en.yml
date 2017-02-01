@@ -20,7 +20,15 @@ odrReady: Report ready to submit
 sectionsRemaining: "sections remaining"
 overview: New deputy report
 
+status:
+    notStarted: "Not started"
+    notFinished: "Not finished"
+    readyToSubmit: "Ready to submit"
 
+labels:
+    not-started: "Not started"
+    incomplete: "Not finished"
+    done: "Finished"
 
 visits_care:
     subSectionTitle: "Visits and care"
@@ -67,8 +75,8 @@ debts:
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
-    edit: "Edit actions"
-    start: "Start actions"
+    edit: "Edit"
+    start: "Start"
     label:
       done: "Finished"
 other_info:
@@ -78,49 +86,12 @@ other_info:
     start: "Start"
     label:
       done: "Finished"
-
-#finances:
-#    subSectionTitle: "Finances (old, no OTPP)"
-#    subSectionDescription: "Enter details of all income and spending in the reporting period"
-#    edit: "Edit finances"
-#    start: "Start finances"
-#contacts:
-#    subSectionTitle: "Contacts (no OTPP)"
-#    subSectionDescription: "Tell us about the people you consulted regarding %client%"
-#    edit: "Edit contacts"
-#    start: "Start contacts"
-#decisions:
-#    subSectionTitle: "Decisions (no OTPP)"
-#    subSectionDescription: "Let us know about any significant decisions you've made for %client%"
-#    edit: "Edit decisions"
-#    start: "Start decisions"
-
-#finances:
-#    subSectionTitle: "Finances  (no OTPP)"
-#    subSectionDescription: "Enter details of all income and spending in the reporting period"
-#    edit: "Edit finances"
-#    start: "Start finances"
-#transfers:
-#    subSectionTitle: "Money transfers (no OTPP)"
-#    subSectionDescription: "Tell us about any money you've moved between %client%'s accounts"
-#    edit: "Edit transfers"
-#    start: "Start money transfers"
-#transfersInactive:
-#    subSectionTitle: "Money transfers (no OTPP)"
-#    subSectionDescription: "This will become available if you have more than one account"
-#    edit: "Edit transfers"
-#    start: "Start money transfers"
-#
-#actions:
-#    subSectionTitle: "Actions (no OTPP)"
-#    edit: "Edit actions"
-#    start: "Start actions"
-
 odr_add_further_info:
     subSectionTitle: "Submit report"
     edit: "Submit report"
     start: "Submit report"
-
+    label:
+          done: "Ready to submit"
 
 additionalInformation:
   subSectionTitle: More information
@@ -136,13 +107,3 @@ announcement: |
   Use the links on this page to view and edit the different sections of your new deputy report.
 
 
-status:
-    notStarted: "Not started"
-    notFinished: "Not finished"
-    readyToSubmit: "Ready to submit"
-
-
-labels:
-    not-started: "Not started"
-    incomplete: "Not finished"
-    done: "Finished"

@@ -30,7 +30,7 @@ class IncomeBenefitController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $oss = new OdrStatusService($odr);
-        if ($oss->getIncomeBenefitsState() != OdrStatusService::STATE_NOT_STARTED) {
+        if ($oss->getIncomeBenefitsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_income_benefits_summary', ['odrId' => $odrId]);
         }
 
@@ -106,7 +106,7 @@ class IncomeBenefitController extends AbstractController
 
         // not started -> go back to start page
         $oss = new OdrStatusService($odr);
-        if ($oss->getIncomeBenefitsState() == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
+        if ($oss->getIncomeBenefitsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
             return $this->redirectToRoute('odr_income_benefits', ['odrId' => $odrId]);
         }
 

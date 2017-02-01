@@ -34,6 +34,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getOneOffPresent' => [],
                 'getBankAccounts' => [],
                 'getHasDebts' => null,
+                'getDebtsWithValidAmount' => [],
                 'getNoAssetToAdd' => null,
                 'getAssets' => [],
                 'incomeBenefitsStatus' => 'not-started',
@@ -71,7 +72,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function visitsCare($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getVisitsCareState());
+        $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
 
     public function expensesProvider()
@@ -95,7 +96,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function expenses($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getExpensesState());
+        $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
     public function incomeBenefitsProvider()
@@ -123,7 +124,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function incomeBenefits($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getIncomeBenefitsState());
+        $this->assertEquals($state, $object->getIncomeBenefitsState()['state']);
     }
 
     public function debtsProvider()
@@ -142,7 +143,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function debts($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getDebtsState());
+        $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
     public function banksProvider()
@@ -163,7 +164,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function banks($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getBankAccountsState());
+        $this->assertEquals($state, $object->getBankAccountsState()['state']);
     }
 
     public function assetsProvider()
@@ -186,7 +187,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function assets($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getAssetsState());
+        $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
     public function actionProvider()
@@ -216,7 +217,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function actions($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getActionsState());
+        $this->assertEquals($state, $object->getActionsState()['state']);
     }
 
     public function otherInfoProvider()
@@ -234,7 +235,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function otherinfo($mocks, $state)
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($state, $object->getOtherInfoState());
+        $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
     /**
@@ -304,5 +305,6 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $object->getRemainingSections());
         $this->assertTrue($object->isReadyToSubmit());
         $this->assertEquals('readyToSubmit', $object->getStatus());
+        $this->assertEquals(OdrStatusService::STATE_DONE, $object->getSubmitState()['state']);
     }
 }

@@ -329,11 +329,9 @@ class ReportStatusService
      */
     public function getStatus()
     {
-        $startedSections = array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_NOT_STARTED;
-        });
-
-        if (count($startedSections) === 0) {
+        if (count(array_filter($this->getSectionStatus(), function ($e) {
+                return $e != self::STATE_NOT_STARTED;
+            })) === 0) {
             return 'notStarted';
         }
 

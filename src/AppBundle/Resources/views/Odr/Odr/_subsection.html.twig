@@ -13,11 +13,11 @@
         {% endif %}
 
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
-        <span class="status flush--bottom {{ state }}">
-            {% if state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
-                {{ (subSection ~ '.label.' ~ state) | transchoice(nOfRecords | default(0)) }}
+        <span class="status flush--bottom {{ state.state }}">
+            {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+                {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
             {% else %}
-                {{ ('labels.' ~ state) | trans }}
+                {{ ('labels.' ~ state.state) | trans }}
             {% endif %}
         </span>
 
@@ -25,7 +25,7 @@
             {% if allowEdit == false %}disabled{% endif %}"
            {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %}
     >
-        {% if state == 'not-started' %}
+        {% if state.state == 'not-started' %}
             {{ (subSection ~ '.start') | trans({}, translationDomain) }}
         {% else %}
             {{ (subSection ~ '.edit') | trans({}, translationDomain) }}

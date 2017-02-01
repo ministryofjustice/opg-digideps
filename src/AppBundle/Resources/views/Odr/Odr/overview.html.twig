@@ -156,7 +156,8 @@
             odr: odr,
             linkToSubSection: path('odr_declaration', {'odrId': odr.id}),
             description: false,
-            state: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
+            stateOld: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
+            state: odrStatus.submitState,
             editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',
             } %}
             {% if odrStatus.isReadyToSubmit  %}
