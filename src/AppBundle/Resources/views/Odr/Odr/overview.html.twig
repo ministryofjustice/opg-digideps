@@ -36,9 +36,9 @@
                         </p>
                     </li>
                 {% else %}
-                    <li>{{ 'dueDate' | trans() }}:
-                        <span class="bold-small">{{ odr.getDueDate() | date("j M Y") }}</span>
-                    </li>
+                    {#<li>{{ 'dueDate' | trans() }}:#}
+                        {#<span class="bold-small">{{ odr.getDueDate() | date("j M Y") }}</span>#}
+                    {#</li>#}
                     <li>Report status:
                         <span class="bold-small">{{ ('status.' ~ odrStatus.status) | trans() }}</span>
                     </li>
