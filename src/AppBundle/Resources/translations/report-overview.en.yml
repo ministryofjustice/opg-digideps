@@ -21,7 +21,6 @@ overview: Report overview
 labels:
     not-started: "Not started"
     incomplete: "Not finished"
-    #done: "Finished"
 
 heading.decisionsContacts: "Decisions and contacts"
 decisions:
@@ -107,8 +106,6 @@ money_out_short:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 
 
-
-
 balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""
@@ -153,6 +150,8 @@ report_add_further_info:
     subSectionTitle: "Submit report"
     edit: "Start Submit report"
     start: "Start Submit report"
+    label:
+      done: "Ready to submit"
 
 additionalInformation:
   subSectionTitle: More information
