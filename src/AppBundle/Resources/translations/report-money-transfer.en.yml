@@ -35,6 +35,7 @@ stepPage:
 summaryPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageSectionTitle: Money transfers
+  weAskAbout: In this section, we ask you about money you’ve transferred between %client%’s accounts.
   addButton: Add a transfer
   edit: Edit
 #  relationship: Their relationship to %client%
