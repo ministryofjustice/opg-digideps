@@ -86,6 +86,10 @@
             } %}
         {% endif %}
 
+        {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
+            'title': 'Is there anything you’d like to tell us that hasn’t been covered elsewhere in your report?',
+        } %}
+
         {% if report.furtherInformation %}
             {% include 'AppBundle:Report/Formatted:_further_information.html.twig' %}
         {% endif %}
