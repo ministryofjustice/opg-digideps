@@ -46,7 +46,6 @@
                 report: report,
                 description: true,
                 state: reportStatus.decisionsState,
-                nOfRecords: report.decisions | length,
                 list: true
             } %}
             {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -57,7 +56,6 @@
                 list: true,
                 info: true,
                 state: reportStatus.contactsState,
-                nOfRecords: report.contacts | length,
             } %}
         </li>
 
@@ -89,7 +87,6 @@
                     subSection: 'deputy_expenses',
                     report: report,
                     state: reportStatus.expensesState,
-                    nOfRecords: report.expenses | length,
                     linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
                     description: true
                 } %}
@@ -99,7 +96,6 @@
                 subSection: 'gifts',
                 report: report,
                 state: reportStatus.giftsState,
-                nOfRecords: report.gifts | length,
                 linkToSubSection: path('gifts', {'reportId': report.id}),
                 description: true
                 } %}
@@ -109,7 +105,6 @@
                     subSection: 'bank_accounts',
                     report: report,
                     state: reportStatus.bankAccountsState,
-                    nOfRecords: report.bankAccounts | length,
                     warning: true,
                     description: true
                 } %}
@@ -119,7 +114,6 @@
                         subSection: 'money_transfers',
                         report: report,
                         state: reportStatus.moneyTransferState,
-                        nOfRecords: report.moneyTransfers | length,
                         warning: true,
                         description: true
                     } %}
@@ -130,7 +124,6 @@
                     subSection: 'money_in',
                     report: report,
                     state: reportStatus.moneyInState,
-                    nOfRecords: report.moneyTransactionsIn | length,
                     warning: true,
                     description: true
                     } %}
@@ -139,7 +132,6 @@
                     subSection: 'money_out',
                     report: report,
                     state: reportStatus.moneyOutState,
-                    nOfRecords: report.moneyTransactionsOut | length,
                     warning: true,
                     description: true
                     } %}
@@ -150,7 +142,6 @@
                     subSection: 'money_in_short',
                     report: report,
                     state: reportStatus.MoneyInShortState,
-                    nOfRecords: report.moneyTransactionsShortIn | length,
                     warning: true,
                     description: true
                     } %}
@@ -159,7 +150,6 @@
                     {#subSection: 'money_short_out',#}
                     {#report: report,#}
                     {#state: reportStatus.moneyOutState,#}
-                    {#nOfRecords: report.moneyShortTransactionsOut | length,#}
                     {#warning: true,#}
                     {#description: true#}
                     {#} %}#}
@@ -180,7 +170,6 @@
                     subSection: 'assets',
                     report: report,
                     state: reportStatus.assetsState,
-                    nOfRecords: report.assets | length,
                     list: true,
                     description: true
                 } %}
@@ -189,7 +178,6 @@
                 subSection: 'debts',
                 report: report,
                 state: reportStatus.debtsState,
-                nOfRecords: report.debtsWithValidAmount | length,
                 list: true,
                 description: true
                 } %}
@@ -217,26 +205,14 @@
                 state: reportStatus.otherInfoState,
             } %}
 
-            {% if reportStatus.isReadyToSubmit and report.isDue %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                    transDomain: translationDomain,
-                    subSection: 'report_add_further_info',
-                    report: report,
-                    description: false,
-                    state: "not-started",
-                    status: "Not started"
-                } %}
-            {%  else %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                    transDomain: translationDomain,
-                    subSection: 'report_add_further_info',
-                    report: report,
-                    description: false,
-                    state: "not-started",
-                    status: "Not started",
-                    disableedit: true
-                } %}
-            {%  endif %}
+            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'report_add_further_info',
+                report: report,
+                description: false,
+                state: reportStatus.submitState,
+                disableedit: reportStatus.submitState.state != 'done'
+            } %}
         </li>
     </ul>
 

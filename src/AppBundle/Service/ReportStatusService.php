@@ -23,13 +23,13 @@ class ReportStatusService
     {
         // no decisions, no tick, no mental capacity => grey
         if (empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions()) && empty($this->report->getMentalCapacity())) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
         if ($this->missingDecisions()) {
-            return self::STATE_INCOMPLETE;
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
         } else {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getDecisions())];
         }
     }
 
@@ -37,9 +37,9 @@ class ReportStatusService
     public function getContactsState()
     {
         if (empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts())) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         } else {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getContacts())];
         }
     }
 
@@ -47,23 +47,23 @@ class ReportStatusService
     public function getVisitsCareState()
     {
         if (!$this->report->getVisitsCare()) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
         if ($this->report->getVisitsCare()->missingInfo()) {
-            return self::STATE_INCOMPLETE;
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
         }
 
-        return self::STATE_DONE;
+        return ['state' => self::STATE_DONE, 'nOfRecords'=>0];
     }
 
     /** @return string */
     public function getBankAccountsState()
     {
         if (empty($this->report->getBankAccounts())) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
-        return self::STATE_DONE;
+        return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getBankAccounts())];
     }
 
     public function getMoneyTransferState()
@@ -72,28 +72,28 @@ class ReportStatusService
         $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
 
         if ($valid || count($this->report->getBankAccounts()) <= 1) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getMoneyTransfers())];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     public function getMoneyInState()
     {
         if ($this->report->hasMoneyIn()) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getMoneyTransactionsIn())];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     public function getMoneyOutState()
     {
         if ($this->report->hasMoneyOut()) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getMoneyTransactionsOut())];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     public function getMoneyInShortState()
@@ -102,14 +102,14 @@ class ReportStatusService
         $exist = in_array($this->report->getMoneyTransactionsShortInExist(), ['yes', 'no']);
 
         if ($exist) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getMoneyTransactionsShortIn())];
         }
 
         if ($categoriesCount) {
-            return self::STATE_INCOMPLETE;
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     public function getMoneyOutShortState()
@@ -118,31 +118,31 @@ class ReportStatusService
         $exist = in_array($this->report->getMoneyTransactionsShortOutExist(), ['yes', 'no']);
 
         if ($exist) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getMoneyTransactionsShortOut())];
         }
 
         if ($categoriesCount) {
-            return self::STATE_INCOMPLETE;
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     public function getBalanceState()
     {
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
-            return self::STATE_INCOMPLETE;
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
         }
 
         if ($this->report->isTotalsMatch()) {
-            return self::STATE_DONE; // balance matching => complete
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>0]; // balance matching => complete
         }
 
         if ($this->report->getBalanceMismatchExplanation()) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>0];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     /** @return string */
@@ -152,14 +152,14 @@ class ReportStatusService
         $noAssetsToAdd = $this->report->getNoAssetToAdd();
 
         if (!$hasAtLeastOneAsset && !$noAssetsToAdd) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
         if ($hasAtLeastOneAsset || $noAssetsToAdd) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getAssets())];
         }
 
-        return self::STATE_INCOMPLETE;
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
     }
 
     /** @return string */
@@ -168,9 +168,9 @@ class ReportStatusService
         $hasDebts = $this->report->getHasDebts();
 
         if (in_array($hasDebts, ['yes', 'no'])) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getDebtsWithValidAmount())];
         } else {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
     }
 
@@ -179,26 +179,14 @@ class ReportStatusService
     {
         $action = $this->report->getAction();
         if (empty($action)) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
         if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>0];
         }
 
-        return self::STATE_INCOMPLETE;
-    }
-
-    /** @return bool */
-    public function hasOutstandingAccounts()
-    {
-        foreach ($this->report->getBankAccounts() as $account) {
-            if (!$account->hasClosingBalance() || $account->hasMissingInformation()) {
-                return true;
-            }
-        }
-
-        return false;
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
     }
 
     /**
@@ -207,10 +195,10 @@ class ReportStatusService
     public function getOtherInfoState()
     {
         if ($this->report->getActionMoreInfo() === null) {
-            return self::STATE_NOT_STARTED;
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
-        return self::STATE_DONE;
+        return ['state' => self::STATE_DONE, 'nOfRecords'=>0];
     }
 
     /** @return bool */
@@ -248,17 +236,17 @@ class ReportStatusService
     }
 
     /**
-     * @return array
+     * @return array of section=>state
      */
     private function getSectionStatus()
     {
         $states = [
-            'decisions'  => $this->getDecisionsState(),
-            'contacts'   => $this->getContactsState(),
-            'visitsCare' => $this->getVisitsCareState(),
-            'actions'    => $this->getActionsState(),
-            'otherInfo'  => $this->getOtherInfoState(),
-            'gifts'      => $this->getGiftsState(),
+            'decisions'  => $this->getDecisionsState()['state'],
+            'contacts'   => $this->getContactsState()['state'],
+            'visitsCare' => $this->getVisitsCareState()['state'],
+            'actions'    => $this->getActionsState()['state'],
+            'otherInfo'  => $this->getOtherInfoState()['state'],
+            'gifts'      => $this->getGiftsState()['state'],
         ];
 
         $type = $this->report->getType();
@@ -266,29 +254,29 @@ class ReportStatusService
 
         if ($type == Report::TYPE_102) {
             $states += [
-                'bankAccounts'   => $this->getBankAccountsState(),
-                'deputyExpense'  => $this->getExpensesState(),
-                'moneyIn'        => $this->getMoneyInState(),
-                'moneyOut'       => $this->getMoneyOutState(),
-                'assets'         => $this->getAssetsState(),
-                'debts'          => $this->getDebtsState(),
+                'bankAccounts'  => $this->getBankAccountsState()['state'],
+                'deputyExpense' => $this->getExpensesState()['state'],
+                'moneyIn'       => $this->getMoneyInState()['state'],
+                'moneyOut'      => $this->getMoneyOutState()['state'],
+                'assets'        => $this->getAssetsState()['state'],
+                'debts'         => $this->getDebtsState()['state'],
             ];
 
             if (count($this->report->getBankAccounts())) {
                 $states += [
-                    'moneyTransfers' => $this->getMoneyTransferState(),
+                    'moneyTransfers' => $this->getMoneyTransferState()['state'],
                 ];
             }
         }
 
         if ($type == Report::TYPE_103) {
             $states += [
-                'bankAccounts'  => $this->getBankAccountsState(),
-                'deputyExpense' => $this->getExpensesState(),
-                'moneyInShort'  => $this->getMoneyInShortState(),
-                'moneyOutShort' => $this->getMoneyOutShortState(),
-                'assets'        => $this->getAssetsState(),
-                'debts'         => $this->getDebtsState(),
+                'bankAccounts'  => $this->getBankAccountsState()['state'],
+                'deputyExpense' => $this->getExpensesState()['state'],
+                'moneyInShort'  => $this->getMoneyInShortState()['state'],
+                'moneyOutShort' => $this->getMoneyOutShortState()['state'],
+                'assets'        => $this->getAssetsState()['state'],
+                'debts'         => $this->getDebtsState()['state'],
             ];
         }
 
@@ -301,10 +289,10 @@ class ReportStatusService
     public function getExpensesState()
     {
         if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getExpenses())];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     /**
@@ -313,10 +301,10 @@ class ReportStatusService
     public function getGiftsState()
     {
         if (count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no') {
-            return self::STATE_DONE;
+            return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getGifts())];
         }
 
-        return self::STATE_NOT_STARTED;
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
     }
 
     /** @return bool */
@@ -328,9 +316,20 @@ class ReportStatusService
     /**
      * @return string $status | null
      */
+    public function getSubmitState()
+    {
+        return [
+            'state' => $this->isReadyToSubmit() && $this->report->isDue() ? self::STATE_DONE : self::STATE_NOT_STARTED,
+            'nOfRecords'=>0
+        ];
+    }
+
+    /**
+     * @return string $status | null
+     */
     public function getStatus()
     {
-        $startedSections = array_filter($this->getSectionStatus(), function($e) {
+        $startedSections = array_filter($this->getSectionStatus(), function ($e) {
             return $e != self::STATE_NOT_STARTED;
         });
 
