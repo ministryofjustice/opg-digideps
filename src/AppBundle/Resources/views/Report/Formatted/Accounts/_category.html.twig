@@ -1,8 +1,8 @@
-{% set translationDomain = "report-transactions" %}
+{% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 
 <div class="category">
-    <h3>{{ ('form.categories.' ~ categoryId) | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <h3>{{ ('form.group.entries.' ~ categoryId) | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
     <ul class="transactions">
         {% for transaction in transactions %}
             {% include 'AppBundle:Report/Formatted:Accounts/_transaction.html.twig' with {
