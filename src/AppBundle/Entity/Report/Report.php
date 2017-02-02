@@ -883,24 +883,6 @@ class Report
     /**
      * @return float
      */
-    public function getAccountsClosingBalanceTotal()
-    {
-        return $this->accountsClosingBalanceTotal;
-    }
-
-    /**
-     * @param float $accountsClosingBalanceTotal
-     */
-    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
-    {
-        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
     public function getCalculatedBalance()
     {
         return $this->calculatedBalance;
@@ -1012,19 +994,4 @@ class Report
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function hasAccountWithId($id)
-    {
-        foreach ($this->getBankAccounts() as $e) {
-            if ($e->getId() == $id) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

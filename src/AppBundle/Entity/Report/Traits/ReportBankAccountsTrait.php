@@ -46,7 +46,7 @@ trait ReportBankAccountsTrait
      */
     public function getBankAccountsIncomplete()
     {
-        return array_filter($this->bankAccounts ?: [], function($b) {
+        return array_filter($this->bankAccounts ?: [], function ($b) {
             return $b->getClosingBalance() === null;
         });
     }
@@ -62,4 +62,23 @@ trait ReportBankAccountsTrait
             }
         }
     }
+
+    /**
+     * @return float
+     */
+    public function getAccountsClosingBalanceTotal()
+    {
+        return $this->accountsClosingBalanceTotal;
+    }
+
+    /**
+     * @param float $accountsClosingBalanceTotal
+     */
+    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
+    {
+        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
+
+        return $this;
+    }
+
 }

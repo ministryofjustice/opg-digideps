@@ -208,7 +208,7 @@ class BankAccountController extends AbstractController
             'Bank account deleted'
         );
 
-        if ($report->hasAccountWithId($accountId)) {
+        if ($report->getBankAccountById($accountId)) {
             $this->getRestClient()->delete("/account/{$accountId}");
         }
 
