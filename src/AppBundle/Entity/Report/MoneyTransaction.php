@@ -193,7 +193,7 @@ class MoneyTransaction
     }
 
     /**
-     * @return TransactionType
+     * @return string
      */
     public function getCategory()
     {
@@ -201,7 +201,7 @@ class MoneyTransaction
     }
 
     /**
-     * @param TransactionType $category
+     * @param string $category
      */
     public function setCategory($category)
     {

@@ -11,33 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 class AccountController extends RestController
 {
     /**
-     * @deprecated in favour of odr/{id}?group=[accounts]
-     * @Route("/odr/{id}/accounts")
-     * @Method({"GET"})
-     */
-    public function getAccountsAction(Request $request, $id)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
-
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
-
-        $accounts = $this->getRepository(EntityDir\Odr\BankAccount::class)->findByOdr($odr, [
-            'id' => 'DESC',
-        ]);
-
-        if (count($accounts) === 0) {
-            return [];
-        }
-
-        return $accounts;
-    }
-
-    /**
      * @Route("/odr/{odrId}/account")
      * @Method({"POST"})
      */

@@ -280,29 +280,6 @@ class Fixtures
         return $decision;
     }
 
-    /**
-     * @deprecated
-     *
-     * @return EntityDir\Report\Transaction
-     */
-    public function createTransaction(EntityDir\Report\Report $report, $type, array $amounts, array $settersMap = [])
-    {
-        $ttype = new EntityDir\Report\TransactionTypeIn();
-        $ttype->setId($type);
-        $ttype->setHasMoreDetails(false);
-        $ttype->setCategory('cat');
-
-        $transaction = new EntityDir\Report\Transaction($report, $ttype, $amounts);
-
-        foreach ($settersMap as $k => $v) {
-            $transaction->$k($v);
-        }
-        $this->em->persist($ttype);
-        $this->em->persist($transaction);
-
-        return $transaction;
-    }
-
     public function flush()
     {
         $args = func_get_args();

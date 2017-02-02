@@ -1107,18 +1107,6 @@ class Report
     }
 
     /**
-     * @param string $transactionTypeId
-     *
-     * @return Transaction
-     */
-    public function getTransactionByTypeId($transactionTypeId)
-    {
-        return $this->getTransactions()->filter(function (Transaction $transaction) use ($transactionTypeId) {
-            return $transaction->getTransactionTypeId() == $transactionTypeId;
-        })->first();
-    }
-
-    /**
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsIn"})
      * @JMS\Type("double")

@@ -54,29 +54,9 @@ class AccountControllerTest extends AbstractTestController
         }
     }
 
-    public function testgetAccountsAuth()
-    {
-        $url = '/odr/' . self::$odr1->getId() . '/accounts';
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testgetAccountsAcl()
-    {
-        $url2 = '/odr/' . self::$odr2->getId() . '/accounts';
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
-    }
-
     public function testgetAccounts()
     {
-        // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', '/odr/' . self::$odr1->getId() . '/accounts', [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ])['data'];
-        $this->assertCount(1, $data);
-        $this->assertEquals(self::$account1->getId(), $data[0]['id']);
-        $this->assertEquals(self::$account1->getBank(), $data[0]['bank']);
+        $this->markTestIncomplete('implement using odr/1 with accounts group');
     }
 
     public function testaddAccount()

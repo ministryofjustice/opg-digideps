@@ -64,36 +64,6 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * @deprecated addTransactionsToReportIfMissing
-     * add empty Transaction to Report.
-     * Called from doctrine listener.
-     *
-     * @param Report $report
-     *
-     * @return int changed records
-     */
-    public function addTransactionsToReportIfMissing(Report $report)
-    {
-        $ret = 0;
-
-        if (count($report->getTransactions()) > 0) {
-            return $ret;
-        }
-
-        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\Report\TransactionType')
-            ->findBy([], ['displayOrder' => 'ASC']);
-
-        foreach ($transactionTypes as $transactionType) {
-            $transaction = new Transaction($report, $transactionType, []);
-            $report->getTransactions()->add($transaction);
-            $this->_em->persist($transaction);
-            ++$ret;
-        }
-
-        return $ret;
-    }
-
-    /**
      * add empty Debts to Report.
      * Called from doctrine listener.
      *
