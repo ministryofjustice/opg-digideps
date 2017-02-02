@@ -31,7 +31,7 @@ class Version099 extends AbstractMigration
         WHERE t.amounts is not null
         ';
         $oldTrans = $this->connection->fetchAll($sql);
-        echo count($oldTrans).' transactions to migrate: ';
+        echo count($oldTrans).' transactions->money_transaction to migrate: ';
         $this->connection->beginTransaction();
 
         $i = 0;
@@ -53,7 +53,7 @@ class Version099 extends AbstractMigration
 
     private function convertOldToNew($old)
     {
-        $amounts = explode(',', $old['amounts']);
+        $amounts = array_filter(explode(',', $old['amounts']));
         $ret = [];
         foreach ($amounts as $amount) {
             $ret[] = [
