@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,8 +30,8 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $decisionValid = count($report->getDecisions()) > 0 || !empty($report->getReasonForNoDecisions());
-        if ($decisionValid || $report->getMentalCapacity()) {
+        $s = new ReportStatusService($report);
+        if ($s->getDecisionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -46,7 +47,7 @@ class DecisionController extends AbstractController
     public function mentalCapacityAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
         if ($mc == null) {
@@ -61,34 +62,29 @@ class DecisionController extends AbstractController
             $data->setReport($report);
 
             $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
-            if ($fromPage == 'summary') {
+            if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
-            $route = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_mental_assessment';
-
-            return $this->redirect($this->generateUrl($route, ['reportId' => $reportId]));
+            return $this->redirectToRoute($fromSummaryPage ? 'decisions_summary' : 'decisions_mental_assessment', ['reportId' => $reportId]);
         }
 
         return [
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl('decisions', ['reportId'=>$report->getId()]),
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'decisions_summary' : 'decisions', ['reportId'=>$report->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('decisions_mental_assessment', ['reportId'=>$report->getId()]),
             'report' => $report,
         ];
     }
 
     /**
-     * //TODO consider to merge this as a step of mentalCapacity action above
-     *
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
      * @Template()
      */
     public function mentalAssessmentAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
-        $routeForward = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_exist';
-        $routeBack = ($fromPage == 'summary') ? 'decisions_summary' : 'decisions_mental_capacity';
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
         if ($mc == null) {
@@ -104,17 +100,17 @@ class DecisionController extends AbstractController
             $data->setReport($report);
 
             $this->getRestClient()->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
-            if ($fromPage == 'summary') {
+            if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
-
-            return $this->redirect($this->generateUrl($routeForward, ['reportId' => $reportId]));
+            return $this->redirectToRoute($fromSummaryPage ? 'decisions_summary' : 'decisions_exist', ['reportId' => $reportId]);
         }
 
         return [
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($routeBack, ['reportId'=>$report->getId()]),
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'decisions_summary' : 'decisions_mental_capacity', ['reportId'=>$report->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('decisions_exist', ['reportId'=>$report->getId()]),
             'report' => $report,
         ];
     }
@@ -253,7 +249,9 @@ class DecisionController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (!$report->getMentalCapacity()) {
+
+        $s = new ReportStatusService($report);
+        if ($s->getDecisionsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
