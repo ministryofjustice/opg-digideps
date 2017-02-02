@@ -41,7 +41,7 @@ class ReportController extends RestController
             //    break;
             case 'OPG102':
             default:
-                $report->setType(Report::TYPE_103);
+                $report->setType(Report::TYPE_102);
                 break;
         }
 
