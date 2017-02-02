@@ -23,6 +23,7 @@ class Report
     use ReportTraits\ReportGiftTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportDebtsTrait;
+    use ReportTraits\ReportBankAccountsTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';
@@ -103,13 +104,6 @@ class Report
      * @var string
      */
     private $period;
-
-    /**
-     * @JMS\Type("array<AppBundle\Entity\Report\BankAccount>")
-     *
-     * @var BankAccount[]
-     */
-    private $bankAccounts;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
@@ -486,35 +480,7 @@ class Report
         return $this;
     }
 
-    /**
-     * @return BankAccount[]
-     */
-    public function getBankAccounts()
-    {
-        return $this->bankAccounts;
-    }
 
-    /**
-     * @return BankAccount[]
-     */
-    public function getBankAccountsIncomplete()
-    {
-        return array_filter($this->bankAccounts ?: [], function($b) {
-            return $b->getClosingBalance() === null;
-        });
-    }
-
-    /**
-     * @return BankAccount
-     */
-    public function getAccountWithId($id)
-    {
-        foreach ($this->bankAccounts as $account) {
-            if ($account->getId() == $id) {
-                return $account;
-            }
-        }
-    }
 
     /**
      * @return MoneyTransfer[]
@@ -545,21 +511,6 @@ class Report
         return $this;
     }
 
-    /**
-     * @param array $bankAccounts
-     *
-     * @return \AppBundle\Entity\Report
-     */
-    public function setBankAccounts($bankAccounts)
-    {
-        foreach ($bankAccounts as $account) {
-            $account->setReport($this);
-        }
-
-        $this->bankAccounts = $bankAccounts;
-
-        return $this;
-    }
 
     /**
      * @return array $contacts
