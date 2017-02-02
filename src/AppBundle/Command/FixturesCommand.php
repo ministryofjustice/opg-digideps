@@ -3,9 +3,6 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\CourtOrderType;
-use AppBundle\Entity\Report\TransactionType;
-use AppBundle\Entity\Report\TransactionTypeIn;
-use AppBundle\Entity\Report\TransactionTypeOut;
 use AppBundle\Entity\Role;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -80,6 +77,4 @@ class FixturesCommand extends AddSingleUserCommand
         }
         $em->flush();
     }
-
-
 }
