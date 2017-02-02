@@ -18,7 +18,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -43,7 +43,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Report\BankAccount', $id, 'Account not found');
+        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -61,7 +61,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Report\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
+        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $data = $this->deserializeBodyContent($request);
@@ -85,7 +85,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Report\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
+        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $this->getEntityManager()->remove($account);

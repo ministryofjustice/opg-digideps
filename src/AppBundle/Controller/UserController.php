@@ -40,7 +40,7 @@ class UserController extends RestController
          * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception
          * thrown when persist flush ?
          */
-        if ($user->getEmail() && $this->getRepository('User')->findOneBy(['email' => $user->getEmail()])) {
+        if ($user->getEmail() && $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $user->getEmail()])) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
         }
 
@@ -57,7 +57,7 @@ class UserController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
 
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\Role::ADMIN)
@@ -85,7 +85,7 @@ class UserController extends RestController
     {
         // for both ADMIN and DEPUTY
 
-        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
         if ($this->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to check other user's password");
         }
@@ -114,7 +114,7 @@ class UserController extends RestController
     {
         //for both admin and users
 
-        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user EntityDir\User */
         if ($this->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to change other user's data");
         }
@@ -155,12 +155,12 @@ class UserController extends RestController
     public function getOneByFilter(Request $request, $what, $filter)
     {
         if ($what == 'email') {
-            $user = $this->getRepository('User')->findOneBy(['email' => $filter]);
+            $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $filter]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
         } elseif ($what == 'case_number') {
-            $client = $this->getRepository('Client')->findOneBy(['caseNumber' => $filter]);
+            $client = $this->getRepository(EntityDir\Client::class)->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
                 throw new \RuntimeException('Client not found', 404);
             }
@@ -169,7 +169,7 @@ class UserController extends RestController
             }
             $user = $client->getUsers()[0];
         } elseif ($what == 'user_id') {
-            $user = $this->getRepository('User')->find($filter);
+            $user = $this->getRepository(EntityDir\User::class)->find($filter);
             if (!$user) {
                 throw new \RuntimeException('User not found', 419);
             }
@@ -205,7 +205,7 @@ class UserController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $user = $this->findEntityBy('User', $id);  /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id);  /* @var $user EntityDir\User */
 
         // delete clients
         foreach ($user->getClients() as $client) {
@@ -255,7 +255,7 @@ class UserController extends RestController
         if ($adOnly) {
             $criteria['adManaged'] = true;
         }
-        return $this->getRepository('User')->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
+        return $this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
     }
 
     /**
@@ -271,7 +271,7 @@ class UserController extends RestController
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
-        $user = $this->findEntityBy('User', ['email' => $email]);
+        $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
         //TODO consider an AD key from admin area
         /*$isAd = $this->getUser()->getRole();
@@ -298,7 +298,7 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy('User', ['registrationToken' => $token], 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
@@ -334,7 +334,7 @@ class UserController extends RestController
         ]);
 
         if (array_key_exists('role_id', $data)) {
-            $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
+            $role = $this->findEntityBy(EntityDir\Role::class, $data['role_id'], 'Role not found');
             $user->setRole($role);
         }
 

@@ -18,10 +18,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Report\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $serialisedGroups = $request->query->has('groups')
@@ -41,7 +41,7 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'type' => 'mustExist',
@@ -68,10 +68,10 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Report\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
@@ -89,10 +89,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $asset = $this->findEntityBy('Report\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $report->setNoAssetToAdd(null); // reset asset choice

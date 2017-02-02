@@ -26,14 +26,14 @@ class ReportController extends RestController
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
-        $client = $this->findEntityBy('Client', $reportData['client']['id']);
+        $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         $report = new Report();
         $report->setClient($client);
 
         // the below will change when it's decide where COT will be moved
-        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type_id']);
+        $courtOrderType = $this->findEntityBy(EntityDir\CourtOrderType::class, $reportData['court_order_type_id']);
         $report->setCourtOrderType($courtOrderType);
         if ($reportData['court_order_type_id'] == Report::PROPERTY_AND_AFFAIRS) {
             /**
@@ -83,7 +83,7 @@ class ReportController extends RestController
             ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
-        $report = $this->findEntityBy('Report\Report', $id);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -98,7 +98,7 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $currentReport = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
         $user = $this->getUser();
@@ -125,7 +125,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         //lets create subsequent year's report
-        $nextYearReport = $this->getRepository('Report\Report')->createNextYearReport($currentReport);
+        $nextYearReport = $this->getRepository(Report::class)->createNextYearReport($currentReport);
         $this->getEntityManager()->flush($currentReport);
 
         //response to pass back
@@ -140,7 +140,7 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $id, 'Report not found');
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 

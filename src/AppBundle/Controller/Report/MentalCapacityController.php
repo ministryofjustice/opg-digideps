@@ -17,7 +17,7 @@ class MentalCapacityController extends RestController
     public function updateAction(Request $request, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $mc = $report->getMentalCapacity();
@@ -44,7 +44,7 @@ class MentalCapacityController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $mc = $this->findEntityBy('Report\MentalCapacity', $id, 'MentalCapacity with id:' . $id . ' not found');
+        $mc = $this->findEntityBy(EntityDir\Report\MentalCapacity::class, $id, 'MentalCapacity with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
         $serialisedGroups = $request->query->has('groups')

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\CourtOrderType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -16,7 +17,7 @@ class CourtOrderTypeController extends RestController
      */
     public function getAllCourtOrderTypeAction()
     {
-        $courtOrderTypes = $this->getDoctrine()->getManager()->getRepository('AppBundle:CourtOrderType')->findAll();
+        $courtOrderTypes = $this->getDoctrine()->getManager()->getRepository(CourtOrderType::class)->findAll();
 
         return ['court_order_types' => $courtOrderTypes];
     }

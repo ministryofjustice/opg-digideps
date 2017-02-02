@@ -37,13 +37,13 @@ class AuditLogController extends RestController
 
         $auditLogEntry = new EntityDir\AuditLogEntry();
         $auditLogEntry
-            ->setPerformedByUser($this->findEntityBy('User', $data['performed_by_user']['id']))
+            ->setPerformedByUser($this->findEntityBy(EntityDir\User::class, $data['performed_by_user']['id']))
             ->setIpAddress($data['ip_address'])
             ->setCreatedAt(new \DateTime($data['created_at']))
             ->setAction($data['action']);
 
         if (isset($data['user_edited']['id'])) {
-            $auditLogEntry->setUserEdited($this->findEntityBy('User', $data['user_edited']['id']));
+            $auditLogEntry->setUserEdited($this->findEntityBy(EntityDir\User::class, $data['user_edited']['id']));
         }
 
         $this->persistAndFlush($auditLogEntry);
@@ -61,6 +61,6 @@ class AuditLogController extends RestController
 
         $this->setJmsSerialiserGroups(['audit_log']);
 
-        return $this->getRepository('AuditLogEntry')->findBy([], ['id' => 'DESC']);
+        return $this->getRepository(EntityDir\AuditLogEntry::class)->findBy([], ['id' => 'DESC']);
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\NotFound;
 use AppBundle\Service\Auth\AuthService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -62,7 +63,7 @@ abstract class RestController extends Controller
 
     protected function getRepository($entityClass)
     {
-        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\' . $entityClass);
+        return $this->getDoctrine()->getManager()->getRepository($entityClass);
     }
 
     /**
@@ -74,26 +75,11 @@ abstract class RestController extends Controller
      */
     protected function findEntityBy($entityClass, $criteriaOrId, $errorMessage = null)
     {
-        $repo = $this->getRepository($entityClass);
+        $repo = $this->getDoctrine()->getManager()->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
         if (!$entity) {
             throw new NotFound($errorMessage ?: $entityClass . ' not found');
-        }
-
-        return $entity;
-    }
-
-    /**
-     * @param $reportId
-     *
-     * @return EntityDir\Report\Report
-     */
-    protected function findReportById($reportId)
-    {
-        $entity = $this->getRepository('Report\Report')->find($reportId);
-        if (!$entity) {
-            throw new NotFound('Report not found');
         }
 
         return $entity;

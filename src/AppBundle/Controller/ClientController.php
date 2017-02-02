@@ -29,11 +29,11 @@ class ClientController extends RestController
             if (!in_array($this->getUser()->getId(), [$userId])) {
                 throw $this->createAccessDeniedException('User not allowed');
             }
-            $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
+            $user = $this->findEntityBy(EntityDir\User::class, $userId, "User with id: {$userId}  does not exist");
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {
-            $client = $this->findEntityBy('Client', $data['id'], 'Client not found');
+            $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
             if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
                 throw $this->createAccessDeniedException('Client does not belong to user');
             }
@@ -71,7 +71,7 @@ class ClientController extends RestController
      */
     private function add($userId)
     {
-        $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
+        $user = $this->findEntityBy(EntityDir\User::class, $userId, "User with id: {$userId}  does not exist");
 
         $client = new EntityDir\Client();
         $client->addUser($user);
@@ -93,7 +93,7 @@ class ClientController extends RestController
             ? (array) $request->query->get('groups') : ['client'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
-        $client = $this->findEntityBy('Client', $id);
+        $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
