@@ -30,7 +30,9 @@ class FixDataCommand extends AddSingleUserCommand
         $reportRepo = $em->getRepository(Report::class);
         foreach ($reportRepo->findAll() as $entity) {
             $debtsAdded = $reportRepo->addDebtsToReportIfMissing($entity);
-            $shortMoneyCatsAdded = $reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            if ($entity->getType() == Report::TYPE_103) {
+                $shortMoneyCatsAdded = $reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            }
             $output->writeln("Report {$entity->getId()}: $debtsAdded debts, $shortMoneyCatsAdded money short cars added");
         }
 
