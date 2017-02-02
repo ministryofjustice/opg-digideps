@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 class IncomeBenefitController extends AbstractController
 {
     private static $jmsGroups = [
-        'client-cot',
         'state-benefits',
         'pension',
         'damages',

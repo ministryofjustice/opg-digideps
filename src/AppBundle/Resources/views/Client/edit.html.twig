@@ -29,16 +29,6 @@
     {{ form_input(form.caseNumber, 'caseNumber') }}
     {{ form_known_date(form.courtDate, 'courtDate') }}
 
-    {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
-        'fieldSetClass' : 'vertical',
-        'formGroupClass': 'visuallyhidden',
-        'legendClass' : 'form-label',
-        'items': [
-            {'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
-            {'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
-        ]
-    }) }}
-
     {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {

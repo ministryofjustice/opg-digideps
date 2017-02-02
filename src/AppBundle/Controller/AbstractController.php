@@ -47,21 +47,6 @@ class AbstractController extends Controller
     }
 
     /**
-     * @return array $choices
-     */
-    protected function getAllowedCourtOrderTypeChoiceOptions()
-    {
-        $responseArray = $this->getRestClient()->get('court-order-type', 'array');
-        foreach ($responseArray['court_order_types'] as $value) {
-            $choices[$value['id']] = $value['name'];
-        }
-
-        arsort($choices);
-
-        return $choices;
-    }
-
-    /**
      * @param Client $client
      * @param array  $groups
      *

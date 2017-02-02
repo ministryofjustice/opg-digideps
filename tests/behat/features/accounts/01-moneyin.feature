@@ -13,7 +13,6 @@ Feature: New accounts money in
             | name | Peter | White | | | |
             | caseNumber | 123456ABC | | | | |
             | courtDate | 1 | 1 | 2016 | | |
-            | allowedCourtOrderTypes_1 | 1 | | | | |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  | | | | |
         Then I fill in the following:

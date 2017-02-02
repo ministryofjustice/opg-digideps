@@ -69,7 +69,7 @@
                     {% endif %}
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                     {% if (app.user.hasDetails() and app.user.numberOfReports > 0) %}
-                        <li><a href="{{path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
+                        <li><a href="{{path('reports', {'type': constant('AppBundle\\Entity\\Report\\Report::TYPE_102') })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
                     {% endif %}
                 {% endif %}
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
