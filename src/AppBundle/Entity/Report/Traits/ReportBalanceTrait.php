@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportBalanceTrait
@@ -49,14 +47,12 @@ trait ReportBalanceTrait
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
-
     /**
      * @JMS\Type("double")
      *
      * @var float
      */
     private $calculatedBalance;
-
 
     /**
      * @return float
@@ -109,6 +105,4 @@ trait ReportBalanceTrait
     {
         $this->totalsMatch = $totalsMatch;
     }
-
-
 }

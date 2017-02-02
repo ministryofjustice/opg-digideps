@@ -464,7 +464,6 @@ class Report
         return $this;
     }
 
-
     /**
      * @return array $contacts
      */
@@ -816,6 +815,4 @@ class Report
 
         return $this;
     }
-
-
 }

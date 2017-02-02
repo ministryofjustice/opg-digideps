@@ -113,6 +113,5 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->setBankAccounts([$closingBalancePositive, $closingBalanceZero, $closingBalanceMissing]);
 
         $this->assertCount(1, $this->report->getBankAccountsIncomplete(), 'only null account expected');
-
     }
 }

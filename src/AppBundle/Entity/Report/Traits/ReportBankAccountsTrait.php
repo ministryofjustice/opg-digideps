@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportBankAccountsTrait
@@ -95,7 +93,6 @@ trait ReportBankAccountsTrait
         return $this;
     }
 
-
     /**
      ** @return bool
      */
@@ -106,7 +103,6 @@ trait ReportBankAccountsTrait
         || !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
     }
-
 
     /**
      ** @return bool
@@ -132,7 +128,6 @@ trait ReportBankAccountsTrait
         return count($this->getMoneyTransactionsOut()) > 0;
     }
 
-
     /**
      * @return float
      */
@@ -148,6 +143,4 @@ trait ReportBankAccountsTrait
     {
         $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
     }
-
-
 }

@@ -195,8 +195,8 @@ class OdrStatusService
     public function getStatus()
     {
         if (count(array_filter($this->getSectionStatus(), function ($e) {
-                return $e != self::STATE_NOT_STARTED;
-            })) === 0
+            return $e != self::STATE_NOT_STARTED;
+        })) === 0
         ) {
             return 'notStarted';
         }
