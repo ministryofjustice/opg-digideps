@@ -49,6 +49,9 @@ class Version099 extends AbstractMigration
             }
         }
         $this->connection->commit();
+
+        $this->connection->query('DROP TABLE transaction');
+        $this->connection->query('DROP TABLE transaction_type');
     }
 
     private function convertOldToNew($old)
