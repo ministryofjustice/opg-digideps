@@ -28,6 +28,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getNoTransfersToAdd'               => null,
                 'getAssets'                         => [],
                 'getDecisions'                      => [],
+                'getHasCapacityChanged'             => [],
                 'getNoAssetToAdd'                   => null,
                 'getContacts'                       => null,
                 'getReasonForNoContacts'            => null,
@@ -63,17 +64,29 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function decisionsProvider()
     {
         $decision = m::mock(\AppBundle\Entity\Decision::class);
-        $mc = m::mock(\AppBundle\Entity\MentalCapacity::class);
+        $mcEmpty = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+            'getHasCapacityChanged' => null,
+            'getMentalAssessmentDate' => null,
+        ]);
+        $mcPartial = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+            'getHasCapacityChanged' => 'no',
+            'getMentalAssessmentDate' => null,
+        ]);
+        $mcComplete = m::mock(\AppBundle\Entity\MentalCapacity::class, [
+            'getHasCapacityChanged' => 'no',
+            'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
+        ]);
 
         return [
             [[], StatusService::STATE_NOT_STARTED, false],
             // incomplete
             [['getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
             [['getReasonForNoDecisions' => 'x'], StatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mc], StatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mcComplete], StatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mcPartial, 'getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
             // done
-            [['getMentalCapacity' => $mc, 'getDecisions' => [$decision]], StatusService::STATE_DONE, true],
-            [['getMentalCapacity' => $mc, 'getReasonForNoDecisions' => 'x'], StatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getDecisions' => [$decision]], StatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], StatusService::STATE_DONE, true],
         ];
     }
 
