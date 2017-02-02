@@ -90,14 +90,6 @@ class Report
     private $moneyTransfers;
 
     /**
-     * @deprecated REMOVE WHEN OTPP is merged and migrated
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Transaction", mappedBy="report", cascade={"persist"}, fetch="LAZY")
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $transactions;
-
-    /**
      * @var MoneyTransaction[]
      *
      * @JMS\Groups({"transaction"})
@@ -333,7 +325,6 @@ class Report
         $this->bankAccounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
         $this->moneyTransactions = new ArrayCollection();
-        $this->transactions = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
@@ -984,16 +975,6 @@ class Report
     }
 
     /**
-     * @deprecated
-     *
-     * @return Transaction[]
-     */
-    public function getTransactions()
-    {
-        return $this->transactions;
-    }
-
-    /**
      *
      * @JMS\VirtualProperty
      * @JMS\SerializedName("money_transactions_in")
@@ -1047,20 +1028,6 @@ class Report
         if (!$this->moneyTransactions->contains($t)) {
             $this->moneyTransactions->add($t);
         }
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param Transaction $transaction
-     */
-    public function addTransaction(Transaction $transaction)
-    {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-        }
-
-        return $this;
     }
 
     /**

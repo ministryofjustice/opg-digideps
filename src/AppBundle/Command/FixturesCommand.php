@@ -31,9 +31,6 @@ class FixturesCommand extends AddSingleUserCommand
         // court order type
         $this->cot($output);
 
-        // transaction types
-        $this->transactionTypes($output);
-
         // user and roles
         $this->roles($output);
         $fixtures = (array) $this->getContainer()->getParameter('fixtures');
@@ -84,32 +81,5 @@ class FixturesCommand extends AddSingleUserCommand
         $em->flush();
     }
 
-    /**
-     * @deprecated
-     *
-     * @param OutputInterface $output
-     */
-    protected function transactionTypes(OutputInterface $output)
-    {
-        $em = $this->getContainer()->get('em');
-        $tt = $em->getRepository('AppBundle\Entity\Report\TransactionType');
-        foreach (TransactionType::$fixtures as $row) {
-            //id, has_more_details, display_order, category, type
-            list($id, $hasMoreDetails, $displayOrder, $category, $type) = $row;
-            $output->write("Transaction Type $id: ");
-            if ($tt->find($id)) {
-                $output->writeln('skip');
-            } else {
-                $t = ($type == 'in') ? new TransactionTypeIn() : new TransactionTypeOut();
-                $t
-                    ->setId($id)
-                    ->setHasMoreDetails($hasMoreDetails)
-                    ->setDisplayOrder(intval($displayOrder))
-                    ->setCategory($category);
-                $em->persist($t);
-                $output->writeln('added');
-            }
-        }
-        $em->flush();
-    }
+
 }
