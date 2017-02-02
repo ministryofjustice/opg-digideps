@@ -55,9 +55,9 @@ class ReportController extends AbstractController
         $client = !empty($clients) ? $clients[0] : null;
 
         $reports = $client ? $client->getReports() : [];
-        $reports = array_filter($reports, function ($r) use ($type) {
-            return $r->getType() == $type;
-        });
+//        $reports = array_filter($reports, function ($r) use ($type) {
+//            return $r->getType() == $type;
+//        });
         arsort($reports);
 
         $report = new EntityDir\Report\Report();
