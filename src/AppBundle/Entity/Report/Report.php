@@ -375,11 +375,11 @@ class Report
      */
     public function getPeriod()
     {
-        if (!empty($this->period)) {
+        if ($this->period) {
             return $this->period;
         }
 
-        if (empty($this->startDate)) {
+        if (!$this->startDate instanceof \DateTime || !$this->endDate instanceof \DateTime) {
             return $this->period;
         }
 
