@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\CourtOrderType;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -163,16 +162,6 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist"})
      **/
     private $mentalCapacity;
-
-    /**
-     * @deprecated in favour of report.type
-     * Do not remove until the new frontend logic (102,103,104) is implemented
-     *
-     * @JMS\Exclude
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
-     * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
-     */
-    private $courtOrderType;
 
     /**
      * @var \Date
@@ -856,43 +845,6 @@ class Report
     public function getReasonForNoDecisions()
     {
         return $this->reasonForNoDecisions;
-    }
-
-    /**
-     * Set courtOrderType.
-     *
-     * @param CourtOrderType $courtOrderType
-     *
-     * @return Report
-     */
-    public function setCourtOrderType(CourtOrderType $courtOrderType = null)
-    {
-        $this->courtOrderType = $courtOrderType;
-
-        return $this;
-    }
-
-    /**
-     * Get courtOrderType.
-     *
-     * @return CourtOrderType
-     */
-    public function getCourtOrderType()
-    {
-        return $this->courtOrderType;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("integer")
-     * @JMS\SerializedName("court_order_type_id")
-     * @JMS\Groups({"report"})
-     *
-     * @return int
-     */
-    public function getCourtOrderTypeId()
-    {
-        return $this->getCourtOrderType()->getId();
     }
 
     /**

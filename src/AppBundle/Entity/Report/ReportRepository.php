@@ -25,7 +25,6 @@ class ReportRepository extends EntityRepository
         //lets clone the report
         $newReport = new EntityDir\Report\Report();
         $newReport->setClient($report->getClient());
-        $newReport->setCourtOrderType($report->getCourtOrderType());
         $newReportType = $this->getReportTypeBasedOnOldReport($report);
         $newReport->setType($newReportType);
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));

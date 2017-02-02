@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\NotFound;
 use AppBundle\Service\Auth\AuthService;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -61,6 +62,11 @@ abstract class RestController extends Controller
         }
     }
 
+    /**
+     * @param $entityClass string
+     *
+     * @return EntityRepository
+     */
     protected function getRepository($entityClass)
     {
         return $this->getDoctrine()->getManager()->getRepository($entityClass);

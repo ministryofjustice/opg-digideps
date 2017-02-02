@@ -43,7 +43,6 @@ class ClientController extends RestController
             'firstname' => 'setFirstname',
             'lastname' => 'setLastname',
             'case_number' => 'setCaseNumber',
-            'allowed_court_order_types' => 'setAllowedCourtOrderTypes',
             'address' => 'setAddress',
             'address2' => 'setAddress2',
             'postcode' => 'setPostcode',

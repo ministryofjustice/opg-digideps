@@ -84,10 +84,6 @@ class Fixtures
      */
     public function createReport(EntityDir\Client $client, array $settersMap = [])
     {
-        $cot = new EntityDir\CourtOrderType();
-        $cot->setName('test');
-        $this->em->persist($cot);
-
         $report = new EntityDir\Report\Report();
 
         // start/end dates from today for 365 days
@@ -97,7 +93,6 @@ class Fixtures
         $report->setEndDate($today);
 
         $report->setClient($client);
-        $report->setCourtOrderType($cot);
         $report->setType(EntityDir\Report\Report::TYPE_102);
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
