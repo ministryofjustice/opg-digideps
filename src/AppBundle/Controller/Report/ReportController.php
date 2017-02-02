@@ -32,26 +32,17 @@ class ReportController extends RestController
         $report = new Report();
         $report->setClient($client);
 
-        // the below will change when it's decide where COT will be moved
-        $courtOrderType = $this->findEntityBy(EntityDir\CourtOrderType::class, $reportData['court_order_type_id']);
-        $report->setCourtOrderType($courtOrderType);
-        if ($reportData['court_order_type_id'] == Report::PROPERTY_AND_AFFAIRS) {
-            /**
-             * Introduced by
-             * https://opgtransform.atlassian.net/browse/DDPB-757
-             * Remove when
-             * https://opgtransform.atlassian.net/browse/DDPB-758
-             * is implemented
-             */
-            if ($this->getUser()->getEmail() == 'laydeputy103@publicguardian.gsi.gov.uk') {
+        // set report type based on casrec. If not found, set to 102
+        $casRec = $this->getRepository(EntityDir\CasRec::class)->findOneBy(['caseNumber'=>$client->getCaseNumber()]); /* @var $casRec EntityDir\CasRec */
+        switch ($casRec ? $casRec->getTypeOfReport() : null) {
+            // DISABLED UNTIL THE BUSINESS DECIDE TO EMABLE 103 for users. decomment following 3 lines to enable
+            //case 'OPG103':
+            //    $report->setType(Report::TYPE_103);
+            //    break;
+            case 'OPG102':
+            default:
                 $report->setType(Report::TYPE_103);
-            } else {
-                $report->setType(Report::TYPE_102);
-            }
-        }
-        // disabled in the UX atm, but implemented for clarity
-        if ($reportData['court_order_type_id'] == Report::HEALTH_WELFARE) {
-            $report->setType(Report::TYPE_104);
+                break;
         }
 
         $this->validateArray($reportData, [

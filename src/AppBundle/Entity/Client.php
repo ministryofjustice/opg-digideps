@@ -155,15 +155,6 @@ class Client
     private $lastname;
 
     /**
-     * @JMS\Type("array")
-     * @JMS\Groups({"client"})
-     * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
-     *
-     * @var array
-     */
-    private $allowedCourtOrderTypes;
-
-    /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"client"})
      *
@@ -532,30 +523,6 @@ class Client
     public function setOdr($odr)
     {
         $this->odr = $odr;
-    }
-
-    /**
-     * Set allowedCourtOrderTypes.
-     *
-     * @param array $allowedCourtOrderTypes
-     *
-     * @return Client
-     */
-    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
-    {
-        $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
-
-        return $this;
-    }
-
-    /**
-     * Get allowedCourtOrderTypes.
-     *
-     * @return array
-     */
-    public function getAllowedCourtOrderTypes()
-    {
-        return $this->allowedCourtOrderTypes;
     }
 
     /**
