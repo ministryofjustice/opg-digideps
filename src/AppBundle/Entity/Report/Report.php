@@ -487,7 +487,7 @@ class Report
     }
 
     /**
-     * @return Account[]
+     * @return BankAccount[]
      */
     public function getBankAccounts()
     {
@@ -495,7 +495,17 @@ class Report
     }
 
     /**
-     * @return Account
+     * @return BankAccount[]
+     */
+    public function getBankAccountsIncomplete()
+    {
+        return array_filter($this->bankAccounts ?: [], function($b) {
+            return $b->getClosingBalance() === null;
+        });
+    }
+
+    /**
+     * @return BankAccount
      */
     public function getAccountWithId($id)
     {

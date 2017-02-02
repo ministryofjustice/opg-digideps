@@ -59,11 +59,16 @@ class ReportStatusService
     /** @return string */
     public function getBankAccountsState()
     {
-        if (empty($this->report->getBankAccounts())) {
+        $bankAccounts = $this->report->getBankAccounts();
+        if (empty($bankAccounts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords'=>0];
         }
 
-        return ['state' => self::STATE_DONE, 'nOfRecords'=>count($this->report->getBankAccounts())];
+        if ($this->report->getBankAccountsIncomplete()) {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords'=>0];
+        }
+
+        return ['state' => self::STATE_DONE, 'nOfRecords'=>count($bankAccounts)];
     }
 
     public function getMoneyTransferState()

@@ -7,7 +7,7 @@
     </div>
     <div class="column-half text--right">
         <a href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1}) }}"
-            class="bold-small move-quarter--up action-link behat-link-add">
+           class="bold-small move-quarter--up action-link behat-link-add">
             <span class="icon icon-plus"></span>
             Add account
         </a>
@@ -16,14 +16,14 @@
 
 <table class="check-your-answers behat-region-list-accounts">
     <thead>
-        <tr>
-            <th>Account</th>
-            <th class="text--right">Balance on {{ report.startDate | date("j F Y") }}</th>
-            <th class="text--right">Balance on {{ report.endDate | date("j F Y") }}</th>
-            <th>
-                <span class="visuallyhidden">Actions</span>
-            </th>
-        </tr>
+    <tr>
+        <th>Account</th>
+        <th class="text--right">Balance on {{ report.startDate | date("j F Y") }}</th>
+        <th class="text--right">Balance on {{ report.endDate | date("j F Y") }}</th>
+        <th>
+            <span class="visuallyhidden">Actions</span>
+        </th>
+    </tr>
     </thead>
     <tbody>
     {% for account in report.bankAccounts %}
@@ -45,9 +45,16 @@
             <td class="numeric-small">
                 £{{ account.openingBalance | money_format }}
             </td>
-            <td class="numeric-small">
-                £{{ account.closingBalance == null ? ' -,-' : (account.closingBalance | money_format) }}
-            </td>
+            {% if account.closingBalance == null %}
+                <td class="numeric-small">
+                    £-,-
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td class="numeric-small">
+                    £{{ account.closingBalance | money_format }}
+                </td>
+            {% endif %}
             <td class="change-answer soft-half--left hard--right">
                 <a class="behat-link-edit action-link"
                    href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>

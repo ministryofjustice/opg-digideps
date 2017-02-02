@@ -16,7 +16,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->report = new Report();
         $this->account = m::mock('AppBundle\Entity\Report\BankAccount');
-        $this->account->shouldIgnoreMissing();
     }
 
     public function tearDown()
@@ -102,5 +101,18 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ['+1 month', false],
             ['+1 year', false],
         ];
+    }
+
+    public function testgetBankAccountsIncomplete()
+    {
+        $closingBalancePositive = m::mock(BankAccount::class, ['getClosingBalance'=>1, 'setReport'=>'']);
+        $closingBalanceZero = m::mock(BankAccount::class, ['getClosingBalance'=>0, 'setReport'=>'']);
+        $closingBalanceMissing = m::mock(BankAccount::class, ['getClosingBalance'=>null, 'setReport'=>'']);
+
+        $this->report = new Report();
+        $this->report->setBankAccounts([$closingBalancePositive, $closingBalanceZero, $closingBalanceMissing]);
+
+        $this->assertCount(1, $this->report->getBankAccountsIncomplete(), 'only null account expected');
+
     }
 }

@@ -18,43 +18,44 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     private function getStatusServiceWithReportMocked(array $reportMethods)
     {
         $report = m::mock(Report::class, $reportMethods + [
-                'getCourtOrderTypeId' => Report::PROPERTY_AND_AFFAIRS,
-                'getBankAccounts' => [],
-                'getExpenses' => [],
-                'getPaidForAnything' => null,
-                'getGifts' => [],
-                'getGiftsExist' => [],
-                'getMoneyTransfers' => [],
-                'getNoTransfersToAdd' => null,
-                'getAssets' => [],
-                'getDecisions' => [],
-                'getNoAssetToAdd' => null,
-                'getContacts' => null,
-                'getReasonForNoContacts' => null,
-                'getReasonForNoDecisions' => null,
-                'getVisitsCare' => null,
-                'getAction' => null,
-                'getActionMoreInfo' => null,
-                'getMentalCapacity' => null,
-                'hasMoneyIn' => false,
-                'getMoneyTransactionsIn' => [],
-                'hasMoneyOut' => false,
-                'getMoneyTransactionsOut' => [],
-                'getHasDebts' => null,
-                'getDebts' => [],
-                'getDebtsWithValidAmount' => [],
-                'isTotalsMatch' => null,
-                'getBalanceMismatchExplanation' => null,
+                'getCourtOrderTypeId'               => Report::PROPERTY_AND_AFFAIRS,
+                'getBankAccounts'                   => [],
+                'getBankAccountsIncomplete'         => [],
+                'getExpenses'                       => [],
+                'getPaidForAnything'                => null,
+                'getGifts'                          => [],
+                'getGiftsExist'                     => [],
+                'getMoneyTransfers'                 => [],
+                'getNoTransfersToAdd'               => null,
+                'getAssets'                         => [],
+                'getDecisions'                      => [],
+                'getNoAssetToAdd'                   => null,
+                'getContacts'                       => null,
+                'getReasonForNoContacts'            => null,
+                'getReasonForNoDecisions'           => null,
+                'getVisitsCare'                     => null,
+                'getAction'                         => null,
+                'getActionMoreInfo'                 => null,
+                'getMentalCapacity'                 => null,
+                'hasMoneyIn'                        => false,
+                'getMoneyTransactionsIn'            => [],
+                'hasMoneyOut'                       => false,
+                'getMoneyTransactionsOut'           => [],
+                'getHasDebts'                       => null,
+                'getDebts'                          => [],
+                'getDebtsWithValidAmount'           => [],
+                'isTotalsMatch'                     => null,
+                'getBalanceMismatchExplanation'     => null,
                 // 103
-                'getMoneyShortCategoriesIn' => [],
-                'getMoneyShortCategoriesInPresent' => [],
-                'getMoneyTransactionsShortInExist' => null,
-                'getMoneyTransactionsShortIn' => [],
-                'getMoneyShortCategoriesOut' => [],
+                'getMoneyShortCategoriesIn'         => [],
+                'getMoneyShortCategoriesInPresent'  => [],
+                'getMoneyTransactionsShortInExist'  => null,
+                'getMoneyTransactionsShortIn'       => [],
+                'getMoneyShortCategoriesOut'        => [],
                 'getMoneyShortCategoriesOutPresent' => [],
                 'getMoneyTransactionsShortOutExist' => null,
-                'getMoneyTransactionsShortOut' => [],
-                'getType' => Report::TYPE_102,
+                'getMoneyTransactionsShortOut'      => [],
+                'getType'                           => Report::TYPE_102,
             ]);
 
         return new StatusService($report);
@@ -140,12 +141,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function bankAccountProvider()
     {
-        $account = m::mock(\AppBundle\Entity\Report\Account::class, [
-        ]);
+        $account = m::mock(\AppBundle\Entity\Report\Account::class);
 
         return [
-            [['getBankAccounts' => []], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$account]], StatusService::STATE_DONE],
+            [['getBankAccounts' => [], 'getBankAccountsIncomplete' => []], StatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => [$account]], StatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => []], StatusService::STATE_DONE],
         ];
     }
 
@@ -227,7 +228,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             [['getMoneyTransactionsShortInExist' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
         ];
@@ -249,7 +250,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent'=>[$cat]], StatusService::STATE_INCOMPLETE],
+            [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
             [['getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
         ];
@@ -355,13 +356,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function actionsProvider()
     {
         $actionIncomplete = m::mock(\AppBundle\Entity\Action::class, [
-            'getDoYouHaveConcerns' => true,
-            'getDoYouExpectFinancialDecisions' => false
+            'getDoYouHaveConcerns'             => true,
+            'getDoYouExpectFinancialDecisions' => false,
         ]);
 
         $actionComplete = m::mock(\AppBundle\Entity\Action::class, [
-            'getDoYouHaveConcerns' => true,
-            'getDoYouExpectFinancialDecisions' => true
+            'getDoYouHaveConcerns'             => true,
+            'getDoYouExpectFinancialDecisions' => true,
         ]);
 
         return [
@@ -421,7 +422,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function mockedMethodsCompletingReport($type)
     {
-        $ret = ['getType'=>$type];
+        $ret = ['getType' => $type];
 
         $ret += array_pop($this->decisionsProvider())[0];
         $ret += array_pop($this->contactsProvider())[0];
