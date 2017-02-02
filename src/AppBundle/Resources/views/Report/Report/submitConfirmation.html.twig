@@ -38,6 +38,6 @@
     {{ form_end(form) }}
     {# end feedback form #}
 
-    <a href="{{ path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') })}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
+    <a href="{{ path('reports', {'type': '102' })}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
 
 {% endblock %}

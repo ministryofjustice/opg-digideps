@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
 {
-    private static $jmsGroups = ['odr-account', 'client-cot'];
+    private static $jmsGroups = ['odr-account'];
 
     /**
      * @Route("/odr/{odrId}/bank-accounts", name="odr_bank_accounts")

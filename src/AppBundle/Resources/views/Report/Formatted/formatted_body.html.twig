@@ -8,9 +8,9 @@
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
 {% set transOptions = {'%client%': report.client.firstname} %}
-{% set is102 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
-{% set is103 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
-{% set is104 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_104') %}
+{% set is102 = report.type == '102' %}
+{% set is103 = report.type == '103' %}
+{% set is104 = report.type == '104' %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}
@@ -20,7 +20,7 @@
     <div id="content" class="formatted-report content">
         <div id="report-header">Office of the Public Guardian</div>
         <h1>Deputy report for property and financial decisions
-            {% if report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
+            {% if report.type == '103' %}
                 (103)
             {% endif %}
         </h1>

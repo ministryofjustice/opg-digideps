@@ -17,13 +17,6 @@
 
 {% block pageContent %}
 
-    {#<nav id="account-sub-nav">#}
-        {#<a id="report-prop-fin"#}
-           {#href="{{ path('reports', {'cot': constant('AppBundle\\Entity\\Report\\Report::PROPERTY_AND_AFFAIRS') }) }}"#}
-           {#class="active behat-link-prop-finance">{{ 'nav.propFinance' | trans() }}</a>#}
-    {#</nav>#}
-
-
     {% if reportId %}
         {% include 'AppBundle:Report:_edit-dates.html.twig' with {
                     'form' : editReportDatesForm

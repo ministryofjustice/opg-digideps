@@ -203,7 +203,6 @@ Feature: User Self Registration
             | client_address |  address1 |
             | client_country | GB |
             | client_postcode | SW1 1RH |
-            | client_allowedCourtOrderTypes_0 | 2 |
         And I press "client_save"
         Then the URL should match "/report/create/\d+"
         And I set the report start date to "1/1/2016"

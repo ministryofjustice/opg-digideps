@@ -28,7 +28,7 @@ class ElementController extends AbstractController
     {
         $report = new Report();
         $report->setId(1);
-        $report->setCourtOrderTypeId(2);
+        $report->setType(Report::TYPE_102);
 
         return [
             'report' => $report,

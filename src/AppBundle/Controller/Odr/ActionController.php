@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 class ActionController extends AbstractController
 {
     private static $jmsGroups = [
-        'client-cot',
-        //TODO merge groups in the API into "odr-action"
         'odr-action-give-gifts',
         'odr-action-property',
         'odr-action-more-info',

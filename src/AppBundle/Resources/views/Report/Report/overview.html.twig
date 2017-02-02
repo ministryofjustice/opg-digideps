@@ -3,9 +3,9 @@
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 
-{% set is102 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_102') %}
-{% set is103 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_103') %}
-{% set is104 = report.type == constant('AppBundle\\Entity\\Report\\Report::TYPE_104') %}
+{% set is102 = report.type == '102' %}
+{% set is103 = report.type == '103' %}
+{% set is104 = report.type == '104' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}

@@ -32,7 +32,7 @@ class ClientController extends AbstractController
     {
         $client = $this->getFirstClient();
 
-        $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
+        $form = $this->createForm(new FormDir\ClientType(), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
 
         // edit client form
@@ -73,8 +73,7 @@ class ClientController extends AbstractController
             $client->addUser($this->getUser()->getId());
         }
 
-        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions(); //TODO inject into form
-        $form = $this->createForm(new FormDir\ClientType($this->getRestClient()), $client);
+        $form = $this->createForm(new FormDir\ClientType(), $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {

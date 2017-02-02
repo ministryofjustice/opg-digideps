@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 class MoneyInShortController extends AbstractController
 {
     private static $jmsGroups = [
-        'client-cot',
         'moneyShortCategoriesIn',
         'moneyTransactionsShortIn',
     ];

@@ -11,14 +11,6 @@ lastname:
 caseNumber:
     label: Case number
     hint: You will find the case number on the first page of the court order (top right-hand corner).
-allowedCourtOrderTypes:
-    legend: Court order type
-    hint: This service is only available for people with a property and affairs court order making financial decisions on behalf of someone else.
-    description-0: "If you make financial decisions on behalf of the client, you will have a property and affairs court order."
-    description-1: |
-        Are you a health and welfare deputy?
-        We’re working on a digital service for people with a personal welfare order.
-        It’s not ready yet; we’ll let you know when you can start using it.
 address:
     label: Address
 address2:
@@ -45,8 +37,6 @@ startDate:
 endDate:
     legend: End date
     hint: (DD/MM/YYYY)
-courtOrderTypeId:
-    label: Report Type
 form:
   newReportForm:
     subSectionTitle: "Add the reporting period"

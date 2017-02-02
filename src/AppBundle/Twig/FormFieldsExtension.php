@@ -84,15 +84,7 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @DEPRECATED
-     * form_checkbox_group(element, 'allowedCourtOrderTypes', {.
-     'legendClass' : 'form-label-bold',
-     'fieldSetClass' : 'inline',
-     'vertical': true,
-     'items': [
-     {'labelClass': 'block-label', 'elementClass': 'checkbox' },
-     {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
-     ]
-     })
+     *
      * //TODO consider refactor using getFormComponentTwigVariables
      */
     public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
@@ -146,15 +138,7 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @DEPRECATED
-     * form_checkbox_group(element, 'allowedCourtOrderTypes', {.
-     'legendClass' : 'form-label-bold',
-     'fieldSetClass' : 'inline',
-     'vertical': true,
-     'items': [
-     {'labelClass': 'block-label', 'elementClass': 'checkbox' },
-     {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
-     ]
-     })
+     *
      */
     public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
     {

@@ -41,10 +41,10 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
+     * @Route("/reports/{type}/{reportId}", name="reports", defaults={"reportId" = ""})
      * @Template()
      */
-    public function indexAction(Request $request, $cot, $reportId = null)
+    public function indexAction(Request $request, $type, $reportId = null)
     {
         $user = $this->getUserWithData(['user', 'client', 'report']);
         if ($user->isOdrEnabled()) {
@@ -55,9 +55,9 @@ class ReportController extends AbstractController
         $client = !empty($clients) ? $clients[0] : null;
 
         $reports = $client ? $client->getReports() : [];
-        $reports = array_filter($reports, function ($r) use ($cot) {
-            return $r->getCourtOrderTypeId() == $cot;
-        });
+//        $reports = array_filter($reports, function ($r) use ($type) {
+//            return $r->getType() == $type;
+//        });
         arsort($reports);
 
         $report = new EntityDir\Report\Report();
@@ -73,7 +73,7 @@ class ReportController extends AbstractController
             if ($editReportDatesForm->isValid()) {
                 $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
 
-                return $this->redirect($this->generateUrl('reports', ['cot' => $report->getCourtOrderTypeId()]));
+                return $this->redirect($this->generateUrl('reports', ['type' => $report->getType()]));
             }
         }
 
@@ -104,8 +104,6 @@ class ReportController extends AbstractController
     {
         $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client']);
 
-        $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
-
         $existingReports = $this->getReportsIndexedById($client);
 
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report\Report) {
@@ -113,14 +111,6 @@ class ReportController extends AbstractController
         } else {
             // new report
             $report = new EntityDir\Report\Report();
-
-            //if client has property & affairs and health & welfare then give them property & affairs
-            //else give them health and welfare
-            if (count($allowedCourtOrderTypes) > 1) {
-                $report->setCourtOrderTypeId(EntityDir\Report\Report::PROPERTY_AND_AFFAIRS);
-            } else {
-                $report->setCourtOrderTypeId($allowedCourtOrderTypes[0]);
-            }
         }
         $report->setClient($client);
 

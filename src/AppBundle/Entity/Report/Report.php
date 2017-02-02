@@ -31,16 +31,6 @@ class Report
     const TYPE_104 = '104';
 
     /**
-     * 104 report
-     */
-    const PERSONAL_WELFARE = 1;
-
-    /**
-     * 102 report
-     */
-    const PROPERTY_AND_AFFAIRS = 2;
-
-    /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care"})
      *
@@ -91,13 +81,6 @@ class Report
      * @var Client
      */
     private $client;
-
-    /**
-     * @JMS\Type("integer")
-     *
-     * @var int
-     */
-    private $courtOrderTypeId;
 
     /**
      * @JMS\Exclude
@@ -412,26 +395,6 @@ class Report
     public function setClient(Client $client)
     {
         $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCourtOrderTypeId()
-    {
-        return $this->courtOrderTypeId;
-    }
-
-    /**
-     * @param int $courtOrderTypeId
-     *
-     * @return \AppBundle\Entity\Report
-     */
-    public function setCourtOrderTypeId($courtOrderTypeId)
-    {
-        $this->courtOrderTypeId = $courtOrderTypeId;
 
         return $this;
     }
