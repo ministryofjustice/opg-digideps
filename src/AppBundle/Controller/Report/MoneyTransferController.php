@@ -18,7 +18,7 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -48,7 +48,7 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -57,7 +57,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = $this->findEntityBy('Report\MoneyTransfer', $transferId);
+        $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->fillEntity($transfer, $data);
 
         $this->persistAndFlush($transfer);
@@ -73,10 +73,10 @@ class MoneyTransferController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $transfer = $this->findEntityBy('Report\MoneyTransfer', $transferId);
+        $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
         $report->setNoTransfersToAdd(null);
@@ -92,8 +92,8 @@ class MoneyTransferController extends RestController
         $amountCleaned = preg_replace('/[^\d\.]+/', '', $data['amount']); // 123,123.34 -> 123123.34
 
         $transfer
-            ->setFrom($this->findEntityBy('Report\BankAccount', $data['account_from_id']))
-            ->setTo($this->findEntityBy('Report\BankAccount', $data['account_to_id']))
+            ->setFrom($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['account_from_id']))
+            ->setTo($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['account_to_id']))
             ->setAmount($amountCleaned);
     }
 }

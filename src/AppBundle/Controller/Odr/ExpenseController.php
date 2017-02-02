@@ -18,10 +18,10 @@ class ExpenseController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $expense = $this->findEntityBy('Odr\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
         $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
 
         return $expense;
@@ -37,7 +37,7 @@ class ExpenseController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId); /* @var $odr EntityDir\Odr\Odr */
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
         $this->validateArray($data, [
             'explanation' => 'mustExist',
@@ -64,10 +64,10 @@ class ExpenseController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $expense = $this->findEntityBy('Odr\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
         $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
 
         $this->updateEntityWithData($expense, $data);
@@ -85,10 +85,10 @@ class ExpenseController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId); /* @var $odr EntityDir\Odr\Odr */
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $expense = $this->findEntityBy('Odr\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
         $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
         $this->getEntityManager()->remove($expense);
 

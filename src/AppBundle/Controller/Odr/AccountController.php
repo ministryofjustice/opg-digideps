@@ -23,10 +23,10 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
 
-        $odr = $this->findEntityBy('Odr\Odr', $id);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $accounts = $this->getRepository('Odr\BankAccount')->findByOdr($odr, [
+        $accounts = $this->getRepository(EntityDir\Odr\BankAccount::class)->findByOdr($odr, [
             'id' => 'DESC',
         ]);
 
@@ -45,7 +45,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
         $data = $this->deserializeBodyContent($request, [
@@ -73,7 +73,7 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
 
-        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found');
+        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         return $account;
@@ -87,7 +87,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount*/
+        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount*/
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         $data = $this->deserializeBodyContent($request);
@@ -109,7 +109,7 @@ class AccountController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $account = $this->findEntityBy('Odr\BankAccount', $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount */
+        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount */
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
         $this->getEntityManager()->remove($account);

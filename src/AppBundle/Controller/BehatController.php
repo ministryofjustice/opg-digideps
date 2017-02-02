@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\AuditLogEntry;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,7 +30,7 @@ class BehatController extends RestController
     {
         $this->securityChecks();
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(Report::class, $reportId);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -81,7 +83,7 @@ class BehatController extends RestController
 
         $this->setJmsSerialiserGroups(['audit_log']);
 
-        return $this->getRepository('AuditLogEntry')->findBy([], ['id' => 'DESC']);
+        return $this->getRepository(AuditLogEntry::class)->findBy([], ['id' => 'DESC']);
     }
 
     /**
@@ -93,7 +95,7 @@ class BehatController extends RestController
         $this->securityChecks();
 
         $data = $this->deserializeBodyContent($request);
-        $user = $this->findEntityBy('User', ['email' => $email]);
+        $user = $this->findEntityBy(User::class, ['email' => $email]);
 
         if (!empty($data['registration_token'])) {
             $user->setRegistrationToken($data['registration_token']);

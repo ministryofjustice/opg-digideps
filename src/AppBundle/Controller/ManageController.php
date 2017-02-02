@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -41,7 +42,7 @@ class ManageController extends RestController
     private function dbInfo()
     {
         try {
-            $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findAll();
+            $this->getDoctrine()->getRepository(User::class)->findAll();
 
             return [true, ''];
         } catch (\Exception $e) {

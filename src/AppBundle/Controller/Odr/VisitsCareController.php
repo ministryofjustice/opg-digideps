@@ -21,7 +21,7 @@ class VisitsCareController extends RestController
         $visitsCare = new EntityDir\Odr\VisitsCare();
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $data['odr_id']);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $data['odr_id']);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
         $visitsCare->setOdr($odr);
@@ -41,7 +41,7 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id);
+        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id);
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
 
         $data = $this->deserializeBodyContent($request);
@@ -62,10 +62,10 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Odr\Odr', $odrId);
+        $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($report);
 
-        $ret = $this->getRepository('Odr\Odr')->findByReport($report);
+        $ret = $this->getRepository(EntityDir\Odr\Odr::class)->findByReport($report);
 
         return $ret;
     }
@@ -83,7 +83,7 @@ class VisitsCareController extends RestController
         $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id, 'VisitsCare with id:' . $id . ' not found');
+        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
 
         return $visitsCare;
@@ -97,7 +97,7 @@ class VisitsCareController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy('Odr\VisitsCare', $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Odr\VisitsCare */
+        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Odr\VisitsCare */
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
 
         $this->getEntityManager()->remove($visitsCare);

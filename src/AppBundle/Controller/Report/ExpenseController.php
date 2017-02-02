@@ -18,10 +18,10 @@ class ExpenseController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         return $expense;
@@ -37,7 +37,7 @@ class ExpenseController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'explanation' => 'mustExist',
@@ -64,10 +64,10 @@ class ExpenseController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $this->updateEntityWithData($expense, $data);
@@ -85,10 +85,10 @@ class ExpenseController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $expense = $this->findEntityBy('Report\Expense', $expenseId);
+        $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
         $this->getEntityManager()->remove($expense);
 

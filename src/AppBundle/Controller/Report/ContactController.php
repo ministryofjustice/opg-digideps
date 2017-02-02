@@ -26,7 +26,7 @@ class ContactController extends RestController
             ? (array) $request->query->get('groups') : ['contact'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
-        $contact = $this->findEntityBy('Report\Contact', $id);
+        $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
         return $contact;
@@ -40,7 +40,7 @@ class ContactController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $contact = $this->findEntityBy('Report\Contact', $id, 'Contact not found');
+        $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
         $this->getEntityManager()->remove($contact);
@@ -63,7 +63,7 @@ class ContactController extends RestController
             $this->validateArray($contactData, [
                 'report_id' => 'mustExist',
             ]);
-            $report = $this->findEntityBy('Report\Report', $contactData['report_id']);
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $contactData['report_id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
             $contact = new EntityDir\Report\Contact();
             $contact->setReport($report);
@@ -71,7 +71,7 @@ class ContactController extends RestController
             $this->validateArray($contactData, [
                 'id' => 'mustExist',
             ]);
-            $contact = $this->findEntityBy('Report\Contact', $contactData['id']); /* @var $contact EntityDir\Report\Contact */
+            $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $contactData['id']); /* @var $contact EntityDir\Report\Contact */
             $report = $contact->getReport();
             $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         }
@@ -114,10 +114,10 @@ class ContactController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $id);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $contacts = $this->getRepository('Report\Contact')->findByReport($report);
+        $contacts = $this->getRepository(EntityDir\Report\Contact::class)->findByReport($report);
 
         if (count($contacts) == 0) {
             //throw new AppExceptions\NotFound("No contacts found for report id: $id", 404);

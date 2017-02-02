@@ -22,7 +22,7 @@ class OdrController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         /* @var $report EntityDir\Odr\Odr */
-        $report = $this->findEntityBy('Odr\Odr', $id);
+        $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $id);
 
         if (!$this->isGranted(EntityDir\Role::ADMIN)) {
             $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
@@ -40,7 +40,7 @@ class OdrController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
         /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
@@ -72,7 +72,7 @@ class OdrController extends RestController
     public function update(Request $request, $id)
     {
         /* @var $odr EntityDir\Odr\Odr */
-        $odr = $this->findEntityBy('Odr\Odr', $id, 'Odr not found');
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
 
         if (!$this->isGranted(EntityDir\Role::ADMIN)) {
             $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);

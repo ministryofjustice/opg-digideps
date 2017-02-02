@@ -18,10 +18,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $assets = $this->getRepository('Odr\Asset')->findByOdr($odr);
+        $assets = $this->getRepository(EntityDir\Odr\Asset::class)->findByOdr($odr);
 
         if (count($assets) == 0) {
             return [];
@@ -38,10 +38,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $asset = $this->findEntityBy('Odr\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
         $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
 
         return $asset;
@@ -57,7 +57,7 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId); /* @var $odr EntityDir\Odr\Odr */
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
         $this->validateArray($data, [
             'type' => 'mustExist',
@@ -82,10 +82,10 @@ class AssetController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $asset = $this->findEntityBy('Odr\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
         $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
 
         $this->updateEntityWithData($asset, $data);
@@ -103,10 +103,10 @@ class AssetController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $odr = $this->findEntityBy('Odr\Odr', $odrId);
+        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
 
-        $asset = $this->findEntityBy('Odr\Asset', $assetId);
+        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
         $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
 
         $odr->setNoAssetToAdd(null); // reset asset choice

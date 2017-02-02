@@ -18,10 +18,10 @@ class GiftController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         return $gift;
@@ -37,7 +37,7 @@ class GiftController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->validateArray($data, [
             'explanation' => 'mustExist',
@@ -64,10 +64,10 @@ class GiftController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy('Report\Report', $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $this->updateEntityWithData($gift, $data);
@@ -85,10 +85,10 @@ class GiftController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report\Report', $reportId); /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $gift = $this->findEntityBy('Report\Gift', $giftId);
+        $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
         $this->getEntityManager()->remove($gift);
 

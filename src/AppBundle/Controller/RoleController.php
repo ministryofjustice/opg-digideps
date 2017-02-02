@@ -19,6 +19,6 @@ class RoleController extends RestController
      */
     public function getAll()
     {
-        return $this->getRepository('Role')->findAll();
+        return $this->getRepository(Role::class)->findAll();
     }
 }
