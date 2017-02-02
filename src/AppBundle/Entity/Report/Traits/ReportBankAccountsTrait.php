@@ -16,6 +16,20 @@ trait ReportBankAccountsTrait
      */
     private $bankAccounts;
 
+    /**
+     * @JMS\Type("double")
+     *
+     * @var float
+     */
+    private $accountsClosingBalanceTotal;
+
+
+    /**
+     * @JMS\Type("double")
+     *
+     * @var float
+     */
+    private $accountsOpeningBalanceTotal;
 
     /**
      * @param array $bankAccounts
@@ -80,5 +94,60 @@ trait ReportBankAccountsTrait
 
         return $this;
     }
+
+
+    /**
+     ** @return bool
+     */
+    public function isMissingMoneyOrAccountsOrClosingBalance()
+    {
+        return !$this->hasMoneyIn()
+        || !$this->hasMoneyOut()
+        || !$this->hasAccounts()
+        || count($this->getBankAccountsIncomplete()) > 0;
+    }
+
+
+    /**
+     ** @return bool
+     */
+    public function hasAccounts()
+    {
+        return count($this->getBankAccounts()) > 0;
+    }
+
+    /**
+     ** @return bool
+     */
+    public function hasMoneyIn()
+    {
+        return count($this->getMoneyTransactionsIn()) > 0;
+    }
+
+    /**
+     ** @return bool
+     */
+    public function hasMoneyOut()
+    {
+        return count($this->getMoneyTransactionsOut()) > 0;
+    }
+
+
+    /**
+     * @return float
+     */
+    public function getAccountsOpeningBalanceTotal()
+    {
+        return $this->accountsOpeningBalanceTotal;
+    }
+
+    /**
+     * @param float $accountsOpeningBalanceTotal
+     */
+    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
+    {
+        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+    }
+
 
 }

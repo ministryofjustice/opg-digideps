@@ -233,51 +233,6 @@ class Report
 
 
     /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $accountsOpeningBalanceTotal;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $accountsClosingBalanceTotal;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $calculatedBalance;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $totalsOffset;
-
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @var bool
-     */
-    private $totalsMatch;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"balance_mismatch_explanation"})
-     * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
-     * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
-     *
-     * @var string
-     */
-    private $balanceMismatchExplanation;
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"report-metadata"})
      *
@@ -479,8 +434,6 @@ class Report
 
         return $this;
     }
-
-
 
     /**
      * @return MoneyTransfer[]
@@ -864,134 +817,5 @@ class Report
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAccountsOpeningBalanceTotal()
-    {
-        return $this->accountsOpeningBalanceTotal;
-    }
-
-    /**
-     * @param float $accountsOpeningBalanceTotal
-     */
-    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
-    {
-        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
-    }
-
-    /**
-     * @return float
-     */
-    public function getCalculatedBalance()
-    {
-        return $this->calculatedBalance;
-    }
-
-    /**
-     * @param float $calculatedBalance
-     */
-    public function setCalculatedBalance($calculatedBalance)
-    {
-        $this->calculatedBalance = $calculatedBalance;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTotalsOffset()
-    {
-        return $this->totalsOffset;
-    }
-
-    /**
-     * @param float $totalsOffset
-     */
-    public function setTotalsOffset($totalsOffset)
-    {
-        $this->totalsOffset = $totalsOffset;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTotalsMatch()
-    {
-        return $this->totalsMatch;
-    }
-
-    /**
-     * @param bool $totalsMatch
-     */
-    public function setTotalsMatch($totalsMatch)
-    {
-        $this->totalsMatch = $totalsMatch;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBalanceMismatchExplanation()
-    {
-        return $this->balanceMismatchExplanation;
-    }
-
-    /**
-     * @param string $balanceMismatchExplanation
-     */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
-    {
-        $this->balanceMismatchExplanation = $balanceMismatchExplanation;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasAccounts()
-    {
-        return count($this->getBankAccounts()) > 0;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasMoneyIn()
-    {
-        return count($this->getMoneyTransactionsIn()) > 0;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasMoneyOut()
-    {
-        return count($this->getMoneyTransactionsOut()) > 0;
-    }
-
-    /**
-     ** @return BankAccount[]
-     */
-    public function getAccountsWithNoClosingBalance()
-    {
-        return array_filter($this->getBankAccounts(), function ($account) {
-            /* @var $account BankAccount */
-            return $account->getClosingBalance() === null;
-        });
-    }
-
-    /**
-     ** @return bool
-     */
-    public function isMissingMoneyOrAccountsOrClosingBalance()
-    {
-        return !$this->hasMoneyIn()
-            || !$this->hasMoneyOut()
-            || !$this->hasAccounts()
-            || count($this->getAccountsWithNoClosingBalance()) > 0;
-    }
 
 }
