@@ -22,12 +22,12 @@
                 </div>
             {% endif %}
 
-            {% if mentalCapacity.mentalAssessmentDate %}
-                <div class="form-group form-group-vertical ">
-                    <div class="question">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </div>
-                    <div class="value textarea ">{{ mentalCapacity.mentalAssessmentDate | date("m/Y") }}</div>
+            <div class="form-group form-group-vertical ">
+                <div class="question">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </div>
+                <div class="value textarea ">
+                    {{ mentalCapacity.mentalAssessmentDate ? mentalCapacity.mentalAssessmentDate  | date("m/Y") : 'n.a.' }}
                 </div>
-            {% endif %}
+            </div>
         </div>
     </div>
 
