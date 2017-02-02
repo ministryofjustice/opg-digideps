@@ -54,7 +54,7 @@ trait ReportBankAccountsTrait
     /**
      * @return BankAccount
      */
-    public function getAccountWithId($id)
+    public function getBankAccountById($id)
     {
         foreach ($this->bankAccounts as $account) {
             if ($account->getId() == $id) {

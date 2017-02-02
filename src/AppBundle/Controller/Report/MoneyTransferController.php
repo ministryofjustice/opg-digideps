@@ -113,9 +113,9 @@ class MoneyTransferController extends AbstractController
         // add URL-data into model
         if (isset($dataFromUrl['from-id']) && isset($dataFromUrl['to-id'])) {
             $transfer->setAccountFromId($dataFromUrl['from-id']);
-            $transfer->setAccountFrom($report->getAccountWithId($dataFromUrl['from-id']));
+            $transfer->setAccountFrom($report->getBankAccountById($dataFromUrl['from-id']));
             $transfer->setAccountToId($dataFromUrl['to-id']);
-            $transfer->setAccountTo($report->getAccountWithId($dataFromUrl['to-id']));
+            $transfer->setAccountTo($report->getBankAccountById($dataFromUrl['to-id']));
         }
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
