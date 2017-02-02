@@ -216,14 +216,16 @@
         </li>
     </ul>
 
-    {% if report.isDue == false and reportStatus.isReadyToSubmit == false %}
+    {# report due but NOT ready to submit #}
+    {% if report.isDue and not reportStatus.isReadyToSubmit %}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'submitWhenReady' | trans()
         } %}
     {% endif %}
 
-    {% if report.isDue == true %}
+    {# report is NOT due #}
+    {% if not report.isDue %}
         {% set endDate = report.getEndDate() | date(" d F Y")  %}
         {% set transOptions = {'%date%': endDate} %}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
