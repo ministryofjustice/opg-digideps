@@ -25,9 +25,6 @@
 
 
     {% if reportId %}
-         {% if newReportNotification %}
-            <p class="flash">{{ newReportNotification }}</p>
-        {% endif %}
         {% include 'AppBundle:Report:_edit-dates.html.twig' with {
                     'form' : editReportDatesForm
                 } %}
