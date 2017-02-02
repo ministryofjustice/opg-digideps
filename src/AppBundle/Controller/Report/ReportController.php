@@ -77,18 +77,6 @@ class ReportController extends AbstractController
             }
         }
 
-        $newReportNotification = null;
-        foreach ($reports as $report) {
-            if ($report->getReportSeen() === false) {
-                $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
-
-                $reportObj = $this->getReport($report->getId(), ['transactions']);
-                //update report to say message has been seen
-                $reportObj->setReportSeen(true);
-                $this->getRestClient()->put('report/' . $report->getId(), $reportObj);
-            }
-        }
-
         return [
             'client' => $client,
             'report' => $report,
@@ -96,7 +84,6 @@ class ReportController extends AbstractController
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
-            'newReportNotification' => $newReportNotification,
             'filter' => 'propFinance', // extend with param when required
         ];
     }
