@@ -10,6 +10,15 @@
     <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
 {% endblock %}
 
+{% block notification %}
+    <div class="push--top">
+        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
+            alertType: 'info',
+            message: 'serviceNotification' | trans({}, 'common')
+        } %}
+    </div>
+{% endblock %}
+
 {% block pageContent %}
 
     {% if odrStatus.isReadyToSubmit %}
