@@ -535,9 +535,12 @@ class Report
         return null;
     }
 
+    /**
+     * @return string yes/no/null
+     */
     public function hasDecisions()
     {
-        if (empty($this->getDecisions()) && $this->getReasonForNoDecisions() === null) {
+        if (empty($this->getDecisions()) && !$this->getReasonForNoDecisions()) {
             return null;
         }
 
