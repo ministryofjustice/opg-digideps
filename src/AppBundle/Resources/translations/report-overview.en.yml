@@ -149,8 +149,8 @@ other_info:
 
 report_add_further_info:
     subSectionTitle: "Submit report"
-    edit: "Start Submit report"
-    start: "Start Submit report"
+    edit: "Submit report"
+    start: "Submit report"
     label:
       done: "Ready to submit"
 
