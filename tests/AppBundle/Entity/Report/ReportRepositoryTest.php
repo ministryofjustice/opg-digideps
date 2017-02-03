@@ -117,13 +117,14 @@ class ReportRepositoryTest extends WebTestCase
     }
 
     /**
-     * //TODO avoid setUp being called for this method
-     *
      * @test
      * @dataProvider createNextYearReportChangesTypeProvider
      */
     public function createNextYearReportChangesType($reportAssetTotalValue, $initialType, $newReportType)
     {
+        if (!Report::ENABLE_103) {
+            $this->markTestSkipped("enable when 103 is enabled");
+        }
         $report = m::mock(Report::class, [
             'getType' => $initialType,
             'getEndDate' => new \DateTime(),
