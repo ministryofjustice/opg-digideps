@@ -66,7 +66,7 @@ class AssetController extends RestController
         $asset->setOdr($odr);
 
         $this->updateEntityWithData($asset, $data);
-        $odr->setNoAssetToAdd(null);
+        $odr->setNoAssetToAdd(false);
         $this->persistAndFlush($asset);
 
         return ['id' => $asset->getId()];
@@ -108,8 +108,6 @@ class AssetController extends RestController
 
         $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
         $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
-
-        $odr->setNoAssetToAdd(null); // reset asset choice
 
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();

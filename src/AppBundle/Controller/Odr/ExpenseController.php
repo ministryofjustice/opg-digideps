@@ -92,9 +92,6 @@ class ExpenseController extends RestController
         $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
         $this->getEntityManager()->remove($expense);
 
-        if (count($odr->getExpenses()) === 0) {
-            $odr->setPaidForAnything(null); // reset choice
-        }
         $this->getEntityManager()->flush();
 
         return [];

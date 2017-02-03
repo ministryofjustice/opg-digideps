@@ -51,5 +51,63 @@ class DoctrineListener
                 $report->setMoneyTransactionsShortOutExist('no');
             }
         }
+
+        if ($entity instanceof EntityDir\Report\Contact) {
+            $report = $entity->getReport();
+            if (count($report->getContacts()) === 1) {
+                $report->setReasonForNoContacts(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\Gift) {
+            $report = $entity->getReport();
+            if (count($report->getGifts()) === 1) {
+                $report->setGiftsExist(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\Decision) {
+            $report = $entity->getReport();
+            if (count($report->getDecisions()) === 1) {
+                $report->setReasonForNoDecisions(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\Expense) {
+            $report = $entity->getReport();
+            if (count($report->getExpenses()) === 1) {
+                $report->setPaidForAnything(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransfer) {
+            $report = $entity->getReport();
+            if (count($report->getMoneyTransfers()) === 1) {
+                $report->setNoTransfersToAdd(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Report\Asset) {
+            $report = $entity->getReport();
+            if (count($report->getAssets()) === 1) {
+                $report->setNoAssetToAdd(null);
+            }
+        }
+
+        // NDR
+        if ($entity instanceof EntityDir\Odr\Expense) {
+            $odr = $entity->getOdr();
+            if (count($odr->getExpenses()) === 1) {
+                $odr->setPaidForAnything(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Odr\Asset) {
+            $odr = $entity->getOdr();
+            if (count($odr->getAssets()) === 1) {
+                $odr->setNoAssetToAdd(null);
+            }
+        }
+
     }
 }

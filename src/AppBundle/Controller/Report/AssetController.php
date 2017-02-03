@@ -48,7 +48,7 @@ class AssetController extends RestController
         ]);
         $asset = EntityDir\Report\Asset::factory($data['type']);
         $asset->setReport($report);
-        $report->setNoAssetToAdd(null);
+        $report->setNoAssetToAdd(false);
 
         $this->updateEntityWithData($asset, $data);
 
@@ -94,8 +94,6 @@ class AssetController extends RestController
 
         $asset = $this->findEntityBy(EntityDir\Report\Asset::class, $assetId);
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
-
-        $report->setNoAssetToAdd(null); // reset asset choice
 
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();
