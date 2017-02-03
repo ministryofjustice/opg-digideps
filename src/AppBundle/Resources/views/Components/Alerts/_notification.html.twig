@@ -14,6 +14,11 @@
 			<span class="icon icon-cross"></span>
 			<div class="alert-message"><p>{{ message | raw }}</p></div>
 		</div>
+	{% elseif alertType == 'info' %}
+		<div class="alert-info panel panel-border-narrow">
+			<span class="icon icon-info"></span>
+			<div class="alert-message"><p>{{ message | raw }}</p></div>
+		</div>
 	{% else %}
 		<div class="alert panel panel-border-narrow">
 			<div class="alert-message"><p>{{ message | raw }}</p></div>

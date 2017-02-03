@@ -1,41 +1,5 @@
 // =======================================================
 // ALERT
-// Flash messages (tick and info)
-
-#content p.flash {
-    border-left: 3px solid $turquoise;
-    padding: 15px 10px 15px 40px;
-    width: 85%;
-    box-sizing: border-box;
-    margin-bottom: 40px;
-    position: relative;
-    overflow: hidden;
-    background: rgba($turquoise, .1) url("/images/icons/tick.png") 10px 13px no-repeat;
-
-    &.flash-news {
-        box-sizing: border-box;
-        background: $newsbg url("/images/icons/info.png") 10px 10px no-repeat;
-        border-left: 3px solid $newsborder;
-        margin-bottom: 30px;
-        width: 100%;
-        padding-left: 50px;
-
-        @include media(mobile) {
-            margin-bottom: 20px;
-        }
-    }
-
-}
-
-#content .report-submission p.flash {
-    max-width: 540px;
-}
-
-#page-body p.flash {
-    width: 65%;
-}
-
-// ALERT
 
 %alert-base {
     max-width: 30em;
@@ -66,6 +30,12 @@
     @extend %alert-base;
     border-color: $error-colour;
     background-color: rgba($error-colour, .1);
+}
+
+.alert-info {
+    @extend %alert-base;
+    border-color: $light-blue;
+    background-color: rgba($light-blue, .1);
 }
 
 .alert-message {
