@@ -65,5 +65,12 @@ class DoctrineListener
                 $report->setGiftsExist(null);
             }
         }
+
+        if ($entity instanceof EntityDir\Report\Decision) {
+            $report = $entity->getReport();
+            if (count($report->getDecisions()) === 1) {
+                $report->setReasonForNoDecisions(null);
+            }
+        }
     }
 }
