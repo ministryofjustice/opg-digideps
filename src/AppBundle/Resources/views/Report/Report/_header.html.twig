@@ -17,30 +17,5 @@
     <div id="header-report-submit" class="hero">
         <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
         <div class="message"><a class="button-grey submit-link" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
-    </div>
-{% else %}
-
-    {% for account in report.bankAccounts %}
-        {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
-            {% set linkToAccount = path('bank_account_edit', {'reportId': report.id, 'id': account.id }) %}
-            <p class="flash flash-news">
-                We moved "{{ account.meta | trim('.') }}" into bank accounts, so we need some extra information:<br/>
-                {% if account.requiresBankNameAndSortCode %}
-                    {% if not account.bank %}
-                        - <a href="{{ linkToAccount }}">enter the bank account name</a><br/>
-                    {% endif %}
-                    {% if not account.sortCode %}
-                        - <a href="{{ linkToAccount }}#account_bank">enter the sort code</a><br/>
-                    {% endif %}
-                {% endif %}
-                {% if not account.accountNumber %}
-                    - <a href="{{ linkToAccount }}#account_accountType">enter the account number</a><br/>
-                {% endif %}
-                {% if account.getIsJointAccount is null %}
-                    - <a href="{{ linkToAccount }}#account_accountType">tell us if this is a joint account</a><br/>
-                {% endif %}
-            </p>
-        {% endif %}
-    {% endfor %}
-    
+    </div>    
 {% endif %}
