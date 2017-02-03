@@ -51,5 +51,12 @@ class DoctrineListener
                 $report->setMoneyTransactionsShortOutExist('no');
             }
         }
+
+        if ($entity instanceof EntityDir\Report\Contact) {
+            $report = $entity->getReport();
+            if (count($report->getContacts()) === 1) {
+                $report->setReasonForNoContacts(null);
+            }
+        }
     }
 }
