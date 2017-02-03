@@ -14,8 +14,20 @@
 
 {% block pageContent %}
 
-    <div class="text">
+	<div class="text">
         <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
     </div>
 
     <a href="{{ path('gifts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
