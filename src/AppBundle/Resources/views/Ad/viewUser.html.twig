@@ -1,4 +1,4 @@
-{% extends 'AppBundle:Layouts:application_new.html.twig' %}
+{% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% set firstClient = (user.clients | length) > 0 ? (user.clients | first) : null %}
 {% set reports = firstClient ? firstClient.reports : [] %}
