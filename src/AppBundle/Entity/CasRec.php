@@ -193,5 +193,4 @@ class CasRec
     {
         return $this->typeOfReport;
     }
-
 }

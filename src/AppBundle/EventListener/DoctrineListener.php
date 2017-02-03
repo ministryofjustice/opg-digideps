@@ -108,6 +108,5 @@ class DoctrineListener
                 $odr->setNoAssetToAdd(null);
             }
         }
-
     }
 }

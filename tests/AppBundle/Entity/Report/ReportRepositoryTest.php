@@ -123,7 +123,7 @@ class ReportRepositoryTest extends WebTestCase
     public function createNextYearReportChangesType($reportAssetTotalValue, $initialType, $newReportType)
     {
         if (!Report::ENABLE_103) {
-            $this->markTestSkipped("enable when 103 is enabled");
+            $this->markTestSkipped('enable when 103 is enabled');
         }
         $report = m::mock(Report::class, [
             'getType' => $initialType,
