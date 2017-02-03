@@ -217,6 +217,7 @@ ul.form-hint {
 
 .input-group-prefix {
     position: absolute;
+    z-index: 1;
     width: 10px;
     margin: 2px 0 0 2px;
     background: $grey-3;
