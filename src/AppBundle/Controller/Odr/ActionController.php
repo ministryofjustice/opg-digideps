@@ -26,7 +26,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->hasAtLeastOneAction()) {
+        if ((new OdrStatusService($odr))->getActionsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_actions_summary', ['odrId' => $odrId]);
         }
 
@@ -89,8 +89,7 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        //$this->flagSectionStarted($odr, self::SECTION_ID);
-        if (!$odr->hasAtLeastOneAction() && $fromPage != 'skip-step') {
+        if ((new OdrStatusService($odr))->getActionsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_actions', ['odrId' => $odrId]);
         }
 

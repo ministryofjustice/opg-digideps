@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
 use AppBundle\Service\SectionValidator\Odr\VisitsCareValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,7 +24,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->getVisitsCare() != null/* || $odr->isSectionStarted(self::SECTION_ID)*/) {
+        if ((new OdrStatusService($odr))->getVisitsCareState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_visits_care_summary', ['odrId' => $odrId]);
         }
 
@@ -98,7 +99,7 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         //$this->flagSectionStarted($odr, self::SECTION_ID);
-        if (!$odr->getVisitsCare() && $fromPage != 'skip-step') {
+        if ((new OdrStatusService($odr))->getVisitsCareState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_visits_care', ['odrId' => $odrId]);
         }
 

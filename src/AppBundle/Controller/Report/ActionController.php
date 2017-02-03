@@ -25,7 +25,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getAction() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
+        if ((new ReportStatusService($report))->getActionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
@@ -94,7 +94,7 @@ class ActionController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         //$this->flagSectionStarted($report, self::SECTION_ID);
-        if (!$report->getAction() && $fromPage != 'skip-step') {
+        if ((new ReportStatusService($report))->getActionsState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }
 

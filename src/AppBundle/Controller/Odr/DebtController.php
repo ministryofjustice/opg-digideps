@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->getHasDebts() != null) {
+        if ((new OdrStatusService($odr))->getDebtsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_debts_summary', ['odrId' => $odrId]);
         }
 
@@ -105,7 +106,7 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->getHasDebts() == null) {
+        if ((new OdrStatusService($odr))->getDebtsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_debts', ['odrId' => $odrId]);
         }
 

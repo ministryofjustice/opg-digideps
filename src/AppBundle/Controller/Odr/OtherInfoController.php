@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Odr;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -22,7 +23,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ($odr->getActionMoreInfo() !== null) {
+        if ((new OdrStatusService($odr))->getOtherInfoState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
         }
 
@@ -86,7 +87,7 @@ class OtherInfoController extends AbstractController
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         //$this->flagSectionStarted($odr, self::SECTION_ID);
-        if ($odr->getActionMoreInfo() === null && $fromPage != 'skip-step') {
+        if ((new OdrStatusService($odr))->getOtherInfoState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_other_info', ['odrId' => $odrId]);
         }
 

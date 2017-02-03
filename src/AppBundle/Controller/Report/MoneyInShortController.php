@@ -24,7 +24,7 @@ class MoneyInShortController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getMoneyTransactionsShortInExist() || $report->getMoneyShortCategoriesInPresent()) {
+        if ((new ReportStatusService($report))->getMoneyInShortState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
         }
 
@@ -215,6 +215,10 @@ class MoneyInShortController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ((new ReportStatusService($report))->getMoneyInShortState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+            return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
+        }
+
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
