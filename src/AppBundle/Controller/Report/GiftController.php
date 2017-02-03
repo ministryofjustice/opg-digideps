@@ -142,7 +142,7 @@ class GiftController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Record edited');
+            $request->getSession()->getFlashBag()->add('notice', 'Gift edited');
 
             $this->getRestClient()->put('report/' . $report->getId() . '/gift/' . $gift->getId(), $data, ['gift']);
 

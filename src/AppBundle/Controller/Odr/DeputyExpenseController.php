@@ -142,7 +142,7 @@ class DeputyExpenseController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Record edited');
+            $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
             $this->getRestClient()->put('odr/' . $odr->getId() . '/expense/' . $expense->getId(), $data, ['odr-expense']);
 

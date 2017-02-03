@@ -172,7 +172,7 @@ class MoneyInShortController extends AbstractController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Record edited');
+            $request->getSession()->getFlashBag()->add('notice', 'Entry edited');
 
             $this->getRestClient()->put('report/' . $report->getId() . '/money-transaction-short/' . $transaction->getId(), $data, ['moneyTransactionShort']);
 
@@ -201,7 +201,7 @@ class MoneyInShortController extends AbstractController
 
         $request->getSession()->getFlashBag()->add(
             'notice',
-            'Record deleted'
+            'Entry deleted'
         );
 
         return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));

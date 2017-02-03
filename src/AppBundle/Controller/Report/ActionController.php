@@ -68,7 +68,7 @@ class ActionController extends AbstractController
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    'Record edited'
+                    'Answer edited'
                 );
             }
 

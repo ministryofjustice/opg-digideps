@@ -147,7 +147,7 @@ class ContactController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $request->getSession()->getFlashBag()->add('notice', 'Record edited');
+            $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
 
             $this->getRestClient()->put('report/contact', $data);
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
