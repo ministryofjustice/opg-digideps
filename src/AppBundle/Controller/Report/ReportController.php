@@ -161,7 +161,6 @@ class ReportController extends RestController
 
         if (array_key_exists('paid_for_anything', $data)) {
             $report->setPaidForAnything($data['paid_for_anything']);
-            // TODO consider moving to a listener or service
             if ($report->getPaidForAnything() === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
                     $this->getEntityManager()->remove($e);

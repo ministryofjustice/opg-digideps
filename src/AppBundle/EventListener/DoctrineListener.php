@@ -72,5 +72,12 @@ class DoctrineListener
                 $report->setReasonForNoDecisions(null);
             }
         }
+
+        if ($entity instanceof EntityDir\Report\Expense) {
+            $report = $entity->getReport();
+            if (count($report->getExpenses()) === 1) {
+                $report->setPaidForAnything(null);
+            }
+        }
     }
 }

@@ -92,9 +92,6 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
         $this->getEntityManager()->remove($expense);
 
-        if (count($report->getExpenses()) === 0) {
-            $report->setPaidForAnything(null); // reset choice
-        }
         $this->getEntityManager()->flush();
 
         return [];
