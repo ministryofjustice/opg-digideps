@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (count($report->getExpenses()) > 0 || $report->getPaidForAnything() !== null) {
+        if ((new ReportStatusService($report))->getExpensesState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -167,7 +168,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (count($report->getExpenses()) === 0 && $report->getPaidForAnything() === null) {
+        if ((new ReportStatusService($report))->getExpensesState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 
