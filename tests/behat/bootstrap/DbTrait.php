@@ -5,7 +5,7 @@ namespace DigidepsBehat;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
-trait StatusSnapshotTrait
+trait DbTrait
 {
     /**
      * @Then I save the application status into :status
@@ -81,5 +81,17 @@ trait StatusSnapshotTrait
                         . '-after-auto';
 
         self::iSaveTheApplicationStatusInto($snapshotName);
+    }
+
+    public function dbQueryRaw($table, array $fields)
+    {
+        if (!$fields) {
+            throw new \InvalidArgumentException(__METHOD__.' array with at least one element expected');
+        }
+        $columns = join(',', array_keys($fields));
+        $values = "'" . join("', '", array_values($fields)) . "'";
+        $query = sprintf("INSERT INTO {$table} ({$columns}) VALUES({$values})");
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
     }
 }

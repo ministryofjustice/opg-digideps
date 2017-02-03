@@ -21,7 +21,7 @@ trait EmailTrait
      */
     public function givenEmailsAreSentFrom($area)
     {
-        $this->visitBehatLink('email-reset');
+        //$this->visitBehatLink('email-reset');
 
         self::$mailSentFrom = $area;
     }
