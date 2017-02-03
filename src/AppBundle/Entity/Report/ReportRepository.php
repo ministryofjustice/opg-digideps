@@ -122,8 +122,9 @@ class ReportRepository extends EntityRepository
      */
     private function getReportTypeBasedOnOldReport(Report $oldReport)
     {
+        // 102 and 103 is decided based on total amount of assets below the threshold
         if (in_array($oldReport->getType(), [Report::TYPE_102, Report::TYPE_103])) {
-            if ($oldReport->getAssetsTotalValue() <= Report::ASSETS_TOTAL_VALUE_103_THRESHOLD) {
+            if (Report::ENABLE_103 && $oldReport->getAssetsTotalValue() <= Report::ASSETS_TOTAL_VALUE_103_THRESHOLD) {
                 return Report::TYPE_103;
             }
 

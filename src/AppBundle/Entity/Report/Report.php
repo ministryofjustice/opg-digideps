@@ -29,6 +29,9 @@ class Report
     const TYPE_103 = '103';
     const TYPE_104 = '104';
 
+    // to enable 103 permanently, search for this constant and enable code
+    const ENABLE_103 = false;
+
     /**
      * Reports with total amount of assets
      * Threshold under which reports should be 103, and not 102
