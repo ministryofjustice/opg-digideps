@@ -160,22 +160,21 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
-            $report->setPaidForAnything($data['paid_for_anything']);
-            if ($report->getPaidForAnything() === 'no') { // remove existing expenses
+            if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
+            $report->setPaidForAnything($data['paid_for_anything']);
         }
 
         if (array_key_exists('gifts_exist', $data)) {
-            $report->setGiftsExist($data['gifts_exist']);
-            // TODO consider moving to a listener or service
-            if ($report->getGiftsExist() === 'no') { // remove existing gift
+            if ($data['gifts_exist'] === 'no') { // remove existing gift
                 foreach ($report->getGifts() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
+            $report->setGiftsExist($data['gifts_exist']);
         }
 
         if (array_key_exists('start_date', $data)) {
@@ -256,23 +255,21 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('money_transactions_short_in_exist', $data)) {
-            $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
-            // TODO consider moving to a listener or service
-            if ($report->getMoneyTransactionsShortInExist() === 'no') { // remove existing
+            if ($data['money_transactions_short_in_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortIn() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
+            $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
         }
 
         if (array_key_exists('money_transactions_short_out_exist', $data)) {
-            $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
-            // TODO consider moving to a listener or service
-            if ($report->getMoneyTransactionsShortOutExist() === 'no') { // remove existing
+            if ($data['money_transactions_short_out_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortOut() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
+            $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
         }
 
         $this->getEntityManager()->flush();

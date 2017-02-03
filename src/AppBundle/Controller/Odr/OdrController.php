@@ -124,10 +124,10 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('receive_other_income', $data)) {
-            $odr->setReceiveOtherIncome($data['receive_other_income']);
-            if ($odr->getReceiveOtherIncome() == 'no') {
+            if ($data['receive_other_income'] == 'no') {
                 $odr->setReceiveOtherIncomeDetails(null);
             }
+            $odr->setReceiveOtherIncome($data['receive_other_income']);
         }
 
         if (array_key_exists('expect_compensation_damages_details', $data)) {
@@ -135,10 +135,10 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('expect_compensation_damages', $data)) {
-            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
-            if ($odr->getExpectCompensationDamages() == 'no') {
+            if ($data['expect_compensation_damages'] == 'no') {
                 $odr->setExpectCompensationDamagesDetails(null);
             }
+            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
         }
 
         if (array_key_exists('one_off', $data)) {
@@ -162,12 +162,12 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
-            $odr->setPaidForAnything($data['paid_for_anything']);
-            if ($odr->getPaidForAnything() === 'no') { // remove existing expenses
+            if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($odr->getExpenses() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
+            $odr->setPaidForAnything($data['paid_for_anything']);
         }
 
         // actions
