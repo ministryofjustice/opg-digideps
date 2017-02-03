@@ -25,7 +25,7 @@ class MoneyInController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->hasMoneyIn()) {
+        if ((new ReportStatusService($report))->getMoneyInState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
 
@@ -158,7 +158,7 @@ class MoneyInController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (!$report->hasMoneyIn()) {
+        if ((new ReportStatusService($report))->getMoneyInState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
 
