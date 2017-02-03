@@ -79,8 +79,6 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy(EntityDir\Report\MoneyTransfer::class, $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
-        $report->setNoTransfersToAdd(null);
-
         $this->getEntityManager()->remove($transfer);
         $this->getEntityManager()->flush();
 

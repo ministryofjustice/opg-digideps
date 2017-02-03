@@ -79,5 +79,14 @@ class DoctrineListener
                 $report->setPaidForAnything(null);
             }
         }
+
+        if ($entity instanceof EntityDir\Report\MoneyTransfer) {
+            $report = $entity->getReport();
+            if (count($report->getMoneyTransfers()) === 1) {
+                $report->setNoTransfersToAdd(null);
+            }
+        }
+
+
     }
 }
