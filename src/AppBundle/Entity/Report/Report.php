@@ -1026,7 +1026,7 @@ class Report
     }
 
     /**
-     * Get assets total value.
+     * Get debts total value.
      *
      * @JMS\VirtualProperty
      * @JMS\Type("string")

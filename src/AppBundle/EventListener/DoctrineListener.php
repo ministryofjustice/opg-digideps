@@ -87,5 +87,12 @@ class DoctrineListener
             }
         }
 
+        if ($entity instanceof EntityDir\Report\Asset) {
+            $report = $entity->getReport();
+            if (count($report->getAssets()) === 1) {
+                $report->setNoAssetToAdd(null);
+            }
+        }
+
     }
 }

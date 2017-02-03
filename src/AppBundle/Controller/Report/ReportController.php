@@ -196,7 +196,6 @@ class ReportController extends RestController
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
-            // TODO consider moving to a listener or service
             if ($report->getNoAssetToAdd()) {
                 foreach ($report->getAssets() as $asset) {
                     $this->getEntityManager()->remove($asset);
