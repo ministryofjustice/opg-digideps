@@ -94,5 +94,20 @@ class DoctrineListener
             }
         }
 
+        // NDR
+        if ($entity instanceof EntityDir\Odr\Expense) {
+            $odr = $entity->getOdr();
+            if (count($odr->getExpenses()) === 1) {
+                $odr->setPaidForAnything(null);
+            }
+        }
+
+        if ($entity instanceof EntityDir\Odr\Asset) {
+            $odr = $entity->getOdr();
+            if (count($odr->getAssets()) === 1) {
+                $odr->setNoAssetToAdd(null);
+            }
+        }
+
     }
 }

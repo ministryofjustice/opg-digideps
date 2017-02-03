@@ -66,7 +66,7 @@ class AssetController extends RestController
         $asset->setOdr($odr);
 
         $this->updateEntityWithData($asset, $data);
-        $odr->setNoAssetToAdd(null);
+        $odr->setNoAssetToAdd(false);
         $this->persistAndFlush($asset);
 
         return ['id' => $asset->getId()];
