@@ -83,8 +83,11 @@ trait DbTrait
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
 
-    public function dbQueryRaw($table, $fields)
+    public function dbQueryRaw($table, array $fields)
     {
+        if (!$fields) {
+            throw new \InvalidArgumentException(__METHOD__.' array with at least one element expected');
+        }
         $columns = join(',', array_keys($fields));
         $values = "'" . join("', '", array_values($fields)) . "'";
         $query = sprintf("INSERT INTO {$table} ({$columns}) VALUES({$values})");
