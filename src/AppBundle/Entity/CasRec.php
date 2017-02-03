@@ -107,14 +107,16 @@ class CasRec
      * @param string $deputyNo
      * @param string $deputySurname
      * @param string $deputyPostCode
+     * @param string $typeOfReport
      */
-    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode)
+    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport)
     {
         $this->caseNumber = self::normaliseCaseNumber($caseNumber);
         $this->clientLastname = self::normaliseSurname($clientLastname);
         $this->deputyNo = self::normaliseDeputyNo($deputyNo);
         $this->deputySurname = self::normaliseSurname($deputySurname);
         $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
+        $this->typeOfReport = $typeOfReport;
     }
 
     public static function normaliseSurname($value)
@@ -192,11 +194,4 @@ class CasRec
         return $this->typeOfReport;
     }
 
-    /**
-     * @param string $typeOfReport
-     */
-    public function setTypeOfReport($typeOfReport)
-    {
-        $this->typeOfReport = $typeOfReport;
-    }
 }

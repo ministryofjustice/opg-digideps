@@ -56,9 +56,9 @@ class CasRecController extends RestController
                     $row['Surname'],
                     $row['Deputy No'],
                     $row['Dep Surname'],
-                    $row['Dep Postcode']
+                    $row['Dep Postcode'],
+                    $row['Typeofrep']
                 );
-                $casRec->setTypeOfReport($row['Typeofrep']);
 
                 $errors = $validator->validate($casRec);
                 if (count($errors) > 0) {
