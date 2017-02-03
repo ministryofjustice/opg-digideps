@@ -58,5 +58,12 @@ class DoctrineListener
                 $report->setReasonForNoContacts(null);
             }
         }
+
+        if ($entity instanceof EntityDir\Report\Gift) {
+            $report = $entity->getReport();
+            if (count($report->getGifts()) === 1) {
+                $report->setGiftsExist(null);
+            }
+        }
     }
 }

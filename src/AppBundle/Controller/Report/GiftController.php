@@ -92,9 +92,6 @@ class GiftController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
         $this->getEntityManager()->remove($gift);
 
-        if (count($report->getGifts()) === 0) {
-            $report->setGiftsExist(null); // reset choice
-        }
         $this->getEntityManager()->flush();
 
         return [];
