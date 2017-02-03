@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,7 +30,7 @@ class AssetController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (count($report->getAssets()) > 0 || $report->getNoAssetToAdd()) {
+        if ((new ReportStatusService($report))->getAssetsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
 
@@ -325,7 +326,7 @@ class AssetController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (count($report->getAssets()) == 0 && $report->getNoAssetToAdd() === null) {
+        if ((new ReportStatusService($report))->getAssetsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
 

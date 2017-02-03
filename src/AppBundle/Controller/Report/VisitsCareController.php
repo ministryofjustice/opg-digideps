@@ -25,7 +25,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getVisitsCare() != null/* || $report->isSectionStarted(self::SECTION_ID)*/) {
+        if ((new ReportStatusService($report))->getVisitsCareState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -53,7 +53,7 @@ class VisitsCareController extends AbstractController
             ->setRoutes('visits_care', 'visits_care_step', 'visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['reportId'=>$reportId]);
+            ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
         $form->handleRequest($request);
@@ -83,12 +83,12 @@ class VisitsCareController extends AbstractController
 
 
         return [
-            'report' => $report,
-            'step' => $step,
+            'report'       => $report,
+            'step'         => $step,
             'reportStatus' => new ReportStatusService($report),
-            'form' => $form->createView(),
-            'backLink' => $stepRedirector->getBackLink(),
-            'skipLink' => $stepRedirector->getSkipLink(),
+            'form'         => $form->createView(),
+            'backLink'     => $stepRedirector->getBackLink(),
+            'skipLink'     => $stepRedirector->getSkipLink(),
         ];
     }
 
@@ -101,7 +101,7 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         //$this->flagSectionStarted($report, self::SECTION_ID);
-        if (!$report->getVisitsCare() && $fromPage != 'skip-step') {
+        if ((new ReportStatusService($report))->getVisitsCareState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
@@ -111,8 +111,8 @@ class VisitsCareController extends AbstractController
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
-            'report' => $report,
-            'validator' => new VisitsCareValidator($report->getVisitsCare()),
+            'report'             => $report,
+            'validator'          => new VisitsCareValidator($report->getVisitsCare()),
         ];
     }
 }

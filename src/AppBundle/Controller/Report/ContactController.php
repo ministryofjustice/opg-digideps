@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,7 +29,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (count($report->getContacts()) > 0 || !empty($report->getReasonForNoContacts())) {
+        if ((new ReportStatusService($report))->getContactsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -171,6 +172,10 @@ class ContactController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        if ((new ReportStatusService($report))->getContactsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+            return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
+        }
 
         return [
             'report' => $report,

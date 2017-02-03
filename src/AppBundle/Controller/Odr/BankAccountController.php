@@ -22,7 +22,7 @@ class BankAccountController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if (count($odr->getBankAccounts())) {
+        if ((new OdrStatusService($odr))->getBankAccountsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_bank_accounts_summary', ['odrId' => $odrId]);
         }
 
@@ -163,7 +163,7 @@ class BankAccountController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if (count($odr->getBankAccounts()) === 0) {
+        if ((new OdrStatusService($odr))->getBankAccountsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_bank_accounts', ['odrId' => $odrId]);
         }
 

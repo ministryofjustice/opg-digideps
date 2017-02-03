@@ -86,7 +86,7 @@ trait DbTrait
     public function dbQueryRaw($table, array $fields)
     {
         if (!$fields) {
-            throw new \InvalidArgumentException(__METHOD__.' array with at least one element expected');
+            throw new \InvalidArgumentException(__METHOD__ . ' array with at least one element expected');
         }
         $columns = join(',', array_keys($fields));
         $values = "'" . join("', '", array_values($fields)) . "'";

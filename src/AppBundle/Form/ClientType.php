@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

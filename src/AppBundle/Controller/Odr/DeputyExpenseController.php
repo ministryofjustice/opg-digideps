@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        if (count($odr->getExpenses()) > 0 || $odr->getPaidForAnything() !== null) {
+        if ((new OdrStatusService($odr))->getExpensesState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
         }
 
@@ -167,7 +168,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if (count($odr->getExpenses()) === 0 && $odr->getPaidForAnything() === null) {
+        if ((new OdrStatusService($odr))->getExpensesState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
         }
 

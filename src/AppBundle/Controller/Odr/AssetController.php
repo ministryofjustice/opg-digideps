@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,7 +26,7 @@ class AssetController extends AbstractController
     public function startAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if (count($odr->getAssets()) > 0 || $odr->getNoAssetToAdd()) {
+        if ((new OdrStatusService($odr))->getAssetsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
         }
 
@@ -319,7 +320,7 @@ class AssetController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if (count($odr->getAssets()) === 0 && $odr->getNoAssetToAdd() === null) {
+        if ((new OdrStatusService($odr))->getAssetsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
         }
 
