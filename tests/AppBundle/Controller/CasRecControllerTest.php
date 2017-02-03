@@ -58,7 +58,7 @@ class CasRecControllerTest extends AbstractTestController
     public function testAddBulk()
     {
         // just to check it gets truncated
-        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1');
+        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
