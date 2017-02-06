@@ -7,7 +7,9 @@ Feature: deputy / report / submit
         And I click on "reports, report-2016"
         Then I should not see the "download-2016-report" link
         # if not found, it means that the report is not submittable
-        And I follow "edit-report_submit"
+        And I click on "report-submit"
+        Then the URL should match "/report/\d+/review"
+        And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"
 
