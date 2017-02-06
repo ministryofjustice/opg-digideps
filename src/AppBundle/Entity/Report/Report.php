@@ -176,14 +176,6 @@ class Report
     private $submitted;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"furtherInformation"})
-     *
-     * @var string
-     */
-    private $furtherInformation;
-
-    /**
      * @deprecated remove from view as well if not used
      * @JMS\Type("boolean")
      *
@@ -695,22 +687,6 @@ class Report
         $this->submitted = $submitted;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFurtherInformation()
-    {
-        return $this->furtherInformation;
-    }
-
-    /**
-     * @param string $furtherInformation
-     */
-    public function setFurtherInformation($furtherInformation)
-    {
-        $this->furtherInformation = $furtherInformation;
     }
 
     /**
