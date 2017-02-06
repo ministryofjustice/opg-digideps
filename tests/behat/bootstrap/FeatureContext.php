@@ -150,14 +150,4 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         //$this->assertResponseStatus(200);
     }
 
-    /**
-     * @Given I confirm the report is ready to be submitted
-     */
-    public function IconfirmTheReportIsReadyToBeSubmitted()
-    {
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', 'a#edit-report_add_further_info');
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException('a#edit-report_add_further_info not found. Report does not seem ready to be submitted');
-        }
-    }
 }

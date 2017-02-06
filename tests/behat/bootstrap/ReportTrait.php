@@ -303,33 +303,6 @@ trait ReportTrait
         $this->assertResponseStatus(200);
     }
 
-    /**
-     * @When I submit the report with further info :moreInfo
-     */
-    public function iSubmitTheReportWithFurtherInfo($moreInfo)
-    {
-        // get the report then goto the overview
-        $css = 'meta[name="reportId"]';
-
-        $element = $this->getSession()->getPage()->find('css', $css);
-
-        $reportId = $element->getAttribute('content');
-        $this->visit('/report/' . $reportId . '/overview');
-
-        # more info page
-        $this->clickLink('edit-report_add_further_info');
-        $this->fillField('report_add_info_furtherInformation', $moreInfo);
-        $this->pressButton('report_add_info_saveAndContinue');
-
-        # declaration page
-        $this->checkOption('report_declaration_agree');
-        $this->fillField('report_declaration_allAgreed_0', 1);
-        $this->pressButton('report_declaration_save');
-
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
     private function replace_dashes($string)
     {
         $string = str_replace(' ', '-', $string);
@@ -537,7 +510,7 @@ trait ReportTrait
     public function theReportShouldNotBeSubmittable()
     {
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
+        $this->assertSession()->elementNotExists('css', '#edit-report_submit');
     }
 
     /**
@@ -546,6 +519,6 @@ trait ReportTrait
     public function theReportShouldBeSubmittable()
     {
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementExists('css', '#edit-report_add_further_info');
+        $this->assertSession()->elementExists('css', '#edit-report_submit');
     }
 }

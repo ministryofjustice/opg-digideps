@@ -147,7 +147,7 @@ other_info:
     label:
       done: "Finished"
 
-report_add_further_info:
+report_submit:
     subSectionTitle: "Submit report"
     edit: "Submit report"
     start: "Submit report"

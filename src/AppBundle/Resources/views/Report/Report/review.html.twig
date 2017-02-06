@@ -18,9 +18,10 @@
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
             'previousLink': path("report_overview" , {'reportId': report.id }),
             'previousLabel': 'Edit this report',
-            'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+            'nextLink': path("report_declaration" , {'reportId': report.id }),
             'nextLabel': 'Submit report',
-            'position': 'top'
+            'position': 'top',
+            'nextId': 'declaration_page',
             } %}
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
@@ -43,7 +44,7 @@
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("report_overview" , {'reportId': report.id }),
                 'previousLabel': 'Edit this report',
-                'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+                'nextLink': path("report_declaration" , {'reportId': report.id }),
                 'nextLabel': 'Submit report',
                 'position': 'bottom'
                 } %}

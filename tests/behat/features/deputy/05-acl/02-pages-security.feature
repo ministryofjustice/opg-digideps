@@ -87,8 +87,7 @@ Feature: deputy / acl / security on pages
         | /report/1/accounts/banks/upsert/1 | 500 | 
         | /report/1/accounts/banks/1/delete | 500 | 
         # submit
-        | /report/1/add_further_information | 500 | 
-        | /report/1/declaration | 500 | 
+        | /report/1/declaration | 500 |
         | /report/1/submitted | 500 | 
       And I load the application status from "deputy-acl-before"
 
