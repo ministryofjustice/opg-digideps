@@ -86,7 +86,7 @@ other_info:
     start: "Start"
     label:
       done: "Finished"
-odr_add_further_info:
+odr_submit:
     subSectionTitle: "Submit report"
     edit: "Submit report"
     start: "Submit report"
