@@ -211,10 +211,6 @@ class ReportController extends RestController
             $report->setReasonForNoDecisions($data['reason_for_no_decisions']);
         }
 
-        if (array_key_exists('further_information', $data)) {
-            $report->setFurtherInformation($data['further_information']);
-        }
-
         if (array_key_exists('balance_mismatch_explanation', $data)) {
             $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
         }
