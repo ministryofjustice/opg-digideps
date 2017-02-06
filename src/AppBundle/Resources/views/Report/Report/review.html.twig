@@ -21,7 +21,7 @@
             'nextLink': path("report_declaration" , {'reportId': report.id }),
             'nextLabel': 'Submit report',
             'position': 'top',
-            'nextId': 'declaration_page',
+            'nextAdditionalClass': 'behat-link-declaration-page'
             } %}
         {% else  %}
             {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {

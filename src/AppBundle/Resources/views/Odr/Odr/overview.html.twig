@@ -163,7 +163,7 @@
             transDomain: translationDomain,
             subSection: 'odr_submit',
             odr: odr,
-            linkToSubSection: path('odr_declaration', {'odrId': odr.id}),
+            linkToSubSection: path('odr_review', {'odrId': odr.id}),
             description: false,
             stateOld: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
             state: odrStatus.submitState,
