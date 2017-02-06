@@ -205,15 +205,6 @@ class Report
     private $lastedit;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report"})
-     * @ORM\Column(name="further_information", type="text", nullable=true)
-     */
-    private $furtherInformation;
-
-    /**
      * @var bool deputy declaration saying there are no assets. Required (true/false) if no decisions are added
      *
      * @JMS\Type("boolean")
@@ -445,32 +436,6 @@ class Report
     public function getLastedit()
     {
         return $this->lastedit;
-    }
-
-    /**
-     * Set furtherInformation.
-     *
-     * @param string $furtherInformation
-     *
-     * @return Report
-     */
-    public function setFurtherInformation($furtherInformation)
-    {
-        $furtherInformation = trim($furtherInformation, " \n");
-
-        $this->furtherInformation = $furtherInformation;
-
-        return $this;
-    }
-
-    /**
-     * Get furtherInformation.
-     *
-     * @return string
-     */
-    public function getFurtherInformation()
-    {
-        return $this->furtherInformation;
     }
 
     /**
