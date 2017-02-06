@@ -217,7 +217,7 @@
             {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_submit',
-                linkToSubSection: path('report_review', {reportId: report.id}),
+                linkToSubSection: path('report_declaration', {reportId: report.id}),
                 report: report,
                 description: false,
                 state: reportStatus.submitState,
