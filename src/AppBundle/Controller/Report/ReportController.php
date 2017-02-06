@@ -144,57 +144,6 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/add_further_information/{action}",
-     *  name="report_add_further_info",
-     *  defaults={"action": "view"},
-     *  requirements={"action": "(view|edit)"}
-     * )
-     * @Template()
-     */
-    public function furtherInformationAction(Request $request, $reportId, $action = 'view')
-    {
-        /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
-
-        /** @var TranslatorInterface $translator */
-        $translator = $this->get('translator');
-
-        // check status
-        $reportStatusService = new ReportStatusService($report);
-        if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
-        }
-
-        $user = $this->getUserWithData(['user', 'role', 'client']);
-        $clients = $user->getClients();
-        $client = $clients[0];
-
-        $form = $this->createForm(new FormDir\Report\ReportFurtherInfoType(), $report);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            // add furher info
-            $this->getRestClient()->put('report/' . $report->getId(), $report, ['furtherInformation']);
-
-            // next or save: redirect to report declration
-            if ($form->get('saveAndContinue')->isClicked()) {
-                return $this->redirect($this->generateUrl('report_declaration', ['reportId' => $reportId]));
-            }
-        }
-
-        if (!$report->getFurtherInformation()) {
-            $action = 'edit';
-        }
-
-        return [
-            'action' => $action,
-            'report' => $report,
-            'reportStatus' => $reportStatusService,
-            'client' => $client,
-            'form' => $form->createView(),
-        ];
-    }
-
-    /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template()
      */
