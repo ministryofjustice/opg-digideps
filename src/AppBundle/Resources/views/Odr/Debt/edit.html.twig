@@ -29,8 +29,7 @@
                 {{ form_input(debt.amount, 'amount', {
                     'inputPrefix' : '£',
                     'inputClass' : 'form-control__number js-more-info js-format-currency',
-                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
-                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname})
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans
                 }) }}
 
                 {% if debt.moreDetails is defined %}
@@ -38,7 +37,8 @@
                         <div class="panel panel-border-narrow flush--bottom hidden">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                                'inputClass': ' transaction-more-details'
+                                'inputClass': ' transaction-more-details',
+                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname})
                             }) }}
                         </div>
                     </div>

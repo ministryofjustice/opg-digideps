@@ -78,7 +78,10 @@ form:
     label: Are you intending to give any gifts on behalf of %client%?
   actionGiveGiftsToClientDetails:
     label: Please tell us more about the gifts you intend to make.
-    hint: For example, who they are for and roughly how much you will spend
+    hint: |
+      Tell us who you plan to gifts to, on what occasion and roughly how much you will spend. 
+      For example, "Birthday gifts for the client's immediate family. I'll spend around £10 on 
+      each gift."
   actionPropertyMaintenance:
     label: Are there plans for maintenance or alterations to any property owned by %client%?
   actionPropertySellingRent:
