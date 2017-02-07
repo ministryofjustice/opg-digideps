@@ -12,25 +12,15 @@
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
     </script>
 
-    <!--[if IE 8]>
-    <script type="text/javascript">
-      (function(){if(window.opera){return;}
-       setTimeout(function(){var a=document,g,b={families:(g=
-       ["nta"]),urls:["{{ 'stylesheets/fonts-ie8.css' | assetUrl }}"]},
-       c="{{ 'javascripts/webfont-debug.js' | assetUrl }}",d="script",
-       e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
-       ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h=h-1;a.documentElement
-       .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
-      })()
-    </script>
-    <![endif]-->
-
-
-    <!--[if lt IE 9]>
-      <script src="{{ 'javascripts/ie.js' | assetUrl }}" type="text/javascript"></script>
-    <![endif]-->
-
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
+
+    <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/govuk-template.css'| assetUrl }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
+    <!--[if IE 7]><link href="{{ 'stylesheets/govuk-template-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <!--[if IE 8]><link href="{{ 'stylesheets/govuk-template-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+
+    <!--[if IE 8]><link href="{{ 'stylesheets/fonts-ie8.css' | assetUrl }}" media="all" rel="stylesheet" /><![endif]-->
+    <!--[if gte IE 9]><!--><link href="{{ 'stylesheets/fonts.css'| assetUrl }}" media="all" rel="stylesheet" /><!--<![endif]-->
+    <!--[if lt IE 9]><script src="{{ 'javascripts/ie.js' | assetUrl }}" type="text/javascript"></script><![endif]-->
 
     <!-- Size for iPad and iPad mini (high resolution) -->
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset('images/apple-touch-icon-152x152.png') }}">
@@ -46,17 +36,20 @@
 
     {%  if report is defined %}
       <meta name="reportId" content="{{ report.id }}">
-
     {% endif %}
 
-    {% block stylesheets %}{% endblock %}
+    <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/application.css'| assetUrl }}"  rel="stylesheet" type="text/css"><!--<![endif]-->
+    <!--[if IE 7]><link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <!--[if IE 8]><link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+
+    <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
 
     {% block head %}{% endblock %}
 
     <script src="{{ '/javascripts/jquery.min.js' | assetUrl }}" type="text/javascript"></script>
   </head>
 
-  <body class="{% block bodyClasses %}{% endblock %}">
+  <body>
       {% if ga is defined and ga is not null %}
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
