@@ -2,14 +2,15 @@ Feature: deputy / report / balance
 
     @deputy
     Scenario: balance fix
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I save the application status into "report-balance-before"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert report not submittable
         And I click on "reports, report-2016"
         Then the report should not be submittable
         # check balance mismatch difference
         When I click on "balance-view-details"
         Then I should see the "balance-bad" region
-        And I should see "£101.11" in the "unaccounted-for" region
+        And I should see "£191.11" in the "unaccounted-for" region
         # fix balance
         And I save the application status into "balance-before-adding-explanation"
         And I click on "step-back, edit-bank_accounts"
@@ -17,7 +18,7 @@ Feature: deputy / report / balance
         And I submit the step
         And I submit the step
         And the step with the following values CAN be submitted:
-            | account_closingBalance | 133.90 |
+            | account_closingBalance | 43.89 |
         And I click on "breadcrumbs-report-overview"
         # assert balance is now good
         Then I should not see the "balance-bad" region
@@ -28,7 +29,8 @@ Feature: deputy / report / balance
     @deputy
     Scenario: balance explanation
         # restore previous bad balance, add explanation
-        Given I load the application status from "balance-before-adding-explanation"
+        Given I save the application status into "report-balance-explanation-before"
+        And I load the application status from "balance-before-adding-explanation"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016"
         And I click on "balance-view-details"

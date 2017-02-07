@@ -90,8 +90,6 @@ class MoneyTransaction
         ['purchase-over-1000', true, '630', 'major-purchases', 'out'],
         ['stocks-and-shares-purchased', true, '640', 'major-purchases', 'out'],
 
-        ['gifts', true, '650', 'spending-on-other-people', 'out'],
-
         ['bank-charges', false, '660', 'debt-and-charges', 'out'],
         ['credit-cards-charges', false, '670', 'debt-and-charges', 'out'],
         ['unpaid-care-fees', false, '680', 'debt-and-charges', 'out'],

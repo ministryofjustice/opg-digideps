@@ -16,7 +16,7 @@ balance:
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut:
         title: "Total balance after money in and money out:"
-        subtitle: This is what you entered for the opening balance, income and spending
+        subtitle: This is what you entered for the opening balance, income and spending including gifts and expenses
       totalFromAccounts:
         title: "Total balance of all bank accounts:"
         subtitle: This is what you entered for the closing balance on %endDate%
@@ -31,7 +31,13 @@ balance:
          you should have a sum of money that matches the one you entered in the
          closing balance in <a href="%accountsLink%">bank accounts</a>.
          %paragraphBreak%
-         If the two sums don't match, first, check that the figures you gave in <a href="%accountsLink%">bank accounts</a> are correct. If the amounts still don't match, go back and carefully check that you have included all of %client%'s incomings and outgoings correctly in the <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> sections.
+         If the two sums don't match, first, check that the figures you gave in <a href="%accountsLink%">bank accounts</a> are correct. If the amounts still don't match, go back and carefully check that you have included all of %client%'s incomings
+         and outgoings correctly in the
+         <a href="%moneyInLink%">money in</a>,
+         <a href="%moneyOutLink%">money out</a>,
+         <a href="%giftsLink%">gifts</a> and
+         <a href="%expensesLink%">expenses</a>
+          sections.
       cantFind: Can’t find the problem?
       form:
         explanation:
