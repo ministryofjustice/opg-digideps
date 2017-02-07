@@ -30,7 +30,7 @@ Feature: deputy / report / balance
     Scenario: balance explanation
         # restore previous bad balance, add explanation
         Given I save the application status into "report-balance-explanation-before"
-        and I load the application status from "balance-before-adding-explanation"
+        And I load the application status from "balance-before-adding-explanation"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016"
         And I click on "balance-view-details"
