@@ -1,11 +1,9 @@
 page:
   propFinance:
-      htmlTitle: "Deputy report - property and finance reports | GOV.UK"
-      pageSectionTitle: Property and finance reports for %client%
-      title: Property and finance reports for %client%
+      htmlTitle: "Deputy report - annual deputy reports | GOV.UK"
+      pageSectionTitle: Annual deputy reports for %client%
+      title: Annual deputy reports for %client%
   lastLoggedIn: "Last signed in:"
-nav:
-    propFinance: Property and finance
 reportDataList:
   editReportingPeriod: "Edit report dates"
   edit: "Edit reporting period"
