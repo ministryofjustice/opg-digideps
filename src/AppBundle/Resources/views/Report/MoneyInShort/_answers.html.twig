@@ -24,8 +24,7 @@
             {% else %}
                 {# display categories comma separated #}
                 {% for c in categories %}
-                    {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
-                    {% if not loop.last %}, {% endif %}
+                    {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             {% endif %}
         </td>
@@ -97,8 +96,8 @@
         <thead>
         <tr>
             <th>Description of expense</th>
-            <th>Date</th>
-            <th class="text--right">Amount</th>
+            <th class="numeric">Date</th>
+            <th class="numeric">Amount</th>
             <th>
                 <span class="visuallyhidden">Actions</span>
             </th>
@@ -107,10 +106,10 @@
         <tbody>
         {% for tr in report.moneyTransactionsShortIn %}
             <tr class="behat-region-transaction-{{ tr.description | behat_namify }}">
-                <td class="">
+                <td>
                     {{ tr.description }}<br/>
                 </td>
-                <td>
+                <td class="numeric-small">
                     {{ tr.date ? tr.date | date("j F Y")  : '-' }}
                 </td>
                 <td class="numeric-small">
@@ -125,10 +124,10 @@
             </tr>
         {% endfor %}
         <tr class="no-border">
-            <td></td>
             <td>
                 <span class="bold-small">Total money in</span>
             </td>
+            <td></td>
             <td class="numeric-small">
                 <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</span>
             </td>
