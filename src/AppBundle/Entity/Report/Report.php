@@ -105,7 +105,7 @@ class Report
      * @var Debt[]
      *
      * @JMS\Groups({"debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -1105,5 +1105,44 @@ class Report
             return false;
         }
         return $this->getEndDate()->add(new \DateInterval('P56D'));
+    }
+
+
+    /**
+     * @return BankAccount[]
+     */
+    public function getBankAccountsIncomplete()
+    {
+        return $this->getBankAccounts()->filter(function ($b) {
+            return $b->getClosingBalance() === null;
+        });
+    }
+
+    /**
+     ** @return bool
+     */
+    public function hasMoneyIn()
+    {
+        return count($this->getMoneyTransactionsIn()) > 0;
+    }
+
+    /**
+     ** @return bool
+     */
+    public function hasMoneyOut()
+    {
+        return count($this->getMoneyTransactionsOut()) > 0;
+    }
+
+    /**
+     * @return Debt[]
+     */
+    public function getDebtsWithValidAmount()
+    {
+        $debtsWithAValidAmount = $this->getDebts()->filter(function ($debt) {
+            return !empty($debt->getAmount());
+        });
+
+        return $debtsWithAValidAmount;
     }
 }
