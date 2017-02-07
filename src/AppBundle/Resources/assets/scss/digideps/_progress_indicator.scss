@@ -155,11 +155,6 @@ ol.progress {
                 @include media(tablet) {
                     margin-left: 2.474em;
                 }
-
-                @include media($max_width: 320px) {
-                    @include visuallyhide;
-                }
-
             }
         }
 

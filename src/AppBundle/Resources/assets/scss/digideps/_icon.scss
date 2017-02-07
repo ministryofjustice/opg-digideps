@@ -44,6 +44,7 @@
 .icon-info {
     @include icon(icon-info, 22, 22, 'icons');
     background-size: contain;
+
     @include media(mobile) {
         @include icon(icon-info, 16, 16);
         margin-right: 6px;
