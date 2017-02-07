@@ -5,6 +5,8 @@ namespace Tests\AppBundle\Entity\Report;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\Report;
 use Mockery as m;
@@ -19,6 +21,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->report = new Report();
+
+        $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
+        $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
+        $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
+        $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
     }
 
     public function testGetMoneyInTotal()
@@ -80,7 +87,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20));//in
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15));//out
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15));//out
-        $calculatedBalance = 1 + 20 + 20 - 15 - 15;
+        $this->report->setGifts([$this->gift1, $this->gift2]);
+        $this->report->setExpenses([$this->expense1, $this->expense2]);
+        $calculatedBalance = 1 + 20 + 20 - 15 - 15 - 11 - 22;
 
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
     }
@@ -94,14 +103,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1500));//in
         $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(400));//out
+        $this->report->setGifts([$this->gift1, $this->gift2]);
+        $this->report->setExpenses([$this->expense1, $this->expense2]);
 
-        $this->assertEquals(100, $this->report->getTotalsOffset());
+        $exepectedTotalOffset = 67; // 1000 - 2000 + 1500 - 400 - 11 - 22
+        $this->assertEquals($exepectedTotalOffset, $this->report->getTotalsOffset());
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(100));//out
+        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(67));//in
 
-        $this->assertEquals(0, 1000 + 1500 - 400 - 100 - 2000);
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
@@ -121,8 +132,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(0, $this->report->getAssetsTotalValue());
 
-        $this->report->addAsset(m::mock(AssetOther::class, ['getValueTotal'=>1]));
-        $this->report->addAsset(m::mock(AssetProperty::class, ['getValueTotal'=>1]));
+        $this->report->addAsset(m::mock(AssetOther::class, ['getValueTotal' => 1]));
+        $this->report->addAsset(m::mock(AssetProperty::class, ['getValueTotal' => 1]));
 
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }

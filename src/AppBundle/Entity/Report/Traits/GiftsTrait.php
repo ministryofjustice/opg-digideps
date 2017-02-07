@@ -77,4 +77,17 @@ trait GiftsTrait
 
         return $this;
     }
+
+    /**
+     * @return float
+     */
+    protected function getGiftsTotal()
+    {
+        $ret = 0;
+        foreach($this->getGifts() as $record) {
+            $ret += $record->getAmount();
+        }
+
+        return $ret;
+    }
 }

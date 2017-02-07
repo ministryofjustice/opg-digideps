@@ -82,4 +82,17 @@ trait ExpensesTrait
 
         return $this;
     }
+
+    /**
+     * @return float
+     */
+    protected function getExpensesTotal()
+    {
+        $ret = 0;
+        foreach($this->getExpenses() as $record) {
+            $ret += $record->getAmount();
+        }
+
+        return $ret;
+    }
 }
