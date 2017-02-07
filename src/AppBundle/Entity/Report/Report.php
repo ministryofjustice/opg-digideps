@@ -306,6 +306,8 @@ class Report
         $this->noAssetToAdd = null;
         $this->noTransfersToAdd = null;
         $this->reportSeen = true;
+        $this->expenses = new ArrayCollection();
+        $this->gifts = new ArrayCollection();
     }
 
     /**
