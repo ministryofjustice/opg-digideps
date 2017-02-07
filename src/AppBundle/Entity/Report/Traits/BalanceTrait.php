@@ -92,9 +92,15 @@ trait BalanceTrait
         }
 
         return $this->getAccountsOpeningBalanceTotal()
-        + $this->getMoneyInTotal()
-        - $this->getMoneyOutTotal();
+            + $this->getMoneyInTotal()
+            - $this->getMoneyOutTotal()
+            - $this->getExpensesTotal()
+            - $this->getGiftsTotal();
+        ;
     }
+
+
+
 
     /**
      * @JMS\VirtualProperty
