@@ -4,8 +4,8 @@
     <thead>
     <tr>
         <th>Description of asset</th>
-        <th class="numeric">Value</th>
         <th class="numeric">Valuation date</th>
+        <th class="numeric">Value</th>
         <th>
             <span class="visuallyhidden">Actions</span>
         </th>
@@ -15,7 +15,6 @@
     {% for asset in assetsInGroup.items %}
         <tr class="behat-region-asset-{{ asset.description | behat_namify }}">
             <td>{{ asset.description | nl2br }}</td>
-            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
             <td class="numeric-small width-fifth">
                 {% if asset.valuationDate %}
                     {{ asset.valuationDate | date('d F Y') }}
@@ -23,6 +22,7 @@
                     -
                 {% endif %}
             </td>
+            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-edit action-link"
                    href="{{ path('odr_asset_other_edit', {'odrId': odr.id, 'assetId': asset.id}) }}">Edit</a>
@@ -34,10 +34,10 @@
             <td>
                 <span class="bold-small">Total amount</span>
             </td>
-            <td class="text--right">
+            <td></td>
+            <td class="numeric">
                 <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
             </td>
-            <td></td>
             <td></td>
         </tr>
     </tbody>
