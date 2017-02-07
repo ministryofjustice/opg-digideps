@@ -30,15 +30,12 @@ class Version115 extends AbstractMigration
 
             $this->connection->query("UPDATE report set gifts_exist='yes' WHERE id=$reportId ");
 
-            echo "Migrating gifts [$reportId]:";
-
             foreach ($mts as $mt) {
 
                 $existing = false;
                 foreach ($gifts as $gift) {
                     if ($gift['amount'] != $mt['amount']) {
                         $existing = true;
-                        echo "[skipped]";
                     }
                 }
 
@@ -49,7 +46,6 @@ class Version115 extends AbstractMigration
                         'amount'      => $mt['amount'],
                     ];
                     $this->connection->insert('gift', $insert);
-                    echo ".";
                 }
 
             }
