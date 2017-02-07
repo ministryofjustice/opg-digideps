@@ -736,11 +736,13 @@ class User implements UserInterface
      */
     public function getActiveReportId()
     {
-        $reports = $this->getFirstClient() ? $this->getFirstClient()->getReports() : [];
-        foreach ($reports as $report) {
-            if (!$report->getSubmitted()) {
-                return $report->getId();
-            }
+        $client = $this->getFirstClient() ? $this->getFirstClient() : null;
+        if (!$client) {
+            return;
+        }
+
+        if ($client->getUnsubmittedReports()->count() === 1) {
+            return $client->getUnsubmittedReports()->first()->getId();
         }
 
         return;

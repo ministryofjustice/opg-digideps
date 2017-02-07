@@ -494,6 +494,18 @@ class Client
     }
 
     /**
+     * Get un-submitted reports.
+     *
+     * @return Report[]
+     */
+    public function getUnsubmittedReports()
+    {
+        return $this->reports->filter(function($report) {
+            return !$report->getSubmitted();
+        });
+    }
+
+    /**
      * @return array $reportIds
      */
     public function getReportIds()
