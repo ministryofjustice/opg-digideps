@@ -43,7 +43,7 @@ class MoneyInShortController extends AbstractController
     public function categoryAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, Report::TYPE_103);
-        $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(new FormDir\Report\MoneyShortType(), $report);
         $form->handleRequest($request);
@@ -53,7 +53,7 @@ class MoneyInShortController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
 
-            if ($fromPage == 'summary') {
+            if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -69,8 +69,8 @@ class MoneyInShortController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromPage == 'summary' ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId]), //FIX when from summary
-            'skipLink' => $this->generateUrl('money_in_short_exist', ['reportId'=>$reportId]), //FIX when from summary
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('money_in_short_exist', ['reportId'=>$reportId]),
         ];
     }
 
@@ -83,7 +83,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, Report::TYPE_103);
         $form = $this->createForm(new FormDir\YesNoType('moneyTransactionsShortInExist', 'report-money-short', ['yes' => 'Yes', 'no' => 'No']), $report);
         $form->handleRequest($request);
-        $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isValid()) {
             $data = $form->getData();
@@ -98,7 +98,7 @@ class MoneyInShortController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl($fromPage == 'summary' ? 'money_in_short_summary' : 'money_in_short_category', ['reportId'=>$reportId]), //FIX when from summary
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short_category', ['reportId'=>$reportId]), //FIX when from summary
             'form' => $form->createView(),
             'report' => $report,
         ];
