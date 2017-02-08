@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
