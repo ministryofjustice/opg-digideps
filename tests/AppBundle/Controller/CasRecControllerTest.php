@@ -41,6 +41,15 @@ class CasRecControllerTest extends AbstractTestController
         }
     }
 
+    public function testTruncateAuth()
+    {
+        $url = '/casrec/truncate';
+
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
+    }
+
     public function testAddBulkAuth()
     {
         $url = '/casrec/bulk-add';
@@ -50,18 +59,28 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
+
     private function compress($data)
     {
         return base64_encode(gzcompress(json_encode($data), 9));
     }
 
-    public function testAddBulk()
+    public function testTruncateAddBulkCount()
     {
         // just to check it gets truncated
         $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
+        $this->fixtures()->clear();
 
+        // truncate
+        $this->assertJsonRequest('DELETE', '/casrec/truncate', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+        $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+
+        // add
         $this->assertJsonRequest('POST', '/casrec/bulk-add', [
             'rawData' => $this->compress([
                 [
@@ -105,6 +124,17 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('h2', $record2->getDeputySurname());
         $this->assertEquals('', $record2->getDeputyPostCode());
         $this->assertEquals('OPG103', $record2->getTypeOfReport());
+
+
+        // check count
+        $url = '/casrec/count';
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        $this->assertEquals(2, $data);
     }
 
     public function testCountAuth()
@@ -121,18 +151,4 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
-    /**
-     * @depends testAddBulk
-     */
-    public function testCountAll()
-    {
-        $url = '/casrec/count';
-
-        $data = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ])['data'];
-
-        $this->assertEquals(2, $data);
-    }
 }

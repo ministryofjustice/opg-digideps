@@ -16,12 +16,29 @@ class CasRecController extends RestController
      * Bulk insert
      * Max 10k otherwise failing (memory reach 128M).
      *
+     * @Route("/truncate")
+     * @Method({"DELETE"})
+     */
+    public function truncateTable(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+
+        $em = $this->getEntityManager();
+        $em->getConnection()->query('TRUNCATE TABLE casrec');
+
+        return ['truncated'=>true];
+    }
+
+    /**
+     * Bulk insert
+     * Max 10k otherwise failing (memory reach 128M).
+     *
      * @Route("/bulk-add")
      * @Method({"POST"})
      */
     public function addBulk(Request $request)
     {
-        $maxRecords = 50000;
+        $maxRecords = 10000;
         $persistEvery = 5000;
 
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
@@ -47,8 +64,6 @@ class CasRecController extends RestController
 
         try {
             $em->beginTransaction();
-            $em->getConnection()->query('TRUNCATE TABLE casrec');
-
             $added = 1;
             foreach ($data as $dataIndex => $row) {
                 $casRec = new EntityDir\CasRec(
@@ -69,7 +84,6 @@ class CasRecController extends RestController
                     if (($added++ % $persistEvery) === 0) {
                         $em->flush();
                         $em->clear();
-                        $this->get('logger')->info("saved $added / $count records. " . (memory_get_peak_usage() / 1024 / 1024) . ' MB of memory used');
                     }
                 }
             }
@@ -78,10 +92,7 @@ class CasRecController extends RestController
             $em->commit();
             $em->clear();
         } catch (\Exception $e) {
-            $this->get('logger')->error($e->getMessage());
-            $em->rollback();
-
-            throw new \RuntimeException($e->getMessage());
+            return ['added' => $added - 1, 'errors' => [$e->getMessage()]];
         }
 
         return ['added' => $added - 1, 'errors' => $retErrors];
