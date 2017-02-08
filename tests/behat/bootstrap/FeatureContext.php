@@ -149,5 +149,4 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink('check-app-params');
         //$this->assertResponseStatus(200);
     }
-
 }

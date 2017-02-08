@@ -24,9 +24,9 @@ class CsvToArray
     private $normaliseNewLines;
 
     /**
-     * @param string $file path to file
-     * @param array $expectedColumns e.g. ['Case','Surname', 'Deputy No' ...]
-     * @param bool $normaliseNewLines
+     * @param string $file              path to file
+     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No' ...]
+     * @param bool   $normaliseNewLines
      *
      * @throws \RuntimeException
      */
