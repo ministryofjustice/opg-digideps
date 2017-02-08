@@ -266,8 +266,14 @@ class AdminController extends AbstractController
                 $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    sprintf('%d record uploaded, %d failed', $ret['added'], count($ret['errors']))
+                    sprintf('%d record uploaded, %d errors', $ret['added'], count($ret['errors']))
                 );
+                foreach($ret['errors'] as $error) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $error
+                    );
+                }
                 foreach ($ret['errors'] as $error) {
                     $request->getSession()->getFlashBag()->add('notice', $error);
                 }

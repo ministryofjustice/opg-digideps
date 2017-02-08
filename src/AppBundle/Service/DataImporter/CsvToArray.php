@@ -24,9 +24,9 @@ class CsvToArray
     private $normaliseNewLines;
 
     /**
-     * @param string $file              path to file
-     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No' ...]
-     * @param bool   $normaliseNewLines
+     * @param string $file path to file
+     * @param array $expectedColumns e.g. ['Case','Surname', 'Deputy No' ...]
+     * @param bool $normaliseNewLines
      *
      * @throws \RuntimeException
      */
@@ -85,7 +85,14 @@ class CsvToArray
         // read rows
         while (($row = $this->getRow()) !== false) {
             if (count($header) === count($row)) {
-                $ret[] = array_combine($header, $row);
+                $rowArray = [];
+                foreach ($this->expectedColumns as $expectedColumn) {
+                    $index = array_search($expectedColumn, $header);
+                    if ($index !== false) {
+                        $rowArray[$expectedColumn] = $row[$index];
+                    }
+                }
+                $ret[] = $rowArray;
             }
         }
 
