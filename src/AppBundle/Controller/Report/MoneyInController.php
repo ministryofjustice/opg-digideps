@@ -24,7 +24,7 @@ class MoneyInController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, Report::TYPE_102);
         if ((new ReportStatusService($report))->getMoneyInState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -48,7 +48,7 @@ class MoneyInController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         $fromPage = $request->get('from');
 
 
@@ -157,7 +157,7 @@ class MoneyInController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         if ((new ReportStatusService($report))->getMoneyInState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
@@ -177,7 +177,7 @@ class MoneyInController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });

@@ -27,7 +27,7 @@ class MoneyTransferController extends AbstractController
      */
     public function startAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         if (count($report->getBankAccounts()) < 2) {
             return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
@@ -50,7 +50,7 @@ class MoneyTransferController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         $form = $this->createForm(new FormDir\YesNoType('noTransfersToAdd', 'report-money-transfer', [0 => 'Yes', 1 => 'No']), $report);
         $form->handleRequest($request);
 
@@ -90,7 +90,7 @@ class MoneyTransferController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         $fromPage = $request->get('from');
 
 
@@ -171,7 +171,7 @@ class MoneyTransferController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
 
         $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transfer'), $report);
         $form->handleRequest($request);
@@ -201,7 +201,7 @@ class MoneyTransferController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
         if ((new ReportStatusService($report))->getMoneyTransferState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
@@ -220,6 +220,8 @@ class MoneyTransferController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transferId)
     {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
+
         $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
 
         $request->getSession()->getFlashBag()->add(
