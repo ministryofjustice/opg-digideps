@@ -35,10 +35,10 @@ class AdminController extends AbstractController
         $newSortOrder = $sortOrder == 'ASC' ? 'DESC' : 'ASC';
 
         return [
-            'users' => $users,
-            'userCount' => $userCount,
-            'limit' => $limit,
-            'offset' => $offset,
+            'users'        => $users,
+            'userCount'    => $userCount,
+            'limit'        => $limit,
+            'offset'       => $offset,
             'newSortOrder' => $newSortOrder,
         ];
     }
@@ -55,7 +55,7 @@ class AdminController extends AbstractController
             unset($availableRoles[1]);
         }
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices' => $availableRoles,
+            'roleChoices'      => $availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
@@ -119,9 +119,9 @@ class AdminController extends AbstractController
         }
 
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices' => EntityDir\Role::$availableRoles,
+            'roleChoices'      => EntityDir\Role::$availableRoles,
             'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
-            'roleIdDisabled' => $user->getId() == $this->getUser()->getId(),
+            'roleIdDisabled'   => $user->getId() == $this->getUser()->getId(),
         ]), $user);
 
         $clients = $user->getClients();
@@ -149,10 +149,10 @@ class AdminController extends AbstractController
             }
         }
         $view = [
-            'form' => $form->createView(),
-            'action' => 'edit',
-            'id' => $user->getId(),
-            'user' => $user,
+            'form'          => $form->createView(),
+            'action'        => 'edit',
+            'id'            => $user->getId(),
+            'user'          => $user,
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
 
@@ -235,6 +235,8 @@ class AdminController extends AbstractController
      */
     public function uploadUsersAction(Request $request)
     {
+        $chunkSize = 5000;
+
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
             'action' => $this->generateUrl('admin_upload'),
             'method' => 'POST',
@@ -252,31 +254,37 @@ class AdminController extends AbstractController
                         'Deputy No',
                         'Dep Surname',
                         'Dep Postcode',
-                        'Typeofrep'
+                        'Typeofrep',
                     ])
                     ->getData();
 
-                $count = count($data);
-                if ($count > 30000) {
-                    throw new \RuntimeException("$count records found in the file, only 30000 allowed for each upload.");
+
+                // truncate records
+                $this->getRestClient()->delete('casrec/truncate');
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 'Casrec data truncated'
+                );
+
+
+                $added = 0;
+                $errors = [];
+                foreach (array_chunk($data, $chunkSize) as $chunk) {
+                    $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
+                    $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                    $added += $ret['added'];
+                    $errors = array_merge($errors, $ret['errors']);
                 }
 
-                $compressedData = base64_encode(gzcompress(json_encode($data), 9));
-
-                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                // notifications
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    sprintf('%d record uploaded, %d errors', $ret['added'], count($ret['errors']))
+                    sprintf('%d record uploaded, %d error(s)', $added, count($errors))
                 );
-                foreach($ret['errors'] as $error) {
-                    $request->getSession()->getFlashBag()->add(
-                        'error',
-                        $error
-                    );
-                }
-                foreach ($ret['errors'] as $error) {
-                    $request->getSession()->getFlashBag()->add('notice', $error);
-                }
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    implode('<br>', $errors)
+                );
+
 
                 return $this->redirect($this->generateUrl('admin_upload'));
             } catch (\Exception $e) {
@@ -290,8 +298,8 @@ class AdminController extends AbstractController
 
         return [
             'currentRecords' => $this->getRestClient()->get('casrec/count', 'array'),
-            'form' => $form->createView(),
-            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form'           => $form->createView(),
+            'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
 
@@ -302,6 +310,7 @@ class AdminController extends AbstractController
     public function statsAction(Request $request)
     {
         $data = $this->getRestClient()->get('stats/users?limit=100', 'array');
+
         return [
             'data' => $data,
         ];
@@ -317,7 +326,7 @@ class AdminController extends AbstractController
             $rawCsv = $this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
         } catch (\RuntimeException $e) {
             return $this->render('AppBundle:Admin:stats-wait.html.twig', [
-                'timestamp' => $timestamp
+                'timestamp' => $timestamp,
             ]);
         }
 
