@@ -73,7 +73,7 @@ class CasRec
      *
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
      *
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
+     * @Assert\Length(min=2, max=10, minMessage="postcode too short", maxMessage="postcode too long" )
      */
     private $deputyPostCode;
 
