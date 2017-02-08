@@ -262,7 +262,7 @@ class AdminController extends AbstractController
                 // truncate records
                 $this->getRestClient()->delete('casrec/truncate');
                 $request->getSession()->getFlashBag()->add(
-                    'notice', 'Casrec data truncated'
+                    'notice', 'Existing casrec data truncated prior to upload'
                 );
 
 
@@ -280,10 +280,12 @@ class AdminController extends AbstractController
                     'notice',
                     sprintf('%d record uploaded, %d error(s)', $added, count($errors))
                 );
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    implode('<br>', $errors)
-                );
+                if ($errors) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        implode('<br>', $errors)
+                    );
+                }
 
 
                 return $this->redirect($this->generateUrl('admin_upload'));
