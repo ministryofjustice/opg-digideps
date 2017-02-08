@@ -164,7 +164,7 @@
                     {#} %}#}
                 {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
-                {% if report.balanceMismatchExplanation %}
+                {% if is102 and report.balanceMismatchExplanation %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',

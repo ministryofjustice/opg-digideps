@@ -91,11 +91,15 @@ class AbstractController extends Controller
      * @return Report
      *
      */
-    protected function getReportIfNotSubmitted($reportId, array $groups = [])
+    protected function getReportIfNotSubmitted($reportId, array $groups = [], $onlyForReportType = null)
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
+        }
+
+        if ($onlyForReportType && $report->getType() != $onlyForReportType) {
+            throw new DisplayableException('Section not accessible with this report type');
         }
 
         return $report;
