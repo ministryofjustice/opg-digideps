@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Gift;
-use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -35,7 +33,6 @@ trait BalanceTrait
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
-
 
     /**
      * @JMS\VirtualProperty
@@ -98,9 +95,6 @@ trait BalanceTrait
             - $this->getGiftsTotal();
         ;
     }
-
-
-
 
     /**
      * @JMS\VirtualProperty

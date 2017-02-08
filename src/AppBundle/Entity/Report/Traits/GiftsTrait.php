@@ -84,7 +84,7 @@ trait GiftsTrait
     protected function getGiftsTotal()
     {
         $ret = 0;
-        foreach($this->getGifts() as $record) {
+        foreach ($this->getGifts() as $record) {
             $ret += $record->getAmount();
         }
 

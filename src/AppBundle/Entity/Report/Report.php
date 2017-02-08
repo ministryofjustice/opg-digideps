@@ -1107,7 +1107,6 @@ class Report
         return $this->getEndDate()->add(new \DateInterval('P56D'));
     }
 
-
     /**
      * @return BankAccount[]
      */

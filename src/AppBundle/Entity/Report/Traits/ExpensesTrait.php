@@ -89,7 +89,7 @@ trait ExpensesTrait
     protected function getExpensesTotal()
     {
         $ret = 0;
-        foreach($this->getExpenses() as $record) {
+        foreach ($this->getExpenses() as $record) {
             $ret += $record->getAmount();
         }
 
