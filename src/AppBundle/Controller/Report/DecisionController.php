@@ -171,6 +171,7 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
         }
 
+        //TODO use $backLinkRoute logic and align to other controllers
         $backLink = $this->routeExists($from) ? $this->generateUrl($from, ['reportId'=>$reportId]) : '';
 
         return [
