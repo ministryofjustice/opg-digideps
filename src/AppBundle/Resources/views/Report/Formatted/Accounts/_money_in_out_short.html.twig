@@ -40,7 +40,9 @@
                         <li class="transaction">
                             <div class="label">
                                 {{ t.description }}
-                                ({{ t.date | date("d / m / Y") }})
+                                {% if t.date %}
+                                    (dated {{ t.date | date("d / m / Y") }})
+                                {% endif %}
                             </div>
                             <div class="value">&pound;{{ t.amount | money_format }}</div>
                         </li>
