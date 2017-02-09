@@ -27,6 +27,6 @@ class MoneyShortCategoryType extends AbstractType
 
     public function getName()
     {
-        return 'state_benefit';
+        return 'category';
     }
 }

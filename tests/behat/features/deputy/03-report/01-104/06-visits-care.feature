@@ -1,4 +1,4 @@
-Feature: deputy / report / visits and care
+Feature: Report visits and care
 
   @deputy
   Scenario: visits and care steps

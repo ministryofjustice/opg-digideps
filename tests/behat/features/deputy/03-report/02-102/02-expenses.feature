@@ -1,4 +1,4 @@
-Feature: deputy expenses
+Feature: Report deputy expenses
 
   @deputy
   Scenario: deputy expenses
