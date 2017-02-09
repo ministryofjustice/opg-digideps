@@ -31,7 +31,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     private static $dbName;
 
-    private static $autoDbSnapshot;
+    private static $autoDbSnapshot = false;
 
     public function __construct($options = [])
     {
@@ -42,7 +42,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
         // set this to true for temporary local debugging
-        self::$autoDbSnapshot = false;
     }
 
     public function setKernel(\AppKernel $kernel)
