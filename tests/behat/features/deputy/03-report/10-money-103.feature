@@ -3,15 +3,12 @@ Feature: Report money 103
 
   @deputy
   Scenario: money transactions 103 start
-    # restore 102 pre-status
+    # restore status pre money-102
     Given I load the application status from "money-transactions-before"
     And I change the report 1 type to "103"
 
   @deputy
   Scenario: money in 103
-    # restore 102 pre-status
-    Given I load the application status from "money-transactions-before"
-    And I change the report 1 type to "103"
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-money_in_short, start"
     # categories
@@ -85,7 +82,7 @@ Feature: Report money 103
 
   @deputy
   Scenario: money transactions 103 end
-    # restore 102 status
+    # restore status after money 102 finished
     Given I load the application status from "money-transactions-after"
     And I change the report 1 type to "102"
 
