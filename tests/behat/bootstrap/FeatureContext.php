@@ -29,9 +29,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ExpressionTrait,
         UserTrait;
 
-    private static $dbName;
+    protected static $dbName;
 
-    private static $autoDbSnapshot = false;
+    protected static $autoDbSnapshot = false;
 
     public function __construct($options = [])
     {
