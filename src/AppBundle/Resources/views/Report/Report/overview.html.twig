@@ -154,14 +154,14 @@
                     warning: true,
                     description: true
                     } %}
-                    {#{% include 'AppBundle:Report/Report:_subsection.html.twig' with {#}
-                    {#transDomain: translationDomain,#}
-                    {#subSection: 'money_short_out',#}
-                    {#report: report,#}
-                    {#state: reportStatus.moneyOutState,#}
-                    {#warning: true,#}
-                    {#description: true#}
-                    {#} %}#}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_out_short',
+                    report: report,
+                    state: reportStatus.MoneyOutShortState,
+                    warning: true,
+                    description: true
+                    } %}
                 {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
                 {% if is102 and report.balanceMismatchExplanation %}

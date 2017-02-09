@@ -9,9 +9,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class MoneyShortType extends AbstractType
 {
     /**
-    private $field;
+     private $field;
 
-    /**
+     /**
      * MoneyShortType constructor.
      * @param $field moneyShortCategoriesIn | moneyShortCategoriesOut
      */
@@ -19,7 +19,6 @@ class MoneyShortType extends AbstractType
     {
         $this->field = $field;
     }
-
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

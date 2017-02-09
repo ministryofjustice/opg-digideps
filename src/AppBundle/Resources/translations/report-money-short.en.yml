@@ -62,13 +62,26 @@ addPage:
       You may find it easier to use %client%'s bank statements to find this information.
     pageSectionDescription3: |
       You can add one or more items of income and come back to complete the section later.
-
+  moneyOut:
+      htmlTitle: "Deputy report - money out | GOV.UK"
+      pageSectionTitle: Add an item of income
+      supportTitle: Money in
+      pageSectionDescription1: |
+        List all one-off items of expense over £1,000
+      pageSectionDescription2: |
+        You may find it easier to use %client%'s bank statements to find this information. Don’t tell us about any regular payments, such as care home fees.
+      pageSectionDescription3: |
+        You can add one or more items of expense and come back to complete the section later.
 
 editPage:
-  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  supportTitle: Deputy expenses
-  pageSectionTitle: Edit deputy expense
-
+  moneyIn:
+    htmlTitle: "Deputy report - money in - edit item of income | GOV.UK"
+    supportTitle: Money in
+    pageSectionTitle: Edit item of income
+  moneyOut:
+    htmlTitle: "Deputy report - money out - edit expense | GOV.UK"
+    supportTitle: Money in
+    pageSectionTitle: Edit expense
 
 addAnotherPage:
   moneyIn:
@@ -82,24 +95,34 @@ addAnotherPage:
       save:
          label: Continue
   moneyOut:
-    htmlTitle: "Deputy report - Add another expense | GOV.UK"
-    pageSectionTitle: Add an expense
+    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    supportTitle: Money out
+    pageSectionTitle: Add another expense
     form:
       addAnother:
-        label: ...
-        hint: ...
+        label: The expense has been saved. Would you like to add another expense over £1000 now?
+        hint: If you prefer, you can come back to this section later to add more expenses
       save:
-         label: Continue
+        label: Continue
 
 
 summaryPage:
   edit: Edit
-  addButton: Add an item of income over £1,000
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
-    pageSectionDescription1: |
-      In this section we asked you to tell us about how you have managed $client%'s money during this reporting period.
+    pageSectionDescription: |
+      In this section we asked you to tell us about how you have managed
+      %client%'s money during this reporting period
+    addButton: Add an item of income over £1,000
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money out
+    pageSectionDescripion: |
+      In this section we asked you to tell us about how you have managed
+      Sally's money during this reporting period.
+    addButton: Add expense over £1,000
+
 
 form:
   categoriesIn:
@@ -139,5 +162,18 @@ form:
         label: Add another expense
       save:
           label: Save expense
+
+  transactionsOut:
+        description:
+          label: Description of expense
+        amount:
+          label: Amount
+        date:
+           label: What date did this money go out ? (optional)
+           hint: (DD/MM/YYYY)
+        addAnother:
+          label: 12345345646
+        save:
+            label: Save expense
 
 

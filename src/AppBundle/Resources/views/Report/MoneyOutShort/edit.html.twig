@@ -6,11 +6,11 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname} %}
 
-{% block htmlTitle %}{{ 'editPage.moneyIn.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.moneyIn.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'editPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.moneyOut.pageSectionTitle' | trans }}{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'editPage.moneyIn.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'editPage.moneyOut.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block linkBack %}
@@ -19,7 +19,7 @@
 
 {% block pageContent %}
 
-    {% include 'AppBundle:Report/MoneyInShort:_form.html.twig' with {
+    {% include 'AppBundle:Report/moneyOutShort:_form.html.twig' with {
     'translationDomain': translationDomain,
     'form': form
     } %}

@@ -18,7 +18,6 @@ class MoneyShortTransactionType extends AbstractType
             ->add('amount', 'number', [
                 'precision' => 2,
                 'grouping'  => true,
-//                'invalid_message' => 'expenses.singleExpense.notNumeric',
             ])
             ->add('date', 'date', ['widget'          => 'text',
                                             'input'           => 'datetime',

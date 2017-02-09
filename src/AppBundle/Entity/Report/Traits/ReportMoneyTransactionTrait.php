@@ -96,31 +96,6 @@ trait ReportMoneyTransactionTrait
         return $this->moneyTransactionsOut;
     }
 
-//
-//    public function getTransactionCategories(array $moneyTransactions)
-//    {
-//        $ret = [];
-//        foreach ($moneyTransactions as $id => $transaction) {
-//            $ret[$transaction->getCategory()] = 'form.category.entries.' . $transaction->getCategory();
-//        }
-//        $ret = array_unique($ret);
-//
-//        return $ret;
-//    }
-
-//    public function getTransactionIds(array $moneyTransactions, $category)
-//    {
-//        $ret = [];
-//        foreach ($moneyTransactions as $id => $transaction) {
-//            if ($category == $transaction->getCategory()) {
-//                $ret[$transaction->getId()] = 'form.id.entries.' . $transaction->getId() . '.label';
-//            }
-//        }
-//        $ret = array_unique($ret);
-//
-//        return $ret;
-//    }
-
     /**
      * Group money transactions by Group
      *

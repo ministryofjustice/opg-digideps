@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'addPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.moneyOut.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.moneyOut.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'addPage.moneyOut.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="heading-small">{{ 'addPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
+    <p class="text">{{ 'addPage.moneyOut.pageSectionDescription2' | trans(transOptions) }}</p>
+    <p class="text">{{ 'addPage.moneyOut.pageSectionDescription3' | trans(transOptions) }}</p>
+
+    {% include 'AppBundle:Report/moneyOutShort:_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'form': form
+    } %}
+
+{% endblock %}
