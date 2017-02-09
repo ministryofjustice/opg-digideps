@@ -11,7 +11,7 @@ trait ReportMoneyShortTrait
     /**
      * @var MoneyShortCategory[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyShortCategory", mappedBy="report")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $moneyShortCategories;
