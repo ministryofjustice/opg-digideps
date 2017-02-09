@@ -5,6 +5,9 @@ namespace AppBundle\EventListener;
 use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
+/**
+ * Consider moving this to service classes, and unit test triggers
+ */
 class DoctrineListener
 {
     public function prePersist(LifecycleEventArgs $args)
