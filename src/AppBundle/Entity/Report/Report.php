@@ -300,6 +300,8 @@ class Report
         $this->bankAccounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
         $this->moneyTransactions = new ArrayCollection();
+        $this->moneyShortCategories = new ArrayCollection();
+        $this->moneyTransactionsShort = new ArrayCollection();
         $this->debts = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();

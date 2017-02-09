@@ -135,6 +135,8 @@ class ReportController extends RestController
 
         if (!empty($data['type'])) {
             $report->setType($data['type']);
+            // enable if SQL report type is not needed anymore
+            //$this->getRepository(Report::class)->addMoneyShortCategoriesIfMissing($report);
         }
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {

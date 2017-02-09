@@ -114,8 +114,6 @@ class ReportRepository extends EntityRepository
             ++$ret;
         }
 
-        //}
-
         return $ret;
     }
 
