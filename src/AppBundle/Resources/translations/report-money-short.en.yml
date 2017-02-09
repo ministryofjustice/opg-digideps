@@ -9,14 +9,8 @@ startPage:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
-      Tell us about money you have spent on %client%'s day-to-day living
-      and welfare costs between %startDate% and %endDate%.
-    pageSectionDescription2: |
-      You can enter a total for each type of expense, or you can enter
-      individual amounts and we'll add them up for you.
-    pageSectionDescription3: |
-      Be sure to enter each individual expense into one category only,
-      so we don’t count them twice when we do the calculation.
+      Tell us about how you have managed %client%'s money during this reporting period.
+      We need this information to understand the client’s financial situation.
     startButton: Start money out
 
 
@@ -30,10 +24,10 @@ categoryPage:
 #    pageSectionTitleWithCategory: Add an item of income: %group%
 #    pageSectionDescription:
 #       step1: You can add one or more items and come back to complete the section later.
-#  moneyOut:
+  moneyOut:
 #      htmlTitle: "Deputy report - Money out | GOV.UK"
 #      supportTitle: Money out
-#      pageSectionTitle: Money in
+      pageSectionTitle: Money out
 #      pageSectionTitle: Add an expense
 #      pageSectionTitleWithCategory: Add an expense: %group%
 #      pageSectionDescription:
@@ -42,30 +36,39 @@ categoryPage:
 
 
 existPage:
-  htmlTitle: "Deputy report - Money in | GOV.UK"
-  pageSectionTitle: Money in
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageSectionTitle: Money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money out
   form:
     moneyTransactionsShortInExist:
       label: Have there been any items of income over £1,000?
+    moneyTransactionsShortOutExist:
+      label: Have there been any one-off items of expense over £1,000?
     save:
       label: Save and continue
 
 
 addPage:
-  htmlTitle: "Deputy report - money in | GOV.UK"
-  pageSectionTitle: Add an item of income
-  supportTitle: Money in
-  pageSectionDescription1: |
-    List all one-off items of income over £1,000
-  pageSectionDescription2: |
-    You may find it easier to use %client%'s bank statements to find this information.
-  pageSectionDescription3: |
-    You can add one or more items of income and come back to complete the section later.
+  moneyIn:
+    htmlTitle: "Deputy report - money in | GOV.UK"
+    pageSectionTitle: Add an item of income
+    supportTitle: Money in
+    pageSectionDescription1: |
+      List all one-off items of income over £1,000
+    pageSectionDescription2: |
+      You may find it easier to use %client%'s bank statements to find this information.
+    pageSectionDescription3: |
+      You can add one or more items of income and come back to complete the section later.
+
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   supportTitle: Deputy expenses
   pageSectionTitle: Edit deputy expense
+
 
 addAnotherPage:
   moneyIn:
@@ -103,7 +106,7 @@ form:
     label: Tell us about the different categories of money paid into %client%'s accounts
     hint: Please tick all that apply
   categoriesOut:
-      label: ...
+      label: Tell us about the different categories of money paid out of %client%'s accounts
       hint: Please tick all that apply
   categoriesEntries:
       # in
@@ -115,14 +118,14 @@ form:
       compensations_and_damages_awards.label: Compensations and damages awards
       personal_pension.label: Personal pension
       # out
-      accomodation_costs:  Accommodation costs, eg rent, mortgage, service charges
-      care_fees: Care fees or local authority charges for care
-      holidays: Holidays and trips
-      households_bills: Household bills, eg water, gas, electricity, phone, council tax
-      personal_allowance: %client%’s personal allowance
-      professional_fees: Professional fees, eg solicitor or accountant fees
-      new_investments: New investments, eg buying shares, new bonds
-      travel_costs: Travel costs, eg bus, train, taxi fares
+      accomodation_costs.label:  Accommodation costs, eg rent, mortgage, service charges
+      care_fees.label: Care fees or local authority charges for care
+      holidays.label: Holidays and trips
+      households_bills.label: Household bills, eg water, gas, electricity, phone, council tax
+      personal_allowance.label: %client%'s personal allowance
+      professional_fees.label: Professional fees, eg solicitor or accountant fees
+      new_investments.label: New investments, eg buying shares, new bonds
+      travel_costs.label: Travel costs, eg bus, train, taxi fares
 
   transactionsIn:
       description:
