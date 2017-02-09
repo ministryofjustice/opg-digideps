@@ -6,6 +6,9 @@ Feature: Report 103 start
     # that checkpoint correspond to a 103 report without money added
     Given I load the application status from "money-transactions-before"
     And I change the report 1 type to "103"
+    # assert not submittable yet
+    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-2016"
     Then the report should not be submittable
 
 
