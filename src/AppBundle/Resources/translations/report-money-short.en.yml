@@ -18,20 +18,10 @@ categoryPage:
   backLink: Back
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-#    supportTitle: Money in
     pageSectionTitle: Money in
-#    pageSectionTitle: Add an item of income
-#    pageSectionTitleWithCategory: Add an item of income: %group%
-#    pageSectionDescription:
-#       step1: You can add one or more items and come back to complete the section later.
   moneyOut:
-#      htmlTitle: "Deputy report - Money out | GOV.UK"
-#      supportTitle: Money out
-      pageSectionTitle: Money out
-#      pageSectionTitle: Add an expense
-#      pageSectionTitleWithCategory: Add an expense: %group%
-#      pageSectionDescription:
-#         step1: You can add one or more items of expense and come back to complete the section later.
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageSectionTitle: Money out
 
 
 

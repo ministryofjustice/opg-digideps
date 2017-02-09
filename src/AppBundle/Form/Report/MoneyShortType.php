@@ -44,6 +44,6 @@ class MoneyShortType extends AbstractType
 
     public function getName()
     {
-        return 'income_benefits';
+        return 'money_short';
     }
 }

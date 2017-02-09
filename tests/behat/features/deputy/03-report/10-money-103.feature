@@ -13,8 +13,8 @@ Feature: Report money 103
     And I click on "reports, report-2016, edit-money_in_short, start"
     # categories
     And the step with the following values CAN be submitted:
-      | income_benefits_moneyShortCategoriesIn_0_present | 1 |
-      | income_benefits_moneyShortCategoriesIn_5_present | 1 |
+      | money_short_moneyShortCategoriesIn_0_present | 1 |
+      | money_short_moneyShortCategoriesIn_5_present | 1 |
     # chose "no records"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
@@ -73,11 +73,6 @@ Feature: Report money 103
     And each text should be present in the corresponding region:
       | 1,450.00 | transaction-november-salary |
 
-
-  @deputy
-  Scenario: money out 103
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # TODO
 
 
   @deputy
