@@ -8,13 +8,27 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MoneyShortType extends AbstractType
 {
+    /**
+    private $field;
+
+    /**
+     * MoneyShortType constructor.
+     * @param $field moneyShortCategoriesIn | moneyShortCategoriesOut
+     */
+    public function __construct($field)
+    {
+        $this->field = $field;
+    }
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('id', 'hidden')
-            ->add('moneyShortCategoriesIn', 'collection', [
+            ->add($this->field, 'collection', [
                 'type' => new MoneyShortCategoryType(),
-            ]);
+            ])
+        ;
 
 
         $builder->add('save', 'submit');

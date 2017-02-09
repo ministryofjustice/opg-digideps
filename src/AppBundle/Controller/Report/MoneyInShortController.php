@@ -44,7 +44,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, Report::TYPE_103);
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortType(), $report);
+        $form = $this->createForm(new FormDir\Report\MoneyShortType('moneyShortCategoriesIn'), $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
