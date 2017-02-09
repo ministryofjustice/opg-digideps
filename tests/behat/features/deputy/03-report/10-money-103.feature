@@ -1,4 +1,4 @@
-Feature: deputy / report / money transactions 103
+Feature: Report money 103
 # to save time, 103 money section is tested by using snapshots inside the 102 journey
 
   @deputy

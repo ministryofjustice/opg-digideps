@@ -1,4 +1,4 @@
-Feature: deputy / report / submit
+Feature: Report submit
 
     @deputy
     Scenario: report declaration page

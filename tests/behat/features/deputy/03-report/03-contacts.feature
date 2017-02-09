@@ -1,4 +1,4 @@
-Feature: deputy / report / contacts
+Feature: Report contacts
 
     @deputy
     Scenario: contacts

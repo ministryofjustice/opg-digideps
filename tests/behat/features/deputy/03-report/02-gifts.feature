@@ -1,4 +1,4 @@
-Feature: gifts
+Feature: Report gifts
 
   @deputy
   Scenario: gifts

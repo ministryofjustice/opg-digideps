@@ -1,4 +1,4 @@
-Feature: deputy / report / decisions
+Feature: Report decisions
 
     @deputy
     Scenario: decisions

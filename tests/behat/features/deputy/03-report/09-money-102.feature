@@ -1,4 +1,7 @@
-Feature: deputy / report / money transactions
+Feature: Report money 102
+
+  @deputy
+  Scenario: save status before starting money 1102
 
   @deputy
   Scenario: money in

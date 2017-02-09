@@ -1,4 +1,4 @@
-Feature: deputy / report / asset with variations
+Feature: Report asset with variations
 
     @deputy
     Scenario: assets

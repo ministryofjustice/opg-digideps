@@ -1,4 +1,4 @@
-Feature: deputy / report / edit and test tabs
+Feature: Report edit and test tabs
     
     @deputy
     Scenario: edit report dates
