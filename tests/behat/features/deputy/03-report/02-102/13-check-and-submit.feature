@@ -2,7 +2,7 @@ Feature: Report submit
 
     @deputy
     Scenario: report declaration page
-#        Given I set the report 1 end date to 3 days ago
+        #Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016"
         Then I should not see the "download-2016-report" link

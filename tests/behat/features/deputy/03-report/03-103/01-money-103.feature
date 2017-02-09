@@ -1,11 +1,4 @@
 Feature: Report money 103
-# to save time, 103 money section is tested by using snapshots inside the 102 journey
-
-  @deputy
-  Scenario: money transactions 103 start
-    # restore status pre money-102
-    Given I load the application status from "money-transactions-before"
-    And I change the report 1 type to "103"
 
   @deputy
   Scenario: money in 103
@@ -140,12 +133,6 @@ Feature: Report money 103
     And each text should be present in the corresponding region:
       | 1,451.00 | transaction-november-rent |
 
-
-  @deputy
-  Scenario: money transactions 103 end
-    # restore status after money 102 finished
-    Given I load the application status from "money-transactions-after"
-    And I change the report 1 type to "102"
 
 
 
