@@ -1,0 +1,6 @@
+[template]
+src = "nginx_app_conf_settings.tmpl"
+dest = "/etc/nginx/app.conf.d/app_extra.conf"
+keys = [
+    "/opg/nginx",
+]
