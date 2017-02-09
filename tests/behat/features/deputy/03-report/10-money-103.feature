@@ -21,9 +21,9 @@ Feature: Report money 103
       | yes_no_moneyTransactionsShortInExist_1 | no |
         # summary page check
     And each text should be present in the corresponding region:
-      | State pension and benefits | categories    |
-      |  Compensations and damages awards           | categories    |
-      | No                         | records-exist |
+      | State pension and benefits       | categories    |
+      | Compensations and damages awards | categories    |
+      | No                               | records-exist |
         # select there are records (from summary page link)
     Given I click on "edit" in the "records-exist" region
     And the step with the following values CAN be submitted:
@@ -73,6 +73,72 @@ Feature: Report money 103
     And each text should be present in the corresponding region:
       | 1,450.00 | transaction-november-salary |
 
+
+  @deputy
+  Scenario: money out 103
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-2016, edit-money_out_short, start"
+    # categories
+    And the step with the following values CAN be submitted:
+      | money_short_moneyShortCategoriesOut_0_present | 1 |
+      | money_short_moneyShortCategoriesOut_4_present | 1 |
+    # chose "no records"
+    Given the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | yes_no_moneyTransactionsShortOutExist_1 | no |
+        # summary page check
+    And each text should be present in the corresponding region:
+      | Accommodation costs      | categories    |
+      | Cly's personal allowance | categories    |
+      | No                       | records-exist |
+        # select there are records (from summary page link)
+    Given I click on "edit" in the "records-exist" region
+    And the step with the following values CAN be submitted:
+      | yes_no_moneyTransactionsShortOutExist_0 | yes |
+        # add transaction n.1 (and validate form)
+    And the step with the following values CANNOT be submitted:
+      | money_short_transaction_description |  | [ERR] |
+      | money_short_transaction_amount      |  | [ERR] |
+    And the step with the following values CANNOT be submitted:
+      | money_short_transaction_description |                | [ERR] |
+      | money_short_transaction_amount      | invalid number | [ERR] |
+    And the step with the following values CANNOT be submitted:
+      | money_short_transaction_description |     | [ERR] |
+      | money_short_transaction_amount      | 999 | [ERR] |
+    And the step with the following values CAN be submitted:
+      | money_short_transaction_description | december rent |
+      | money_short_transaction_amount      | 1401            |
+        # add transaction n.2
+    And I choose "yes" when asked for adding another record
+    And the step with the following values CAN be submitted:
+      | money_short_transaction_description | january rent |
+      | money_short_transaction_amount      | 1501           |
+        # add another: no
+    And I choose "no" when asked for adding another record
+        # check record in summary page
+    And each text should be present in the corresponding region:
+      | december rent | transaction-december-rent |
+      | £1,401.00       | transaction-december-rent |
+      | january rent  | transaction-january-rent  |
+      | £1,501.00       | transaction-january-rent  |
+      | £2,900.00       | transaction-total           |
+        # remove transaction n.2
+    When I click on "delete" in the "transaction-january-rent" region
+    Then I should not see the "transaction-january-rent" region
+        # test add link
+    When I click on "add"
+    Then I should see the "save-and-continue" link
+    When I go back from the step
+        # edit transaction n.1
+    When I click on "edit" in the "transaction-december-rent" region
+    Then the following fields should have the corresponding values:
+      | money_short_transaction_description | december rent |
+      | money_short_transaction_amount      | 1,401.00        |
+    And the step with the following values CAN be submitted:
+      | money_short_transaction_description | november rent |
+      | money_short_transaction_amount      | 1,451.00        |
+    And each text should be present in the corresponding region:
+      | 1,451.00 | transaction-november-rent |
 
 
   @deputy
