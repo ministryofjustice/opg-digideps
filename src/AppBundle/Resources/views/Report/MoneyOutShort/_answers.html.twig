@@ -15,10 +15,10 @@
     <tbody>
     <tr class="behat-region-categories">
         <td>
-            {{ 'form.categoriesIn.label' | trans(transOptions) }}
+            {{ 'form.categoriesOut.label' | trans(transOptions) }}
         </td>
         <td>
-            {% set categories = report.moneyShortCategoriesInPresent %}
+            {% set categories = report.moneyShortcategoriesOutPresent %}
             {% if categories | length == 0 %}
                 None
             {% else %}
@@ -29,7 +29,7 @@
             {% endif %}
         </td>
         <td class="change-answer">
-            <a href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}"
+            <a href="{{ path('money_out_short_category', { 'reportId': report.id, 'from': 'summary' }) }}"
                class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
         </td>
     </tr>
@@ -50,10 +50,10 @@
     </thead>
     <tbody>
     <tr class="behat-region-records-exist">
-        {% if report.moneyTransactionsShortInExist is null %}
+        {% if report.moneyTransactionsShortOutExist is null %}
             <td>
                 <span class="error">
-                    {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
+                    {{ 'existPage.form.moneyTransactionsShortOutExist.label' | trans(transOptions) }}
                 </span>
             </td>
             <td>
@@ -61,14 +61,14 @@
             </td>
         {% else %}
             <td>
-                {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
+                {{ 'existPage.form.moneyTransactionsShortOutExist.label' | trans(transOptions) }}
             </td>
             <td>
-                {{ report.moneyTransactionsShortInExist | capitalize }}
+                {{ report.moneyTransactionsShortOutExist | capitalize }}
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
+            <a href="{{ path('money_out_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
                class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
         </td>
     </tr>
@@ -76,22 +76,22 @@
 </table>
 
 
-{% if report.moneyTransactionsShortIn | length > 0 %}
+{% if report.moneyTransactionsShortOut | length > 0 %}
     <div class="grid-row">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of items of income over £1000</h2>
+            <h2 class="heading-medium flush--ends">List expenses over £1000</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('money_in_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
+            <a href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
-                {{ 'summaryPage.moneyIn.addButton' | trans }}
+                {{ 'summaryPage.moneyOut.addButton' | trans }}
             </a>
         </div>
     </div>
 {% endif %}
 
-{% if report.moneyTransactionsShortIn | length > 0 %}
+{% if report.moneyTransactionsShortOut | length > 0 %}
     <table class="check-your-answers columns-3">
         <thead>
         <tr>
@@ -104,7 +104,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for tr in report.moneyTransactionsShortIn %}
+        {% for tr in report.moneyTransactionsShortOut %}
             <tr class="behat-region-transaction-{{ tr.description | behat_namify }}">
                 <td>
                     {{ tr.description }}<br/>
@@ -116,20 +116,20 @@
                     £{{ tr.amount | money_format }}
                 </td>
                 <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}#pageBody"
+                    <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}#pageBody"
                        class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
-                    <a href="{{ path('money_in_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
+                    <a href="{{ path('money_out_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                        class="push-half--left action-link behat-link-delete">Remove</a>
                 </td>
             </tr>
         {% endfor %}
         <tr class="no-border">
             <td>
-                <span class="bold-small">Total money in</span>
+                <span class="bold-small">Total money out</span>
             </td>
             <td></td>
             <td class="numeric-small">
-                <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</span>
+                <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortOut) | money_format }}</span>
             </td>
             <td></td>
         </tr>

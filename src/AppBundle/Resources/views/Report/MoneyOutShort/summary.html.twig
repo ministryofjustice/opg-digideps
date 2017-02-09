@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyOut.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    {# Return to overview link #}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
+            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
+        </a>
+    </p>
+
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' %}
+
+    {# Pagination #}
+    {{ macros.reportSectionPrevNext(report, 'moneyOutShort') }}
+
+{% endblock %}
+
+
+

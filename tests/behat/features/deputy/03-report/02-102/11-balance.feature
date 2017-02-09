@@ -1,4 +1,4 @@
-Feature: deputy / report / balance
+Feature: Report balance
 
     @deputy
     Scenario: balance fix

@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname} %}
+
+{% block htmlTitle %}{{ 'addAnotherPage.moneyOut.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addAnotherPage.moneyOut.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addAnotherPage.moneyOut.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, 'addAnotherPage.moneyOut.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label-bold'
+    }) }}
+
+    {{ macros.addAnotherSaveButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

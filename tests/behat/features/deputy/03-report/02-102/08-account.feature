@@ -1,4 +1,4 @@
-Feature: deputy / report / account
+Feature: Report accounts
 
   @deputy
   Scenario: add account

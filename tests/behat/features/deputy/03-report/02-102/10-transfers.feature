@@ -1,4 +1,4 @@
-Feature: deputy / report / account transfers
+Feature: Report account transfers
 
   @deputy
   Scenario: transfers

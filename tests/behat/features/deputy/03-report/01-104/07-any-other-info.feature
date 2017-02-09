@@ -1,4 +1,4 @@
-Feature: any other info
+Feature: Report any other info
 
   @deputy
   Scenario: any other info

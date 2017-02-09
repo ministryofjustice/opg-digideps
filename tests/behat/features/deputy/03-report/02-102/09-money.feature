@@ -1,8 +1,12 @@
-Feature: deputy / report / money transactions
+Feature: Report money 102
 
   @deputy
-  Scenario: money in
+  # save status in order to be reused for 103 later
+  Scenario: save status before starting money 102
     Given I save the application status into "money-transactions-before"
+
+  @deputy
+  Scenario: money in 102
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-money_in, start"
     # add transaction n.1 and check validation
@@ -148,7 +152,12 @@ Feature: deputy / report / money transactions
       | Anything else                | transaction-some-money-found-on-the-road |
       | Some money found on the road | transaction-some-money-found-on-the-road |
       | £51.00                       | transaction-some-money-found-on-the-road |
-    And I save the application status into "money-transactions-after"
+
+
+  @deputy
+  # save status in order to be restore to continue 102
+  Scenario: save status aftermoney 102
+    Given I save the application status into "money-transactions-after"
 
 
 
