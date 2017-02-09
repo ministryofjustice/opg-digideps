@@ -12,9 +12,10 @@ use JMS\Serializer\Annotation as JMS;
 class MoneyShortCategory
 {
     /**
+     *
      * @param $type in|out
      *
-     * @return array
+     * @return array [ in =>  [typeId=>...], out=> [typeId=>...] ]
      */
     public static function getCategories($type)
     {
@@ -93,6 +94,7 @@ class MoneyShortCategory
     }
 
     /**
+     * Find the type (in/out) based on the
      * @return string in|out
      */
     public function getType()

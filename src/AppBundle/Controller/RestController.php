@@ -81,7 +81,7 @@ abstract class RestController extends Controller
      */
     protected function findEntityBy($entityClass, $criteriaOrId, $errorMessage = null)
     {
-        $repo = $this->getDoctrine()->getManager()->getRepository($entityClass);
+        $repo = $this->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
         if (!$entity) {
