@@ -9,7 +9,7 @@ startPage:
     summary: More guidance on giving gifts on behalf of the client
     content:
       para01: |
-        Gifts you make on behalf of Bob may include, for example, a birthday or wedding present
+        Gifts you make on behalf of %client% may include, for example, a birthday or wedding present
         or charitable donations.
       para02: |
         There are strict limits on gift-giving as a deputy. These rules help to look

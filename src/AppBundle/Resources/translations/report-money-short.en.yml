@@ -112,7 +112,7 @@ summaryPage:
     pageSectionTitle: Money out
     weAskAbout: |
       In this section we asked you to tell us about how you have managed
-      Sally's money during this reporting period.
+      %client%'s money during this reporting period.
     addButton: Add an expense over £1,000
 
 
