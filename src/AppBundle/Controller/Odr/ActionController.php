@@ -95,6 +95,7 @@ class ActionController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr'             => $odr,
+            'status'          => $odr->getStatusService()->getActionsState()
         ];
     }
 }
