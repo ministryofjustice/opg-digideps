@@ -10,7 +10,7 @@ startPage:
   pageSectionDescription3: |
     We will also need to know the balance of each account.
   hiddenText01:
-    summary: More on how to carry out your duties 
+    summary: More on how to carry out your duties
     content:
       para01: "As a property and affairs deputy, you must now be sure to keep copies of:"
       listItem01: bank statements
@@ -18,11 +18,11 @@ startPage:
       listItem03: receipts
       listItem04: letters and emails about your activities as a deputy
       para02: |
-        You must include details of how you've managed %client%'s money in your 
-        <a href="https://www.gov.uk/become-deputy/complete-your-annual-report" target="_blank">annual report</a>. 
-        This report falls due on the first anniversary of your court order. 
+        You must include details of how you've managed %client%'s money in your
+        <a href="https://www.gov.uk/become-deputy/complete-your-annual-report" target="_blank">annual report</a>.
+        This report falls due on the first anniversary of your court order.
       para03: |
-        OPG’s <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet</a> gives detailed advice on how to look after %client%'s financial affairs.  
+        OPG’s <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet</a> gives detailed advice on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:
@@ -47,7 +47,7 @@ summaryPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts
   weAskAbout: |
-    In this section, we ask you about %client%'s bank accounts, building society 
+    In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
 form:
   accountType:
@@ -64,7 +64,7 @@ form:
   balanceOnCourtOrderDate:
       label: How much was in the account on %cotDate%?
   isJointAccount:
-      label: Is this a joint account ?
+      label: Is this a joint account?
   save:
     label: Save and continue
   cancel:

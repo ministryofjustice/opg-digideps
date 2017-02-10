@@ -20,6 +20,3 @@ manualLogout:
 
 admin:
     pageTitle: OPG user sign in
-#_security:
-#    403_error:
-#    last_error: sec last error

@@ -148,7 +148,7 @@ form:
       amount:
         label: Amount
       date:
-         label: What date did this money come in ? (optional)
+         label: What date did this money come in? (optional)
          hint: (DD/MM/YYYY)
       addAnother:
         label: Add another expense
@@ -161,7 +161,7 @@ form:
         amount:
           label: Amount
         date:
-           label: What date did this money go out ? (optional)
+           label: What date did this money go out? (optional)
            hint: (DD/MM/YYYY)
         addAnother:
           label: 12345345646

@@ -2,8 +2,8 @@ startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   pageSectionDescription: |
-    Use this section to tell us about %client%'s care and contact with you and other people. 
-    We ask about this because it’s OPG’s responsibility to make sure you are looking 
+    Use this section to tell us about %client%'s care and contact with you and other people.
+    We ask about this because it’s OPG’s responsibility to make sure you are looking
     after %client%'s best interests, including health and welfare.
   startButton: Start visits and care
 
@@ -25,10 +25,8 @@ form:
     label: |
       Please tell us how often you have contact with %client% and how you make sure others are looking
       after %client%'s needs when you're not able to.
-#   label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
   doesClientReceivePaidCare:
     label: Does %client% get care that is paid for?
-    #label: Does %client% receive care which is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
   howIsCareFunded:
     label: How is the care funded?

@@ -102,9 +102,6 @@ form:
       moneyout-other: Other
   amount:
       label: Amount
-#  createdAt:
-#    label: What date did this money come in? (optional)
-#    hint: "(DD/MM/YYYY)"
   description:
     mandatory:
       label: Description of %category%
