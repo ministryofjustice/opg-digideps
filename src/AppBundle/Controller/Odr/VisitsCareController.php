@@ -110,7 +110,7 @@ class VisitsCareController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
-            'validator' => new VisitsCareValidator($odr->getVisitsCare()),
+            'status'=>$odr->getStatusService()->getVisitsCareState()
         ];
     }
 }
