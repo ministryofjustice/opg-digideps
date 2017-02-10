@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -96,7 +95,6 @@ class ActionController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr'             => $odr,
-            'validator'          => new ActionsValidator($odr),
         ];
     }
 }
