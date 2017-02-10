@@ -21,7 +21,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getDebtsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getDebtsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_debts_summary', ['odrId' => $odrId]);
         }
 
@@ -106,7 +106,7 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getDebtsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getDebtsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_debts', ['odrId' => $odrId]);
         }
 

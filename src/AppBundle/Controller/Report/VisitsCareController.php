@@ -25,7 +25,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getVisitsCareState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getVisitsCareState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -100,7 +100,7 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getVisitsCareState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($report->getStatusService()->getVisitsCareState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 

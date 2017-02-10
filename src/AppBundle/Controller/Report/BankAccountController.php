@@ -25,7 +25,7 @@ class BankAccountController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getBankAccountsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getBankAccountsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -182,7 +182,7 @@ class BankAccountController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getBankAccountsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getBankAccountsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
 

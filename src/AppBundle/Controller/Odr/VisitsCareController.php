@@ -24,7 +24,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getVisitsCareState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getVisitsCareState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_visits_care_summary', ['odrId' => $odrId]);
         }
 
@@ -98,7 +98,7 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getVisitsCareState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($odr->getStatusService()->getVisitsCareState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_visits_care', ['odrId' => $odrId]);
         }
 

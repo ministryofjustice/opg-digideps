@@ -30,7 +30,7 @@ class AssetController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getAssetsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getAssetsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
 
@@ -326,7 +326,7 @@ class AssetController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getAssetsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getAssetsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
 

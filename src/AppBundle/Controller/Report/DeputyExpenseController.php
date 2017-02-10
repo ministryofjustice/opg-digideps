@@ -28,7 +28,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getExpensesState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getExpensesState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -168,7 +168,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getExpensesState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getExpensesState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 

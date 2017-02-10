@@ -28,7 +28,7 @@ class GiftController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getGiftsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getGiftsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
         }
 
@@ -168,7 +168,7 @@ class GiftController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getGiftsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getGiftsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
 

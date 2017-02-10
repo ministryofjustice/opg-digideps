@@ -29,7 +29,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getContactsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getContactsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -173,7 +173,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getContactsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getContactsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
         }
 

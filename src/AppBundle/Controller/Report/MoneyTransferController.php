@@ -35,7 +35,7 @@ class MoneyTransferController extends AbstractController
             ]);
         }
 
-        if ((new ReportStatusService($report))->getMoneyTransferState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getMoneyTransferState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -202,7 +202,7 @@ class MoneyTransferController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
-        if ((new ReportStatusService($report))->getMoneyTransferState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getMoneyTransferState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 
