@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Service\ReportStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -590,7 +591,7 @@ class Report
      */
     public function getVisitsCare()
     {
-        return $this->visitsCare;
+        return $this->visitsCare ?: new VisitsCare();
     }
 
     /**
@@ -603,7 +604,7 @@ class Report
 
     public function getAction()
     {
-        return $this->action;
+        return $this->action ?: new Action();
     }
 
     public function setAction(Action $action)
@@ -757,5 +758,13 @@ class Report
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
 
         return $this;
+    }
+
+    /**
+     * @return ReportStatusService
+     */
+    public function getStatusService()
+    {
+        return new ReportStatusService($this);
     }
 }

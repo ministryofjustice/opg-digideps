@@ -23,7 +23,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getOtherInfoState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getOtherInfoState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
@@ -86,8 +86,7 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        //$this->flagSectionStarted($report, self::SECTION_ID);
-        if ((new ReportStatusService($report))->getOtherInfoState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($report->getStatusService()->getOtherInfoState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 

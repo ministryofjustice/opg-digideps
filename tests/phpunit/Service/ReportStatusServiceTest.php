@@ -2,9 +2,11 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
 
@@ -33,8 +35,16 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getContacts'                       => null,
                 'getReasonForNoContacts'            => null,
                 'getReasonForNoDecisions'           => null,
-                'getVisitsCare'                     => null,
-                'getAction'                         => null,
+                'getVisitsCare'                     => m::mock(VisitsCare::class, [
+                    'getDoYouLiveWithClient'     => null,
+                    'getDoesClientHaveACarePlan' => null,
+                    'getWhoIsDoingTheCaring'     => null,
+                    'getDoesClientHaveACarePlan' => null,
+                ]),
+                'getAction'                         => m::mock(Action::class, [
+                    'getDoYouExpectFinancialDecisions' => null,
+                    'getDoYouHaveConcerns'             => null,
+                ]),
                 'getActionMoreInfo'                 => null,
                 'getMentalCapacity'                 => null,
                 'hasMoneyIn'                        => false,
@@ -65,15 +75,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $decision = m::mock(\AppBundle\Entity\Decision::class);
         $mcEmpty = m::mock(\AppBundle\Entity\MentalCapacity::class, [
-            'getHasCapacityChanged' => null,
+            'getHasCapacityChanged'   => null,
             'getMentalAssessmentDate' => null,
         ]);
         $mcPartial = m::mock(\AppBundle\Entity\MentalCapacity::class, [
-            'getHasCapacityChanged' => 'no',
+            'getHasCapacityChanged'   => 'no',
             'getMentalAssessmentDate' => null,
         ]);
         $mcComplete = m::mock(\AppBundle\Entity\MentalCapacity::class, [
-            'getHasCapacityChanged' => 'no',
+            'getHasCapacityChanged'   => 'no',
             'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
 
@@ -124,20 +134,29 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function visitsCareProvider()
     {
-        $visitsCareNotMissingInfo = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
-            'missingInfo' => false,
+        $empty = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient'     => null,
+            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring'     => null,
+            'getDoesClientHaveACarePlan' => null,
         ]);
-
-        $visitsCareMissingInfo = m::mock(\AppBundle\Entity\Report\VisitsCare::class, [
-            'missingInfo' => true,
+        $incomplete = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient'     => 'yes',
+            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring'     => null,
+            'getDoesClientHaveACarePlan' => null,
+        ]);
+        $done = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient'     => 'yes',
+            'getDoesClientHaveACarePlan' => 'yes',
+            'getWhoIsDoingTheCaring'     => 'xxx',
+            'getDoesClientHaveACarePlan' => 'yes',
         ]);
 
         return [
-            // not started
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $visitsCareMissingInfo], StatusService::STATE_INCOMPLETE],
-            // done
-            [['getVisitsCare' => $visitsCareNotMissingInfo], StatusService::STATE_DONE],
+            [['getVisitsCare' => $empty], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $incomplete], StatusService::STATE_INCOMPLETE],
+            [['getVisitsCare' => $done], StatusService::STATE_DONE],
         ];
     }
 
@@ -280,9 +299,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function expensesProvider()
     {
-        $expense = m::mock(Expense::class, [
-            'missingInfo' => false,
-        ]);
+        $expense = m::mock(Expense::class);
 
         return [
             [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
@@ -367,21 +384,25 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function actionsProvider()
     {
-        $actionIncomplete = m::mock(\AppBundle\Entity\Action::class, [
-            'getDoYouHaveConcerns'             => true,
-            'getDoYouExpectFinancialDecisions' => false,
+        $empty = m::mock(Action::class, [
+            'getDoYouExpectFinancialDecisions' => null,
+            'getDoYouHaveConcerns'             => null,
         ]);
 
-        $actionComplete = m::mock(\AppBundle\Entity\Action::class, [
-            'getDoYouHaveConcerns'             => true,
-            'getDoYouExpectFinancialDecisions' => true,
+        $incomplete = m::mock(Action::class, [
+            'getDoYouExpectFinancialDecisions' => 'yes',
+            'getDoYouHaveConcerns'             => null,
+        ]);
+
+        $done = m::mock(Action::class, [
+            'getDoYouExpectFinancialDecisions' => 'yes',
+            'getDoYouHaveConcerns'             => 'no',
         ]);
 
         return [
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getAction' => $actionIncomplete], StatusService::STATE_INCOMPLETE],
-            // done
-            [['getAction' => $actionComplete], StatusService::STATE_DONE],
+            [['getAction' => $empty], StatusService::STATE_NOT_STARTED],
+            [['getAction' => $incomplete], StatusService::STATE_INCOMPLETE],
+            [['getAction' => $done], StatusService::STATE_DONE],
         ];
     }
 

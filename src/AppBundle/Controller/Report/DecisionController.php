@@ -30,7 +30,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getDecisionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getDecisionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -250,7 +250,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ((new ReportStatusService($report))->getDecisionsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getDecisionsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 

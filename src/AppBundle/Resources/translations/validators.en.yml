@@ -198,16 +198,6 @@ moneyTransactionShort:
       maxMessage: The amount must be less than £10,000,000,000
   description:
       notBlank: Please enter a description
-#  date:
-#    notValid: Enter a valid date
-#  form:
-#    category:
-#      notBlank: Please choose one option
-#    id:
-#      notBlank: Please choose one option
-#
-#    description:
-#      notBlank: Please give us some more information about this amount
 
 expenses:
     paidForAnything.notBlank: Choose yes or no

@@ -16,6 +16,11 @@
 
 {% block pageContent %}
 
+    {# Introduction text #}
+    <div class="text">
+        <p>{{ 'summaryPage.moneyOut.weAskAbout' | trans(transOptions) }}</p>
+    </div>
+
     {# Check answers text #}
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>

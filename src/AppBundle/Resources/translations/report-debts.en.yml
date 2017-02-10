@@ -11,7 +11,7 @@ existPage:
   pageSectionTitle: Debts
   form:
     exist:
-      label: Does %client% have any debts ?
+      label: Does %client% have any debts?
     save:
       label: Save and continue
 
@@ -39,7 +39,7 @@ form:
       label: Other
       moreInformations: Give us more information about this debt
     clientHasDebts:
-      label: Does %client% have any debts ?
+      label: Does %client% have any debts?
       hint: ""
 save:
   label: Save

@@ -66,7 +66,6 @@ Feature: Report edit and test tabs
         And I click on "reports, report-2016"
         # assert 102
         And I save the page as "report-102-overview-empty"
-        Then I should not see "(103)" in the "report-title" region
         And I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
         Then I should see the "edit-visits_care" link
@@ -84,7 +83,6 @@ Feature: Report edit and test tabs
         Given I change the report 1 type to "103"
         And I move backward one page
         And I save the page as "report-103-overview-empty"
-        Then I should see "(103)" in the "report-title" region
         And I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
         Then I should see the "edit-visits_care" link

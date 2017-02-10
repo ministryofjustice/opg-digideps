@@ -63,5 +63,5 @@ form:
 
 #form:
 #  paidForAnything:
-#    label: Did you pay for anything for %client% before you were given your court order ?
+#    label: Did you pay for anything for %client% before you were given your court order?
 #  expe Add another expense

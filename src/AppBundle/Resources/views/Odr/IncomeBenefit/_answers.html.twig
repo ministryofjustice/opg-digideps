@@ -19,7 +19,7 @@
             {{ 'form.stateBenefits.label' | trans(transOptions) }}
         </td>
         <td>
-            {% if validator.missing('stateBenefits') %}
+            {% if odr.stateBenefitsPresent | length == 0 %}
                 None
             {% else %}
                 {# display state benefits choices comma separated #}
@@ -66,7 +66,7 @@
     <tbody>
     <tr class="behat-region-receive-state-pension">
 
-        {% if validator.missing('receiveStatePension') %}
+        {% if odr.receiveStatePension is null %}
             <td>
                 <span class="error">
                     {{ 'form.receiveStatePension.label' | trans(transOptions) }}
@@ -88,7 +88,7 @@
         </td>
     </tr>
     <tr class="behat-region-receive-other-regular-income">
-        {% if validator.missing('receiveOtherIncome') %}
+        {% if odr.receiveOtherIncome is null %}
             <td>
                 <span class="error">
                     {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
@@ -138,7 +138,7 @@
     </thead>
     <tbody>
     <tr class="behat-region-compensation-awards">
-        {% if validator.missing('expectCompensationDamages') %}
+        {% if odr.expectCompensationDamages is null %}
             <td>
                     <span class="error">
                         {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
@@ -192,7 +192,7 @@
             {{ 'form.oneOff.label' | trans(transOptions) }}
         </td>
         <td>
-            {% if validator.missing('oneOff') %}
+            {% if odr.getOneOffPresent | length == 0 %}
                 None
             {% else %}
                 {# display one Off choices comma separated #}

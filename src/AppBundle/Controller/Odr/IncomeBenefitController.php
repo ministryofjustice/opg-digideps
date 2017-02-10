@@ -28,7 +28,7 @@ class IncomeBenefitController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getIncomeBenefitsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getIncomeBenefitsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_income_benefits_summary', ['odrId' => $odrId]);
         }
 
@@ -103,14 +103,14 @@ class IncomeBenefitController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
         // not started -> go back to start page
-        if ((new OdrStatusService($odr))->getIncomeBenefitsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
+        if ($odr->getStatusService()->getIncomeBenefitsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step' && $fromPage != 'last-step') {
             return $this->redirectToRoute('odr_income_benefits', ['odrId' => $odrId]);
         }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
-            'validator' => new IncomeBenefitsValidator($odr),
+            'status' => $odr->getStatusService(),
         ];
     }
 }

@@ -28,7 +28,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        if ((new OdrStatusService($odr))->getExpensesState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getExpensesState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_deputy_expenses_summary', ['odrId' => $odrId]);
         }
 
@@ -168,7 +168,7 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getExpensesState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getExpensesState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('odr_deputy_expenses', ['odrId' => $odrId]));
         }
 

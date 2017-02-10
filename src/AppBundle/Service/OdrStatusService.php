@@ -21,14 +21,22 @@ class OdrStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        if (!$this->odr->getVisitsCare()) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
-        if ($this->odr->getVisitsCare()->missingInfo()) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        $visitsCare = $this->odr->getVisitsCare();
+        $answers = [
+            $visitsCare->getDoYouLiveWithClient(),
+            $visitsCare->getDoesClientHaveACarePlan(),
+            $visitsCare->getWhoIsDoingTheCaring(),
+            $visitsCare->getDoesClientHaveACarePlan()
+        ];
 
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 4:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
     }
 
     /**

@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\ActionsValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -26,7 +25,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getActionsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getActionsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_actions_summary', ['odrId' => $odrId]);
         }
 
@@ -89,14 +88,14 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getActionsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($odr->getStatusService()->getActionsState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_actions', ['odrId' => $odrId]);
         }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr'             => $odr,
-            'validator'          => new ActionsValidator($odr),
+            'status'          => $odr->getStatusService()
         ];
     }
 }

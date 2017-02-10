@@ -19,11 +19,7 @@
 <div id="wrapper">
     <div id="content" class="formatted-report content">
         <div id="report-header">Office of the Public Guardian</div>
-        <h1>Deputy report for property and financial decisions
-            {% if report.type == '103' %}
-                (103)
-            {% endif %}
-        </h1>
+        <h1>Deputy report for property and financial decisions</h1>
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}

@@ -151,19 +151,4 @@ class Action
 
         return $this;
     }
-
-    /**
-     * checks if report is missing visits care
-     * information.
-     *
-     * @return bool
-     */
-    public function missingInfo()
-    {
-        if (empty($this->doYouExpectFinancialDecisions) || empty($this->doYouHaveConcerns)) {
-            return true;
-        }
-
-        return false;
-    }
 }

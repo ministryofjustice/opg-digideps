@@ -42,16 +42,6 @@ trait ReportActionTrait
      */
     private $actionPropertyBuy;
 
-    /**
-     * @return bool
-     */
-    public function missingActionInfo()
-    {
-        return empty($this->actionGiveGiftsToClient)
-                || empty($this->actionPropertyMaintenance)
-                || empty($this->actionPropertySellingRent)
-                || empty($this->actionPropertyBuy);
-    }
 
     public function hasAtLeastOneAction()
     {
