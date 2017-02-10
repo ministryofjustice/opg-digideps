@@ -72,7 +72,8 @@ class CasRecController extends RestController
                     $row['Deputy No'],
                     $row['Dep Surname'],
                     $row['Dep Postcode'],
-                    $row['Typeofrep']
+                    $row['Typeofrep'],
+                    $row['Corref']
                 );
 
                 $errors = $validator->validate($casRec);

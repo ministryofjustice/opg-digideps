@@ -32,12 +32,10 @@ class ReportController extends RestController
         $report = new Report();
         $report->setClient($client);
 
-        // set report type based on casrec. If not found, set to 102
         $casRec = $this->getRepository(EntityDir\CasRec::class)->findOneBy(['caseNumber'=>$client->getCaseNumber()]); /* @var $casRec EntityDir\CasRec */
-        $casRecReportType = $casRec ? strtolower($casRec->getTypeOfReport()) : null;
-        if (Report::ENABLE_103 && $casRecReportType === 'opg103') {
-            $report->setType(Report::TYPE_103);
-        } else /*if $casRecReportType === 'opg102' */{
+        if ($casRec instanceof EntityDir\CasRec) {
+            $report->setTypeBasedOnCasrecRecord($casRec);
+        } else {
             $report->setType(Report::TYPE_102);
         }
 

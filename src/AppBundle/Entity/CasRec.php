@@ -86,6 +86,16 @@ class CasRec
      */
     private $typeOfReport;
 
+    /**
+     * @var string A2|C1|HW|L2|L2A|L3|L3G|P2A|PGA|PGC|S1A|S1N|empty
+     *
+     * typeOfReport=OPG103 only have
+     *
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="corref", type="string", length=10, nullable=true)
+     */
+    private $corref;
 
     /**
      * @var array
@@ -109,7 +119,7 @@ class CasRec
      * @param string $deputyPostCode
      * @param string $typeOfReport
      */
-    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport)
+    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport, $corref = null)
     {
         $this->caseNumber = self::normaliseCaseNumber($caseNumber);
         $this->clientLastname = self::normaliseSurname($clientLastname);
@@ -117,6 +127,7 @@ class CasRec
         $this->deputySurname = self::normaliseSurname($deputySurname);
         $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
         $this->typeOfReport = $typeOfReport;
+        $this->corref = $corref;
     }
 
     public static function normaliseSurname($value)
@@ -193,4 +204,14 @@ class CasRec
     {
         return $this->typeOfReport;
     }
+
+    /**
+     * @return string
+     */
+    public function getCorref()
+    {
+        return $this->corref;
+    }
+
+
 }

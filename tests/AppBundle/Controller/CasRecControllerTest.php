@@ -68,7 +68,7 @@ class CasRecControllerTest extends AbstractTestController
     public function testTruncateAddBulkCount()
     {
         // just to check it gets truncated
-        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102');
+        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102', 'L2');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
         $this->fixtures()->clear();
@@ -90,6 +90,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Surname' => 'R2',
                     'Dep Postcode' => 'SW1 aH3',
                     'Typeofrep' => 'OPG102',
+                    'Corref' => 'L2',
                 ],
                 [
                     'Case' => '22',
@@ -98,6 +99,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Surname' => 'H2',
                     'Dep Postcode' => '',
                     'Typeofrep' => 'OPG103',
+                    'Corref' => 'L3',
                 ],
 
             ]),
@@ -117,14 +119,9 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('r2', $record1->getDeputySurname());
         $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
         $this->assertEquals('OPG102', $record1->getTypeOfReport());
+        $this->assertEquals('L2', $record1->getCorref());
 
         $this->assertEquals('22', $record2->getCaseNumber());
-        $this->assertEquals('h1', $record2->getClientLastname());
-        $this->assertEquals('dn2', $record2->getDeputyNo());
-        $this->assertEquals('h2', $record2->getDeputySurname());
-        $this->assertEquals('', $record2->getDeputyPostCode());
-        $this->assertEquals('OPG103', $record2->getTypeOfReport());
-
 
         // check count
         $url = '/casrec/count';
