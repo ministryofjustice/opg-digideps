@@ -6,17 +6,16 @@ startPage:
   pageSectionDescription2: |
     Gifts must be reasonable – you need to make sure they don’t reduce the level of care %client% can afford.
   hiddenText01:
-    summary: More guidance on giving gifts on behalf of the client 
+    summary: More guidance on giving gifts on behalf of the client
     content:
       para01: |
-        Gifts you make on behalf of %client% may include a 21st birthday present, charitable 
-        donations, help with university fees or allowing someone to live 'rent-free' at a 
-        house owned by %client%. 
+        Gifts you make on behalf of Bob may include, for example, a birthday or wedding present
+        or charitable donations.
       para02: |
-        However there are strict limits on gift-giving as a deputy. These rules help to look 
-        after %client%'s best interests. 
+        There are strict limits on gift-giving as a deputy. These rules help to look
+        after %client%'s best interests.
       para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys/opg2-giving-gifts-for-someone-else-web-version/" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed advice on giving gifts as a deputy. 
+        OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys/opg2-giving-gifts-for-someone-else-web-version/" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed advice on giving gifts as a deputy.
   startButton: Start gifts
 
 existPage:
