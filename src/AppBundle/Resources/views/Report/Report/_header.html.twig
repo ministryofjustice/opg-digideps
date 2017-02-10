@@ -3,10 +3,6 @@
 
 <h1 class="heading-xlarge flush--bottom behat-region-report-title">
     {{ report.period }} {{ 'report.header.report' | trans }}
-    {# implement specific key in translation file when the content is defined #}
-    {% if report.type == '103' %}
-        (103)
-    {% endif %}
 </h1>
 <h2 class="heading-large flush--top">{{ report.client.fullname }}</h2>
 
