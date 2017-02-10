@@ -94,9 +94,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function expensesProvider()
     {
-        $expense = m::mock(Expense::class, [
-            'missingInfo' => false,
-        ]);
+        $expense = m::mock(Expense::class);
 
         return [
             [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
@@ -118,9 +116,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function incomeBenefitsProvider()
     {
-        $ib = m::mock(IncomeBenefit::class, [
-            'missingInfo' => false,
-        ]);
+        $ib = m::mock(IncomeBenefit::class);
 
         return [
             [[], StatusService::STATE_NOT_STARTED],

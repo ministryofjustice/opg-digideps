@@ -299,9 +299,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function expensesProvider()
     {
-        $expense = m::mock(Expense::class, [
-            'missingInfo' => false,
-        ]);
+        $expense = m::mock(Expense::class);
 
         return [
             [['getExpenses' => []], StatusService::STATE_NOT_STARTED],

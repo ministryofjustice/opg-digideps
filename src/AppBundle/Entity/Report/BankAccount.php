@@ -348,25 +348,4 @@ class BankAccount
 
         return $this;
     }
-
-    /**
-     * Only for partial account created during migrations
-     * e.g. asset -> bank account.
-     *
-     * @return bool
-     */
-    public function hasMissingInformation()
-    {
-        if (!$this->getAccountNumber() || $this->getIsJointAccount() === null) {
-            return true;
-        }
-
-        if ($this->requiresBankNameAndSortCode()) {
-            if (!$this->getBank() || !$this->getSortCode()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
