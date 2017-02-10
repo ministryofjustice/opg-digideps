@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
+use AppBundle\Service\OdrStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -522,5 +523,13 @@ class Odr
         }
 
         return $ret;
+    }
+
+    /**
+     * @return OdrStatusService
+     */
+    public function getStatusService()
+    {
+        return new OdrStatusService($this);
     }
 }

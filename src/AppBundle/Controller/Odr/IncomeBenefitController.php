@@ -110,7 +110,7 @@ class IncomeBenefitController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
-            'validator' => new IncomeBenefitsValidator($odr),
+            'status' => $odr->getStatusService()->getIncomeBenefitsState(),
         ];
     }
 }
