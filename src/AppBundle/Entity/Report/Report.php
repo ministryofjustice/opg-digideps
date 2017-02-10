@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
@@ -31,7 +32,7 @@ class Report
     const TYPE_104 = '104';
 
     // to enable 103 permanently, search for this constant and enable code
-    const ENABLE_103 = false;
+    const ENABLE_103 = true;
 
     /**
      * Reports with total amount of assets
@@ -327,6 +328,22 @@ class Report
     {
         $this->type = $type;
     }
+
+
+    /**
+     * @param string $type
+     */
+    public function setTypeBasedOnCasrecRecord(CasRec $casRec)
+    {
+        $casRecReportType = $casRec ? strtolower($casRec->getTypeOfReport()) : null;
+        $casRecCorref = $casRec ? strtolower($casRec->getCorref()) : null;
+        if (Report::ENABLE_103 && $casRecReportType === 'opg103' && in_array($casRecCorref, ['l3', 'l3g'])) {
+            $this->setType(Report::TYPE_103);
+        } else /*if $casRecReportType === 'opg102' */{
+            $this->setType(Report::TYPE_102);
+        }
+    }
+
 
     /**
      * Get id.

@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Entity\Report;
 
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount;
@@ -137,4 +138,37 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
+
+    public function setTypeBasedOnCasrecRecordPRovider()
+    {
+        return [
+            [m::mock(CasRec::class, ['getTypeOfReport'=>null, 'getCorref'=>null]), Report::TYPE_102],
+            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>null]), Report::TYPE_102],
+            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>null]), Report::TYPE_102],
+            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L2']), Report::TYPE_102],
+
+            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L3']), Report::TYPE_103],
+            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L3G']), Report::TYPE_103],
+        ];
+    }
+
+
+    /**
+     * @dataProvider  setTypeBasedOnCasrecRecordPRovider
+     */
+    public function testsetTypeBasedOnCasrecRecord($casRec, $expectedType)
+    {
+        $this->report->setTypeBasedOnCasrecRecord($casRec);
+
+        // override if not enabled
+        if (!Report::ENABLE_103) {
+            $expectedType = Report::TYPE_102;
+        }
+
+        $this->report->setTypeBasedOnCasrecRecord($casRec);
+        $this->assertEquals($expectedType, $this->report->getType());
+    }
+
+
+
 }
