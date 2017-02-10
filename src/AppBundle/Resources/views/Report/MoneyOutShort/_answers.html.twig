@@ -79,7 +79,7 @@
 {% if report.moneyTransactionsShortOut | length > 0 %}
     <div class="grid-row">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List expenses over £1000</h2>
+            <h2 class="heading-medium flush--ends">List of expenses over £1000</h2>
         </div>
         <div class="column-half text--right">
             <a href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
