@@ -16,9 +16,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.password.first,'password', { 'labelClass': 'required' } ) }}
+    {{ form_input(form.password.first,'password' ) }}
 
-    {{ form_input(form.password.second,'password_confirm', { 'labelClass': 'required' } ) }}
+    {{ form_input(form.password.second,'password_confirm' ) }}
 
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 

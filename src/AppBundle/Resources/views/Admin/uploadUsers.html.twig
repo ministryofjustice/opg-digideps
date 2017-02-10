@@ -17,7 +17,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.file, 'csv_upload.form.file', { 'labelClass': 'required' }) }}
+    {{ form_input(form.file, 'csv_upload.form.file') }}
 
     {{ form_submit(form.upload, 'csv_upload.form.upload') }}
 

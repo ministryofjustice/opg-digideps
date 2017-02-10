@@ -20,8 +20,8 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom'}}) }}
 
-    {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
-    {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
+    {{ form_input(form.email,'email') }}
+    {{ form_input(form.password,'password' ) }}
     {{ form_submit(form.login,'signin', {'buttonClass': 'behat-link-login'}) }}
 
     {{ form_end(form) }}
