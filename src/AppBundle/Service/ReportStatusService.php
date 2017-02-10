@@ -50,14 +50,22 @@ class ReportStatusService
     /** @return string */
     public function getVisitsCareState()
     {
-        if (!$this->report->getVisitsCare()) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
-        if ($this->report->getVisitsCare()->missingInfo()) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        $visitsCare = $this->report->getVisitsCare();
+        $answers = [
+            $visitsCare->getDoYouLiveWithClient(),
+            $visitsCare->getDoesClientHaveACarePlan(),
+            $visitsCare->getWhoIsDoingTheCaring(),
+            $visitsCare->getDoesClientHaveACarePlan()
+        ];
 
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 4:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
     }
 
     /** @return string */
@@ -187,15 +195,19 @@ class ReportStatusService
     public function getActionsState()
     {
         $action = $this->report->getAction();
-        if (empty($action)) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
+        $answers = [
+            $action->getDoYouHaveConcerns(),
+            $action->getDoYouExpectFinancialDecisions()
+        ];
 
-        if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 2:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
-
-        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
     /**

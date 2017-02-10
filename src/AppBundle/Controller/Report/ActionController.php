@@ -97,14 +97,10 @@ class ActionController extends AbstractController
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }
 
-        if (!$report->getAction()) { //allow validation with answers all skipped
-            $report->setAction(new EntityDir\Report\Action());
-        }
-
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report'             => $report,
-            'validator'          => new ActionsValidator($report->getAction()),
+            'status'             => $report->getStatusService()
         ];
     }
 }

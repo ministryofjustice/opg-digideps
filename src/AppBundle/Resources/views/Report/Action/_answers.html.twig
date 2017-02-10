@@ -15,7 +15,7 @@
     <tbody>
         {# step 1 #}
         <tr class="behat-region-expect-financial-decision">
-            {% if validator.missing('doYouExpectFinancialDecisions') %}
+            {% if report.action.doYouExpectFinancialDecisions is null %}
                 <td>
                     <span class="error">
                         {{ 'form.doYouExpectFinancialDecisions.label' | trans(transOptions) }}
@@ -48,7 +48,7 @@
 
         {# step 2 #}
         <tr class="behat-region-have-concerns">
-            {% if validator.missing('doYouHaveConcerns') %}
+            {% if report.action.doYouHaveConcerns is null %}
                 <td>
                     <span class="error">
                         {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}

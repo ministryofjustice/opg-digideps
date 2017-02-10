@@ -21,14 +21,14 @@
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Missing questions alerts #}
-    {% if status.incomeBenefitsState.state == 'incomplete' and comingFromLastStep %}
+    {% if status.incomeBenefitsState.state != 'done' and comingFromLastStep %}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')
         } %}
     {% endif %}
 
-    {% if status.incomeBenefitsState.state == 'incomplete' and not comingFromLastStep%}
+    {% if status.incomeBenefitsState.state != 'done' and not comingFromLastStep%}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')

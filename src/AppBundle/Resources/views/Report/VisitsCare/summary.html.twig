@@ -26,14 +26,14 @@
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Missing questions alerts #}
-    {% if report.visitsCare.missingInfo() and comingFromLastStep%}
+    {% if status.visitsCareState.state != 'done' and comingFromLastStep%}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')
         } %}
     {% endif %}
 
-    {% if report.visitsCare.missingInfo() and not comingFromLastStep%}
+    {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
         {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
             alertType: 'notice',
             message: 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')
