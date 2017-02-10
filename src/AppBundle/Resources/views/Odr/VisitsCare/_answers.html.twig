@@ -15,7 +15,7 @@
     <tbody>
         {# step 1 #}
         <tr class="behat-region-live-with-client">
-            {% if odr.doYouLiveWithClient is null %}
+            {% if odr.visitsCare.doYouLiveWithClient is null %}
                 <td>
                     <span class="error">
                         {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
@@ -48,7 +48,7 @@
 
         {# step 2 #}
         <tr class="behat-region-does-client-receive-paid-care">
-            {% if odr.doesClientReceivePaidCare is null %}
+            {% if odr.visitsCare.doesClientReceivePaidCare is null %}
                 <td>
                     <span class="error">
                         {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
@@ -85,7 +85,7 @@
 
         {# step 3 #}
         <tr class="behat-region-who-is-doing-caring">
-            {% if odr.whoIsDoingTheCaring is null %}
+            {% if odr.visitsCare.whoIsDoingTheCaring is null %}
                 <td>
                     <span class="error">
                         {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
@@ -109,7 +109,7 @@
 
         {# step 4 #}
         <tr class="behat-region-client-has-care-plan">
-            {% if odr.doesClientHaveACarePlan is null %}
+            {% if odr.visitsCare.doesClientHaveACarePlan is null %}
                 <td>
                     <span class="error">
                         {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
@@ -146,7 +146,7 @@
 
         {# step 5 #}
         <tr class="behat-region-plan-move-new-residence">
-            {% if odr.planMoveNewResidence is null %}
+            {% if odr.visitsCare.planMoveNewResidence is null %}
                 <td>
                     <span class="error">
                         {{ 'form.planMoveNewResidence.label' | trans(transOptions) }}
