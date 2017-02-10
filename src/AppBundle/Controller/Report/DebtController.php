@@ -21,7 +21,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getDebtsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getDebtsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -106,7 +106,7 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ((new ReportStatusService($report))->getDebtsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatusService()->getDebtsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
 

@@ -278,19 +278,4 @@ class VisitsCare
 
         return true;
     }
-
-    /**
-     * checks if report is missing visits care
-     * information.
-     *
-     * @return bool
-     */
-    public function missingInfo()
-    {
-        if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
-            return true;
-        }
-
-        return false;
-    }
 }

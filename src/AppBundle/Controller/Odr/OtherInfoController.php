@@ -23,7 +23,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getOtherInfoState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getOtherInfoState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_other_info_summary', ['odrId' => $odrId]);
         }
 
@@ -86,8 +86,7 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        //$this->flagSectionStarted($odr, self::SECTION_ID);
-        if ((new OdrStatusService($odr))->getOtherInfoState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($odr->getStatusService()->getOtherInfoState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_other_info', ['odrId' => $odrId]);
         }
 

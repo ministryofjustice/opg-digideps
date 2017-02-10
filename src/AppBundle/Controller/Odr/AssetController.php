@@ -26,7 +26,7 @@ class AssetController extends AbstractController
     public function startAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getAssetsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getAssetsState()['state'] != OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirectToRoute('odr_assets_summary', ['odrId' => $odrId]);
         }
 
@@ -320,7 +320,7 @@ class AssetController extends AbstractController
     public function summaryAction($odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        if ((new OdrStatusService($odr))->getAssetsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
+        if ($odr->getStatusService()->getAssetsState()['state'] == OdrStatusService::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('odr_assets', ['odrId' => $odrId]));
         }
 
