@@ -255,7 +255,7 @@ form:
       accountant-fees:
         label: Accountant's fees
       professional-fees-eg-solicitor-accountant:
-        label: Professional fees, eg solicitor or accountant fees
+        label: Professional fees – for example, solicitor or accountant fees
         moreInformations: For each fee, please enter the date, the amount and what it was for
       your-deputy-expenses:
         label: Your deputy expenses
