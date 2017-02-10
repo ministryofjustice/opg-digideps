@@ -39,21 +39,21 @@
                             </ul>
                         </div>
                     </details>
-
                 </div>
             </div>
 
             <div class="grid-row push-half--top">
                 <div class="column-half">
                     <h2 class="heading-medium flush--top">{{ 'ialready' |trans }}</h2>
-                    <p>{{ 'signtoaccess' | trans }}</p>
                 </div>
                 <div class="column-half">
-                    <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+                    <p>
+                        <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+                    </p>
                 </div>
             </div>
 
-            <div class="text">
+            <div class="text push--top">
 
                 <details>
                     <summary>
@@ -94,15 +94,6 @@
 
                 <details>
                     <summary>
-                        <span class="summary">{{ 'afterISubmit.summary' |trans }}</span>
-                    </summary>
-                    <div class="panel panel-border-narrow">
-                        <p>{{ 'afterISubmit.para01' |trans }}</p>
-                    </div>
-                </details>
-
-                <details>
-                    <summary>
                         <span class="summary">{{ 'hwDeputies.summary' |trans }}</span>
                     </summary>
                     <div class="panel panel-border-narrow">
@@ -112,13 +103,13 @@
 
                 <details>
                     <summary>
-                        <span class="summary">{{ 'feeRemissions.summary' |trans }}</span>
+                        <span class="summary">{{ 'afterISubmit.summary' |trans }}</span>
                     </summary>
                     <div class="panel panel-border-narrow">
-                        <p>{{ 'feeRemissions.para01' |trans }}</p>
-                        <p>{{ 'feeRemissions.para02' |trans|raw }}</p>
+                        <p>{{ 'afterISubmit.para01' |trans }}</p>
                     </div>
                 </details>
+
             </div>
 
         </div>
