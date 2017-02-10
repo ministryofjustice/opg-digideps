@@ -23,7 +23,12 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     private function getStatusServiceWithReportMocked(array $odrMethods)
     {
         $odr = m::mock(Odr::class, $odrMethods + [
-                'getVisitsCare' => [],
+                'getVisitsCare' => m::mock(VisitsCare::class, [
+                    'getDoYouLiveWithClient' => null,
+                    'getDoesClientHaveACarePlan' => null,
+                    'getWhoIsDoingTheCaring' => null,
+                    'getDoesClientHaveACarePlan' => null,
+                ]),
                 'getExpenses' => [],
                 'getPaidForAnything' => null,
                 'getStateBenefits' => [],
@@ -50,18 +55,30 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function visitsCareProvider()
     {
-        $visitsCareNotMissinginfo = m::mock(VisitsCare::class, [
-            'missingInfo' => false,
+        $empty = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient' => null,
+            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring' => null,
+            'getDoesClientHaveACarePlan' => null,
         ]);
-        $visitsCareMissinginfo = m::mock(VisitsCare::class, [
-            'missingInfo' => true,
+        $incomplete = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient' => 'yes',
+            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring' => null,
+            'getDoesClientHaveACarePlan' => null,
+        ]);
+        $done = m::mock(VisitsCare::class, [
+            'getDoYouLiveWithClient' => 'yes',
+            'getDoesClientHaveACarePlan' => 'yes',
+            'getWhoIsDoingTheCaring' => 'xxx',
+            'getDoesClientHaveACarePlan' => 'yes',
         ]);
 
         return [
             // not started
-            [['getVisitsCare' => null], StatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $visitsCareMissinginfo], StatusService::STATE_INCOMPLETE],
-            [['getVisitsCare' => $visitsCareNotMissinginfo], StatusService::STATE_DONE],
+            [['getVisitsCare' => $empty], StatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $incomplete], StatusService::STATE_INCOMPLETE],
+            [['getVisitsCare' => $done], StatusService::STATE_DONE],
         ];
     }
 
