@@ -3,7 +3,8 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     pageSectionDescription1: |
-      Tell us about how you have managed %client%'s money during this reporting period. We need this information to understand the client’s financial situation.
+      Tell us about how you have managed %client%'s money during this reporting period.
+      We need this information to understand the client’s financial situation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
@@ -101,7 +102,7 @@ summaryPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
-    pageSectionDescription: |
+    weAskAbout: |
       In this section we asked you to tell us about how you have managed
       %client%'s money during this reporting period
     addButton: Add an item of income over £1,000
