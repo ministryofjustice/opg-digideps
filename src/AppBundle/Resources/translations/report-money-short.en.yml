@@ -35,7 +35,7 @@ existPage:
     pageSectionTitle: Money out
   form:
     moneyTransactionsShortInExist:
-      label: Have there been any items of income over £1,000?
+      label: Have there been any one-off income payments over £1,000?
     moneyTransactionsShortOutExist:
       label: Have there been any one-off items of expense over £1,000?
     save:
@@ -82,7 +82,7 @@ addAnotherPage:
     pageSectionTitle: Add another item
     form:
       addAnother:
-        label: The item of income has been saved. Would you like to add another item of income over £1000 now?
+        label: The item of income has been saved. Would you like to add another item of income over £1,000 now?
         hint: If you prefer, you can come back to this section later to add more items of income
       save:
          label: Continue
@@ -92,7 +92,7 @@ addAnotherPage:
     pageSectionTitle: Add another expense
     form:
       addAnother:
-        label: The expense has been saved. Would you like to add another expense over £1000 now?
+        label: The expense has been saved. Would you like to add another expense over £1,000 now?
         hint: If you prefer, you can come back to this section later to add more expenses
       save:
         label: Continue
