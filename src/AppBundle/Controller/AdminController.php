@@ -255,6 +255,7 @@ class AdminController extends AbstractController
                         'Dep Surname',
                         'Dep Postcode',
                         'Typeofrep',
+                        'Corref',
                     ])
                     ->getData();
 
