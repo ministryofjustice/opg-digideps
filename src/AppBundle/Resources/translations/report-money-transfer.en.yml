@@ -38,8 +38,6 @@ summaryPage:
   weAskAbout: In this section, we ask you about money you’ve transferred between %client%’s accounts.
   addButton: Add a transfer
   edit: Edit
-#  relationship: Their relationship to %client%
-#  reasonForContact: Reason for contact
 
 errorPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
@@ -55,4 +53,4 @@ form:
   accountTo:
     label: Which account did you transfer money to?
   amount:
-    label: How much money was transferred from %fromAccountName% to %toAccountName% ?
+    label: How much money was transferred from %fromAccountName% to %toAccountName%?

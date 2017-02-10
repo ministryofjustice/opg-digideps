@@ -35,7 +35,7 @@ existPage:
     pageSectionTitle: Money out
   form:
     moneyTransactionsShortInExist:
-      label: Have there been any items of income over £1,000?
+      label: Have there been any one-off income payments over £1,000?
     moneyTransactionsShortOutExist:
       label: Have there been any one-off items of expense over £1,000?
     save:
@@ -82,7 +82,7 @@ addAnotherPage:
     pageSectionTitle: Add another item
     form:
       addAnother:
-        label: The item of income has been saved. Would you like to add another item of income over £1000 now?
+        label: The item of income has been saved. Would you like to add another item of income over £1,000 now?
         hint: If you prefer, you can come back to this section later to add more items of income
       save:
          label: Continue
@@ -92,7 +92,7 @@ addAnotherPage:
     pageSectionTitle: Add another expense
     form:
       addAnother:
-        label: The expense has been saved. Would you like to add another expense over £1000 now?
+        label: The expense has been saved. Would you like to add another expense over £1,000 now?
         hint: If you prefer, you can come back to this section later to add more expenses
       save:
         label: Continue
@@ -112,7 +112,7 @@ summaryPage:
     pageSectionTitle: Money out
     weAskAbout: |
       In this section we asked you to tell us about how you have managed
-      Sally's money during this reporting period.
+      %client%'s money during this reporting period.
     addButton: Add an expense over £1,000
 
 
@@ -126,21 +126,21 @@ form:
   categoriesEntries:
       # in
       state_pension_and_benefit.label: State pension and benefits
-      bequests.label: Bequests, eg inheritance, gifts received
+      bequests.label: Bequests – for example, inheritance, gifts received
       income_from_invesments_dividends_rental.label: Income from investments, dividends, property rental
       sale_of_investments_property_assets.label: Sale of investments, property or assets
       salary_or_wages.label: Salary or wages
       compensations_and_damages_awards.label: Compensations and damages awards
       personal_pension.label: Personal pension
       # out
-      accomodation_costs.label:  Accommodation costs, eg rent, mortgage, service charges
+      accomodation_costs.label:  Accommodation costs – for example, rent, mortgage, service charges
       care_fees.label: Care fees or local authority charges for care
       holidays.label: Holidays and trips
-      households_bills.label: Household bills, eg water, gas, electricity, phone, council tax
+      households_bills.label: Household bills – for example, water, gas, electricity, phone, council tax
       personal_allowance.label: %client%'s personal allowance
-      professional_fees.label: Professional fees, eg solicitor or accountant fees
-      new_investments.label: New investments, eg buying shares, new bonds
-      travel_costs.label: Travel costs, eg bus, train, taxi fares
+      professional_fees.label: Professional fees – for example, solicitor or accountant fees
+      new_investments.label: New investments – for example, buying shares, new bonds
+      travel_costs.label: Travel costs – for example, bus, train, taxi fares
 
   transactionsIn:
       description:
@@ -148,7 +148,7 @@ form:
       amount:
         label: Amount
       date:
-         label: What date did this money come in ? (optional)
+         label: What date did this money come in? (optional)
          hint: (DD/MM/YYYY)
       addAnother:
         label: Add another expense
@@ -161,7 +161,7 @@ form:
         amount:
           label: Amount
         date:
-           label: What date did this money go out ? (optional)
+           label: What date did this money go out? (optional)
            hint: (DD/MM/YYYY)
         addAnother:
           label: 12345345646

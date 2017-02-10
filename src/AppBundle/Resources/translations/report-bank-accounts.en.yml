@@ -31,7 +31,7 @@ addAnotherPage:
 
 summaryPage:
   weAskAbout: |
-    In this section, we ask you about %client%'s bank accounts, building society accounts, 
+    In this section, we ask you about %client%'s bank accounts, building society accounts,
     savings accounts and ISAs.
   totalBalance: Total balance on %endDate%: £%amount%
   htmlTitle: "Deputy report - Accounts | GOV.UK"
@@ -53,7 +53,7 @@ form:
   closingBalance:
     label: How much was in the account on %endDate%?
   isJointAccount:
-    label: Is this a joint account ?
+    label: Is this a joint account?
   isClosed:
       label: You currently have £0 in this account on %endDate%.  Have you closed this account?
   save:

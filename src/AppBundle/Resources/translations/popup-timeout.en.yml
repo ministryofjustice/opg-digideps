@@ -1,7 +1,5 @@
 component:
   title: "Session timeout"
-# %inactiveFor% = number of minutes the user has been inactive for
-# %loggedOutIn% = number of minutes the user will be logged out within
   firstLine: |
         You have been inactive for %inactiveFor% minutes and will be automatically
         signed out in %loggedOutIn% minutes.
