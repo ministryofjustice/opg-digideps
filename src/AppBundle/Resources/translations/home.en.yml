@@ -25,9 +25,6 @@ helpfulToKnow:
     supervise your deputyship.
   para02: You can also use your report to raise concerns and ask for support.
   para03: |
-    We first ask you to complete a new deputy report, which records the client's
-    circumstances at the time of your court order.
-  para04: |
     You can then use this service to record your deputy decisions as you go along,
     for a report you send OPG at the end of every year of your deputyship.
 
@@ -41,35 +38,46 @@ provideDetails:
   listItem05: any big decisions you have made or are planning to make for the client
   listItem06: friends, family and professionals you've contacted on behalf of the client
 
-hiddenText01:
+moreThanOne:
   summary: The client has more than one deputy
-  content:
-    para01: |
-      You'll only need to submit one deputy report for each reporting period. This applies
-      if you make decisions together (usually called 'jointly') or separately and together
-      (usually called 'jointly and severally').
+  para01: |
+    You'll only need to submit one deputy report for each reporting period. This applies
+    if you make decisions together (usually called 'jointly') or separately and together
+    (usually called 'jointly and severally').
 
-hiddenText02:
+afterISubmit:
   summary: What happens after I submit my report?
-  content:
-    para01: |
-      We'll review the report, and may still need to contact you for more information – by
-      phone, email, in writing or by arranging a visit.
+  para01: |
+    We'll review the report, and may still need to contact you for more information – by
+    phone, email, in writing or by arranging a visit.
 
-hiddenText03:
+hwDeputies:
   summary: Health and welfare deputies
-  content:
-    para01: |
-      We are currently building a digital service for health and welfare deputies. In the
-      meantime, please <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537794/OPG104-Deputy-report-form-health-and-welfare-decisions.pdf" target="_blank">
-      download and print</a> your annual report form.
+  para01: |
+    We are currently building a digital service for health and welfare deputies. In the
+    meantime, please <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537794/OPG104-Deputy-report-form-health-and-welfare-decisions.pdf" target="_blank">
+    download and print</a> your annual report form.
 
-hiddenText04:
+feeRemissions:
   summary: Deputy fees remission or exemption
-  content:
-    para01: You pay OPG's fees for supervising your deputyship from the client's funds.
-    para02: |
-      Clients with a lower income may qualify for a <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">
-      remission or exemption</a>.
+  para01: You pay OPG's fees for supervising your deputyship from the client's funds.
+  para02: |
+    Clients with a lower income may qualify for a <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">
+    remission or exemption</a>.
+
+relatedLinks:
+  heading: "Deputies: make decisions for someone who lacks capacity"
+  link01Text: "Deputy guidance: how to carry out your duties"
+  link01Src: https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties
+  link02Text: "Deputy fees: remission or exemption"
+  link02Src: https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption
+  link03Text: "Deputy guidance: dealing with banks"
+  link03Src: https://www.gov.uk/government/publications/deputy-and-attorney-guidance-dealing-with-banks
+  link04Text: "Giving gifts: a guide for deputies"
+  link04Src: https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys
+  link05Text: Mental Capacity Act Code of Practice
+  link05Src: https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf
+  link06Text: Contact OPG
+  link06Src: https://www.gov.uk/government/organisations/office-of-the-public-guardian
 
 signin: Sign in
