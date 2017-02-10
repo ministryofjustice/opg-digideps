@@ -8,104 +8,148 @@
 
 {% block pageContent %}
 
-    <div class="text">
-        <p class="lede">{{ 'intro.lede' |trans }}</p>
-        <p>{{ 'intro.para01' |trans }}</p>
-        <p>{{ 'intro.para02' |trans }}</p>
-        <p>{{ 'intro.para03' |trans }}</p>   
-    </div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="text">
+                <p class="lede">{{ 'intro.lede' |trans }}</p>
+                <p>{{ 'intro.para01' |trans }}</p>
+                <p>{{ 'intro.para02' |trans }}</p>
+                <p>{{ 'intro.para03' |trans }}</p>
+            </div>
 
-    <div class="grid-row push--top">
-        <div class="column-half">
-            <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
-        </div>
-        <div class="column-half">
-
-            <p>
-                <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
-            </p>
-
-            <details class="push--bottom">
-                <summary>
-                    <span class="summary">{{ 'whatyouneed' |trans }}</span>
-                </summary>
-                <div class="panel panel-border-narrow">
-                    <ul class="list list-bullet">
-                        <li>{{ 'whatyouneedListItem1' | trans }}</li>
-                        <li>{{ 'whatyouneedListItem2' | trans }}</li>
-                        <li>{{ 'whatyouneedListItem3' | trans }}</li>
-                    </ul>
+            <div class="grid-row push--top">
+                <div class="column-half">
+                    <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
                 </div>
-            </details>
+                <div class="column-half">
+
+                    <p>
+                        <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+                    </p>
+
+                    <details class="push--bottom">
+                        <summary>
+                            <span class="summary">{{ 'whatyouneed' |trans }}</span>
+                        </summary>
+                        <div class="panel panel-border-narrow">
+                            <ul class="list list-bullet">
+                                <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+
+            <div class="grid-row push-half--top">
+                <div class="column-half">
+                    <h2 class="heading-medium flush--top">{{ 'ialready' |trans }}</h2>
+                    <p>{{ 'signtoaccess' | trans }}</p>
+                </div>
+                <div class="column-half">
+                    <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+                </div>
+            </div>
+
+            <div class="text">
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'helpfulToKnow.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'helpfulToKnow.para01' |trans }}</p>
+                        <p>{{ 'helpfulToKnow.para02' |trans }}</p>
+                        <p>{{ 'helpfulToKnow.para03' |trans }}</p>
+                        <p>{{ 'helpfulToKnow.para04' |trans }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'provideDetails.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'provideDetails.para01' |trans }}</p>
+                        <ul class="list list-bullet">
+                            <li>{{ 'provideDetails.listItem01' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem02' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem03' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem04' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem05' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem06' |trans }}</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'hiddenText01.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'hiddenText01.content.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'hiddenText02.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'hiddenText02.content.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'hiddenText03.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'hiddenText03.content.para01' |trans|raw }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'hiddenText04.summary' |trans }}</span>
+                    </summary>
+                    <div class="panel panel-border-narrow">
+                        <p>{{ 'hiddenText04.content.para01' |trans }}</p>
+                        <p>{{ 'hiddenText04.content.para02' |trans|raw }}</p>
+                    </div>
+                </details>
+            </div>
 
         </div>
-    </div>
-
-    <div class="grid-row push-half--top">
-        <div class="column-half">
-            <h2 class="heading-medium flush--top">{{ 'ialready' |trans }}</h2>
-            <p>{{ 'signtoaccess' | trans }}</p>
+        <div class="column-third">
+            <aside class="govuk-related-items" role="complementary">
+              <h2>Deputies: make decisions for someone who lacks capacity</h2>
+              <nav role="navigation">
+                <ul>
+                    <li>
+                      <a href="#">Deputy guidance: how to carry out your duties</a>
+                    </li>
+                    <li>
+                        <a href="#">Deputy fees: remission or exemption</a>
+                    </li>
+                    <li>
+                        <a href="#">Deputy guidance: dealing with banks</a>
+                    </li>
+                    <li>
+                        <a href="#">Giving gifts: a guide for deputies</a>
+                    </li>
+                    <li>
+                        <a href="#">Mental Capacity Act Code of Practice</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact OPG</a>
+                    </li>
+                </ul>
+              </nav>
+          </aside>
         </div>
-        <div class="column-half">
-            <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
-        </div>
-    </div>
-
-    <div class="text">
-        
-        <h2 class="heading-medium">{{ 'helpfulToKnow.heading' |trans }}</h2>
-        <p>{{ 'helpfulToKnow.para01' |trans }}</p>
-        <p>{{ 'helpfulToKnow.para02' |trans }}</p>
-        <p>{{ 'helpfulToKnow.para03' |trans }}</p>
-        <p>{{ 'helpfulToKnow.para04' |trans }}</p>
-
-        <h2 class="heading-medium">{{ 'provideDetails.heading' |trans }}</h2>
-        <ul class="list list-bullet">
-            <li>{{ 'provideDetails.listItem01' |trans }}</li>
-            <li>{{ 'provideDetails.listItem02' |trans }}</li>
-            <li>{{ 'provideDetails.listItem03' |trans }}</li>
-            <li>{{ 'provideDetails.listItem04' |trans }}</li>
-            <li>{{ 'provideDetails.listItem05' |trans }}</li>
-            <li>{{ 'provideDetails.listItem06' |trans }}</li>
-        </ul>
-
-        <details>
-            <summary>
-                <span class="summary">{{ 'hiddenText01.summary' |trans }}</span>
-            </summary>
-            <div class="panel panel-border-narrow">
-                <p>{{ 'hiddenText01.content.para01' |trans }}</p>
-            </div>
-        </details>
-
-        <details>
-            <summary>
-                <span class="summary">{{ 'hiddenText02.summary' |trans }}</span>
-            </summary>
-            <div class="panel panel-border-narrow">
-                <p>{{ 'hiddenText02.content.para01' |trans }}</p>
-            </div>
-        </details>
-
-        <details>
-            <summary>
-                <span class="summary">{{ 'hiddenText03.summary' |trans }}</span>
-            </summary>
-            <div class="panel panel-border-narrow">
-                <p>{{ 'hiddenText03.content.para01' |trans|raw }}</p>
-            </div>
-        </details>
-
-        <details>
-            <summary>
-                <span class="summary">{{ 'hiddenText04.summary' |trans }}</span>
-            </summary>
-            <div class="panel panel-border-narrow">
-                <p>{{ 'hiddenText04.content.para01' |trans }}</p>
-                <p>{{ 'hiddenText04.content.para02' |trans|raw }}</p>
-            </div>
-        </details>
-
     </div>
 
 {% endblock %}
