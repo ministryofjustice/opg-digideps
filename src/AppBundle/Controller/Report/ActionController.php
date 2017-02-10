@@ -93,7 +93,6 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        //$this->flagSectionStarted($report, self::SECTION_ID);
         if ((new ReportStatusService($report))->getActionsState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }

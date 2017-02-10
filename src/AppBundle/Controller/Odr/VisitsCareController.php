@@ -98,19 +98,14 @@ class VisitsCareController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        //$this->flagSectionStarted($odr, self::SECTION_ID);
         if ((new OdrStatusService($odr))->getVisitsCareState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_visits_care', ['odrId' => $odrId]);
-        }
-
-        if (!$odr->getVisitsCare()) { //allow validation with answers all skipped
-            $odr->setVisitsCare(new EntityDir\Odr\VisitsCare());
         }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
-            'status'=>$odr->getStatusService()->getVisitsCareState()
+            'status'=>$odr->getStatusService()
         ];
     }
 }

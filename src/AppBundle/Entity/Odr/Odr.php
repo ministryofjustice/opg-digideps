@@ -205,7 +205,7 @@ class Odr
      */
     public function getVisitsCare()
     {
-        return $this->visitsCare;
+        return $this->visitsCare ?: new VisitsCare();
     }
 
     /**

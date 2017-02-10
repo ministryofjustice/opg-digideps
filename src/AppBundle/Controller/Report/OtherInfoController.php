@@ -86,7 +86,6 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        //$this->flagSectionStarted($report, self::SECTION_ID);
         if ((new ReportStatusService($report))->getOtherInfoState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }

@@ -86,7 +86,6 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        //$this->flagSectionStarted($odr, self::SECTION_ID);
         if ((new OdrStatusService($odr))->getOtherInfoState()['state'] == OdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('odr_other_info', ['odrId' => $odrId]);
         }

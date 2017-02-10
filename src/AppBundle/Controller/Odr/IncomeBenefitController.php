@@ -110,7 +110,7 @@ class IncomeBenefitController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'odr' => $odr,
-            'status' => $odr->getStatusService()->getIncomeBenefitsState(),
+            'status' => $odr->getStatusService(),
         ];
     }
 }
