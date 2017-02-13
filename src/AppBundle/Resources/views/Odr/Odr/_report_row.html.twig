@@ -29,9 +29,11 @@
         <div class="card-actions">
             <a href="{{ link }}" class="button behat-link-report-start" >{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
         </div>
-        <div>
+        {% if reportActive %}
+            <div>
             <a href="{{ path('reports', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
-        </div>
+            </div>
+        {% endif %}
 
     </div>
 {% else %}
