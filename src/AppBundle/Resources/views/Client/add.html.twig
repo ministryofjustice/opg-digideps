@@ -29,7 +29,7 @@
     {{ form_select(form.country, 'country') }}
     {{ form_input(form.phone, 'phone') }}
 
-    {{ form_input(form.caseNumber, 'caseNumber') }}
+    {{ form_input(form.caseNumber, 'caseNumber', { 'labelRaw': true }) }}
     {{ form_known_date(form.courtDate, 'courtDate') }}
 
     {{ form_submit(form.save,'saveAndContinue') }}

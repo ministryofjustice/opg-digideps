@@ -31,7 +31,7 @@
         {{ form_input(form.postcode,'postcode', { 'labelClass': 'required' }) }}
         {{ form_input(form.clientFirstname,'clientFirstname', { 'labelClass': 'required' }) }}
         {{ form_input(form.clientLastname,'clientLastname', { 'labelClass': 'required' }) }}
-        {{ form_input(form.caseNumber,'caseNumber', { 'labelClass': 'required' }) }}
+        {{ form_input(form.caseNumber,'caseNumber', { 'labelRaw': true }) }}
 
         {{ form_submit(form.save,'save') }}
 
