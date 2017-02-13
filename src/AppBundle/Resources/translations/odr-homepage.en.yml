@@ -18,6 +18,7 @@ odr:
     buttonLabel: Continue
 
 report:
+  editReportingPeriod: "Edit reporting period"
   due: "Due: "
   notAvailable:
     status: NOT AVAILABLE
