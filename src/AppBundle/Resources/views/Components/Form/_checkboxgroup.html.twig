@@ -3,10 +3,12 @@
 {% endif %}
 
     <fieldset class="{{ fieldSetClass }}">
-        <legend class="{{ legendClass }} text">{{ legendText }}</legend>
-        {% if hintText is not null %}
-            <p class="form-hint text">{{ hintText }}</p>
-        {% endif %}
+        <legend class="{{ legendClass }} text push-half--bottom">
+            {{ legendText }}
+            {% if hintText is not null %}
+                <span class="form-hint text">{{ hintText }}</span>
+            {% endif %}
+        </legend>
         {{  form_errors(element) }}
         {% for key,choiceElement in element %}
 

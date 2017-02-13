@@ -17,8 +17,8 @@
                     {{ legendText }}
                 {% endif %}
           {% endif %}
+            <span class="form-hint">{{ hintText }}</span>
         </legend>
-        <p class="form-hint">{{ hintText }}</p>
         {{ form_errors(element) }}
         {# day: show element or disable field depending on "showDay" setting #}
         {% if showDay == 'true' %}
