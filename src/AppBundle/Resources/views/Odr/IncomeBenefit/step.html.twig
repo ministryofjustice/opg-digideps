@@ -30,10 +30,10 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-        <p class="text">
+        <p class="bold-small text">
             {{ 'form.stateBenefits.label' | trans(transOptions) }}
         </p>
-        <p class="form-hint">
+        <p class="text">
             {{ 'form.stateBenefits.hint' | trans(transOptions) }}
         </p>
         {% include 'AppBundle:Odr/IncomeBenefit:_checkboxes_list.html.twig' with {
@@ -69,7 +69,8 @@
                 <div id="receive-other-income-details" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.receiveOtherIncomeDetails, 'form.receiveOtherIncomeDetails', {
                         'labelClass': 'required',
-                        'labelParameters': transOptions
+                        'labelParameters': transOptions,
+                        'labelRaw': true
                     }) }}
                 </div>
             </div>
@@ -94,7 +95,8 @@
                 <div id="expect-compensation-damages-details" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.expectCompensationDamagesDetails, 'form.expectCompensationDamagesDetails', {
                         'labelClass': 'required',
-                        'labelParameters': transOptions
+                        'labelParameters': transOptions,
+                        'labelRaw': true
                     }) }}
                 </div>
             </div>
@@ -103,10 +105,10 @@
 
 
     {% if step == 5 %}
-        <p class="text">
+        <p class="bold-small text">
             {{ 'form.oneOff.label' | trans(transOptions) }}
         </p>
-        <p class="form-hint">
+        <p class="text">
             {{ 'form.oneOff.hint' | trans(transOptions) }}
         </p>
         {% include 'AppBundle:Odr/IncomeBenefit:_checkboxes_list.html.twig' with {

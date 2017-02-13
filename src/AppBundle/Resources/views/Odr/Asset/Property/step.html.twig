@@ -81,7 +81,8 @@
     {% if step == 5 %}
         {{ form_input(form.value, 'form.property.value', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number js-format-currency'
+            'inputClass' : 'form-control__number js-format-currency',
+            'labelRaw': true
         } ) }}
     {% endif %}
 

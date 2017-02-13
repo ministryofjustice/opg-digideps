@@ -16,9 +16,10 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}</h3>
-
-    <p class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans({'%client%': odr.client.firstname}, translationDomain) }}</p>
+    <h3 class="heading-small push-half--bottom">
+        {{ 'editPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}
+        <span class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans({'%client%': odr.client.firstname}, translationDomain) }}</span>
+    </h3>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
@@ -29,7 +30,9 @@
                 {{ form_input(debt.amount, 'amount', {
                     'inputPrefix' : '£',
                     'inputClass' : 'form-control__number js-more-info js-format-currency',
-                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans
+                    'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
+                    'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname}),
+                    'labelRaw': true
                 }) }}
 
                 {% if debt.moreDetails is defined %}
@@ -38,7 +41,8 @@
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'inputClass': ' transaction-more-details',
-                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname})
+                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname}),
+                                'labelRaw': true
                             }) }}
                         </div>
                     </div>
