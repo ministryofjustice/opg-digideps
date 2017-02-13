@@ -12,10 +12,7 @@
 
 {% block notification %}
     <div class="push--top">
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'info',
-            message: 'serviceNotification' | trans({}, 'common')
-        } %}
+        {{ macros.notification('info', 'serviceNotification' | trans({}, 'common')) }}
     </div>
 {% endblock %}
 
@@ -38,7 +35,7 @@
                         Submitted:
                         <span class="bold-small">{{ odr.submitDate | date("j F Y") }}</span>
 
- 
+
                         <p class="flush--bottom">
                             <a href="{{ path('odr_pdf', {'odrId': odr.id}) }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'odr-submitted') }}</a>
                             <a href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'status.viewReportOnline' | trans({}, 'odr-submitted') }}</a>
@@ -183,10 +180,7 @@
     </ul>
 
     {% if not odrStatus.isReadyToSubmit  %}
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'notice',
-            message: 'cantSubmitUntilComplete' | trans()
-        } %}
+        {{ macros.notification('notice', 'cantSubmitUntilComplete' | trans()) }}
     {% endif %}
 
 {% endblock %}

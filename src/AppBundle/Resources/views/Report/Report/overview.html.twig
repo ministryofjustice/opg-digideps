@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 
@@ -12,10 +14,7 @@
 
 {% block notification %}
     <div class="push--top">
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'info',
-            message: 'serviceNotification' | trans({}, 'common')
-        } %}
+        {{ macros.notification('info', 'serviceNotification' | trans({}, 'common')) }}
     </div>
 {% endblock %}
 
@@ -84,11 +83,7 @@
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans() }}</h2>
                 {% if report.isDue() and not reportStatus.balanceMatches %}
-                    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-                        alertType: 'notice',
-                        message: 'balance.notBalancedWarning' | trans({
-                            '%detailsLink%': path('balance', {'reportId': report.id}) })
-                    } %}
+                    {{ macros.notification('notice', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -228,20 +223,14 @@
 
     {# report due but NOT ready to submit #}
     {% if report.isDue and not reportStatus.isReadyToSubmit %}
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'notice',
-            message: 'submitWhenReady' | trans()
-        } %}
+        {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
     {% endif %}
 
     {# report is NOT due #}
     {% if not report.isDue %}
         {% set endDate = report.getEndDate() | date(" d F Y")  %}
         {% set transOptions = {'%date%': endDate} %}
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'notice',
-            message: 'warningNotDue' | trans(transOptions)
-        } %}
+        {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
     {% endif %}
 
 {% endblock %}

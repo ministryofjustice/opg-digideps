@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:moj_template.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set adLoggedAsDeputy = app.session.get('_adId') %}
 {% set adName = app.session.get('_adFirstname') ~ ' ' ~ app.session.get('_adLastname') %}
 
@@ -98,10 +100,7 @@
     {% block notification %}
         {% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="push--top">
-                {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-                    alertType: 'success',
-                    message: flashMessage
-                } %}
+                {{ macros.notification('success', flashMessage) }}
             </div>
         {% endfor %}
     {% endblock %}

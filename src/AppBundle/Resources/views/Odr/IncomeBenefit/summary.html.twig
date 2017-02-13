@@ -22,17 +22,11 @@
 
     {# Missing questions alerts #}
     {% if status.incomeBenefitsState.state != 'done' and comingFromLastStep %}
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'notice',
-            message: 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')
-        } %}
+        {{ macros.notification('notice', 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')) }}
     {% endif %}
 
-    {% if status.incomeBenefitsState.state != 'done' and not comingFromLastStep%}
-        {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-            alertType: 'notice',
-            message: 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')
-        } %}
+    {% if status.incomeBenefitsState.state != 'done' and not comingFromLastStep %}
+        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
     {% endif %}
 
     {# Return to overview link #}
