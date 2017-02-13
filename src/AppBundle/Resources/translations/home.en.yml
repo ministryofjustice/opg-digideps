@@ -16,16 +16,16 @@ whatyouneedListItem2: your email address
 whatyouneedListItem3: your client's last name
 ialready: I already have a deputy account
 
-helpfulToKnow:
+whyWeNeed:
   summary: Why we need the deputy report
   para01: |
-    It's OPG's responsibility to look after the client's best interests (the client
-    is the person whose affairs you are looking after). Your deputy reports help us
-    supervise your deputyship.
-  para02: You can also use your report to raise concerns and ask for support.
-  para03: |
-    You can then use this service to record your deputy decisions as you go along,
-    for a report you send OPG at the end of every year of your deputyship.
+    It's OPG's responsibility to look after the client's best interests (the client is the person
+    whose affairs you are looking after). Your deputy reports help us supervise your deputyship.
+  para02: |
+    Use this service to record the assets, income and outgoings of the person you’re making
+    decisions for, as well as the important decisions you make. These can be added to the deputy
+    report any time throughout the year.
+  para03: You can also use your report to raise concerns and ask for support.
 
 provideDetails:
   summary: What you'll need for the report
