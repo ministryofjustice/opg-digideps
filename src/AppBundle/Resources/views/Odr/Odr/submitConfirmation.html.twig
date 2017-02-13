@@ -34,7 +34,7 @@
     <div class="text">
         <p>{{ 'giveUsFeedback.body1' | trans }}</p>
         <p>{{ 'giveUsFeedback.body2' | trans({
-                '%linkStart%': '<a href="https://www.surveymonkey.co.uk/r/H2ZH57Y">',
+                '%linkStart%': '<a href="' ~ feedbackUrl ~ '" target="_blank">',
                 '%linkEnd%': '</a>'
             }) | raw }}</p>
     </div>
