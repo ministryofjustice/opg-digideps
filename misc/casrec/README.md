@@ -2,7 +2,7 @@
 
 ## Instructions
  
-  * Upload this file into admin area ()"upload" link)
+  * Upload this file into admin area ("upload" link)
   * Go to /register and insert the data matching the information in this file
   
         Your first name = any value, not used for matching
@@ -37,7 +37,7 @@
         Client's last name = S99
         Case number = TEST0099
         
-The report type create will depend on the value of Corref and Typeofrep columns.
+The report type create will depend on the value of `Corref` and `Typeofrep` columns.
 
 Records 1-50 are set to create 102 reports.
 
