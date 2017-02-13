@@ -49,7 +49,7 @@ class ReportController extends AbstractController
     public function indexAction(Request $request, $type, $reportId = null)
     {
         $user = $this->getUserWithData(['user', 'client', 'report']);
-        if ($user->isOdrEnabled()) {
+        if ($user->isOdrEnabled() && empty($reportId)) {
             return $this->redirectToRoute('odr_index');
         }
 
