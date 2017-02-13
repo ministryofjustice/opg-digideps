@@ -174,8 +174,6 @@ form {
 }
 
 .form-label {
-    margin-bottom: 5px;
-
     @include media(mobile) {
         width: auto;
     }
@@ -203,12 +201,6 @@ form {
 
 legend .form-label {
     width: 85%;
-}
-
-.form-hint {
-    margin-top: 0;
-    width: 85%;
-    margin-bottom: 5px;
 }
 
 ul.form-hint {
