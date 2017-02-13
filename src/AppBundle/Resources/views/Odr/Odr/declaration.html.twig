@@ -42,10 +42,7 @@
 
     {{ form_end(form) }}
 
-    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-        alertType: 'notice',
-        message: 'unableToEditAfterSubmission' | trans()
-    } %}
+    {{ macros.notification('notice', 'unableToEditAfterSubmission' | trans()) }}
 
     <script type="text/javascript">
         $(document).ready(function() {

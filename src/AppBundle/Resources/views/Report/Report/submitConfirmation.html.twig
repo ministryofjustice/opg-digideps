@@ -8,10 +8,7 @@
 
 {% block pageContent %}
 
-    {% include 'AppBundle:Components/Alerts:_notification.html.twig' with {
-        alertType: 'success',
-        message: 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()})
-    } %}
+    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()})) }}
 
     <div class="text push--top">
         <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
