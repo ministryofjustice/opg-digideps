@@ -15,6 +15,7 @@
             {% set description = items[key].description is defined ?  items[key].description : null %}
             {% set disabled = items[key].disabled is defined and items[key].disabled %}
             {% set labelDataTarget = items[key].dataTarget is defined ? items[key].dataTarget : null %}
+            {% set hiddenForm = items[key].question is defined ? items[key].question : null %}
 
             {% if description is not null %}
                 <p class="form-hint description">{{ description | raw }}</p>
@@ -30,6 +31,13 @@
                 {{ form_widget(choiceElement, {'attr': attr}) }}
                 {{ choiceElement.vars.label | trans({}, translationDomain)}}
             </label>
+            {% if labelDataTarget %}
+                <div id="{{ labelDataTarget }}" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.hiddenForm, 'form.{{ hiddenForm }}', {
+                        'labelParameters': { '%client%': report.client.firstname }
+                    }) }}
+                </div>
+            {% endif %}
         {% endfor %}
     </fieldset>
 

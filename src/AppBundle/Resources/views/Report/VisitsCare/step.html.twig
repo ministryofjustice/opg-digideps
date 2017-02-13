@@ -27,17 +27,20 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': report.client.firstname}, translationDomain),
                     'items': [
-                    {},
-                    {'dataTarget': 'how-often-contact-client-wrapper' }
+                        {},
+                        {
+                            'dataTarget': 'how-often-contact-client-wrapper',
+                            'question': 'howOftenDoYouContactClient'
+                         }
                     ]
                 }) }}
 
-                <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
+                {# <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
                         'labelClass': 'required',
                         'labelParameters': { '%client%': report.client.firstname }
                     }) }}
-                </div>
+                </div> #}
             </div>
         </div>
     {% endif %}
