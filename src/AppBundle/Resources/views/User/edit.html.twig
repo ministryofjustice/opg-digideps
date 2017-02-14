@@ -15,12 +15,12 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
+    {{ form_input(form.firstname,'firstname') }}
 
-    {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+    {{ form_input(form.lastname,'lastname') }}
 
     {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
-        {{ form_input(form.address1,'address1', { 'labelClass': 'required' }) }}
+        {{ form_input(form.address1,'address1') }}
 
         {{ form_input(form.address2,'address2') }}
 
@@ -28,11 +28,11 @@
 
         {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
 
-        {{ form_select(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
+        {{ form_select(form.addressCountry,'addressCountry') }}
 
-        {{ form_input(form.phoneMain,'phoneMain', { 'labelClass': 'required' }) }}
+        {{ form_input(form.phoneMain,'phoneMain') }}
 
-        {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
+        {{ form_input(form.phoneAlternative,'phoneAlternative') }}
     {% endif %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}

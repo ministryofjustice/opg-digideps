@@ -13,15 +13,13 @@
         <span class="status status-corner {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
         <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
         <div class="card-body">
-            <p>
-                {% if reportActive %}
+            {% if reportActive %}
+                <p>
                     {{ reportActive.startDate | date("j F Y") }} -
                     {{ reportActive.endDate | date("j F Y") }}
-                {% endif %}
-            </p>
-            <p class="text-secondary soft-half--top">
-                &nbsp;
-            </p>
+                </p>
+                <a href="{{ path('reports', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
+            {% endif %}
         </div>
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
@@ -29,6 +27,7 @@
         <div class="card-actions">
             <a href="{{ link }}" class="button behat-link-report-start" >{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
         </div>
+
     </div>
 {% else %}
     {#

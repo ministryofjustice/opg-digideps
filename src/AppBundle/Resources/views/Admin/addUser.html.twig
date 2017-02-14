@@ -12,11 +12,11 @@
     </h1>
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.email,'addUserForm.email', { 'labelClass': 'required' }) }}
-    {{ form_input(form.firstname,'addUserForm.firstname', { 'labelClass': 'required' }) }}
-    {{ form_input(form.lastname,'addUserForm.lastname', { 'labelClass': 'required' }) }}
-    {{ form_select(form.roleId,'addUserForm.roleId', { 'labelClass': 'required' }) }}
-    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled', { 'labelClass': 'required' }) }}
+    {{ form_input(form.email,'addUserForm.email') }}
+    {{ form_input(form.firstname,'addUserForm.firstname') }}
+    {{ form_input(form.lastname,'addUserForm.lastname') }}
+    {{ form_select(form.roleId,'addUserForm.roleId') }}
+    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
 
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 

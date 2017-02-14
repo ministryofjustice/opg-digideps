@@ -1,0 +1,14 @@
+// ==========================================================================
+// RELATED
+// Govuk related resources (aside)
+
+.govuk-related-items {
+    padding-top: 5px;
+    border-top: 10px solid $link-colour;
+
+    .list {
+        li {
+            margin-bottom: .75em;
+        }
+    }
+}

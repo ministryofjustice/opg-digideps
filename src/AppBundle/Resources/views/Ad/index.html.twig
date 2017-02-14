@@ -139,10 +139,10 @@
         it'll be immediately possible to login on the deputy area and complete the deputy reports on behalf of the user
     </p>
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-    {{ form_input(form.firstname,'addUserForm.firstname', { 'labelClass': 'required' }) }}
-    {{ form_input(form.lastname,'addUserForm.lastname', { 'labelClass': 'required' }) }}
-    {{ form_select(form.roleId,'addUserForm.roleId', { 'labelClass': 'required' }) }}
-    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled', { 'labelClass': 'required' }) }}
+    {{ form_input(form.firstname,'addUserForm.firstname') }}
+    {{ form_input(form.lastname,'addUserForm.lastname') }}
+    {{ form_select(form.roleId,'addUserForm.roleId') }}
+    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
     <p class="text">Other user details, client details, NDR and annual reports will be editable from the deputy area</p>
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
     {{ form_end(form) }}

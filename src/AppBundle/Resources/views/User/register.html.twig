@@ -24,13 +24,14 @@
     {% set formClass = 'registration-form' %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
-        {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
-        {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
-        {{ form_input(form.email.first,'email.first', { 'labelClass': 'required' }) }}
-        {{ form_input(form.email.second,'email.second', { 'labelClass': 'required' }) }}
-        {{ form_input(form.postcode,'postcode', { 'labelClass': 'required' }) }}
-        {{ form_input(form.clientFirstname,'clientFirstname', { 'labelClass': 'required' }) }}
-        {{ form_input(form.clientLastname,'clientLastname', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.firstname,'firstname') }}
+        {{ form_input(form.lastname,'lastname') }}
+        {{ form_input(form.email.first,'email.first') }}
+        {{ form_input(form.email.second,'email.second') }}
+        {{ form_input(form.postcode,'postcode', {}) }}
+        {{ form_input(form.clientFirstname,'clientFirstname') }}
+        {{ form_input(form.clientLastname,'clientLastname') }}
         {{ form_input(form.caseNumber,'caseNumber', { 'labelRaw': true }) }}
 
         {{ form_submit(form.save,'save') }}
