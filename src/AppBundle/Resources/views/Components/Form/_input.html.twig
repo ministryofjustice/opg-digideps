@@ -3,21 +3,21 @@
     {% if labelRaw is defined and labelRaw %}
       <label class="form-label {% if element.vars.required %} required {% endif %} text" for="{{ element.vars.id }}">
         {{ labelText | raw }}
+        {% if (hintText is defined) and (hintText is not empty) %}
+            <span class="form-hint text">
+              {{ hintText }}
+            </span>
+            {% if hintListArray is defined %}
+                <ul class="form-hint list-bullet">
+                    {% for hintList in hintListArray %}
+                        <li>{{ hintList }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
       </label>
     {% else %}
       {{ form_label(element, labelText, {'label_attr': {'class': 'form-label text ' ~ labelClass | default('') }}) }}
-    {% endif %}
-    {% if (hintText is defined) and (hintText is not empty) %}
-        <p class="form-hint text">
-          {{ hintText }}
-        </p>
-        {% if hintListArray is defined %}
-            <ul class="form-hint list-bullet">
-                {% for hintList in hintListArray %}
-                    <li>{{ hintList }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
     {% endif %}
 
     {{ form_errors(element) }}

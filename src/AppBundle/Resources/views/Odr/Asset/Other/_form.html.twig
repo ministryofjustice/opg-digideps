@@ -2,7 +2,8 @@
 
 {{ form_input(form.value, 'form.value', {
     'inputPrefix' : '£',
-    'inputClass' : 'form-control__number js-format-currency'
+    'inputClass' : 'form-control__number js-format-currency',
+    'labelRaw': true
 } ) }}
 {{ form_input(form.description, 'form.description') }}
 {{ form_known_date(form.valuationDate, 'form.valuationDate') }}

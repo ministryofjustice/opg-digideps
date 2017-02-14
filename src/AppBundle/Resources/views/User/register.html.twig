@@ -24,6 +24,7 @@
     {% set formClass = 'registration-form' %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
         {{ form_input(form.firstname,'firstname') }}
         {{ form_input(form.lastname,'lastname') }}
         {{ form_input(form.email.first,'email.first') }}
@@ -31,7 +32,7 @@
         {{ form_input(form.postcode,'postcode', {}) }}
         {{ form_input(form.clientFirstname,'clientFirstname') }}
         {{ form_input(form.clientLastname,'clientLastname') }}
-        {{ form_input(form.caseNumber,'caseNumber') }}
+        {{ form_input(form.caseNumber,'caseNumber', { 'labelRaw': true }) }}
 
         {{ form_submit(form.save,'save') }}
 
