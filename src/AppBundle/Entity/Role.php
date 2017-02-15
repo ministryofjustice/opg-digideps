@@ -14,7 +14,6 @@ class Role implements RoleInterface
     const ADMIN = 'ROLE_ADMIN';
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const AD = 'ROLE_AD';
-    const SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     /**
      * Added via digideps:fixtures command.
@@ -27,7 +26,6 @@ class Role implements RoleInterface
         'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
         'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
         self::AD => ['Assisted Digital', 5],
-        self::SUPER_ADMIN => ['Super Admin', 6],
     ];
 
     /**

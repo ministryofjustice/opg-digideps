@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Mockery as m;
 
@@ -119,6 +120,8 @@ class AuthControllerTest extends AbstractTestController
                 'mustSucceed' => true,
                 'AuthToken' => $authToken,
             ])['data'];
+
+        $this->assertEquals(Role::LAY_DEPUTY, $data['role_name']);
         $this->assertEquals('deputy@example.org', $data['email']);
 
         return $authToken;

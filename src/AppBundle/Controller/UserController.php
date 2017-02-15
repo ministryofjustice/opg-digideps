@@ -143,6 +143,15 @@ class UserController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
+        $requestedUserIsLogged = $this->getUser()->getId() == $id;
+        
+        // only allow admins/AD to access any user, otherwise the user can only see himself
+        if (!$this->isGranted(EntityDir\Role::ADMIN)
+            && !$this->isGranted(EntityDir\Role::AD)
+            && !$requestedUserIsLogged) {
+            throw $this->createAccessDeniedException("Not authorised to see other user's data");
+        }
+
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
@@ -273,12 +282,6 @@ class UserController extends RestController
         }
         $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
-        //TODO consider an AD key from admin area
-        /*$isAd = $this->getUser()->getRole();
-        if (!$isAd && !$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole().' user role not allowed from this client.', 403);
-        }*/
-
         $user->recreateRegistrationToken();
 
         $this->getEntityManager()->flush($user);
@@ -301,7 +304,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         return $user;

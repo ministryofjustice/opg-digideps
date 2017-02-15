@@ -81,11 +81,3 @@ security:
             provider: user_provider_redis
             stateless:   true
             
-#    access_control:
-#        - { path: ^/audit-log, roles: [ROLE_ADMIN, IS_AUTHENTICATED_FULLY] }
-#    role_hierarchy:
-#        ROLE_LAY_DEPUTY: []
-#        ROLE_ADMIN: [ ]
-
-        
-        

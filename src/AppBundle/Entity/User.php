@@ -115,6 +115,9 @@ class User implements UserInterface
      * @var string ROLE_
      * see roles in Role class
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"user", "role"})
+     *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
     private $roleName;
@@ -514,10 +517,6 @@ class User implements UserInterface
     /**
      * Get role.
      *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("role")
-     * @JMS\Groups({"role"})
-     *
      * @return Role
      */
     public function getRole()
@@ -543,7 +542,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return [$this->getRoleName()];
+        return [$this->roleName];
     }
 
     public function eraseCredentials()
