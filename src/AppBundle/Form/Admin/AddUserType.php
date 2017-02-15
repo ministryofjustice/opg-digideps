@@ -14,7 +14,7 @@ class AddUserType extends AbstractType
     private $options;
 
     /**
-     * @param array $options keys: array roleChoices, array roleIdEmptyValue
+     * @param array $options keys: array roleChoices, array roleNameEmptyValue
      */
     public function __construct(array $options)
     {
@@ -23,20 +23,20 @@ class AddUserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $roleIdOptions = [
+        $roleNameOptions = [
             'choices' => $this->options['roleChoices'],
-            'empty_value' => $this->options['roleIdEmptyValue'],
+            'empty_value' => $this->options['roleNameEmptyValue'],
         ];
 
-        if (!empty($this->options['roleIdSetTo'])) {
-            $roleIdOptions['data'] = $this->options['roleIdSetTo'];
-            $roleIdOptions['disabled'] = 'disabled';
+        if (!empty($this->options['roleNameSetTo'])) {
+            $roleNameOptions['data'] = $this->options['roleNameSetTo'];
+            $roleNameOptions['disabled'] = 'disabled';
         }
 
         $builder->add('email', 'text')
             ->add('firstname', 'text')
             ->add('lastname', 'text')
-            ->add('roleId', 'choice', $roleIdOptions)
+            ->add('roleName', 'choice', $roleNameOptions)
             ->add('odrEnabled', 'checkbox')
             ->add('save', 'submit');
     }

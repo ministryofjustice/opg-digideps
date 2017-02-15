@@ -21,7 +21,7 @@
     {{ form_input(form.email,'addUserForm.email') }}
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
-    {{ form_select(form.roleId,'addUserForm.roleId') }}
+    {{ form_select(form.roleName,'addUserForm.roleName') }}
     {% if reportsCount > 0 %}
         Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.
     {% endif %}

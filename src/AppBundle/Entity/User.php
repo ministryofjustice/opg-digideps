@@ -93,13 +93,13 @@ class User implements AdvancedUserInterface
     private $role;
 
     /**
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
      *
-     * @var int
+     * @var string
      */
-    private $roleId;
+    private $roleName;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Client>")
@@ -531,18 +531,18 @@ class User implements AdvancedUserInterface
         return  $diffSeconds < $expiresSeconds;
     }
 
-    public function getRoleId()
+    public function getRoleName()
     {
-        if (empty($this->roleId)) {
-            $this->roleId = $this->role['id'];
-        }
+//        if (empty($this->roleName)) {
+//            $this->roleName = $this->role['id'];
+//        }
 
-        return $this->roleId;
+        return $this->roleName;
     }
 
-    public function setRoleId($roleId)
+    public function setRoleName($roleName)
     {
-        $this->roleId = $roleId;
+        $this->roleName = $roleName;
 
         return $this;
     }

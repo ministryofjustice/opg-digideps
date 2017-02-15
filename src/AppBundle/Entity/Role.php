@@ -17,17 +17,30 @@ class Role
     const AD = 'ROLE_AD';
     const SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
-
-    // keep aligned with backendd
-    public static $availableRoles = [
-        1 => 'OPG Admin',
-        5 => 'Assisted Digital',
-        2 => 'Lay Deputy',
-        // 3 => "Professional Deputy",
-        // 4 => "Local Authority Deputy",
-
-        //6 => "Super Admin",
+    /**
+     * Added via digideps:fixtures command.
+     *
+     * @JMS\Exclude
+     */
+    public static $allowedRoles = [
+        self::ADMIN => 'OPG Admin',
+        self::LAY_DEPUTY => 'Lay Deputy',
+        'ROLE_PROFESSIONAL_DEPUTY' => 'Professional Deputy',
+        'ROLE_LOCAL_AUTHORITY_DEPUTY' => 'Local Authority Deputy',
+        self::AD => 'Assisted Digital',
+        self::SUPER_ADMIN => 'Super Admin',
     ];
+
+//    // keep aligned with backendd
+//    public static $availableRoles = [
+//        1 => 'OPG Admin',
+//        5 => 'Assisted Digital',
+//        2 => 'Lay Deputy',
+//        // 3 => "Professional Deputy",
+//        // 4 => "Local Authority Deputy",
+//
+//        //6 => "Super Admin",
+//    ];
 
     /**
      * @JMS\Type("integer")

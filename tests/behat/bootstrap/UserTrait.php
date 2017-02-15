@@ -2,12 +2,17 @@
 
 namespace DigidepsBehat;
 
+use AppBundle\Entity\Role;
 use Behat\Gherkin\Node\TableNode;
 
 trait UserTrait
 {
     // added here for simplicity
-    private static $roleNameToRoleId = ['admin' => 1, 'lay deputy' => 2, 'ad' => 5];
+    private static $roleStringToRoleName = [
+        'admin' => Role::ADMIN,
+        'lay deputy' => Role::LAY_DEPUTY,
+        'ad' => Role::AD
+    ];
 
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
@@ -20,8 +25,8 @@ trait UserTrait
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
         $this->fillField('admin_lastname', $lastname);
-        $roleId = self::$roleNameToRoleId[strtolower($role)];
-        $this->fillField('admin_roleId', $roleId);
+        $roleName = self::$roleStringToRoleName[strtolower($role)];
+        $this->fillField('admin_roleName', $roleName);
         switch ($odrType) {
             case 'ODR-enabled':
                 $this->checkOption('admin_odrEnabled');

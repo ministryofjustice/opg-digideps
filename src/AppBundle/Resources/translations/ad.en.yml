@@ -8,7 +8,7 @@ addUserForm:
   lastname:
     label: Last name
     hint: ''
-  roleId:
+  roleName:
     label: Role
     hint: ''
     defaultOption: Please select ...

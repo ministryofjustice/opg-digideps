@@ -49,14 +49,14 @@ class AdminController extends AbstractController
      */
     public function addUserAction(Request $request)
     {
-        $availableRoles = EntityDir\Role::$availableRoles;
+        $availableRoles = EntityDir\Role::$allowedRoles;
         // non-admin cannot add admin users
         if (!$this->isGranted(EntityDir\Role::ADMIN)) {
-            unset($availableRoles[1]);
+            unset($availableRoles[EntityDir\Role::ADMIN]);
         }
         $form = $this->createForm(new FormDir\Admin\AddUserType([
             'roleChoices'      => $availableRoles,
-            'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
+            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
         if ($request->isMethod('POST')) {
@@ -64,7 +64,7 @@ class AdminController extends AbstractController
             if ($form->isValid()) {
                 // add user
                 try {
-                    if (!$this->isGranted(EntityDir\Role::ADMIN) && $form->getData()->getRoleId() == 1) {
+                    if (!$this->isGranted(EntityDir\Role::ADMIN) && $form->getData()->getRoleName() == EntityDir\Role::ADMIN) {
                         throw new \RuntimeException('Cannot add admin from non-admin user');
                     }
                     $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
@@ -120,8 +120,8 @@ class AdminController extends AbstractController
 
         $form = $this->createForm(new FormDir\Admin\AddUserType([
             'roleChoices'      => EntityDir\Role::$availableRoles,
-            'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
-            'roleIdDisabled'   => $user->getId() == $this->getUser()->getId(),
+            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
+            'roleNameDisabled'   => $user->getId() == $this->getUser()->getId(),
         ]), $user);
 
         $clients = $user->getClients();
