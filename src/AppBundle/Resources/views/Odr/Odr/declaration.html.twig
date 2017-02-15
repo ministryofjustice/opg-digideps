@@ -27,13 +27,20 @@
 
     {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
 
-    {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
-        'fieldSetClass' : 'radio-agreed-behalf-deputy',
-        'legendClass' : 'form-label'
-    }) }}
+    <div class="form-group {% if not form.agreedBehalfDeputy.vars.valid %}error{% endif %}">
+        {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
+            'useFormGroup': false,
+            'legendClass' : 'form-label-bold',
+            'items': [
+                {},
+                {},
+                {'dataTarget': 'not-signing-details-wrapper' }
+            ]
+        }) }}
 
-    <div id="agreed-behalf-deputy-explanation-section">
-        {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required'}) }}
+        <div id="not-signing-details-wrapper" class="panel panel-border-narrow js-hidden">
+            {{ form_input(form.agreedBehalfDeputyExplanation, 'agreedBehalfDeputyExplanation') }}
+        </div>
     </div>
 
     <div class="form-group button-bar">
@@ -43,16 +50,5 @@
     {{ form_end(form) }}
 
     {{ macros.notification('notice', 'unableToEditAfterSubmission' | trans()) }}
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            new opg.RadioHide({
-                radio: '.radio-agreed-behalf-deputy input[type=radio]',
-                content: '#agreed-behalf-deputy-explanation-section',
-                hideByDefault: true,
-                showWithValue: 'more_deputies_not_behalf'
-            });
-        });
-    </script>
 
 {% endblock %}
