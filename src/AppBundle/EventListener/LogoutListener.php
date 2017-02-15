@@ -35,7 +35,9 @@ class LogoutListener implements LogoutSuccessHandlerInterface
 
     public function onLogoutSuccess(Request $request)
     {
-        $this->restClient->logout();
+        if ($this->security->getToken()) {
+            $this->restClient->logout();
+        }
 
         $request->getSession()->set('loggedOutFrom', 'logoutPage');
 
