@@ -171,7 +171,7 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     public static function progressBarRegistrationProvider()
     {
         $user = m::mock(User::class);
-        $user->shouldReceive('getRole')->andReturn(['ROLE_ADMIN']);
+        $user->shouldReceive('getRoleName')->andReturn('ROLE_ADMIN');
 
         return [
             [],
@@ -184,7 +184,7 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     public function progressBarRegistrationTest()
     {
         $user = m::mock(User::class);
-        $user->shouldReceive('getRole')->andReturn(['role'=>'ROLE_ADMIN']);
+        $user->shouldReceive('getRoleName')->andReturn('ROLE_ADMIN');
         $f = $this->object->getFunctions()['progress_bar_registration']->getCallable();
 
         $this->markTestIncomplete('need to mock environemnt to test');
