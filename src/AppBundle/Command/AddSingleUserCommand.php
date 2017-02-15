@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,6 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
+ * @deprecated use fixtures command instead. if removed,
+ * move login into subclass FixturesCommand
+ *
  * @codeCoverageIgnore
  */
 class AddSingleUserCommand extends ContainerAwareCommand
@@ -23,6 +27,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->addOption('firstname', null, InputOption::VALUE_REQUIRED)
             ->addOption('lastname', null, InputOption::VALUE_REQUIRED)
             ->addOption('role', null, InputOption::VALUE_REQUIRED)
+            ->addOption('roleName', null, InputOption::VALUE_REQUIRED)
             ->addOption('password', null, InputOption::VALUE_REQUIRED)
             ->addOption('enable-odr', null, InputOption::VALUE_NONE)
         ;
@@ -54,7 +59,6 @@ class AddSingleUserCommand extends ContainerAwareCommand
     {
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
-        $roleRepo = $em->getRepository('AppBundle\Entity\Role');
         $email = $data['email'];
 
         $output->write("User $email: ");
@@ -65,21 +69,24 @@ class AddSingleUserCommand extends ContainerAwareCommand
             return;
         }
 
-        $role = $roleRepo->find($data['roleId']);
-        if (!$role) {
-            $output->writeln("role {$data['roleId']} not found");
-
-            return;
-        }
         $user = (new User())
             ->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
             ->setEmail($email)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setRole($role)
             ->setOdrEnabled(!empty($data['odrEnabled']))
         ;
+
+        // role
+        if (!empty($data['roleId'])) { //deprecated
+            $user->setRoleName(User::roleIdToName($data['roleId']));
+        } else if (!empty($data['roleName'])) {
+            $user->setRoleName($data['roleName']);
+        } else {
+            $output->write('roleId or roleName must be defined');
+            return;
+        }
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 

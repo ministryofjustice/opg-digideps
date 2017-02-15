@@ -16,7 +16,7 @@ class AssetController extends RestController
      */
     public function getAll($odrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
@@ -36,7 +36,7 @@ class AssetController extends RestController
      */
     public function getOneById($odrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
@@ -53,7 +53,7 @@ class AssetController extends RestController
      */
     public function add(Request $request, $odrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -78,7 +78,7 @@ class AssetController extends RestController
      */
     public function edit(Request $request, $odrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -101,7 +101,7 @@ class AssetController extends RestController
      */
     public function delete($odrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);

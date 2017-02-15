@@ -162,7 +162,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     public function testisSecretValidForUser($clientSecret, $role, $expectedResult)
     {
         $user = m::stub('AppBundle\Entity\User', [
-                'getRole->getRole' => $role,
+                'getRoleName' => $role,
         ]);
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);

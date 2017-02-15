@@ -64,7 +64,7 @@ class AuthController extends RestController
             }
         }
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
+            throw new AppException\UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
         }
 
         // reset counters at successful login

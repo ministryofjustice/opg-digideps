@@ -100,7 +100,7 @@ class AuthService
             return false;
         }
         $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
-        $userRole = $user->getRole()->getRole();
+        $userRole = $user->getRoleName();
 
         return in_array($userRole, $permissions);
     }

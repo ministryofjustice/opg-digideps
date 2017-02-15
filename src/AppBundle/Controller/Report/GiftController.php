@@ -16,7 +16,7 @@ class GiftController extends RestController
      */
     public function getOneById($reportId, $giftId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -33,7 +33,7 @@ class GiftController extends RestController
      */
     public function add(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -60,7 +60,7 @@ class GiftController extends RestController
      */
     public function edit(Request $request, $reportId, $giftId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -83,7 +83,7 @@ class GiftController extends RestController
      */
     public function delete($reportId, $giftId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);

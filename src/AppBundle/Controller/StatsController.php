@@ -19,7 +19,7 @@ class StatsController extends RestController
      */
     public function users(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         $stats = $this->get('stats_service');
         /* @var $stats StatsService */
@@ -38,7 +38,7 @@ class StatsController extends RestController
      */
     public function usersCsv(Request $request, $timestamp)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         $file = '/tmp/stats' . $timestamp . '.csv';
 

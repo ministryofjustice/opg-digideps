@@ -16,6 +16,22 @@ class User implements UserInterface
 {
     const TOKEN_EXPIRE_HOURS = 48;
 
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    const ROLE_AD = 'ROLE_AD';
+
+    /**
+     * @JMS\Exclude
+     */
+    private static $allowedRoles = [
+        self::ROLE_ADMIN => ['OPG Admin', 1],
+        self::ROLE_LAY_DEPUTY => ['Lay Deputy', 2],
+        'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
+        'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
+        self::ROLE_AD => ['Assisted Digital', 5],
+    ];
+
+
     /**
      * @var int
      * @JMS\Type("integer")
@@ -112,14 +128,15 @@ class User implements UserInterface
     private $tokenDate;
 
     /**
-     * @var int
+     * @var string ROLE_
+     * see roles in Role class
      *
-     * @JMS\Groups({"audit_log", "role"})
-     * @JMS\Type("AppBundle\Entity\Role")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
-     * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
+     * @JMS\Type("string")
+     * @JMS\Groups({"user", "role"})
+     *
+     * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
-    private $role;
+    private $roleName;
 
     /**
      * This id is supplied to GA for UserID tracking. It is an md5 of the user id,
@@ -494,27 +511,23 @@ class User implements UserInterface
     }
 
     /**
-     * Set role.
-     *
-     * @param Role $role
-     *
-     * @return User
+     * @return mixed
      */
-    public function setRole(Role $role = null)
+    public function getRoleName()
     {
-        $this->role = $role;
-
-        return $this;
+        return $this->roleName;
     }
 
     /**
-     * Get role.
+     * @param string $roleName ROLE_.*
      *
-     * @return Role
+     * @return User
      */
-    public function getRole()
+    public function setRoleName($roleName)
     {
-        return $this->role;
+        $this->roleName = $roleName;
+
+        return $this;
     }
 
     public function getUsername()
@@ -535,7 +548,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return [$this->role->getRole()];
+        return [$this->roleName];
     }
 
     public function eraseCredentials()
@@ -804,5 +817,22 @@ class User implements UserInterface
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
+    }
+
+
+    /**
+     * @deprecated ID shouldn't be used anymore anywhere
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function roleIdToName($id)
+    {
+        foreach(self::$allowedRoles as $name => $row) {
+            if ($row[1] == $id) {
+                return $name;
+            }
+        }
     }
 }

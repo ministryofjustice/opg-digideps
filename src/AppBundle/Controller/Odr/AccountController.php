@@ -16,7 +16,7 @@ class AccountController extends RestController
      */
     public function addAccountAction(Request $request, $odrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
@@ -40,7 +40,7 @@ class AccountController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
@@ -58,7 +58,7 @@ class AccountController extends RestController
      */
     public function editAccountAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount*/
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
@@ -80,7 +80,7 @@ class AccountController extends RestController
      */
     public function accountDelete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount */
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());

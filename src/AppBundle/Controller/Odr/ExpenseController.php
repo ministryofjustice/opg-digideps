@@ -16,7 +16,7 @@ class ExpenseController extends RestController
      */
     public function getOneById($odrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);
@@ -33,7 +33,7 @@ class ExpenseController extends RestController
      */
     public function add(Request $request, $odrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -60,7 +60,7 @@ class ExpenseController extends RestController
      */
     public function edit(Request $request, $odrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -83,7 +83,7 @@ class ExpenseController extends RestController
      */
     public function delete($odrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
         $this->denyAccessIfOdrDoesNotBelongToUser($odr);

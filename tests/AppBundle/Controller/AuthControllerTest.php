@@ -119,6 +119,8 @@ class AuthControllerTest extends AbstractTestController
                 'mustSucceed' => true,
                 'AuthToken' => $authToken,
             ])['data'];
+
+        $this->assertEquals(User::ROLE_LAY_DEPUTY, $data['role_name']);
         $this->assertEquals('deputy@example.org', $data['email']);
 
         return $authToken;

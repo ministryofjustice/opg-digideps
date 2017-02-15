@@ -2,6 +2,9 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Role;
+use AppBundle\Entity\User;
+
 class UserControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -60,7 +63,7 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertContains('role_id', $errorMessage);
+        $this->assertContains('role_name', $errorMessage);
         $this->assertContains('email', $errorMessage);
         $this->assertContains('firstname', $errorMessage);
         $this->assertContains('lastname', $errorMessage);
@@ -70,7 +73,7 @@ class UserControllerTest extends AbstractTestController
     {
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
-                'role_id' => self::$deputy1->getRole()->getId(), //deputy role
+                'role_name' => User::ROLE_LAY_DEPUTY, //deputy role
                 'firstname' => 'n',
                 'lastname' => 's',
                 'email' => 'n.s@example.org',
@@ -272,18 +275,6 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $return['data']['email']);
     }
 
-    /**
-     * @depends testGetOneById
-     */
-    public function testGetOneByIdNotExisting()
-    {
-        $return = $this->assertJsonRequest('GET', '/user/0', [
-            'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ]);
-        $this->assertEmpty($return['data']);
-        $this->assertContains('not found', $return['message']);
-    }
 
     public function testDeleteAuth()
     {

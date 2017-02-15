@@ -24,8 +24,8 @@ class OdrController extends RestController
         /* @var $report EntityDir\Odr\Odr */
         $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $id);
 
-        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfOdrDoesNotBelongToUser($report);
         }
 
@@ -38,7 +38,7 @@ class OdrController extends RestController
      */
     public function submit(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
         /* @var $odr EntityDir\Odr\Odr */
@@ -74,8 +74,8 @@ class OdrController extends RestController
         /* @var $odr EntityDir\Odr\Odr */
         $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
 
-        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
-            $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
             $this->denyAccessIfOdrDoesNotBelongToUser($odr);
         }
 

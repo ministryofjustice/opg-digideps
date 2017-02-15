@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
@@ -17,16 +18,12 @@ class UserRegistrationService
     private $userRepository;
 
     /** @var \Doctrine\ORM\EntityRepository */
-    private $roleRepository;
-
-    /** @var \Doctrine\ORM\EntityRepository */
     private $casRecRepo;
 
     public function __construct($em)
     {
         $this->em = $em;
         $this->userRepository = $this->em->getRepository('AppBundle\Entity\User');
-        $this->roleRepository = $this->em->getRepository('AppBundle\Entity\Role');
         $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
     }
 
@@ -127,14 +124,12 @@ class UserRegistrationService
 
     public function populateUser(User $user, SelfRegisterData $selfRegisterData)
     {
-        $role = $this->roleRepository->findOneBy(['role' => 'ROLE_LAY_DEPUTY']);
-
         $user->setFirstname($selfRegisterData->getFirstname());
         $user->setLastname($selfRegisterData->getLastname());
         $user->setEmail($selfRegisterData->getEmail());
         $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
-        $user->setRole($role);
+        $user->setRoleName(User::ROLE_LAY_DEPUTY);
         $user->setRegistrationDate(new \DateTime());
     }
 

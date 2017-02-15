@@ -22,10 +22,10 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
 
         $data = $this->deserializeBodyContent($request, [
-            'role_id' => 'notEmpty',
+            'role_name' => 'notEmpty',
             'email' => 'notEmpty',
             'firstname' => 'mustExist',
             'lastname' => 'mustExist',
@@ -60,8 +60,8 @@ class UserController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
 
         if ($this->getUser()->getId() != $user->getId()
-            && !$this->isGranted(EntityDir\Role::ADMIN)
-            && !$this->isGranted(EntityDir\Role::AD)
+            && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
+            && !$this->isGranted(EntityDir\User::ROLE_AD)
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
@@ -184,8 +184,8 @@ class UserController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(EntityDir\Role::ADMIN)
-            && !$this->isGranted(EntityDir\Role::AD)
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)
+            && !$this->isGranted(EntityDir\User::ROLE_AD)
             && !$requestedUserIsLogged) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
@@ -203,7 +203,7 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         $user = $this->findEntityBy(EntityDir\User::class, $id);  /* @var $user EntityDir\User */
 
@@ -227,7 +227,7 @@ class UserController extends RestController
      */
     public function userCount($adOnly)
     {
-        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
 
         /** @var $qb QueryBuilder $qb */
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
@@ -249,7 +249,7 @@ class UserController extends RestController
      */
     public function getAll($order_by, $sort_order, $limit, $offset, $adOnly)
     {
-        $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
 
         $criteria = [];
         if ($adOnly) {
@@ -276,12 +276,6 @@ class UserController extends RestController
         }
         $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
-        //TODO consider an AD key from admin area
-        /*$isAd = $this->getUser()->getRole();
-        if (!$isAd && !$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole().' user role not allowed from this client.', 403);
-        }*/
-
         $user->recreateRegistrationToken();
 
         $this->getEntityManager()->flush($user);
@@ -304,7 +298,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
+            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         return $user;
@@ -336,9 +330,8 @@ class UserController extends RestController
             'phone_main' => 'setPhoneMain',
         ]);
 
-        if (array_key_exists('role_id', $data)) {
-            $role = $this->findEntityBy(EntityDir\Role::class, $data['role_id'], 'Role not found');
-            $user->setRole($role);
+        if (array_key_exists('role_name', $data)) {
+            $user->setRoleName($data['role_name']);
         }
 
         if (array_key_exists('last_logged_in', $data)) {
