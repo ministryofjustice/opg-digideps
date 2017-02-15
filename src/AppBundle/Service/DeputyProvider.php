@@ -44,7 +44,7 @@ class DeputyProvider implements UserProviderInterface
 
             return $user;
         } catch (\Exception $e) {
-            $this->logger->warning(__METHOD__ . ': ' . $e);
+            $this->logger->info(__METHOD__ . ': ' . $e);
 
             // rethrow 423 (brute-force/locked to grab timestamp)
             if ($e->getCode() == 423) {
