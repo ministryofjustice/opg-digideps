@@ -63,7 +63,7 @@ class MailFactory
      */
     public function createActivationEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == (EntityDir\Role::LAY_DEPUTY) ?
+        $area = $user->getRoleName() == (EntityDir\User::ROLE_LAY_DEPUTY) ?
             self::AREA_DEPUTY : self::AREA_ADMIN;
 
         $viewParams = [
@@ -98,7 +98,7 @@ class MailFactory
      */
     public function createResetPasswordEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $user->getRoleName() == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'name' => $user->getFullName(),
@@ -133,7 +133,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $user->getRoleName() == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -161,7 +161,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $user->getRoleName() == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -197,7 +197,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $user->getRoleName() == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),

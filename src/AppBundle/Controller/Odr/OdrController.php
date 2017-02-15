@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Role;
+use AppBundle\Entity\User;
 use AppBundle\Form\Odr\ReportDeclarationType;
 use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -147,7 +148,7 @@ class OdrController extends AbstractController
     private function getPdfBinaryContent($odr)
     {
         $html = $this->render('AppBundle:Odr/Formatted:formatted_body.html.twig', [
-            'odr' => $odr, 'adLoggedAsDeputy' => $this->isGranted(Role::AD)
+            'odr' => $odr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
         ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);

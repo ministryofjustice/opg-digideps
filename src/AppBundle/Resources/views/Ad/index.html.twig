@@ -141,7 +141,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
-    {{ form_select(form.roleId,'addUserForm.roleId') }}
+    {{ form_select(form.roleName,'addUserForm.roleName') }}
     {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
     <p class="text">Other user details, client details, NDR and annual reports will be editable from the deputy area</p>
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}

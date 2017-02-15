@@ -80,13 +80,11 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($this->security->isGranted(EntityDir\Role::ADMIN)
-            || $this->security->isGranted(EntityDir\Role::SUPER_ADMIN)
-        ) {
+        if ($this->security->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
-        } elseif ($this->security->isGranted(EntityDir\Role::AD)) {
+        } elseif ($this->security->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
-        } elseif ($this->security->isGranted(EntityDir\Role::LAY_DEPUTY)) {
+        } elseif ($this->security->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
@@ -173,12 +171,11 @@ class Redirector
 
         if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($securityContext->isGranted(EntityDir\Role::SUPER_ADMIN)
-                || $securityContext->isGranted(EntityDir\Role::ADMIN)
+            if ($securityContext->isGranted(EntityDir\User::ROLE_ADMIN)
             ) {
                 return $this->router->generate('admin_homepage');
             }
-            if ($securityContext->isGranted(EntityDir\Role::AD)) {
+            if ($securityContext->isGranted(EntityDir\User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
             }
 

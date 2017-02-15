@@ -34,31 +34,6 @@ trait AuthenticationTrait
     }
 
     /**
-     * @Given I am not logged into admin
-     */
-    public function notLoggedInAdmin()
-    {
-        $this->iAmAtAdminLogin();
-        $this->visitPath('/logout');
-    }
-
-    /**
-     * @Given I am not logged in
-     */
-    public function iAmNotLoggedIn()
-    {
-        $this->visitPath('/logout');
-    }
-
-    /**
-     * @Given I am on the login page
-     */
-    public function iAmAtLogin()
-    {
-        $this->visitPath('/login');
-    }
-
-    /**
      * @Given I am on admin login page
      */
     public function iAmAtAdminLogin()

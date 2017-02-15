@@ -7,7 +7,7 @@ services:
 
     logout_listener:
       class:   AppBundle\EventListener\LogoutListener
-      arguments:  ["@security.context", "@rest_client", "@router", "@audit_logger"]
+      arguments:  ["@security.context", "@rest_client", "@router"]
 
     response_nocache_listener:
        class:   AppBundle\EventListener\ResponseNoCacheListener

@@ -129,18 +129,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Then the last audit log entry should contain:
-     */
-    public function theLastAuditLogEntryShouldContain(TableNode $fields)
-    {
-        $this->visitBehatLink('view-audit-log');
-
-        foreach ($fields->getRowsHash() as $field => $value) {
-            $this->iShouldSeeInTheRegion($value, 'entry-1');
-        }
-    }
-
-    /**
      * @Given the application config is valid
      */
     public function iChecktheAppParameterFile()

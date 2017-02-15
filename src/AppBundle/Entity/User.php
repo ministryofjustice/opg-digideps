@@ -9,19 +9,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
- * @JMS\XmlRoot("user")
- * @JMS\AccessType("public_method")
- * @JMS\ExclusionPolicy("none")
  */
 class User implements AdvancedUserInterface
 {
     use LoginInfoTrait;
 
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    const ROLE_AD = 'ROLE_AD';
+
+    /**
+     * @JMS\Exclude
+     */
+    private static $allowedRoles = [
+        self::ROLE_ADMIN                   => 'OPG Admin',
+        self::ROLE_LAY_DEPUTY              => 'Lay Deputy',
+        self::ROLE_AD                      => 'Assisted Digital',
+    ];
+
     const TOKEN_EXPIRE_HOURS = 48;
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user","audit_log_save"})
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
      *
      * @var int
      */
@@ -60,11 +70,11 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     *  @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password"} )
-     *  @Assert\Length( min=8, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
-     *  @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
-     *  @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
-     *  @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
+     * @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password"} )
+     * @Assert\Length( min=8, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
+     * @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
+     * @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
+     * @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
      *
      * @var string
      */
@@ -85,21 +95,13 @@ class User implements AdvancedUserInterface
     private $active;
 
     /**
-     * @JMS\Type("array")
-     * @JMS\Accessor(getter="getRole", setter="setRole")
-     *
-     * @var Role
-     */
-    private $role;
-
-    /**
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
      *
-     * @var int
+     * @var string
      */
-    private $roleId;
+    private $roleName;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Client>")
@@ -367,26 +369,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-    /**
-     * @return array $roles
-     */
-    public function getRoles()
-    {
-        return [$this->role['role']];
-    }
-
-    /**
-     * @param string $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
-    }
-
-    public function getRole()
-    {
-        return $this->role;
-    }
 
     public function setClients(array $clients)
     {
@@ -528,23 +510,33 @@ class User implements AdvancedUserInterface
 
         $diffSeconds = $timeStampNow - $timestampToken;
 
-        return  $diffSeconds < $expiresSeconds;
+        return $diffSeconds < $expiresSeconds;
     }
 
-    public function getRoleId()
+    public function getRoleName()
     {
-        if (empty($this->roleId)) {
-            $this->roleId = $this->role['id'];
-        }
-
-        return $this->roleId;
+        return $this->roleName;
     }
 
-    public function setRoleId($roleId)
+
+    public function getRoleFullName()
     {
-        $this->roleId = $roleId;
+        return self::$allowedRoles[$this->roleName];
+    }
+
+    public function setRoleName($roleName)
+    {
+        $this->roleName = $roleName;
 
         return $this;
+    }
+
+    /**
+     * @return array $roles
+     */
+    public function getRoles()
+    {
+        return [$this->roleName];
     }
 
     public function getAddress1()
@@ -638,8 +630,9 @@ class User implements AdvancedUserInterface
      */
     public function hasDetails()
     {
-        if (!empty($this->getAddress1())  && !empty($this->getAddressCountry())
-             && !empty($this->getAddressPostcode()) && !empty($this->getPhoneMain())) {
+        if (!empty($this->getAddress1()) && !empty($this->getAddressCountry())
+            && !empty($this->getAddressPostcode()) && !empty($this->getPhoneMain())
+        ) {
             return true;
         }
     }

@@ -115,10 +115,10 @@
                     <td>{{ user.lastname }}</td>
                     <td  >{{ user.adManaged ? '-' : user.email }}</td>
                     <td nowrap>
-                        {{ user.role.name }}
+                        {{ user.roleFullName }}
                         {% if user.adManaged %} Assisted{% endif %}
                         {% if app.user.id == user.id %} (currenty logged){% endif %}
-                        {% if is_granted('ROLE_AD') and user.role.role == 'ROLE_LAY_DEPUTY' %}
+                        {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
                             [<a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id })}}">View</a>]
                         {% endif %}
 
@@ -126,7 +126,7 @@
                     <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">{{ user.odrEnabled ? 'yes' : '-' }}</td>
                     <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
                 <td>
-                    {% if user.role.role != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
+                    {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                     [<a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id })}}' class="behat-link-user-{{ user.email }}" >Edit</a>]
                     {% endif %}
                 </td>
