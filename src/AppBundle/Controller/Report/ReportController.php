@@ -18,7 +18,7 @@ class ReportController extends RestController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $reportData = $this->deserializeBodyContent($request);
 
@@ -62,7 +62,7 @@ class ReportController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $groups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['report'];
@@ -81,7 +81,7 @@ class ReportController extends RestController
      */
     public function submit(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
@@ -123,7 +123,7 @@ class ReportController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $report Report */

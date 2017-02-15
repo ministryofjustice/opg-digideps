@@ -129,7 +129,7 @@ class UserRegistrationService
         $user->setEmail($selfRegisterData->getEmail());
         $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
-        $user->setRoleName(Role::LAY_DEPUTY);
+        $user->setRoleName(User::ROLE_LAY_DEPUTY);
         $user->setRegistrationDate(new \DateTime());
     }
 

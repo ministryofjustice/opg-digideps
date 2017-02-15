@@ -21,7 +21,7 @@ class CasRecController extends RestController
      */
     public function truncateTable(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         $em = $this->getEntityManager();
         $em->getConnection()->query('TRUNCATE TABLE casrec');
@@ -41,7 +41,7 @@ class CasRecController extends RestController
         $maxRecords = 10000;
         $persistEvery = 5000;
 
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
         set_time_limit(600);
@@ -105,7 +105,7 @@ class CasRecController extends RestController
      */
     public function userCount()
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
         $qb->select('count(c.id)');

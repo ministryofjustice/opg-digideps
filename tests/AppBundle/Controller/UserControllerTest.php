@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Role;
+use AppBundle\Entity\User;
 
 class UserControllerTest extends AbstractTestController
 {
@@ -72,7 +73,7 @@ class UserControllerTest extends AbstractTestController
     {
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
-                'role_name' => Role::LAY_DEPUTY, //deputy role
+                'role_name' => User::ROLE_LAY_DEPUTY, //deputy role
                 'firstname' => 'n',
                 'lastname' => 's',
                 'email' => 'n.s@example.org',

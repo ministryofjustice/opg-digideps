@@ -16,7 +16,7 @@ class ActionController extends RestController
      */
     public function updateAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -42,7 +42,7 @@ class ActionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $action = $this->findEntityBy(EntityDir\Report\Action::class, $id, 'Action with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());

@@ -20,7 +20,7 @@ class ContactController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['contact'];
@@ -38,7 +38,7 @@ class ContactController extends RestController
      */
     public function deleteContact($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
@@ -55,7 +55,7 @@ class ContactController extends RestController
      **/
     public function upsertContact(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $contactData = $this->deserializeBodyContent($request);
 
@@ -112,7 +112,7 @@ class ContactController extends RestController
      */
     public function getContacts($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($report);

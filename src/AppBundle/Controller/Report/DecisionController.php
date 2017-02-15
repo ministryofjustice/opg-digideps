@@ -19,7 +19,7 @@ class DecisionController extends RestController
      */
     public function upsertDecision(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -66,7 +66,7 @@ class DecisionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['decision'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -83,7 +83,7 @@ class DecisionController extends RestController
      */
     public function deleteDecision($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());

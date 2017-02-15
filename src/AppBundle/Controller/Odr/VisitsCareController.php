@@ -16,7 +16,7 @@ class VisitsCareController extends RestController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $visitsCare = new EntityDir\Odr\VisitsCare();
         $data = $this->deserializeBodyContent($request);
@@ -39,7 +39,7 @@ class VisitsCareController extends RestController
      */
     public function updateAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id);
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
@@ -60,7 +60,7 @@ class VisitsCareController extends RestController
      */
     public function findByOdrIdAction($odrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
         $this->denyAccessIfOdrDoesNotBelongToUser($report);
@@ -78,7 +78,7 @@ class VisitsCareController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
@@ -95,7 +95,7 @@ class VisitsCareController extends RestController
      */
     public function deleteVisitsCare($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Odr\VisitsCare */
         $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
