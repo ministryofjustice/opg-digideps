@@ -349,6 +349,6 @@ class Fixtures
 
     public static function deleteReportsData()
     {
-        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table casrec, deputy_case, report, audit_log_entry, odr  RESTART IDENTITY cascade";');
+        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table casrec, deputy_case, report, odr  RESTART IDENTITY cascade";');
     }
 }
