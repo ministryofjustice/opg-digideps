@@ -16,6 +16,22 @@ class User implements UserInterface
 {
     const TOKEN_EXPIRE_HOURS = 48;
 
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    const ROLE_AD = 'ROLE_AD';
+
+    /**
+     * @JMS\Exclude
+     */
+    private static $allowedRoles = [
+        self::ROLE_ADMIN => ['OPG Admin', 1],
+        self::ROLE_LAY_DEPUTY => ['Lay Deputy', 2],
+        'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
+        'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
+        self::ROLE_AD => ['Assisted Digital', 5],
+    ];
+
+
     /**
      * @var int
      * @JMS\Type("integer")
@@ -514,16 +530,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * Get role.
-     *
-     * @return Role
-     */
-    public function getRole()
-    {
-        return new Role($this->roleName);
-    }
-
     public function getUsername()
     {
         return $this->email;
@@ -811,5 +817,22 @@ class User implements UserInterface
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
+    }
+
+
+    /**
+     * @deprecated ID shouldn't be used anymore anywhere
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function roleIdToName($id)
+    {
+        foreach(self::$allowedRoles as $name => $row) {
+            if ($row[1] == $id) {
+                return $name;
+            }
+        }
     }
 }

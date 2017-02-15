@@ -61,7 +61,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $user->recreateRegistrationToken();
         $this->userRegistrationService->populateUser($user, $data);
 
-        $this->assertEquals(Role::LAY_DEPUTY, $user->getRole()->getRole());
+        $this->assertEquals(Role::LAY_DEPUTY, $user->getRoleName());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('zac@thetolleys.com', $user->getEmail());
