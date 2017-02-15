@@ -106,19 +106,6 @@ class BehatController extends AbstractController
         return new Response('done');
     }
 
-    /**
-     * @Route("/behat/{secret}/view-audit-log")
-     * @Method({"GET"})
-     * @Template()
-     */
-    public function viewAuditLogAction()
-    {
-        $this->securityChecks();
-
-        $entities = $this->getRestClient()->get('behat/audit-log', 'AuditLogEntry[]');
-
-        return ['entries' => $entities];
-    }
 
     /**
      * set token_date and registration_token on the user.

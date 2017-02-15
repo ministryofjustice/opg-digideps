@@ -2,8 +2,6 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Entity\AuditLogEntry;
-use AppBundle\Service\AuditLogger;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,27 +22,19 @@ class LogoutListener implements LogoutSuccessHandlerInterface
     private $router;
 
     /**
-     * @var AuditLogger
-     */
-    private $auditLogger;
-
-    /**
      * @var RestClient
      */
     private $restClient;
 
-    public function __construct(SecurityContext $security, RestClient $restClient, Router $router, AuditLogger $auditLogger)
+    public function __construct(SecurityContext $security, RestClient $restClient, Router $router)
     {
         $this->security = $security;
         $this->restClient = $restClient;
         $this->router = $router;
-        $this->auditLogger = $auditLogger;
     }
 
     public function onLogoutSuccess(Request $request)
     {
-        $this->auditLogger->log(AuditLogEntry::ACTION_LOGOUT);
-
         $this->restClient->logout();
 
         $request->getSession()->set('loggedOutFrom', 'logoutPage');

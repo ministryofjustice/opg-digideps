@@ -49,11 +49,16 @@ class AdminController extends AbstractController
      */
     public function addUserAction(Request $request)
     {
-        $availableRoles = EntityDir\Role::$allowedRoles;
-        // non-admin cannot add admin users
-        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
-            unset($availableRoles[EntityDir\Role::ADMIN]);
+        $availableRoles = [
+            EntityDir\User::ROLE_LAY_DEPUTY              => 'Lay Deputy',
+            EntityDir\User::ROLE_AD                      => 'Assisted Digital',
+        ];
+        // only admins can add other admins
+        if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
         }
+
+
         $form = $this->createForm(new FormDir\Admin\AddUserType([
             'roleChoices'      => $availableRoles,
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
@@ -64,7 +69,7 @@ class AdminController extends AbstractController
             if ($form->isValid()) {
                 // add user
                 try {
-                    if (!$this->isGranted(EntityDir\Role::ADMIN) && $form->getData()->getRoleName() == EntityDir\Role::ADMIN) {
+                    if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                         throw new \RuntimeException('Cannot add admin from non-admin user');
                     }
                     $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
@@ -77,8 +82,6 @@ class AdminController extends AbstractController
                         'notice',
                         'An activation email has been sent to the user.'
                     );
-
-                    $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
                     return $this->redirect($this->generateUrl('admin_homepage'));
                 } catch (RestClientException $e) {
@@ -112,16 +115,20 @@ class AdminController extends AbstractController
             ]);
         }
 
-        if ($user->getRole()['role'] == EntityDir\Role::ADMIN && !$this->isGranted(EntityDir\Role::ADMIN)) {
+        if ($user->getRoleName() == EntityDir\User::ROLE_ADMIN && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'Non-admin cannot edit admin users',
             ]);
         }
 
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'      => EntityDir\Role::$availableRoles,
+            'roleChoices'      => [
+                EntityDir\User::ROLE_ADMIN                   => 'OPG Admin',
+                EntityDir\User::ROLE_LAY_DEPUTY              => 'Lay Deputy',
+                EntityDir\User::ROLE_AD                      => 'Assisted Digital',
+            ],
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-            'roleNameDisabled'   => $user->getId() == $this->getUser()->getId(),
+            'roleNameDisabled'   => $user->getId() == $this->getUser()->getId(), //can't edit current user's role
         ]), $user);
 
         $clients = $user->getClients();
@@ -221,8 +228,6 @@ class AdminController extends AbstractController
     public function deleteAction($id)
     {
         $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
-
-        $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
 
         $this->getRestClient()->delete('user/' . $id);
 
