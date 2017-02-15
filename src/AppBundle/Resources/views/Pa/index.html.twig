@@ -1,0 +1,16 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block htmlTitle %}...{% endblock %}
+{% block pageTitle %}..{% endblock %}
+
+{% block pageContent %}
+
+    {% for report in reports %}
+        <hr>
+        {{ dump(report.client.firstName) }}
+        {{ dump(report.client.lastName) }}
+        {{ dump(report.client.caseNumber) }}
+        {{ dump(report.statusService.status) }}
+    {% endfor %}
+
+{% endblock %}
