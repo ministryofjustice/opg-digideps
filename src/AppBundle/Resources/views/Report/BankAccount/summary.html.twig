@@ -25,7 +25,7 @@
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
-    {% if not report.getBankAccountsIncomplete() %}
+    {% if report.getBankAccountsIncomplete() %}
         {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
     {% endif %}
 
