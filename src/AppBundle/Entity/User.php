@@ -9,8 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
- * @JMS\XmlRoot("user")
- * @JMS\AccessType("public_method")
  */
 class User implements AdvancedUserInterface
 {

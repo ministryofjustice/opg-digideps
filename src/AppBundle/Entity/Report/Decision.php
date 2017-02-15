@@ -6,9 +6,6 @@ use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @JMS\XmlRoot("decision")
- */
 class Decision
 {
     use HasReportTrait;
