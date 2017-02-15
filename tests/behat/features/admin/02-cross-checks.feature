@@ -7,7 +7,7 @@ Feature: admin / acl
         #Then the response status code should be 200
         # check admin CANNOT login into DEPUTY site
         Given I go to "/logout"
-        And  I am on the login page
+        And  I go to "/login"
         When I fill in the following:
             | login_email     | behat-admin-user@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
@@ -28,7 +28,7 @@ Feature: admin / acl
         Then the last email should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         # check admin CANNOT recover password from DEPUTY site
         Given I reset the email log
-        And I am on the login page
+        And I go to "/login"
         When I click on "forgotten-password"
         Then I should be on "/password-managing/forgotten"
         When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"

@@ -20,7 +20,7 @@ Feature: admin / admin
 
     Scenario: login and add user (admin)
         Given emails are sent from "admin" area
-        And I am not logged into admin
+        And I go to "/logout"
         # assert email link doesn't work on admin area
         When I open the "/user/activate/" link from the email on the "deputy" area
         Then the response status code should be 500
