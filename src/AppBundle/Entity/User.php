@@ -112,14 +112,12 @@ class User implements UserInterface
     private $tokenDate;
 
     /**
-     * @var int
+     * @var string ROLE_
+     * see roles in Role class
      *
-     * @JMS\Groups({"audit_log", "role"})
-     * @JMS\Type("AppBundle\Entity\Role")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
-     * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
+     * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
-    private $role;
+    private $roleName;
 
     /**
      * This id is supplied to GA for UserID tracking. It is an md5 of the user id,
@@ -494,15 +492,21 @@ class User implements UserInterface
     }
 
     /**
-     * Set role.
-     *
-     * @param Role $role
+     * @return mixed
+     */
+    public function getRoleName()
+    {
+        return $this->roleName;
+    }
+
+    /**
+     * @param string $roleName ROLE_.*
      *
      * @return User
      */
-    public function setRole(Role $role = null)
+    public function setRoleName($roleName)
     {
-        $this->role = $role;
+        $this->roleName = $roleName;
 
         return $this;
     }
@@ -510,11 +514,15 @@ class User implements UserInterface
     /**
      * Get role.
      *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("role")
+     * @JMS\Groups({"role"})
+     *
      * @return Role
      */
     public function getRole()
     {
-        return $this->role;
+        return new Role($this->roleName);
     }
 
     public function getUsername()
@@ -535,7 +543,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return [$this->role->getRole()];
+        return [$this->getRoleName()];
     }
 
     public function eraseCredentials()

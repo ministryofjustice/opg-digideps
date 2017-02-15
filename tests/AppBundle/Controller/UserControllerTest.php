@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Role;
+
 class UserControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -60,7 +62,7 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertContains('role_id', $errorMessage);
+        $this->assertContains('role_name', $errorMessage);
         $this->assertContains('email', $errorMessage);
         $this->assertContains('firstname', $errorMessage);
         $this->assertContains('lastname', $errorMessage);
@@ -70,7 +72,7 @@ class UserControllerTest extends AbstractTestController
     {
         $return = $this->assertJsonRequest('POST', '/user', [
             'data' => [
-                'role_id' => self::$deputy1->getRole()->getId(), //deputy role
+                'role_name' => Role::LAY_DEPUTY, //deputy role
                 'firstname' => 'n',
                 'lastname' => 's',
                 'email' => 'n.s@example.org',

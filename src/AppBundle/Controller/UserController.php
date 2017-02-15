@@ -25,7 +25,7 @@ class UserController extends RestController
         $this->denyAccessUnlessGranted([EntityDir\Role::ADMIN, EntityDir\Role::AD]);
 
         $data = $this->deserializeBodyContent($request, [
-            'role_id' => 'notEmpty',
+            'role_name' => 'notEmpty',
             'email' => 'notEmpty',
             'firstname' => 'mustExist',
             'lastname' => 'mustExist',
@@ -333,9 +333,8 @@ class UserController extends RestController
             'phone_main' => 'setPhoneMain',
         ]);
 
-        if (array_key_exists('role_id', $data)) {
-            $role = $this->findEntityBy(EntityDir\Role::class, $data['role_id'], 'Role not found');
-            $user->setRole($role);
+        if (array_key_exists('role_name', $data)) {
+            $user->setRoleName($data['role_name']);
         }
 
         if (array_key_exists('last_logged_in', $data)) {

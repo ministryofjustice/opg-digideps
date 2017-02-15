@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\UserRegistrationService;
@@ -16,22 +17,10 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
      */
     private $userRegistrationService;
 
-    private $mockRole;
-
     public function setup()
     {
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $this->mockRole = m::mock('\AppBundle\Entity\Role')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getId')->andReturn(99)
-            ->getMock();
-
-        $mockRoleRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['role' => 'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
             ->getMock();
 
         $this->casRec = m::mock('\AppBundle\Entity\CasRec');
@@ -44,7 +33,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
 //            ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\Role')->andReturn($mockRoleRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->getMock();
 
@@ -73,7 +61,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $user->recreateRegistrationToken();
         $this->userRegistrationService->populateUser($user, $data);
 
-        $this->assertEquals($this->mockRole, $user->getRole());
+        $this->assertEquals(Role::LAY_DEPUTY, $user->getRole()->getRole());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('zac@thetolleys.com', $user->getEmail());
@@ -298,11 +286,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn(null)
             ->getMock();
 
-        $mockRoleRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['role' => 'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
-            ->getMock();
-
         $this->casRec = m::mock('\AppBundle\Entity\CasRec')
             ->shouldReceive('getDeputyPostCode')->andReturn(null)
             ->shouldReceive('getDeputyNo')->andReturn('D01')
@@ -325,7 +308,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockUser)
             ->shouldReceive('persist')->with($mockClient)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\Role')->andReturn($mockRoleRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();

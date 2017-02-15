@@ -8,9 +8,6 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Roles.
- *
- * @ORM\Table(name="role")
- * @ORM\Entity
  */
 class Role implements RoleInterface
 {
@@ -21,58 +18,53 @@ class Role implements RoleInterface
 
     /**
      * Added via digideps:fixtures command.
-     * //TODO remove this table, role name should be used inside user table with no joins
      *
      * @JMS\Exclude
      */
-    public static $fixtures = [
-        1 => ['OPG Admin', self::ADMIN],
-        2 => ['Lay Deputy', self::LAY_DEPUTY],
-        3 => ['Professional Deputy', 'ROLE_PROFESSIONAL_DEPUTY'],
-        4 => ['Local Authority Deputy', 'ROLE_LOCAL_AUTHORITY_DEPUTY'],
-        5 => ['Assisted Digital', self::AD],
-        6 => ['Super Admin', self::SUPER_ADMIN],
+    public static $allowedRoles = [
+        self::ADMIN => ['OPG Admin', 1],
+        self::LAY_DEPUTY => ['Lay Deputy', 2],
+        'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
+        'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
+        self::AD => ['Assisted Digital', 5],
+        self::SUPER_ADMIN => ['Super Admin', 6],
     ];
+
+    /**
+     * @deprecated ID shouldn't be used anymore anywhere
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function idToName($id)
+    {
+        foreach(self::$allowedRoles as $name => $row) {
+            if ($row[1] == $id) {
+                return $name;
+            }
+        }
+    }
 
     /**
      * @var int
      *
      * @JMS\Groups({"role"})
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="role_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    private $name;
 
     /**
-     * @JMS\Groups({"role"})
-     * @ORM\Column( name="role", type="string", length=50, nullable=true)
-     */
-    private $role;
-
-    /**
+     * Role constructor.
      * @param int $id
      */
-    public function setId($id)
+    public function __construct($name)
     {
-        $this->id = $id;
-
-        return $this;
+        $this->name = $name;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
-     * Get name.
+     * @deprecated
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"role", "audit_log"})
@@ -81,25 +73,17 @@ class Role implements RoleInterface
      */
     public function getName()
     {
-        return self::$fixtures[$this->getId()][0];
-    }
-
-    public function getRole()
-    {
-        return $this->role;
+        return $this->name;
     }
 
     /**
-     * Set role.
+     * @return string ROLE_*
+     * @JMS\VirtualProperty
      *
-     * @param string $role
-     *
-     * @return Role
+     * @JMS\Groups({"role", "audit_log"})
      */
-    public function setRole($role)
+    public function getRole()
     {
-        $this->role = $role;
-
-        return $this;
+        return $this->name;
     }
 }

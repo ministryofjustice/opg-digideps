@@ -26,9 +26,9 @@ class StatsService
     {
         $ret = [];
         $qb = $this->userRepository->createQueryBuilder('u');
-        $qb->leftJoin('u.role', 'r')
+        $qb
             ->leftJoin('u.clients', 'c')
-            ->where('r.role = ?1')
+            ->where('u.roleName = ?1')
             ->orderBy('u.id', 'DESC');
         $qb->setParameter('1', 'ROLE_LAY_DEPUTY');
 
