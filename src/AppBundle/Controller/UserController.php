@@ -255,6 +255,9 @@ class UserController extends RestController
         if ($adOnly) {
             $criteria['adManaged'] = true;
         }
+
+        $this->setJmsSerialiserGroups(['user', 'role']);
+
         return $this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
     }
 
