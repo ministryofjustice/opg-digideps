@@ -275,18 +275,6 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $return['data']['email']);
     }
 
-    /**
-     * @depends testGetOneById
-     */
-    public function testGetOneByIdNotExisting()
-    {
-        $return = $this->assertJsonRequest('GET', '/user/0', [
-            'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ]);
-        $this->assertEmpty($return['data']);
-        $this->assertContains('not found', $return['message']);
-    }
 
     public function testDeleteAuth()
     {

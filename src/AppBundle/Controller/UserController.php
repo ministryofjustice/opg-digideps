@@ -143,15 +143,6 @@ class UserController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $requestedUserIsLogged = $this->getUser()->getId() == $id;
-
-        // only allow admins/AD to access any user, otherwise the user can only see himself
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)
-            && !$this->isGranted(EntityDir\User::ROLE_AD)
-            && !$requestedUserIsLogged) {
-            throw $this->createAccessDeniedException("Not authorised to see other user's data");
-        }
-
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
