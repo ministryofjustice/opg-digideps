@@ -47,13 +47,10 @@ class PaService
      */
     public function addFromCasrecRows(array $rows)
     {
-        $ret = [
-            'users'   => [],
-            'clients' => [],
-            'reports' => [],
-        ];
+        $added = ['users' => [], 'clients' => [], 'reports' => []];
+        $errors = [];
 
-        foreach ($rows as $row) {
+        foreach ($rows as $index => $row) {
             if ($row['Dep Type'] != 23) {
                 continue;
             }
@@ -73,7 +70,7 @@ class PaService
                     ->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5'])
                     ->setAddressPostcode($row['Dep Postcode'])//->setAddressCountry('GB')
                 ;
-                $ret['users'][] = $email;
+                $added['users'][] = $email;
                 $this->em->persist($user);
                 $this->em->flush($user);
             }
@@ -88,7 +85,7 @@ class PaService
                     ->setFirstname($row['Forename'])
                     ->setLastname($row['Surname'])//->setCourtDate($row['Dship Create'])
                 ;
-                $ret['clients'][] = $caseNumber;
+                $added['clients'][] = $caseNumber;
                 $this->em->persist($client);
                 $user->addClient($client);
                 $this->em->persist($user);
@@ -98,35 +95,39 @@ class PaService
 
             // find or create reports
             $reportDueDate = self::parseDate($row['Report Due']);
-            $report = $client->getReportByDueDate($reportDueDate);
-            if (!$report) {
-                $report = new EntityDir\Report\Report();
-                $client->addReport($report);
-                $report
-                    ->setType(EntityDir\Report\Report::TYPE_102)
-                    ->setEndDate($reportDueDate);
-                $ret['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
-                $this->em->persist($report);
-                $this->em->flush();
+            if (!$reportDueDate) {
+                $errors []= "Cannot parse date {$row['Report Due']} in line $index";
+            } else {
+                $report = $client->getReportByDueDate($reportDueDate);
+                if (!$report) {
+                    $report = new EntityDir\Report\Report();
+                    $client->addReport($report);
+                    $report
+                        ->setType(EntityDir\Report\Report::TYPE_102)
+                        ->setEndDate($reportDueDate);
+                    $added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
+                    $this->em->persist($report);
+                    $this->em->flush();
+                }
             }
 
             // next row
             $this->em->clear();
         }
 
-        return $ret;
+        return ['added' => $added, 'errors'=>$errors];
     }
 
     /**
-     * create DateTime object based on '16-Dec-14' formatted dates
+     * create DateTime object based on '16-Dec-2014' formatted dates
      *
-     * @param string $dateString e.g. 16-Dec-14
+     * @param string $dateString e.g. 16-Dec-2014
      *
      * @return \DateTime
      */
     private static function parseDate($dateString)
     {
-        return \DateTime::createFromFormat('d-M-y', $dateString);
+        return \DateTime::createFromFormat('d-M-Y', $dateString);
     }
 
 

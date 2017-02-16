@@ -53,8 +53,8 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy2 = [
         'Deputy No'    => '00000002',
-        'Pat Create'   => '16-Dec-14',
-        'Dship Create' => '07-Apr-15',
+        'Pat Create'   => '16-Dec-2014',
+        'Dship Create' => '07-Apr-2015',
         'Dep Postcode' => 'SW1',
         'Dep Forename' => 'Dep2',
         'Dep Surname'  => 'Uty2',
@@ -72,7 +72,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly1',
         'Surname'    => 'Hent1',
         'Corref'     => 'A2',
-        'Report Due' => '16-Dec-14',
+        'Report Due' => '16-Dec-2014',
     ];
 
 
@@ -81,7 +81,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly2',
         'Surname'    => 'Hent2',
         'Corref'     => 'A3',
-        'Report Due' => '04-Feb-15',
+        'Report Due' => '04-Feb-2015',
     ];
 
     public static $client3 = [
@@ -89,7 +89,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
         'Corref'     => 'A3',
-        'Report Due' => '05-Feb-15',
+        'Report Due' => '05-Feb-2015',
     ];
 
     public function setup()
@@ -106,7 +106,6 @@ class PaServiceTest extends WebTestCase
             self::$deputy1 + self::$client1,
             self::$deputy1 + self::$client2,
             self::$deputy2 + self::$client3,
-
         ];
 
         // add twice to check duplicates are not added
