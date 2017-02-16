@@ -22,18 +22,6 @@ class PaServiceTest extends WebTestCase
      */
     protected static $em;
 
-    public static function setUpBeforeClass()
-    {
-        self::$frameworkBundleClient = static::createClient(['environment' => 'test',
-                                                             'debug'       => true,]);
-
-        self::$em = self::$frameworkBundleClient->getContainer()->get('em');
-    }
-
-    /**
-     * @var PaService
-     */
-    private $pa;
 
     public static $deputy1 = [
         'Deputy No'    => '00000001',
@@ -91,6 +79,20 @@ class PaServiceTest extends WebTestCase
         'Corref'     => 'A3',
         'Report Due' => '05-Feb-2015',
     ];
+
+
+    /**
+     * @var PaService
+     */
+    private $pa;
+
+    public static function setUpBeforeClass()
+    {
+        self::$frameworkBundleClient = static::createClient(['environment' => 'test',
+                                                             'debug'       => true,]);
+
+        self::$em = self::$frameworkBundleClient->getContainer()->get('em');
+    }
 
     public function setup()
     {
