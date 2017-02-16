@@ -41,13 +41,10 @@ class PaController extends RestController
         $pa = new PaService($this->get('em'));
 
         try {
-            $pa->addFromCasrecRows($data);
-            $added = $pa->getAddedRecords();
-            $retErrors = $pa->getErrors();
+            $ret = $pa->addFromCasrecRows($data);
+            return ['added' => $ret, 'errors' => []];
         } catch (\Exception $e) {
-            return ['added' => $added - 1, 'errors' => [$e->getMessage()]];
+            return ['added' => [], 'errors' => [$e->getMessage()]];
         }
-
-        return ['added' => $added - 1, 'errors' => $retErrors];
     }
 }

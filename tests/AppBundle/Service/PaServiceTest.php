@@ -35,6 +35,63 @@ class PaServiceTest extends WebTestCase
      */
     private $pa;
 
+    public static $deputy1 = [
+        'Deputy No'    => '00000001',
+        'Pat Create'   => '12-Dec-02',
+        'Dship Create' => '28-Sep-07',
+        'Dep Postcode' => 'N1 ABC',
+        'Dep Forename' => 'Dep1',
+        'Dep Surname'  => 'Uty2',
+        'Dep Type'     => 23,
+        'Dep Adrs1'    => 'ADD1',
+        'Dep Adrs2'    => 'ADD2',
+        'Dep Adrs3'    => 'ADD3',
+        'Dep Adrs4'    => 'ADD4',
+        'Dep Adrs5'    => 'ADD5',
+        'Email'        => 'dep1@provider.com',
+    ];
+
+    public static $deputy2 = [
+        'Deputy No'    => '00000002',
+        'Pat Create'   => '16-Dec-14',
+        'Dship Create' => '07-Apr-15',
+        'Dep Postcode' => 'SW1',
+        'Dep Forename' => 'Dep2',
+        'Dep Surname'  => 'Uty2',
+        'Dep Type'     => 23,
+        'Dep Adrs1'    => 'ADD1',
+        'Dep Adrs2'    => 'ADD2',
+        'Dep Adrs3'    => 'ADD3',
+        'Dep Adrs4'    => 'ADD4',
+        'Dep Adrs5'    => 'ADD5',
+        'Email'        => 'dep2@provider.com',
+    ];
+
+    public static $client1 = [
+        'Case'       => '10000001',
+        'Forename'   => 'Cly1',
+        'Surname'    => 'Hent1',
+        'Corref'     => 'A2',
+        'Report Due' => '16-Dec-14',
+    ];
+
+
+    public static $client2 = [
+        'Case'       => '10000002',
+        'Forename'   => 'Cly2',
+        'Surname'    => 'Hent2',
+        'Corref'     => 'A3',
+        'Report Due' => '04-Feb-15',
+    ];
+
+    public static $client3 = [
+        'Case'       => '10000003',
+        'Forename'   => 'Cly3',
+        'Surname'    => 'Hent3',
+        'Corref'     => 'A3',
+        'Report Due' => '05-Feb-15',
+    ];
+
     public function setup()
     {
         $this->pa = new PaService(self::$em);
@@ -44,62 +101,11 @@ class PaServiceTest extends WebTestCase
 
     public function testAddFromCasrecRows()
     {
-        $deputy1 = [
-            'Deputy No'    => '00000001',
-            'Pat Create'   => '12-Dec-02',
-            'Dship Create' => '28-Sep-07',
-            'Dep Postcode' => 'N1 ABC',
-            'Dep Forename' => 'Dep1',
-            'Dep Surname'  => 'Uty2',
-            'Dep Type'     => 23,
-            'Dep Adrs1'    => 'ADD1',
-            'Dep Adrs2'    => 'ADD2',
-            'Dep Adrs3'    => 'ADD3',
-            'Dep Adrs4'    => 'ADD4',
-            'Dep Adrs5'    => 'ADD5',
-            'Email'        => 'dep1@provider.com',
-
-        ];
-
-        $deputy2 = [
-            'Deputy No'    => '00000002',
-            'Pat Create'   => '16-Dec-14',
-            'Dship Create' => '07-Apr-15',
-            'Dep Postcode' => 'SW1',
-            'Dep Forename' => 'Dep2',
-            'Dep Surname'  => 'Uty2',
-            'Dep Type'     => 23,
-            'Dep Adrs1'    => 'ADD1',
-            'Dep Adrs2'    => 'ADD2',
-            'Dep Adrs3'    => 'ADD3',
-            'Dep Adrs4'    => 'ADD4',
-            'Dep Adrs5'    => 'ADD5',
-            'Email'        => 'dep2@provider.com',
-        ];
-
         // create two clients for the same deputy, each one with a report
         $data = [
-            $deputy1 + [
-                'Case'       => '10000001',
-                'Forename'   => 'Cly1',
-                'Surname'    => 'Hent1',
-                'Corref'     => 'A2',
-                'Report Due' => '16-Dec-14',
-            ],
-            $deputy1 + [
-                'Case'       => '10000002',
-                'Forename'   => 'Cly2',
-                'Surname'    => 'Hent2',
-                'Corref'     => 'A3',
-                'Report Due' => '04-Feb-15',
-            ],
-            $deputy2 + [
-                'Case'       => '10000003',
-                'Forename'   => 'Cly3',
-                'Surname'    => 'Hent3',
-                'Corref'     => 'A3',
-                'Report Due' => '05-Feb-15',
-            ],
+            self::$deputy1 + self::$client1,
+            self::$deputy1 + self::$client2,
+            self::$deputy2 + self::$client3,
 
         ];
 
