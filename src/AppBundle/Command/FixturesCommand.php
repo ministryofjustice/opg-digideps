@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Role;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,7 +24,7 @@ class FixturesCommand extends AddSingleUserCommand
         $em->clear();
 
         // user and roles
-        $fixtures = (array)$this->getContainer()->getParameter('fixtures');
+        $fixtures = (array) $this->getContainer()->getParameter('fixtures');
         foreach ($fixtures as $email => $data) {
             $this->addSingleUser($output, ['email' => $email] + $data, ['flush' => false]);
         }

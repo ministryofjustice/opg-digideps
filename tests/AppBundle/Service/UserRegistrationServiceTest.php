@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\UserRegistrationService;

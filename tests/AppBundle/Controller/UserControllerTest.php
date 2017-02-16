@@ -275,7 +275,6 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $return['data']['email']);
     }
 
-
     public function testDeleteAuth()
     {
         $url = '/user/' . self::$deputy1->getId();

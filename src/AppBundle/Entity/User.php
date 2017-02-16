@@ -118,7 +118,7 @@ class User implements UserInterface
 
     /**
      * @var string ROLE_
-     * see roles in Role class
+     *             see roles in Role class
      *
      * @JMS\Type("string")
      * @JMS\Groups({"user", "role"})
@@ -326,7 +326,7 @@ class User implements UserInterface
      */
     public function setActive($active)
     {
-        $this->active = (bool)$active;
+        $this->active = (bool) $active;
 
         return $this;
     }
@@ -807,7 +807,6 @@ class User implements UserInterface
     {
         $this->adManaged = $adManaged;
     }
-
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere

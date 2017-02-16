@@ -329,7 +329,6 @@ class Report
         $this->type = $type;
     }
 
-
     /**
      * @param string $type
      */
@@ -343,7 +342,6 @@ class Report
             $this->setType(Report::TYPE_102);
         }
     }
-
 
     /**
      * Get id.
