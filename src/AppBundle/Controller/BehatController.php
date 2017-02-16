@@ -106,7 +106,6 @@ class BehatController extends AbstractController
         return new Response('done');
     }
 
-
     /**
      * set token_date and registration_token on the user.
      *

@@ -369,7 +369,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-
     public function setClients(array $clients)
     {
         $this->clients = $clients;
@@ -517,7 +516,6 @@ class User implements AdvancedUserInterface
     {
         return $this->roleName;
     }
-
 
     public function getRoleFullName()
     {

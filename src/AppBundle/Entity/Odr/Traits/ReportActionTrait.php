@@ -42,7 +42,6 @@ trait ReportActionTrait
      */
     private $actionPropertyBuy;
 
-
     public function hasAtLeastOneAction()
     {
         return !empty($this->actionGiveGiftsToClient)
