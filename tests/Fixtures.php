@@ -62,7 +62,7 @@ class Fixtures
 
     /**
      * @param EntityDir\Client $client
-     * @param array            $settersMap
+     * @param array $settersMap
      *
      * @return EntityDir\Odr\Odr
      */
@@ -179,7 +179,7 @@ class Fixtures
 
     /**
      * @param EntityDir\Odr\Odr $odr
-     * @param array             $settersMap
+     * @param array $settersMap
      *
      * @return EntityDir\Odr\VisitsCare
      */
@@ -347,8 +347,9 @@ class Fixtures
         self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
-    public static function deleteReportsData()
+    public static function deleteReportsData($additionalTables = [])
     {
-        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table casrec, deputy_case, report, odr  RESTART IDENTITY cascade";');
+        $tables = array_merge(['casrec', 'deputy_case', 'report', 'odr'], $additionalTables);
+        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 }
