@@ -322,11 +322,14 @@ class Report
     }
 
     /**
-     * @param string $type
+     * @param $type see TYPE_ constants
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**

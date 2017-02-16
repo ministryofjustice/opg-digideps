@@ -474,7 +474,9 @@ class User implements UserInterface
     public function addClient(Client $client)
     {
         $client->addUser($this);
-        $this->clients[] = $client;
+        if (!$this->clients->contains($client)) {
+            $this->clients->add($client);
+        }
 
         return $this;
     }
@@ -635,60 +637,83 @@ class User implements UserInterface
         return $this->phoneAlternative;
     }
 
+
     /**
-     * @return string
+     * @param $address1
+     * @return $this
      */
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
+
+        return $this;
     }
 
+
     /**
-     * @return string
+     * @param $address2
+     * @return $this
      */
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $address3
+     * @return $this
      */
     public function setAddress3($address3)
     {
         $this->address3 = $address3;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $addressPostcode
+     * @return $this
      */
     public function setAddressPostcode($addressPostcode)
     {
         $this->addressPostcode = $addressPostcode;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $addressCountry
+     * @return $this
      */
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $phoneMain
+     * @return $this
      */
     public function setPhoneMain($phoneMain)
     {
         $this->phoneMain = $phoneMain;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $phoneAlternative
+     * @return $this
      */
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = $phoneAlternative;
+
+        return $this;
     }
 
     /**
