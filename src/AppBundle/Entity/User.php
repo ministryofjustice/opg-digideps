@@ -500,6 +500,18 @@ class User implements UserInterface
     }
 
     /**
+     * Get client by case number.
+     *
+     * @return Client
+     */
+    public function getClientByCaseNumber($caseNumber)
+    {
+        return $this->getClients()->filter(function($client) use ($caseNumber) {
+            return $client->getCaseNumber() == $caseNumber;
+        })->first();
+    }
+
+    /**
      * @return mixed
      */
     public function getRoleName()
