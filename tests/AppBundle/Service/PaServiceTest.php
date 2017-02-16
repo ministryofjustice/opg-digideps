@@ -24,8 +24,6 @@ class PaServiceTest extends WebTestCase
 
     public static function setUpBeforeClass()
     {
-        Fixtures::deleteReportsData();
-
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
                                                              'debug'       => true,]);
 
@@ -40,12 +38,16 @@ class PaServiceTest extends WebTestCase
     public function setup()
     {
         $this->pa = new PaService(self::$em);
+        Fixtures::deleteReportsData(['dd_user']);
+        self::$em->clear();
     }
 
     public function testAddFromCasrecRows()
     {
         $deputy1 = [
             'Deputy No'    => '00000001',
+            'Pat Create'   => '12-Dec-02',
+            'Dship Create' => '28-Sep-07',
             'Dep Postcode' => 'N1 ABC',
             'Dep Forename' => 'Dep1',
             'Dep Surname'  => 'Uty2',
@@ -56,14 +58,22 @@ class PaServiceTest extends WebTestCase
             'Dep Adrs4'    => 'ADD4',
             'Dep Adrs5'    => 'ADD5',
             'Email'        => 'dep1@provider.com',
+
         ];
 
         $deputy2 = [
             'Deputy No'    => '00000002',
+            'Pat Create'   => '16-Dec-14',
+            'Dship Create' => '07-Apr-15',
             'Dep Postcode' => 'SW1',
             'Dep Forename' => 'Dep2',
             'Dep Surname'  => 'Uty2',
             'Dep Type'     => 23,
+            'Dep Adrs1'    => 'ADD1',
+            'Dep Adrs2'    => 'ADD2',
+            'Dep Adrs3'    => 'ADD3',
+            'Dep Adrs4'    => 'ADD4',
+            'Dep Adrs5'    => 'ADD5',
             'Email'        => 'dep2@provider.com',
         ];
 
@@ -94,8 +104,33 @@ class PaServiceTest extends WebTestCase
         ];
 
         // add twice to check duplicates are not added
-        $this->pa->addFromCasrecRows($data);
-        $this->pa->addFromCasrecRows($data);
+        $ret1 = $this->pa->addFromCasrecRows($data);
+        $ret2 = $this->pa->addFromCasrecRows($data);
+        // check return values
+        $this->assertEquals([
+            'users'   => [
+                'added'   => ['dep1@provider.com', 'dep2@provider.com'],
+            ],
+            'clients' => [
+                'added'   => ['10000001', '10000002', '10000003'],
+            ],
+            'reports' => [
+                'added'   => ['10000001-2014-12-16', '10000002-2015-02-04', '10000003-2015-02-05'],
+            ],
+        ], $ret1);
+        $this->assertEquals([
+            'users'   => [
+                'added'   => [],
+            ],
+            'clients' => [
+                'added'   => [],
+            ],
+            'reports' => [
+                'added'   => [],
+            ],
+        ], $ret2);
+
+        self::$em->clear();
 
         //assert 1st deputy
         $user1 = self::$em->getRepository(EntityDir\User::class)->findOneBy(['email' => 'dep1@provider.com']);
@@ -110,7 +145,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2014-12-16', $client1Report1->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
 
         // assert 2nd client and report
         $client2 = $user1->getClientByCaseNumber('10000002');
@@ -119,7 +154,8 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client2->getReports());
         $client2Report1 = $client2->getReports()->first();
         /* @var $client2Report1 EntityDir\Report\Report */
-        $this->assertEquals('2015-02-04', $client2Report1->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2015-02-04', $client2Report1->getEndDate()->format('Y-m-d'));
+        $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client2Report1->getType());
 
         // assert 2nd deputy
         $user2 = self::$em->getRepository(EntityDir\User::class)->findOneBy(['email' => 'dep2@provider.com']);
@@ -127,13 +163,13 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $clients);
 
         // assert 1st client and report
-        $client1 = $user1->getClientByCaseNumber('10000003');
+        $client1 = $user2->getClientByCaseNumber('10000003');
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2015-02-05', $client1Report1->getDueDate()->format('Y-m-d'));
+        $this->assertEquals('2015-02-05', $client1Report1->getEndDate()->format('Y-m-d'));
     }
 
     public function tearDown()
