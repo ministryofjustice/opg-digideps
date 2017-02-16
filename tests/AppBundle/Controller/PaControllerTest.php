@@ -2,8 +2,8 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Fixtures;
 use AppBundle\Entity\pa;
+use Fixtures;
 use Tests\AppBundle\Service\PaServiceTest;
 
 class PaControllerTest extends AbstractTestController
@@ -43,7 +43,6 @@ class PaControllerTest extends AbstractTestController
         }
     }
 
-
     public function testAddBulkAuth()
     {
         $url = '/pa/bulk-add';
@@ -52,7 +51,6 @@ class PaControllerTest extends AbstractTestController
 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
-
 
     public function testAddBulk()
     {
@@ -69,7 +67,6 @@ class PaControllerTest extends AbstractTestController
         $this->assertEquals('10000001', $data['added']['clients'][0]);
         $this->assertEquals('10000001-2014-12-16', $data['added']['reports'][0]);
     }
-
 
     private function compress($data)
     {

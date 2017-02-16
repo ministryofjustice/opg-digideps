@@ -508,7 +508,7 @@ class User implements UserInterface
      */
     public function getClientByCaseNumber($caseNumber)
     {
-        return $this->getClients()->filter(function($client) use ($caseNumber) {
+        return $this->getClients()->filter(function ($client) use ($caseNumber) {
             return $client->getCaseNumber() == $caseNumber;
         })->first();
     }
@@ -637,9 +637,9 @@ class User implements UserInterface
         return $this->phoneAlternative;
     }
 
-
     /**
      * @param $address1
+     *
      * @return $this
      */
     public function setAddress1($address1)
@@ -649,9 +649,9 @@ class User implements UserInterface
         return $this;
     }
 
-
     /**
      * @param $address2
+     *
      * @return $this
      */
     public function setAddress2($address2)
@@ -663,6 +663,7 @@ class User implements UserInterface
 
     /**
      * @param $address3
+     *
      * @return $this
      */
     public function setAddress3($address3)
@@ -674,6 +675,7 @@ class User implements UserInterface
 
     /**
      * @param $addressPostcode
+     *
      * @return $this
      */
     public function setAddressPostcode($addressPostcode)
@@ -685,6 +687,7 @@ class User implements UserInterface
 
     /**
      * @param $addressCountry
+     *
      * @return $this
      */
     public function setAddressCountry($addressCountry)
@@ -696,6 +699,7 @@ class User implements UserInterface
 
     /**
      * @param $phoneMain
+     *
      * @return $this
      */
     public function setPhoneMain($phoneMain)
@@ -707,6 +711,7 @@ class User implements UserInterface
 
     /**
      * @param $phoneAlternative
+     *
      * @return $this
      */
     public function setPhoneAlternative($phoneAlternative)

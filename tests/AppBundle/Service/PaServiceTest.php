@@ -2,13 +2,13 @@
 
 namespace Tests\AppBundle\Service;
 
-use Doctrine\ORM\EntityManager;
-use Fixtures;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\PaService;
+use Doctrine\ORM\EntityManager;
+use Fixtures;
 use Mockery as m;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PaServiceTest extends WebTestCase
 {
@@ -169,6 +169,4 @@ class PaServiceTest extends WebTestCase
     {
         m::close();
     }
-
-
 }

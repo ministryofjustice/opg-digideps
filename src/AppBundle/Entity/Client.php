@@ -505,7 +505,7 @@ class Client
      */
     public function getReportByDueDate(\DateTime $dueDate)
     {
-        return $this->reports->filter(function($report) use ($dueDate) {
+        return $this->reports->filter(function ($report) use ($dueDate) {
             return $dueDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
         })->first();
     }

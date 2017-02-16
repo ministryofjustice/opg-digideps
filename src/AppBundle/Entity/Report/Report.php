@@ -323,6 +323,7 @@ class Report
 
     /**
      * @param $type see TYPE_ constants
+     *
      * @return $this
      */
     public function setType($type)

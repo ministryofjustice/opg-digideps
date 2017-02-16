@@ -42,7 +42,9 @@ class PaService
      *     'Corref'     => 'A3',
      *     'Report Due' => '05-Feb-15',
      * ]
+     *
      * @param array $rows
+     *
      * @return array
      */
     public function addFromCasrecRows(array $rows)
@@ -129,6 +131,4 @@ class PaService
     {
         return \DateTime::createFromFormat('d-M-Y', $dateString);
     }
-
-
 }
