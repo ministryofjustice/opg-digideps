@@ -108,26 +108,14 @@ class PaServiceTest extends WebTestCase
         $ret2 = $this->pa->addFromCasrecRows($data);
         // check return values
         $this->assertEquals([
-            'users'   => [
-                'added'   => ['dep1@provider.com', 'dep2@provider.com'],
-            ],
-            'clients' => [
-                'added'   => ['10000001', '10000002', '10000003'],
-            ],
-            'reports' => [
-                'added'   => ['10000001-2014-12-16', '10000002-2015-02-04', '10000003-2015-02-05'],
-            ],
+            'users'   => ['dep1@provider.com', 'dep2@provider.com'],
+            'clients' => ['10000001', '10000002', '10000003'],
+            'reports' => ['10000001-2014-12-16', '10000002-2015-02-04', '10000003-2015-02-05'],
         ], $ret1);
         $this->assertEquals([
-            'users'   => [
-                'added'   => [],
-            ],
-            'clients' => [
-                'added'   => [],
-            ],
-            'reports' => [
-                'added'   => [],
-            ],
+            'users'   => [],
+            'clients' => [],
+            'reports' => [],
         ], $ret2);
 
         self::$em->clear();

@@ -48,15 +48,9 @@ class PaService
     public function addFromCasrecRows(array $rows)
     {
         $ret = [
-            'users'   => [
-                'added'   => [],
-            ],
-            'clients' => [
-                'added'   => [],
-            ],
-            'reports' => [
-                'added'   => [],
-            ],
+            'users'   => [],
+            'clients' => [],
+            'reports' => [],
         ];
 
         foreach ($rows as $row) {
@@ -79,7 +73,7 @@ class PaService
                     ->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5'])
                     ->setAddressPostcode($row['Dep Postcode'])//->setAddressCountry('GB')
                 ;
-                $ret['users']['added'][] = $email;
+                $ret['users'][] = $email;
                 $this->em->persist($user);
                 $this->em->flush($user);
             }
@@ -94,7 +88,7 @@ class PaService
                     ->setFirstname($row['Forename'])
                     ->setLastname($row['Surname'])//->setCourtDate($row['Dship Create'])
                 ;
-                $ret['clients']['added'][] = $caseNumber;
+                $ret['clients'][] = $caseNumber;
                 $this->em->persist($client);
                 $user->addClient($client);
                 $this->em->persist($user);
@@ -111,7 +105,7 @@ class PaService
                 $report
                     ->setType(EntityDir\Report\Report::TYPE_102)
                     ->setEndDate($reportDueDate);
-                $ret['reports']['added'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
+                $ret['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
                 $this->em->persist($report);
                 $this->em->flush();
             }
