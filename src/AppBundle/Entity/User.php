@@ -19,18 +19,7 @@ class User implements UserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-
-    /**
-     * @JMS\Exclude
-     */
-    private static $allowedRoles = [
-        self::ROLE_ADMIN => ['OPG Admin', 1],
-        self::ROLE_LAY_DEPUTY => ['Lay Deputy', 2],
-        'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
-        'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
-        self::ROLE_AD => ['Assisted Digital', 5],
-    ];
-
+    const ROLE_PA = 'ROLE_PA';
 
     /**
      * @var int
@@ -337,7 +326,7 @@ class User implements UserInterface
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
@@ -829,7 +818,13 @@ class User implements UserInterface
      */
     public static function roleIdToName($id)
     {
-        foreach(self::$allowedRoles as $name => $row) {
+        foreach ([
+                     self::ROLE_ADMIN              => ['OPG Admin', 1],
+                     self::ROLE_LAY_DEPUTY         => ['Lay Deputy', 2],
+                     'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
+                     'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
+                     self::ROLE_AD                 => ['Assisted Digital', 5],
+                 ] as $name => $row) {
             if ($row[1] == $id) {
                 return $name;
             }
