@@ -342,7 +342,7 @@ class AdminController extends AbstractController
                         'Dep Adrs4',
                         'Dep Adrs5',
                         'Email',
-                        'Case' ,
+                        'Case',
                         'Forename',
                         'Surname',
                         'Corref',
@@ -376,7 +376,6 @@ class AdminController extends AbstractController
                         implode('<br>', $errors)
                     );
                 }
-
 
                 return $this->redirect($this->generateUrl('admin_pa_upload'));
             } catch (\Exception $e) {
