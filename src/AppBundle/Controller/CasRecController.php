@@ -13,9 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 class CasRecController extends RestController
 {
     /**
-     * Bulk insert
-     * Max 10k otherwise failing (memory reach 128M).
-     *
      * @Route("/truncate")
      * @Method({"DELETE"})
      */
