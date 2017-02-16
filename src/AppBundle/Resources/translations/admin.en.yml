@@ -28,12 +28,3 @@ yes:
     label: Yes
 action:
     message: Your changes were saved
-csv_upload:
-    form:
-        file:
-            label: Select CSV file exported from CASREC
-        truncate:
-            label: Delete existing data before uploading. 
-            hint: Previous data will be restored in case of failure
-        upload:
-            label: Upload

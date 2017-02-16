@@ -50,8 +50,8 @@ class AdminController extends AbstractController
     public function addUserAction(Request $request)
     {
         $availableRoles = [
-            EntityDir\User::ROLE_LAY_DEPUTY              => 'Lay Deputy',
-            EntityDir\User::ROLE_AD                      => 'Assisted Digital',
+            EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+            EntityDir\User::ROLE_AD         => 'Assisted Digital',
         ];
         // only admins can add other admins
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
@@ -60,7 +60,7 @@ class AdminController extends AbstractController
 
 
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'      => $availableRoles,
+            'roleChoices'        => $availableRoles,
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
@@ -122,10 +122,10 @@ class AdminController extends AbstractController
         }
 
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'      => [
-                EntityDir\User::ROLE_ADMIN                   => 'OPG Admin',
-                EntityDir\User::ROLE_LAY_DEPUTY              => 'Lay Deputy',
-                EntityDir\User::ROLE_AD                      => 'Assisted Digital',
+            'roleChoices'        => [
+                EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
+                EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+                EntityDir\User::ROLE_AD         => 'Assisted Digital',
             ],
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
             'roleNameDisabled'   => $user->getId() == $this->getUser()->getId(), //can't edit current user's role
@@ -243,7 +243,6 @@ class AdminController extends AbstractController
         $chunkSize = 5000;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
-            'action' => $this->generateUrl('admin_upload'),
             'method' => 'POST',
         ]);
 
@@ -306,6 +305,90 @@ class AdminController extends AbstractController
 
         return [
             'currentRecords' => $this->getRestClient()->get('casrec/count', 'array'),
+            'form'           => $form->createView(),
+            'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+        ];
+    }
+
+    /**
+     * @Route("/pa-upload", name="admin_pa_upload")
+     * @Template
+     */
+    public function uploadPaUsersAction(Request $request)
+    {
+        $chunkSize = 2;
+
+        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+            'method' => 'POST',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $fileName = $form->get('file')->getData();
+            try {
+                $data = (new CsvToArray($fileName, true))
+                    ->setExpectedColumns([
+                        'Deputy No',
+                        'Pat Create',
+                        'Dship Create',
+                        'Dep Postcode',
+                        'Dep Forename',
+                        'Dep Surname',
+                        'Dep Type',
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
+                        'Email',
+                        'Case' ,
+                        'Forename',
+                        'Surname',
+                        'Corref',
+                        'Report Due'
+                    ])
+                    ->getData();
+
+                $added = ['users' => [], 'clients' => [], 'reports' => []];
+                $errors = [];
+                foreach (array_chunk($data, $chunkSize) as $chunk) {
+                    $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
+                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
+                    $added['users'] = array_merge($added['users'], $ret['added']['users']);
+                    $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);
+                    $added['reports'] = array_merge($added['reports'], $ret['added']['reports']);
+                    $errors = array_merge($errors, $ret['errors']);
+                }
+
+                // notifications
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    sprintf('Added %d PA users, %d clients, %d reports.',
+                        count($added['users']),
+                        count($added['clients']),
+                        count($added['reports'])
+                    )
+                );
+                if ($errors) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        implode('<br>', $errors)
+                    );
+                }
+
+
+                return $this->redirect($this->generateUrl('admin_pa_upload'));
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $message = $e->getData()['message'];
+                }
+                $form->get('file')->addError(new FormError($message));
+            }
+        }
+
+        return [
             'form'           => $form->createView(),
             'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];

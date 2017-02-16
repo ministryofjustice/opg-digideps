@@ -1,0 +1,22 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+
+{% block htmlTitle %}Administration - Add PA users{% endblock %}
+{% block pageTitle %}Add PA users{% endblock %}
+
+{% block pageContent %}
+
+    <p>
+        Add PA users along with Clients and reports.
+    </p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.file, '', {'labelText': 'Select CSV file'}) }}
+
+    {{ form_submit(form.upload, '', {'labelText': 'Add PA users'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
