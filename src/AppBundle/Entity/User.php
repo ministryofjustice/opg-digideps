@@ -691,4 +691,12 @@ class User implements AdvancedUserInterface
     {
         $this->adManaged = $adManaged;
     }
+
+    /**
+     * @return bool true if user role is LAY or PA
+     */
+    public function isDeputy()
+    {
+        return in_array($this->roleName, [self::ROLE_LAY_DEPUTY, self::ROLE_PA]);
+    }
 }
