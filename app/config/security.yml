@@ -1,6 +1,7 @@
 security:
     role_hierarchy:
         ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
+        ROLE_PA: [ ROLE_PA ]
         ROLE_PROFESSIONAL_DEPUTY: [ ROLE_DEPUTY ]
         ROLE_AD: [ ROLE_AD ]
         ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY ]
