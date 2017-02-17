@@ -34,6 +34,12 @@ default:
             contexts:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
+        pa:
+            description: End to end journey for Pub Authority users
+            paths:    [ %paths.base%/features/pa ]
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
@@ -147,4 +153,5 @@ headless:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte: ~
             base_url: http://digideps-client.local/
+            files_path: %paths.base%/fixtures/
 
