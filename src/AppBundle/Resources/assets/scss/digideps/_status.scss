@@ -29,6 +29,10 @@
         margin-top: 0;
     }
 
+    &-large {
+        font-size: 16px;
+    }
+
     &.not-started {
         color: $grey-status;
     }

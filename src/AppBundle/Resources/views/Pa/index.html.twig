@@ -19,19 +19,19 @@
 			<tr>
 				<td>
 					<a href="#">
-				        {{ dump(report.client.lastName) }}, {{ dump(report.client.firstName) }}
+				        {{ report.client.lastName }}, {{ report.client.firstName }}
 					</a>
 				</td>
 				<td>
-					{{ dump(report.client.caseNumber) }}
+					{{ report.client.caseNumber }}
 				</td>
 				<td>
 					<span>20 Dec 2017</span><br>
 					<span class="font-xsmall">Due in 7 days</span>
 				</td>
 				<td>
-					<span class="status done">
-						{{ dump(report.statusService.status) }}
+					<span class="status status-large done">
+						Not started
 					</span>
 				</td>
 			</tr>
