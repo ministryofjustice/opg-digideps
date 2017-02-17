@@ -8,9 +8,9 @@ default:
             paths:    [ %paths.base%/features/prechecks ]
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
 
         deputy:
@@ -20,9 +20,9 @@ default:
                 tags: "@deputy&&~@javascript"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps' }]
             {{ end }}
 
         admin:
@@ -32,9 +32,9 @@ default:
                 tags: "~@javascript"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: "api", autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
             {{ end }}
 
         deputyodr:
@@ -44,10 +44,17 @@ default:
                 tags: "@odr"
             contexts:
             {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
-                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: false }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
+
+         pa:
+            description: End to end journey for Pub Authority users
+            paths:    [ %paths.base%/features/pa ]
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+
 
         components:
             description: Tests related to textareas
@@ -167,6 +174,7 @@ headless:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte: ~
+            files_path: %paths.base%/fixtures/
         {{ if exists "/frontend/nonadmin/host" }}
             base_url: {{ getv "/frontend/nonadmin/host" }}
         {{ else }}
