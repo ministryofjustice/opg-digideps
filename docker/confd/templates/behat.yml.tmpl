@@ -53,7 +53,11 @@ default:
             description: End to end journey for Pub Authority users
             paths:    [ %paths.base%/features/pa ]
             contexts:
+            {{ if exists "/api/database/name" }}
                 - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+            {{ end }}
 
 
         components:
