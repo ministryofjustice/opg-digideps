@@ -418,7 +418,9 @@ class Client
      */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+        }
 
         return $this;
     }
@@ -466,9 +468,12 @@ class Client
      *
      * @return Client
      */
-    public function addReport(Report $reports)
+    public function addReport(Report $report)
     {
-        $this->reports[] = $reports;
+        if (!$this->reports->contains($report)) {
+            $this->reports->add($report);
+        }
+        $report->setClient($this);
 
         return $this;
     }
@@ -491,6 +496,18 @@ class Client
     public function getReports()
     {
         return $this->reports;
+    }
+
+    /**
+     * @param \DateTime $dueDate
+     *
+     * @return Report
+     */
+    public function getReportByDueDate(\DateTime $dueDate)
+    {
+        return $this->reports->filter(function ($report) use ($dueDate) {
+            return $dueDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
+        })->first();
     }
 
     /**

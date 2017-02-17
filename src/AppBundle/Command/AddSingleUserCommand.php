@@ -81,7 +81,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
         // role
         if (!empty($data['roleId'])) { //deprecated
             $user->setRoleName(User::roleIdToName($data['roleId']));
-        } else if (!empty($data['roleName'])) {
+        } elseif (!empty($data['roleName'])) {
             $user->setRoleName($data['roleName']);
         } else {
             $output->write('roleId or roleName must be defined');

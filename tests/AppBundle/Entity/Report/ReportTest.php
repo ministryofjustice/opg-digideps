@@ -152,7 +152,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider  setTypeBasedOnCasrecRecordPRovider
      */
@@ -168,7 +167,4 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->setTypeBasedOnCasrecRecord($casRec);
         $this->assertEquals($expectedType, $this->report->getType());
     }
-
-
-
 }

@@ -19,18 +19,7 @@ class User implements UserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-
-    /**
-     * @JMS\Exclude
-     */
-    private static $allowedRoles = [
-        self::ROLE_ADMIN => ['OPG Admin', 1],
-        self::ROLE_LAY_DEPUTY => ['Lay Deputy', 2],
-        'ROLE_PROFESSIONAL_DEPUTY' => ['Professional Deputy', 3],
-        'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
-        self::ROLE_AD => ['Assisted Digital', 5],
-    ];
-
+    const ROLE_PA = 'ROLE_PA';
 
     /**
      * @var int
@@ -129,7 +118,7 @@ class User implements UserInterface
 
     /**
      * @var string ROLE_
-     * see roles in Role class
+     *             see roles in Role class
      *
      * @JMS\Type("string")
      * @JMS\Groups({"user", "role"})
@@ -485,7 +474,9 @@ class User implements UserInterface
     public function addClient(Client $client)
     {
         $client->addUser($this);
-        $this->clients[] = $client;
+        if (!$this->clients->contains($client)) {
+            $this->clients->add($client);
+        }
 
         return $this;
     }
@@ -508,6 +499,18 @@ class User implements UserInterface
     public function getClients()
     {
         return $this->clients;
+    }
+
+    /**
+     * Get client by case number.
+     *
+     * @return Client
+     */
+    public function getClientByCaseNumber($caseNumber)
+    {
+        return $this->getClients()->filter(function ($client) use ($caseNumber) {
+            return $client->getCaseNumber() == $caseNumber;
+        })->first();
     }
 
     /**
@@ -635,59 +638,87 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @param $address1
+     *
+     * @return $this
      */
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $address2
+     *
+     * @return $this
      */
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $address3
+     *
+     * @return $this
      */
     public function setAddress3($address3)
     {
         $this->address3 = $address3;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $addressPostcode
+     *
+     * @return $this
      */
     public function setAddressPostcode($addressPostcode)
     {
         $this->addressPostcode = $addressPostcode;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $addressCountry
+     *
+     * @return $this
      */
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $phoneMain
+     *
+     * @return $this
      */
     public function setPhoneMain($phoneMain)
     {
         $this->phoneMain = $phoneMain;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @param $phoneAlternative
+     *
+     * @return $this
      */
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = $phoneAlternative;
+
+        return $this;
     }
 
     /**
@@ -819,7 +850,6 @@ class User implements UserInterface
         $this->adManaged = $adManaged;
     }
 
-
     /**
      * @deprecated ID shouldn't be used anymore anywhere
      *
@@ -829,7 +859,13 @@ class User implements UserInterface
      */
     public static function roleIdToName($id)
     {
-        foreach(self::$allowedRoles as $name => $row) {
+        foreach ([
+                     self::ROLE_ADMIN              => ['OPG Admin', 1],
+                     self::ROLE_LAY_DEPUTY         => ['Lay Deputy', 2],
+                     'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
+                     'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
+                     self::ROLE_AD                 => ['Assisted Digital', 5],
+                 ] as $name => $row) {
             if ($row[1] == $id) {
                 return $name;
             }

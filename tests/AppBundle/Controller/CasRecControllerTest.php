@@ -59,7 +59,6 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
-
     private function compress($data)
     {
         return base64_encode(gzcompress(json_encode($data), 9));
@@ -147,5 +146,4 @@ class CasRecControllerTest extends AbstractTestController
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
     }
-
 }

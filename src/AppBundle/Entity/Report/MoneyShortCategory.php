@@ -95,6 +95,7 @@ class MoneyShortCategory
 
     /**
      * Find the type (in/out) based on the
+     *
      * @return string in|out
      */
     public function getType()

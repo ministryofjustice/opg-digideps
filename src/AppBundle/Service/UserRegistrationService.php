@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
