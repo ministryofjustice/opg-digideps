@@ -35,7 +35,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->user = m::mock('AppBundle\Entity\User', [
-            'getRoleName' => 'ROLE_LAY_DEPUTY',
+            'isDeputy' => true,
             'getFullName' => 'FN',
             'getRegistrationToken' => 'RT',
             'getEmail' => 'user@email',

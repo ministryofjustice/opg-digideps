@@ -17,6 +17,7 @@ class User implements AdvancedUserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
+    const ROLE_PA = 'ROLE_PA';
 
     /**
      * @JMS\Exclude
@@ -25,6 +26,7 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN                   => 'OPG Admin',
         self::ROLE_LAY_DEPUTY              => 'Lay Deputy',
         self::ROLE_AD                      => 'Assisted Digital',
+        self::ROLE_PA                      => 'Public Authority',
     ];
 
     const TOKEN_EXPIRE_HOURS = 48;
@@ -369,7 +371,6 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
-
     public function setClients(array $clients)
     {
         $this->clients = $clients;
@@ -517,7 +518,6 @@ class User implements AdvancedUserInterface
     {
         return $this->roleName;
     }
-
 
     public function getRoleFullName()
     {
@@ -690,5 +690,13 @@ class User implements AdvancedUserInterface
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
+    }
+
+    /**
+     * @return bool true if user role is LAY or PA
+     */
+    public function isDeputy()
+    {
+        return in_array($this->roleName, [self::ROLE_LAY_DEPUTY, self::ROLE_PA]);
     }
 }

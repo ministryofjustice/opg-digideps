@@ -3,8 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use AppBundle\Form as FormDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +18,6 @@ class PaController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        if ($this->getUser()->getEmail() != 'laydeputy@publicguardian.gsi.gov.uk') {
-            throw $this->createNotFoundException();
-        }
-
         $reports = [];
         $i = 100;
         while ($i--) {
@@ -40,5 +34,4 @@ class PaController extends AbstractController
             'reports' => $reports,
         ];
     }
-
 }
