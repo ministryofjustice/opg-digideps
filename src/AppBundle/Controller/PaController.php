@@ -18,10 +18,6 @@ class PaController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        if ($this->getUser()->getEmail() != 'laydeputy@publicguardian.gsi.gov.uk') {
-            throw $this->createNotFoundException();
-        }
-
         $reports = [];
         $i = 100;
         while ($i--) {
