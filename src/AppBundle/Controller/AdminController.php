@@ -327,7 +327,7 @@ class AdminController extends AbstractController
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
-                $data = (new CsvToArray($fileName, true))
+                $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
                         'Deputy No',
                         'Pat Create',
