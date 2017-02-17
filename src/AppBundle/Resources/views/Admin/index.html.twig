@@ -69,20 +69,11 @@
             <thead>
             <tr>
                 <th scope="col">
-                    {% if currentOrderBy == 'firstname' %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': newSortOrder })}}#users-list-title"> Firstname</a>
-                        ({{ currentSortOrder == "ASC" ? ' a-z' : 'z-a' }})
-                    {% else %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': 'DESC' })}}#users-list-title" > Firstname</a>
-                    {% endif %}
-                </th>
-
-                <th scope="col">
                     {% if currentOrderBy == 'lastname' %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}#users-list-title">Lastname</a>
+                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}#users-list-title">Name </a>
                         ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
                     {% else %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}#users-list-title"  >Lastname</a>
+                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}#users-list-title"  >Name</a>
                     {% endif %}
                 </th>
                 <th scope="col">
@@ -95,6 +86,7 @@
                 </th>
                 <th scope="col">Role</th>
                 <th scope="col">NDR Enabled</th>
+                <th scope="col">Active</th>
                 <th scope="col">
                     {% if currentOrderBy == 'registrationDate' %}
                         <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder })}}#users-list-title">Registration date</a>
@@ -110,9 +102,8 @@
             {% for user in users %}
                 <tr>
                     <td>
-                        {{ user.firstname }}
+                        {{ user.firstname }}<br/>{{ user.lastname }}
                     </td>
-                    <td>{{ user.lastname }}</td>
                     <td  >{{ user.adManaged ? '-' : user.email }}</td>
                     <td nowrap>
                         {{ user.roleFullName }}
@@ -123,7 +114,19 @@
                         {% endif %}
 
                     </td>
-                    <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">{{ user.odrEnabled ? 'yes' : '-' }}</td>
+                    <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">
+                        {{ user.odrEnabled ? 'yes' : '-' }}
+                    </td>
+                    <td >
+                        {% if user.active %}
+                        YES
+                        {% else %}
+                            NO<br/>
+                            <a data-role="ajax-link" href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                                (Re)send activation email
+                            </a>
+                        {% endif %}
+                    </td>
                     <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
                 <td>
                     {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
@@ -136,6 +139,18 @@
         </table>
     </div>
 
-
+    {# simple JS script to transform data-role="ajax-link" links
+    into loading the URL with AJAX and replace the response with the HTTP response #}
+    <script>
+        $(document).ready(function() {
+            $('[data-role="ajax-link"]').click(function(e){
+                e.preventDefault();
+                var link = $(this);
+                $.get(link.attr('href'), function( data ) {
+                    link.replaceWith(data);
+                });
+            });
+        });
+    </script>
 
 {% endblock %}

@@ -346,7 +346,7 @@ class AdminController extends AbstractController
                         'Forename',
                         'Surname',
                         'Corref',
-                        'Report Due'
+                        'Report Due',
                     ])
                     ->getData();
 
@@ -364,7 +364,7 @@ class AdminController extends AbstractController
                 // notifications
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    sprintf('Added %d PA users, %d clients, %d reports.',
+                    sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
                         count($added['users']),
                         count($added['clients']),
                         count($added['reports'])
@@ -388,8 +388,8 @@ class AdminController extends AbstractController
         }
 
         return [
-            'form'           => $form->createView(),
-            'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+            'form'          => $form->createView(),
+            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
 
@@ -429,5 +429,23 @@ class AdminController extends AbstractController
         $response->setContent($rawCsv);
 
         return $response;
+    }
+
+    /**
+     * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     **/
+    public function passwordForgottenAction(Request $request, $email)
+    {
+        try {
+            /* @var $user EntityDir\User */
+            $user = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
+            $resetPasswordEmail = $this->getMailFactory()->createActivationEmail($user);
+
+            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+        }
+
+        return new Response('done');
     }
 }
