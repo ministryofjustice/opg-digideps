@@ -62,7 +62,9 @@ class PaService
             $user = $this->userRepository->findOneBy(['email' => $email]);
             if (!$user) {
                 $user = new EntityDir\User();
-                $user->setDeputyNo($row['Deputy No'])
+                $user
+                    ->setRegistrationDate(new \DateTime())
+                    ->setDeputyNo($row['Deputy No'])
                     ->setEmail($email)
                     ->setFirstname($row['Dep Forename'])
                     ->setLastname($row['Dep Surname'])
