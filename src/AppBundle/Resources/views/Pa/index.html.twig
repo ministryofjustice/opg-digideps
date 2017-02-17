@@ -1,16 +1,42 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}...{% endblock %}
-{% block pageTitle %}..{% endblock %}
+{% block htmlTitle %}Deputy reports dashboard{% endblock %}
+{% block pageTitle %}Deputy reports dashboard{% endblock %}
 
 {% block pageContent %}
 
-    {% for report in reports %}
-        <hr>
-        {{ dump(report.client.firstName) }}
-        {{ dump(report.client.lastName) }}
-        {{ dump(report.client.caseNumber) }}
-        {{ dump(report.statusService.status) }}
-    {% endfor %}
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Client</th>
+				<th scope="col">Court order no.</th>
+				<th scope="col">Report due date</th>
+				<th scope="col">Report status</th>
+			</tr>
+		</thead>
+		<tbody>
+	    {% for report in reports %}
+			<tr>
+				<td>
+					<a href="#">
+				        {{ dump(report.client.lastName) }}, {{ dump(report.client.firstName) }}
+					</a>
+				</td>
+				<td>
+					{{ dump(report.client.caseNumber) }}
+				</td>
+				<td>
+					<span>20 Dec 2017</span><br>
+					<span class="font-xsmall">Due in 7 days</span>
+				</td>
+				<td>
+					<span class="status done">
+						{{ dump(report.statusService.status) }}
+					</span>
+				</td>
+			</tr>
+	    {% endfor %}
+		</tbody>
+	</table>
 
 {% endblock %}
