@@ -32,7 +32,7 @@ form:
   entries:
     care-fees:
       label: Outstanding care home fees
-      hint: Don't include fees charged against %client%'s property, that is, fees which will be paid off when the property is sold
+      hint: Don't include fees charged against %client%'s property, that is, fees that will be paid off when the property is sold
     credit-cards:
       label: Credit cards
       hint: ''
