@@ -11,4 +11,4 @@ export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
 export PGUSER=${API_DATABASE_USERNAME:=api}
 rm -rf app/cache/*
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=ad --profile=${PROFILE:=headless} --stop-on-failure
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=ad --profile=${PROFILE:=headless} --stop-on-failure

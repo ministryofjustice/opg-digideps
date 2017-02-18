@@ -100,7 +100,7 @@
             </thead>
             <tbody >
             {% for user in users %}
-                <tr>
+                <tr class="behat-region-user-{{ user.email | behat_namify }}">
                     <td>
                         {{ user.firstname }}<br/>{{ user.lastname }}
                     </td>
@@ -122,7 +122,7 @@
                         YES
                         {% else %}
                             NO<br/>
-                            <a data-role="ajax-link" href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                            <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
                                 (Re)send activation email
                             </a>
                         {% endif %}

@@ -37,9 +37,9 @@
         {% if app.user %}
             <ul id="proposition-links">
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{% trans %}nav.adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
-                    <li><a href="{{ path('admin_pa_upload') }}">{% trans %}Upload PA{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{% trans %}Upload PA{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
