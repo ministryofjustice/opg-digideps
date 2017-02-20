@@ -53,7 +53,6 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-
     public function setUp()
     {
         if (null === self::$tokenAdmin) {
@@ -72,7 +71,6 @@ class ClientControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
     }
-
 
     public function testupsertAuth()
     {
@@ -180,7 +178,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$client1->getId(), $data['id']);
         $this->assertEquals('Firstname', $data['firstname']);
     }
-
 
     public function testGetAllAuth()
     {

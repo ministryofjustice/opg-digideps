@@ -57,8 +57,18 @@ trait ReportMoneyShortTrait
      */
     public function getMoneyShortCategoriesIn()
     {
-        return $this->moneyShortCategories->filter(function ($e) {
+        return $this->getMoneyShortCategories()->filter(function ($e) {
             return $e->getType() == 'in';
+        });
+    }
+
+    /**
+     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     */
+    public function getMoneyShortCategoriesInPresent()
+    {
+        return $this->getMoneyShortCategories()->filter(function ($e) {
+            return $e->getType() == 'in' && $e->getPresent();
         });
     }
 
@@ -69,8 +79,18 @@ trait ReportMoneyShortTrait
      */
     public function getMoneyShortCategoriesOut()
     {
-        return $this->moneyShortCategories->filter(function ($e) {
+        return $this->getMoneyShortCategories()->filter(function ($e) {
             return $e->getType() == 'out';
+        });
+    }
+
+    /**
+     * @return \AppBundle\Entity\Report\MoneyShortCategory[]
+     */
+    public function getMoneyShortCategoriesOutPresent()
+    {
+        return $this->getMoneyShortCategories()->filter(function ($e) {
+            return $e->getType() == 'out' && $e->getPresent();
         });
     }
 

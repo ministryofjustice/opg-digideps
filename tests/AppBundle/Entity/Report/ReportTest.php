@@ -10,6 +10,7 @@ use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\ReportStatusService;
 use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
@@ -166,5 +167,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->report->setTypeBasedOnCasrecRecord($casRec);
         $this->assertEquals($expectedType, $this->report->getType());
+    }
+
+    public function testStatus()
+    {
+        $status = $this->report->getStatus();
+        $this->assertInstanceOf(ReportStatusService::class, $status);
     }
 }

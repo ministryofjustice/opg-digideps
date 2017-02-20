@@ -6,6 +6,7 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
+use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -1155,6 +1156,25 @@ class Report
     }
 
     /**
+     ** @return bool
+     */
+    public function hasAccounts()
+    {
+        return count($this->getBankAccounts()) > 0;
+    }
+
+    /**
+     ** @return bool
+     */
+    public function isMissingMoneyOrAccountsOrClosingBalance()
+    {
+        return !$this->hasMoneyIn()
+        || !$this->hasMoneyOut()
+        || !$this->hasAccounts()
+        || count($this->getBankAccountsIncomplete()) > 0;
+    }
+
+    /**
      * @return Debt[]
      */
     public function getDebtsWithValidAmount()
@@ -1164,5 +1184,18 @@ class Report
         });
 
         return $debtsWithAValidAmount;
+    }
+
+    /**
+     * Get assets total value.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"status"})
+     *
+     * @return array
+     */
+    public function getStatus()
+    {
+        return new ReportStatusService($this);
     }
 }
