@@ -34,7 +34,7 @@
                     @include box-sizing(border-box);
                     float: left;
                     width: 100%;
-                    padding: $gutter 0 20px;
+                    padding: 12px 0 12px;
                     border: 0 none;
                     color: $black;
                     text-align: center;
@@ -44,7 +44,7 @@
             &.active {
                 a {
                     @include media(tablet) {
-                        padding-bottom: $gutter;
+                        padding-bottom: 21px;
                     }
                 }
                 @include media(tablet) {
@@ -60,27 +60,54 @@
                 }
             }
 
-            &.tab-clients {
-                margin-left: 0;
-                a,
-                &:after { background-color: $link-colour; }
+            @include media(tablet) {
+                &.tab-clients {
+                    margin-left: 0;
+                    a,
+                    &:after { background-color: mix($white,$link-colour,25%); }
+
+                    a {
+                        &:hover {
+                            background-color: mix($white,$link-colour,45%)
+                        }
+                    }
+                }
+
+                &.tab-unstarted {
+                    a,
+                    &:after { background-color: #d7d7d7; }
+
+                    a {
+                        &:hover {
+                            background-color: mix($white,#d7d7d7,20%)
+                        }
+                    }
+                }
+
+                &.tab-progress {
+                    a,
+                    &:after { background-color: mix($white,$orange,25%); }
+
+                    a {
+                        &:hover {
+                            background-color: mix($white,$orange,45%)
+                        }
+                    }
+                }
+
+                &.tab-ready {
+                    margin-right: 0;
+                    a,
+                    &:after { background-color: mix($white,$button-colour,25%); }
+
+                    a {
+                        &:hover {
+                            background-color: mix($white,$button-colour,45%)
+                        }
+                    }
+                }
             }
 
-            &.tab-unstarted {
-                a,
-                &:after { background-color: #d7d7d7; }
-            }
-
-            &.tab-progress {
-                a,
-                &:after { background-color: $orange; }
-            }
-
-            &.tab-ready {
-                margin-right: 0;
-                a,
-                &:after { background-color: $button-colour; }
-            }
         }
     }
 }
