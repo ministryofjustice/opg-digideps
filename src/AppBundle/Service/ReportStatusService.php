@@ -33,12 +33,13 @@ class ReportStatusService
      */
     public function getDecisionsState()
     {
-        $decisionsValid = $this->report->getDecisions() || $this->report->getReasonForNoDecisions();
+        $hasDecisions = count($this->report->getDecisions()) > 0;
 
-        if (!$this->report->getDecisions() && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
+        if (!$hasDecisions && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
+        $decisionsValid = $hasDecisions || $this->report->getReasonForNoDecisions();
         if ($decisionsValid && $this->report->getMentalCapacity() &&
             $this->report->getMentalCapacity()->getHasCapacityChanged()
             && $this->report->getMentalCapacity()->getMentalAssessmentDate()
@@ -58,7 +59,8 @@ class ReportStatusService
      */
     public function getContactsState()
     {
-        if (empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts())) {
+        $hasContacts = count($this->report->getContacts()) > 0;
+        if (!$hasContacts && empty($this->report->getReasonForNoContacts())) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } else {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getContacts())];
@@ -102,7 +104,7 @@ class ReportStatusService
     public function getBankAccountsState()
     {
         $bankAccounts = $this->report->getBankAccounts();
-        if (empty($bankAccounts)) {
+        if (!count($bankAccounts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
