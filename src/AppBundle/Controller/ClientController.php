@@ -63,23 +63,9 @@ class ClientController extends RestController
         return ['id' => $client->getId()];
     }
 
-    /**
-     * @param int $userId
-     *
-     * @return EntityDir\Client
-     */
-    private function add($userId)
-    {
-        $user = $this->findEntityBy(EntityDir\User::class, $userId, "User with id: {$userId}  does not exist");
-
-        $client = new EntityDir\Client();
-        $client->addUser($user);
-
-        return $client;
-    }
 
     /**
-     * @Route("/{id}", name="client_find_by_id" )
+     * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"})
      * @Method({"GET"})
      *
      * @param int $id
@@ -99,5 +85,42 @@ class ClientController extends RestController
         }
 
         return $client;
+    }
+
+
+    /**
+     * Get list of clients, currently only for PA users
+     *
+     *
+     * @Route("/get-all")
+     * @Method({"GET"})
+     */
+    public function getAll(Request $request)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
+
+        $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
+        $page = $request->get('user_id');
+        $q = $request->get('q');
+        $status = $request->get('status');
+        $limit = $request->get('limit', 100);
+
+        $qb = $this->getRepository(EntityDir\Client::class)
+            ->createQueryBuilder('c')
+            ->leftJoin('c.users', 'u')
+            ->leftJoin('c.reports', 'r')
+            ->where('u.id = '.$userId);
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        $query = $qb->getQuery();
+
+        $ret = $query->getResult();
+
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['client', 'report'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        return $ret;
     }
 }

@@ -57,3 +57,9 @@ parameters:
             lastname: admin
             roleId: 1
             password: Abcd1234
+
+        pa@example.org:
+            firstname: test
+            lastname: pa
+            roleId: 6
+            password: Abcd1234

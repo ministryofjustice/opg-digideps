@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\User;
+
 class ClientControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -10,8 +12,19 @@ class ClientControllerTest extends AbstractTestController
     private static $deputy2;
     private static $client2;
     private static $report2;
+
+    // pa
+    private static $pa1;
+    private static $paClient1;
+    private static $paClient1Report1;
+    private static $paClient2;
+    private static $paClient2Report1;
+    private static $paClient3;
+    private static $paClient3Report1;
+
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
+    private static $tokenPa = null;
 
     public static function setUpBeforeClass()
     {
@@ -27,7 +40,27 @@ class ClientControllerTest extends AbstractTestController
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
+        // pa1
+        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$paClient1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient1']);
+        self::$paClient1Report1 = self::fixtures()->createReport(self::$paClient1);
+        self::$paClient2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient2']);
+        self::$paClient2Report1 = self::fixtures()->createReport(self::$paClient2);
+        self::$paClient3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient3']);
+        self::$paClient3Report1 = self::fixtures()->createReport(self::$paClient3);
+
+
         self::fixtures()->flush()->clear();
+    }
+
+
+    public function setUp()
+    {
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenPa = $this->loginAsPa();
+        }
     }
 
     /**
@@ -40,13 +73,6 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function setUp()
-    {
-        if (null === self::$tokenAdmin) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
 
     public function testupsertAuth()
     {
@@ -153,5 +179,39 @@ class ClientControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals(self::$client1->getId(), $data['id']);
         $this->assertEquals('Firstname', $data['firstname']);
+    }
+
+
+    public function testGetAllAuth()
+    {
+        $url = '/client/get-all';
+        $this->assertEndpointNeedsAuth('GET', $url);
+
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+    }
+
+    public function testGetAllAcl()
+    {
+        $url = '/client/get-all';
+
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+    }
+
+    public function testGetAllById()
+    {
+        $url = '/client/get-all';
+
+        // assert get
+        $clients = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
+
+        //assert
+        $this->assertCount(3, $clients);
+        $this->assertArrayHasKey('id', $clients[0]['reports'][0]);
+        $this->assertArrayHasKey('id', $clients[1]['reports'][0]);
+        $this->assertArrayHasKey('id', $clients[2]['reports'][0]);
     }
 }
