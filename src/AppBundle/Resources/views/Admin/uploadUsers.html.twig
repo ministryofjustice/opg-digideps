@@ -17,9 +17,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.file, 'csv_upload.form.file') }}
+    {{ form_input(form.file, '', {'labelText': 'Select CSV file exported from CASREC'}) }}
 
-    {{ form_submit(form.upload, 'csv_upload.form.upload') }}
+    {{ form_submit(form.upload, '', {'labelText': 'Upload'}) }}
 
     {{ form_end(form) }}
 

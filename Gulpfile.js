@@ -63,7 +63,7 @@ gulp.task('sass.debug.application', () => {
 
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass(config.sass))
+        .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 

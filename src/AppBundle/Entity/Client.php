@@ -8,8 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @JMS\XmlRoot("client")
- * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidCourtDate"})
  */
 class Client

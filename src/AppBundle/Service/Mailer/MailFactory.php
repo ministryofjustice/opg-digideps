@@ -38,9 +38,9 @@ class MailFactory
     }
 
     /**
-     * @param string $area      deputy|admin
+     * @param string $area deputy|admin
      * @param string $routeName must be in YML config under email.routes
-     * @param array  $params
+     * @param array $params
      *
      * @return string calculated route
      */
@@ -63,18 +63,17 @@ class MailFactory
      */
     public function createActivationEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == (EntityDir\Role::LAY_DEPUTY) ?
-            self::AREA_DEPUTY : self::AREA_ADMIN;
+        $area = $this->getUserArea($user);
 
         $viewParams = [
-            'name' => $user->getFullName(),
-            'domain' => $this->generateAbsoluteLink($area, 'homepage', []),
-            'link' => $this->generateAbsoluteLink($area, 'user_activate', [
+            'name'             => $user->getFullName(),
+            'domain'           => $this->generateAbsoluteLink($area, 'homepage', []),
+            'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
-                'token' => $user->getRegistrationToken(),
-             ]),
+                'token'  => $user->getRegistrationToken(),
+            ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
         ];
 
         $email = new ModelDir\Email();
@@ -98,15 +97,15 @@ class MailFactory
      */
     public function createResetPasswordEmail(EntityDir\User $user)
     {
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $this->getUserArea($user);
 
         $viewParams = [
-            'name' => $user->getFullName(),
-            'link' => $this->generateAbsoluteLink($area, 'user_activate', [
+            'name'        => $user->getFullName(),
+            'link'        => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'password-reset',
-                'token' => $user->getRegistrationToken(),
+                'token'  => $user->getRegistrationToken(),
             ]),
-            'domain' => $this->generateAbsoluteLink($area, 'homepage'),
+            'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
 
@@ -133,7 +132,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
+        $area = $this->getUserArea($user);
 
         $viewParams = [
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
@@ -151,7 +150,7 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
+     * @param EntityDir\User $user
      * @param EntityDir\Report\Report $report
      * @param $pdfBinaryContent
      *
@@ -161,10 +160,8 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
-
         $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
         ];
 
         $client = $report->getClient();
@@ -187,7 +184,18 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
+     * Get user area depending on the role
+     *
+     * @param EntityDir\User $user
+     * @return string
+     */
+    private function getUserArea(EntityDir\User $user)
+    {
+        return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
+    }
+
+    /**
+     * @param EntityDir\User $user
      * @param EntityDir\Report\Report $odr
      * @param $pdfBinaryContent
      *
@@ -197,10 +205,8 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $area = $user->getRole()['role'] == 'ROLE_ADMIN' ? self::AREA_ADMIN : self::AREA_DEPUTY;
-
         $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
         ];
 
         $client = $odr->getClient();
@@ -230,7 +236,7 @@ class MailFactory
     {
         $viewParams = [
             'response' => $response,
-         ];
+        ];
 
         $email = new ModelDir\Email();
         $email
@@ -245,9 +251,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
+     * @param EntityDir\User $user
      * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report        $newReport
+     * @param EntityDir\Report $newReport
      *
      * @return ModelDir\Email
      */
@@ -258,11 +264,11 @@ class MailFactory
         $viewParams = [
             'submittedReport' => $submittedReport,
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
-            'newReport' => $newReport,
-            'link' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
+            'newReport'       => $newReport,
+            'link'            => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
                 'type' => $newReport->getType(), //TODO take from $submittedReport ?
             ]),
-            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
         ];
 
         $email
@@ -278,9 +284,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User    $user
+     * @param EntityDir\User $user
      * @param EntityDir\Odr\Odr $odr
-     * @param EntityDir\Report  $newReport
+     * @param EntityDir\Report $newReport
      *
      * @return ModelDir\Email
      */
@@ -289,7 +295,7 @@ class MailFactory
         $email = new ModelDir\Email();
 
         $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
         ];
 

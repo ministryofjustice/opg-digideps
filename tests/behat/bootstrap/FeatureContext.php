@@ -3,7 +3,6 @@
 namespace DigidepsBehat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 
@@ -125,18 +124,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
         if (!$found) {
             throw new \Exception("Header $header not found in response. Values: " . implode(', ', $responseHeaders[$header]));
-        }
-    }
-
-    /**
-     * @Then the last audit log entry should contain:
-     */
-    public function theLastAuditLogEntryShouldContain(TableNode $fields)
-    {
-        $this->visitBehatLink('view-audit-log');
-
-        foreach ($fields->getRowsHash() as $field => $value) {
-            $this->iShouldSeeInTheRegion($value, 'entry-1');
         }
     }
 

@@ -339,5 +339,4 @@ class VisitsCare
 
         return true;
     }
-
 }

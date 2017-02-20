@@ -10,7 +10,7 @@
 
 {% block pageContent %}
     <a href="{{ path('ad_homepage') }}">Back</a>
-    <h2 class="heading-small">{{ user.adManaged ? 'Assisted':'' }} {{ user.role.name }}</h2>
+    <h2 class="heading-small">{{ user.adManaged ? 'Assisted':'' }} {{ user.roleFullName }}</h2>
     <ul>
         <li>Name: {{ user.firstname }}</li>
         <li>Lastname: {{ user.lastname }}</li>
@@ -38,7 +38,7 @@
         You must create the client first from the deputy area
     {% endif %}
 
-    {% if is_granted('ROLE_AD') and  user.role.role == 'ROLE_LAY_DEPUTY' %}
+    {% if is_granted('ROLE_AD') and  user.roleName == 'ROLE_LAY_DEPUTY' %}
         <h2 class="heading-small">Login as deputy</h2>
         <p>Login as a deputy to edit all the data above.</p>
         <a href="{{ path('ad_deputy_login_redirect', {deputyId: user.id}) }}" target="_blank" class=""

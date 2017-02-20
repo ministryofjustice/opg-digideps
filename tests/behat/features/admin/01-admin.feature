@@ -1,14 +1,11 @@
 Feature: admin / admin
 
-    Scenario: login and add admin user, check audit log
+    Scenario: login and add admin user
         Given emails are sent from "admin" area
         And I reset the email log
         And I am on admin page "/"
         Then I should be on "/login"
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | login |
         Given I am on admin page "/"
         Then I should be on "/admin/"
         And I create a new "ODR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
@@ -17,20 +14,13 @@ Feature: admin / admin
         And I should see "OPG Admin" in the "users" region
         And I save the page as "admin-admin-added"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
-        And the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | user_add |
-          | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
         #When I go to "/logout"
         Given I am on admin page "/logout"
-        Then the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | logout |
 
 
     Scenario: login and add user (admin)
         Given emails are sent from "admin" area
-        And I am not logged into admin
+        And I go to "/logout"
         # assert email link doesn't work on admin area
         When I open the "/user/activate/" link from the email on the "deputy" area
         Then the response status code should be 500
