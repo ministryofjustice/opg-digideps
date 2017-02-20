@@ -190,7 +190,6 @@ class PaServiceTest extends WebTestCase
         // check client 3 is now associated with deputy1
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
-
     }
 
     public function tearDown()

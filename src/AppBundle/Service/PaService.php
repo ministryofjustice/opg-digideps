@@ -52,80 +52,116 @@ class PaService
      */
     public function addFromCasrecRows(array $rows)
     {
-        $added = ['users' => [], 'clients' => [], 'reports' => []];
+        $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
 
         foreach ($rows as $index => $row) {
-            if ($row['Dep Type'] != 23) {
-                continue;
-            }
-
-            // find or create deputy
-            $email = $row['Email'];
-            $user = $this->userRepository->findOneBy(['email' => $email]);
-            if (!$user) {
-                $user = new EntityDir\User();
-                $user
-                    ->setRegistrationDate(new \DateTime())
-                    ->setDeputyNo($row['Deputy No'])
-                    ->setEmail($email)
-                    ->setFirstname($row['Dep Forename'])
-                    ->setLastname($row['Dep Surname'])
-                    ->setRoleName(EntityDir\User::ROLE_PA)
-                    ->setAddress1($row['Dep Adrs1'])
-                    ->setAddress2($row['Dep Adrs2'])
-                    ->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5'])
-                    ->setAddressPostcode($row['Dep Postcode'])//->setAddressCountry('GB')
-                ;
-                $added['users'][] = $email;
-                $this->em->persist($user);
-                $this->em->flush($user);
-            }
-
-            // find or create client
-            $caseNumber = strtolower($row['Case']);
-            $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
-            if ($client) {
-                foreach($client->getUsers() as $cu) {
-                    $client->getUsers()->removeElement($cu);
+            try {
+                if ($row['Dep Type'] != 23) {
+                    throw new \RuntimeException('Not a PA');
                 }
-            } else {
-                $client = new EntityDir\Client();
-                $client
-                    ->setCaseNumber($caseNumber)
-                    ->setFirstname(trim($row['Forename']))
-                    ->setLastname(trim($row['Surname']))//->setCourtDate($row['Dship Create'])
-                ;
-                $added['clients'][] = $client->getCaseNumber();
-                $this->em->persist($client);
 
+                $user = $this->createUser($row);
+                $client = $this->createClient($row, $user);
+                $this->createReport($row, $client);
+            } catch (\RuntimeException $e) {
+                $errors[] = $e->getMessage() . ' in line ' . ($index + 2);
             }
-            $user->addClient($client);
-            $this->em->flush($client);
-
-            // find or create reports
-            $reportDueDate = self::parseDate($row['Report Due']);
-            if (!$reportDueDate) {
-                $errors []= "Cannot parse date {$row['Report Due']} in line $index";
-            } else {
-                $report = $client->getReportByDueDate($reportDueDate);
-                if (!$report) {
-                    $report = new EntityDir\Report\Report();
-                    $client->addReport($report);
-                    $report
-                        ->setType(EntityDir\Report\Report::TYPE_102)
-                        ->setEndDate($reportDueDate);
-                    $added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
-                    $this->em->persist($report);
-                    $this->em->flush();
-                }
-            }
-
-            // next row
+            // clean up for next iteration
             $this->em->clear();
         }
 
-        return ['added' => $added, 'errors'=>$errors];
+        return ['added' => $this->added, 'errors' => $errors];
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return EntityDir\User
+     */
+    private function createUser(array $row)
+    {
+        $email = $row['Email'];
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+        if (!$user) {
+            $user = new EntityDir\User();
+            $user
+                ->setRegistrationDate(new \DateTime())
+                ->setDeputyNo($row['Deputy No'])
+                ->setEmail($email)
+                ->setFirstname($row['Dep Forename'])
+                ->setLastname($row['Dep Surname'])
+                ->setRoleName(EntityDir\User::ROLE_PA)
+                ->setAddress1($row['Dep Adrs1'])
+                ->setAddress2($row['Dep Adrs2'])
+                ->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5'])
+                ->setAddressPostcode($row['Dep Postcode'])//->setAddressCountry('GB')
+            ;
+            $this->added['users'][] = $email;
+            $this->em->persist($user);
+            $this->em->flush($user);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param array          $row
+     * @param EntityDir\User $user
+     *
+     * @return EntityDir\Client
+     */
+    private function createClient(array $row, EntityDir\User $user)
+    {
+        // find or create client
+        $caseNumber = strtolower($row['Case']);
+        $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
+        if ($client) {
+            foreach ($client->getUsers() as $cu) {
+                $client->getUsers()->removeElement($cu);
+            }
+        } else {
+            $client = new EntityDir\Client();
+            $client
+                ->setCaseNumber($caseNumber)
+                ->setFirstname(trim($row['Forename']))
+                ->setLastname(trim($row['Surname']))//->setCourtDate($row['Dship Create'])
+            ;
+            $this->added['clients'][] = $client->getCaseNumber();
+            $this->em->persist($client);
+        }
+        $user->addClient($client);
+        $this->em->flush($client);
+
+        return $client;
+    }
+
+    /**
+     * @param array            $row
+     * @param EntityDir\Client $client
+     *
+     * @return EntityDir\Report\Report
+     */
+    private function createReport(array $row, EntityDir\Client $client)
+    {
+        // find or create reports
+        $reportDueDate = self::parseDate($row['Report Due']);
+        if (!$reportDueDate) {
+            throw new \RuntimeException("Cannot parse date {$row['Report Due']}");
+        }
+        $report = $client->getReportByDueDate($reportDueDate);
+        if (!$report) {
+            $report = new EntityDir\Report\Report();
+            $client->addReport($report);
+            $report
+                ->setType(EntityDir\Report\Report::TYPE_102)
+                ->setEndDate($reportDueDate);
+            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
+            $this->em->persist($report);
+            $this->em->flush();
+        }
+
+        return $report;
     }
 
     /**

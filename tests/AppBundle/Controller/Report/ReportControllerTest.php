@@ -158,7 +158,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data']['status'];
 
-        foreach([
+        foreach ([
             'decisions_state',
             'contacts_state',
             'visits_care_state',
@@ -185,8 +185,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('remaining_sections', $data);
         $this->assertArrayHasKey('section_status', $data);
         $this->assertArrayHasKey('is_ready_to_submit', $data);
-
-
     }
 
     public function testSubmitAuth()
