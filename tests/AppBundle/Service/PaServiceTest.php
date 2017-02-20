@@ -103,7 +103,7 @@ class PaServiceTest extends WebTestCase
     public function setup()
     {
         $this->pa = new PaService(self::$em);
-        Fixtures::deleteReportsData(['dd_user']);
+        Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
     }
 
@@ -111,10 +111,14 @@ class PaServiceTest extends WebTestCase
     {
         // create two clients for the same deputy, each one with a report
         $data = [
+            // deputy 1 with client 1 and client 2
             self::$deputy1 + self::$client1,
             self::$deputy1 + self::$client2,
+            // deputy 2 with client 3
             self::$deputy2 + self::$client3,
         ];
+
+//        print_r($data);die;
 
         // add twice to check duplicates are not added
         $ret1 = $this->pa->addFromCasrecRows($data);
@@ -130,11 +134,10 @@ class PaServiceTest extends WebTestCase
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
-
         self::$em->clear();
 
         //assert 1st deputy
-        $user1 = self::$em->getRepository(EntityDir\User::class)->findOneBy(['email' => 'dep1@provider.com']);
+        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
         $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
         $clients = $user1->getClients();
         $this->assertCount(2, $clients);
@@ -159,7 +162,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client2Report1->getType());
 
         // assert 2nd deputy
-        $user2 = self::$em->getRepository(EntityDir\User::class)->findOneBy(['email' => 'dep2@provider.com']);
+        $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');
         $clients = $user2->getClients();
         $this->assertCount(1, $clients);
 
@@ -173,16 +176,20 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('2015-02-05', $client1Report1->getEndDate()->format('Y-m-d'));
 
 
-        // upload
-        // create two clients for the same deputy, each one with a report
-        $data = [
-            self::$deputy1 + self::$client1,
-            self::$deputy1 + self::$client2,
-            self::$deputy2 + self::$client3,
-        ];
+        // check client 3 is associated with deputy2
+        $this->assertCount(2, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
+        $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
-        // add twice to check duplicates are not added
-        $ret1 = $this->pa->addFromCasrecRows($data);
+        // move client2 from deputy1 -> deputy2
+        $data = [
+            self::$deputy2 + self::$client2,
+        ];
+        $ret = $this->pa->addFromCasrecRows($data);
+        self::$em->clear();
+
+        // check client 3 is now associated with deputy1
+        $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
+        $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
     }
 

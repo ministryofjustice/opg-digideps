@@ -320,6 +320,16 @@ class Fixtures
         return $this->getRepo('Report\Report')->find($id);
     }
 
+    /**
+     * @param $email
+     *
+     * @return EntityDir\User
+     */
+    public function findUserByEmail($email)
+    {
+        return $this->getRepo('User')->findOneBy(['email'=>$email]);
+    }
+
     public function getConnection()
     {
         return $this->em->getConnection();

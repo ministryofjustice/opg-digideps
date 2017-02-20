@@ -83,9 +83,13 @@ class PaService
             }
 
             // find or create client
-            $caseNumber = $row['Case'];
-            $client = $user->getClientByCaseNumber($caseNumber);
-            if (!$client) {
+            $caseNumber = strtolower($row['Case']);
+            $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
+            if ($client) {
+                foreach($client->getUsers() as $cu) {
+                    $client->getUsers()->removeElement($cu);
+                }
+            } else {
                 $client = new EntityDir\Client();
                 $client
                     ->setCaseNumber($caseNumber)
@@ -94,11 +98,10 @@ class PaService
                 ;
                 $added['clients'][] = $client->getCaseNumber();
                 $this->em->persist($client);
-                $user->addClient($client);
-                $this->em->persist($user);
-                $this->em->flush($user);
-                $this->em->flush($client);
+
             }
+            $user->addClient($client);
+            $this->em->flush($client);
 
             // find or create reports
             $reportDueDate = self::parseDate($row['Report Due']);
