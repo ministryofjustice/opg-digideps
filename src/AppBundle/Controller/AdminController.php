@@ -108,6 +108,7 @@ class AdminController extends AbstractController
         $filter = $request->get('filter');
 
         try {
+            /* @var $user EntityDir\User */
             $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
@@ -121,14 +122,20 @@ class AdminController extends AbstractController
             ]);
         }
 
+        // no role editing for current user and PA
+        $roleNameSetTo = null;
+        if ($user->getId() == $this->getUser()->getId() || $user->getRoleName() == EntityDir\User::ROLE_PA) {
+            $roleNameSetTo = $user->getRoleName();
+        }
         $form = $this->createForm(new FormDir\Admin\AddUserType([
             'roleChoices'        => [
                 EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
                 EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                 EntityDir\User::ROLE_AD         => 'Assisted Digital',
+                EntityDir\User::ROLE_PA         => 'Public Authority',
             ],
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-            'roleNameDisabled'   => $user->getId() == $this->getUser()->getId(), //can't edit current user's role
+            'roleNameSetTo'   => $roleNameSetTo, //can't edit current user's role
         ]), $user);
 
         $clients = $user->getClients();
