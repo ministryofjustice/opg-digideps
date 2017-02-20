@@ -136,7 +136,7 @@ class DeputyExpenseController extends AbstractController
     public function editAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense', ['expense']);
+        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
         $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
         $form->handleRequest($request);
