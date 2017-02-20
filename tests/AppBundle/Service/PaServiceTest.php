@@ -22,6 +22,11 @@ class PaServiceTest extends WebTestCase
      */
     protected static $em;
 
+    /**
+     * @var Fixtures
+     */
+    protected static $fixtures;
+
 
     public static $deputy1 = [
         'Deputy No'    => '00000001',
@@ -92,6 +97,7 @@ class PaServiceTest extends WebTestCase
                                                              'debug'       => true,]);
 
         self::$em = self::$frameworkBundleClient->getContainer()->get('em');
+        self::$fixtures = new Fixtures(self::$em);
     }
 
     public function setup()
@@ -112,13 +118,13 @@ class PaServiceTest extends WebTestCase
 
         // add twice to check duplicates are not added
         $ret1 = $this->pa->addFromCasrecRows($data);
-        $ret2 = $this->pa->addFromCasrecRows($data);
-        // check return values
         $this->assertEquals([
             'users'   => ['dep1@provider.com', 'dep2@provider.com'],
             'clients' => ['10000001', '10000002', '1000000t'],
             'reports' => ['10000001-2014-12-16', '10000002-2015-02-04', '1000000t-2015-02-05'],
         ], $ret1['added']);
+        // add again and check no override
+        $ret2 = $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
             'users'   => [],
             'clients' => [],
@@ -165,6 +171,19 @@ class PaServiceTest extends WebTestCase
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
         $this->assertEquals('2015-02-05', $client1Report1->getEndDate()->format('Y-m-d'));
+
+
+        // upload
+        // create two clients for the same deputy, each one with a report
+        $data = [
+            self::$deputy1 + self::$client1,
+            self::$deputy1 + self::$client2,
+            self::$deputy2 + self::$client3,
+        ];
+
+        // add twice to check duplicates are not added
+        $ret1 = $this->pa->addFromCasrecRows($data);
+
     }
 
     public function tearDown()

@@ -92,7 +92,7 @@ class PaService
                     ->setFirstname(trim($row['Forename']))
                     ->setLastname(trim($row['Surname']))//->setCourtDate($row['Dship Create'])
                 ;
-                $added['clients'][] = $caseNumber;
+                $added['clients'][] = $client->getCaseNumber();
                 $this->em->persist($client);
                 $user->addClient($client);
                 $this->em->persist($user);
