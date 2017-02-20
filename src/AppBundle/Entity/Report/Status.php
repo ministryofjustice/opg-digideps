@@ -166,7 +166,7 @@ class Status
     private $isReadyToSubmit;
 
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("string")
      *
      * @var array
      */
