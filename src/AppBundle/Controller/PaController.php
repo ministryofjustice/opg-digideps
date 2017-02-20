@@ -39,6 +39,12 @@ class PaController extends AbstractController
 
         return [
             'reports' => $reports,
+            'counts' => [
+                'total' => count($reports),
+                'notStarted' => 8,
+                'notCompleted' => 7,
+                'readyToSubmit' => 3,
+            ]
         ];
     }
 }
