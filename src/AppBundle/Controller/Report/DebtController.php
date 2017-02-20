@@ -3,16 +3,19 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Report;
+use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
-    private static $jmsGroups = ['debt'];
+    private static $jmsGroups = [
+        'debt',
+        'debt-state',
+    ];
 
     /**
      * @Route("/report/{reportId}/debts", name="debts")
@@ -21,7 +24,7 @@ class DebtController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getDebtsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDebtsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -106,7 +109,7 @@ class DebtController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getDebtsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDebtsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
 

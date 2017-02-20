@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,6 +15,7 @@ class ActionController extends AbstractController
 {
     private static $jmsGroups = [
         'action',
+        'action-state',
     ];
 
     /**
@@ -24,7 +25,7 @@ class ActionController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getActionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getActionsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
@@ -77,7 +78,7 @@ class ActionController extends AbstractController
         return [
             'report'       => $report,
             'step'         => $step,
-            'reportStatus' => new ReportStatusService($report),
+            'reportStatus' => $report->getStatus(),
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
             'skipLink'     => $stepRedirector->getSkipLink(),
@@ -92,14 +93,14 @@ class ActionController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getActionsState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($report->getStatus()->getActionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report'             => $report,
-            'status'             => $report->getStatusService()
+            'status'             => $report->getStatus()
         ];
     }
 }

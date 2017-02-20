@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,6 +16,7 @@ class MoneyOutController extends AbstractController
 {
     private static $jmsGroups = [
         'transactionsOut',
+        'money-out-state',
     ];
 
     /**
@@ -25,7 +26,7 @@ class MoneyOutController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
-        if ($report->getStatusService()->getMoneyOutState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyOutState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
 
@@ -114,7 +115,7 @@ class MoneyOutController extends AbstractController
             'transaction' => $transaction,
             'report' => $report,
             'step' => $step,
-            'reportStatus' => new ReportStatusService($report),
+            'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
@@ -158,7 +159,7 @@ class MoneyOutController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
-        if ($report->getStatusService()->getMoneyOutState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyOutState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
 

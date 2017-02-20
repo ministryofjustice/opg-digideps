@@ -38,9 +38,9 @@ class MailFactory
     }
 
     /**
-     * @param string $area deputy|admin
+     * @param string $area      deputy|admin
      * @param string $routeName must be in YML config under email.routes
-     * @param array $params
+     * @param array  $params
      *
      * @return string calculated route
      */
@@ -150,7 +150,7 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $report
      * @param $pdfBinaryContent
      *
@@ -186,7 +186,7 @@ class MailFactory
     /**
      * Get user area depending on the role
      *
-     * @param EntityDir\User $user
+     * @param  EntityDir\User $user
      * @return string
      */
     private function getUserArea(EntityDir\User $user)
@@ -195,7 +195,7 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $odr
      * @param $pdfBinaryContent
      *
@@ -251,9 +251,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User          $user
      * @param EntityDir\Report\Report $submittedReport
-     * @param EntityDir\Report $newReport
+     * @param EntityDir\Report        $newReport
      *
      * @return ModelDir\Email
      */
@@ -284,9 +284,9 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param EntityDir\User    $user
      * @param EntityDir\Odr\Odr $odr
-     * @param EntityDir\Report $newReport
+     * @param EntityDir\Report  $newReport
      *
      * @return ModelDir\Email
      */

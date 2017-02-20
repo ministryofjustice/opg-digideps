@@ -12,6 +12,7 @@ class BalanceController extends AbstractController
 {
     private static $jmsGroups = [
         'balance',
+        'balance-state',
     ];
 
     /**

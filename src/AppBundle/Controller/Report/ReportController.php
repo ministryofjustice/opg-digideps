@@ -6,7 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,28 +16,29 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportController extends AbstractController
 {
     private static $reportGroupsForValidation = [
-        'account',
-        'expenses',
-        'gifts',
-        'action',
-        'action-more-info',
-        'asset',
-        'debt',
-        'balance',
-        'client',
-        'contact',
-        'debts',
-        'decision',
-        'visits-care',
-        'mental-capacity',
-        'money-transfer',
-        'transaction',
-        'transactionsIn',
-        'transactionsOut',
-        'moneyShortCategoriesIn',
-        'moneyShortCategoriesOut',
-        'moneyTransactionsShortIn',
-        'moneyTransactionsShortOut',
+        'status',
+//        'account',
+//        'expenses',
+//        'gifts',
+//        'action',
+//        'action-more-info',
+//        'asset',
+//        'debt',
+//        'balance',
+//        'client',
+//        'contact',
+//        'debts',
+//        'decision',
+//        'visits-care',
+//        'mental-capacity',
+//        'money-transfer',
+//        'transaction',
+//        'transactionsIn',
+//        'transactionsOut',
+//        'moneyShortCategoriesIn',
+//        'moneyShortCategoriesOut',
+//        'moneyTransactionsShortIn',
+//        'moneyTransactionsShortOut',
     ];
 
     /**
@@ -135,13 +136,12 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        // get all the groups (needed by ReportStatusService
+        // get all the groups (needed by EntityDir\Report\Status
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
-        $reportStatusService = new ReportStatusService($report);
 
         return [
             'report' => $report,
-            'reportStatus' => $reportStatusService,
+            'reportStatus' => $report->getStatus(),
         ];
     }
 
@@ -157,8 +157,8 @@ class ReportController extends AbstractController
         $translator = $this->get('translator');
 
         // check status
-        $reportStatusService = new ReportStatusService($report);
-        if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
+        $status= $report->getStatus();
+        if (!$report->isDue() || !$status->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
@@ -262,12 +262,12 @@ class ReportController extends AbstractController
         $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         // check status
-        $reportStatusService = new ReportStatusService($report);
+        $status= $report->getStatus();
 
         return [
             'report' => $report,
             'deputy' => $this->getUser(),
-            'reportStatus' => $reportStatusService,
+            'reportStatus' => $status,
         ];
     }
 

@@ -4,7 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+use AppBundle\Entity as EntityDir;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -14,6 +15,7 @@ class OtherInfoController extends AbstractController
 {
     private static $jmsGroups = [
         'action-more-info',
+        'more-info-state',
     ];
 
     /**
@@ -23,7 +25,7 @@ class OtherInfoController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getOtherInfoState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getOtherInfoState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
@@ -86,7 +88,7 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getOtherInfoState()['state'] == ReportStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($report->getStatus()->getOtherInfoState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 
