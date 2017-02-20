@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,8 @@ class MoneyTransferController extends AbstractController
 {
     private static $jmsGroups = [
         'money-transfer',
-        'account'
+        'account',
+        'money-transfer-state',
     ];
 
     /**
@@ -35,7 +36,7 @@ class MoneyTransferController extends AbstractController
             ]);
         }
 
-        if ($report->getStatusService()->getMoneyTransferState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyTransferState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -158,7 +159,7 @@ class MoneyTransferController extends AbstractController
             'transfer' => $transfer,
             'report' => $report,
             'step' => $step,
-            'reportStatus' => new ReportStatusService($report),
+            'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
@@ -202,7 +203,7 @@ class MoneyTransferController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
-        if ($report->getStatusService()->getMoneyTransferState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyTransferState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 

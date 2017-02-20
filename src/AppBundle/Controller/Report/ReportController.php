@@ -6,7 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
 {
-    private static $reportGroupsForValidation = [
+    /**
+     * JMS groups used for report preview and PDF
+     * 
+     * @var array
+     */
+    private static $reportGroupsAll = [
         'account',
         'expenses',
         'gifts',
@@ -38,6 +43,7 @@ class ReportController extends AbstractController
         'moneyShortCategoriesOut',
         'moneyTransactionsShortIn',
         'moneyTransactionsShortOut',
+        'status',
     ];
 
     /**
@@ -135,13 +141,12 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        // get all the groups (needed by ReportStatusService
-        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
-        $reportStatusService = new ReportStatusService($report);
+        // get all the groups (needed by EntityDir\Report\Status
+        $report = $this->getReportIfNotSubmitted($reportId, ['status']);
 
         return [
             'report' => $report,
-            'reportStatus' => $reportStatusService,
+            'reportStatus' => $report->getStatus(),
         ];
     }
 
@@ -151,14 +156,14 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status']);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         // check status
-        $reportStatusService = new ReportStatusService($report);
-        if (!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
+        $status= $report->getStatus();
+        if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
@@ -201,7 +206,7 @@ class ReportController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReport($reportId, ['status']);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -235,7 +240,7 @@ class ReportController extends AbstractController
      */
     public function submitFeedbackAction($reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -258,16 +263,16 @@ class ReportController extends AbstractController
      */
     public function reviewAction($reportId)
     {
-        /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        /** @var EntityDir\Report\Report $report */
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         // check status
-        $reportStatusService = new ReportStatusService($report);
+        $status= $report->getStatus();
 
         return [
             'report' => $report,
             'deputy' => $this->getUser(),
-            'reportStatus' => $reportStatusService,
+            'reportStatus' => $status,
         ];
     }
 
@@ -276,7 +281,7 @@ class ReportController extends AbstractController
      */
     public function pdfViewAction($reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $this->getPdfBinaryContent($reportId);
 
         $response = new Response($pdfBinary);
@@ -301,7 +306,7 @@ class ReportController extends AbstractController
 
     private function getPdfBinaryContent($reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,

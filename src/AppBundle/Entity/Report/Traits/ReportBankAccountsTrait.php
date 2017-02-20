@@ -93,24 +93,6 @@ trait ReportBankAccountsTrait
         return $this;
     }
 
-    /**
-     ** @return bool
-     */
-    public function isMissingMoneyOrAccountsOrClosingBalance()
-    {
-        return !$this->hasMoneyIn()
-        || !$this->hasMoneyOut()
-        || !$this->hasAccounts()
-        || count($this->getBankAccountsIncomplete()) > 0;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasAccounts()
-    {
-        return count($this->getBankAccounts()) > 0;
-    }
 
     /**
      ** @return bool

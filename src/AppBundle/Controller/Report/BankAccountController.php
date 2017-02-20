@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,6 +16,7 @@ class BankAccountController extends AbstractController
 {
     private static $jmsGroups = [
         'account',
+        'account-state',
     ];
 
     /**
@@ -25,7 +26,7 @@ class BankAccountController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getBankAccountsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getBankAccountsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -138,7 +139,7 @@ class BankAccountController extends AbstractController
             'account' => $account,
             'report' => $report,
             'step' => $step,
-            'reportStatus' => new ReportStatusService($report),
+            'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
@@ -182,7 +183,7 @@ class BankAccountController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatusService()->getBankAccountsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getBankAccountsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
 

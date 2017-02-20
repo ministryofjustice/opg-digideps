@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
-use AppBundle\Service\ReportStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -211,9 +210,15 @@ class Report
      * @JMS\Type("string")
      * @JMS\Groups({"report-metadata"})
      *
-     * @var decimal
+     * @var string
      */
     private $metadata;
+
+    /**
+     * @JMS\Type("AppBundle\Entity\Report\Status")
+     * @var Status
+     */
+    private $status;
 
     /**
      * @return int $id
@@ -759,10 +764,18 @@ class Report
     }
 
     /**
-     * @return ReportStatusService
+     * @return Status
      */
-    public function getStatusService()
+    public function getStatus()
     {
-        return new ReportStatusService($this);
+        return $this->status;
+    }
+
+    /**
+     * @param Status $status$statusrvice
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }

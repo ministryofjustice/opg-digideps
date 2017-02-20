@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +15,8 @@ class DecisionController extends AbstractController
 {
     private static $jmsGroups = [
         'decision',
-        'mental-capacity'
+        'mental-capacity',
+        'decision-status',
     ];
 
     /**
@@ -30,7 +31,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatusService()->getDecisionsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDecisionsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -250,7 +251,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatusService()->getDecisionsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDecisionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 

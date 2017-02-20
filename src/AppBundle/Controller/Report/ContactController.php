@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ReportStatusService;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,6 +15,7 @@ class ContactController extends AbstractController
 {
     private static $jmsGroups = [
         'contact',
+        'contact-status',
     ];
 
     /**
@@ -29,7 +30,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatusService()->getContactsState()['state'] != ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getContactsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -173,7 +174,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatusService()->getContactsState()['state'] == ReportStatusService::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getContactsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
         }
 
