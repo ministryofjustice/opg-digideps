@@ -39,15 +39,26 @@ class PaController extends AbstractController
         }
 
         // calculate count
-        $statesCount = ['notStarted' => 0, 'readyToSubmit' => 0, 'notFinished' => 0];
+        $statesCount = ['total'=>0,'notStarted' => 0, 'readyToSubmit' => 0, 'notFinished' => 0];
         foreach($reports as $report) {
             $statesCount[$report->getStatus()->getStatus()]++;
+            $statesCount['total']++;
+        }
+
+        //apply tab filter //TODO move to API to optimise if needed
+        if ($filterStatus = $request->get('status')) {
+            $reports = array_filter($reports, function($report) use ($filterStatus) {
+                return $report->getStatus()->getStatus() == $filterStatus;
+            });
         }
 
         return [
+            'filters' => [
+                'status' => $filterStatus
+            ],
             'reports' => $reports,
             'counts' => [
-                'total' => count($reports),
+                'total' => $statesCount['total'],
                 'notStarted' => $statesCount['notStarted'],
                 'notFinished' => $statesCount['notFinished'],
                 'readyToSubmit' => $statesCount['readyToSubmit'],

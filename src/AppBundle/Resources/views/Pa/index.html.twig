@@ -8,24 +8,24 @@
 	<div class="tabs push-half--bottom">
 		<div class="tabs-nav">
 	        <ul class="tabs-list" role="tablist">
-				<li class="tab-item clients active" role="presentation">
+				<li class="tab-item clients {{ not filters.status ? 'active' : ''  }}" role="presentation">
 					<a href="#" role="tab" tabindex="0" aria-selected="true">
 						<span class="data-item bold-large">{{ counts.total }}</span>
 						<span class="data-item bold-xsmall">Clients</span>
 					</a>
 				</li>
-				<li class="tab-item unstarted" role="presentation">
-					<a href="#" role="tab" tabindex="0">
+				<li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
+					<a href="?status=notStarted" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notStarted }}</span>
 						<span class="data-item bold-xsmall">Not started</span></a>
 				</li>
-				<li class="tab-item progress" role="presentation">
-					<a href="#" role="tab" tabindex="0">
+				<li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
+					<a href="?status=notFinished" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notFinished }}</span>
 						<span class="data-item bold-xsmall">In progress</span></a>
 				</li>
-				<li class="tab-item ready" role="presentation">
-					<a href="#" role="tab" tabindex="0">
+				<li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
+					<a href="?status=readyToSubmit" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
 						<span class="data-item bold-xsmall">Ready to submit</span></a>
 				</li>
