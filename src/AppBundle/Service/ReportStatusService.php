@@ -462,7 +462,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("string")
-     * @JMS\Groups({"status2"})
+     * @JMS\Groups({"status"})
      *
      * @return string
      */
