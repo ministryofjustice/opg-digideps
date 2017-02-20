@@ -14,7 +14,7 @@ class GiftController extends RestController
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($reportId, $giftId)
+    public function getOneById(Request $request, $reportId, $giftId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
@@ -23,6 +23,10 @@ class GiftController extends RestController
 
         $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
+
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['gifts'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $gift;
     }

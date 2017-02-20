@@ -14,7 +14,7 @@ class ExpenseController extends RestController
      * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($reportId, $expenseId)
+    public function getOneById(Request $request, $reportId, $expenseId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
@@ -24,7 +24,9 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
-        $this->setJmsSerialiserGroups(['expenses']);
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['expenses'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $expense;
     }
