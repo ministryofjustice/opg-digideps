@@ -151,6 +151,42 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('debts', $data);
+
+        // assert status
+        $data = $this->assertJsonRequest('GET', $url . '?groups=status', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data']['status'];
+
+        foreach([
+            'decisions_state',
+            'contacts_state',
+            'visits_care_state',
+            'bank_accounts_state',
+            'money_transfer_state',
+            'money_in_state',
+            'money_out_state',
+            'money_in_short_state',
+            'money_out_short_state',
+            'balance_state',
+            'assets_state',
+            'debts_state',
+            'actions_state',
+            'other_info_state',
+            'expenses_state',
+            'gifts_state',
+            'submit_state',
+                ] as $key) {
+            $this->assertArrayHasKey('state', $data[$key]);
+            $this->assertArrayHasKey('nOfRecords', $data[$key]);
+        }
+
+        $this->assertArrayHasKey('balance_matches', $data);
+        $this->assertArrayHasKey('remaining_sections', $data);
+        $this->assertArrayHasKey('section_status', $data);
+        $this->assertArrayHasKey('is_ready_to_submit', $data);
+
+
     }
 
     public function testSubmitAuth()

@@ -63,7 +63,6 @@ class ClientController extends RestController
         return ['id' => $client->getId()];
     }
 
-
     /**
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"})
      * @Method({"GET"})
@@ -87,7 +86,6 @@ class ClientController extends RestController
         return $client;
     }
 
-
     /**
      * Get list of clients, currently only for PA users
      *
@@ -109,7 +107,7 @@ class ClientController extends RestController
             ->createQueryBuilder('c')
             ->leftJoin('c.users', 'u')
             ->leftJoin('c.reports', 'r')
-            ->where('u.id = '.$userId);
+            ->where('u.id = ' . $userId);
 
         if ($limit) {
             $qb->setMaxResults($limit);

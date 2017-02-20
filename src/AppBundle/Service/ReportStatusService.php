@@ -3,17 +3,20 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\VisitsCare;
+use JMS\Serializer\Annotation as JMS;
 
-/**
- * copied from client in order to clean up empty reports
- */
 class ReportStatusService
 {
     const STATE_NOT_STARTED = 'not-started';
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
-    /** @var Report */
+    /**
+     * @JMS\Exclude
+     *
+     * @var Report
+     */
     private $report;
 
     public function __construct(Report $report)
@@ -21,15 +24,22 @@ class ReportStatusService
         $this->report = $report;
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "decision-status"})
+     *
+     * @return array
+     */
     public function getDecisionsState()
     {
-        $decisionsValid = count($this->report->getDecisions()) || $this->report->getReasonForNoDecisions();
+        $hasDecisions = count($this->report->getDecisions()) > 0;
 
-        if (!count($this->report->getDecisions()) && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
+        if (!$hasDecisions && !$this->report->getReasonForNoDecisions() && !$this->report->getMentalCapacity()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
+        $decisionsValid = $hasDecisions || $this->report->getReasonForNoDecisions();
         if ($decisionsValid && $this->report->getMentalCapacity() &&
             $this->report->getMentalCapacity()->getHasCapacityChanged()
             && $this->report->getMentalCapacity()->getMentalAssessmentDate()
@@ -40,44 +50,78 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "contact-status"})
+     *
+     * @return array
+     */
     public function getContactsState()
     {
-        if (!count($this->report->getContacts()) && empty($this->report->getReasonForNoContacts())) {
+        $hasContacts = count($this->report->getContacts()) > 0;
+        if (!$hasContacts && empty($this->report->getReasonForNoContacts())) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } else {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getContacts())];
         }
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "visits-care-state"})
+     *
+     * @return array
+     */
     public function getVisitsCareState()
     {
-        if (!$this->report->getVisitsCare()) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
-        if ($this->report->getVisitsCare()->missingInfo()) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        $visitsCare = $this->report->getVisitsCare();
+        $answers = $visitsCare ? [
+            $visitsCare->getDoYouLiveWithClient(),
+            $visitsCare->getDoesClientHaveACarePlan(),
+            $visitsCare->getWhoIsDoingTheCaring(),
+            $visitsCare->getDoesClientHaveACarePlan()
+        ] : [];
 
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 4:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "account-state"})
+     *
+     * @return array
+     */
     public function getBankAccountsState()
     {
         $bankAccounts = $this->report->getBankAccounts();
-        if (count($bankAccounts)===0) {
+        if (count($bankAccounts) === 0) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-        if ($this->report->getBankAccountsIncomplete()) {
+        if (count($this->report->getBankAccountsIncomplete()) > 0) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
 
         return ['state' => self::STATE_DONE, 'nOfRecords' => count($bankAccounts)];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "money-transfer-state"})
+     *
+     * @return array
+     */
     public function getMoneyTransferState()
     {
         $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
@@ -90,6 +134,13 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "money-in-state"})
+     *
+     * @return array
+     */
     public function getMoneyInState()
     {
         if ($this->report->hasMoneyIn()) {
@@ -99,6 +150,13 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "money-out-state"})
+     *
+     * @return array
+     */
     public function getMoneyOutState()
     {
         if ($this->report->hasMoneyOut()) {
@@ -108,6 +166,13 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "money-in-short-state"})
+     *
+     * @return array
+     */
     public function getMoneyInShortState()
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
@@ -124,6 +189,13 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "money-out-short-state"})
+     *
+     * @return array
+     */
     public function getMoneyOutShortState()
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
@@ -140,13 +212,20 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "balance-state"})
+     *
+     * @return array
+     */
     public function getBalanceState()
     {
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
 
-        if ($this->report->isTotalsMatch()) {
+        if ($this->report->getTotalsMatch()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0]; // balance matching => complete
         }
 
@@ -157,7 +236,13 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "asset-state"})
+     *
+     * @return array
+     */
     public function getAssetsState()
     {
         $hasAtLeastOneAsset = count($this->report->getAssets()) > 0;
@@ -174,7 +259,13 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "debt-state"})
+     *
+     * @return array
+     */
     public function getDebtsState()
     {
         $hasDebts = $this->report->getHasDebts();
@@ -186,23 +277,37 @@ class ReportStatusService
         }
     }
 
-    /** @return string */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "action-state"})
+     *
+     * @return array
+     */
     public function getActionsState()
     {
         $action = $this->report->getAction();
-        if (empty($action)) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
+        $answers = $action ? [
+            $action->getDoYouHaveConcerns(),
+            $action->getDoYouExpectFinancialDecisions()
+        ] : [];
 
-        if ($action->getDoYouHaveConcerns() && $action->getDoYouExpectFinancialDecisions()) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 2:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
-
-        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
     /**
-     * @return string
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "more-info-state"})
+     *
+     * @return array
      */
     public function getOtherInfoState()
     {
@@ -213,30 +318,76 @@ class ReportStatusService
         return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
     }
 
-    /** @return bool */
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"status"})
+     *
+     * @return bool
+     */
     public function balanceMatches()
     {
         if ($this->report->getType() == Report::TYPE_103) {
             return true;
         }
 
-        return $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
+        return $this->report->getTotalsMatch() || $this->report->getBalanceMismatchExplanation();
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "expenses-state"})
+     *
+     * @return array
+     */
+    public function getExpensesState()
+    {
+        if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getExpenses())];
+        }
+
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "gifts-state"})
+     *
+     * @return array
+     */
+    public function getGiftsState()
+    {
+        if (count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no') {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getGifts())];
+        }
+
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status"})
+     *
      * @return array
      */
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
             return $e != self::STATE_DONE;
-        });
+        }) ?: [];
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status"})
+     *
      * @return array of section=>state
      */
-    private function getSectionStatus()
+    public function getSectionStatus()
     {
         $states = [
             'decisions'  => $this->getDecisionsState()['state'],
@@ -282,37 +433,23 @@ class ReportStatusService
     }
 
     /**
-     * @return string
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"status"})
+     *
+     * @return bool
      */
-    public function getExpensesState()
-    {
-        if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getExpenses())];
-        }
-
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-    }
-
-    /**
-     * @return string
-     */
-    public function getGiftsState()
-    {
-        if (count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no') {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getGifts())];
-        }
-
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-    }
-
-    /** @return bool */
     public function isReadyToSubmit()
     {
         return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
     }
 
     /**
-     * @return string $status | null
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status"})
+     *
+     * @return array
      */
     public function getSubmitState()
     {
@@ -323,7 +460,11 @@ class ReportStatusService
     }
 
     /**
-     * @return string $status | null
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\Groups({"status"})
+     *
+     * @return string
      */
     public function getStatus()
     {
