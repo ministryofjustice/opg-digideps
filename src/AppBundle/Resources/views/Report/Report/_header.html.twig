@@ -12,6 +12,6 @@
 {% if reportStatus.isReadyToSubmit and report.isDue %}
     <div id="header-report-submit" class="hero">
         <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
-        <div class="message"><a class="button-grey submit-link behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
-    </div>    
+        <div class="message"><a class="button submit-link behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
+    </div>
 {% endif %}

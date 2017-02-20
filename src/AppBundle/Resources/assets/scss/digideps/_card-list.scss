@@ -2,55 +2,6 @@
 // CARD LIST
 // Round, coloured boxes that look like cards
 
-.card-list {
-    @include core-19();
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    .card-item {
-        @extend %contain-floats;
-        margin: 30px 0 50px 0;
-    }
-
-    .meta-data {
-        box-sizing: border-box;
-        width: 55%;
-        float: left;
-        padding-left: 15px;
-
-
-        .labelvalue {
-            @extend %contain-floats;
-
-            .label {
-                @include core-19(1.5);
-                float: left;
-                clear: both;
-            }
-
-            .value {
-                @include bold-19(1.5);
-                padding-left: 10px;
-                float: left;
-            }
-
-        }
-
-        .warning {
-            // moves to the bottom
-            margin-top: 30px;
-        }
-
-    }
-
-    .edit-link {
-        display: block;
-        margin-top: 5px;
-    }
-
-}
-
 .card {
     @include border-radius(10px);
     box-sizing: border-box;
@@ -149,18 +100,5 @@
             bottom: $gutter-half;
             right: $gutter-half;
         }
-    }
-}
-
-
-
-// appplies to uknown closing balance for each account, and for the accounts total
-.labelvalue .value.unknown {
-    color: $red-unknown;
-}
-
-#bank-account-list {
-    .card {
-        width: 45%;
     }
 }
