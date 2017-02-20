@@ -26,10 +26,11 @@ class PaController extends AbstractController
             'status'  => '*', // starte
         ]);
 
-        $clients = $this->getRestClient()->get($endpoint, 'Client[]', ['client', 'report']);
+        $clients = $this->getRestClient()->get($endpoint, 'Client[]', ['client', 'report', 'status']);
 
         // the view needs reports data, so easier to re-organize by reports
-        // note: for PA (so far), one client only has one report. And there are no clients without report
+        // note: for PA (so far), one client only has one report. And there are no clients without report\
+        /* @var $reports EntityDir\Report\Report[] */
         $reports = [];
         foreach ($clients as $client) {
             $report = $client->getReports()[0]; // no reason why data is wrong
@@ -37,13 +38,19 @@ class PaController extends AbstractController
             $reports[] = $report;
         }
 
+        // calculate count
+        $statesCount = ['notStarted' => 0, 'readyToSubmit' => 0, 'notFinished' => 0];
+        foreach($reports as $report) {
+            $statesCount[$report->getStatus()->getStatus()]++;
+        }
+
         return [
             'reports' => $reports,
             'counts' => [
                 'total' => count($reports),
-                'notStarted' => 8,
-                'notCompleted' => 7,
-                'readyToSubmit' => 3,
+                'notStarted' => $statesCount['notStarted'],
+                'notFinished' => $statesCount['notFinished'],
+                'readyToSubmit' => $statesCount['readyToSubmit'],
             ]
         ];
     }

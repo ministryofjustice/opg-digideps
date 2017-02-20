@@ -21,7 +21,7 @@
 				</li>
 				<li class="tab-item progress" role="presentation">
 					<a href="#" role="tab" tabindex="0">
-						<span class="data-item bold-large">{{ counts.notCompleted }}</span>
+						<span class="data-item bold-large">{{ counts.notFinished }}</span>
 						<span class="data-item bold-xsmall">In progress</span></a>
 				</li>
 				<li class="tab-item ready" role="presentation">
@@ -59,7 +59,7 @@
 				</td>
 				<td>
 					<span class="status status-large done">
-						Not started
+						{{ report.status.status }}
 					</span>
 				</td>
 			</tr>
