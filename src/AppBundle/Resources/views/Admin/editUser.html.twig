@@ -26,7 +26,13 @@
     {% if reportsCount > 0 %}
         Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.
     {% endif %}
-    {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
+    {% if user.roleName == 'ROLE_LAY_DEPUTY' %}
+        {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
+    {% else %}
+        <div class="hidden">
+            {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
+        </div>
+    {% endif %}
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
 
