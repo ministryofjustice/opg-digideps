@@ -16,21 +16,21 @@ class AddUserType extends AbstractType
     /**
      * @var string
      */
-    private $roleIdEmptyValue;
+    private $roleNameEmptyValue;
 
     /**
      * @var bool
      */
-    private $roleIdDisabled;
+    private $roleNameDisabled;
 
     /**
-     * @param array $options keys: array roleChoices, array roleIdEmptyValue
+     * @param array $options keys: array roleChoices, array roleNameEmptyValue
      */
     public function __construct(array $options)
     {
         $this->roleChoices = $options['roleChoices'];
-        $this->roleIdEmptyValue = $options['roleIdEmptyValue'];
-        $this->roleIdDisabled = empty($options['roleIdDisabled']) ? false : true;
+        $this->roleNameEmptyValue = $options['roleNameEmptyValue'];
+        $this->roleNameDisabled = empty($options['roleNameDisabled']) ? false : true;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,10 +38,10 @@ class AddUserType extends AbstractType
         $builder->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
-                 ->add('roleId', 'choice', [
+                 ->add('roleName', 'choice', [
                     'choices' => $this->roleChoices,
-                    'empty_value' => $this->roleIdEmptyValue,
-                    'disabled' => $this->roleIdDisabled,
+                    'empty_value' => $this->roleNameEmptyValue,
+                    'disabled' => $this->roleNameDisabled,
                   ])
                  ->add('odrEnabled', 'checkbox')
                  ->add('save', 'submit');

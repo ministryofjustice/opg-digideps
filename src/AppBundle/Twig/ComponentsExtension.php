@@ -181,7 +181,9 @@ class ComponentsExtension extends \Twig_Extension
      */
     public function progressBarRegistration(User $user, $selectedStepId)
     {
-        if (in_array($user->getRole()['role'], ['ROLE_ADMIN', 'ROLE_AD'])) {
+        if (in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD])) {
+            $availableStepIds = ['password', 'user_details'];
+        } elseif ($user->getRoleName() == User::ROLE_PA) {
             $availableStepIds = ['password', 'user_details'];
         } elseif ($user->isOdrEnabled()) {
             $availableStepIds = ['password', 'user_details', 'client_details'];

@@ -6,7 +6,6 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
-use AppBundle\Service\SectionValidator\Odr\IncomeBenefitsValidator;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

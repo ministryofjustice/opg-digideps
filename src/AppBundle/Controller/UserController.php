@@ -166,16 +166,17 @@ class UserController extends AbstractController
                     $basicFormOnly ? 'user_details_basic' : 'user_details_full',
                 ]);
 
-                if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                    $route = 'admin_homepage';
-                } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
-                    $route = 'ad_homepage';
-                } else {
-                    $route = 'client_add';
+                // redirect to a different page based on role
+                switch ($user->getRoleName()) {
+                    case EntityDir\User::ROLE_ADMIN:
+                        return $this->redirect($this->generateUrl('admin_homepage'));
+                    case EntityDir\User::ROLE_AD:
+                        return $this->redirect($this->generateUrl('ad_homepage'));
+                    case EntityDir\User::ROLE_PA:
+                        return $this->redirect($this->generateUrl('pa_dashboard'));
                 }
 
-                // after details are added, admin users to go their homepage, deputies go to next step
-                return $this->redirect($this->generateUrl($route));
+                return $this->redirect($this->generateUrl('client_add'));
             }
         } else {
             // fill the form in (edit mode)

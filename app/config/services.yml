@@ -11,10 +11,6 @@ services:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.context", "@router", "@session", "%env%" ]
 
-    audit_logger:
-        class: AppBundle\Service\AuditLogger
-        arguments: ["@rest_client", "@security.context", "@service_container"]
-
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator
         arguments:  

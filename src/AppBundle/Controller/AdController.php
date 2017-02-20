@@ -32,9 +32,9 @@ class AdController extends AbstractController
 
         // form add
         $form = $this->createForm(new FormDir\Ad\AddUserType([
-            'roleChoices' => [2=>'Lay deputy'],
-            'roleIdSetTo' => 2,
-            'roleIdEmptyValue' => null,
+            'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
+            'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
+            'roleNameEmptyValue' => null,
         ]), new EntityDir\User());
 
         if ($request->isMethod('POST')) {
@@ -93,7 +93,7 @@ class AdController extends AbstractController
             ]);
         }
 
-        if ($user->getRole()['role'] != EntityDir\Role::LAY_DEPUTY) {
+        if ($user->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
             return $this->render('AppBundle:Ad:error.html.twig', [
                 'error' => 'You can only view Lay deputies',
             ]);
@@ -119,7 +119,7 @@ class AdController extends AbstractController
         try {
             /* @var $deputy EntityDir\User */
             $deputy = $this->getRestClient()->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user', 'role']);
-            if ($deputy->getRole()['role'] != EntityDir\Role::LAY_DEPUTY) {
+            if ($deputy->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
                 throw new \RuntimeException('User not a Lay deputy');
             }
 

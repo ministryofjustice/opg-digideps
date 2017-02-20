@@ -25,7 +25,7 @@
 
     {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
 
-    {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
+        {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
         'fieldSetClass' : 'radio-agreed-behalf-deputy',
         'legendClass' : 'form-label'
     }) }}
@@ -50,5 +50,6 @@
             });
         });
     </script>
+
 
 {% endblock %}

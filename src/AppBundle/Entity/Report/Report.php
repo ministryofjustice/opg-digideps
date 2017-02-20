@@ -10,8 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @JMS\XmlRoot("report")
- * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */

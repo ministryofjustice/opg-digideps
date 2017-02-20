@@ -1,0 +1,95 @@
+// =======================================================
+// TABS
+
+@mixin tab-style($colour,$defaultTint,$hoverTint) {
+    a,
+    &:after,
+    &.active a:hover { background-color: mix($white,$colour,$defaultTint) }
+    a:hover { background-color: mix($white,$colour,$hoverTint) }
+}
+
+.tabs {
+    float: left;
+    width: 100%;
+}
+
+.tabs-list {
+    position: relative;
+    margin: 0;
+    border-top: 1px solid $border-colour;
+
+    @include media(tablet) {
+        border-top: 0 none
+    }
+}
+
+.tab-item {
+    border-bottom: 1px solid $border-colour;
+
+    @include media(tablet) {
+        @include box-sizing(border-box);
+        float: left;
+        display: inline-block;
+        width: 24.25%;
+        margin: 0 .5% 0;
+        border-bottom: 0 none;
+    }
+
+    a {
+        display: block;
+        padding: .47em;
+        text-decoration: none;
+
+        @include media(tablet) {
+            @include box-sizing(border-box);
+            float: left;
+            width: 100%;
+            padding: 12px 0 12px;
+            border: 0 none;
+            color: $black;
+            text-align: center;
+        }
+    }
+
+    &.active {
+        a {
+            @include media(tablet) {
+                padding-bottom: 21px;
+                &:hover {
+                    cursor: default;
+                }
+            }
+        }
+        @include media(tablet) {
+            &:after {
+                content: '';
+                position: absolute;
+                top: 85px;
+                left: 0;
+                display: block;
+                width: 100%;
+                height: 10px;
+            }
+        }
+    }
+
+    @include media(tablet) {
+        &.clients {
+            margin-left: 0;
+            @include tab-style($link-colour,25%,45%);
+        }
+
+        &.unstarted {
+            @include tab-style(#d7d7d7,0%,20%);
+        }
+
+        &.progress {
+            @include tab-style($orange,25%,45%);
+        }
+
+        &.ready {
+            margin-right: 0;
+            @include tab-style($button-colour,25%,45%);
+        }
+    }
+}

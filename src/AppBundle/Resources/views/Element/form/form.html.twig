@@ -194,53 +194,6 @@
 &lt;/div></code></pre>
     </div>
 
-    <!-- radio with hidden -->
-    <div class="grid-row">
-        <div id="sort-code" class="column-two-thirds">
-            <h3 class="heading-large">Radio with hidden</h3>
-            <p>Provide a yes no radio button with a hidden detail section, all in a fieldset
-              to keep it accessable.
-            </p>
-        </div>
-    </div>
-    <div class="example" id="radio-example">
-        <form action="">
-      <fieldset class="radio-with-hidden form-group">
-        <legend class="form-label">Do you expect to make any significant decisions on behalf of the client in the next 12 months?</legend>
-        <p class="form-hint">For example, the client moving to other accommodation, buying or selling property or making adaptations
-          to their home, changing their investments, taking funds out of the Courts Funds Office, seeking NHS continuing care funding,
-          making large gifts (such as a 21st birthday present for their child)
-        </p>
-        <div class="inline radio-buttons">
-          <label class="block-label" for="radio-inline-1">
-            <input id="radio-inline-1" type="radio" name="radio-inline-group" value="Yes" />
-            Yes
-          </label>
-          <label class="block-label" for="radio-inline-2">
-            <input id="radio-inline-2" type="radio" name="radio-inline-group" value="No">
-            No
-          </label>
-        </div>
-        <div class="hidden-section">
-          <label class="label" for="textarea">
-            Tell us more
-            <textarea id="textarea" class="form-control expandable"></textarea>
-          </label>
-        </div>
-      </fieldset>
-      </form>
-    </div>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        new opg.RadioHide({
-            radio: '#radio-example input[type=radio]',
-            content: '#radio-example .hidden-section',
-            hideOnYes: false
-        });
-      });
-      </script>
-
-
     <!-- Button Save Bar -->
     <div class="grid-row">
         <div class="column">

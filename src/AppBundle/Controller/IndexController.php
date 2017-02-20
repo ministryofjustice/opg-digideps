@@ -88,8 +88,6 @@ class IndexController extends AbstractController
             $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
             $session->set('lastLoggedIn', $user->getLastLoggedIn());
-
-            $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
 
         // different page version for timeout and manual logout

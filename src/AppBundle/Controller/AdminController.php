@@ -49,14 +49,19 @@ class AdminController extends AbstractController
      */
     public function addUserAction(Request $request)
     {
-        $availableRoles = EntityDir\Role::$availableRoles;
-        // non-admin cannot add admin users
-        if (!$this->isGranted(EntityDir\Role::ADMIN)) {
-            unset($availableRoles[1]);
+        $availableRoles = [
+            EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+            EntityDir\User::ROLE_AD         => 'Assisted Digital',
+        ];
+        // only admins can add other admins
+        if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
         }
+
+
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'      => $availableRoles,
-            'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
+            'roleChoices'        => $availableRoles,
+            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
         ]), new EntityDir\User());
 
         if ($request->isMethod('POST')) {
@@ -64,7 +69,7 @@ class AdminController extends AbstractController
             if ($form->isValid()) {
                 // add user
                 try {
-                    if (!$this->isGranted(EntityDir\Role::ADMIN) && $form->getData()->getRoleId() == 1) {
+                    if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                         throw new \RuntimeException('Cannot add admin from non-admin user');
                     }
                     $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
@@ -77,8 +82,6 @@ class AdminController extends AbstractController
                         'notice',
                         'An activation email has been sent to the user.'
                     );
-
-                    $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
 
                     return $this->redirect($this->generateUrl('admin_homepage'));
                 } catch (RestClientException $e) {
@@ -105,6 +108,7 @@ class AdminController extends AbstractController
         $filter = $request->get('filter');
 
         try {
+            /* @var $user EntityDir\User */
             $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
@@ -112,16 +116,26 @@ class AdminController extends AbstractController
             ]);
         }
 
-        if ($user->getRole()['role'] == EntityDir\Role::ADMIN && !$this->isGranted(EntityDir\Role::ADMIN)) {
+        if ($user->getRoleName() == EntityDir\User::ROLE_ADMIN && !$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'Non-admin cannot edit admin users',
             ]);
         }
 
+        // no role editing for current user and PA
+        $roleNameSetTo = null;
+        if ($user->getId() == $this->getUser()->getId() || $user->getRoleName() == EntityDir\User::ROLE_PA) {
+            $roleNameSetTo = $user->getRoleName();
+        }
         $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'      => EntityDir\Role::$availableRoles,
-            'roleIdEmptyValue' => $this->get('translator')->trans('addUserForm.roleId.defaultOption', [], 'admin'),
-            'roleIdDisabled'   => $user->getId() == $this->getUser()->getId(),
+            'roleChoices'        => [
+                EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
+                EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+                EntityDir\User::ROLE_AD         => 'Assisted Digital',
+                EntityDir\User::ROLE_PA         => 'Public Authority',
+            ],
+            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
+            'roleNameSetTo'   => $roleNameSetTo, //can't edit current user's role
         ]), $user);
 
         $clients = $user->getClients();
@@ -222,8 +236,6 @@ class AdminController extends AbstractController
     {
         $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
 
-        $this->get('audit_logger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
-
         $this->getRestClient()->delete('user/' . $id);
 
         return $this->redirect($this->generateUrl('admin_homepage'));
@@ -238,7 +250,6 @@ class AdminController extends AbstractController
         $chunkSize = 5000;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
-            'action' => $this->generateUrl('admin_upload'),
             'method' => 'POST',
         ]);
 
@@ -307,6 +318,89 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/pa-upload", name="admin_pa_upload")
+     * @Template
+     */
+    public function uploadPaUsersAction(Request $request)
+    {
+        $chunkSize = 2;
+
+        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+            'method' => 'POST',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $fileName = $form->get('file')->getData();
+            try {
+                $data = (new CsvToArray($fileName, false))
+                    ->setExpectedColumns([
+                        'Deputy No',
+                        'Pat Create',
+                        'Dship Create',
+                        'Dep Postcode',
+                        'Dep Forename',
+                        'Dep Surname',
+                        'Dep Type',
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
+                        'Email',
+                        'Case',
+                        'Forename',
+                        'Surname',
+                        'Corref',
+                        'Report Due',
+                    ])
+                    ->getData();
+
+                $added = ['users' => [], 'clients' => [], 'reports' => []];
+                $errors = [];
+                foreach (array_chunk($data, $chunkSize) as $chunk) {
+                    $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
+                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
+                    $added['users'] = array_merge($added['users'], $ret['added']['users']);
+                    $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);
+                    $added['reports'] = array_merge($added['reports'], $ret['added']['reports']);
+                    $errors = array_merge($errors, $ret['errors']);
+                }
+
+                // notifications
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
+                        count($added['users']),
+                        count($added['clients']),
+                        count($added['reports'])
+                    )
+                );
+                if ($errors) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        implode('<br>', $errors)
+                    );
+                }
+
+                return $this->redirect($this->generateUrl('admin_pa_upload'));
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $message = $e->getData()['message'];
+                }
+                $form->get('file')->addError(new FormError($message));
+            }
+        }
+
+        return [
+            'form'          => $form->createView(),
+            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+        ];
+    }
+
+    /**
      * @Route("/stats", name="admin_stats")
      * @Template
      */
@@ -342,5 +436,23 @@ class AdminController extends AbstractController
         $response->setContent($rawCsv);
 
         return $response;
+    }
+
+    /**
+     * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     **/
+    public function passwordForgottenAction(Request $request, $email)
+    {
+        try {
+            /* @var $user EntityDir\User */
+            $user = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
+            $resetPasswordEmail = $this->getMailFactory()->createActivationEmail($user);
+
+            $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+        }
+
+        return new Response('done');
     }
 }
