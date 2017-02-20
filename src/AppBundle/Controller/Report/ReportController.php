@@ -15,6 +15,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
 {
+    /**
+     * JMS groups used for report preview and PDF
+     * 
+     * @var array
+     */
     private static $reportGroupsAll = [
         'account',
         'expenses',
@@ -201,7 +206,7 @@ class ReportController extends AbstractController
      */
     public function submitConfirmationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->getReport($reportId, ['status']);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
