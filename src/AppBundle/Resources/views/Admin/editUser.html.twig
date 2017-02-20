@@ -11,7 +11,8 @@
         Edit user
     </h1>
 
-    {% set firstClient = (user.clients | length) > 0 ? (user.clients | first) : null %}
+    {% set numberOfClients = user.clients | length %}
+    {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
     {% set reports = firstClient ? firstClient.reports : [] %}
     {% set reportsCount = reports | length %}
 
@@ -29,27 +30,25 @@
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
 
-    <h2 class="heading-small">Client</h2>
-    {% if firstClient %}
-        {% set firstClient = user.clients | first %}
-        <ul>
-            <li>Client name: {{ firstClient.firstname }}</li>
-            <li>Client lastname: {{ firstClient.lastname }}</li>
-            <li>Case number: {{ firstClient.caseNumber }}</li>
-        </ul>
+    <h2 class="heading-small">Clients and reports</h2>
+    {% if numberOfClients > 0 %}
+        <table>
+            <tr>
+                <td>Client</td>
+                <td>Case number</td>
+                <td>Number of reports</td>
+            </tr>
+            {% for client in user.clients %}
+                <tr>
+                    <td>{{ client.firstname }} {{ client.lastname }}</td>
+                    <td>{{ client.caseNumber }}</td>
+                    <td>{{ client.reports | length }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     {% else %}
         No clients for this user
     {% endif %}
-
-    <h2 class="heading-small">Reports</h2>
-    {% if reportsCount > 0 %}
-        <ul>
-            <li>Number of total reports: {{ reportsCount }}</li>
-        </ul>
-    {% else %}
-        No reports
-    {% endif %}
-
 
     {% if action is defined %}
         {% if action == 'edit' %}
