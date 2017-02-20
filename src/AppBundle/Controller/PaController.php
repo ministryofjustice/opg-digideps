@@ -18,14 +18,21 @@ class PaController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+        /* @var $clients EntityDir\Client[] */
+        $endpoint = '/client/get-all?' . http_build_query([
+//            'user_id' => $this->getUser()->getId(),
+            'q'       => '123 sdf',
+            'page'    => 1,
+            'status'  => '*', // starte
+        ]);
+
+        $clients = $this->getRestClient()->get($endpoint, 'Client[]', ['client', 'report']);
+
+        // the view needs reports data, so easier to re-organize by reports
+        // note: for PA (so far), one client only has one report. And there are no clients without report
         $reports = [];
-        $i = 100;
-        while ($i--) {
-            $report = new EntityDir\Report\Report();
-            $client = new EntityDir\Client();
-            $client->setFirstname("John $i");
-            $client->setLastname("Smith $i");
-            $client->setCaseNumber("190993$i");
+        foreach ($clients as $client) {
+            $report = $client->getReports()[0]; // no reason why data is wrong
             $report->setClient($client);
             $reports[] = $report;
         }
