@@ -502,14 +502,14 @@ class User implements UserInterface
     }
 
     /**
-     * Get client by case number.
+     * Get client by case number, case insensitive.
      *
      * @return Client
      */
     public function getClientByCaseNumber($caseNumber)
     {
         return $this->getClients()->filter(function ($client) use ($caseNumber) {
-            return $client->getCaseNumber() == $caseNumber;
+            return $client->getCaseNumber() == strtolower($caseNumber);
         })->first();
     }
 

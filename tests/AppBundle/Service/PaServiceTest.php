@@ -73,7 +73,7 @@ class PaServiceTest extends WebTestCase
     ];
 
     public static $client3 = [
-        'Case'       => '10000003',
+        'Case'       => '1000000T',
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
         'Corref'     => 'A3',
@@ -116,8 +116,8 @@ class PaServiceTest extends WebTestCase
         // check return values
         $this->assertEquals([
             'users'   => ['dep1@provider.com', 'dep2@provider.com'],
-            'clients' => ['10000001', '10000002', '10000003'],
-            'reports' => ['10000001-2014-12-16', '10000002-2015-02-04', '10000003-2015-02-05'],
+            'clients' => ['10000001', '10000002', '1000000t'],
+            'reports' => ['10000001-2014-12-16', '10000002-2015-02-04', '1000000t-2015-02-05'],
         ], $ret1['added']);
         $this->assertEquals([
             'users'   => [],
@@ -158,7 +158,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $clients);
 
         // assert 1st client and report
-        $client1 = $user2->getClientByCaseNumber('10000003');
+        $client1 = $user2->getClientByCaseNumber('1000000t');
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());

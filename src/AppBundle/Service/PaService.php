@@ -22,6 +22,9 @@ class PaService
     }
 
     /**
+     * //TODO
+     * - move to methods
+     * - cleanup data if needed
      *
      * Example of a single row :[
      *     'Email'        => 'dep2@provider.com',
@@ -86,8 +89,8 @@ class PaService
                 $client = new EntityDir\Client();
                 $client
                     ->setCaseNumber($caseNumber)
-                    ->setFirstname($row['Forename'])
-                    ->setLastname($row['Surname'])//->setCourtDate($row['Dship Create'])
+                    ->setFirstname(trim($row['Forename']))
+                    ->setLastname(trim($row['Surname']))//->setCourtDate($row['Dship Create'])
                 ;
                 $added['clients'][] = $caseNumber;
                 $this->em->persist($client);
