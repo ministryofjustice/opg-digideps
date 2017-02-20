@@ -1135,7 +1135,7 @@ class Report
     public function getBankAccountsIncomplete()
     {
         return $this->getBankAccounts()->filter(function ($b) {
-            return $b->getClosingBalance() === null;
+            return $b->getClosingBalance() == null;
         });
     }
 

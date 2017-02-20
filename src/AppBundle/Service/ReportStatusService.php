@@ -104,11 +104,11 @@ class ReportStatusService
     public function getBankAccountsState()
     {
         $bankAccounts = $this->report->getBankAccounts();
-        if (!count($bankAccounts)) {
+        if (count($bankAccounts) === 0) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-        if ($this->report->getBankAccountsIncomplete()) {
+        if (count($this->report->getBankAccountsIncomplete()) > 0) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
 
