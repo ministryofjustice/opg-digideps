@@ -23,7 +23,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
 
-    {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
+    {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
         {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
         'fieldSetClass' : 'radio-agreed-behalf-deputy',
@@ -34,7 +34,9 @@
         {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation') }}
     </div>
 
-    {{ form_submit(form.save,'save') }}
+    <div class="form-group">
+        {{ form_submit(form.save,'save') }}
+    </div>
 
     {{ form_end(form) }}
 

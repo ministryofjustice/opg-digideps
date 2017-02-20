@@ -7,107 +7,10 @@ input[type=text]::-ms-clear {
     display: none;
 }
 
-form {
-    &.single-texta-area {
-        padding-top: 3px;
-    }
-
-    &.report-form {
-        border-left: 3px solid $grey-2;
-        padding-left: 10px;
-    }
-
-    &.in-page-form {
-        border-left: 3px solid $grey-2;
-        padding-left: 15px;
-
-        h3.heading-medium:first-child {
-            margin-top: 0;
-        }
-
-        .form-date {
-            .form-group {
-                input {
-                    width: 100%;
-                }
-            }
-        }
-
-        .form-group {
-
-            textarea.form-control {
-                height: 7em;
-            }
-
-            .form-control__postcode {
-                width: 22%;
-            }
-
-            fieldset.stacked {
-                label.block-label {
-                    width: 85%;
-                }
-            }
-
-            label.block-label {
-                @include core-19();
-            }
-
-        }
-
-        .report-list__item & {
-
-            margin-bottom: 20px;
-
-            .form-date {
-                .form-group input {
-                    width: 100%;
-                }
-            }
-
-            .form-group {
-
-                .form-control {
-                    width: 63%;
-                }
-
-                .form-control__postcode,
-                .form-control__number {
-                    width: 25%;
-                }
-
-            }
-
-        }
-
-        + .in-page-form {
-            margin-top: 40px;
-        }
-
-    }
-
-}
-
-.form--client-add-report {
-    margin: 40px 0 20px 0;
-}
-
 .form-group {
-    float: none;// Only flat left if within a form container.
+    float: none;// Only float left if within a form container.
     form & {
         float: left;
-    }
-
-    .expanding-wrapper {
-        width: 90%;
-        max-width: 540px;
-        line-height: 1.4;
-    }
-
-    &.form-inline {
-        .form-label {
-            float: left;
-        }
     }
 
     textarea.form-control {
@@ -120,15 +23,6 @@ form {
         height: 39px;
         padding-right: 10px;
     }
-
-    &.margin-bottom-reduced {
-        margin-bottom: 15px;
-    }
-
-}
-
-.form-group_button-bar {
-    padding-top: $gutter * 2;
 }
 
 .form-group__checkbox-group {
@@ -228,11 +122,6 @@ ul.form-hint {
     }
 }
 
-.below-form-link {
-    display: inline-block;
-    margin-top: 15px;
-}
-
 .errors {
     width: auto;
     margin-bottom: 5px;
@@ -241,26 +130,4 @@ ul.form-hint {
         color: $error-colour;
         width: auto;
     }
-
-}
-
-label.extra-top {
-    margin-top: 3px;
-}
-
-.radio-with-hidden {
-
-  .radio-buttons {
-    @extend %contain-floats;
-  }
-
-  .hidden-section {
-    margin-top: 20px;
-
-    form .form-group & {
-      margin-bottom: 40px;
-    }
-
-  }
-
 }

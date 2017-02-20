@@ -119,28 +119,6 @@ $declaration-margin: 170px;
 
 }
 
-.my-client {
-
-    .item-list.reports,
-    .client-details {
-        width: 85%;
-    }
-
-    .client-details {
-        .item-data-fixed {
-            .item-label {
-                width: $client-label-width;
-            }
-
-            .item-value {
-                margin-left: $client-label-width;
-            }
-        }
-    }
-
-
-}
-
 .your-details {
     width: 85%;
 
@@ -157,8 +135,7 @@ $declaration-margin: 170px;
     }
 }
 
-.page-report-header,
-.external-report-section-declaration {
+.page-report-header {
     .item-data-fixed {
         .item-label {
             width: $declaration-margin;

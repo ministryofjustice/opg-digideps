@@ -43,5 +43,10 @@
     }
 }
 
+// appplies to uknown closing balance for each account, and for the accounts total
+.labelvalue .value.unknown {
+    color: $red-unknown;
+}
+
 
 
