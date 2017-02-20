@@ -27,7 +27,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "decision-status"})
      *
      * @return array
      */
@@ -52,7 +52,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "contact-status"})
      *
      * @return array
      */
@@ -68,7 +68,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "visits-care-state"})
      *
      * @return array
      */
@@ -95,7 +95,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "account-state"})
      *
      * @return array
      */
@@ -116,7 +116,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "money-transfer-state"})
      *
      * @return array
      */
@@ -135,7 +135,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "money-in-state"})
      *
      * @return array
      */
@@ -151,7 +151,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "money-out-state"})
      *
      * @return array
      */
@@ -167,7 +167,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "money-in-short-state"})
      *
      * @return array
      */
@@ -190,7 +190,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "money-out-short-state"})
      *
      * @return array
      */
@@ -213,7 +213,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "balance-state"})
      *
      * @return array
      */
@@ -237,7 +237,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "asset-state"})
      *
      * @return array
      */
@@ -260,7 +260,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "debt-state"})
      *
      * @return array
      */
@@ -278,7 +278,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "action-state"})
      *
      * @return array
      */
@@ -303,7 +303,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "more-info-state"})
      *
      * @return array
      */
@@ -335,7 +335,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "expenses-state"})
      *
      * @return array
      */
@@ -351,7 +351,7 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "gifts-state"})
      *
      * @return array
      */

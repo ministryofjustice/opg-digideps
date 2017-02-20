@@ -1190,7 +1190,25 @@ class Report
      * Get assets total value.
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({
+     *     "status",
+     *     "decision-status",
+     *     "contact-status",
+     *     "visits-care-state",
+     *     "expenses-state",
+     *     "gifts-state",
+     *     "account-state",
+     *     "money-transfer-state",
+     *     "money-in-state",
+     *     "money-out-state",
+     *     "asset-state",
+     *     "debt-state",
+     *     "action-state",
+     *     "more-info-state",
+     *     "balance-state",
+     *     "money-in-short-state",
+     *     "money-out-short-state",
+     * })
      *
      * @return array
      */
