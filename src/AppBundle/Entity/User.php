@@ -865,6 +865,7 @@ class User implements UserInterface
                      'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
                      'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
                      self::ROLE_AD                 => ['Assisted Digital', 5],
+                     self::ROLE_PA                 => ['Pa', 6],
                  ] as $name => $row) {
             if ($row[1] == $id) {
                 return $name;
