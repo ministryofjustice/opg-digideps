@@ -3,9 +3,9 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Form as FormDir;
-use AppBundle\Entity as EntityDir;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

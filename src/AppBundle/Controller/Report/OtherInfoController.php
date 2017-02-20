@@ -3,8 +3,8 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

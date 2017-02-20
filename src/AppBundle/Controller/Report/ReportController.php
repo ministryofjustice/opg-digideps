@@ -17,7 +17,7 @@ class ReportController extends AbstractController
 {
     /**
      * JMS groups used for report preview and PDF
-     * 
+     *
      * @var array
      */
     private static $reportGroupsAll = [

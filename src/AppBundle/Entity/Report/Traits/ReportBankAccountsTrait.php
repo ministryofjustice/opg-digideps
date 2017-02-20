@@ -93,7 +93,6 @@ trait ReportBankAccountsTrait
         return $this;
     }
 
-
     /**
      ** @return bool
      */
