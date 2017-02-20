@@ -463,6 +463,15 @@ class Status
     /**
      * @return mixed
      */
+    public function isReadyToSubmit()
+    {
+        return $this->isReadyToSubmit;
+    }
+
+    /**
+     * //TODO remove and clean up if not used
+     * @return mixed
+     */
     public function getIsReadyToSubmit()
     {
         return $this->isReadyToSubmit;
