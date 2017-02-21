@@ -102,6 +102,8 @@ class ClientController extends RestController
         $q = $request->get('q');
         $status = $request->get('status');
         $limit = $request->get('limit', 100);
+        $sort = $request->get('sort');
+        $sortDirection = $request->get('sort_direction');
 
         $qb = $this->getRepository(EntityDir\Client::class)
             ->createQueryBuilder('c')
@@ -116,6 +118,10 @@ class ClientController extends RestController
         if ($limit) {
             $qb->setMaxResults($limit);
         }
+        if ($sort == 'end_date') {
+            $qb->orderBy('r.endDate', $sortDirection =='desc' ? 'DESC' : 'ASC');
+        }
+
         $query = $qb->getQuery();
 
         $ret = $query->getResult();
