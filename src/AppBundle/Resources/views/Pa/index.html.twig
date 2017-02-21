@@ -55,7 +55,7 @@
 				</td>
 				<td>
 					<span>{{ report.dueDate | date("j M Y") }}</span><br>
-					<span class="font-xsmall">Due in 7 days</span>
+					<span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
 				</td>
 				<td>
 					<span class="status status-large done">
