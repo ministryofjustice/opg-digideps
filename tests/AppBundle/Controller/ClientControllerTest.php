@@ -207,8 +207,14 @@ class ClientControllerTest extends AbstractTestController
 
         //assert
         $this->assertCount(3, $clients);
-        $this->assertArrayHasKey('id', $clients[0]['reports'][0]);
-        $this->assertArrayHasKey('id', $clients[1]['reports'][0]);
-        $this->assertArrayHasKey('id', $clients[2]['reports'][0]);
+        
+        $this->assertEquals('paClient1', $clients[0]['firstname']);
+        $this->assertCount(1, $clients[0]['reports']);
+
+        $this->assertEquals('paClient2', $clients[1]['firstname']);
+        $this->assertCount(1, $clients[1]['reports']);
+
+        $this->assertEquals('paClient3', $clients[2]['firstname']);
+        $this->assertCount(1, $clients[2]['reports']);
     }
 }
