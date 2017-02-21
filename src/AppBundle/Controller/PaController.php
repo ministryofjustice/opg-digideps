@@ -25,6 +25,8 @@ class PaController extends AbstractController
             'page'    => 1,
             'status'  => '*', // starte
             'exclude_submitted'  => true,
+            'sort'  => 'end_date',
+            'sort_direction'  => 'asc',
         ]);
 
         $clients = $this->getRestClient()->get($endpoint, 'Client[]', ['client', 'report', 'status']);
