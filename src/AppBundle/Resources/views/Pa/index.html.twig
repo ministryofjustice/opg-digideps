@@ -47,20 +47,30 @@
 			<tr>
 				<td>
 					<a href="#">
-				        {{ report.client.lastName }}, {{ report.client.firstName }}
+				        {{ report.client.lastName|title }}, {{ report.client.firstName|title }}
 					</a>
 				</td>
 				<td>
-					{{ report.client.caseNumber }}
+					{{ report.client.caseNumber|upper }}
 				</td>
 				<td>
 					<span>{{ report.dueDate | date("j M Y") }}</span><br>
-					<span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+					{% if report.dueDateDiffDays < 0 %}
+						<span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+					{% elseif report.dueDateDiffDays == 0 %}
+						<span class="font-xsmall bold">Due today</span>
+					{% else %}
+						<span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+					{% endif %}
 				</td>
 				<td>
-					<span class="status status-large done">
-						{{ report.status.status }}
-					</span>
+					{% if report.status.status == 'notStarted' %}
+				        <span class="status status-large not-started">Not Started</span>
+				    {% elseif report.status.status == 'notFinished' %}
+				        <span class="status status-large incomplete">In Progress</span>
+				    {% elseif report.status.status == 'readyToSubmit' %}
+				        <span class="status status-large done">Ready To Submit</span>
+				    {% endif %}
 				</td>
 			</tr>
 	    {% endfor %}
