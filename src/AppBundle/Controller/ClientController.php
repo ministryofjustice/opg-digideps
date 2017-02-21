@@ -109,6 +109,10 @@ class ClientController extends RestController
             ->leftJoin('c.reports', 'r')
             ->where('u.id = ' . $userId);
 
+        if ($request->get('exclude_submitted')) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
         if ($limit) {
             $qb->setMaxResults($limit);
         }
