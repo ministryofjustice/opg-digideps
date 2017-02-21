@@ -114,4 +114,29 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $this->report->getBankAccountsIncomplete(), 'only null account expected');
     }
+
+    public function dueDateDiffDaysProvider()
+    {
+        return [
+            [null, new \DateTime('2017-02-21'), null],
+            [new \DateTime('2017-02-21'), new \DateTime('2017-02-21'), 0],
+            [new \DateTime('2017-02-21'), new \DateTime('2017-02-21 23:59'), 0],
+            [new \DateTime('2017-02-21'), new \DateTime('2017-02-21 00:01'), 0],
+            [new \DateTime('2017-02-21'), new \DateTime('2017-02-22'), -1],
+            [new \DateTime('2017-02-21'), new \DateTime('2017-02-20'), 1],
+        ];
+    }
+
+    /**
+     * @dataProvider dueDateDiffDaysProvider
+     */
+    public function testgetDueDateDiffDays($dueDate, $currentDate, $expected)
+    {
+        $report = m::mock(Report::class . '[getDueDate]');
+        $report->shouldReceive('getDueDate')->andReturn($dueDate);
+
+        $actual = $report->getDueDateDiffDays($currentDate);
+        $this->assertEquals($expected, $actual);
+
+    }
 }

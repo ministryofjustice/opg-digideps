@@ -304,6 +304,34 @@ class Report
     }
 
     /**
+     * Returns the days left to the due report
+     * 0 = same day
+     * -1 = overdue by 1 day
+     * 1 = 1 day
+     *
+     * @param \DateTime|null $currentDate
+     * @return int|void
+     */
+    public function getDueDateDiffDays(\DateTime $currentDate = null)
+    {
+        if (!$this->getDueDate()) {
+            return;
+        }
+
+        $currentDate = $currentDate ? $currentDate : new \DateTime();
+
+        // clone and set time to 0,0,0 (might not be needed)
+        $currentDate = clone $currentDate;
+        $currentDate->setTime(0,0,0);
+        $dueDate = clone $this->getDueDate();
+        $dueDate->setTime(0,0,0);
+
+        $days = (int)$currentDate->diff($dueDate)->format("%R%a");
+
+        return $days;
+    }
+
+    /**
      * Get submitDate.
      *
      * @return \DateTime
