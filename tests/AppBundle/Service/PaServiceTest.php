@@ -46,8 +46,8 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy2 = [
         'Deputy No'    => '00000002',
-        'Pat Create'   => '16-Dec-2014',
-        'Dship Create' => '07-Apr-2015',
+        'Pat Create'   => '16-Dec-14',
+        'Dship Create' => '07-Apr-15',
         'Dep Postcode' => 'SW1',
         'Dep Forename' => 'Dep2',
         'Dep Surname'  => 'Uty2',
@@ -65,7 +65,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly1',
         'Surname'    => 'Hent1',
         'Corref'     => 'A2',
-        'Report Due' => '16-Dec-2014',
+        'Report Due' => '16-Dec-14',
     ];
 
 
@@ -74,7 +74,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly2',
         'Surname'    => 'Hent2',
         'Corref'     => 'A3',
-        'Report Due' => '04-Feb-2015',
+        'Report Due' => '04-Feb-15',
     ];
 
     public static $client3 = [
@@ -82,7 +82,7 @@ class PaServiceTest extends WebTestCase
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
         'Corref'     => 'A3',
-        'Report Due' => '05-Feb-2015',
+        'Report Due' => '05-Feb-15',
     ];
 
 
@@ -118,10 +118,8 @@ class PaServiceTest extends WebTestCase
             self::$deputy2 + self::$client3,
         ];
 
-//        print_r($data);die;
-
-        // add twice to check duplicates are not added
         $ret1 = $this->pa->addFromCasrecRows($data);
+        $this->assertEmpty($ret1['errors']);
         $this->assertEquals([
             'users'   => ['dep1@provider.com', 'dep2@provider.com'],
             'clients' => ['10000001', '10000002', '1000000t'],
@@ -132,6 +130,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals([
             'users'   => [],
             'clients' => [],
+            'reports' => [],
             'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
@@ -195,5 +194,23 @@ class PaServiceTest extends WebTestCase
     public function tearDown()
     {
         m::close();
+    }
+
+    public static function parseDateProvider()
+    {
+        return [
+            ['05-Feb-15', '2015-02-05'],
+            ['23-May-17', '2017-05-23'],
+            ['15-Jul-17', '2017-07-15'],
+            ['10-Jul-17', '2017-07-10'],
+        ];
+    }
+
+    /**
+     * @dataProvider parseDateProvider
+     */
+    public function testparseDate($in, $out)
+    {
+        $this->assertEquals($out, PaService::parseDate($in)->format('Y-m-d'));
     }
 }

@@ -71,6 +71,10 @@ class PaService
             $this->em->clear();
         }
 
+        sort($this->added['users']);
+        sort($this->added['clients']);
+        sort($this->added['reports']);
+
         return ['added' => $this->added, 'errors' => $errors];
     }
 
@@ -165,14 +169,14 @@ class PaService
     }
 
     /**
-     * create DateTime object based on '16-Dec-2014' formatted dates
+     * create DateTime object based on '16-Dec-14' formatted dates
      *
      * @param string $dateString e.g. 16-Dec-2014
      *
      * @return \DateTime
      */
-    private static function parseDate($dateString)
+    public static function parseDate($dateString)
     {
-        return \DateTime::createFromFormat('d-M-Y', $dateString);
+        return \DateTime::createFromFormat('d-M-y', $dateString);
     }
 }
