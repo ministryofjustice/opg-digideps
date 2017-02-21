@@ -24,6 +24,7 @@ class PaController extends AbstractController
             'q'       => '123 sdf',
             'page'    => 1,
             'status'  => '*', // starte
+            'exclude_submitted'  => true,
         ]);
 
         $clients = $this->getRestClient()->get($endpoint, 'Client[]', ['client', 'report', 'status']);
