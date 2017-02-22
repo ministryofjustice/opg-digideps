@@ -51,7 +51,7 @@ class DeputyProvider implements UserProviderInterface
                 throw $e;
             }
 
-            throw new UsernameNotFoundException("We can't sign you in at this time.", $e->getCode());
+            throw new UsernameNotFoundException("We don't recognise your email address or password - please try again.", $e->getCode());
         }
     }
 
