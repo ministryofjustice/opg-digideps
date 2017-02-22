@@ -40,15 +40,15 @@ class ClientController extends RestController
         }
 
         $this->hydrateEntityWithArrayData($client, $data, [
-            'firstname' => 'setFirstname',
-            'lastname' => 'setLastname',
+            'firstname'   => 'setFirstname',
+            'lastname'    => 'setLastname',
             'case_number' => 'setCaseNumber',
-            'address' => 'setAddress',
-            'address2' => 'setAddress2',
-            'postcode' => 'setPostcode',
-            'country' => 'setCountry',
-            'county' => 'setCounty',
-            'phone' => 'setPhone',
+            'address'     => 'setAddress',
+            'address2'    => 'setAddress2',
+            'postcode'    => 'setPostcode',
+            'country'     => 'setCountry',
+            'county'      => 'setCounty',
+            'phone'       => 'setPhone',
         ]);
         $client->setCourtDate(new \DateTime($data['court_date']));
 
@@ -74,7 +74,7 @@ class ClientController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['client'];
+            ? (array)$request->query->get('groups') : ['client'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
@@ -86,53 +86,5 @@ class ClientController extends RestController
         return $client;
     }
 
-    /**
-     * Get list of clients, currently only for PA users
-     *
-     *
-     * @Route("/get-all")
-     * @Method({"GET"})
-     */
-    public function getAll(Request $request)
-    {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
 
-        $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
-        $offset = $request->get('offset');
-        $q = $request->get('q');
-        $status = $request->get('status');
-        $limit = $request->get('limit', 100);
-        $sort = $request->get('sort');
-        $sortDirection = $request->get('sort_direction');
-
-        $qb = $this->getRepository(EntityDir\Client::class)
-            ->createQueryBuilder('c')
-            ->leftJoin('c.users', 'u')
-            ->leftJoin('c.reports', 'r')
-            ->where('u.id = ' . $userId);
-
-        if ($request->get('exclude_submitted')) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
-
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
-
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-        if ($sort == 'end_date') {
-            $qb->orderBy('r.endDate', $sortDirection =='desc' ? 'DESC' : 'ASC');
-        }
-
-        $query = $qb->getQuery();
-
-        $ret = $query->getResult();
-
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['client', 'report'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
-
-        return $ret;
-    }
 }

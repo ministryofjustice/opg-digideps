@@ -13,18 +13,8 @@ class ClientControllerTest extends AbstractTestController
     private static $client2;
     private static $report2;
 
-    // pa
-    private static $pa1;
-    private static $paClient1;
-    private static $paClient1Report1;
-    private static $paClient2;
-    private static $paClient2Report1;
-    private static $paClient3;
-    private static $paClient3Report1;
-
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-    private static $tokenPa = null;
 
     public static function setUpBeforeClass()
     {
@@ -40,16 +30,6 @@ class ClientControllerTest extends AbstractTestController
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
-        // pa1
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
-        self::$paClient1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient1']);
-        self::$paClient1Report1 = self::fixtures()->createReport(self::$paClient1);
-        self::$paClient2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient2']);
-        self::$paClient2Report1 = self::fixtures()->createReport(self::$paClient2);
-        self::$paClient3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient3']);
-        self::$paClient3Report1 = self::fixtures()->createReport(self::$paClient3);
-
-
         self::fixtures()->flush()->clear();
     }
 
@@ -58,7 +38,7 @@ class ClientControllerTest extends AbstractTestController
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenPa = $this->loginAsPa();
+//            self::$tokenPa = $this->loginAsPa();
         }
     }
 
@@ -179,55 +159,4 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Firstname', $data['firstname']);
     }
 
-    public function testGetAllAuth()
-    {
-        $url = '/client/get-all';
-        $this->assertEndpointNeedsAuth('GET', $url);
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testGetAllAcl()
-    {
-        $url = '/client/get-all';
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-    }
-
-    public function testGetAllById()
-    {
-        $url = '/client/get-all';
-
-        // assert get
-        $clients = $this->clientsGetAllRequest([]);
-
-        //assert results
-        $this->assertCount(3, $clients);
-        $this->assertEquals('paClient1', $clients[0]['firstname']);
-        $this->assertCount(1, $clients[0]['reports']);
-        $this->assertEquals('paClient2', $clients[1]['firstname']);
-        $this->assertCount(1, $clients[1]['reports']);
-        $this->assertEquals('paClient3', $clients[2]['firstname']);
-        $this->assertCount(1, $clients[2]['reports']);
-
-
-        //test pagination
-        $clients = $this->clientsGetAllRequest([
-            'offset'    => 1,
-            'limit'  => '1',
-        ]);
-        $this->assertCount(1, $clients, 'limit fail');
-        $this->assertEquals('paClient2', $clients[0]['firstname'], 'offset fail');
-
-    }
-
-    private function clientsGetAllRequest(array $params)
-    {
-        $url = '/client/get-all?' . http_build_query($params);
-        return $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenPa,
-        ])['data'];
-    }
 }
