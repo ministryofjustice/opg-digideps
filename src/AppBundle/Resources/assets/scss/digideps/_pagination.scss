@@ -156,3 +156,46 @@
     }
 
 }
+
+// Simple pagination styles
+// http://rural-payments-styleguide.herokuapp.com/pagination/
+
+
+.pager-items {
+    display: inline;
+
+    @include media($max_width: 320px) {
+        display: none;
+    }
+
+    li {
+        display: inline;
+        margin: 0 5px;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+
+        }
+    }
+}
+
+.pager-prev {
+    margin-right: 10px;
+}
+
+.pager-next {
+    margin-left: 10px;
+}
+
+.pager-controls {
+    margin-bottom: 8px;
+
+    @include media(tablet) {
+        float: right;
+        margin-bottom: 0;
+    }
+}
