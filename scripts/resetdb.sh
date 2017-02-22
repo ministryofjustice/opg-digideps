@@ -3,7 +3,7 @@ set -e
 # We need below to create the params file on container start
 run-parts /etc/my_init.d
 
-bash initialize_schema.sh
+source initialize_schema.sh
 
 /sbin/setuser app php app/console doctrine:migrations:status-check
 /sbin/setuser app php app/console doctrine:migrations:migrate --no-interaction -vvv
