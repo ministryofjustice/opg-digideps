@@ -283,7 +283,7 @@ class RestClient
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } elseif (substr($expectedResponseType, -2) == '[]') {
-            return $this->arrayToEntitities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
+            return $this->arrayToEntities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
         } elseif (class_exists('AppBundle\\Entity\\' . $expectedResponseType)) {
             return $this->arrayToEntity($expectedResponseType, $responseArray);
         } else {
@@ -398,7 +398,7 @@ class RestClient
      *
      * @return array of type $class
      */
-    private function arrayToEntitities($class, array $data)
+    public function arrayToEntities($class, array $data)
     {
         $expectedResponseType = substr($class, 0, -2);
         $ret = [];
