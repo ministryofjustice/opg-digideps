@@ -299,8 +299,20 @@ class ReportController extends RestController
 
         $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
         $qb
+//            ->select('r')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
+            // the following might save PSQL time if reports have data. to test
+//            ->leftJoin('r.contacts', 'contacts')
+//            ->leftJoin('r.bankAccounts', 'bankAccounts')
+//            ->leftJoin('r.moneyTransfers', 'moneyTransfers')
+//            ->leftJoin('r.moneyTransactions', 'moneyTransactions')
+//            ->leftJoin('r.debts', 'debts')
+//            ->leftJoin('r.decisions', 'decisions')
+//            ->leftJoin('r.assets', 'assets')
+//            ->leftJoin('r.visitsCare', 'visitsCare')
+//            ->leftJoin('r.action', 'action')
+//            ->leftJoin('r.mentalCapacity', 'co')
             ->where('u.id = ' . $userId);
 
         if ($request->get('exclude_submitted')) {
