@@ -41,7 +41,7 @@ contacts:
     label:
       done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
-heading.healthAndWelfare: "Health and welfare"
+heading.healthAndWelfare: "%client%'s welfare"
 visits_care:
     subSectionTitle: "Visits and care"
     subSectionDescription: "Give us an overview of who is looking after %client%"
@@ -49,7 +49,7 @@ visits_care:
     start: "Start"
     label:
       done: "Finished"
-heading.propFinance: "Property and finance"
+heading.propFinance: "%client%'s property and finance"
 deputy_expenses:
     subSectionTitle: "Deputy expenses"
     subSectionDescription: "Claim for things you paid for on %client%'s behalf"
@@ -131,7 +131,7 @@ debts:
     start: "Start"
     label:
        done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
-heading.other: "Other"
+heading.other: "Other information"
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "What major decisions will you need to take for %client% in the next year?"

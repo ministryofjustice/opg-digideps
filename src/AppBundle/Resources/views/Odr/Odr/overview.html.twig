@@ -62,7 +62,7 @@
     <ul id="overview-sections" class="overview-sections">
 
         <li id="visits-and-actions" class="overview-section">
-            <h2 class="heading">Health and welfare</h2>
+            <h2 class="heading">{{ client.firstname }}'s welfare</h2>
             {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'visits_care',
@@ -76,7 +76,7 @@
 
 
         <li id="finances-and-assets" class="overview-section">
-        <h2 class="heading">Property and finance</h2>
+        <h2 class="heading">{{ client.firstname }}'s property and finance</h2>
         {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
         transDomain: translationDomain,
         subSection: 'deputy_expenses',
@@ -133,7 +133,7 @@
         </li>
 
         <li id="visits-and-actions" class="overview-section">
-            <h2 class="heading">Other</h2>
+            <h2 class="heading">Other information</h2>
             {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
