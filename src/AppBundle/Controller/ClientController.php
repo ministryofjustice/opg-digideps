@@ -98,7 +98,7 @@ class ClientController extends RestController
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
 
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
-        $page = $request->get('user_id');
+        $offset = $request->get('offset');
         $q = $request->get('q');
         $status = $request->get('status');
         $limit = $request->get('limit', 100);
@@ -113,6 +113,10 @@ class ClientController extends RestController
 
         if ($request->get('exclude_submitted')) {
             $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
         }
 
         if ($limit) {

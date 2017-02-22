@@ -157,7 +157,6 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client2->getReports());
         $client2Report1 = $client2->getReports()->first();
         /* @var $client2Report1 EntityDir\Report\Report */
-        $this->assertEquals('2015-02-04', $client2Report1->getEndDate()->format('Y-m-d'));
         $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client2Report1->getType());
 
         // assert 2nd deputy
@@ -170,9 +169,6 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
-        $client1Report1 = $client1->getReports()->first();
-        /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2015-02-05', $client1Report1->getEndDate()->format('Y-m-d'));
 
 
         // check client 3 is associated with deputy2

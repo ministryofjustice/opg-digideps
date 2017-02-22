@@ -200,15 +200,34 @@ class ClientControllerTest extends AbstractTestController
         $url = '/client/get-all';
 
         // assert get
-        $clients = $this->assertJsonRequest('GET', $url, [
+        $clients = $this->clientsGetAllRequest([]);
+
+        //assert results
+        $this->assertCount(3, $clients);
+        $this->assertEquals('paClient1', $clients[0]['firstname']);
+        $this->assertCount(1, $clients[0]['reports']);
+        $this->assertEquals('paClient2', $clients[1]['firstname']);
+        $this->assertCount(1, $clients[1]['reports']);
+        $this->assertEquals('paClient3', $clients[2]['firstname']);
+        $this->assertCount(1, $clients[2]['reports']);
+
+
+        //test pagination
+        $clients = $this->clientsGetAllRequest([
+            'offset'    => 1,
+            'limit'  => '1',
+        ]);
+        $this->assertCount(1, $clients, 'limit fail');
+        $this->assertEquals('paClient2', $clients[0]['firstname'], 'offset fail');
+
+    }
+
+    private function clientsGetAllRequest(array $params)
+    {
+        $url = '/client/get-all?' . http_build_query($params);
+        return $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
         ])['data'];
-
-        //assert
-        $this->assertCount(3, $clients);
-        $this->assertArrayHasKey('id', $clients[0]['reports'][0]);
-        $this->assertArrayHasKey('id', $clients[1]['reports'][0]);
-        $this->assertArrayHasKey('id', $clients[2]['reports'][0]);
     }
 }
