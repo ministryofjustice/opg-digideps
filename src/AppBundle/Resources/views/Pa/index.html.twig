@@ -33,13 +33,13 @@
 	     </div>
 	</div>
 
-	<table>
+	<table class="push--bottom">
 		<thead>
 			<tr>
 				<th scope="col">Client</th>
 				<th scope="col">Court order no.</th>
 				<th scope="col">Report due date</th>
-				<th scope="col">Report status</th>
+				<th scope="col" class="numeric">Report status</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,7 +63,7 @@
 						<span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
 					{% endif %}
 				</td>
-				<td>
+				<td class="numeric">
 					{% if report.status.status == 'notStarted' %}
 				        <span class="status status-large not-started">Not Started</span>
 				    {% elseif report.status.status == 'notFinished' %}
@@ -76,5 +76,21 @@
 	    {% endfor %}
 		</tbody>
 	</table>
+
+	{# http://rural-payments-styleguide.herokuapp.com/pagination/ #}
+	<div class="pager">
+		<div class="pager-controls">
+			<a class="pager-prev" href="#">Prev</a>
+			<ul class="pager-items">
+				<li>1</li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+			</ul>
+			<a class="pager-next" href="#">Next</a>
+		</div>
+		<div class="pager-summary">Showing 1 &ndash; 50 of 146 clients</div>
+	</div>
 
 {% endblock %}
