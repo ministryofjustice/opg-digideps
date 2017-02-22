@@ -9,23 +9,23 @@
 		<div class="tabs-nav">
 	        <ul class="tabs-list" role="tablist">
 				<li class="tab-item clients {{ not filters.status ? 'active' : ''  }}" role="presentation">
-					<a href="?status=" role="tab" tabindex="0" aria-selected="true">
+					<a href="{{ path('pa_dashboard', {'status': ''}) }}" role="tab" tabindex="0" aria-selected="true">
 						<span class="data-item bold-large">{{ counts.total }}</span>
 						<span class="data-item bold-xsmall">Clients</span>
 					</a>
 				</li>
 				<li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-					<a href="?status=notStarted" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'notStarted'}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notStarted }}</span>
 						<span class="data-item bold-xsmall">Not started</span></a>
 				</li>
 				<li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-					<a href="?status=notFinished" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'notFinished'}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notFinished }}</span>
 						<span class="data-item bold-xsmall">In progress</span></a>
 				</li>
 				<li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-					<a href="?status=readyToSubmit" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'readyToSubmit'}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
 						<span class="data-item bold-xsmall">Ready to submit</span></a>
 				</li>
@@ -78,19 +78,45 @@
 	</table>
 
 	{# http://rural-payments-styleguide.herokuapp.com/pagination/ #}
-	<div class="pager">
-		<div class="pager-controls">
-			<a class="pager-prev" href="#">Prev</a>
-			<ul class="pager-items">
-				<li>1</li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-			</ul>
-			<a class="pager-next" href="#">Next</a>
+	{% set recordsPerPage = filters.limit %}
+	{% set totalRecords = counts[filters.status ?: 'total'] %}
+    {% set pages = range(0, totalRecords, recordsPerPage) %}
+
+	{% if pages | length > 1 %}
+		<div class="pager">
+			<div class="pager-controls">
+                {% if filters.offset > 0 %}
+                    <a class="pager-prev" href="{{ path('pa_dashboard', {
+                        'status': filters.status,
+                        'offset': filters.offset - recordsPerPage
+                    }) }}">Prev</a>
+                {% endif %}
+
+				<ul class="pager-items">
+					{% for currentOffset in pages %}
+                        {% if currentOffset == filters.offset %}
+                            <li>{{ loop.index }}</li>
+                        {% else %}
+                            <li><a href="{{ path('pa_dashboard', {
+                                    'status': filters.status,
+                                    'offset': currentOffset
+                                }) }}">{{ loop.index }}</a></li>
+                        {% endif %}
+					{% endfor %}
+				</ul>
+
+                {% if (filters.offset + recordsPerPage) < totalRecords %}
+                    <a class="pager-next" href="{{ path('pa_dashboard', {
+                        'status': filters.status,
+                        'offset': filters.offset + recordsPerPage
+                    }) }}">Next</a>
+                {% endif %}
+
+			</div>
+            {% set firstRecordDisplayed = filters.offset + 1 %}
+            {% set lastRecordDisplayed = (filters.offset + recordsPerPage) > totalRecords ? totalRecords : (filters.offset + recordsPerPage)  %}
+            <div class="pager-summary">Showing {{ firstRecordDisplayed }} &ndash; {{ lastRecordDisplayed }} of {{ totalRecords }} clients</div>
 		</div>
-		<div class="pager-summary">Showing 1 &ndash; 50 of 146 clients</div>
-	</div>
+	{% endif %}
 
 {% endblock %}
