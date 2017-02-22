@@ -1,11 +1,12 @@
 // =======================================================
 // TABS
 
-@mixin tab-style($colour,$defaultTint,$hoverTint) {
+@mixin tab-style($colour, $defaultTint, $hoverTint) {
     a,
     &:after,
-    &.active a:hover { background-color: mix($white,$colour,$defaultTint) }
-    a:hover { background-color: mix($white,$colour,$hoverTint) }
+    &.active a:hover { background-color: mix($white, $colour, $defaultTint); }
+
+    a:hover { background-color: mix($white, $colour, $hoverTint); }
 }
 
 .tabs {
@@ -19,7 +20,7 @@
     border-top: 1px solid $border-colour;
 
     @include media(tablet) {
-        border-top: 0 none
+        border-top: 0 none;
     }
 }
 
@@ -55,11 +56,13 @@
         a {
             @include media(tablet) {
                 padding-bottom: 21px;
+
                 &:hover {
                     cursor: default;
                 }
             }
         }
+
         @include media(tablet) {
             &:after {
                 content: '';
@@ -76,20 +79,22 @@
     @include media(tablet) {
         &.clients {
             margin-left: 0;
-            @include tab-style($link-colour,25%,45%);
+
+            @include tab-style($link-colour, 25%, 45%);
         }
 
         &.unstarted {
-            @include tab-style(#d7d7d7,0%,20%);
+            @include tab-style($panel-colour, 0%, 20%);
         }
 
         &.progress {
-            @include tab-style($orange,25%,45%);
+            @include tab-style($orange, 25%, 45%);
         }
 
         &.ready {
             margin-right: 0;
-            @include tab-style($button-colour,25%,45%);
+
+            @include tab-style($button-colour, 25%, 45%);
         }
     }
 }
