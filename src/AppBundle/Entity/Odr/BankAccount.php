@@ -19,8 +19,8 @@ class BankAccount
         'isa' => 'ISA',
         'postoffice' => 'Post Office account',
         'cfo' => 'Court Funds Office account',
-        'other' => 'Other',
-        'other_no_sortcode' => 'Other without sort code',
+        'other' => 'Other type of account',
+        'other_no_sortcode' => 'Other type of account without sort code',
     ];
 
     private static $typesRequiringSortCode = [
