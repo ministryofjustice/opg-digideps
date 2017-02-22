@@ -16,6 +16,16 @@ class ReportControllerTest extends AbstractTestController
     private static $report2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
+    private static $tokenPa = null;
+
+    // pa
+    private static $pa1;
+    private static $paClient1;
+    private static $paClient1Report1;
+    private static $paClient2;
+    private static $paClient2Report1;
+    private static $paClient3;
+    private static $paClient3Report1;
 
     public static function setUpBeforeClass()
     {
@@ -33,6 +43,15 @@ class ReportControllerTest extends AbstractTestController
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
+
+        // pa1
+        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$paClient1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient1']);
+        self::$paClient1Report1 = self::fixtures()->createReport(self::$paClient1);
+        self::$paClient2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient2']);
+        self::$paClient2Report1 = self::fixtures()->createReport(self::$paClient2);
+        self::$paClient3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient3']);
+        self::$paClient3Report1 = self::fixtures()->createReport(self::$paClient3);
 
         self::fixtures()->flush()->clear();
     }
@@ -52,6 +71,7 @@ class ReportControllerTest extends AbstractTestController
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenPa = $this->loginAsPa();
         }
     }
 
@@ -451,5 +471,57 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals('care_fees', $data['money_short_categories_out'][8]['type_id']);
         $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
+    }
+
+
+    public function testGetAllAuth()
+    {
+        $url = '/report/get-all';
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+    }
+
+    public function testGetAllAcl()
+    {
+        $url = '/report/get-all';
+
+        $this->assertEndpointNotAllowedFor('GET', '/report/get-all', self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+    }
+
+    public function testGetAll()
+    {
+        $url = '/report/get-all';
+
+        // assert get
+        $ret = $this->reportsGetAllRequest([]);
+        // assert counts
+//        $this->assertEquals(0, $ret['counts']['total']);
+//        $this->assertEquals(0, $ret['counts']['notStarted']);
+//        $this->assertEquals(0, $ret['counts']['notFinished']);
+//        $this->assertEquals(0, $ret['counts']['readyToSubmit']);
+
+        //assert results
+        $this->assertCount(3,  $ret['reports']);
+        $this->assertEquals('102',  $ret['reports'][0]['type']);
+        $this->assertEquals('paClient1',  $ret['reports'][0]['client']['firstname']);
+
+        //test pagination
+        $reportsPaginated = $this->reportsGetAllRequest([
+            'offset'    => 1,
+            'limit'  => '1',
+        ]);
+        $this->assertCount(1, $reportsPaginated['reports']);
+        $this->assertEquals($reportsPaginated['reports'][0]['id'], $ret['reports'][1]['id']);
+
+    }
+
+    private function reportsGetAllRequest(array $params)
+    {
+        $url = '/report/get-all?' . http_build_query($params);
+        return $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
     }
 }

@@ -10,10 +10,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/report")
+ */
 class ReportController extends RestController
 {
     /**
-     * @Route("/report")
+     * @Route("")
      * @Method({"POST"})
      */
     public function addAction(Request $request)
@@ -55,7 +58,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/report/{id}")
+     * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      *
      * @param int $id
@@ -76,7 +79,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/report/{id}/submit")
+     * @Route("/{id}/submit", requirements={"id":"\d+"})
      * @Method({"PUT"})
      */
     public function submit(Request $request, $id)
@@ -118,7 +121,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/report/{id}")
+     * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"PUT"})
      */
     public function update(Request $request, $id)
@@ -271,5 +274,63 @@ class ReportController extends RestController
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
+    }
+
+    /**
+     * Get list of reports, currently only for PA users
+     *
+     *
+     * @Route("/get-all")
+     * @Method({"GET"})
+     */
+    public function getAll(Request $request)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
+
+        $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
+        $offset = $request->get('offset');
+//        $q = $request->get('q');
+//        $status = $request->get('status');
+        $limit = $request->get('limit', 100);
+        $sort = $request->get('sort');
+        $sortDirection = $request->get('sort_direction');
+
+        $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
+
+        $qb
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            ->where('u.id = ' . $userId);
+
+        if ($request->get('exclude_submitted')) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        if ($sort == 'end_date') {
+            $qb->orderBy('r.endDate', $sortDirection == 'desc' ? 'DESC' : 'ASC');
+        }
+
+        $reports = $qb->getQuery()->getResult();
+
+        $serialisedGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['client', 'report'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        return [
+            'counts'=>[
+                'total' => 60,
+                'notStarted' => 30,
+                'notFinished' => 20,
+                'readyToSubmit' => 10,
+            ],
+            'reports'=>$reports
+        ];
     }
 }
