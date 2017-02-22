@@ -1210,7 +1210,7 @@ class Report
      *     "money-out-short-state",
      * })
      *
-     * @return array
+     * @return ReportStatusService
      */
     public function getStatus()
     {

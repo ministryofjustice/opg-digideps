@@ -134,6 +134,8 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+
+        //TODO move to a unit-tested service
         if (!empty($data['type'])) {
             $report->setType($data['type']);
             // enable if SQL report type is not needed anymore
@@ -290,13 +292,12 @@ class ReportController extends RestController
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
 //        $q = $request->get('q');
-//        $status = $request->get('status');
-        $limit = $request->get('limit', 100);
+        $status = $request->get('status');
+        $limit = $request->get('limit', 15);
         $sort = $request->get('sort');
         $sortDirection = $request->get('sort_direction');
 
         $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
-
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
@@ -306,30 +307,36 @@ class ReportController extends RestController
             $qb->andWhere('r.submitted = false OR r.submitted is null');
         }
 
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
-
         if ($sort == 'end_date') {
             $qb->orderBy('r.endDate', $sortDirection == 'desc' ? 'DESC' : 'ASC');
         }
 
-        $reports = $qb->getQuery()->getResult();
+        $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+
+        // calculate counts, and apply limit/offset
+        $counts = ['total' => 0,
+                   'notStarted' => 0,
+                   'notFinished' => 0,
+                   'readyToSubmit' => 0];
+        foreach($reports as $report) {
+            $counts[$report->getStatus()->getStatus()]++;
+            $counts['total']++;
+        }
+
+        // apply limit, offset, status filters
+        if ($status) {
+            $reports = array_filter($reports, function($report) use($status) {
+                return $report->getStatus()->getStatus() == $status;
+            });
+        }
+        $reports = array_slice($reports, $offset, $limit);
+
 
         $serialisedGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['client', 'report'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return [
-            'counts'=>[
-                'total' => 60,
-                'notStarted' => 30,
-                'notFinished' => 20,
-                'readyToSubmit' => 10,
-            ],
+            'counts'=>$counts,
             'reports'=>$reports
         ];
     }

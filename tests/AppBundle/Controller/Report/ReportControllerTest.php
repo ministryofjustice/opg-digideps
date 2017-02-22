@@ -514,6 +514,17 @@ class ReportControllerTest extends AbstractTestController
         $this->assertCount(1, $reportsPaginated['reports']);
         $this->assertEquals($reportsPaginated['reports'][0]['id'], $ret['reports'][1]['id']);
 
+        //test status
+        $reportsNotStarted = $this->reportsGetAllRequest([
+            'status'    => 'notStarted',
+        ]);
+        $this->assertCount(3,  $reportsNotStarted['reports']);
+        $reportsFilteredReadyToSubmit = $this->reportsGetAllRequest([
+            'status'    => 'readyToSubmit',
+        ]);
+        $this->assertCount(0,  $reportsFilteredReadyToSubmit['reports']);
+
+
     }
 
     private function reportsGetAllRequest(array $params)
