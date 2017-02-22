@@ -75,7 +75,7 @@ form:
     label: Are you expecting %client% to get any money from compensation awards or damages?
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
-    hint: Tell us what the damages or compensation is for (for example, an accident or injury) and who will be paying the money out
+    hint: For example, what the damages or compensation is for (perhaps an accident or injury) and who will be paying the money out
     labelSummaryPage: More about any damages or compensation paid to %client%
   oneOff:
     label: Has %client% received any one-off payments since the court order?
