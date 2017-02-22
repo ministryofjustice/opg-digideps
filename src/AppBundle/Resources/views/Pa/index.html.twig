@@ -2,10 +2,20 @@
 
 {% block htmlTitle %}Deputy reports dashboard{% endblock %}
 {% block pageTitle %}Deputy reports dashboard{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block pageContent %}
 
-	<div class="tabs push-half--bottom">
+	<form action="#" method="GET" class="search-form push--ends">
+        <fieldset>
+            <legend class="visuallyhidden">Search</legend>
+            <label for="search" class="search-label">Search by client name or court order number</label>
+            <input type="text" id="search" name="search" value="" class="js-search-focus search-input form-control">
+            <input class="button flush--bottom" type="submit" value="Search">
+        </fieldset>
+    </form>
+
+	<div class="tabs push--ends">
 		<div class="tabs-nav">
 	        <ul class="tabs-list" role="tablist">
 				<li class="tab-item clients {{ not filters.status ? 'active' : ''  }}" role="presentation">
