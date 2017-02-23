@@ -222,28 +222,6 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/count/{adOnly}")
-     * @Method({"GET"})
-     */
-    public function userCount($adOnly)
-    {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
-
-        /** @var $qb QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $qb->select('count(user.id)');
-        $qb->from('AppBundle\Entity\User', 'user');
-
-        if ($adOnly) {
-            $qb->where('user.adManaged = true');
-        }
-
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return $count;
-    }
-
-    /**
      * @Route("/get-all", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
      */
@@ -256,6 +234,7 @@ class UserController extends RestController
         $limit  = $request->get('limit', 50);
         $offset  = $request->get('offset', 0);
         $roleName  = $request->get('role_name');
+        $adManaged  = $request->get('ad_managed');
         $q  = $request->get('q');
 
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
@@ -266,6 +245,10 @@ class UserController extends RestController
         if ($roleName) {
             $qb->andWhere('u.roleName = :role');
             $qb->setParameter('role', $roleName);
+        }
+
+        if ($adManaged) {
+            $qb->andWhere('u.adManaged = true');
         }
 
         if ($q) {
