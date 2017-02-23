@@ -1,0 +1,47 @@
+{# http://rural-payments-styleguide.herokuapp.com/pagination/ #}
+<div class="pager">
+    {% if totalRecords <= recordsPerPage %}
+        <div class="pager-summary">
+            Showing {{ totalRecords }} {{ totalRecords == 1 ? 'client' : 'clients' }}
+        </div>
+    {% else %}
+        {% set pages = range(0, totalRecords, recordsPerPage) %}
+        <div class="pager-controls">
+            {% if filters.offset > 0 %}
+                <a class="pager-prev" href="{{ path('pa_dashboard', {
+                    'status': filters.status,
+                    'offset': filters.offset - recordsPerPage,
+                    'q': filters.q,
+                }) }}">Prev</a>
+            {% endif %}
+
+            <ul class="pager-items">
+                {% for currentOffset in pages %}
+                    {% if currentOffset == filters.offset %}
+                        <li>{{ loop.index }}</li>
+                    {% else %}
+                        <li><a href="{{ path('pa_dashboard', {
+                                'status': filters.status,
+                                'offset': currentOffset,
+                                'q': filters.q,
+                            }) }}">{{ loop.index }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            {% if (filters.offset + recordsPerPage) < totalRecords %}
+                <a class="pager-next" href="{{ path('pa_dashboard', {
+                    'status': filters.status,
+                    'offset': filters.offset + recordsPerPage,
+                    'q': filters.q,
+                }) }}">Next</a>
+            {% endif %}
+
+        </div>
+        {% set firstRecordDisplayed = filters.offset + 1 %}
+        {% set lastRecordDisplayed = (filters.offset + recordsPerPage) > totalRecords ? totalRecords : (filters.offset + recordsPerPage) %}
+        <div class="pager-summary">Showing {{ firstRecordDisplayed }} &ndash; {{ lastRecordDisplayed }}
+            of {{ totalRecords }} clients
+        </div>
+    {% endif %}
+</div>

@@ -6,133 +6,103 @@
 
 {% block pageContent %}
 
-	<form action="#" method="GET" class="search-form push--ends">
+    <form action="#" method="GET" class="search-form push--ends">
         <fieldset>
             <legend class="visuallyhidden">Search</legend>
             <label for="search" class="search-label">Search by client name or court order number</label>
-            <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus search-input form-control">
+            <input type="text" id="search" name="q" value="{{ filters.q }}"
+                   class="js-search-focus search-input form-control">
             <input class="button flush--bottom" type="submit" value="Search">
         </fieldset>
-		{# stlye me, please, I'm ugly #}
-		{#<a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>#}
+        {# stlye me, please, I'm ugly #}
+        {#<a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>#}
 
     </form>
 
-	<div class="tabs push--ends">
-		<div class="tabs-nav">
-	        <ul class="tabs-list" role="tablist">
-				<li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
-						<span class="data-item bold-large">{{ counts.total }}</span>
-						<span class="data-item bold-xsmall">Clients</span>
-					</a>
-				</li>
-				<li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
-						<span class="data-item bold-large">{{ counts.notStarted }}</span>
-						<span class="data-item bold-xsmall">Not started</span></a>
-				</li>
-				<li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
-						<span class="data-item bold-large">{{ counts.notFinished }}</span>
-						<span class="data-item bold-xsmall">In progress</span></a>
-				</li>
-				<li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
-						<span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
-						<span class="data-item bold-xsmall">Ready to submit</span></a>
-				</li>
-	        </ul>
-	     </div>
-	</div>
+    <div class="tabs push--ends">
+        <div class="tabs-nav">
+            <ul class="tabs-list" role="tablist">
+                <li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
+                    <a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0"
+                       aria-selected="true">
+                        <span class="data-item bold-large">{{ counts.total }}</span>
+                        <span class="data-item bold-xsmall">Clients</span>
+                    </a>
+                </li>
+                <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
+                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab"
+                       tabindex="0">
+                        <span class="data-item bold-large">{{ counts.notStarted }}</span>
+                        <span class="data-item bold-xsmall">Not started</span></a>
+                </li>
+                <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
+                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab"
+                       tabindex="0">
+                        <span class="data-item bold-large">{{ counts.notFinished }}</span>
+                        <span class="data-item bold-xsmall">In progress</span></a>
+                </li>
+                <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
+                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab"
+                       tabindex="0">
+                        <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
+                        <span class="data-item bold-xsmall">Ready to submit</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-	<table class="push--bottom">
-		<thead>
-			<tr>
-				<th scope="col">Client</th>
-				<th scope="col">Court order no.</th>
-				<th scope="col">Report due date</th>
-				<th scope="col" class="numeric">Report status</th>
-			</tr>
-		</thead>
-		<tbody>
-	    {% for report in reports %}
-			<tr>
-				<td>
-					<a href="#">
-				        {{ report.client.lastName|title }}, {{ report.client.firstName|title }}
-					</a>
-				</td>
-				<td>
-					{{ report.client.caseNumber|upper }}
-				</td>
-				<td>
-					<span>{{ report.dueDate | date("j M Y") }}</span><br>
-					{% if report.dueDateDiffDays < 0 %}
-						<span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
-					{% elseif report.dueDateDiffDays == 0 %}
-						<span class="font-xsmall bold">Due today</span>
-					{% else %}
-						<span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
-					{% endif %}
-				</td>
-				<td class="numeric">
-					{% if report.status.status == 'notStarted' %}
-				        <span class="status status-large not-started">Not Started</span>
-				    {% elseif report.status.status == 'notFinished' %}
-				        <span class="status status-large incomplete">In Progress</span>
-				    {% elseif report.status.status == 'readyToSubmit' %}
-				        <span class="status status-large done">Ready To Submit</span>
-				    {% endif %}
-				</td>
-			</tr>
-	    {% endfor %}
-		</tbody>
-	</table>
+    <table class="push--bottom">
+        <thead>
+        <tr>
+            <th scope="col">Client</th>
+            <th scope="col">Court order no.</th>
+            <th scope="col">Report due date</th>
+            <th scope="col" class="numeric">Report status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <td>
+                    <a href="#">
+                        {{ report.client.lastName|title }}, {{ report.client.firstName|title }}
+                    </a>
+                </td>
+                <td>
+                    {{ report.client.caseNumber|upper }}
+                </td>
+                <td>
+                    <span>{{ report.dueDate | date("j M Y") }}</span><br>
+                    {% if report.dueDateDiffDays < 0 %}
+                        <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                    {% elseif report.dueDateDiffDays == 0 %}
+                        <span class="font-xsmall bold">Due today</span>
+                    {% else %}
+                        <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    {% if report.status.status == 'notStarted' %}
+                        <span class="status status-large not-started">Not Started</span>
+                    {% elseif report.status.status == 'notFinished' %}
+                        <span class="status status-large incomplete">In Progress</span>
+                    {% elseif report.status.status == 'readyToSubmit' %}
+                        <span class="status status-large done">Ready To Submit</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if filters.q and reports |length == 0 %}
+        <p class="heading-secondary">
+            Sorry, no results were found for "{{ filters.q }}"
+        </p>
+    {% endif %}
 
-	{# http://rural-payments-styleguide.herokuapp.com/pagination/ #}
-	{% set recordsPerPage = filters.limit %}
-	{% set totalRecords = counts[filters.status ?: 'total'] %}
-
-	{% if totalRecords > recordsPerPage %}
-		{% set pages = range(0, totalRecords, recordsPerPage) %}
-		<div class="pager">
-			<div class="pager-controls">
-                {% if filters.offset > 0 %}
-                    <a class="pager-prev" href="{{ path('pa_dashboard', {
-                        'status': filters.status,
-                        'offset': filters.offset - recordsPerPage,
-						'q': filters.q,
-                    }) }}">Prev</a>
-                {% endif %}
-
-				<ul class="pager-items">
-					{% for currentOffset in pages %}
-                        {% if currentOffset == filters.offset %}
-                            <li>{{ loop.index }}</li>
-                        {% else %}
-                            <li><a href="{{ path('pa_dashboard', {
-                                    'status': filters.status,
-                                    'offset': currentOffset,
-									'q': filters.q,
-                                }) }}">{{ loop.index }}</a></li>
-                        {% endif %}
-					{% endfor %}
-				</ul>
-
-                {% if (filters.offset + recordsPerPage) < totalRecords %}
-                    <a class="pager-next" href="{{ path('pa_dashboard', {
-                        'status': filters.status,
-                        'offset': filters.offset + recordsPerPage,
-						'q': filters.q,
-                    }) }}">Next</a>
-                {% endif %}
-
-			</div>
-            {% set firstRecordDisplayed = filters.offset + 1 %}
-            {% set lastRecordDisplayed = (filters.offset + recordsPerPage) > totalRecords ? totalRecords : (filters.offset + recordsPerPage)  %}
-            <div class="pager-summary">Showing {{ firstRecordDisplayed }} &ndash; {{ lastRecordDisplayed }} of {{ totalRecords }} clients</div>
-		</div>
-	{% endif %}
+    {% include 'AppBundle:Pa:_paginator.html.twig' with {
+    recordsPerPage: filters.limit,
+    totalRecords: counts[filters.status ?: 'total']
+    } %}
 
 {% endblock %}
