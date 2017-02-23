@@ -39,7 +39,7 @@ class AdminController extends AbstractController
         $form = $this->createForm(new FormDir\Admin\SearchType(),null, [ 'method' => 'GET']);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $filters += $form->getData();
+            $filters = $form->getData() + $filters;
         }
 
         $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
