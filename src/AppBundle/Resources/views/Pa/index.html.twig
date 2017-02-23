@@ -10,32 +10,35 @@
         <fieldset>
             <legend class="visuallyhidden">Search</legend>
             <label for="search" class="search-label">Search by client name or court order number</label>
-            <input type="text" id="search" name="search" value="" class="js-search-focus search-input form-control">
+            <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus search-input form-control">
             <input class="button flush--bottom" type="submit" value="Search">
         </fieldset>
+		{# stlye me, please, I'm ugly #}
+		{#<a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>#}
+
     </form>
 
 	<div class="tabs push--ends">
 		<div class="tabs-nav">
 	        <ul class="tabs-list" role="tablist">
-				<li class="tab-item clients {{ not filters.status ? 'active' : ''  }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': ''}) }}" role="tab" tabindex="0" aria-selected="true">
+				<li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
+					<a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
 						<span class="data-item bold-large">{{ counts.total }}</span>
 						<span class="data-item bold-xsmall">Clients</span>
 					</a>
 				</li>
 				<li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'notStarted'}) }}" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notStarted }}</span>
 						<span class="data-item bold-xsmall">Not started</span></a>
 				</li>
 				<li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'notFinished'}) }}" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.notFinished }}</span>
 						<span class="data-item bold-xsmall">In progress</span></a>
 				</li>
 				<li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-					<a href="{{ path('pa_dashboard', {'status': 'readyToSubmit'}) }}" role="tab" tabindex="0">
+					<a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
 						<span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
 						<span class="data-item bold-xsmall">Ready to submit</span></a>
 				</li>
@@ -90,15 +93,16 @@
 	{# http://rural-payments-styleguide.herokuapp.com/pagination/ #}
 	{% set recordsPerPage = filters.limit %}
 	{% set totalRecords = counts[filters.status ?: 'total'] %}
-    {% set pages = range(0, totalRecords, recordsPerPage) %}
 
-	{% if pages | length > 1 %}
+	{% if totalRecords > recordsPerPage %}
+		{% set pages = range(0, totalRecords, recordsPerPage) %}
 		<div class="pager">
 			<div class="pager-controls">
                 {% if filters.offset > 0 %}
                     <a class="pager-prev" href="{{ path('pa_dashboard', {
                         'status': filters.status,
-                        'offset': filters.offset - recordsPerPage
+                        'offset': filters.offset - recordsPerPage,
+						'q': filters.q,
                     }) }}">Prev</a>
                 {% endif %}
 
@@ -109,7 +113,8 @@
                         {% else %}
                             <li><a href="{{ path('pa_dashboard', {
                                     'status': filters.status,
-                                    'offset': currentOffset
+                                    'offset': currentOffset,
+									'q': filters.q,
                                 }) }}">{{ loop.index }}</a></li>
                         {% endif %}
 					{% endfor %}
@@ -118,7 +123,8 @@
                 {% if (filters.offset + recordsPerPage) < totalRecords %}
                     <a class="pager-next" href="{{ path('pa_dashboard', {
                         'status': filters.status,
-                        'offset': filters.offset + recordsPerPage
+                        'offset': filters.offset + recordsPerPage,
+						'q': filters.q,
                     }) }}">Next</a>
                 {% endif %}
 

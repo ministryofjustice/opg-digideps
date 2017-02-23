@@ -19,7 +19,7 @@ class PaController extends AbstractController
     public function indexAction(Request $request)
     {
         $currentFilters = [
-            //'q'       => '123 sdf',
+            'q'                 => $request->get('q'),
             'status'            => $request->get('status'),
             'exclude_submitted' => true,
             'sort'              => 'end_date',
@@ -33,11 +33,7 @@ class PaController extends AbstractController
         $reports = $this->get('restClient')->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
 
         return [
-            'filters' => [
-                'status' => $currentFilters['status'],
-                'limit'  => $currentFilters['limit'],
-                'offset' => $currentFilters['offset'],
-            ],
+            'filters' => $currentFilters,
             'reports' => $reports,
             'counts'  => [
                 'total'         => $ret['counts']['total'],
