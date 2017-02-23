@@ -253,18 +253,39 @@ class UserController extends RestController
 
         $order_by  = $request->get('order_by', 'id');
         $sort_order  = strtoupper($request->get('sort_order', 'DESC'));
-        $limit  = $request->get('limit');
-        $offset  = $request->get('role');
+        $limit  = $request->get('limit', 50);
+        $offset  = $request->get('offset', 0);
         $roleName  = $request->get('role_name');
+        $q  = $request->get('q');
 
-        $criteria = [];
+        $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($limit);
+        $qb->orderBy('u.'.$order_by, $sort_order);
+
         if ($roleName) {
-            $criteria['roleName'] = $roleName;
+            $qb->andWhere('u.roleName = :role');
+            $qb->setParameter('role', $roleName);
         }
 
-        $this->setJmsSerialiserGroups(['user', 'role']);
+        if ($q) {
+            if (preg_match('/^[0-9t]{8}$/i', $q)) { // case number
+                $qb->leftJoin('u.clients', 'c');
+                $qb->andWhere('lower(c.caseNumber) = :cn');
+                $qb->setParameter('cn', strtolower($q));
+            } else { // mail or first/lastname or user or client
+                $qb->leftJoin('u.clients', 'c');
+                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+                $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            }
+        }
 
-        return $this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
+        $this->setJmsSerialiserGroups(['user']);
+
+        $users = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+
+        return $users;
+        //$this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
     }
 
     /**
