@@ -291,7 +291,7 @@ class ReportController extends RestController
 
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
-//        $q = $request->get('q');
+        $q = $request->get('q');
         $status = $request->get('status');
         $limit = $request->get('limit', 15);
         $sort = $request->get('sort');
@@ -299,20 +299,8 @@ class ReportController extends RestController
 
         $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
         $qb
-//            ->select('r')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            // the following might save PSQL time if reports have data. to test
-//            ->leftJoin('r.contacts', 'contacts')
-//            ->leftJoin('r.bankAccounts', 'bankAccounts')
-//            ->leftJoin('r.moneyTransfers', 'moneyTransfers')
-//            ->leftJoin('r.moneyTransactions', 'moneyTransactions')
-//            ->leftJoin('r.debts', 'debts')
-//            ->leftJoin('r.decisions', 'decisions')
-//            ->leftJoin('r.assets', 'assets')
-//            ->leftJoin('r.visitsCare', 'visitsCare')
-//            ->leftJoin('r.action', 'action')
-//            ->leftJoin('r.mentalCapacity', 'co')
             ->where('u.id = ' . $userId);
 
         if ($request->get('exclude_submitted')) {
@@ -321,6 +309,12 @@ class ReportController extends RestController
 
         if ($sort == 'end_date') {
             $qb->orderBy('r.endDate', $sortDirection == 'desc' ? 'DESC' : 'ASC');
+        }
+
+        if ($q) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('q', $q);
         }
 
         $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */

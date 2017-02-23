@@ -493,8 +493,16 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/get-all';
 
+        $reportsGetAllRequest = function(array $params)  {
+            $url = '/report/get-all?' . http_build_query($params);
+            return $this->assertJsonRequest('GET', $url, [
+                'mustSucceed' => true,
+                'AuthToken' => self::$tokenPa,
+            ])['data'];
+        };
+
         // assert get
-        $ret = $this->reportsGetAllRequest([]);
+        $ret = $reportsGetAllRequest([]);
         // assert counts
 //        $this->assertEquals(0, $ret['counts']['total']);
 //        $this->assertEquals(0, $ret['counts']['notStarted']);
@@ -507,7 +515,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('paClient1',  $ret['reports'][0]['client']['firstname']);
 
         //test pagination
-        $reportsPaginated = $this->reportsGetAllRequest([
+        $reportsPaginated = $reportsGetAllRequest([
             'offset'    => 1,
             'limit'  => '1',
         ]);
@@ -515,24 +523,19 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals($reportsPaginated['reports'][0]['id'], $ret['reports'][1]['id']);
 
         //test status
-        $reportsNotStarted = $this->reportsGetAllRequest([
+        $reportsNotStarted = $reportsGetAllRequest([
             'status'    => 'notStarted',
         ]);
         $this->assertCount(3,  $reportsNotStarted['reports']);
-        $reportsFilteredReadyToSubmit = $this->reportsGetAllRequest([
+        $reportsFilteredReadyToSubmit = $reportsGetAllRequest([
             'status'    => 'readyToSubmit',
         ]);
         $this->assertCount(0,  $reportsFilteredReadyToSubmit['reports']);
 
-
-    }
-
-    private function reportsGetAllRequest(array $params)
-    {
-        $url = '/report/get-all?' . http_build_query($params);
-        return $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenPa,
-        ])['data'];
+        // test search
+        $reportsSearched = $reportsGetAllRequest([
+            'q'    => 'paClient3',
+        ]);
+        $this->assertCount(1,  $reportsSearched['reports']);
     }
 }
