@@ -87,12 +87,12 @@
                         {% if user.active %}
                             YES
                         {% else %}
-                            NO<br/>
-                            <a data-role="ajax-link" class="behat-link-send-activation-email"
-                               href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
-                                (Re)send activation email
-                            </a>
+                            NO
                         {% endif %}
+                        <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
+                           href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                            (Re)send activation email
+                        </a>
                     </td>
                     <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
                     <td>

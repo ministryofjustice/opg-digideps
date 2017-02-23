@@ -462,6 +462,6 @@ class AdminController extends AbstractController
             $this->get('logger')->debug($e->getMessage());
         }
 
-        return new Response('done');
+        return new Response('[Link sent]');
     }
 }
