@@ -1,0 +1,62 @@
+{# generic paginator component. See example at http://rural-payments-styleguide.herokuapp.com/pagination/  #}
+{# Example of usage
+    include 'AppBundle:Components:paginator.html.twig' with {
+    currentOffset: filters.offset,
+    recordsPerPage: filters.limit,
+    totalRecords: counts[filters.status ?: 'total'],
+    routeName: 'pa_dashboard',
+    routeParams: {
+        'status': filters.status,
+        'q': filters.q
+    },
+    messages: {
+        singlePage: '{0} Showing 0 clients|{1} Showing 1 client|]1,Inf[ Showing %count% clients',
+        multiPage: 'Showing %from% &ndash; %to% of %total% clients'
+    }
+
+#}
+<div class="pager">
+    {% if totalRecords <= recordsPerPage %}
+        <div class="pager-summary">
+            {{ messages.singlePage | transchoice(totalRecords) | raw }}
+        </div>
+    {% else %}
+        {% set pages = range(0, totalRecords, recordsPerPage) %}
+        <div class="pager-controls">
+            {# prev #}
+            {% if currentOffset > 0 %}
+                <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
+                    'offset': (currentOffset - recordsPerPage)
+                })) }}">Prev</a>
+            {% endif %}
+
+            {# links to single pages #}
+            <ul class="pager-items">
+                {% for offset in pages %}
+                    {% if offset == currentOffset %}
+                        <li>{{ loop.index }}</li>
+                    {% else %}
+                        <li><a href="{{ path(routeName, routeParams | merge({
+                                'offset': offset
+                            })) }}">{{ loop.index }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            {# next #}
+            {% if (currentOffset + recordsPerPage) < totalRecords %}
+                <a class="pager-next" href="{{ path(routeName, routeParams | merge({
+                    'offset': currentOffset + recordsPerPage
+                })) }}">Next</a>
+            {% endif %}
+
+        </div>
+
+        {# summary #}
+        {% set firstRecordDisplayed = currentOffset + 1 %}
+        {% set lastRecordDisplayed = (currentOffset + recordsPerPage) > totalRecords ? totalRecords : (currentOffset + recordsPerPage) %}
+        <div class="pager-summary">
+            {{ messages.multiPage | trans({'%from%': firstRecordDisplayed, '%to%': lastRecordDisplayed, '%total%': totalRecords}) | raw }}
+        </div>
+    {% endif %}
+</div>

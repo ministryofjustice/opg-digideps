@@ -100,9 +100,19 @@
         </p>
     {% endif %}
 
-    {% include 'AppBundle:Pa:_paginator.html.twig' with {
-    recordsPerPage: filters.limit,
-    totalRecords: counts[filters.status ?: 'total']
+    {% include 'AppBundle:Components:paginator.html.twig' with {
+        currentOffset: filters.offset,
+        recordsPerPage: filters.limit,
+        totalRecords: counts[filters.status ?: 'total'],
+        routeName: 'pa_dashboard',
+        routeParams: {
+            'status': filters.status,
+            'q': filters.q
+        },
+        messages: {
+            singlePage: '{0} Showing 0 clients|{1} Showing 1 client|]1,Inf[ Showing %count% clients',
+            multiPage: 'Showing %from% &ndash; %to% of %total% clients'
+        }
     } %}
 
 {% endblock %}

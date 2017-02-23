@@ -153,8 +153,6 @@ class FormattedTest extends WebTestCase
         ]);
 
         $this->crawler = new Crawler($this->html);
-
-        file_put_contents('/app/tests/report.html', $this->html);
     }
 
     private function html($crawler, $expr)
