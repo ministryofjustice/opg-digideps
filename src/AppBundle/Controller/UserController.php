@@ -244,16 +244,22 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/get-all/{order_by}/{sort_order}/{limit}/{offset}/{adOnly}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
+     * @Route("/get-all", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
      */
-    public function getAll($order_by, $sort_order, $limit, $offset, $adOnly)
+    public function getAll(Request $request)
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
 
+        $order_by  = $request->get('order_by', 'id');
+        $sort_order  = strtoupper($request->get('sort_order', 'DESC'));
+        $limit  = $request->get('limit');
+        $offset  = $request->get('role');
+        $roleName  = $request->get('role_name');
+
         $criteria = [];
-        if ($adOnly) {
-            $criteria['adManaged'] = true;
+        if ($roleName) {
+            $criteria['roleName'] = $roleName;
         }
 
         $this->setJmsSerialiserGroups(['user', 'role']);

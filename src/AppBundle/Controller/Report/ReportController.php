@@ -308,7 +308,7 @@ class ReportController extends RestController
         }
 
         if ($sort == 'end_date') {
-            $qb->orderBy('r.endDate', $sortDirection == 'desc' ? 'DESC' : 'ASC');
+            $qb->orderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
         }
 
         if ($q) {
@@ -329,12 +329,13 @@ class ReportController extends RestController
             $counts['total']++;
         }
 
-        // apply limit, offset, status filters
+        // status filters
         if ($status) {
             $reports = array_filter($reports, function($report) use($status) {
                 return $report->getStatus()->getStatus() == $status;
             });
         }
+        // apply offset and limit filters (has to be last)
         $reports = array_slice($reports, $offset, $limit);
 
 
