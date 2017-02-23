@@ -20,15 +20,17 @@ class AdController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        // list
-        $orderBy = $request->query->has('order_by') ? $request->query->get('order_by') : 'id';
-        $sortOrder = $request->query->has('sort_order') ? $request->query->get('sort_order') : 'DESC';
-        $limit = $request->query->get('limit') ?: 50;
-        $offset = $request->query->get('offset') ?: 0;
-        $userCount = $this->getRestClient()->get('user/count/1', 'array');
-        $users = $this->getRestClient()->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset/1", 'User[]');
-        $newSortOrder = $sortOrder == 'ASC' ? 'DESC' : 'ASC';
+        $filters = [
+            'order_by' => $request->get('order_by', 'id'),
+            'sort_order' => $request->get('sort_order', 'DESC'),
+            'limit' => $request->get('limit', 50),
+            'offset' => $request->get('offset', 0),
+            'role_name' => EntityDir\User::ROLE_AD,
+            'q' => $request->get('q'),
+        ];
+        $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
 
+        $userCount = $this->getRestClient()->get('user/count/1', 'array');
 
         // form add
         $form = $this->createForm(new FormDir\Ad\AddUserType([
@@ -66,9 +68,8 @@ class AdController extends AbstractController
         return [
             'users' => $users,
             'userCount' => $userCount,
-            'limit' => $limit,
-            'offset' => $offset,
-            'newSortOrder' => $newSortOrder,
+            'limit' => 50,
+            'offset' => 0,
             'form' => $form->createView(),
         ];
     }
