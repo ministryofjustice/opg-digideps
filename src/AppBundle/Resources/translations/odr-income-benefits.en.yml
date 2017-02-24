@@ -3,7 +3,7 @@ startPage:
   pageSectionTitle: Income and benefits
   pageSectionDescription: |
     As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
-    This includes making sure %client%'s full entitlement of benefits is claimed.
+    This includes making sure you claim all %client%'s benefits on his behalf.
   hiddenText01:
     summary: Find out what benefits %client% is entitled to
     content:
@@ -69,13 +69,13 @@ form:
     hint: For example, private pension, dividends, wages or salary
   receiveOtherIncomeDetails:
       label: Please tell us more about %client%'s other regular sources of income
-      hint: For example, who pays them and their frequency and amount
+      hint: For example, what the sources of income are, the amount they pay and how often
       labelSummaryPage: More about %client%'s other regular sources of income
   expectCompensationDamages:
-    label: Are you expecting %client% to get any compensation awards or damages?
+    label: Are you expecting %client% to get any money from compensation awards or damages?
   expectCompensationDamagesDetails:
     label: Please tell us more about any damages or compensation awards
-    hint: For example, what is being compensated for and who will be paying out the award
+    hint: For example, what the damages or compensation is for (perhaps an accident or injury) and who will be paying the money out
     labelSummaryPage: More about any damages or compensation paid to %client%
   oneOff:
     label: Has %client% received any one-off payments since the court order?

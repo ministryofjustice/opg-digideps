@@ -2,8 +2,7 @@ startPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageSectionTitle: Accounts
   pageSectionDescription1: |
-    An important part of your role as a deputy is to keep a record of
-    the money that comes in and goes out of %client%'s accounts.
+    An important part of your role as a deputy is to keep a record of the money that comes into and goes out of %client%'s accounts.
   pageSectionDescription2: |
     Use this section to tell us about all of %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
@@ -12,7 +11,7 @@ startPage:
   hiddenText01:
     summary: More on how to carry out your duties
     content:
-      para01: "As a property and affairs deputy, you must now be sure to keep copies of:"
+      para01: "As a property and affairs deputy, you must be sure to keep copies of:"
       listItem01: bank statements
       listItem02: contracts for services or tradespeople
       listItem03: receipts
@@ -22,7 +21,7 @@ startPage:
         <a href="https://www.gov.uk/become-deputy/complete-your-annual-report" target="_blank">annual report</a>.
         This report falls due on the first anniversary of your court order.
       para03: |
-        OPG’s <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet</a> gives detailed advice on how to look after %client%'s financial affairs.
+        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed advice on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:

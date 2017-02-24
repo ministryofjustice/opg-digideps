@@ -4,7 +4,7 @@ startPage:
   pageSectionDescription: |
     Use this section to tell us about %client%'s care and contact with you and other people.
     We ask about this because it’s OPG’s responsibility to make sure you are looking
-    after %client%'s best interests, including health and welfare.
+    after %client%'s best interests, which includes making health and welfare decisions.
   startButton: Start visits and care
 
 stepPage:
@@ -36,10 +36,10 @@ form:
       all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
   whoIsDoingTheCaring:
     label: Who is doing the caring?
-    hint: For example, local authority or private residential care, live-in or visiting care workers, family members
+    hint: For example, local authority or private residential care workers, live-in or visiting care workers, family members
   doesClientHaveACarePlan:
     label: Does %client% have a care plan?
-    hint: Local social services may provide a care plan to show how someone's welfare and support needs will be met
+    hint: Local social services may provide a care plan to show how someone's welfare needs will be met
   whenWasCarePlanLastReviewed:
       label: When was the care plan last reviewed?
       hint: (MM/YYYY)
@@ -47,7 +47,7 @@ form:
     label: Are there any plans to move %client% to a new residence?
   planMoveNewResidenceDetails:
     label: Tell us more about your plans to move %client%
-    hint: For example, why it is in %client%'s best interests to move and the location of %client%'s new home
+    hint: For example, the location of %client%'s new home and why it is in %client%'s best interests to move
   choices:
     everyday: Every day
     once_a_week: At least once a week

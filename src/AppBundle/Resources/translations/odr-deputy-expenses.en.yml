@@ -11,7 +11,7 @@ startPage:
     summary: More about what you can and can't claim for
     content:
       para01: |
-        OPG’s <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497266/SD3-How-to-be-a-deputy-property-and-financial-decisions.pdf/" target="_blank">'How to be a deputy' (SD3) booklet</a> gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy.
+        OPG’S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy.
   startButton: Start deputy expenses
 
 existPage:
@@ -39,7 +39,7 @@ addPage:
   pageSectionTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
-    Use this section to tell us about the money you spent on %client%'s care before your court order.
+    Use this section to tell us about the money you spent on %client%'s care and other expenses (professional fees for example) before your court order.
     You can add one or more items of expense and come back to complete the section later.
 
 editPage:
