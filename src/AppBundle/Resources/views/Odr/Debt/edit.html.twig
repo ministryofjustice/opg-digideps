@@ -41,7 +41,7 @@
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'inputClass': ' transaction-more-details',
-                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans({'%client%': odr.client.firstname}),
+                                'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans({'%client%': odr.client.firstname}),
                                 'labelRaw': true
                             }) }}
                         </div>

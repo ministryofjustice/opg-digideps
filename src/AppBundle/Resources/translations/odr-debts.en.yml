@@ -41,8 +41,9 @@ form:
       hint: ''
     other:
       label: Other
+      hint: ''
       moreInformations: Please tell us more about this debt.
-      hint: For example, what costs this other debt relates to and who it is owed to
+      moreInfoHint: For example, what costs this other debt relates to and who it is owed to
     clientHasDebts:
       label: Does %client% have any debts?
       hint: ""
