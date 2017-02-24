@@ -21,10 +21,11 @@ Feature: admin / upload PA users
     Given emails are sent from "admin" area
     When I open the "/user/activate/" link from the email
     And I activate the user with password "Abcd1234"
-    Then I set the user details to:
+    And I set the user details to:
       | name    | Pubo             | Autoritus      |        |     |    |
       | address | 102 Petty France | MOJ            | London | HA2 | GB |
       | phone   | 46745675674567   | 46745675674567 |        |     |    |
     Then the URL should match "/pa"
+    And I should see the "client-1000010" region
 
 

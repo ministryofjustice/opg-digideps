@@ -62,7 +62,7 @@
         </thead>
         <tbody>
         {% for report in reports %}
-            <tr>
+            <tr class="behat-region-client-{{ report.client.caseNumber | upper }}">
                 <td>
                     <a href="#">
                         {{ report.client.lastName|title }}, {{ report.client.firstName|title }}
