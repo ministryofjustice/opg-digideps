@@ -12,10 +12,11 @@
             <label for="search" class="search-label">Search by client name or court order number</label>
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
-            <input class="button flush--bottom" type="submit" value="Search">
+            <input class="button flush--bottom push-half--right" type="submit" value="Search">
+            {% if filters.q %}
+                <a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>
+            {% endif %}
         </fieldset>
-        {# stlye me, please, I'm ugly #}
-        {#<a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>#}
 
     </form>
 
@@ -23,29 +24,28 @@
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0"
-                       aria-selected="true">
+                    <a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="data-item bold-large">{{ counts.total }}</span>
                         <span class="data-item bold-xsmall">Clients</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab"
-                       tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
                         <span class="data-item bold-large">{{ counts.notStarted }}</span>
-                        <span class="data-item bold-xsmall">Not started</span></a>
+                        <span class="data-item bold-xsmall">Not started</span>
+                    </a>
                 </li>
                 <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab"
-                       tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
                         <span class="data-item bold-large">{{ counts.notFinished }}</span>
-                        <span class="data-item bold-xsmall">In progress</span></a>
+                        <span class="data-item bold-xsmall">In progress</span>
+                    </a>
                 </li>
                 <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab"
-                       tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
                         <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
-                        <span class="data-item bold-xsmall">Ready to submit</span></a>
+                        <span class="data-item bold-xsmall">Ready to submit</span>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -53,12 +53,12 @@
 
     <table class="push--bottom">
         <thead>
-        <tr>
-            <th scope="col">Client</th>
-            <th scope="col">Court order no.</th>
-            <th scope="col">Report due date</th>
-            <th scope="col" class="numeric">Report status</th>
-        </tr>
+            <tr>
+                <th scope="col">Client</th>
+                <th scope="col">Court order no.</th>
+                <th scope="col">Report due date</th>
+                <th scope="col" class="numeric">Report status</th>
+            </tr>
         </thead>
         <tbody>
         {% for report in reports %}
@@ -95,9 +95,8 @@
         </tbody>
     </table>
     {% if filters.q and reports |length == 0 %}
-        <p class="heading-secondary">
-            Sorry, no results were found for "{{ filters.q }}"
-        </p>
+        <p>Sorry, no results were found for "<strong class="bold">{{ filters.q }}</strong>"</p>
+        <hr>
     {% endif %}
 
     {% include 'AppBundle:Components:paginator.html.twig' with {
