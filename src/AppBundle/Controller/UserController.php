@@ -235,6 +235,7 @@ class UserController extends RestController
         $offset  = $request->get('offset', 0);
         $roleName  = $request->get('role_name');
         $adManaged  = $request->get('ad_managed');
+        $odrEnabled  = $request->get('odr_enabled');
         $q  = $request->get('q');
 
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
@@ -249,6 +250,10 @@ class UserController extends RestController
 
         if ($adManaged) {
             $qb->andWhere('u.adManaged = true');
+        }
+
+        if ($odrEnabled) {
+            $qb->andWhere('u.odrEnabled = true');
         }
 
         if ($q) {
