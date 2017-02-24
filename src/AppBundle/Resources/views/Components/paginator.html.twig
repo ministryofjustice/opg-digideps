@@ -38,7 +38,7 @@
                     {% else %}
                         <li><a href="{{ path(routeName, routeParams | merge({
                                 'offset': offset
-                            })) }}">{{ loop.index }}</a></li>
+                            })) }}" class="behat-link-paginator-page-{{ loop.index }}">{{ loop.index }}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>

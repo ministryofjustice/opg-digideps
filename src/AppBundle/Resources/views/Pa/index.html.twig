@@ -6,13 +6,13 @@
 
 {% block pageContent %}
 
-    <form action="#" method="GET" class="search-form push--ends">
+    <form action="{{ path('pa_dashboard') }}" method="GET" class="search-form push--ends">
         <fieldset>
             <legend class="visuallyhidden">Search</legend>
             <label for="search" class="search-label">Search by client name or court order number</label>
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
-            <input class="button flush--bottom push-half--right" type="submit" value="Search">
+            <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
             {% if filters.q %}
                 <a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>
             {% endif %}
@@ -30,7 +30,7 @@
                     </a>
                 </li>
                 <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-unstarted">
                         <span class="data-item bold-large">{{ counts.notStarted }}</span>
                         <span class="data-item bold-xsmall">Not started</span>
                     </a>
@@ -42,7 +42,7 @@
                     </a>
                 </li>
                 <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0"  class="behat-link-tab-ready">
                         <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
                         <span class="data-item bold-xsmall">Ready to submit</span>
                     </a>
@@ -62,7 +62,7 @@
         </thead>
         <tbody>
         {% for report in reports %}
-            <tr class="behat-region-client-{{ report.client.caseNumber | upper }}">
+            <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}">
                 <td>
                     <a href="#">
                         {{ report.client.lastName|title }}, {{ report.client.firstName|title }}

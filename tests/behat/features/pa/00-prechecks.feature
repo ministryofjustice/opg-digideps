@@ -1,4 +1,4 @@
-Feature: pa / pre checks
+Feature: PA pre checks
 
     Scenario: check app status
         Given the application config is valid

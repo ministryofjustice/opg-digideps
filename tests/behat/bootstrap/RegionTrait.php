@@ -39,7 +39,7 @@ trait RegionTrait
     }
 
     /**
-     * Assert that the HTML element with class behat-<type>-<element> does not exist.
+     * Assert that the HTML element with class behat-<type>-<element> exists.
      *
      * @Then I should see the :element :type
      */
@@ -50,6 +50,21 @@ trait RegionTrait
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element $regionCss not found");
+        }
+    }
+
+    /**
+     * Assert that the HTML element with class behat-<type>-<element> exist N times.
+     *
+     * @Then I should see the :element :type exactly :n times
+     */
+    public function iShouldSeeTheBehatElementNTimes($element, $type, $n)
+    {
+        //$this->assertResponseStatus(200);
+        $regionCss = self::behatElementToCssSelector($element, $type);
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
+        if (($c = count($linksElementsFound)) != $n) {
+            throw new \RuntimeException("Found $c instances of $regionCss, $n expected");
         }
     }
 

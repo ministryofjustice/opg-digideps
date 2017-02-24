@@ -1,4 +1,4 @@
-Feature: admin / upload PA users
+Feature: Add PA users and activate PA user (journey)
 
   Scenario: add PA users
     Given emails are sent from "admin" area
@@ -27,5 +27,3 @@ Feature: admin / upload PA users
       | phone   | 46745675674567   | 46745675674567 |        |     |    |
     Then the URL should match "/pa"
     And I should see the "client-1000010" region
-
-
