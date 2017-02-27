@@ -338,22 +338,22 @@ class AdminController extends AbstractController
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
                         'Deputy No',
-                        'Pat Create',
-                        'Dship Create',
+                        //'Pat Create',
+                        //'Dship Create',
                         'Dep Postcode',
                         'Dep Forename',
                         'Dep Surname',
                         'Dep Type',
                         'Dep Adrs1',
                         'Dep Adrs2',
-                        'Dep Adrs3',
+                        //'Dep Adrs3',
                         'Dep Adrs4',
                         'Dep Adrs5',
                         'Email',
                         'Case',
                         'Forename',
                         'Surname',
-                        'Corref',
+                        //'Corref',
                         'Report Due',
                     ])
                     ->getData();
