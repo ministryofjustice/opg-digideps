@@ -123,7 +123,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals([
             'users'   => ['dep1@provider.com', 'dep2@provider.com'],
             'clients' => ['10000001', '10000002', '1000000t'],
-            'reports' => ['10000001-2014-12-2016', '10000002-2015-02-04', '1000000t-2015-02-05'],
+            'reports' => ['10000001-2014-12-16', '10000002-2015-02-04', '1000000t-2015-02-05'],
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
@@ -148,7 +148,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2014-12-2016', $client1Report1->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
 
         // assert 2nd client and report
         $client2 = $user1->getClientByCaseNumber('10000002');
