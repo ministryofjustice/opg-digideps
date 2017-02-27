@@ -1,37 +1,33 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin" %}
-{% set currentSortOrder = app.request.query.get('sort_order') %}
-{% set currentOrderBy = app.request.query.get('order_by') %}
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
 
 {% block pageContent %}
-<style type="text/css">
-    .user-table td {
-    font-size: 0.8em;
-    }
-</style>
+    <style type="text/css">
+        .user-table td {
+            font-size: 0.8em;
+        }
+    </style>
     <h1 class="form-title heading-large">
         USER MANAGEMENT
     </h1>
 
-    {# JUMP TO #}
-    <div class="jump-to-user">
-        <form action="{{ path('admin_editUser') }}" method="GET">
-            Edit user with
-            <select name="what" class="form-control form-control-fit" style="width: 250px">
-                <option value="email">Email</option>
-                <option value="case_number">Case number</option>
-                <option value="user_id">User ID</option>
-            </select>
-            &nbsp;equals to&nbsp;
-            <input name="filter" required="required" class="form-control form-control-fit" style="width: 250px">
-            <button class="button" type="submit"/>Go</button>
-        </form>
-    </div>
+    <h2 class="form-title heading-medium">SEARCH</h2>
 
+    <div class="jump-to-user">
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        {{ form_input(form.q, 'Search', {
+            'labelRaw': true,
+            'labelText':'Search',
+            'hintText':'user email OR first or last name of the user OR first or last name of the client OR full case number'}) }}
+        {{ form_select(form.role_name, '', {'labelText': 'Role'}) }}
+        {{ form_checkbox(form.odr_enabled, '', {'labelText': 'NDR enabled'}) }}
+        {{ form_submit(form.search, 'Search', {'labelText': 'Search'}) }}
+        {{ form_end(form) }}
+    </div>
     <hr>
 
     {# LIST #}
@@ -41,26 +37,17 @@
         <h2 class="form-title heading-medium" id="users-list-title">
             User list
         </h2>
-        <p class="text">[<a href="{{ path('admin_add_user') }}" class="behat-link-user-add-new">Add a new user</a>]</p>
-
+        <p class="text">
+            [<a href="{{ path('admin_add_user') }}" class="behat-link-user-add-new">Add a new user</a>]
+            [<a href="{{ path('admin_homepage') }}">Clear filters</a>]
+        </p>
 
         {# simple paginator #}
         <div style="float: right">
-            {{ userCount }} users in total.
-            {% if userCount > limit %}
-                Go to page
-                {% set pages = range(0, userCount, limit) %}
-                {% for currentOffset in pages %}
-                    {% if currentOffset == offset %}
-                        {{ loop.index }}
-                    {% else %}
-                        <a href="{{  path("admin_homepage", {
-                            "offset": currentOffset,
-                            'sort_order': currentSortOrder,
-                            'order_by': app.request.query.get('order_by')}
-                        ) }}#users-list-title">{{ loop.index }}</a>
-                    {% endif %}
-                {% endfor %}
+            {% if users | length  == filters.limit %}
+                Results limited to 100 users. Use search to filter the wanted users
+            {% else %}
+                Found {{ users | length }} users
             {% endif %}
         </div>
 
@@ -68,71 +55,51 @@
         <table class="user-table">
             <thead>
             <tr>
-                <th scope="col">
-                    {% if currentOrderBy == 'lastname' %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}#users-list-title">Name </a>
-                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
-                    {% else %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}#users-list-title"  >Name</a>
-                    {% endif %}
-                </th>
-                <th scope="col">
-                    {% if currentOrderBy == 'email' %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': newSortOrder })}}#users-list-title">Email</a>
-                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
-                    {% else %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': 'ASC' })}}#users-list-title" >Email</a>
-                    {% endif %}
-                </th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
                 <th scope="col">Role</th>
                 <th scope="col">NDR Enabled</th>
                 <th scope="col">Active</th>
-                <th scope="col">
-                    {% if currentOrderBy == 'registrationDate' %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder })}}#users-list-title">Registration date</a>
-                        ({{ currentSortOrder == "ASC" ? 'a-z' : 'z-a' }})
-                    {% else %}
-                        <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': 'ASC' })}}#users-list-title" >Registration date</a>
-                    {% endif %}
-                </th>
-                <th></th>
+                <th scope="col">Registration date</th>
             </tr>
             </thead>
-            <tbody >
+            <tbody>
             {% for user in users %}
                 <tr class="behat-region-user-{{ user.email | behat_namify }}">
                     <td>
-                        {{ user.firstname }}<br/>{{ user.lastname }}
+                        {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
+                            <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id }) }}'
+                                class="behat-link-user-{{ user.email }}">{{ user.firstname }}<br/>{{ user.lastname }}</a>
+                        {% endif %}
+
+
                     </td>
-                    <td  >{{ user.adManaged ? '-' : user.email }}</td>
+                    <td>{{ user.adManaged ? '-' : user.email }}</td>
                     <td nowrap>
                         {{ user.roleFullName }}
                         {% if user.adManaged %} Assisted{% endif %}
                         {% if app.user.id == user.id %} (currenty logged){% endif %}
                         {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
-                            [<a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id })}}">View</a>]
+                            [<a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">View</a>]
                         {% endif %}
 
                     </td>
                     <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">
                         {{ user.odrEnabled ? 'yes' : '-' }}
                     </td>
-                    <td >
+                    <td>
                         {% if user.active %}
-                        YES
+                            YES
                         {% else %}
-                            NO<br/>
-                            <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
-                                (Re)send activation email
-                            </a>
+                            NO
+                            <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
+                                    href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                            (Re)send activation email
+                        </a>
                         {% endif %}
+
                     </td>
                     <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
-                <td>
-                    {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
-                    [<a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id })}}' class="behat-link-user-{{ user.email }}" >Edit</a>]
-                    {% endif %}
-                </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -142,11 +109,11 @@
     {# simple JS script to transform data-role="ajax-link" links
     into loading the URL with AJAX and replace the response with the HTTP response #}
     <script>
-        $(document).ready(function() {
-            $('[data-role="ajax-link"]').click(function(e){
+        $(document).ready(function () {
+            $('[data-role="ajax-link"]').click(function (e) {
                 e.preventDefault();
                 var link = $(this);
-                $.get(link.attr('href'), function( data ) {
+                $.get(link.attr('href'), function (data) {
                     link.replaceWith(data);
                 });
             });

@@ -26,20 +26,28 @@ class AdminController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $orderBy = $request->query->has('order_by') ? $request->query->get('order_by') : 'firstname';
-        $sortOrder = $request->query->has('sort_order') ? $request->query->get('sort_order') : 'ASC';
-        $limit = $request->query->get('limit') ?: 50;
-        $offset = $request->query->get('offset') ?: 0;
-        $userCount = $this->getRestClient()->get('user/count/0', 'array');
-        $users = $this->getRestClient()->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset/0", 'User[]');
-        $newSortOrder = $sortOrder == 'ASC' ? 'DESC' : 'ASC';
+        $filters = [
+            'limit' => 100,
+            'offset' => $request->get('offset', 'id'),
+            'role_name' => '',
+            'q' => '',
+            'odr_enabled' => '',
+            'order_by' => 'id',
+            'sort_order' => 'DESC',
+        ];
+
+        $form = $this->createForm(new FormDir\Admin\SearchType(),null, [ 'method' => 'GET']);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $filters = $form->getData() + $filters;
+        }
+
+        $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
 
         return [
+            'form'        => $form->createView(),
             'users'        => $users,
-            'userCount'    => $userCount,
-            'limit'        => $limit,
-            'offset'       => $offset,
-            'newSortOrder' => $newSortOrder,
+            'filters'     => $filters,
         ];
     }
 
@@ -454,6 +462,6 @@ class AdminController extends AbstractController
             $this->get('logger')->debug($e->getMessage());
         }
 
-        return new Response('done');
+        return new Response('[Link sent]');
     }
 }

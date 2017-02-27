@@ -30,7 +30,7 @@
     {% endif %}
 
     <h2 class="heading-small">NDR</h2>
-    {% if firstClient.odr is defined %}
+    {% if firstClient.odr is defined and firstClient.odr %}
         <ul>
             <li>Status: {{ firstClient.odr.submitted ? 'Submitted' : 'Not submitted' }}</li>
         </ul>
