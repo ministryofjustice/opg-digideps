@@ -56,6 +56,7 @@ class PaService
         $errors = [];
 
         foreach ($rows as $index => $row) {
+            $row = array_map('trim', $row);
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
