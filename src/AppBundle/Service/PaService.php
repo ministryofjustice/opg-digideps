@@ -169,14 +169,20 @@ class PaService
     }
 
     /**
-     * create DateTime object based on '16-Dec-14' formatted dates
+     * create DateTime object based on '16-Dec-2014' formatted dates
+     * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
      *
-     * @return \DateTime
+     * @return \DateTime|false
      */
     public static function parseDate($dateString)
     {
-        return \DateTime::createFromFormat('d-M-y', $dateString);
+        $ret = \DateTime::createFromFormat('d-M-Y', $dateString);
+        if (!$ret instanceof \DateTime || (int)$ret->format('Y') < 99) {
+            $ret = \DateTime::createFromFormat('d-M-y', $dateString);
+        }
+
+        return $ret;
     }
 }
