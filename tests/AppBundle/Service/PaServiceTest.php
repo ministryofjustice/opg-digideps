@@ -30,8 +30,8 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy1 = [
         'Deputy No'    => '00000001',
-        'Pat Create'   => '12-Dec-02',
-        'Dship Create' => '28-Sep-07',
+        //'Pat Create'   => '12-Dec-02',
+        //'Dship Create' => '28-Sep-07',
         'Dep Postcode' => 'N1 ABC',
         'Dep Forename' => 'Dep1',
         'Dep Surname'  => 'Uty2',
@@ -46,17 +46,9 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy2 = [
         'Deputy No'    => '00000002',
-        'Pat Create'   => '16-Dec-14',
-        'Dship Create' => '07-Apr-15',
-        'Dep Postcode' => 'SW1',
         'Dep Forename' => 'Dep2',
         'Dep Surname'  => 'Uty2',
         'Dep Type'     => 23,
-        'Dep Adrs1'    => 'ADD1',
-        'Dep Adrs2'    => 'ADD2',
-        'Dep Adrs3'    => 'ADD3',
-        'Dep Adrs4'    => 'ADD4',
-        'Dep Adrs5'    => 'ADD5',
         'Email'        => 'dep2@provider.com',
     ];
 
@@ -64,8 +56,8 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000001',
         'Forename'   => 'Cly1',
         'Surname'    => 'Hent1',
-        'Corref'     => 'A2',
-        'Report Due' => '16-Dec-14',
+        //'Corref'     => 'A2',
+        'Report Due' => '16-Dec-2014',
     ];
 
 
@@ -73,23 +65,23 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000002',
         'Forename'   => 'Cly2',
         'Surname'    => 'Hent2',
-        'Corref'     => 'A3',
-        'Report Due' => '04-Feb-15',
+        //'Corref'     => 'A3',
+        'Report Due' => '04-Feb-2015',
     ];
 
     public static $client3 = [
         'Case'       => '1000000T',
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
-        'Corref'     => 'A3',
-        'Report Due' => '05-Feb-15',
+        //'Corref'     => 'A3',
+        'Report Due' => '05-Feb-2015',
     ];
 
 
     /**
      * @var PaService
      */
-    private $pa;
+    private $pa = null;
 
     public static function setUpBeforeClass()
     {
@@ -192,21 +184,4 @@ class PaServiceTest extends WebTestCase
         m::close();
     }
 
-    public static function parseDateProvider()
-    {
-        return [
-            ['05-Feb-15', '2015-02-05'],
-            ['23-May-17', '2017-05-23'],
-            ['15-Jul-17', '2017-07-15'],
-            ['10-Jul-17', '2017-07-10'],
-        ];
-    }
-
-    /**
-     * @dataProvider parseDateProvider
-     */
-    public function testparseDate($in, $out)
-    {
-        $this->assertEquals($out, PaService::parseDate($in)->format('Y-m-d'));
-    }
 }

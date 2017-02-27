@@ -95,12 +95,25 @@ class PaService
                 ->setEmail($email)
                 ->setFirstname($row['Dep Forename'])
                 ->setLastname($row['Dep Surname'])
-                ->setRoleName(EntityDir\User::ROLE_PA)
-                ->setAddress1($row['Dep Adrs1'])
-                ->setAddress2($row['Dep Adrs2'])
-                ->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5'])
-                ->setAddressPostcode($row['Dep Postcode'])//->setAddressCountry('GB')
-            ;
+                ->setRoleName(EntityDir\User::ROLE_PA);
+
+            if (!empty($row['Dep Adrs1'])) {
+                $user->setAddress1($row['Dep Adrs1']);
+            }
+
+            if (!empty($row['Dep Adrs2'])) {
+                $user->setAddress2($row['Dep Adrs2']);
+            }
+
+            if (!empty($row['Dep Adrs3']) || !empty($row['Dep Adrs4']) || !empty($row['Dep Adrs5'])) {
+                $user->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5']);
+            }
+
+            if (!empty($row['Dep Postcode'])) {
+                $user->setAddressPostcode($row['Dep Postcode']);
+                $user->setAddressCountry('GB'); //postcode given means a UK address is given
+            }
+
             $this->added['users'][] = $email;
             $this->em->persist($user);
             $this->em->flush($user);
@@ -110,7 +123,7 @@ class PaService
     }
 
     /**
-     * @param array          $row
+     * @param array $row
      * @param EntityDir\User $user
      *
      * @return EntityDir\Client
@@ -129,8 +142,7 @@ class PaService
             $client
                 ->setCaseNumber($caseNumber)
                 ->setFirstname(trim($row['Forename']))
-                ->setLastname(trim($row['Surname']))//->setCourtDate($row['Dship Create'])
-            ;
+                ->setLastname(trim($row['Surname']));
             $this->added['clients'][] = $client->getCaseNumber();
             $this->em->persist($client);
         }
@@ -141,7 +153,7 @@ class PaService
     }
 
     /**
-     * @param array            $row
+     * @param array $row
      * @param EntityDir\Client $client
      *
      * @return EntityDir\Report\Report
@@ -169,14 +181,20 @@ class PaService
     }
 
     /**
-     * create DateTime object based on '16-Dec-14' formatted dates
+     * create DateTime object based on '16-Dec-2014' formatted dates
+     * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
      *
-     * @return \DateTime
+     * @return \DateTime|false
      */
     public static function parseDate($dateString)
     {
-        return \DateTime::createFromFormat('d-M-y', $dateString);
+        $ret = \DateTime::createFromFormat('d-M-Y', $dateString);
+        if (!$ret instanceof \DateTime || (int)$ret->format('Y') < 99) {
+            $ret = \DateTime::createFromFormat('d-M-y', $dateString);
+        }
+
+        return $ret;
     }
 }
