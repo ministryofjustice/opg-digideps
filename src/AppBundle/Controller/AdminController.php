@@ -338,22 +338,16 @@ class AdminController extends AbstractController
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
                         'Deputy No',
-                        //'Pat Create',
-                        //'Dship Create',
+                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
                         'Dep Postcode',
                         'Dep Forename',
                         'Dep Surname',
-                        'Dep Type',
-                        //'Dep Adrs1',
-                        //'Dep Adrs2',
-                        //'Dep Adrs3',
-                        //'Dep Adrs4',
-                        //'Dep Adrs5',
-                        'Email',
-                        'Case',
-                        'Forename',
-                        'Surname',
-                        //'Corref',
+                        'Dep Type', // 23 = PA (but not confirmed)
+                        //'Dep Adrs1', 'Dep Adrs2', 'Dep Adrs3', 'Dep Adrs4', 'Dep Adrs5', // recognised but not mandatory
+                        'Email', //mandatory, used as user ID whem uploading
+                        'Case', //case number, used as ID when uploading
+                        'Forename', 'Surname', //client forename and surname
+                        //'Corref', (should decide report type, but no specs given yet)
                         'Report Due',
                     ])
                     ->getData();
