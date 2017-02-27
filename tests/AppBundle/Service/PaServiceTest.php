@@ -30,8 +30,8 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy1 = [
         'Deputy No'    => '00000001',
-        'Pat Create'   => '12-Dec-02',
-        'Dship Create' => '28-Sep-07',
+        //'Pat Create'   => '12-Dec-02',
+        //'Dship Create' => '28-Sep-07',
         'Dep Postcode' => 'N1 ABC',
         'Dep Forename' => 'Dep1',
         'Dep Surname'  => 'Uty2',
@@ -46,17 +46,9 @@ class PaServiceTest extends WebTestCase
 
     public static $deputy2 = [
         'Deputy No'    => '00000002',
-        'Pat Create'   => '16-Dec-2014',
-        'Dship Create' => '07-Apr-2015',
-        'Dep Postcode' => 'SW1',
         'Dep Forename' => 'Dep2',
         'Dep Surname'  => 'Uty2',
         'Dep Type'     => 23,
-        'Dep Adrs1'    => 'ADD1',
-        'Dep Adrs2'    => 'ADD2',
-        'Dep Adrs3'    => 'ADD3',
-        'Dep Adrs4'    => 'ADD4',
-        'Dep Adrs5'    => 'ADD5',
         'Email'        => 'dep2@provider.com',
     ];
 
@@ -64,7 +56,7 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000001',
         'Forename'   => 'Cly1',
         'Surname'    => 'Hent1',
-        'Corref'     => 'A2',
+        //'Corref'     => 'A2',
         'Report Due' => '16-Dec-2014',
     ];
 
@@ -73,7 +65,7 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000002',
         'Forename'   => 'Cly2',
         'Surname'    => 'Hent2',
-        'Corref'     => 'A3',
+        //'Corref'     => 'A3',
         'Report Due' => '04-Feb-2015',
     ];
 
@@ -81,7 +73,7 @@ class PaServiceTest extends WebTestCase
         'Case'       => '1000000T',
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
-        'Corref'     => 'A3',
+        //'Corref'     => 'A3',
         'Report Due' => '05-Feb-2015',
     ];
 
