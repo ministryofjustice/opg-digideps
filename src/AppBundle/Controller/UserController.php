@@ -222,43 +222,58 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/count/{adOnly}")
+     * @Route("/get-all", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
      */
-    public function userCount($adOnly)
+    public function getAll(Request $request)
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
 
-        /** @var $qb QueryBuilder $qb */
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $qb->select('count(user.id)');
-        $qb->from('AppBundle\Entity\User', 'user');
+        $order_by  = $request->get('order_by', 'id');
+        $sort_order  = strtoupper($request->get('sort_order', 'DESC'));
+        $limit  = $request->get('limit', 50);
+        $offset  = $request->get('offset', 0);
+        $roleName  = $request->get('role_name');
+        $adManaged  = $request->get('ad_managed');
+        $odrEnabled  = $request->get('odr_enabled');
+        $q  = $request->get('q');
 
-        if ($adOnly) {
-            $qb->where('user.adManaged = true');
+        $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($limit);
+        $qb->orderBy('u.'.$order_by, $sort_order);
+
+        if ($roleName) {
+            $qb->andWhere('u.roleName = :role');
+            $qb->setParameter('role', $roleName);
         }
 
-        $count = $qb->getQuery()->getSingleScalarResult();
-
-        return $count;
-    }
-
-    /**
-     * @Route("/get-all/{order_by}/{sort_order}/{limit}/{offset}/{adOnly}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
-     * @Method({"GET"})
-     */
-    public function getAll($order_by, $sort_order, $limit, $offset, $adOnly)
-    {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
-
-        $criteria = [];
-        if ($adOnly) {
-            $criteria['adManaged'] = true;
+        if ($adManaged) {
+            $qb->andWhere('u.adManaged = true');
         }
 
-        $this->setJmsSerialiserGroups(['user', 'role']);
+        if ($odrEnabled) {
+            $qb->andWhere('u.odrEnabled = true');
+        }
 
-        return $this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
+        if ($q) {
+            if (preg_match('/^[0-9t]{8}$/i', $q)) { // case number
+                $qb->leftJoin('u.clients', 'c');
+                $qb->andWhere('lower(c.caseNumber) = :cn');
+                $qb->setParameter('cn', strtolower($q));
+            } else { // mail or first/lastname or user or client
+                $qb->leftJoin('u.clients', 'c');
+                $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
+                $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            }
+        }
+
+        $this->setJmsSerialiserGroups(['user']);
+
+        $users = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+
+        return $users;
+        //$this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
     }
 
     /**

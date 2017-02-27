@@ -307,21 +307,21 @@ class UserControllerTest extends AbstractTestController
 
     public function testGetAllAuth()
     {
-        $url = '/user/get-all/firstname/ASC/50/0/0';
+        $url = '/user/get-all';
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testGetAllAcl()
     {
-        $url = '/user/get-all/firstname/ASC/50/0/0';
+        $url = '/user/get-all';
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
     public function testGetAll()
     {
-        $url = '/user/get-all/firstname/ASC/50/0/0';
+        $url = '/user/get-all';
 
         $return = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
