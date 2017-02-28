@@ -49,7 +49,7 @@ visits_care:
     start: "Start"
     label:
       done: "Finished"
-heading.propFinance: "%client%'s property and finance"
+heading.propFinance: "%client%'s property and finances"
 deputy_expenses:
     subSectionTitle: "Deputy expenses"
     subSectionDescription: "Claim for things you paid for on %client%'s behalf"
