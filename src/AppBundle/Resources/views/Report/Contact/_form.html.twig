@@ -1,4 +1,4 @@
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 

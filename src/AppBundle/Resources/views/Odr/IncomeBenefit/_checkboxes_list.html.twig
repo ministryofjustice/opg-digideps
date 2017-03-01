@@ -1,6 +1,6 @@
 {% set translationDomain = "odr-income-benefits" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 <div class="form-section push--bottom">
 {% for sbSingleForm in elements %}

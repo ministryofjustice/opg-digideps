@@ -1,6 +1,6 @@
 {% set translationDomain = "odr-actions" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 
 <h2 class="heading-medium flush--ends">Gifts</h2>

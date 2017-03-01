@@ -1,6 +1,6 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 <li class="transaction">
     <div class="label">{{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, translationDomain) | raw }}</div>

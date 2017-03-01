@@ -65,7 +65,7 @@
             <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}">
                 <td>
                     <a href="#">
-                        {{ report.client.lastName|title }}, {{ report.client.firstName|title }}
+                        {{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}
                     </a>
                 </td>
                 <td>

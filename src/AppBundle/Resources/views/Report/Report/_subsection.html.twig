@@ -1,6 +1,6 @@
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% if disableedit is defined and disableedit == true %}
     {% set allowEdit = false %}

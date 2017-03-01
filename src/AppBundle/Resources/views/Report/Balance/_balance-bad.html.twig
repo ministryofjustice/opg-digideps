@@ -1,6 +1,6 @@
 {% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% if report.totalsOffset < 0 %}
     {% set moreless = "more" %}
