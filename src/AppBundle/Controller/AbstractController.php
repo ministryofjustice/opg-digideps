@@ -10,6 +10,8 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class AbstractController extends Controller
 {
@@ -171,5 +173,30 @@ class AbstractController extends Controller
     protected function stepRedirector()
     {
         return $this->get('step_redirector');
+    }
+
+    /**
+     * Get referer, only if matching an existing route
+     *
+     * @param  Request $request
+     * @param  array   $excludedRoutes
+     * @return string  referer URL, null if not existing or inside the $excludedRoutes
+     */
+    protected function getRefererUrlSafe(Request $request, array $excludedRoutes = [])
+    {
+        $refererUrlPath = str_replace('app_dev.php/', '', parse_url($request->headers->get('referer'), \PHP_URL_PATH));
+
+        try {
+            $routeParams = $this->get('router')->match($refererUrlPath);
+        } catch (ResourceNotFoundException $e) {
+            return null;
+        }
+        $routeName = $routeParams['_route'];
+        if (in_array($routeName, $excludedRoutes)) {
+            return null;
+        }
+        unset($routeParams['_route']);
+
+        return $this->get('router')->generate($routeName, $routeParams);
     }
 }

@@ -6,7 +6,9 @@
 {% block pageTitle %}{{ 'Terms and conditions' | trans }}{% endblock %}
 
 {% block linkBack %}
-  <a href="{{ app.request.headers.get('referer') | e('js') }}" class="link-back behat-link-step-back">Back</a>
+    {% if backlink %}
+        <a href="{{ backlink }}" class="link-back behat-link-step-back">Back</a>
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
