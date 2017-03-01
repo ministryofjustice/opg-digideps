@@ -40,7 +40,7 @@ class ClientController extends AbstractController
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['edit']);
-            $request->getSession()->getFlashBag()->add('notice', $client->getFirstname() . "'s data edited");
+            $request->getSession()->getFlashBag()->add('notice', htmlentities($client->getFirstname()) . "'s data edited");
 
             return $this->redirect($this->generateUrl('client_show'));
         }
