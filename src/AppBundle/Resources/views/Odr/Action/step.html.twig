@@ -77,7 +77,7 @@
         {{ form_checkbox_group(form.actionPropertyMaintenance, 'form.actionPropertyMaintenance', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertyMaintenance.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+            'legendText' : 'form.actionPropertyMaintenance.label' | trans(transOptions, translationDomain)
         }) }}
     {% endif %}
 
@@ -85,7 +85,7 @@
         {{ form_checkbox_group(form.actionPropertySellingRent, 'form.actionPropertySellingRent', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertySellingRent.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+            'legendText' : 'form.actionPropertySellingRent.label' | trans(transOptions, translationDomain)
         }) }}
 
         <details class="text push--bottom">
@@ -105,7 +105,7 @@
         {{ form_checkbox_group(form.actionPropertyBuy, 'form.actionPropertyBuy', {
             'fieldSetClass' : 'inline paid-anything',
             'legendClass' : 'form-label',
-            'legendText' : 'form.actionPropertyBuy.label' | trans({'%client%': odr.client.firstname}, translationDomain)
+            'legendText' : 'form.actionPropertyBuy.label' | trans(transOptions, translationDomain)
         }) }}
     {% endif %}
 

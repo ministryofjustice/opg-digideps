@@ -21,7 +21,7 @@
     <div class="form-section push--bottom">
     {{ form_checkbox_group(form.giftsExist, 'existPage.form.giftsExist', {
         'fieldSetClass' : 'inline',
-        'labelParameters': { '%client%': report.client.firstname },
+        'labelParameters': transOptions,
         'legendClass' : 'form-label-bold text',
         'formGroupClass': 'flush--bottom'
     }) }}

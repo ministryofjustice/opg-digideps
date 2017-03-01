@@ -23,7 +23,7 @@
                 {{ form_checkbox_group(form.hasDecisions, 'existPage.form.hasDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'labelParameters': { '%client%': report.client.firstname },
+                    'labelParameters': transOptions,
                     'legendClass' : 'form-label-bold text',
                     'items': [
                         {},
@@ -35,7 +35,7 @@
                 <div id="reason-for-no-decisions" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.reasonForNoDecisions, 'existPage.form.reasonForNoDecisions', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': report.client.firstname }
+                        'labelParameters': transOptions
                     }) }}
                 </div>
             </div>

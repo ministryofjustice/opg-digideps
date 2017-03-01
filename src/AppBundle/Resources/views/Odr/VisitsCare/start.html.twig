@@ -4,6 +4,7 @@
 
 {% set translationDomain = "odr-visits-care" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -14,7 +15,7 @@
 {% block pageContent %}
 
     <p class="text">
-        {{ 'startPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}
+        {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
     </p>
 
     <a href="{{ path('odr_visits_care_step', { 'odrId': odr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>

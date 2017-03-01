@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}</h3>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 

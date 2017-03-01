@@ -21,7 +21,7 @@
     <div class="form-section push--bottom">
     {{ form_checkbox_group(form.paidForAnything, 'existPage.form.paidForAnything', {
         'fieldSetClass' : 'inline',
-        'labelParameters': { '%client%': odr.client.firstname },
+        'labelParameters': transOptions,
         'legendClass' : 'form-label-bold text',
         'formGroupClass': 'flush--bottom'
     }) }}

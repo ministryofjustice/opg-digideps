@@ -1,20 +1,22 @@
+{% set transOptions = {'%client%': report.client.firstname} %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
 <h4 class="heading-medium">{{ 'form.description.heading' | trans({}, translationDomain) }}</h4>
 
 {{ form_input(form.description,'form.description') }}
 
-<h4 class="heading-medium">{{ 'form.clientInvolvedBoolean.heading' | trans({'%client%': report.client.firstname}, translationDomain) }}</h4>
+<h4 class="heading-medium">{{ 'form.clientInvolvedBoolean.heading' | trans(transOptions, translationDomain) }}</h4>
 
 {{ form_checkbox_group(form.clientInvolvedBoolean, 'form.clientInvolvedBoolean', {
     'fieldSetClass' : 'inline',
     'legendClass' : 'form-label',
-    'labelParameters': { '%client%': report.client.firstname }
+    'labelParameters': transOptions
 }) }}
 
 {{ form_input(form.clientInvolvedDetails,'form.clientInvolvedDetails', {
     'labelClass': 'required',
-    'labelParameters': { '%client%': report.client.firstname }
+    'labelParameters': transOptions
 }) }}
 
 {{ macros.saveAndContinueButton(form.save) }}

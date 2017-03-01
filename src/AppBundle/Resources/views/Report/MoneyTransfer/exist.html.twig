@@ -23,7 +23,7 @@
                 {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'labelParameters': { '%client%': report.client.firstname },
+                    'labelParameters': transOptions,
                     'legendClass' : 'form-label-bold text',
                     'formGroupClass': 'flush--bottom'
                 }) }}

@@ -4,6 +4,7 @@
 
 {% set translationDomain = "odr-visits-care" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
@@ -25,7 +26,7 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doYouLiveWithClient.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                    'legendText' : 'form.doYouLiveWithClient.label' | trans(transOptions, translationDomain),
                     'items': [
                     {},
                     {'dataTarget': 'how-often-contact-client-wrapper' }
@@ -35,7 +36,7 @@
                 <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': odr.client.firstname }
+                        'labelParameters': transOptions
                     }) }}
                 </div>
             </div>
@@ -50,7 +51,7 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doesClientReceivePaidCare.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                    'legendText' : 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain),
                     'items': [
                     {'dataTarget': 'how-care-funded-wrapper' },
                     {}
@@ -85,7 +86,7 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans(transOptions, translationDomain),
                     'items': [
                     {'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
                     {}
@@ -110,7 +111,7 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.planMoveNewResidence.label' | trans({'%client%': odr.client.firstname}, translationDomain),
+                    'legendText' : 'form.planMoveNewResidence.label' | trans(transOptions, translationDomain),
                     'items': [
                     {'dataTarget': 'plan-move-residence-details-textarea'},
                     {}]
@@ -118,8 +119,8 @@
                 <div id="plan-move-residence-details-textarea" class="panel panel-border-narrow  js-hidden">
                     {{ form_input(form.planMoveNewResidenceDetails, 'form.planMoveNewResidenceDetails', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': odr.client.firstname },
-                        'hintText' : 'form.planMoveNewResidenceDetails.hint' | trans({'%client%': odr.client.firstname}, translationDomain),
+                        'labelParameters': transOptions,
+                        'hintText' : 'form.planMoveNewResidenceDetails.hint' | trans(transOptions, translationDomain),
                         'labelRaw': true
                     }) }}
                 </div>

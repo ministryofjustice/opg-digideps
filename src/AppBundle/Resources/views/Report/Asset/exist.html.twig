@@ -21,7 +21,7 @@
     <div class="form-section push--bottom">
         {{ form_checkbox_group(form.noAssetToAdd, 'existPage.form.noAssetToAdd', {
             'fieldSetClass' : 'inline',
-            'labelParameters': { '%client%': report.client.firstname },
+            'labelParameters': transOptions,
             'legendClass' : 'form-label-bold text',
             'legendText' : 'existPage.form.noAssetToAdd.label' | trans(transOptions, translationDomain),
             'formGroupClass': 'flush--bottom'

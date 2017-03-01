@@ -4,6 +4,7 @@
 
 {% set translationDomain = "odr-income-benefits" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': odr.client.firstname} %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -15,15 +16,15 @@
 
 	<div class="text">
 	    <p>
-	        {{ 'startPage.pageSectionDescription' | trans({'%client%': odr.client.firstname}, translationDomain) }}
+	        {{ 'startPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
 	    </p>
 
 	    <details class="push--bottom">
             <summary>
-                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans({'%client%': odr.client.firstname}, translationDomain) }}</span>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions, translationDomain) }}</span>
             </summary>
             <div class="panel panel-border-narrow">
-                <p>{{ 'startPage.hiddenText01.content.para01' |trans({'%client%': odr.client.firstname}, translationDomain)|raw }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions, translationDomain)|raw }}</p>
             </div>
         </details>
 		
