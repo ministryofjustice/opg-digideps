@@ -115,7 +115,7 @@
                 var link = $(this);
                 $.get(link.attr('href'), function (data) {
                     link.replaceWith(data);
-                });
+                }, "html");
             });
         });
     </script>
