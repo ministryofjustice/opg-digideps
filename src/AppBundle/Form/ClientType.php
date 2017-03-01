@@ -5,6 +5,8 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class ClientType extends AbstractType
 {
@@ -37,6 +39,14 @@ class ClientType extends AbstractType
                                                               'label' => false, ], 'label' => false, ])
                 ->add('id', 'hidden')
                 ->add('save', 'submit');
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                $data['firstname'] = strip_tags($data['firstname']);
+                $data['lastname'] = strip_tags($data['lastname']);
+                $event->setData($data);
+            });
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
