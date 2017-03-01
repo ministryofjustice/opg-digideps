@@ -1,6 +1,6 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 <div class="grid-row push--top">
     <div class="column-half">

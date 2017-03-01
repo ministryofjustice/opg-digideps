@@ -5,7 +5,7 @@
 {% set translationDomain = "report-money-transaction" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {
-    '%client%': report.client.firstname,
+    '%client%': report.client.firstname | e,
     '%startDate%': report.startDate | date("j M Y"),
     '%endDate%': report.endDate | date("j M Y")
 } %}

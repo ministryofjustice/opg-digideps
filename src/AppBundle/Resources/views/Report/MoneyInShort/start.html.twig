@@ -4,6 +4,7 @@
 
 {% set translationDomain = "report-money-short" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'startPage.moneyIn.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.moneyIn.pageSectionTitle' | trans }}{% endblock %}
@@ -14,7 +15,7 @@
 {% block pageContent %}
 
     <p class="text">
-        {{ 'startPage.moneyIn.pageSectionDescription1' | trans({'%client%': report.client.firstname}, translationDomain) }}
+        {{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions, translationDomain) }}
     </p>
 
     <a href="{{ path('money_in_short_category', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.moneyIn.startButton' | trans }}</a>

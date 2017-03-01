@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-money-transfer" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
@@ -23,7 +23,7 @@
                 {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'labelParameters': { '%client%': report.client.firstname },
+                    'labelParameters': transOptions,
                     'legendClass' : 'form-label-bold text',
                     'formGroupClass': 'flush--bottom'
                 }) }}

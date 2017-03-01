@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
@@ -23,7 +23,7 @@
                 {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'labelParameters': { '%client%': report.client.firstname },
+                    'labelParameters': transOptions,
                     'legendClass' : 'form-label-bold text',
                     'items': [
                         {},
@@ -35,7 +35,7 @@
                 <div id="reason-for-no-contact" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.reasonForNoContacts, 'existPage.form.reasonForNoContacts', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': report.client.firstname }
+                        'labelParameters': transOptions
                     }) }}
                 </div>
             </div>

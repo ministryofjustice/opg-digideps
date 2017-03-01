@@ -1,6 +1,6 @@
 {% set translationDomain = "odr-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 {% for asset in assetsInGroup.items %}
 {# @var asset \AppBundle\Entity\Report\AssetProperty #}

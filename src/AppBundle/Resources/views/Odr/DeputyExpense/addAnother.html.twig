@@ -4,7 +4,7 @@
 
 {% set translationDomain = "odr-deputy-expenses" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'addAnotherPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addAnotherPage.pageSectionTitle' | trans }}{% endblock %}

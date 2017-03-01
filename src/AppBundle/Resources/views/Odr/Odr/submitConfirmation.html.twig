@@ -6,7 +6,7 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans(clientTrans) }}{% endblock %}
 
-{% set clientTrans = {'%client%': odr.client.firstname} %}
+{% set clientTrans = {'%client%': odr.client.firstname | e } %}
 
 {% block pageContent %}
 

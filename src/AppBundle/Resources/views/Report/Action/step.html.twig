@@ -4,6 +4,7 @@
 
 {% set translationDomain = "report-actions" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
@@ -24,8 +25,8 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                    'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans(transOptions, translationDomain),
+                    'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'financial-decisions-textarea' },
                         {},
@@ -35,7 +36,7 @@
                 <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': report.client.firstname }
+                        'labelParameters': transOptions
                     }) }}
                 </div>
             </div>
@@ -50,8 +51,8 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                    'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
+                    'hintText' : 'form.doYouHaveConcerns.hint' | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'actions-details-textarea' },
                         {},
@@ -61,7 +62,7 @@
                 <div id="actions-details-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
                         'labelClass': 'required',
-                        'labelParameters': { '%client%': report.client.firstname }
+                        'labelParameters': transOptions
                     }) }}
                 </div>
             </div>

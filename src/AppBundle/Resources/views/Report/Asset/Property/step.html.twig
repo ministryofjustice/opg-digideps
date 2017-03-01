@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'stepPageProperty.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'stepPageProperty.pageSectionTitle' | trans(transOptions) }}{% endblock %}
@@ -38,7 +38,7 @@
                 {{ form_checkbox_group(form.owned, 'form.property.owned', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'labelParameters': {'%client%': report.client.firstname},
+                    'labelParameters': transOptions,
                     'legendClass': 'form-label-bold',
                     'items': [
                         {},
@@ -49,7 +49,7 @@
                     {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
                         'inputPrefix' : '%',
                         'inputClass' : 'form-control__number',
-                        'labelParameters': {'%client%': report.client.firstname},
+                        'labelParameters': transOptions,
                     }) }}
                 </div>
             </div>

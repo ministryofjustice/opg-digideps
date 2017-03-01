@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-debts" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
+    <h3 class="heading-small push-half--bottom">{{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}</h3>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 

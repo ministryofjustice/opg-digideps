@@ -7,7 +7,7 @@
 {% set deputy = app.user %}
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set is102 = report.type == '102' %}
 {% set is103 = report.type == '103' %}
 {% set is104 = report.type == '104' %}

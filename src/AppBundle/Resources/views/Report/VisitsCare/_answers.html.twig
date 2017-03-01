@@ -1,6 +1,6 @@
 {% set translationDomain = "report-visits-care" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 <table class="check-your-answers columns-2 push--bottom">
     <thead>

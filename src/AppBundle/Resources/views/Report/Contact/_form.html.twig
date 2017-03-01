@@ -1,8 +1,10 @@
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {{ form_input(form.contactName, 'form.contactName') }}
     {{ form_input(form.relationship, 'form.relationship', {
-        'labelText': 'form.relationship.label' | trans({'%client%': report.client.firstname}, translationDomain)
+        'labelText': 'form.relationship.label' | trans(transOptions, translationDomain)
     }) }}
     {{ form_input(form.explanation, 'form.explanation') }}
     {{ form_input(form.address, 'form.address') }}

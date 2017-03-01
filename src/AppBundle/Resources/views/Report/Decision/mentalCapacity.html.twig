@@ -4,7 +4,7 @@
 
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname} %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'mentalCapacity.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'mentalCapacity.pageSectionTitle' | trans }}{% endblock %}
@@ -24,14 +24,14 @@
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
                 'legendClass' : 'form-label-bold',
-                'legendText' : 'mentalCapacity.form.hasCapacityChanged.label' | trans({'%client%': report.client.firstname}, translationDomain),
+                'legendText' : 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions, translationDomain),
                 'items': [{'dataTarget': 'has-capacity-changed-details'}]
             }) }}
             <div id="has-capacity-changed-details" class="panel panel-border-narrow js-hidden">
                 {{ form_input(form.hasCapacityChangedDetails, 'mentalCapacity.form.hasCapacityChangedDetails', {
                     'labelClass': 'required',
-                    'labelParameters': { '%client%': report.client.firstname },
-                    'hintText' : 'mentalCapacity.form.hasCapacityChangedDetails.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+                    'labelParameters': transOptions,
+                    'hintText' : 'mentalCapacity.form.hasCapacityChangedDetails.hint' | trans(transOptions, translationDomain),
                     'labelRaw': true
                 }) }}
             </div>

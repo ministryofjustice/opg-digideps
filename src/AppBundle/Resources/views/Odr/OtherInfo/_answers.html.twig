@@ -1,6 +1,6 @@
 {% set translationDomain = "odr-more-info" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': odr.client.firstname} %}
+{% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 <table class="check-your-answers columns-2 push--bottom">
     <thead>
