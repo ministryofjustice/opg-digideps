@@ -204,9 +204,11 @@ class IndexController extends AbstractController
     /**
      * @Route("/terms", name="terms")
      */
-    public function termsAction()
+    public function termsAction(Request $request)
     {
-        return $this->render('AppBundle:Index:terms.html.twig');
+        return $this->render('AppBundle:Index:terms.html.twig', [
+            'backlink' => $this->getRefererUrlSafe($request, ['terms'])
+        ]);
     }
 
     /**
