@@ -383,7 +383,7 @@ class AdminController extends AbstractController
                 if ($errors) {
                     $request->getSession()->getFlashBag()->add(
                         'notice',
-                        implode('<br>', $errors)
+                        implode(', ', $errors)
                     );
                 }
 

@@ -127,32 +127,32 @@
         {% if alertType == 'notice' %}
             <div class="alert-notice panel panel-border-narrow">
                 <span class="icon icon-notification"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message }}</p></div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="alert-success panel panel-border-narrow">
                 <span class="icon icon-tick"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message }}</p></div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="alert-error panel panel-border-narrow">
                 <span class="icon icon-cross"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message }}</p></div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="alert-info panel panel-border-narrow">
                 <span class="icon icon-info"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message }}</p></div>
             </div>
         {% else %}
             <div class="alert panel panel-border-narrow">
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message }}</p></div>
             </div>
         {% endif %}
     {% else %}
         <div class="alert panel panel-border-narrow">
             <div class="alert-message">
-                <p>{{ message | raw }}</p>
+                <p>{{ message }}</p>
             </div>
         </div>
     {% endif %}
