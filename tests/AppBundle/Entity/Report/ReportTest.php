@@ -143,27 +143,33 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     public function setTypeBasedOnCasrecRecordPRovider()
     {
         return [
-            [m::mock(CasRec::class, ['getTypeOfReport'=>null, 'getCorref'=>null]), Report::TYPE_102],
-            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>null]), Report::TYPE_102],
-            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>null]), Report::TYPE_102],
-            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L2']), Report::TYPE_102],
+            //corref, type of rep, expected created report
 
-            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L3']), Report::TYPE_103],
-            [m::mock(CasRec::class, ['getTypeOfReport'=>'OPG103', 'getCorref'=>'L3G']), Report::TYPE_103],
+            // 103 created with L3(G) - OPG103
+            ['l3', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+            ['l3g', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+
+            // 104 create with
+            ['hw', '', Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
+
+            // all the rest is a 102 (default)
+            [null, null, Report::TYPE_102],
+            [null, 'opg103', Report::TYPE_102],
+            [null, 'opg103', Report::TYPE_102],
+            ['l2', 'opg103', Report::TYPE_102],
+            ['hw', 'opg103', Report::TYPE_102],
+            ['hw', 'opg102', Report::TYPE_102],
         ];
     }
 
     /**
      * @dataProvider  setTypeBasedOnCasrecRecordPRovider
      */
-    public function testsetTypeBasedOnCasrecRecord($casRec, $expectedType)
+    public function testsetTypeBasedOnCasrecRecord($corref, $typeOfRep, $expectedType)
     {
-        $this->report->setTypeBasedOnCasrecRecord($casRec);
+        $casRec = m::mock(CasRec::class, ['getCorref' => $corref, 'getTypeOfReport' => $typeOfRep]);
 
-        // override if not enabled
-        if (!Report::ENABLE_103) {
-            $expectedType = Report::TYPE_102;
-        }
+        $this->report->setTypeBasedOnCasrecRecord($casRec);
 
         $this->report->setTypeBasedOnCasrecRecord($casRec);
         $this->assertEquals($expectedType, $this->report->getType());

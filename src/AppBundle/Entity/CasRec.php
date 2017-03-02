@@ -126,8 +126,13 @@ class CasRec
         $this->deputyNo = self::normaliseDeputyNo($deputyNo);
         $this->deputySurname = self::normaliseSurname($deputySurname);
         $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
-        $this->typeOfReport = $typeOfReport;
-        $this->corref = $corref;
+        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($typeOfReport);
+        $this->corref = self::normaliseCorrefAndTypeOfRep($corref);
+    }
+
+    private static function normaliseCorrefAndTypeOfRep($value)
+    {
+        return trim(strtolower($value));
     }
 
     public static function normaliseSurname($value)
