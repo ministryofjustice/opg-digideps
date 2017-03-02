@@ -33,6 +33,5 @@ services:
 
     kernel.listener.response_headers:
         class: AppBundle\EventListener\ResponseHeadersListener
-        arguments: [ "@event_dispatcher", "@redirector_service" ]
         tags:
               - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
