@@ -144,14 +144,21 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         return [
             //corref, type of rep, expected created report
-            [null, null, Report::TYPE_102],
-            [null, 'OPG103', Report::TYPE_102],
-            [null, 'OPG103', Report::TYPE_102],
-            ['L2', 'OPG103', Report::TYPE_102],
-            ['HW', 'OPG103', Report::TYPE_102],
 
-            ['L3', 'OPG103', Report::TYPE_103],
-            ['L3G', 'OPG103', Report::TYPE_103],
+            // 103 created with L3(G) - OPG103
+            ['l3', 'opg103', Report::TYPE_103],
+            ['l3g', 'opg103', Report::TYPE_103],
+
+            // 104 create with
+            ['hw', '', Report::TYPE_104],
+
+            // all the rest is a 102 (default)
+            [null, null, Report::TYPE_102],
+            [null, 'opg103', Report::TYPE_102],
+            [null, 'opg103', Report::TYPE_102],
+            ['l2', 'opg103', Report::TYPE_102],
+            ['hw', 'opg103', Report::TYPE_102],
+            ['hw', 'opg102', Report::TYPE_102],
         ];
     }
 
@@ -163,11 +170,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $casRec = m::mock(CasRec::class, ['getCorref' => $corref, 'getTypeOfReport' => $typeOfRep]);
 
         $this->report->setTypeBasedOnCasrecRecord($casRec);
-
-        // override if not enabled
-        if (!Report::ENABLE_103) {
-            $expectedType = Report::TYPE_102;
-        }
 
         $this->report->setTypeBasedOnCasrecRecord($casRec);
         $this->assertEquals($expectedType, $this->report->getType());

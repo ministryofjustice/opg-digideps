@@ -32,8 +32,9 @@ class Report
     const TYPE_103 = '103';
     const TYPE_104 = '104';
 
-    // to enable 103 permanently, search for this constant and enable code
+    // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
+    const ENABLE_104 = true;
 
     /**
      * Reports with total amount of assets
@@ -339,11 +340,13 @@ class Report
      */
     public function setTypeBasedOnCasrecRecord(CasRec $casRec)
     {
-        $casRecReportType = $casRec ? strtolower($casRec->getTypeOfReport()) : null;
-        $casRecCorref = $casRec ? strtolower($casRec->getCorref()) : null;
-        if (Report::ENABLE_103 && $casRecReportType === 'opg103' && in_array($casRecCorref, ['l3', 'l3g'])) {
+        $typeOfRep = $casRec->getTypeOfReport();
+        $corref = $casRec->getCorref();
+        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
             $this->setType(Report::TYPE_103);
-        } else /*if $casRecReportType === 'opg102' */{
+        } else if (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
+            $this->setType(Report::TYPE_104);
+        } else {
             $this->setType(Report::TYPE_102);
         }
     }

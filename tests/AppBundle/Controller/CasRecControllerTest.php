@@ -117,8 +117,8 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('dn1', $record1->getDeputyNo());
         $this->assertEquals('r2', $record1->getDeputySurname());
         $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
-        $this->assertEquals('OPG102', $record1->getTypeOfReport());
-        $this->assertEquals('L2', $record1->getCorref());
+        $this->assertEquals('opg102', $record1->getTypeOfReport());
+        $this->assertEquals('l2', $record1->getCorref());
 
         $this->assertEquals('22', $record2->getCaseNumber());
 
