@@ -146,11 +146,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             //corref, type of rep, expected created report
 
             // 103 created with L3(G) - OPG103
-            ['l3', 'opg103', Report::TYPE_103],
-            ['l3g', 'opg103', Report::TYPE_103],
+            ['l3', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+            ['l3g', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
 
             // 104 create with
-            ['hw', '', Report::TYPE_104],
+            ['hw', '', Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
 
             // all the rest is a 102 (default)
             [null, null, Report::TYPE_102],
