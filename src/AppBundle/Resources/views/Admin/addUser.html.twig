@@ -1,15 +1,21 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
- {% trans_default_domain "admin" %}
+{% trans_default_domain "admin" %}
 
-{% block pageTitle %}Administration - Users{% endblock %}
-{% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}Admin{% endblock %}
+{% block htmlTitle %}Administration - Users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <h1 class="form-title heading-medium">
-        Add a user
-    </h1>
+
+    <h2 class="heading-medium">Add a user</h2>
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'addUserForm.email') }}
@@ -20,27 +26,8 @@
 
     {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
-    {% if action is defined %}
-        {% if action == 'edit' %}
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: 'admin',
-            linkButtonLabel: 'cancel.label',
-            linkClass: 'button-link',
-            linkHref: path('admin_homepage')
-            } %}
-            {# only admin are allowed to delete users (except themselves when logged) #}
-            {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
-                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: 'admin',
-                linkButtonLabel: 'delete.label',
-                linkClass: 'button-link',
-                linkHref: path('admin_delete_confirm', { id: id })
-                } %}
-            {% endif %}
-        {% endif %}
-    {% endif %}
+    <a href="{{ path('admin_homepage') }}" class="button-link">Cancel</a>
 
     {{ form_end(form) }}
-
 
 {% endblock %}

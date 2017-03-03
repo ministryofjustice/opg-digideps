@@ -2,20 +2,28 @@
 
 {% trans_default_domain "admin" %}
 
-{% block htmlTitle %}Administration - Add PA users{% endblock %}
-{% block pageTitle %}Add PA users{% endblock %}
+{% block htmlTitle %}Administration - Upload PA users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">PA user management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <p>
-        Add PA users along with Clients and reports.
-    </p>
+    <h2 class="heading-medium">Upload PA users along with clients and reports</h2>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.file, '', {'labelText': 'Select CSV file'}) }}
+    {{ form_input(form.file, '', {
+    	'labelText': 'Select CSV file',
+    	'inputClass': 'no-border'
+    }) }}
 
-    {{ form_submit(form.upload, '', {'labelText': 'Add PA users'}) }}
+    {{ form_submit(form.upload, '', {'labelText': 'Upload PA users'}) }}
 
     {{ form_end(form) }}
 

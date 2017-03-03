@@ -4,64 +4,71 @@
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <style type="text/css">
-        .user-table td {
-            font-size: 0.8em;
-        }
-    </style>
-    <h1 class="form-title heading-large">
-        USER MANAGEMENT
-    </h1>
 
-    <h2 class="form-title heading-medium">SEARCH</h2>
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-    <div class="jump-to-user">
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-        {{ form_input(form.q, 'Search', {
-            'labelRaw': true,
-            'labelText':'Search',
-            'hintText':'user email OR first or last name of the user OR first or last name of the client OR full case number'}) }}
-        {{ form_select(form.role_name, '', {'labelText': 'Role'}) }}
-        {{ form_checkbox(form.odr_enabled, '', {'labelText': 'NDR enabled'}) }}
-        {{ form_submit(form.search, 'Search', {'labelText': 'Search'}) }}
-        {{ form_end(form) }}
+    <div class="grid-row">
+        <div class="column-one-third">
+            {{ form_input(form.q, 'Search', {
+                'labelRaw': true,
+                'labelText':'Search',
+                'inputClass': 'form-control--full'}) }}
+        </div>
+        <div class="column-one-half">
+            {{ form_select(form.role_name, '', {
+                'labelText': 'Role',
+                'inputClass': 'left'}) }}
+            {{ form_checkbox(form.odr_enabled, '', {'labelText': 'NDR enabled'}) }}
+        </div>
     </div>
+    {{ form_submit(form.search, 'Search', {
+        'labelText': 'Search'}) }}
+    <a href="{{ path('admin_homepage') }}" class="button-link">Clear filters</a>
+    {{ form_end(form) }}
+
     <hr>
 
     {# LIST #}
 
     <div class="behat-region-users user-list">
 
-        <h2 class="form-title heading-medium" id="users-list-title">
-            User list
-        </h2>
-        <p class="text">
-            [<a href="{{ path('admin_add_user') }}" class="behat-link-user-add-new">Add a new user</a>]
-            [<a href="{{ path('admin_homepage') }}">Clear filters</a>]
-        </p>
-
-        {# simple paginator #}
-        <div style="float: right">
-            {% if users | length  == filters.limit %}
-                Results limited to 100 users. Use search to filter the wanted users
-            {% else %}
-                Found {{ users | length }} users
-            {% endif %}
+        <div class="grid-row">
+            <div class="column-one-half">
+                <h2 id="users-list-title" class="heading-medium flush--ends">User list</h2>
+                {% if users | length  == filters.limit %}
+                    <p class="text">Results limited to 100 users.<br>Use search to filter the wanted users.</p>
+                {% else %}
+                    <p>Found {{ users | length }} users</p>
+                {% endif %}
+            </div>
+            <div class="column-one-half text--right">
+                <a href="{{ path('admin_add_user') }}" class="bold-small move-quarter--up action-link behat-link-user-add-new">
+                    <span class="icon icon-plus"></span>
+                    Add a new user
+                </a>
+            </div>
         </div>
 
         {# user list #}
         <table class="user-table">
             <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">NDR Enabled</th>
-                <th scope="col">Active</th>
-                <th scope="col">Registration date</th>
-            </tr>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">NDR
+                    </th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="numeric">Registration date</th>
+                </tr>
             </thead>
             <tbody>
             {% for user in users %}
@@ -69,29 +76,26 @@
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id }) }}'
-                                class="behat-link-user-{{ user.email }}">{{ user.firstname }}<br/>{{ user.lastname }}</a>
+                                class="behat-link-user-{{ user.email }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
                         {% endif %}
-
-
+                        <div class="text-secondary">
+                            {{ user.roleFullName }}
+                            {% if user.adManaged %} Assisted{% endif %}
+                            {% if app.user.id == user.id %} (currenty logged){% endif %}
+                        </div>
+                        {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
+                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">View</a>
+                        {% endif %}
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>
-                    <td nowrap>
-                        {{ user.roleFullName }}
-                        {% if user.adManaged %} Assisted{% endif %}
-                        {% if app.user.id == user.id %} (currenty logged){% endif %}
-                        {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
-                            [<a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">View</a>]
-                        {% endif %}
-
-                    </td>
                     <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">
-                        {{ user.odrEnabled ? 'yes' : '-' }}
+                        {{ user.odrEnabled ? 'Yes' : '-' }}
                     </td>
                     <td>
                         {% if user.active %}
-                            YES
+                            Yes
                         {% else %}
-                            NO
+                            No
                             <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
                                     href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
                             (Re)send activation email
@@ -99,7 +103,7 @@
                         {% endif %}
 
                     </td>
-                    <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
+                    <td class="numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
                 </tr>
             {% endfor %}
             </tbody>

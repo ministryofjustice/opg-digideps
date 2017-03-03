@@ -2,15 +2,23 @@
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <h1 class="form-title heading-medium">Delete user</h1>
-    <p>Are you sure that you want to delete the user <span style="font-weight: bolder"> {{user.getFullname()}} </span> ?</p>
+    <h2 class="heading-medium">Delete user</h2>
+
+    <p class="text">Are you sure that you want to delete <strong class="bold"> {{user.getFullname()}} </strong>?</p>
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: 'admin',
         linkButtonLabel: 'yes.label',
-        linkClass: 'button-warning',
+        linkClass: 'button-warning push-half--right',
         linkHref: path('admin_delete', { id: user.id })
     } %}
 

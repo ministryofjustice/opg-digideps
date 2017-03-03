@@ -4,12 +4,17 @@
 
 {% block htmlTitle %}Administration - Users{% endblock %}
 {% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <a href="{{ path('admin_homepage') }}">Back</a>
-    <h1 class="form-title heading-medium">
-        Edit user
-    </h1>
+
+    <h2 class="heading-medium">Edit user</h2>
 
     {% set numberOfClients = user.clients | length %}
     {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
@@ -24,7 +29,7 @@
     {{ form_input(form.lastname,'addUserForm.lastname') }}
     {{ form_select(form.roleName,'addUserForm.roleName') }}
     {% if reportsCount > 0 %}
-        Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.
+        <p class="text">Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.</p>
     {% endif %}
     {% if user.roleName == 'ROLE_LAY_DEPUTY' %}
         {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
@@ -33,28 +38,7 @@
             {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
         </div>
     {% endif %}
-    {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
-
-
-    <h2 class="heading-small">Clients and reports</h2>
-    {% if numberOfClients > 0 %}
-        <table>
-            <tr>
-                <td>Client</td>
-                <td>Case number</td>
-                <td>Number of reports</td>
-            </tr>
-            {% for client in user.clients %}
-                <tr>
-                    <td>{{ client.firstname }} {{ client.lastname }}</td>
-                    <td>{{ client.caseNumber }}</td>
-                    <td>{{ client.reports | length }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        No clients for this user
-    {% endif %}
+    {{ form_submit(form.save,'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
     {% if action is defined %}
         {% if action == 'edit' %}
@@ -64,22 +48,48 @@
             linkClass: 'button-link',
             linkHref: path('admin_homepage')
             } %}
+        {% endif %}
+    {% endif %}
+
+    {% if numberOfClients > 0 %}
+        <h2 class="heading-medium">Clients and reports</h2>
+        <table class="client-table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th class="numeric-small text--right">Case number</th>
+                    <th class="numeric-small text--right">Number of reports</th>
+                </tr>
+
+            </thead>
+            {% for client in user.clients %}
+                <tr>
+                    <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
+                    <td class="numeric-small">{{ client.caseNumber|upper }}</td>
+                    <td class="numeric-small">{{ client.reports | length }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
             {# only admin are allowed to delete users (except themselves when logged) #}
             {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
                 {% if reportsCount == 0 %}
                     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: 'admin',
-                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete User',
-                    linkClass: 'button-link',
+                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',
+                    linkClass: 'button-warning push--top',
                     linkHref: path('admin_delete_confirm', { id: id })
                     } %}
                 {% else %}
-                    &nbsp;[Delete is disabled as there is at least one report]
+                    <p class="text text-secondary push--top">Delete is disabled as there is at least one report</p>
                 {% endif %}
             {% endif %}
         {% endif %}
     {% endif %}
-
-    {{ form_end(form) }}
 
 {% endblock %}
