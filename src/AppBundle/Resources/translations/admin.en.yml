@@ -15,7 +15,10 @@ addUserForm:
   odrEnabled:
     label: Enable NDR for this user (Lay deputy only)
   submit:
-    label: Save
+    label: Save user
+editUserForm:
+  submit:
+    label: Update user
 cancel:
     label: Cancel
 expiration:
@@ -23,8 +26,8 @@ expiration:
 delete:
     label: Delete User
 no:
-    label: No
+    label: No, take me back
 yes:
-    label: Yes
+    label: Yes, I'm sure
 action:
     message: Your changes were saved

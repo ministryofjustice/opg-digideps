@@ -2,27 +2,35 @@
 
 {% trans_default_domain "admin" %}
 
-{% block htmlTitle %}Administration - Upload users{% endblock %}
-{% block pageTitle %}Upload users{% endblock %}
+{% block htmlTitle %}Administration - Statistics{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">Statistics</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
     <h1 class="heading-medium">Deputy's analysis</h1>
 
-    <p>Limited to last 100 users. Download the CSV to get the full list</p>
-    <img width="17" height="16" title="CSV" alt="CSV" src="data:image/gif;base64,R0lGODlhEQAQAMQUAPj4+PHx8fLy8rCwsPn5+eTk5PT09Pr6+vPz8/v7+/39/ejo6O7u7qampt3d3aKiotra2n5+fjMzM////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABQALAAAAAARABAAAAVhIEVFZGmKqBhNbMuSqeq6axSv8wtBNornpt4oN+NRCIQB0eV4HAIBwLJVEAQkWOwkq5VMFgCsANLyuryMsAShZHG93oQ6SjRLFOv3llsuHAwGZFMTAg0+O4iJiEJBjSUUIQA7" />
-    <a href="{{ path('admin_stats_csv', {'timestamp': date().timestamp }) }}">Export to CSV</a>
-
+    <p>Limited to last 100 users.</p>
+    <p>
+        <a href="{{ path('admin_stats_csv', {'timestamp': date().timestamp }) }}">Download the CSV</a>
+        to get the full list.
+    </p>
 
     {# dynamically display data #}
-    <table class="stats">
+    <table class="stats-table">
         {# header #}
         <thead>
-        <tr>
-            {% for key, column in data|first %}
-                <th>{{ key  | replace({'_': ' '}) | capitalize }}</th>
-            {% endfor %}
-        </tr>
+            <tr>
+                {% for key, column in data|first %}
+                    <th>{{ key  | replace({'_': ' '}) | capitalize }}</th>
+                {% endfor %}
+            </tr>
         </thead>
         <tbody>
         {# rows #}

@@ -3,23 +3,35 @@
 {% trans_default_domain "admin" %}
 
 {% block htmlTitle %}Administration - Upload users{% endblock %}
-{% block pageTitle %}Upload users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <p>
-        Number of users in the database: {{currentRecords}}.
-    </p>
+    <div class="data">
+        <span class="data-item bold-xlarge">{{currentRecords}}</span>
+        <span class="data-item bold-small">users in the database</span>
+    </div>
 
-    <p>
-        Max upload size: {{ maxUploadSize }}.
-    </p>
+    <h2 class="heading-medium">Upload users</h2>
+
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.file, '', {'labelText': 'Select CSV file exported from CASREC'}) }}
+    {{ form_input(form.file, '', {
+        'labelRaw': true,
+        'labelText': 'Select CSV file exported from CASREC',
+        'hintText': 'Max upload size is ' ~ maxUploadSize,
+        'inputClass': 'no-border'
+    }) }}
 
-    {{ form_submit(form.upload, '', {'labelText': 'Upload'}) }}
+    {{ form_submit(form.upload, '', {'labelText': 'Upload users'}) }}
 
     {{ form_end(form) }}
 
