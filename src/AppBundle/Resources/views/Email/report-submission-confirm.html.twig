@@ -1,46 +1,28 @@
-{% embed 'AppBundle:Email:digideps-email-template.html.twig' with {
-turnOnTableBorders: 0,
-outputStyleForInLine: false,
-outputHeaderStyles: true
-} %}
+{% extends 'AppBundle:Email:_template.html.twig' %}
 
-{% set translationDomain = "email-report-submit-confirm" %}
-{% trans_default_domain translationDomain %}
+{% block emailHTMLHeaderTitle %}Deputy report service - Annual deputy report submitted{% endblock %}
 
-{% block emailHTMLHeaderTitle %}
+{% block content %}
 
-{% endblock %}
+    <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Dear {{ deputyFirstName }}</p>
 
-{% block emailHTMLHeader %}{{ parent() }}{% endblock %}
-
-{% block emailHTMLMessage %}
-
-    <p>Dear {{ deputyFirstName }}</p>
-    <br/>
-
-    <p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
         <strong>Thank you for submitting your annual deputy report</strong> for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
     </p>
 
-    <p>We’re in the process of reviewing your report, and will contact you when this has been done. </p>
-    
-     <p><strong>Download a pdf of your report</strong></p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’re in the process of reviewing your report, and will contact you when this has been done. </p>
 
-    <p>To view and download a copy of the report for your records, <a href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
+     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>Download a pdf of your report</strong></p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">To view and download a copy of the report for your records, <a style="word-wrap: break-word;" href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
     </p>
-    
 
-    <p><strong>What happens next</strong></p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>What happens next</strong></p>
 
-    <p>If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
 
-    <p>Sign in to <a href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Sign in to <a style="word-wrap: break-word;" href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
 
-    <p>We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
-    <br/>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
 
 {% endblock %}
-
-{% block emailHTMLFooter %}{{ parent() }}{% endblock %}
-
-{% endembed %}
