@@ -85,6 +85,28 @@ class AbstractController extends Controller
         sort($groups); // helps HTTP caching
         return $this->getRestClient()->get("report/{$reportId}", 'Report\\Report', $groups);
     }
+    
+    /**
+     * @param $report
+     * @return bool
+     */
+    protected function validateSection($report)
+    {
+        $validSections = $this->getParameter('valid_report_sections');
+
+        if (!array_key_exists($report->getType(), $validSections)) {
+            throw new \RuntimeException('Report sections have not been defined for report type ' . $report->getType());
+        }
+
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+
+        if(!in_array($routeName, $validSections[$report->getType()])) {
+            throw new DisplayableException('Section not accessible with this report type.');
+        };
+
+        return true;
+    }
 
     /**
      * @param int $reportId
@@ -94,15 +116,14 @@ class AbstractController extends Controller
      * @return Report
      *
      */
-    protected function getReportIfNotSubmitted($reportId, array $groups = [], $onlyForReportType = null)
+    protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
+
+        $this->validateSection($report);
+
         if ($report->getSubmitted()) {
             throw new \RuntimeException('Report already submitted and not editable.');
-        }
-
-        if ($onlyForReportType && $report->getType() != $onlyForReportType) {
-            throw new DisplayableException('Section not accessible with this report type');
         }
 
         return $report;
