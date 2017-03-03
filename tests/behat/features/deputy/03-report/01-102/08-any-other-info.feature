@@ -23,3 +23,7 @@ Feature: Report any other info
     And each text should be present in the corresponding region:
       | No    | more-info         |
     And I should not see the "more-info-details" region
+
+  @deputy
+  Scenario: save status (used by 104 report)
+    Given I save the application status into "report-decisions-contacts-visitscare-actions-info"
