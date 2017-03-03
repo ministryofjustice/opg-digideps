@@ -63,7 +63,6 @@ class ReportValidator
             !in_array($currentRequestController, $this->validReportSections['all']) &&
             !in_array($currentRequestController, $this->validReportSections[$report->getType()])
         ) {
-            echo $currentRequestController;
             return false;
         };
 
