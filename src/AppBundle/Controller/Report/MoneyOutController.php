@@ -25,7 +25,7 @@ class MoneyOutController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
@@ -49,7 +49,7 @@ class MoneyOutController extends AbstractController
         // common vars and data
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
 
@@ -158,7 +158,7 @@ class MoneyOutController extends AbstractController
      */
     public function summaryAction($reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
@@ -178,7 +178,7 @@ class MoneyOutController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_102);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId) {
             return $t->getId() == $transactionId;
         });
