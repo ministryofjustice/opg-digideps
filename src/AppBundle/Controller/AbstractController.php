@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\ReportValidator;
 use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,15 +95,19 @@ class AbstractController extends Controller
      * @return Report
      *
      */
-    protected function getReportIfNotSubmitted($reportId, array $groups = [], $onlyForReportType = null)
+    protected function getReportIfNotSubmitted($reportId, array $groups = [])
     {
         $report = $this->getReport($reportId, $groups);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException('Report already submitted and not editable.');
+
+        /** @var ReportValidator $reportValidator */
+        $reportValidator = $this->get('report_validator');
+
+        if (!$reportValidator->isAllowedSection($report)) {
+            throw new DisplayableException('Section not accessible with this report type.');
         }
 
-        if ($onlyForReportType && $report->getType() != $onlyForReportType) {
-            throw new DisplayableException('Section not accessible with this report type');
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException('Report already submitted and not editable.');
         }
 
         return $report;

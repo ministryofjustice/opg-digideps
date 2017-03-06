@@ -24,7 +24,7 @@ class MoneyInShortController extends AbstractController
      */
     public function startAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($report->getStatus()->getMoneyInShortState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
@@ -41,7 +41,7 @@ class MoneyInShortController extends AbstractController
      */
     public function categoryAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(new FormDir\Report\MoneyShortType('moneyShortCategoriesIn'), $report);
@@ -79,7 +79,7 @@ class MoneyInShortController extends AbstractController
      */
     public function existAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\YesNoType('moneyTransactionsShortInExist', 'report-money-short', ['yes' => 'Yes', 'no' => 'No']), $report);
         $form->handleRequest($request);
         $fromSummaryPage = $request->get('from') == 'summary';
@@ -109,7 +109,7 @@ class MoneyInShortController extends AbstractController
      */
     public function addAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $record = new MoneyTransactionShort('in');
         $record->setReport($report);
 
@@ -140,7 +140,7 @@ class MoneyInShortController extends AbstractController
      */
     public function addAnotherAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-short'), $report);
         $form->handleRequest($request);
@@ -166,7 +166,7 @@ class MoneyInShortController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->getRestClient()->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
 
         $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $transaction);
@@ -197,7 +197,7 @@ class MoneyInShortController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $this->getRestClient()->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);
 
@@ -216,7 +216,7 @@ class MoneyInShortController extends AbstractController
     public function summaryAction(Request $request, $reportId)
     {
         $fromPage = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups, EntityDir\Report\Report::TYPE_103);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyInShortState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
