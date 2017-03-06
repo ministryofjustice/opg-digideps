@@ -1,0 +1,25 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% block htmlTitle %}Team{% endblock %}
+{% block pageTitle %}Team{% endblock %}
+
+{% block breadcrumbs %}
+    [breadcrumbs]
+    {#{{ macros.breadcrumbsSettings('home') }}#}
+{% endblock %}
+
+{% block pageContent %}
+
+   {% for user in teamMembers %}
+        {{ user.firstname }} |
+        {{ user.lastname }} |
+       {{ user.roleName }} |
+       {{ user.email }} |
+       active: {{ user.active ?'yes':'no' }} |
+       is named deputy ? {{ user.roleName == 'ROLE_PA' ? 'yes':'no' }}
+       <hr/>
+{% endfor %}
+
+{% endblock %}

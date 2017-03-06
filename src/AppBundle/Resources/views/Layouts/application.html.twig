@@ -61,6 +61,11 @@
                     {% endif %}
                 {% endif %}
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+
+                {% if is_granted('ROLE_PA') %}
+                    <li><a href="{{path('pa_settings')}}" class="behat-link-pa-settings"  >Settings</a></li>
+                {% endif %}
+
             </ul>
         {% endif %}
     </nav>

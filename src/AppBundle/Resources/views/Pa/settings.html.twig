@@ -1,0 +1,20 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% block htmlTitle %}Settings{% endblock %}
+{% block pageTitle %}Settings{% endblock %}
+
+{% block breadcrumbs %}
+    [breadcrumbs]
+    {#{{ macros.breadcrumbsSettings('home') }}#}
+{% endblock %}
+
+{% block pageContent %}
+
+    <a href="{{ path('pa_team') }}" class="behat-link-deputy-show">
+        <h2 class="heading-small">User accounts</h2>
+    </a>
+    <p class="text text-info">Add, edit and remove user accounts for you and your team members</p>
+
+{% endblock %}
