@@ -145,10 +145,12 @@ class UserController extends AbstractController
 
 
     /**
-     * Registration steps.
-     * Used for
-     * Deputy incuding PA
-     * Admin
+     * Page to edit user details.
+     * For :
+     * - admin
+     * - AD
+     * - Lay
+     * - PA
      *
      * @Route("/user/details", name="user_details")
      * @Template()
