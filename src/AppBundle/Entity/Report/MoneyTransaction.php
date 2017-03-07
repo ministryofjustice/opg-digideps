@@ -83,7 +83,6 @@ class MoneyTransaction
         ['opg-fees', false, '570', 'fees', 'out'],
         ['other-fees', true, '580', 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, '590', 'fees', 'out'],
-        ['your-deputy-expenses', true, '600', 'fees', 'out'],
 
         ['investment-bonds-purchased', true, '610', 'major-purchases', 'out'],
         ['investment-account-purchased', true, '620', 'major-purchases', 'out'],
