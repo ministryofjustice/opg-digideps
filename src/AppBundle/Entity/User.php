@@ -236,6 +236,24 @@ class User implements UserInterface
     private $adManaged;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user"})
+     * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
+     *
+     * @var string
+     */
+    private $jobTitle;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user"})
+     * @ORM\Column(name="pa_team_name", type="string", length=50, nullable=true)
+     *
+     * @var string
+     */
+    private $paTeamName;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -848,6 +866,44 @@ class User implements UserInterface
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * @param string $jobTitle
+     * @return User
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaTeamName()
+    {
+        return $this->paTeamName;
+    }
+
+    /**
+     * @param string $paTeamName
+     * @return User
+     */
+    public function setPaTeamName($paTeamName)
+    {
+        $this->paTeamName = $paTeamName;
+
+        return $this;
     }
 
     /**
