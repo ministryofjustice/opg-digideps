@@ -20,10 +20,35 @@ Feature: Add PA users and activate PA user (journey)
   Scenario: PA user registration steps
     Given emails are sent from "admin" area
     When I open the "/user/activate/" link from the email
+    # password step
     And I activate the user with password "Abcd1234"
-    And I set the user details to:
-      | name    | Pubo             | Autoritus      |        |     |    |
-      | address | 102 Petty France | MOJ            | London | HA2 | GB |
-      | phone   | 46745675674567   | 46745675674567 |        |     |    |
-    Then the URL should match "/pa"
+    When I click on "save"
+    # assert pre-fill
+    Then the following fields should have the corresponding values:
+      | user_details_firstname | DEP1     |
+      | user_details_lastname  | SURNAME1 |
+    # check errors
+    When I fill in the following:
+      | user_details_firstname  |  |
+      | user_details_lastname   |  |
+      | user_details_jobTitle   |  |
+      | user_details_phoneMain  |  |
+      | user_details_paTeamName |  |
+    And I press "user_details_save"
+    Then the following fields should have an error:
+      | user_details_firstname  |  |
+      | user_details_lastname   |  |
+      | user_details_jobTitle   |  |
+      | user_details_phoneMain  |  |
+      | user_details_paTeamName |  |
+    # correct
+    When I fill in the following:
+      | user_details_firstname  | Pubo           |
+      | user_details_lastname   | Autoritus      |
+      | user_details_jobTitle   | Solicitor      |
+      | user_details_phoneMain  | 46745675674567 |
+      | user_details_paTeamName | TEAM1          |
+    And I press "user_details_save"
+    Then the form should be valid
+    # check I'm in the dashboard
     And I should see the "client-1000010" region
