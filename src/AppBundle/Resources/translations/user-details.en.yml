@@ -16,7 +16,6 @@ addressPostcode:
     label: Postcode
 addressCountry:
     label: Country
-    defaultOption: Please select ...
 phoneMain:
     label: Phone number
 phoneAlternative:

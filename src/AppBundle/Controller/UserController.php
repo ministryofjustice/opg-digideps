@@ -31,7 +31,8 @@ class UserController extends AbstractController
 
         // check $token is correct
         try {
-            $user = $this->getRestClient()->loadUserByToken($token); /* @var $user EntityDir\User*/
+            $user = $this->getRestClient()->loadUserByToken($token);
+            /* @var $user EntityDir\User */
         } catch (\Exception $e) {
             throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
@@ -39,12 +40,12 @@ class UserController extends AbstractController
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             if ('activate' == $action) {
                 return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
-                    'token' => $token,
+                    'token'            => $token,
                     'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
                 ]);
             } else { // password-reset
                 return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
-                    'token' => $token,
+                    'token'            => $token,
                     'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
                 ]);
             }
@@ -75,7 +76,7 @@ class UserController extends AbstractController
             // set password for user
             $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
-                'set_active' => true,
+                'set_active'     => true,
             ]));
 
             // log in user into CLIENT
@@ -85,9 +86,9 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-             //$request = $this->get("request");
-             //$event = new InteractiveLoginEvent($request, $clientToken);
-             //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+            //$request = $this->get("request");
+            //$event = new InteractiveLoginEvent($request, $clientToken);
+            //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
             // after password reset
             if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
@@ -96,7 +97,7 @@ class UserController extends AbstractController
                 $redirectUrl = $this->generateUrl('user_details');
             }
 
-             // the following should not be triggered
+            // the following should not be triggered
             return $this->redirect($redirectUrl);
         }
 
@@ -105,8 +106,8 @@ class UserController extends AbstractController
 
         return $this->render($template, [
             'token' => $token,
-            'form' => $form->createView(),
-            'user' => $user,
+            'form'  => $form->createView(),
+            'user'  => $user,
         ]);
     }
 
@@ -117,7 +118,8 @@ class UserController extends AbstractController
     public function activateLinkSendAction(Request $request, $token)
     {
         // check $token is correct
-        $user = $this->getRestClient()->loadUserByToken($token); /* @var $user EntityDir\User*/
+        $user = $this->getRestClient()->loadUserByToken($token);
+        /* @var $user EntityDir\User */
 
         // recreate token
         // the endpoint will also send the activation email
@@ -136,47 +138,61 @@ class UserController extends AbstractController
     public function activateLinkSentAction(Request $request, $token)
     {
         return [
-            'token' => $token,
+            'token'            => $token,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
     }
 
     /**
+     * @param EntityDir\User $user
+     *
+     * @return array [FormType, array of JMS groups]
+     */
+    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user)
+    {
+        // define form, route, JMS groups
+        switch ($user->getRoleName()) {
+            case EntityDir\User::ROLE_ADMIN:
+            case EntityDir\User::ROLE_AD:
+                return [new FormDir\UserDetailsBasicType(), ['user_details_basic']];
+
+            case EntityDir\User::ROLE_LAY_DEPUTY:
+                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+
+            case EntityDir\User::ROLE_PA:
+                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+        }
+    }
+
+    /**
      * Registration steps.
+     * Used for
+     * Deputy incuding PA
+     * Admin
      *
      * @Route("/user/details", name="user_details")
      * @Template()
      */
     public function detailsAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'role']);
+        $user = $this->getUserWithData(['user']);
 
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
-        $notification = $request->query->has('notification') ? $request->query->get('notification') : null;
-
-        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
-            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
-        ]);
+        list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), [
-                    $basicFormOnly ? 'user_details_basic' : 'user_details_full',
-                ]);
+                $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
-                // redirect to a different page based on role
-                switch ($user->getRoleName()) {
-                    case EntityDir\User::ROLE_ADMIN:
-                        return $this->redirect($this->generateUrl('admin_homepage'));
-                    case EntityDir\User::ROLE_AD:
-                        return $this->redirect($this->generateUrl('ad_homepage'));
-                    case EntityDir\User::ROLE_PA:
-                        return $this->redirect($this->generateUrl('pa_dashboard'));
-                }
+                $redirectRoute = [
+                    EntityDir\User::ROLE_ADMIN      => 'admin_homepage',
+                    EntityDir\User::ROLE_AD         => 'ad_homepage',
+                    EntityDir\User::ROLE_PA         => 'pa_dashboard',
+                    EntityDir\User::ROLE_LAY_DEPUTY => 'client_add',
+                ][$user->getRoleName()];
 
-                return $this->redirect($this->generateUrl('client_add'));
+                return $this->redirect($this->generateUrl($redirectRoute));
             }
         } else {
             // fill the form in (edit mode)
@@ -213,8 +229,8 @@ class UserController extends AbstractController
 
         return [
             'client' => $client,
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'   => $user,
+            'form'   => $form->createView(),
         ];
     }
 
@@ -248,7 +264,7 @@ class UserController extends AbstractController
 
         return [
             'client' => $client,
-            'user' => $user,
+            'user'   => $user,
         ];
     }
 
@@ -263,10 +279,10 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData(['user', 'client', 'role']);
 
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
-        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
-            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
-        ]);
+        list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
+
+//        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
+//        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType();
 
         $form = $this->createForm($formType, $user);
 
@@ -278,7 +294,7 @@ class UserController extends AbstractController
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            $this->getRestClient()->put('user/' . $user->getId(), $formData, ['user_details_full']);
+            $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
             $request->getSession()->getFlashBag()->add('notice', 'Your details edited');
 
             return $this->redirect($this->generateUrl('user_show'));
@@ -288,8 +304,8 @@ class UserController extends AbstractController
 
         return [
             'client' => $client,
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'   => $user,
+            'form'   => $form->createView(),
         ];
     }
 
@@ -363,10 +379,10 @@ class UserController extends AbstractController
 
                 return $this->render('AppBundle:User:registration-thankyou.html.twig', [
                     'bodyText' => $bodyText,
-                    'email' => $email
+                    'email'    => $email,
                 ]);
             } catch (\Exception $e) {
-                switch ((int) $e->getCode()) {
+                switch ((int)$e->getCode()) {
                     case 422:
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
