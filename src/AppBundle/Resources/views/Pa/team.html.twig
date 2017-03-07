@@ -16,6 +16,7 @@
 
 
         {% for user in teamMembers %}
+            {% set isActiveUser = (user.id == app.user.id)  %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td>
                     {{ user.firstname }} |
@@ -24,6 +25,11 @@
                     {{ user.email }} |
                     active: {{ user.active ?'yes':'no' }} |
                     is named deputy ? {{ user.roleName == 'ROLE_PA' ? 'yes':'no' }}
+                </td>
+                <td>
+                    {% if isActiveUser %}
+                        <a href="{{  path('user_edit') }}">Edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
