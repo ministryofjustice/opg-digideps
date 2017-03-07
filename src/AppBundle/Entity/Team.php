@@ -44,7 +44,7 @@ class Team
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -132,7 +132,7 @@ class Team
     /**
      * @return string
      */
-    public function getTeamName(): string
+    public function getTeamName()
     {
         return $this->teamName;
     }

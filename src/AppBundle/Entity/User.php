@@ -43,7 +43,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", casecase={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"})
      *
      * @var ArrayCollection
      */
