@@ -400,13 +400,13 @@ class UserController extends AbstractController
         switch ($user->getRoleName()) {
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
-                return [new FormDir\UserDetailsBasicType(), ['user_details_basic']];
+                return [new FormDir\User\UserDetailsBasicType(), ['user_details_basic']];
 
             case EntityDir\User::ROLE_LAY_DEPUTY:
-                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+                return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
 
             case EntityDir\User::ROLE_PA:
-                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+                return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
         }
     }
 }
