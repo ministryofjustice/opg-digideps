@@ -15,25 +15,7 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.firstname,'firstname') }}
-
-    {{ form_input(form.lastname,'lastname') }}
-
-    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
-        {{ form_input(form.address1,'address1') }}
-
-        {{ form_input(form.address2,'address2') }}
-
-        {{ form_input(form.address3,'address3') }}
-
-        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
-
-        {{ form_select(form.addressCountry,'addressCountry') }}
-
-        {{ form_input(form.phoneMain,'phoneMain') }}
-
-        {{ form_input(form.phoneAlternative,'phoneAlternative') }}
-    {% endif %}
+    {% include 'AppBundle:User:_form_fields.html.twig' %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
