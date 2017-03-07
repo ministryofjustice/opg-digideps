@@ -162,23 +162,16 @@ class UserController extends AbstractController
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
-                $redirectRoute = [
-                    EntityDir\User::ROLE_ADMIN      => 'admin_homepage',
-                    EntityDir\User::ROLE_AD         => 'ad_homepage',
-                    EntityDir\User::ROLE_PA         => 'pa_dashboard',
-                    EntityDir\User::ROLE_LAY_DEPUTY => 'client_add',
-                ][$user->getRoleName()];
-
-                return $this->redirect($this->generateUrl($redirectRoute));
-            }
-        } else {
-            // fill the form in (edit mode)
-            $form->setData($user);
+            return $this->redirect($this->generateUrl([
+                EntityDir\User::ROLE_ADMIN      => 'admin_homepage',
+                EntityDir\User::ROLE_AD         => 'ad_homepage',
+                EntityDir\User::ROLE_PA         => 'pa_dashboard',
+                EntityDir\User::ROLE_LAY_DEPUTY => 'client_add',
+            ][$user->getRoleName()]));
         }
 
         return [
