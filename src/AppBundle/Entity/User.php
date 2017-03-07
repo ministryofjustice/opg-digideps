@@ -235,6 +235,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_pa"})
      * @Assert\NotBlank( message="user.jobTitle.notBlank", groups={"user_details_pa"} )
+     * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_pa"} )
      *
      * @var string
      */

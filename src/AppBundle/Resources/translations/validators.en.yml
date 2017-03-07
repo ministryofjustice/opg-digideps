@@ -37,6 +37,7 @@ user:
     notBlank: Enter your country
   jobTitle:
     notBlank: Enter your job title
+    maxMessage: The job title can't be longer than {{ limit }} letters
   phoneMain:
     notBlank: Enter your main phone number
   paTeamName:
