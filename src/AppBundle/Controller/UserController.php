@@ -143,26 +143,6 @@ class UserController extends AbstractController
         ];
     }
 
-    /**
-     * @param EntityDir\User $user
-     *
-     * @return array [FormType, array of JMS groups]
-     */
-    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user)
-    {
-        // define form, route, JMS groups
-        switch ($user->getRoleName()) {
-            case EntityDir\User::ROLE_ADMIN:
-            case EntityDir\User::ROLE_AD:
-                return [new FormDir\UserDetailsBasicType(), ['user_details_basic']];
-
-            case EntityDir\User::ROLE_LAY_DEPUTY:
-                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
-
-            case EntityDir\User::ROLE_PA:
-                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
-        }
-    }
 
     /**
      * Registration steps.
@@ -210,7 +190,7 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $user = $this->getUserWithData(['user', 'client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -240,7 +220,7 @@ class UserController extends AbstractController
      */
     public function passwordEditDoneAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $user = $this->getUserWithData(['user', 'client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -258,7 +238,7 @@ class UserController extends AbstractController
      **/
     public function showAction()
     {
-        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $user = $this->getUserWithData(['user', 'client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -277,13 +257,9 @@ class UserController extends AbstractController
      **/
     public function editAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client', 'role']);
+        $user = $this->getUserWithData(['user', 'client']);
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
-
-//        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
-//        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType();
-
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
@@ -415,5 +391,27 @@ class UserController extends AbstractController
         return $vars + [
             'form' => $form->createView(),
         ];
+    }
+
+
+    /**
+     * @param EntityDir\User $user
+     *
+     * @return array [FormType, array of JMS groups]
+     */
+    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user)
+    {
+        // define form, route, JMS groups
+        switch ($user->getRoleName()) {
+            case EntityDir\User::ROLE_ADMIN:
+            case EntityDir\User::ROLE_AD:
+                return [new FormDir\UserDetailsBasicType(), ['user_details_basic']];
+
+            case EntityDir\User::ROLE_LAY_DEPUTY:
+                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+
+            case EntityDir\User::ROLE_PA:
+                return [new FormDir\UserDetailsFullType(), ['user_details_full']];
+        }
     }
 }
