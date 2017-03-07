@@ -142,7 +142,7 @@ class Team
      *
      * @return $this
      */
-    public function setTeamName(string $teamName)
+    public function setTeamName($teamName)
     {
         $this->teamName = $teamName;
         return $this;
