@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,6 +40,14 @@ class User implements UserInterface
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
      */
     private $clients;
+
+    /**
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"})
+     *
+     * @var ArrayCollection
+     */
+    private $teams;
 
     /**
      * @var string
@@ -511,6 +520,75 @@ class User implements UserInterface
         return $this->getClients()->filter(function ($client) use ($caseNumber) {
             return $client->getCaseNumber() == strtolower($caseNumber);
         })->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeams()
+    {
+        return $this->teams;
+    }
+
+    /**
+     * @param $teams
+     *
+     * @return $this
+     */
+    public function setTeams($teams)
+    {
+        $this->teams = $teams;
+        return $this;
+    }
+
+    /**
+     * Add a team
+     *
+     * @param Team $team
+     * @return $this
+     */
+    public function addTeam(Team $team)
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams->add($team);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a team
+     *
+     * @param ArrayCollection|Team $teams Collection being added
+     *
+     * @return $this
+     */
+    public function addTeams(ArrayCollection $teams)
+    {
+        $this->teams = new ArrayCollection(
+            array_merge(
+                $this->teams->toArray(),
+                $teams->toArray()
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * Remove a team from the collection
+     *
+     * @param mixed $team collection being removed
+     *
+     * @return $this
+     */
+    public function removeTeam($team)
+    {
+        if ($this->teams->contains($team)) {
+            $this->teams->removeElement($team);
+        }
+
+        return $this;
     }
 
     /**
