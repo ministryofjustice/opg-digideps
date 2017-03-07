@@ -41,9 +41,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
-     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full"} )
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
      *
      * @var string
      */
@@ -191,9 +191,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full"})
-     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full"} )
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
+     * @JMS\Groups({"user_details_full", "user_details_pa"})
+     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "user_details_pa"} )
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa"} )
      *
      * @var string
      */
@@ -230,6 +230,25 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
     private $adManaged;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details_pa"})
+     * @Assert\NotBlank( message="user.jobTitle.notBlank", groups={"user_details_pa"} )
+     *
+     * @var string
+     */
+    private $jobTitle;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details_pa"})
+     * @Assert\NotBlank( message="user.paTeamName.notBlank", groups={"user_details_pa"} )
+     * @Assert\Length(max=50, maxMessage="user.paTeamName.maxMessage", groups={"user_details_pa"} )
+     *
+     * @var string
+     */
+    private $paTeamName;
 
     /**
      * @return int $id
@@ -690,6 +709,44 @@ class User implements AdvancedUserInterface
     public function setAdManaged($adManaged)
     {
         $this->adManaged = $adManaged;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * @param string $jobTitle
+     * @return User
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaTeamName()
+    {
+        return $this->paTeamName;
+    }
+
+    /**
+     * @param string $paTeamName
+     * @return User
+     */
+    public function setPaTeamName($paTeamName)
+    {
+        $this->paTeamName = $paTeamName;
+
+        return $this;
     }
 
     /**

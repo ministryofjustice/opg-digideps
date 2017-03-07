@@ -16,8 +16,13 @@ addressPostcode:
     label: Postcode
 addressCountry:
     label: Country
+jobTitle:
+    label: Job title
 phoneMain:
     label: Phone number
+paTeamName:
+    label: Public Authority team name (optional)
+    hint: Example: Blue Team
 phoneAlternative:
     label: Alternative phone number
 submit:

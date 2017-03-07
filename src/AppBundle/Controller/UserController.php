@@ -406,7 +406,7 @@ class UserController extends AbstractController
                 return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
 
             case EntityDir\User::ROLE_PA:
-                return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
+                return [new FormDir\User\UserDetailsPaType(), ['user_details_pa']];
         }
     }
 }

@@ -21,21 +21,28 @@
 
     {{ form_input(form.lastname,'lastname') }}
 
-    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
+    {% if form.address1 is defined %}
         {{ form_input(form.address1,'address1') }}
-
         {{ form_input(form.address2,'address2') }}
-
         {{ form_input(form.address3,'address3') }}
-
         {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
-
         {{ form_select(form.addressCountry,'addressCountry') }}
+    {% endif %}
 
-        {{ form_input(form.phoneMain,'phoneMain') }}
+    {% if form.jobTitle is defined %}
+        {{ form_input(form.jobTitle, 'jobTitle') }}
+    {% endif %}
 
+    {% if form.phoneMain is defined %}
+        {{ form_input(form.phoneMain, 'phoneMain') }}
+    {% endif %}
+
+    {% if form.paTeamName is defined %}
+        {{ form_input(form.paTeamName, 'paTeamName') }}
+    {% endif %}
+
+    {% if form.phoneAlternative is defined %}
         {{ form_input(form.phoneAlternative,'phoneAlternative') }}
-
     {% endif %}
 
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
