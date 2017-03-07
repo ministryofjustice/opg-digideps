@@ -2,31 +2,76 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% block htmlTitle %}Team{% endblock %}
-{% block pageTitle %}Team{% endblock %}
+{% block htmlTitle %}User accounts{% endblock %}
+{% block pageTitle %}User accounts{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
     [breadcrumbs]
     {#{{ macros.breadcrumbsSettings('home') }}#}
 {% endblock %}
 
+{% block helpline %}{% endblock %}
+
 {% block pageContent %}
 
-    <table>
+    {# Introduction text #}
+    <p class="text">Add, edit and remove user accounts for you and your team members</p>
 
+    <div class="grid-row push--top">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of user accounts</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="#"
+               class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                Add user account
+            </a>
+        </div>
+    </div>
 
+    <table class="check-your-answers">
+        <thead>
+            <tr>
+                <th>Name and job</th>
+                <th>Contact information</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
         {% for user in teamMembers %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
+                <td valign="top" class="width-third">
+                    <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong><br>
+                    {% if user.roleName == 'ROLE_PA' %}
+                        <span class="status status-label admin">Administrator</span><br>
+                    {% endif %}
+                    Named deputy<br>
+                    South Team
+                    <span class="visuallyhidden">
+                        active: {{ user.active ?'yes':'no' }} |
+                    </span>
+                </td>
                 <td>
-                    {{ user.firstname }} |
-                    {{ user.lastname }} |
-                    {{ user.roleName }} |
-                    {{ user.email }} |
-                    active: {{ user.active ?'yes':'no' }} |
-                    is named deputy ? {{ user.roleName == 'ROLE_PA' ? 'yes':'no' }}
+                    <p class="flush--top">
+                        <strong class="bold">Phone</strong><br>
+                        349534958439857
+                    </p>
+                    <p class="flush--bottom">
+                        <strong class="bold">Email</strong><br>
+                        {{ user.email }}
+                    </p>
+                </td>
+                <td class="change-answer">
+                    <a class="" href="#">Edit</a>
                 </td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 
 {% endblock %}
