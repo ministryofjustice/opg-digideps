@@ -12,14 +12,21 @@
 
 {% block pageContent %}
 
-   {% for user in teamMembers %}
-        {{ user.firstname }} |
-        {{ user.lastname }} |
-       {{ user.roleName }} |
-       {{ user.email }} |
-       active: {{ user.active ?'yes':'no' }} |
-       is named deputy ? {{ user.roleName == 'ROLE_PA' ? 'yes':'no' }}
-       <hr/>
-{% endfor %}
+    <table>
+
+
+        {% for user in teamMembers %}
+            <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
+                <td>
+                    {{ user.firstname }} |
+                    {{ user.lastname }} |
+                    {{ user.roleName }} |
+                    {{ user.email }} |
+                    active: {{ user.active ?'yes':'no' }} |
+                    is named deputy ? {{ user.roleName == 'ROLE_PA' ? 'yes':'no' }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
 {% endblock %}
