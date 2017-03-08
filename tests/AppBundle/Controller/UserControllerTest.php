@@ -138,6 +138,32 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->flush($user);
     }
 
+    public function testUpdatePa()
+    {
+        $deputyId = self::$deputy1->getId();
+        $url = '/user/' . $deputyId;
+
+        $this->assertCount(0, self::$deputy1->getTeams());
+
+        // assert get
+        foreach(['pt.old', 'pt.new'] as $teamName) {
+            $this->assertJsonRequest('PUT', $url, [
+                'mustSucceed' => true,
+                'AuthToken' => self::$tokenDeputy,
+                'data' => [
+                    'pa_team_name' => $teamName,
+                ],
+            ]);
+        }
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertEquals('pt.new', $data['pa_team_name']);
+    }
+
     public function testIsPasswordCorrectAuth()
     {
         $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';

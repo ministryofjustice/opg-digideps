@@ -37,9 +37,18 @@ class Team
      *
      * @JMS\Groups({"team"})
      * @JMS\Type("string")
-     * @ORM\Column(name="team_name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="team_name", type="string", length=50, nullable=true)
      */
     private $teamName;
+
+    /**
+     * Team constructor.
+     * @param string $teamName
+     */
+    public function __construct($teamName)
+    {
+        $this->teamName = $teamName;
+    }
 
     /**
      * @return int
@@ -54,7 +63,7 @@ class Team
      *
      * @return $this
      */
-    public function setId(int $id)
+    public function setId($id)
     {
         $this->id = $id;
         return $this;

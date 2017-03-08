@@ -353,6 +353,17 @@ class UserController extends RestController
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }
 
+        if (!empty($data['pa_team_name'])) {
+            if ($user->getTeams()->isEmpty()) {
+                $team = new EntityDir\Team($data['pa_team_name']);
+                $this->getEntityManager()->persist($team);
+                $user->addTeam($team);
+            } else {
+                $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
+            }
+            $this->getEntityManager()->flush($team);
+        }
+
         if (!empty($data['registration_token'])) {
             $user->setRegistrationToken($data['registration_token']);
         }
