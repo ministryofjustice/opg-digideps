@@ -359,7 +359,7 @@ class Fixtures
 
     public static function deleteReportsData($additionalTables = [])
     {
-        $tables = array_merge(['casrec', 'deputy_case', 'report', 'odr'], $additionalTables);
+        $tables = array_merge(['casrec', 'deputy_case', 'report', 'odr', 'dd_team'], $additionalTables);
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 }

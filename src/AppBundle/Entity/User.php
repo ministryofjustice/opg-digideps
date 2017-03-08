@@ -258,8 +258,9 @@ class User implements UserInterface
      */
     public function __construct()
     {
-        $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->clients = new ArrayCollection();
         $this->password = '';
+        $this->teams = new ArrayCollection();
     }
 
     /**
@@ -956,6 +957,22 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * Return Id of the client (if it has details)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user"})
+     * @JMS\Type("string")
+     * @JMS\SerializedName("pa_team_name")
+     */
+    public function getTeamName()
+    {
+        if ($this->getTeams()->isEmpty()) {
+            return null;
+        }
+
+        return $this->getTeams()->first()->getTeamName();
+    }
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere
