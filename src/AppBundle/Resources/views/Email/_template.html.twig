@@ -1,0 +1,203 @@
+{% set httpPrefix = app.request.server.get('HTTP_REFERER')|split(':')[0] %}
+{% if httpPrefix is empty %}
+    {% set httpPrefix = 'http' %}
+{% endif %}
+{% set webPath = httpPrefix ~ '://' ~ app.request.host %}
+
+{% set translationDomain = "email-template" %}
+{% trans_default_domain translationDomain %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="telephone=no" name="format-detection"> <!-- need to add formatting for real phone numbers -->
+    <meta name="viewport" content="width=device-width" />
+    <title>{% block emailHTMLHeaderTitle %}Complete a deputy report service{% endblock %}</title>
+
+    <style>
+        @media only screen and (min-device-width: 581px) {
+            .content {
+                width: 580px !important;
+            }
+        }
+        body { margin:0 !important; }
+        div[style*="margin: 16px 0"] { margin:0 !important; }
+    </style>
+
+    <!--[if gte mso 9]>
+        <style>
+            li {
+                text-indent: -1em;
+            }
+        </style>
+    <![endif]-->
+
+</head>
+<body style="font-family: Helvetica, Arial, sans-serif;font-size: 16px;margin: 0;color:#0b0c0c;">
+    <table role="presentation" width="100%" style="min-width: 100%;width: 100% !important;" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="100%" height="53" bgcolor="#0b0c0c">
+                <!--[if (gte mso 9)|(IE)]>
+                    <table role="presentation" width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td>
+                <![endif]-->
+                <table role="presentation" width="100%" style="max-width: 580px;" cellpadding="0" cellspacing="0" border="0" align="center">
+                    <tr>
+                        <td width="70" bgcolor="#0b0c0c" valign="middle">
+                            <a href="https://www.gov.uk" style="text-decoration: none;">
+                                <img src="https://static.notifications.service.gov.uk/images/gov.uk_logotype_crown.png" alt="" height="32" border="0" style="margin-top: 4px; margin-left: 10px;">
+                            </a>
+                        </td>
+                        <td width="100%" bgcolor="#0b0c0c" valign="middle" align="left">
+                            <span style="padding-left: 5px;">
+                                <a href="https://www.gov.uk" style="font-family: Helvetica, Arial, sans-serif; font-size: 28px; line-height: 1.315789474; font-weight: 700; color: #ffffff; text-decoration: none;">GOV.UK</a>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                        </tr>
+                    </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </table>
+
+    <table
+      role="presentation"
+      class="content"
+      align="center"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="max-width: 580px; width: 100% !important;"
+      width="100%"
+    >
+        <tr>
+            <td width="10" height="10" valign="middle"></td>
+            <td>
+                <!--[if (gte mso 9)|(IE)]>
+                    <table role="presentation" width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td height="10">
+                <![endif]-->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td bgcolor="#005EA5" width="100%" height="10"></td>
+                    </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                        </tr>
+                    </table>
+                <![endif]-->
+            </td>
+            <td width="10" valign="middle" height="10"></td>
+        </tr>
+    </table>
+
+    <table
+      role="presentation"
+      class="content"
+      align="center"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="max-width: 580px; width: 100% !important;"
+      width="100%"
+    >
+        <tr>
+            <td width="10" height="10" valign="middle"></td>
+            <td>
+            <!--[if (gte mso 9)|(IE)]>
+                <table role="presentation" width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td height="10">
+            <![endif]-->
+                <table role="presentation" width="100%" cellpadding="6" cellspacing="0" border="0">
+                    <tr>
+                        <td height="10"></td>
+                        <td height="10"></td>
+                    </tr>
+                    <tr>
+                        <td valign="middle" style="position: relative; border-left: 2px solid #0b0c0c;">
+                            <img src="{{ homepageUrl }}images/crests/org_crest_27px.png" style="display: block; border: 0;" height="27" alt="" >
+                        </td>
+                        <td width="100%" style="font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 23px;" valign="center">
+                            Office of the Public Guardian
+                        </td>
+                    </tr>
+                </table>
+            <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                    </tr>
+                </table>
+            <![endif]-->
+            </td>
+            <td width="10" valign="middle" height="10"></td>
+        </tr>
+    </table>
+
+    <table
+      role="presentation"
+      class="content"
+      align="center"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="max-width: 580px; width: 100% !important;"
+      width="100%"
+    >
+        <tr>
+            <td height="30">&nbsp;</td>
+        </tr>
+        <tr>
+            <td width="10" valign="middle">&nbsp;</td>
+            <td style="font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.315789474; max-width: 560px;">
+            <!--[if (gte mso 9)|(IE)]>
+                <table role="presentation" width="560" align="center" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.315789474;">
+            <![endif]-->
+            {% block content %}{% endblock %}
+            <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;"></h2>
+            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"></p>
+            <a style="word-wrap: break-word;" href="{}"></a>
+
+
+
+
+            <h3 style="Margin: 40px 0 20px 0; padding: 0; font-size: 19px; line-height: 25px; font-weight: bold; color: #0B0C0C;">{{ 'footer.needhelp' | trans }}</h3>
+
+            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ 'footer.automated' | trans }}</p>
+
+            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ 'footer.toContactUs' | trans|raw }}</p>
+
+            <h3 style="Margin: 0 0 0 0; padding: 0; font-size: 19px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ 'footer.opg' | trans }}</h3>
+
+            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+                {{ 'footer.address1' | trans }}<br>
+                {{ 'footer.address2' | trans }}<br>
+                <a style="word-wrap: break-word;" href="{{ homepageUrl }}">{{ homepageUrl }}</a>
+            </p>
+            <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                    </tr>
+                </table>
+            <![endif]-->
+            </td>
+            <td width="10" valign="middle">&nbsp;</td>
+        </tr>
+        <tr>
+            <td height="30">&nbsp;</td>
+        </tr>
+    </table>
+</body>
+</html>
+
+
+
+

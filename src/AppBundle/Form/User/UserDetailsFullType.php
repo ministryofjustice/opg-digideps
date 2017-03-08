@@ -1,26 +1,12 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\User;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserDetailsFullType extends UserDetailsBasicType
 {
-    /**
-     * @var string
-     */
-    private $addressCountryEmptyValue;
-
-    /**
-     * @param array $options needed keys: addressCountryEmptyValue, countryPreferredOptions
-     */
-    public function __construct($options)
-    {
-        $this->addressCountryEmptyValue = empty($options['addressCountryEmptyValue'])
-                                        ? null : $options['addressCountryEmptyValue'];
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -31,7 +17,7 @@ class UserDetailsFullType extends UserDetailsBasicType
         ->add('addressPostcode', 'text')
         ->add('addressCountry', 'country', [
             'preferred_choices' => ['', 'GB'],
-            'empty_value' => $this->addressCountryEmptyValue,
+            'empty_value' => 'Please select ...',
         ])
         ->add('phoneMain', 'text')
         ->add('phoneAlternative', 'text');

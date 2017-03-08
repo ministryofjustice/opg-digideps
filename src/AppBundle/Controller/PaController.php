@@ -43,4 +43,37 @@ class PaController extends AbstractController
             ],
         ];
     }
+
+    /**
+     * @Route("/settings", name="pa_settings")
+     * @Template
+     */
+    public function settingsAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/team", name="pa_team")
+     * @Template
+     */
+    public function teamAction(Request $request)
+    {
+        $teamMembers = [
+            $this->getUser()
+        ];
+
+        $i = 50; while ($i--) {
+            $user = new EntityDir\User();
+            $user->setFirstname('John'.$i);
+            $user->setLastname('Red'.$i);
+            $user->setRoleName('ROLE_PA_UNNAMED');
+            $user->setEmail('jr'.$i.'@example.org');
+            $teamMembers[] = $user;
+        }
+
+        return [
+            'teamMembers' => $teamMembers
+        ];
+    }
 }

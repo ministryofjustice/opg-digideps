@@ -35,7 +35,7 @@
     <nav id="proposition-menu">
         <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
         {% if app.user %}
-            <ul id="proposition-links">
+            <ul id="proposition-links" class="behat-region-navbar">
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{% trans %}nav.adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
@@ -61,6 +61,11 @@
                     {% endif %}
                 {% endif %}
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+
+                {% if is_granted('ROLE_PA') %}
+                    <li><a href="{{path('pa_settings')}}" class="behat-link-pa-settings"  >Settings</a></li>
+                {% endif %}
+
             </ul>
         {% endif %}
     </nav>

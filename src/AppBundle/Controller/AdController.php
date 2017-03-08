@@ -83,7 +83,7 @@ class AdController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report', 'odr']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Ad:error.html.twig', [
                 'error' => 'User not found',
@@ -115,7 +115,7 @@ class AdController extends AbstractController
         // get user and check it's deputy and ODR
         try {
             /* @var $deputy EntityDir\User */
-            $deputy = $this->getRestClient()->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user', 'role']);
+            $deputy = $this->getRestClient()->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
             if ($deputy->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
                 throw new \RuntimeException('User not a Lay deputy');
             }

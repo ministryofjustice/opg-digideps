@@ -1,6 +1,6 @@
 Feature: PA dashboard
 
-  Scenario: PA dashboard
+  Scenario: PA dashboard check visibility, pagination and search
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # check pagination
     And I should see the "client" region exactly 15 times
