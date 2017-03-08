@@ -1,46 +1,27 @@
-<div style="max-width: 650px;font-size:1em;font-family: Arial, Helvetica, sans-serif">
-    <table style="margin-top: 20px;width: 100%;" cellpadding="5" cellspacing="0">
-        <tr style="background: #000000; color: #ffffff;">
-            <td width="38px">&nbsp;</td>
-            <td width="37px" align="left"><img style="height:30px;width:35px; margin-top:5px" src="{{ domain }}images/gov.uk_logotype_crown.png"></td>
-            <td valign="bottom"><div style="font-size: 1.75em;">GOV&#173;.UK</div></td>
-        </tr>
-        <tr><td colspan="3"><div style="font-size:1px;">&nbsp;</div></td></tr>
-        <tr>
-            <td width="38px">&nbsp;</td>
-            <td width="37px" align="left" style="border-left: 2px solid #000;"><img src="{{ domain }}images/crests/org_crest_18px.png"></td>
-            <td valign="bottom"><div style="font-size: 1.2em;">Office of the Public Guardian</div></td>
-        </tr>
-    </table>
+{% extends 'AppBundle:Email:_template.html.twig' %}
 
-    <p style="margin: 50px 20px 20px 50px">Thank you for registering for the Office of the Public Guardian’s deputy report service.</p>
+{% block emailHTMLHeaderTitle %}Deputy report service - Activate account{% endblock %}
 
-    <p style="margin: 20px 50px;">
-        <b>Please click on the link below to activate and start using your account.</b>
+{% block content %}
+
+    <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">Activate your account</h2>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Thank you for registering for the Office of the Public Guardian’s deputy report service.</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>Please click on the link below to activate and start using your account.</strong>
     </p>
 
-    <a style="margin: 20px 50px;" href="{{ link }}">
-        {{ link }}
-    </a>
-
-    <p style="margin: 20px 50px;">If clicking on the link doesn’t work, try copying it into your browser's address bar.</p>
-
-    <p style="margin: 20px 50px;"><b>You must activate your account before you can create a deputy report.</b></p>
-
-    <p style="margin: 20px 50px;">
-The link we’ve given you expires after 48 hours, but don’t worry if you miss this deadline. You can return to the deputy report service at <a href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> and register again.</p>
-
-    <p style="margin: 20px 50px;">This is an automatic email so please don't reply to this address.<br>
-        If you need to contact us please email<br>
-        <a href="mailto:customerservices@deputyreport.service.gov.uk">deputyshipservice@publicguardian.gsi.gov.uk</a>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <a style="word-wrap: break-word;" href="{{ link }}">{{ link }}</a>
     </p>
 
-    <p style="margin: 20px 50px 50px 50px;">Call <b>0300 456 0300</b><br>
-        Monday, Tuesday, Thursday, Friday 9am to 5pm<br>
-        Wednesday 10am to 5pm</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If clicking on the link doesn’t work, try copying it into your browser's address bar.</p>
 
-    <p style="margin-left: 50px;font-size: 1.2em; font-weight: bold">Office of the Public Guardian</p>
-    <p style="margin-left: 50px;">PO Box 16185 Birmingham B2 2WH</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>You must activate your account before you can create a deputy report.</strong>
+    </p>
 
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">The link we’ve given you expires after 48 hours, but don’t worry if you miss this deadline. You can return to the deputy report service at <a style="word-wrap: break-word;" href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> and register again.</p>
 
-</div>
+{% endblock %}
