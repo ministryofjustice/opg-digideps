@@ -1,0 +1,26 @@
+// ==========================================================================
+// SUMMARY
+// Styles for the summary page
+
+// Check your answers (from govuk prototype)
+.check-your-answers {
+
+  &.columns-2 {
+
+    td:first-child {
+      width: 50%;
+    }
+
+  }
+
+  td {
+    @include core-19;
+    vertical-align: top;
+  }
+
+  .change-answer {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 0;
+  }
+}
