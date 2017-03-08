@@ -958,8 +958,6 @@ class User implements UserInterface
     }
 
     /**
-     * Return Id of the client (if it has details)
-     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"user"})
      * @JMS\Type("string")
