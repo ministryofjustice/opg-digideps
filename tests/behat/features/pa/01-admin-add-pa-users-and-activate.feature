@@ -36,11 +36,10 @@ Feature: Add PA users and activate PA user (journey)
       | user_details_paTeamName |  |
     And I press "user_details_save"
     Then the following fields should have an error:
-      | user_details_firstname  |  |
-      | user_details_lastname   |  |
-      | user_details_jobTitle   |  |
-      | user_details_phoneMain  |  |
-      | user_details_paTeamName |  |
+      | user_details_firstname  |
+      | user_details_lastname   |
+      | user_details_jobTitle   |
+      | user_details_phoneMain  |
     # correct
     When I fill in the following:
       | user_details_firstname  | Pubo           |
