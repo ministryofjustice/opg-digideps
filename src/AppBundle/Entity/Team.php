@@ -42,6 +42,15 @@ class Team
     private $teamName;
 
     /**
+     * Team constructor.
+     * @param string $teamName
+     */
+    public function __construct($teamName)
+    {
+        $this->teamName = $teamName;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -54,7 +63,7 @@ class Team
      *
      * @return $this
      */
-    public function setId(int $id)
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
