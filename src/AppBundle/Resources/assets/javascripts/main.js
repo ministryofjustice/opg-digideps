@@ -12,6 +12,9 @@ $(document).ready(function() {
         GOVUK.formatCurrency(event.target);
     });
 
+    // Initialising the character limiter module
+    new GOVUK.limitChars('form');
+
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
