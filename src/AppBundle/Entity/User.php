@@ -254,15 +254,6 @@ class User implements UserInterface
     private $jobTitle;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="pa_team_name", type="string", length=50, nullable=true)
-     *
-     * @var string
-     */
-    private $paTeamName;
-
-    /**
      * Constructor.
      */
     public function __construct()
@@ -965,24 +956,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaTeamName()
-    {
-        return $this->paTeamName;
-    }
-
-    /**
-     * @param string $paTeamName
-     * @return User
-     */
-    public function setPaTeamName($paTeamName)
-    {
-        $this->paTeamName = $paTeamName;
-
-        return $this;
-    }
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere

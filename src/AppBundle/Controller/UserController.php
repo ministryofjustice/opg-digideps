@@ -347,7 +347,6 @@ class UserController extends RestController
             'ad_managed' => 'setAdManaged',
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',
-            'pa_team_name' => 'setPaTeamName',
         ]);
 
         if (array_key_exists('last_logged_in', $data)) {

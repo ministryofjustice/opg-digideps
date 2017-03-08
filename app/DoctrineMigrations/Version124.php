@@ -19,7 +19,6 @@ class Version124 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE dd_user ADD job_title VARCHAR(150) DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_user ADD pa_team_name VARCHAR(50) DEFAULT NULL');
     }
 
     /**
@@ -31,6 +30,5 @@ class Version124 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE dd_user DROP job_title');
-        $this->addSql('ALTER TABLE dd_user DROP pa_team_name');
     }
 }
