@@ -37,7 +37,7 @@ class Team
      *
      * @JMS\Groups({"team"})
      * @JMS\Type("string")
-     * @ORM\Column(name="team_name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="team_name", type="string", length=50, nullable=true)
      */
     private $teamName;
 
