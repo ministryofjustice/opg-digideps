@@ -52,7 +52,7 @@
                         <span class="status status-label admin">Administrator</span><br>
                     {% endif %}
                     Named deputy<br>
-                    South Team
+                    {{ user.paTeamName }} Team
                     <span class="visuallyhidden">
                         active: {{ user.active ?'yes':'no' }} |
                     </span>
@@ -68,11 +68,8 @@
                     </p>
                 </td>
                 <td class="change-answer">
-                    <a class="" href="#">Edit</a>
-                </td>
-                <td>
                     {% if isActiveUser %}
-                        <a href="{{  path('user_edit') }}">Edit</a>
+                        <a class="" href="{{  path('user_edit') }}">Edit</a>
                     {% endif %}
                 </td>
             </tr>

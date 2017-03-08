@@ -41,7 +41,6 @@ user:
   phoneMain:
     notBlank: Enter your main phone number
   paTeamName:
-    notBlank: Enter the Public Authority team name
     maxMessage: The team name can't be longer than {{ limit }} letters
 client:
     firstname:

@@ -268,7 +268,12 @@ class UserController extends AbstractController
             $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
             $request->getSession()->getFlashBag()->add('notice', 'Your details edited');
 
-            return $this->redirect($this->generateUrl('user_show'));
+            $redirectRoute = 'user_show';
+            if ($user->getRoleName() == EntityDir\User::ROLE_PA) {
+                $redirectRoute = 'pa_team';
+            }
+
+            return $this->redirect($this->generateUrl($redirectRoute));
         }
 
         $client = !empty($user->getClients()) ? $user->getClients()[0] : null;
