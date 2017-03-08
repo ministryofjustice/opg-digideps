@@ -39,7 +39,7 @@ user:
     notBlank: Enter your job title
     maxMessage: The job title can't be longer than {{ limit }} letters
   phoneMain:
-    notBlank: Enter your main phone number
+    notBlank: Enter your phone number
   paTeamName:
     maxMessage: The team name can't be longer than {{ limit }} letters
 client:
