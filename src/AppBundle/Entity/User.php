@@ -130,7 +130,7 @@ class User implements UserInterface
      *             see roles in Role class
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "role"})
+     * @JMS\Groups({"user"})
      *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
@@ -243,6 +243,15 @@ class User implements UserInterface
      * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
      */
     private $adManaged;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user"})
+     * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
+     *
+     * @var string
+     */
+    private $jobTitle;
 
     /**
      * Constructor.
@@ -927,6 +936,26 @@ class User implements UserInterface
     {
         $this->adManaged = $adManaged;
     }
+
+    /**
+     * @return string
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * @param string $jobTitle
+     * @return User
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere

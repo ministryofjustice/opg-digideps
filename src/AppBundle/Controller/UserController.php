@@ -343,11 +343,11 @@ class UserController extends RestController
             'address_country' => 'setAddressCountry',
             'phone_alternative' => 'setPhoneAlternative',
             'phone_main' => 'setPhoneMain',
+            'odr_enabled' => 'setOdrEnabled',
+            'ad_managed' => 'setAdManaged',
+            'role_name' => 'setRoleName',
+            'job_title' => 'setJobTitle',
         ]);
-
-        if (array_key_exists('role_name', $data)) {
-            $user->setRoleName($data['role_name']);
-        }
 
         if (array_key_exists('last_logged_in', $data)) {
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
@@ -359,14 +359,6 @@ class UserController extends RestController
 
         if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new \DateTime($data['token_date']));
-        }
-
-        if (array_key_exists('odr_enabled', $data)) {
-            $user->setOdrEnabled($data['odr_enabled']);
-        }
-
-        if (array_key_exists('ad_managed', $data)) {
-            $user->setAdManaged($data['ad_managed']);
         }
     }
 }
