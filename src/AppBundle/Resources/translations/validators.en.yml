@@ -35,8 +35,14 @@ user:
     maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
+  jobTitle:
+    notBlank: Enter your job title
+    maxMessage: The job title can't be longer than {{ limit }} letters
   phoneMain:
     notBlank: Enter your main phone number
+  paTeamName:
+    notBlank: Enter the Public Authority team name
+    maxMessage: The team name can't be longer than {{ limit }} letters
 client:
     firstname:
         notBlank: Enter the client's first name

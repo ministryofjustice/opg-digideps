@@ -44,6 +44,7 @@
 
         <tbody>
         {% for user in teamMembers %}
+            {% set isActiveUser = (user.id == app.user.id)  %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong><br>
@@ -68,6 +69,11 @@
                 </td>
                 <td class="change-answer">
                     <a class="" href="#">Edit</a>
+                </td>
+                <td>
+                    {% if isActiveUser %}
+                        <a href="{{  path('user_edit') }}">Edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

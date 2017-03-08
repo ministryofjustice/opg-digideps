@@ -167,7 +167,7 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $user = $this->getUserWithData(['user', 'role', 'client']);
+        $user = $this->getUserWithData(['user', 'client']);
         $clients = $user->getClients();
         $client = $clients[0];
 

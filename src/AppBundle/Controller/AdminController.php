@@ -117,7 +117,7 @@ class AdminController extends AbstractController
 
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'role', 'client', 'report', 'odr']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -243,7 +243,7 @@ class AdminController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'role', 'client', 'report']);
+        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'report']);
 
         $this->getRestClient()->delete('user/' . $id);
 
