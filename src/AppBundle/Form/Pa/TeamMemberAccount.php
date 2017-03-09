@@ -9,19 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TeamMemberAccount extends AbstractType
 {
-    /**
-     * @var array
-     */
-    private $options;
-
-    /**
-     * @param array $options
-     */
-    public function __construct(array $options)
-    {
-        $this->options = $options;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', 'text')
@@ -34,11 +21,10 @@ class TeamMemberAccount extends AbstractType
             ->add('email', 'text', [
                 'required' => true,
             ])
-            ->add('grantAdminAccess', 'choice', [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+            ->add('roleName', 'choice', [
+                'choices' => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,
                 'required' => true,
-                'mapped' => false,
             ])
             ->add('save', 'submit');
     }
@@ -47,7 +33,7 @@ class TeamMemberAccount extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups' => ['user_details_pa_minimum'],
+            'validation_groups' => ['pa_team_add'],
             'data_class' => User::class,
         ]);
     }

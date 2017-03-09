@@ -1,5 +1,9 @@
-htmlTitle: "Deputy report - add user account | GOV.UK"
-h1Title: Add user account
+addPage:
+  htmlTitle: "Deputy report - add user account | GOV.UK"
+  h1Title: Add user account
+editPage:
+  htmlTitle: "Deputy report - edit user account | GOV.UK"
+  h1Title: Edit user account
 view:
     pageTitle: My details
 form:
@@ -9,8 +13,8 @@ form:
     label: Last name
   email:
     label: Email
-  controls:
-    cancel:
-      label: "Cancel"
-    save:
-      label: "Save"
+  roleName:
+    label: Grant user administrator access
+    hint: Administrator access will allow the new user to add and remove other users of the service
+  save:
+    label: "Save"

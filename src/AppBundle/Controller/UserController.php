@@ -49,7 +49,7 @@ class UserController extends AbstractController
 
         // PA must agree to terms before activating the account
         // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if ($isActivatePage && $user->getRoleName() == EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
+        if ($isActivatePage && $user->getRoleName() == EntityDir\User::ROLE_PA && !$user->getAgreeTermsUse()) {
             return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
         }
 
