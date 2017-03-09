@@ -19,9 +19,6 @@ class PaController extends AbstractController
     public function indexAction(Request $request)
     {
         $user = $this->getUser();
-        if ($user->getRoleName() == EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
-            throw new \RuntimeException('The PA user didn not agree with terms and conditions');
-        }
 
         $currentFilters = [
             'q'                 => $request->get('q'),

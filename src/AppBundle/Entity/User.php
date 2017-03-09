@@ -764,7 +764,7 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function isAgreeTermsUse()
+    public function getAgreeTermsUse()
     {
         return $this->agreeTermsUse;
     }

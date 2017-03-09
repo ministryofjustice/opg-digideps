@@ -27,6 +27,7 @@ class UserController extends AbstractController
     public function activateUserAction(Request $request, $action, $token)
     {
         $translator = $this->get('translator');
+        $isActivatePage = 'activate' === $action;
 
         // check $token is correct
         try {
@@ -37,7 +38,7 @@ class UserController extends AbstractController
         }
 
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            if ('activate' == $action) {
+            if ($isActivatePage) {
                 return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
                     'token'            => $token,
                     'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
@@ -51,7 +52,7 @@ class UserController extends AbstractController
         }
 
         // define form and template that differs depending on the action (activate or password-reset)
-        if ('activate' == $action) {
+        if ($isActivatePage) {
             $formType = new FormDir\SetPasswordType([
                 'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate'),
             ]);
@@ -65,7 +66,7 @@ class UserController extends AbstractController
 
         // PA must agree to terms before activating the account
         // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if ('activate' == $action && $user->getRoleName()==EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
+        if ($isActivatePage && $user->getRoleName()==EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
             return $this->redirectToRoute('user_agree_terms_use', ['token'=>$token]);
         }
 
@@ -75,7 +76,6 @@ class UserController extends AbstractController
         if ($form->isValid()) {
 
             // login user into API
-            //TODO try move at the beginning
             $this->get('deputy_provider')->login(['token' => $token]);
 
             // set password for user
@@ -91,10 +91,10 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-            if ($action == 'password-reset') {
-                $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
-            } else {
+            if ($isActivatePage) {
                 $redirectUrl = $this->generateUrl('user_details');
+            } else {
+                $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
             }
 
             return $this->redirect($redirectUrl);
