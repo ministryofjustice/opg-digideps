@@ -93,19 +93,17 @@
 
             a {
                 padding: .75em 3em .75em 0;
+
+                &:before {
+                    background: transparent url("/images/arrow-sprite.png") no-repeat -102px -11px;
+                    margin: -4px -32px 0 0;
+                    display: block;
+                    float: right;
+                    width: 30px;
+                    height: 38px;
+                    content: " ";
+                }
             }
-
-
-            a::before {
-                background: transparent url("/images/arrow-sprite.png") no-repeat -102px -11px;
-                margin: -4px -32px 0 0;
-                display: block;
-                float: right;
-                width: 30px;
-                height: 38px;
-                content: " ";
-            }
-
         }
 
         &.previous {
@@ -114,20 +112,18 @@
 
             a {
                 padding: .75em 0 .75em 3em;
-            }
 
-            a::before {
-                background: transparent url("/images/arrow-sprite.png") no-repeat -20px -11px;
-                margin: -4px 0 0 -32px;
-                display: block;
-                float: left;
-                width: 30px;
-                height: 38px;
-                content: " ";
+                &:before {
+                    background: transparent url("/images/arrow-sprite.png") no-repeat -20px -11px;
+                    margin: -4px 0 0 -32px;
+                    display: block;
+                    float: left;
+                    width: 30px;
+                    height: 38px;
+                    content: " ";
+                }
             }
-
         }
-
     }
 
     .first,
