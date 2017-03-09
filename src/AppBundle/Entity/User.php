@@ -787,11 +787,16 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
+    public function isDeputyPa()
+    {
+        return in_array($this->roleName, [self::ROLE_PA, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+    }
+
     /**
      * @return bool true if user role is LAY or PA
      */
     public function isDeputy()
     {
-        return in_array($this->roleName, [self::ROLE_LAY_DEPUTY, self::ROLE_PA]);
+        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyPa();
     }
 }

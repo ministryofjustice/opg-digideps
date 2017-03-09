@@ -154,10 +154,12 @@ class UserController extends AbstractController
             $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
             return $this->redirect($this->generateUrl([
-                EntityDir\User::ROLE_ADMIN      => 'admin_homepage',
-                EntityDir\User::ROLE_AD         => 'ad_homepage',
-                EntityDir\User::ROLE_PA         => 'pa_dashboard',
-                EntityDir\User::ROLE_LAY_DEPUTY => 'client_add',
+                EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
+                EntityDir\User::ROLE_AD             => 'ad_homepage',
+                EntityDir\User::ROLE_PA             => 'pa_dashboard',
+                EntityDir\User::ROLE_PA_ADMIN       => 'pa_dashboard',
+                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'pa_dashboard',
+                EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
             ][$user->getRoleName()]));
         }
 
@@ -419,6 +421,8 @@ class UserController extends AbstractController
                 return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
 
             case EntityDir\User::ROLE_PA:
+            case EntityDir\User::ROLE_PA_ADMIN:
+            case EntityDir\User::ROLE_PA_TEAM_MEMBER:
                 return [new FormDir\User\UserDetailsPaType(), ['user_details_pa']];
         }
     }
