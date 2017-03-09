@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Pa;
 
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -36,7 +37,8 @@ class TeamMemberAccount extends AbstractType
             ->add('grantAdminAccess', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'required' => true
+                'required' => true,
+                'mapped' => false,
             ])
             ->add('save', 'submit');
     }
@@ -46,6 +48,7 @@ class TeamMemberAccount extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
             'validation_groups' => ['user_details_pa'],
+            'data_class' => User::class,
         ]);
     }
 
