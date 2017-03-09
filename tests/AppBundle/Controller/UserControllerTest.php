@@ -140,6 +140,8 @@ class UserControllerTest extends AbstractTestController
 
     public function testUpdatePa()
     {
+        $this->markTestSkipped('pa team name disabled');
+
         $deputyId = self::$deputy1->getId();
         $url = '/user/' . $deputyId;
 
