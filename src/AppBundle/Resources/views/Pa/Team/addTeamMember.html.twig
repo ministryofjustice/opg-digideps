@@ -5,8 +5,8 @@
 {% set translationDomain = "pa-team" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'htmlTitle.add-account' | trans({}, 'user-account') }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title.add-account' | trans({}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title' | trans({}, 'pa-team') }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('user-add') }}
