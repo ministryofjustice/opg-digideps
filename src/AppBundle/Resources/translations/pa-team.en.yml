@@ -1,0 +1,16 @@
+pageTitle: "Deputy report - enter your details | GOV.UK"
+h1Title: Enter your details
+view:
+    pageTitle: My details
+form:
+  firstname:
+    label: First name
+  lastname:
+    label: Last name
+  email:
+    label: Email
+  controls:
+    cancel:
+      label: "Cancel"
+    save:
+      label: "Save"

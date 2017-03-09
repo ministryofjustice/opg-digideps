@@ -15,12 +15,12 @@ use AppBundle\Form as FormDir;
 class TeamController extends AbstractController
 {
     /**
-     * @Route("/add-user", name="pa_team_user")
-     * @Template
+     * @Route("/add-team-member", name="add_team_member")
+     * @Template()
      */
-    public function addUserAction(Request $request)
+    public function addTeamMemberAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\User\UserDetailsPaType());
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount([]));
 
         $form->handleRequest($request);
 
@@ -28,7 +28,7 @@ class TeamController extends AbstractController
             $formData = $form->getData();
 
             $this->getRestClient()->post('user/add', $formData);
-            $request->getSession()->getFlashBag()->add('notice', 'User has been added');
+            $request->getSession()->getFlashBag()->add('notice', 'Team member has been added');
 
             $redirectRoute = 'pa_team';
 
