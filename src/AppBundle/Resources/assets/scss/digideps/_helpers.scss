@@ -74,6 +74,14 @@
 .text--center   { text-align: center !important; }
 .text--right    { text-align: right  !important; }
 
+// Percentage widths
+.width-half     { width: $half; }
+.width-third    { width: $one-third; }
+.width-quarter  { width: $one-quarter; }
+.width-fifth    { width: $full-width / 5; }
+.width-sixth    { width: $full-width / 6; }
+.width-eighth   { width: $full-width / 8; }
+
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
 
 #content .visuallyhidden {

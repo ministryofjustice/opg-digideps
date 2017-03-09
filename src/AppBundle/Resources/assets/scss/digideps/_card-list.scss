@@ -11,11 +11,6 @@
     color: $white;
     width: 100%;
 
-    .card-title {
-        @include core-19();
-        margin-bottom: 30px;
-    }
-
     .card-body {
         display: inline-block;
 
@@ -44,32 +39,6 @@
             float: left;
         }
 
-    }
-
-    .add-link {
-        @include inline-block();
-        @include core-36();
-        height: 30px;
-        width: 30px;
-        border-radius: 15px;
-        border: 1px solid $white;
-        color: $white;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    &.add {
-        display: block;
-        background: $grey-3 url("/images/roundplus.png") center 25px no-repeat;
-        background-size: 61px 61px;
-        padding: 110px 0 30px 0;
-        text-align: center;
-        color: $black;
-        text-decoration: none;
-
-        @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-            background-image: url("/images/roundplus_2x.png");
-        }
     }
 
     &.disabled {
