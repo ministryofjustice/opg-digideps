@@ -24,9 +24,15 @@ class TeamMemberAccount extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', 'text')
-            ->add('firstname', 'text')
-            ->add('lastname', 'text')
-            ->add('email', 'text')
+            ->add('firstname', 'text', [
+                'required' => true,
+            ])
+            ->add('lastname', 'text', [
+                'required' => true,
+            ])
+            ->add('email', 'text', [
+                'required' => true,
+            ])
             ->add('grantAdminAccess', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
@@ -39,7 +45,7 @@ class TeamMemberAccount extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups' => ['pa_add_team_member_account'],
+            'validation_groups' => ['user_details_pa'],
         ]);
     }
 
