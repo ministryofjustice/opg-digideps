@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Team as Entity;
+use AppBundle\Entity\Team;
 use Doctrine\Common\Collections\ArrayCollection;
 use Tests\AppBundle\Entity\Abstracts\EntityTester;
 
@@ -11,21 +12,17 @@ use Tests\AppBundle\Entity\Abstracts\EntityTester;
  */
 class TeamTest extends EntityTester
 {
-
     /**
-     * Define the entity to test
-     *
-     * @var string
+     * Override as ctor args are needed  
      */
-    protected $entityClass = Entity::class;
-
-    public function testGetSetTeamName()
+    public function setUp()
     {
-        $data = 'foo';
+        $this->entity = new Team('t1');
+    }
 
-        $this->entity->setTeamName($data);
-
-        $this->assertEquals($data, $this->entity->getTeamName());
+    public function testGetTeamName()
+    {
+        $this->assertEquals('t1', $this->entity->getTeamName());
     }
 
     public function testAddRemoveMembers()
