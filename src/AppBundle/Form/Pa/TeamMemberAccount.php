@@ -14,7 +14,7 @@ class TeamMemberAccount extends AbstractType
     private $options;
 
     /**
-     * @param array $options keys: array roleChoices, array roleNameEmptyValue
+     * @param array $options
      */
     public function __construct(array $options)
     {
@@ -27,7 +27,11 @@ class TeamMemberAccount extends AbstractType
             ->add('firstname', 'text')
             ->add('lastname', 'text')
             ->add('email', 'text')
-            ->add('grantAdminAccess', 'checkbox')
+            ->add('grantAdminAccess', 'choice', [
+                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'expanded' => true,
+                'required' => true
+            ])
             ->add('save', 'submit');
     }
 
