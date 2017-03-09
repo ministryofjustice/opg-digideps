@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "user-terms-use" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%userFirstname%': user.firstname}  %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="heading-medium">
+        {{ 'page.pageSectionDescription' | trans(transOptions) }}
+    </p>
+
+    <div class="text">
+        <p>{{ 'page.descriptionPara01' | trans(transOptions) }}</p>
+        <p>{{ 'page.descriptionPara02' | trans(transOptions) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
+
+    {{ form_checkbox(form.agreeTermsUse, 'form.agreeTermsUse', { 'labelClass': 'required' }) }}
+
+    <div class="form-group">
+        {{ form_submit(form.save, 'form.save') }}
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

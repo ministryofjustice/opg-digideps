@@ -18,6 +18,8 @@ class PaController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+        $user = $this->getUser();
+
         $currentFilters = [
             'q'                 => $request->get('q'),
             'status'            => $request->get('status'),
