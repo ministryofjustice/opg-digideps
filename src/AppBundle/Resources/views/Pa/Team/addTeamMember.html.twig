@@ -15,17 +15,17 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.firstname,'firstname') }}
+    {{ form_input(form.firstname,'form.firstname') }}
 
-    {{ form_input(form.lastname,'lastname') }}
+    {{ form_input(form.lastname,'form.lastname') }}
 
-    {{ form_input(form.email,'email') }}
+    {{ form_input(form.email,'form.email') }}
 
-    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save,'form.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
-    linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+    linkButtonLabel: 'form.controls.cancel.label',
     linkClass: 'button-link',
     linkHref: path('user_show')
     } %}
