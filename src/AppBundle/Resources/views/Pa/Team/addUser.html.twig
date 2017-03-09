@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "user-details" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle.add-account' | trans({}, 'user-account') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.add-account' | trans({}, 'user-account') }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('user-add') }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% include 'AppBundle:User:_form_fields.html.twig' %}
+
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+    linkClass: 'button-link',
+    linkHref: path('user_show')
+    } %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
