@@ -41,12 +41,10 @@
     }
 }
 
-.icon-info {
-    @include icon(icon-info, 22, 22, 'icons');
-    background-size: contain;
-
+.icon-information {
+    @include icon(icon-information, 22, 22, 'icons');
     @include media(mobile) {
-        @include icon(icon-info, 16, 16);
+        @include icon(icon-information, 16, 16);
         margin-right: 6px;
         background-size: contain;
     }
