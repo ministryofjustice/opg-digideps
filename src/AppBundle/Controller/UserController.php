@@ -320,6 +320,29 @@ class UserController extends RestController
     }
 
     /**
+     * @Route("/agree-terms-use/{token}")
+     * @Method({"PUT"})
+     */
+    public function agreeTermsUSe(Request $request, $token)
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+
+        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user EntityDir\User */
+
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
+        }
+
+        $user->setAgreeTermsUse(true);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush($user);
+
+        return $user;
+    }
+
+    /**
      * call setters on User when $data contains values.
      *
      * @param User  $user
@@ -362,10 +385,6 @@ class UserController extends RestController
                 $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
             }
             $this->getEntityManager()->flush($team);
-        }
-
-        if (!empty($data['agree_terms_use'])) {
-            $user->setAgreeTermsUse($data['agree_terms_use']);
         }
 
         if (!empty($data['registration_token'])) {
