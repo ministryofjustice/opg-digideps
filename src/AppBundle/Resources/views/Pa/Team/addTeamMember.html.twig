@@ -1,0 +1,35 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "pa-team" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title' | trans({}, 'pa-team') }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('user-add') }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.firstname,'form.firstname') }}
+
+    {{ form_input(form.lastname,'form.lastname') }}
+
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_submit(form.save,'form.controls.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.controls.cancel.label',
+    linkClass: 'button-link',
+    linkHref: path('user_show')
+    } %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

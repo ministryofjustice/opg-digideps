@@ -1,0 +1,16 @@
+htmlTitle: "Deputy report - add user account | GOV.UK"
+h1Title: Add user account
+view:
+    pageTitle: My details
+form:
+  firstname:
+    label: First name
+  lastname:
+    label: Last name
+  email:
+    label: Email
+  controls:
+    cancel:
+      label: "Cancel"
+    save:
+      label: "Save"
