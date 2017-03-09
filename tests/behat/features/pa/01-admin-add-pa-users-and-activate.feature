@@ -19,10 +19,14 @@ Feature: Add PA users and activate PA user (journey)
 
   Scenario: PA user registration steps
     Given emails are sent from "admin" area
+    And I go to "/logout"
     When I open the "/user/activate/" link from the email
     # password step
-    And I activate the user with password "Abcd1234"
+    And I fill in the following:
+      | set_password_password_first | Abcd1234 |
+      | set_password_password_first | Abcd1234 |
     When I click on "save"
+    Then the form should be valid
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | DEP1     |
@@ -36,10 +40,10 @@ Feature: Add PA users and activate PA user (journey)
       | user_details_paTeamName |  |
     And I press "user_details_save"
     Then the following fields should have an error:
-      | user_details_firstname  |
-      | user_details_lastname   |
-      | user_details_jobTitle   |
-      | user_details_phoneMain  |
+      | user_details_firstname |
+      | user_details_lastname  |
+      | user_details_jobTitle  |
+      | user_details_phoneMain |
     # correct
     When I fill in the following:
       | user_details_firstname  | Pubo           |
