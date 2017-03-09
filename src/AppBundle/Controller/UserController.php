@@ -22,7 +22,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
 
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
