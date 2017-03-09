@@ -42,6 +42,8 @@ user:
     notBlank: Enter your main phone number
   paTeamName:
     maxMessage: The team name can't be longer than {{ limit }} letters
+  agreeTermsUse:
+    notBlank: You must agree to this statement to continue
 client:
     firstname:
         notBlank: Enter the client's first name

@@ -23,13 +23,9 @@ security:
             pattern:  ^/password-managing*
             security: false   
             
-        passwordReset:
-            pattern:  ^/user/password-reset/*
+        userManaging:
+            pattern:  ^/user/(password-reset|activate|agree-terms-use)/*
             security: false 
-            
-        userActivate:
-            pattern:  ^/user/activate*
-            security: false
         
         behatControllers:
             pattern:  ^/behat
