@@ -27,7 +27,7 @@ class AbstractController extends Controller
     /**
      * @param array $jmsGroups
      *
-     * @return User|null
+     * @return User
      */
     protected function getUserWithData(array $jmsGroups)
     {

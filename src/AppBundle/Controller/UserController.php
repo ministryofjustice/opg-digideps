@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class UserController extends AbstractController
 {
@@ -86,23 +85,16 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-            //$request = $this->get("request");
-            //$event = new InteractiveLoginEvent($request, $clientToken);
-            //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-
-            // after password reset
-            if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
+            if ($action == 'password-reset') {
                 $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
-            } else { // activate:  o to 2nd step
+            } elseif ($user->getRoleName() == EntityDir\User::ROLE_PA) {
+                $redirectUrl = $this->generateUrl('user_agree_terms_use');
+            } else {
                 $redirectUrl = $this->generateUrl('user_details');
             }
 
-            // the following should not be triggered
             return $this->redirect($redirectUrl);
         }
-
-//             $email = $this->getMailFactory()->createChangePasswordEmail($user);
-//            $this->getMailSender()->send($email, ['html']);
 
         return $this->render($template, [
             'token' => $token,
@@ -143,7 +135,6 @@ class UserController extends AbstractController
         ];
     }
 
-
     /**
      * Page to edit user details.
      * For :
@@ -158,6 +149,9 @@ class UserController extends AbstractController
     public function detailsAction(Request $request)
     {
         $user = $this->getUserWithData(['user']);
+        if ($user->getRoleName() == EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
+            throw new \RuntimeException('The PA user didn not agree with terms and conditions');
+        }
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -358,7 +352,7 @@ class UserController extends AbstractController
                     'email'    => $email,
                 ]);
             } catch (\Exception $e) {
-                switch ((int)$e->getCode()) {
+                switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
@@ -393,6 +387,27 @@ class UserController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/user/agree-terms-use", name="user_agree_terms_use")
+     * @Template()
+     */
+    public function agreeTermsUseAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(new FormDir\User\AgreeTermsType(), $user);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), ['agree_terms_use']);
+
+            return $this->redirect($this->generateUrl('user_details'));
+        }
+
+        return [
+            'user'   => $user,
+            'form'   => $form->createView(),
+        ];
+    }
 
     /**
      * @param EntityDir\User $user
