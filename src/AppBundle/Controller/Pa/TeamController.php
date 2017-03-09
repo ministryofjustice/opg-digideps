@@ -20,18 +20,7 @@ class TeamController extends AbstractController
      */
     public function listAction(Request $request)
     {
-        $teamMembers = [
-            $this->getUser()
-        ];
-
-        $i = 50; while ($i--) {
-        $user = new EntityDir\User();
-        $user->setFirstname('John'.$i);
-        $user->setLastname('Red'.$i);
-        $user->setRoleName('ROLE_PA_UNNAMED');
-        $user->setEmail('jr'.$i.'@example.org');
-        $teamMembers[] = $user;
-    }
+        $teamMembers = $this->getRestClient()->get('team/members', 'User[]');
 
         return [
             'teamMembers' => $teamMembers
