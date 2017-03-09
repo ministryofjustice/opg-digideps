@@ -63,6 +63,12 @@ class UserController extends AbstractController
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
 
+        // PA must agree to terms before activating the account
+        // this check happens before activating the account, therefore no need to set an ACL on all the actions
+        if ('activate' == $action && $user->getRoleName()==EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
+            return $this->redirectToRoute('user_agree_terms_use', ['token'=>$token]);
+        }
+
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
@@ -87,8 +93,6 @@ class UserController extends AbstractController
 
             if ($action == 'password-reset') {
                 $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
-            } elseif ($user->getRoleName() == EntityDir\User::ROLE_PA) {
-                $redirectUrl = $this->generateUrl('user_agree_terms_use');
             } else {
                 $redirectUrl = $this->generateUrl('user_details');
             }
@@ -388,19 +392,18 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/agree-terms-use", name="user_agree_terms_use")
+     * @Route("/user/agree-terms-use/{token}", name="user_agree_terms_use")
      * @Template()
      */
-    public function agreeTermsUseAction(Request $request)
+    public function agreeTermsUseAction(Request $request, $token)
     {
-        $user = $this->getUser();
+        $user = $this->getRestClient()->loadUserByToken($token);
 
         $form = $this->createForm(new FormDir\User\AgreeTermsType(), $user);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), ['agree_terms_use']);
-
-            return $this->redirect($this->generateUrl('user_details'));
+            $this->getRestClient()->agreeTermsUse($token);
+            return $this->redirectToRoute('user_activate', ['token'=>$token, 'action'=>'activate']);
         }
 
         return [

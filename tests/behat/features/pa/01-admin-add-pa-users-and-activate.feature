@@ -21,21 +21,18 @@ Feature: Add PA users and activate PA user (journey)
     Given emails are sent from "admin" area
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
-    # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    When I click on "save"
-    Then the form should be valid
-    # check URLs not accessible before agreing
-    And the URL "/user/details" should not be accessible
-    And the URL "/pa" should not be accessible
     # terms
     When I press "agree_terms_save"
     Then the following fields should have an error:
       | agree_terms_agreeTermsUse |
     When I check "agree_terms_agreeTermsUse"
     And I press "agree_terms_save"
+    Then the form should be valid
+    # password step
+    When I fill in the following:
+      | set_password_password_first  | Abcd1234 |
+      | set_password_password_second | Abcd1234 |
+    When I click on "save"
     Then the form should be valid
     # assert pre-fill
     Then the following fields should have the corresponding values:
