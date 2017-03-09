@@ -5,8 +5,8 @@
 {% set translationDomain = "pa-team" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title' | trans({}, 'pa-team') }}{% endblock %}
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
 
 {% block linkBack %}
     <a href="{{ path('pa_team') }}" class="link-back behat-link-back">Back</a>
@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block pageContent %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.firstname,'form.firstname') }}

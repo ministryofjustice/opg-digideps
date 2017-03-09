@@ -29,10 +29,10 @@ class TeamController extends AbstractController
 
 
     /**
-     * @Route("/add-team-member", name="add_team_member")
+     * @Route("/add", name="add_team_member")
      * @Template()
      */
-    public function addTeamMemberAction(Request $request)
+    public function addAction(Request $request)
     {
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount());
 
@@ -45,6 +45,30 @@ class TeamController extends AbstractController
             // activation link
             $activationEmail = $this->getMailFactory()->createActivationEmail($user);
             $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+            return $this->redirectToRoute('pa_team');
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit_team_member")
+     * @Template()
+     */
+    public function editAction(Request $request, $id)
+    {
+        $user = $this->getRestClient()->get('team/member/'.$id, 'User');
+
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(), $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $user = $form->getData();
+            $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
 
             return $this->redirectToRoute('pa_team');
         }

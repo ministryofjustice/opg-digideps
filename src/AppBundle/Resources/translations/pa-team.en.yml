@@ -1,5 +1,9 @@
-htmlTitle: "Deputy report - add user account | GOV.UK"
-h1Title: Add user account
+addPage:
+  htmlTitle: "Deputy report - add user account | GOV.UK"
+  h1Title: Add user account
+editPage:
+  htmlTitle: "Deputy report - edit user account | GOV.UK"
+  h1Title: Edit user account
 view:
     pageTitle: My details
 form:
