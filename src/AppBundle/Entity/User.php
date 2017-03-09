@@ -242,6 +242,9 @@ class User implements AdvancedUserInterface
     private $jobTitle;
 
     /**
+     * PA Team name
+     * note: stored as Team entiy in the API. Consider doing the same in the client if Team acquires new fields
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_pa"})
      * @Assert\Length(max=50, maxMessage="user.paTeamName.maxMessage", groups={"user_details_pa"} )
@@ -249,6 +252,15 @@ class User implements AdvancedUserInterface
      * @var string
      */
     private $paTeamName;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"agree_terms_use"})
+     *
+     * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
+     */
+    private $agreeTermsUse;
 
     /**
      * @return int $id
@@ -720,7 +732,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param string $jobTitle
+     * @param  string $jobTitle
      * @return User
      */
     public function setJobTitle($jobTitle)
@@ -739,12 +751,31 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param string $paTeamName
+     * @param  string $paTeamName
      * @return User
      */
     public function setPaTeamName($paTeamName)
     {
         $this->paTeamName = $paTeamName;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAgreeTermsUse()
+    {
+        return $this->agreeTermsUse;
+    }
+
+    /**
+     * @param  bool $agreeTermsUse
+     * @return User
+     */
+    public function setAgreeTermsUse($agreeTermsUse)
+    {
+        $this->agreeTermsUse = $agreeTermsUse;
 
         return $this;
     }
