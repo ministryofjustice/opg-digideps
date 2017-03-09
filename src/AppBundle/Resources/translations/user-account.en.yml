@@ -1,7 +1,8 @@
 h1Title:
     client-edit: "Account: %client%'s details"
     deputy-edit: "Account: Your details"
-    change-password: "Account: Change password"    
+    change-password: "Account: Change password"
+    add-account: "Add a user account"
 htmlTitle:
     client-edit: "Deputy report - %client%'s details | GOV.UK"
     deputy-edit: "Deputy report - your details | GOV.UK"
