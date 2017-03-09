@@ -228,14 +228,14 @@ class RestClient
      *
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $jmsGroups = [])
+    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array')
     {
         $options = [];
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('post', $endpoint, $mixed, 'array', $options);
+        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
     /**

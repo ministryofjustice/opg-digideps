@@ -20,19 +20,19 @@ class TeamController extends AbstractController
      */
     public function addTeamMemberAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount([]));
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount());
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $formData = $form->getData();
+            $user = $form->getData();
+            $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
 
-            $this->getRestClient()->post('user/add', $formData);
-            $request->getSession()->getFlashBag()->add('notice', 'Team member has been added');
+            // activation link
+            $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+            $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-            $redirectRoute = 'pa_team';
-
-            return $this->redirect($this->generateUrl($redirectRoute));
+            return $this->redirectToRoute('pa_team');
         }
 
         return [

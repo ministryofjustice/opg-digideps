@@ -80,8 +80,7 @@ class AdminController extends AbstractController
                     if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
                         throw new \RuntimeException('Cannot add admin from non-admin user');
                     }
-                    $response = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user']);
-                    $user = $this->getRestClient()->get('user/' . $response['id'], 'User');
+                    $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
 
                     $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                     $this->getMailSender()->send($activationEmail, ['text', 'html']);

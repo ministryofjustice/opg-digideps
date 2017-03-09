@@ -9,8 +9,8 @@ form:
     label: Last name
   email:
     label: Email
-  controls:
-    cancel:
-      label: "Cancel"
-    save:
-      label: "Save"
+  roleName:
+    label: Grant user administrator access
+    hint: Administrator access will allow the new user to add and remove other users of the service
+  save:
+    label: "Save"
