@@ -37,40 +37,34 @@ class UserController extends AbstractController
             throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
 
+        // token expired
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            if ($isActivatePage) {
-                return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
-                    'token'            => $token,
-                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                ]);
-            } else { // password-reset
-                return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
-                    'token'            => $token,
-                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                ]);
-            }
-        }
+            $template = $isActivatePage ? 'AppBundle:User:activateTokenExpired.html.twig' : 'AppBundle:User:passwordResetTokenExpired.html.twig';
 
-        // define form and template that differs depending on the action (activate or password-reset)
-        if ($isActivatePage) {
-            $formType = new FormDir\SetPasswordType([
-                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate'),
+            return $this->render($template, [
+                'token'            => $token,
+                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             ]);
-            $template = 'AppBundle:User:activate.html.twig';
-        } else { // 'password-reset'
-            $formType = new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $this->get('translator')->trans('form.password.validation.passwordMismatch', [], 'password-reset'),
-            ]);
-            $template = 'AppBundle:User:passwordReset.html.twig';
         }
 
         // PA must agree to terms before activating the account
         // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if ($isActivatePage && $user->getRoleName()==EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
-            return $this->redirectToRoute('user_agree_terms_use', ['token'=>$token]);
+        if ($isActivatePage && $user->getRoleName() == EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
+            return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
         }
 
-        $form = $this->createForm($formType, $user);
+        // define form and template that differs depending on the action (activate or password-reset)
+        if ($isActivatePage) {
+            $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
+            $template = 'AppBundle:User:activate.html.twig';
+        } else { // 'password-reset'
+            $passwordMismatchMessage = $translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
+            $template = 'AppBundle:User:passwordReset.html.twig';
+        }
+
+        $form = $this->createForm(new FormDir\SetPasswordType([
+            'passwordMismatchMessage' => $passwordMismatchMessage,
+        ]), $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -84,18 +78,16 @@ class UserController extends AbstractController
                 'set_active'     => true,
             ]));
 
-            // log in user into CLIENT
+            // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
             $this->get('security.context')->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-            if ($isActivatePage) {
-                $redirectUrl = $this->generateUrl('user_details');
-            } else {
-                $redirectUrl = $this->get('redirector_service')->getFirstPageAfterLogin();
-            }
+            $redirectUrl = $isActivatePage
+                ? $this->generateUrl('user_details')
+                : $this->get('redirector_service')->getFirstPageAfterLogin();
 
             return $this->redirect($redirectUrl);
         }
@@ -353,7 +345,7 @@ class UserController extends AbstractController
                     'email'    => $email,
                 ]);
             } catch (\Exception $e) {
-                switch ((int) $e->getCode()) {
+                switch ((int)$e->getCode()) {
                     case 422:
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
@@ -400,12 +392,13 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->getRestClient()->agreeTermsUse($token);
-            return $this->redirectToRoute('user_activate', ['token'=>$token, 'action'=>'activate']);
+
+            return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }
 
         return [
-            'user'   => $user,
-            'form'   => $form->createView(),
+            'user' => $user,
+            'form' => $form->createView(),
         ];
     }
 
