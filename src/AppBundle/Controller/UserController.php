@@ -180,7 +180,7 @@ class UserController extends RestController
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user', 'role'];
+            $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins to access any user, otherwise the user can only see himself
@@ -362,6 +362,10 @@ class UserController extends RestController
                 $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
             }
             $this->getEntityManager()->flush($team);
+        }
+
+        if (!empty($data['agree_terms_use'])) {
+            $user->setAgreeTermsUse($data['agree_terms_use']);
         }
 
         if (!empty($data['registration_token'])) {

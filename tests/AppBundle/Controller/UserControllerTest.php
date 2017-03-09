@@ -152,6 +152,7 @@ class UserControllerTest extends AbstractTestController
                 'AuthToken' => self::$tokenDeputy,
                 'data' => [
                     'pa_team_name' => $teamName,
+                    'agree_terms_use' => true,
                 ],
             ]);
         }
@@ -162,6 +163,8 @@ class UserControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals('pt.new', $data['pa_team_name']);
+        $this->assertEquals(true, $data['agree_terms_use']);
+        $this->assertEquals(date('Y-m-d'), $data['agree_terms_use_date']);
     }
 
     public function testIsPasswordCorrectAuth()
