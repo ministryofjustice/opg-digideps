@@ -3,6 +3,13 @@ startPage:
   pageSectionTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you’ve made on %client%'s behalf."
+  hiddenText01:
+      summary: What is mental capacity?
+      content:
+        para01: |
+          ‘Mental capacity’ means being able to make a specific decision at the time that it needs to be made.
+        para02: |
+          For more information, you should refer to the <a href=" https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf " target="_blank"> Mental Capacity Code of Conduct </a> 
   description2: |
     You don't need to include small, day-to-day decisions like buying food or toiletries.
   whatisdecisionSummary: What counts as a significant decision?
