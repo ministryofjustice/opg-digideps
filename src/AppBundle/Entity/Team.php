@@ -27,6 +27,8 @@ class Team
     private $id;
 
     /**
+     * @JMS\Groups({"user"})
+     *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\User>")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="teams", cascade={"persist"})
      */

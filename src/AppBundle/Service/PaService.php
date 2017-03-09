@@ -115,6 +115,14 @@ class PaService
                 $user->setAddressCountry('GB'); //postcode given means a UK address is given
             }
 
+            // create team (if not already existing)
+            if ($user->getTeams()->isEmpty()) {
+                $team = new EntityDir\Team(null);
+                $user->addTeam($team);
+                $this->em->persist($team);
+                $this->em->flush($team);
+            }
+
             $this->added['users'][] = $email;
             $this->em->persist($user);
             $this->em->flush($user);
