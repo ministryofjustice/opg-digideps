@@ -47,7 +47,7 @@ class TeamMemberAccount extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups' => ['user_details_pa'],
+            'validation_groups' => ['user_details_pa_minimum'],
             'data_class' => User::class,
         ]);
     }
