@@ -24,7 +24,7 @@
         {% if showDay == 'true' %}
             <div class="form-group form-group-day">
                 {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month,  'attr': {'class': 'form-control', 'min': 0, 'max': 31}}) }}
+                {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month,  'attr': {'class': 'form-control js-limit-chars-2', 'min': 0, 'max': 31}}) }}
             </div>
         {% else %}
             {% do element.day.setRendered %}
@@ -32,12 +32,12 @@
 
         <div class="form-group form-group-month">
             {{ form_label(element.month,'Month', {'label_attr': {'for': 'dob-month', 'class': 'visuallyhidden' } }) }}
-            {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'form-control', 'min': 0, 'max': 12}}) }}
+            {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'form-control js-limit-chars-2', 'min': 0, 'max': 12}}) }}
         </div>
 
         <div class="form-group form-group-year">
             {{ form_label(element.year,'Year', {'label_attr': {'for': 'dob-year', 'class': 'visuallyhidden' } }) }}
-            {{ form_widget(element.year, { 'type':'number','attr': {'class': 'form-control', 'min': 0, 'max': 2500}}) }}
+            {{ form_widget(element.year, { 'type':'number','attr': {'class': 'form-control js-limit-chars-4', 'min': 0, 'max': 2500}}) }}
         </div>
     </fieldset>
 </div>
