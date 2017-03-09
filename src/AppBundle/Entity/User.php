@@ -21,6 +21,8 @@ class User implements UserInterface
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
     const ROLE_PA = 'ROLE_PA';
+    const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
+    const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
     /**
      * @var int

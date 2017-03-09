@@ -22,7 +22,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA]);
 
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
@@ -46,9 +46,14 @@ class UserController extends RestController
 
         $user->recreateRegistrationToken();
 
-        $this->persistAndFlush($user);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
 
-        return ['id' => $user->getId()];
+        $groups = $request->query->has('groups') ?
+            $request->query->get('groups') : ['user'];
+        $this->setJmsSerialiserGroups($groups);
+
+        return $user;
     }
 
     /**
@@ -376,23 +381,43 @@ class UserController extends RestController
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }
 
-        if (!empty($data['pa_team_name'])) {
-            if ($user->getTeams()->isEmpty()) {
-                $team = new EntityDir\Team($data['pa_team_name']);
-                $this->getEntityManager()->persist($team);
-                $user->addTeam($team);
-            } else {
-                $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
-            }
-            $this->getEntityManager()->flush($team);
-        }
-
         if (!empty($data['registration_token'])) {
             $user->setRegistrationToken($data['registration_token']);
         }
 
         if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+
+        $roleLoggedUser = $this->getUser()->getRoleName();
+        $isPaCreator = in_array($roleLoggedUser, [EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
+
+        if ($roleLoggedUser === EntityDir\User::ROLE_PA && !empty($data['pa_team_name']) && $user->getTeams()->isEmpty()) {
+            $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
+            $this->getEntityManager()->flush($team);
+        }
+
+        if (!empty($data['role_name'])) {
+            $roleToSet = $data['role_name'];
+
+            // TODO: all this should be moved to a service
+            $isPaMemberBeingCreated = in_array($roleToSet, [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+            if ($isPaMemberBeingCreated) {
+                if (!$isPaCreator) {
+                    throw $this->createAccessDeniedException("$roleLoggedUser now allowed to create $roleToSet user");
+                }
+                // add to creator's team
+                if ($team = $this->getUser()->getTeams()->first()) {
+                    $user->addTeam($team);
+                    $this->getEntityManager()->flush($team);
+                }
+
+                //copy clients
+                foreach($this->getUser()->getClients() as $client) {
+                    $user->addClient($client);
+                }
+            }
+            $user->setRoleName($roleToSet);
         }
     }
 }
