@@ -162,6 +162,7 @@ class UserControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals('pt.new', $data['pa_team_name']);
+
     }
 
     public function testIsPasswordCorrectAuth()
@@ -422,25 +423,20 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
     }
 
-    public function testGetByTokenMissingClientSecre()
+
+    public function testGetByToken()
     {
         $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403,
         ]);
-    }
 
-    public function testGetByTokenWrongClientSecret()
-    {
         $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET',
         ]);
-    }
 
-    public function testGetByToken()
-    {
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->recreateRegistrationToken();
         self::fixtures()->flush($deputy);
@@ -452,5 +448,31 @@ class UserControllerTest extends AbstractTestController
             'ClientSecret' => '123abc-deputy',
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
+    }
+
+    public function testAgreeTermsUSe()
+    {
+        // recreate reg token
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $deputy->recreateRegistrationToken();
+        self::fixtures()->flush($deputy);
+        $url = '/user/agree-terms-use/' . $deputy->getRegistrationToken();
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+        ]);
+        $this->assertJsonRequest('PUT', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'ClientSecret' => 'WRONG-CLIENT_SECRET',
+        ]);
+
+        $data = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-deputy',
+        ])['data'];
+        $this->assertEquals(true, $data['agree_terms_use']);
+        $this->assertEquals(date('Y-m-d'), $data['agree_terms_use_date']);
     }
 }

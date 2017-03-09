@@ -254,6 +254,24 @@ class User implements UserInterface
     private $jobTitle;
 
     /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="agree_terms_use", type="boolean", nullable=true, options = { "default": false })
+     */
+    private $agreeTermsUse;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="agree_terms_use_date", type="datetime", nullable=true)
+     */
+    private $agreeTermsUseDate;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -971,6 +989,32 @@ class User implements UserInterface
 
         return $this->getTeams()->first()->getTeamName();
     }
+
+    /**
+     * @return boolean
+     */
+    public function getAgreeTermsUse()
+    {
+        return $this->agreeTermsUse;
+    }
+
+    /**
+     * @param boolean $agreeTermsUse
+     */
+    public function setAgreeTermsUse($agreeTermsUse)
+    {
+        $this->agreeTermsUse = $agreeTermsUse;
+        $this->agreeTermsUseDate = new \DateTime('now');
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAgreeTermsUseDate()
+    {
+        return $this->agreeTermsUseDate;
+    }
+
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere

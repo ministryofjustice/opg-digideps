@@ -64,6 +64,10 @@ security:
             pattern: ^/user/recreate-token
             security: false
             methods: [PUT]
+        userAgreeTermsUse:
+            pattern: ^/user/agree-terms-use
+            security: false
+            methods: [PUT]
         userGetByToken:
             pattern: ^/user/get-by-token
             security: false

@@ -180,7 +180,7 @@ class UserController extends RestController
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user', 'role'];
+            $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
         // only allow admins to access any user, otherwise the user can only see himself
@@ -315,6 +315,29 @@ class UserController extends RestController
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
+
+        return $user;
+    }
+
+    /**
+     * @Route("/agree-terms-use/{token}")
+     * @Method({"PUT"})
+     */
+    public function agreeTermsUSe(Request $request, $token)
+    {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+
+        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user EntityDir\User */
+
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
+        }
+
+        $user->setAgreeTermsUse(true);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush($user);
 
         return $user;
     }
