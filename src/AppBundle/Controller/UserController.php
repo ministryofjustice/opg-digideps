@@ -153,9 +153,6 @@ class UserController extends AbstractController
     public function detailsAction(Request $request)
     {
         $user = $this->getUserWithData(['user']);
-        if ($user->getRoleName() == EntityDir\User::ROLE_PA && !$user->isAgreeTermsUse()) {
-            throw new \RuntimeException('The PA user didn not agree with terms and conditions');
-        }
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
