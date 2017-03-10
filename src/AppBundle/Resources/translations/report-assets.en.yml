@@ -4,7 +4,7 @@ startPage:
   pageSectionDescription: |
     Use this section to tell us about %client%'s assets.
     They may include property, vehicles, valuables or investments.
-    We also need to know if %client% doesn't own any assets.
+    We also need to know if %client% doesn't have any assets.
   startButton: Start assets
 
 existPage:
