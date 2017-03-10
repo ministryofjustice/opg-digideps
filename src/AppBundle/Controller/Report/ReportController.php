@@ -287,7 +287,7 @@ class ReportController extends RestController
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
 
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
