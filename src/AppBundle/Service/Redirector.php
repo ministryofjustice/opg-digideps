@@ -84,7 +84,7 @@ class Redirector
             return $this->router->generate('admin_homepage');
         } elseif ($this->security->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
-        } elseif ($this->security->isGranted(EntityDir\User::ROLE_PA)) {
+        } elseif ($user->isDeputyPa()) {
             return $this->router->generate('pa_dashboard');
         } elseif ($this->security->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
