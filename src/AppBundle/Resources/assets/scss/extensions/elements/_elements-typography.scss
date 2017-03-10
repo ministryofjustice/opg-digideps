@@ -13,3 +13,9 @@
 .text-secondary {
 	color: $secondary-text-colour;
 }
+
+.text {
+	&.heading-xlarge {
+		max-width: 15em;
+	}
+}
