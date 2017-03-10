@@ -230,7 +230,6 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePageHeaderLink' => $this->generateUrl('client_show'),
         ];
     }
 
