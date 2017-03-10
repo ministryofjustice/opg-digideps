@@ -53,8 +53,8 @@ Feature: Add PA users and activate PA user (journey)
       | user_details_phoneMain |
     # correct
     When I fill in the following:
-      | user_details_firstname  | Pubo           |
-      | user_details_lastname   | Autoritus      |
+      | user_details_firstname  | John Named           |
+      | user_details_lastname   | Green      |
       | user_details_jobTitle   | Solicitor      |
       | user_details_phoneMain  | 46745675674567 |
       | user_details_paTeamName | TEAM1          |
