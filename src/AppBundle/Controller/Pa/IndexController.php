@@ -44,7 +44,6 @@ class IndexController extends AbstractController
                 'notFinished'   => $ret['counts']['notFinished'],
                 'readyToSubmit' => $ret['counts']['readyToSubmit'],
             ],
-            'homePageHeaderLink' => $this->generateUrl('pa_dashboard')
         ];
     }
 
@@ -54,9 +53,7 @@ class IndexController extends AbstractController
      */
     public function settingsAction(Request $request)
     {
-        return [
-            'homePageHeaderLink' => $this->generateUrl('pa_dashboard')
-        ];
+        return [];
     }
 
 
