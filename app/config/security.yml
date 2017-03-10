@@ -60,7 +60,7 @@ security:
         # /admin accessible only from ADMIN, super users and AD users
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
-        - { path: ^/pa, roles: [ROLE_PA] }
+        - { path: ^/pa, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
         # open URLs
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login-ad, roles: IS_AUTHENTICATED_ANONYMOUSLY }
