@@ -226,7 +226,6 @@ class OdrController extends AbstractController
         return [
             'odr' => $odr,
             'odrStatus' => $odrStatus,
-            'homePageHeaderLink' => $this->generateUrl('client_show'),
         ];
     }
 }
