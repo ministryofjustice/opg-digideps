@@ -22,10 +22,6 @@
     {{ form_input(form.phoneMain,'phoneMain') }}
 {% endif %}
 
-{% if form.paTeamName is defined %}
-    {{ form_input(form.paTeamName, 'paTeamName', { 'labelRaw': true }) }}
-{% endif %}
-
 {% if form.phoneAlternative is defined %}
     {{ form_input(form.phoneAlternative,'phoneAlternative') }}
 {% endif %}
