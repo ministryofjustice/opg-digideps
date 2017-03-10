@@ -12,7 +12,7 @@ class UserDetailsPaType extends UserDetailsBasicType
         parent::buildForm($builder, $options);
 
         $builder->add('jobTitle', 'text')
-        ->add('paTeamName', 'text')
+        //->add('paTeamName', 'text')
         ->add('phoneMain', 'text');
     }
 
