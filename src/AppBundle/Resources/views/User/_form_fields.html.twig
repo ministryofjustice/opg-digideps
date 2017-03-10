@@ -9,7 +9,7 @@
 
     {{ form_input(form.address3,'address3') }}
 
-    {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
+    {{ form_input(form.addressPostcode,'addressPostcode', { 'inputClass': 'form-control__postcode' }) }}
 
     {{ form_select(form.addressCountry,'addressCountry') }}
 {% endif %}
@@ -23,7 +23,7 @@
 {% endif %}
 
 {% if form.paTeamName is defined %}
-    {{ form_input(form.paTeamName, 'paTeamName') }}
+    {{ form_input(form.paTeamName, 'paTeamName', { 'labelRaw': true }) }}
 {% endif %}
 
 {% if form.phoneAlternative is defined %}
