@@ -56,15 +56,17 @@ class UserController extends AbstractController
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
             $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
+            $form = $this->createForm(new FormDir\SetPasswordType([
+                'passwordMismatchMessage' => $passwordMismatchMessage,
+            ]), $user);
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
             $passwordMismatchMessage = $translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
+            $form = $this->createForm(new FormDir\ResetPasswordType([
+                'passwordMismatchMessage' => $passwordMismatchMessage,
+            ]), $user);
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
-
-        $form = $this->createForm(new FormDir\SetPasswordType([
-            'passwordMismatchMessage' => $passwordMismatchMessage,
-        ]), $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
