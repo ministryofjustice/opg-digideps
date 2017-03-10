@@ -106,7 +106,7 @@ login:
         notBlank: Enter your password
 contact:
     name:
-        notBlank: Enter the contact's first and last name
+        notBlank: Enter the person's first and last name
         minMessage: The name must be at least {{ limit }} letters long
         maxMessage: The name can't be longer than {{ limit }} letters
     address:
@@ -114,7 +114,7 @@ contact:
     postcode:
         maxMessage: The postcode can't be longer than {{ limit }} letters
     relationship:
-        notBlank: Enter the contact's relationship to the client
+        notBlank: Enter the person's relationship to the client
         minMessage: This description is too short
         maxMessage: The description can't be longer than {{ limit }} letters
     explanation:
@@ -126,7 +126,7 @@ contact:
         notBlank: Enter a reason why you don't have any contacts
     phone:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
-    addAnother.notBlank: Please specify if you want to add another contact
+    addAnother.notBlank: Please specify if you want to add another person
 decision:
     noDecisionChoice.notBlank: Please specify if you have you made any significant decisions
     reasonForNoDecisions.notBlank: Enter a reason why you don't have any decisions
@@ -150,7 +150,7 @@ mentalCapacity:
         notBlank: Please enter the last assessment date
 
 account:
-    addAnother.notBlank: Please specify if you want to add another contact
+    addAnother.notBlank: Please specify if you want to add another person
     bank:
         notBlank: You need to enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} letters long
@@ -406,7 +406,7 @@ odr:
       doesClientHaveACarePlan:
           notBlank: Choose yes or no
   account:
-      addAnother.notBlank: Please specify if you want to add another contact
+      addAnother.notBlank: Please specify if you want to add another person
       bank:
           notBlank: Enter the bank or building society name
           minMessage: The bank or building society name must be at least {{ limit }} letters long
