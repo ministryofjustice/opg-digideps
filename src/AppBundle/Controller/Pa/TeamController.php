@@ -23,7 +23,8 @@ class TeamController extends AbstractController
         $teamMembers = $this->getRestClient()->get('team/members', 'User[]');
 
         return [
-            'teamMembers' => $teamMembers
+            'teamMembers' => $teamMembers,
+            'homePageHeaderLink' => $this->generateUrl('pa_dashboard')
         ];
     }
 
@@ -51,6 +52,7 @@ class TeamController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'homePageHeaderLink' => $this->generateUrl('pa_dashboard')
         ];
     }
 
@@ -75,6 +77,7 @@ class TeamController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'homePageHeaderLink' => $this->generateUrl('pa_dashboard')
         ];
     }
 }
