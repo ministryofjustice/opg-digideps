@@ -132,6 +132,7 @@ class PaServiceTest extends WebTestCase
         $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
         $clients = $user1->getClients();
         $this->assertCount(2, $clients);
+        $this->assertCount(1, $user1->getTeams());
 
         // assert 1st client and report
         $client1 = $user1->getClientByCaseNumber('10000001');
@@ -155,6 +156,7 @@ class PaServiceTest extends WebTestCase
         $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');
         $clients = $user2->getClients();
         $this->assertCount(1, $clients);
+        $this->assertCount(1, $user2->getTeams());
 
         // assert 1st client and report
         $client1 = $user2->getClientByCaseNumber('1000000t');
