@@ -14,5 +14,8 @@ Feature: PA dashboard
     # check tabs
     When I click on "tab-ready"
     Then I should not see the "client" region
-    
+    # check navigation links
+    When I click on "pa-dashboard" in the navbar region
+    Then I should be on "/pa/"
+
 
