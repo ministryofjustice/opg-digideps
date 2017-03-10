@@ -62,7 +62,8 @@ summaryPage:
 form:
   explanation:
     label: Description of gift
-    hint: Tell us who you plan to give gifts to, on what occasion and roughly how much you will spend.
+    hint: |
+      Tell us who you plan to give gifts to, on what occasion and roughly how much you will spend.
       For example, "Birthday gifts for the client's immediate family. I'll spend around £10 on
       each gift."
   amount:
