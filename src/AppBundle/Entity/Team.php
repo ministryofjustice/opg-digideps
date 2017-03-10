@@ -50,6 +50,7 @@ class Team
     public function __construct($teamName)
     {
         $this->teamName = $teamName;
+        $this->members = new ArrayCollection();
     }
 
     /**
