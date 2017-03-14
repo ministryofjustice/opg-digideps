@@ -7,13 +7,10 @@
 
 {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.h1Title' | trans }}{% endblock %}
-
-{% block linkBack %}
-    <a href="{{ path('pa_team') }}" class="link-back behat-link-back">Back</a>
-{% endblock %}
+    {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings('user-add') }}
+    [breadcrumbs]
 {% endblock %}
 
 {% block pageContent %}
@@ -26,7 +23,7 @@
     {{ form_input(form.email,'form.email') }}
 
     {{ form_checkbox_group(form.roleName, 'form.roleName', {
-        'legendClass' : 'form-label-bold'
+        'fieldSetClass' : 'inline',
     }) }}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}

@@ -2,7 +2,7 @@
 user:
   email:
     invalid: This email is not valid
-    notBlank: You must enter an email address
+    notBlank: Enter an email address
     maxLength: The email can't be longer than {{ limit }} characters
     doesNotMatch: Email does not match
   firstname:
