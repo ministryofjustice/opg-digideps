@@ -7,8 +7,8 @@ Feature: deputy / user / set password
         # follow link
         When I save the application status into "activation-link-before-opening"
         When I open the "/user/activate/" link from the email
-        #Then the response status code should be 200
-        And I save the page as "deputy-step1"
+        Then the response status code should be 200
+        When I save the page as "deputy-step1"
          # empty
         When I fill in the following: 
             | set_password_password_first   |  |
@@ -60,7 +60,7 @@ Feature: deputy / user / set password
         Given I am on "/logout"
        # follow link as it is
         When I open the "/user/activate/" link from the email
-       #Then the response status code should be 200
+        Then the response status code should be 200
         And I save the page as "odr-deputy-step1"
         And I activate the user with password "Abcd1234"
        # test login

@@ -33,6 +33,7 @@ Feature: PA team
     Given emails are sent from "deputy" area
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
+    Then the response status code should be 200
     # password step
     When I fill in the following:
       | set_password_password_first  | Abcd1234 |
@@ -78,6 +79,7 @@ Feature: PA team
     Given emails are sent from "deputy" area
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
+    Then the response status code should be 200
     # password step
     When I fill in the following:
       | set_password_password_first  | Abcd1234 |
