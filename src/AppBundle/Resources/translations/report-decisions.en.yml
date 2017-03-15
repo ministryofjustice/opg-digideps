@@ -3,15 +3,11 @@ startPage:
   pageSectionTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you’ve made on %client%'s behalf."
-  hiddenText01:
-      summary: What is mental capacity?
-      content:
-        para01: |
-          ‘Mental capacity’ means being able to make a specific decision at the time that it needs to be made.
-        para02: |
-          For more information, you should refer to the <a href=" https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf " target="_blank"> Mental Capacity Code of Conduct </a> 
-  description2: |
-    You don't need to include small, day-to-day decisions like buying food or toiletries.
+  whatisMentalCapacitySummary: What is mental capacity?
+  whatisMentalCapacityPara1: |
+    'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
+  whatisMentalCapacityPara2: |
+    For more information, you should refer to the <a href=" https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf " target="_blank"> Mental Capacity Code of Conduct </a>
   whatisdecisionSummary: What counts as a significant decision?
   whatisdecisionPara1: |
     Significant decisions are any important decisions you make for %client% - not
@@ -25,6 +21,8 @@ startPage:
   whatisdecisionListItem5: making gifts on %client%'s behalf
   whatisdecisionListItem6: moving %client% to another nursing or care home
   whatisdecisionListItem7: changing day centres
+  description2: |
+    You don't need to include small, day-to-day decisions like buying food or toiletries.
 
 mentalCapacity:
   htmlTitle: "Deputy report - mental capacity | GOV.UK"
