@@ -3,7 +3,7 @@ startPage:
   pageSectionTitle: Contacts
   pageSectionDescription1: |
     Please give us details of people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
-  
+
 
   startButton: Start contacts
 
@@ -48,6 +48,9 @@ summaryPage:
   edit: Edit
   relationship: Their relationship to %client%
   reasonForContact: Your reason for consulting them
+  pageContent:
+    weAskAbout: |
+      In this section we ask you about the people who helped you make significant decisions as a deputy
 
 form:
   contactName:
