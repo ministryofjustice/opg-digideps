@@ -4,9 +4,6 @@ startPage:
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
-  pageSectionDescription2: |
-    Your actions might include making a large gift, maintenance and alterations to %client%'s
-    home, or buying and selling property for %client%.
   hiddenText01:
     summary: Making decisions on the client's behalf
     content:
