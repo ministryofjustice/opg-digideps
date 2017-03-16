@@ -46,7 +46,9 @@
 
         <tbody>
         {% for user in teamMembers %}
-            {% set allowedToEdit = app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN' or app.user.id == user.id %}
+            {% set allowedToEdit = app.user.roleName == 'ROLE_PA'
+            or (app.user.roleName == 'ROLE_PA_ADMIN' and user.roleName != 'ROLE_PA')
+            or app.user.id == user.id %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <p class="flush--ends">

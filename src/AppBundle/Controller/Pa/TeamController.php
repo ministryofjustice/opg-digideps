@@ -64,6 +64,16 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/'.$id, 'User');
 
+        if ($this->getUser()->getRoleName() === EntityDir\User::ROLE_PA_TEAM_MEMBER) {
+            throw $this->createAccessDeniedException('Team member cannot edit Team member');
+        }
+        if ($this->getUser()->getRoleName() !== EntityDir\User::ROLE_PA &&
+            $user->getRoleName() === EntityDir\User::ROLE_PA
+        ) {
+            throw $this->createAccessDeniedException('Only Named PAs can edit (other) named PAs');
+        }
+
+
         $showRoleNameField = $user->getRoleName() !== EntityDir\User::ROLE_PA;
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($showRoleNameField), $user);
 

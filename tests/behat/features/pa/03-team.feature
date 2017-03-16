@@ -150,3 +150,6 @@ Feature: PA team
   Scenario: PA admin logs in and edit users
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts"
+    Then I should see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    Then I should see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
