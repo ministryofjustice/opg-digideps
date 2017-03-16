@@ -49,7 +49,7 @@ Feature: PA team
       | user_details_firstname | Mark Admin          |
       | user_details_lastname  | Yellow              |
       | user_details_jobTitle  | Solicitor assistant |
-      | user_details_phoneMain | 203457234582435     |
+      | user_details_phoneMain | 10000000002         |
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
@@ -94,8 +94,8 @@ Feature: PA team
     When I fill in the following:
       | user_details_firstname | Robert Team member |
       | user_details_lastname  | Black              |
-      | user_details_jobTitle  | Solicitor helper       |
-      | user_details_phoneMain | 45687546322543    |
+      | user_details_jobTitle  | Solicitor helper   |
+      | user_details_phoneMain | 10000000003        |
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
@@ -106,3 +106,47 @@ Feature: PA team
     Then I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     #And I should not see the "add" link
+
+  Scenario: PA (named) logs in and edit users
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    # edit PA named
+    When I click on "edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    Then the following fields should have the corresponding values:
+      | team_member_account_firstname | John Named                          |
+      | team_member_account_lastname  | Green                               |
+      | team_member_account_email     | behat-pa1@publicguardian.gsi.gov.uk |
+      | team_member_account_jobTitle  | Solicitor                           |
+      | team_member_account_phoneMain | 10000000001                         |
+    And I should not see a "team_member_account_roleName_0" element
+    And I should not see a "team_member_account_roleName_1" element
+    When I fill in the following:
+      | team_member_account_firstname | Johnny Named                        |
+      | team_member_account_lastname  | Greens                              |
+      | team_member_account_email     | behat-pa1@publicguardian.gsi.gov.uk |
+      | team_member_account_jobTitle  | Senior Solicitor                    |
+      | team_member_account_phoneMain | +4410000000001                      |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    And I should see "Johnny Named" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    And I should see "Greens" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    And I should see "Senior Solicitor" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    And I should see "+4410000000001" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    # PA named edits Admin, downgrade role into team member
+    Given I save the application status into "pa-team-before-downgrading-admin"
+    And I should see "Administrator" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    Then the "team_member_account_roleName_0" field should contain "ROLE_PA_ADMIN"
+    When I fill in "team_member_account_roleName_1" with "ROLE_PA_TEAM_MEMBER"
+    And I press "team_member_account_save"
+    Then I should not see "Administrator" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    # restore Admin role
+    And I load the application status from "pa-team-before-downgrading-admin"
+    # check PA named can edit team members
+    When I click on "edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    Then the "team_member_account_roleName_1" field should contain "ROLE_PA_TEAM_MEMBER"
+    Then the response status code should be 200
+
+  Scenario: PA admin logs in and edit users
+    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
