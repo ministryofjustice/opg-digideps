@@ -26,9 +26,15 @@
 
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_checkbox_group(form.roleName, 'form.roleName', {
-        'legendClass' : 'form-label-bold'
-    }) }}
+    {{ form_input(form.jobTitle, 'form.jobTitle') }}
+
+    {{ form_input(form.phoneMain,'form.phoneMain') }}
+
+    {% if form.roleName is defined %}
+        {{ form_checkbox_group(form.roleName, 'form.roleName', {
+            'legendClass' : 'form-label-bold'
+        }) }}
+    {% endif %}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 

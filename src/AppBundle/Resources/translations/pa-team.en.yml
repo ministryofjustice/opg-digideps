@@ -13,6 +13,10 @@ form:
     label: Last name
   email:
     label: Email
+  jobTitle:
+    label: Job title
+  phoneMain:
+    label: Phone
   roleName:
     label: Grant user administrator access
     hint: Administrator access will allow the new user to add and remove other users of the service
