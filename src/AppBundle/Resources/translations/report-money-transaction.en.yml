@@ -84,20 +84,20 @@ form:
     moneyOut.legend: What category does the payment come under?
     entries:
       # money in
-      income-and-earnings: Income from investments
-      state-benefits: State benefits
-      pensions: Pensions
+      income-and-earnings: Income from investment
+      state-benefits: State benefit
+      pensions: Pension
       damages: Damages
       one-off: One-off
       moneyin-other: Other
       # money out
-      household-bills: Household bills
+      household-bills: Household bill
       accommodation: Accommodation (mortgage or rent)
-      care-and-medical: Care and medical bills
+      care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
-      fees: Professional fees
-      major-purchases: Major purchases
-      debt-and-charges: Tax, debts and charges
+      fees: Professional fee
+      major-purchases: Major purchase
+      debt-and-charges: Tax, debt or charge
       moving-money: Moving money
       moneyout-other: Other
   amount:
@@ -186,7 +186,7 @@ form:
       electricity:
         label: Electricity
       telephone:
-        label: Telephone
+        label: Phone
       council-tax:
         label:
         label:
@@ -252,7 +252,7 @@ form:
       accountant-fees:
         label: Accountant's fees
       professional-fees-eg-solicitor-accountant:
-        label: Professional fees – for example, solicitor or accountant fees
+        label: Fees charged by a solicitor, accountant or other type of professional
         moreInformations: For each fee, please enter the date, the amount and what it was for
       opg-fees:
         label: OPG's fees

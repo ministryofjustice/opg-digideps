@@ -22,6 +22,16 @@
         	'%endDate%': report.endDate | date("j F Y")
         	},translationDomain) }}
         </p>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' |trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
+            </div>
+        </details>
+
     </div>
 
     <a href="{{ path('deputy_expenses_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>

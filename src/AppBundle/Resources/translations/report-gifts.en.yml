@@ -15,7 +15,7 @@ startPage:
         There are strict limits on gift-giving as a deputy. These rules help to look
         after %client%'s best interests.
       para03: |
-        OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys/opg2-giving-gifts-for-someone-else-web-version/" target="_blank">'Giving gifts for someone else' (OPG2)</a> booklet gives detailed advice on giving gifts as a deputy.
+        OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys" target="_blank">'Giving gifts for someone else' (OPG2)</a> booklet gives detailed advice on giving gifts as a deputy.
   startButton: Start gifts
 
 existPage:
@@ -23,7 +23,7 @@ existPage:
   pageSectionTitle: Gifts
   form:
     giftsExist:
-      label: Have you given any gifts to other people on behalf of %client% during this reporting period
+      label: Have you given any gifts to other people on behalf of %client% during this reporting period?
     save:
       label: Save and continue
 
@@ -62,7 +62,10 @@ summaryPage:
 form:
   explanation:
     label: Description of gift
-    hint: Tell us who the gift was for and what the occasion was
+    hint: |
+      Tell us who you plan to give gifts to, on what occasion and roughly how much you will spend.
+      For example, "Birthday gifts for the client's immediate family. I'll spend around £10 on
+      each gift."
   amount:
     label: Amount
   addAnother:

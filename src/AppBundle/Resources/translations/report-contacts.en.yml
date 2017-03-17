@@ -13,7 +13,7 @@ existPage:
   form:
     hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
-      hint: For example, John Smith, accountant, to prepare accounts for the deputy report
+      hint: For example, you may have asked an accountant to prepare accounts for the deputy report
     reasonForNoContacts:
       label: Please give us an explanation
     save:
@@ -60,7 +60,7 @@ form:
       label: Their relationship to %client%
       hint: ''
   explanation:
-      label: Reason for contact
+      label: Reason for consulting them
       hint: ''
   address:
       label: Address (optional)

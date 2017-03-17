@@ -7,7 +7,11 @@ startPage:
     You can pay yourself back from %client%’s funds as you go along, but you need to keep an accurate record of your spending.
   pageSectionDescription3: |
     Use this section to tell us about your expenses between %startDate% and %endDate%.
-
+  hiddenText01:
+    summary: More about what you can and can't claim for
+    content:
+      para01: |
+        OPG’S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed advice on what you can and can't claim for while carrying out your duties as a deputy.
   startButton: Start deputy expenses
 
 existPage:
