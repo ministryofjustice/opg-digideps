@@ -1,8 +1,9 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Pa;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,14 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/pa")
  */
-class PaController extends AbstractController
+class IndexController extends AbstractController
 {
     /**
      * @Route("/", name="pa_dashboard")
      * @Template
      */
-    public function indexAction(Request $request)
+    public function dashboardAction(Request $request)
     {
+        $user = $this->getUser();
+
         $currentFilters = [
             'q'                 => $request->get('q'),
             'status'            => $request->get('status'),
@@ -53,27 +56,5 @@ class PaController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/team", name="pa_team")
-     * @Template
-     */
-    public function teamAction(Request $request)
-    {
-        $teamMembers = [
-            $this->getUser()
-        ];
 
-        $i = 50; while ($i--) {
-            $user = new EntityDir\User();
-            $user->setFirstname('John'.$i);
-            $user->setLastname('Red'.$i);
-            $user->setRoleName('ROLE_PA_UNNAMED');
-            $user->setEmail('jr'.$i.'@example.org');
-            $teamMembers[] = $user;
-        }
-
-        return [
-            'teamMembers' => $teamMembers
-        ];
-    }
 }

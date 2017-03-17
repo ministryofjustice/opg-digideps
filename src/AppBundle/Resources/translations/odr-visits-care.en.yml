@@ -20,11 +20,13 @@ summaryPage:
     weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
 
 form:
-  doYouLiveWithClient.label: Do you live with %client%?
+  doYouLiveWithClient:
+    label: Do you live with %client%?
   howOftenDoYouContactClient:
     label: |
       Please tell us how often you have contact with %client% and how you make sure others are looking
       after %client%'s needs when you're not able to.
+    labelShort: Please tell us how often you have contact with %client%.
   doesClientReceivePaidCare:
     label: Does %client% get care that is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends

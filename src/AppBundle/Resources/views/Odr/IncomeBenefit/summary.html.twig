@@ -26,7 +26,7 @@
     {% endif %}
 
     {% if status.incomeBenefitsState.state != 'done' and not comingFromLastStep %}
-        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
+        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswerNDR' | trans(transOptions, 'common')) }}
     {% endif %}
 
     {# Return to overview link #}

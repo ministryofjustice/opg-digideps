@@ -38,7 +38,7 @@
         </tr>
         {% if report.visitsCare.doYouLiveWithClient == 'no' %}
             <tr class="behat-region-how-often-contact-client">
-                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+                <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</td>
                 <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
                     <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>

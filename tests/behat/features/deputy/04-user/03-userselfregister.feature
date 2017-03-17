@@ -102,7 +102,7 @@ Feature: User Self Registration
     And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
     When I open the "/user/activate/" link from the email
-      #Then the response status code should be 200
+    Then the response status code should be 200
       #
       # check user is created
       #

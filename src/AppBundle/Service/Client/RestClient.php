@@ -160,6 +160,20 @@ class RestClient
     }
 
     /**
+     *
+     * @param string $token
+     *
+     * @throws UsernameNotFoundException
+     *
+     * @return \AppBundle\Entity\User $user
+     *
+     */
+    public function agreeTermsUse($token)
+    {
+        return $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'User', [], false);
+    }
+
+    /**
      * @param string $email
      * @param string $type
      *
@@ -214,14 +228,14 @@ class RestClient
      *
      * @return string response body
      */
-    public function post($endpoint, $mixed, array $jmsGroups = [])
+    public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array')
     {
         $options = [];
         if ($jmsGroups) {
             $options['deserialise_groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('post', $endpoint, $mixed, 'array', $options);
+        return $this->apiCall('post', $endpoint, $mixed, $expectedResponseType, $options);
     }
 
     /**

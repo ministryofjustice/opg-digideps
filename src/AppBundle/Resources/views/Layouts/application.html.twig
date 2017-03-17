@@ -33,7 +33,7 @@
         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
     {% endif %}
     <nav id="proposition-menu">
-        <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
+        <a href="/" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
         {% if app.user %}
             <ul id="proposition-links" class="behat-region-navbar">
                 {% if is_granted('ROLE_ADMIN') %}
@@ -60,11 +60,16 @@
                         <li><a href="{{path('reports', {'type': '102' })}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
                     {% endif %}
                 {% endif %}
+                {% if app.user.isDeputyPa() %}
+                    <li>
+                        <a href="{{path('pa_dashboard')}}" class="behat-link-pa-dashboard">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="{{path('pa_settings')}}" class="behat-link-pa-settings">Settings</a>
+                    </li>
+                {% endif %}
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
 
-                {% if is_granted('ROLE_PA') %}
-                    <li><a href="{{path('pa_settings')}}" class="behat-link-pa-settings"  >Settings</a></li>
-                {% endif %}
 
             </ul>
         {% endif %}

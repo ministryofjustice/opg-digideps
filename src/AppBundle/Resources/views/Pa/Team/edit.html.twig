@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "pa-team" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
+
+{% block linkBack %}
+    <a href="{{ path('pa_team') }}" class="link-back behat-link-back">Back</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('user-add') }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.firstname,'form.firstname') }}
+
+    {{ form_input(form.lastname,'form.lastname') }}
+
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_input(form.jobTitle, 'form.jobTitle') }}
+
+    {{ form_input(form.phoneMain,'form.phoneMain') }}
+
+    {% if form.roleName is defined %}
+        {{ form_checkbox_group(form.roleName, 'form.roleName', {
+            'legendClass' : 'form-label-bold'
+        }) }}
+    {% endif %}
+
+    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

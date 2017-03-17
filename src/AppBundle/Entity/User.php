@@ -18,15 +18,19 @@ class User implements AdvancedUserInterface
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
     const ROLE_PA = 'ROLE_PA';
+    const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
+    const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
     /**
      * @JMS\Exclude
      */
     private static $allowedRoles = [
-        self::ROLE_ADMIN                   => 'OPG Admin',
-        self::ROLE_LAY_DEPUTY              => 'Lay Deputy',
-        self::ROLE_AD                      => 'Assisted Digital',
-        self::ROLE_PA                      => 'Public Authority',
+        self::ROLE_ADMIN          => 'OPG Admin',
+        self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
+        self::ROLE_AD             => 'Assisted Digital',
+        self::ROLE_PA             => 'Public Authority',
+        self::ROLE_PA_ADMIN       => 'Public Authority admin',
+        self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
     ];
 
     const TOKEN_EXPIRE_HOURS = 48;
@@ -41,9 +45,12 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
-     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add",
+     *     "admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "pa_team_add", } )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
+     *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa",
+     *             "pa_team_add"} )
      *
      * @var string
      */
@@ -51,8 +58,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add", "admin_add_user", "ad_add_user"})
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "pa_team_add"} )
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
      *
      * @var string
@@ -61,10 +68,10 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "password_reset"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset"}, checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset"} )
+     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "pa_team_add", "password_reset"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "pa_team_add"}, checkMX=false, checkHost=false )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "pa_team_add"} )
      *
      * @var string
      */
@@ -98,8 +105,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
+     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add"})
+     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user", "pa_team_role_name"} )
      *
      * @var string
      */
@@ -191,9 +198,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "user_details_pa"})
+     * @JMS\Groups({"user_details_full", "user_details_pa", "pa_team_add"})
      * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "user_details_pa"} )
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa"} )
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa", "pa_team_add"} )
      *
      * @var string
      */
@@ -233,7 +240,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_pa"})
+     * @JMS\Groups({"user_details_pa", "pa_team_add"})
      * @Assert\NotBlank( message="user.jobTitle.notBlank", groups={"user_details_pa"} )
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_pa"} )
      *
@@ -242,6 +249,9 @@ class User implements AdvancedUserInterface
     private $jobTitle;
 
     /**
+     * PA Team name
+     * note: stored as Team entiy in the API. Consider doing the same in the client if Team acquires new fields
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_pa"})
      * @Assert\Length(max=50, maxMessage="user.paTeamName.maxMessage", groups={"user_details_pa"} )
@@ -249,6 +259,15 @@ class User implements AdvancedUserInterface
      * @var string
      */
     private $paTeamName;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"agree_terms_use"})
+     *
+     * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
+     */
+    private $agreeTermsUse;
 
     /**
      * @return int $id
@@ -720,7 +739,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param string $jobTitle
+     * @param  string $jobTitle
      * @return User
      */
     public function setJobTitle($jobTitle)
@@ -739,7 +758,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param string $paTeamName
+     * @param  string $paTeamName
      * @return User
      */
     public function setPaTeamName($paTeamName)
@@ -750,10 +769,34 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @return bool
+     */
+    public function getAgreeTermsUse()
+    {
+        return $this->agreeTermsUse;
+    }
+
+    /**
+     * @param  bool $agreeTermsUse
+     * @return User
+     */
+    public function setAgreeTermsUse($agreeTermsUse)
+    {
+        $this->agreeTermsUse = $agreeTermsUse;
+
+        return $this;
+    }
+
+    public function isDeputyPa()
+    {
+        return in_array($this->roleName, [self::ROLE_PA, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+    }
+
+    /**
      * @return bool true if user role is LAY or PA
      */
     public function isDeputy()
     {
-        return in_array($this->roleName, [self::ROLE_LAY_DEPUTY, self::ROLE_PA]);
+        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyPa();
     }
 }

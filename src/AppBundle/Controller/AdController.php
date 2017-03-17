@@ -47,14 +47,14 @@ class AdController extends AbstractController
                     // set email (needed to recreate token before login)
                     $userToAdd->setEmail('ad' . $this->getUser()->getId() . '-' . time() . '@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
-                    $response = $this->getRestClient()->post('user', $userToAdd, ['ad_add_user']);
+                    $response = $this->getRestClient()->post('user', $userToAdd, ['ad_add_user'], 'User');
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'User added. '
                     );
 
                     return $this->redirectToRoute('ad_homepage', [
-                        'userAdded'=>$response['id'],
+                        'userAdded'=>$response->getId(),
                         //'order_by'=>'id',
                         //'sort_order'=>'DESC',
                     ]);
