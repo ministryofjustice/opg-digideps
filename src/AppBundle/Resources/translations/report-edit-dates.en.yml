@@ -7,10 +7,10 @@ form:
       label: "Create new report"
     startDate:
       legend: "Start date"
-      hint: "(DD/MM/YYYY)"
+      hint: "For example, 31 3 1980"
     endDate:
       legend: "End date"
-      hint: "(DD/MM/YYYY)"
+      hint: "For example, 31 3 1980"
     save:
       label: "Save"
     cancel:
