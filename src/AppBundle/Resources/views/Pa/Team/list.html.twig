@@ -2,6 +2,8 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
+{% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
+
 {% block htmlTitle %}User accounts{% endblock %}
 {% block pageTitle %}User accounts{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
@@ -14,16 +16,21 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
     {# Introduction text #}
-    <p class="text">Add, edit and remove user accounts for you and your team members</p>
+    <p class="text">
+        {% if isNamedOrAdmin %}
+            Add, edit and remove user accounts for you and your team members
+        {% else %}
+            View user accounts and team members
+        {% endif %}
+    </p>
 
     <div class="grid-row push--top">
         <div class="column-half">
             <h2 class="heading-medium flush--ends">List of user accounts</h2>
         </div>
         <div class="column-half text--right">
-            {% if app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN' %}
+            {% if isNamedOrAdmin %}
             <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
