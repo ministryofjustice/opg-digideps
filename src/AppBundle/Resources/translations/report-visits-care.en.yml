@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageSectionTitle: Visits and care
   pageSectionDescription: |
-    Use this section to tell us about %client%’s care and contact with you and other people. We ask about this because it’s OPG’s responsibility to make sure you are looking after %client%’s best interests, including health and welfare.
+    Use this section to tell us about %client%’s care and contact with you and other people. We ask about this because it’s OPG’s responsibility to make sure you're looking after %client%’s best interests, which includes making health and welfare decisions.
   startButton: Start visits and care
 
 stepPage:
@@ -18,10 +18,13 @@ summaryPage:
     weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
 
 form:
-  doYouLiveWithClient.label: Do you live with %client%?
-  howOftenDoYouContactClient.label: |
-    Please tell us how often you have contact with %client% and how you make sure others are looking
-    after %client%'s needs when you're not able to.
+  doYouLiveWithClient:
+    label: Do you live with %client%?
+  howOftenDoYouContactClient:
+    label: |
+      Please tell us how often you have contact with %client% and how you make sure others are looking
+      after %client%'s needs when you're not able to.
+    labelShort: Please tell us how often you have contact with %client%.
   doesClientReceivePaidCare:
     label: Does %client% get care that is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
@@ -33,10 +36,10 @@ form:
       all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
   whoIsDoingTheCaring:
     label: Who is doing the caring?
-    hint: For example, local authority or private residential care, live-in or visiting care workers, family members
+    hint: For example, local authority or private residential care workers, live-in or visiting care workers, family members
   doesClientHaveACarePlan:
     label: Does %client% have a care plan?
-    hint: Local social services may provide a care plan to show how someone's welfare and support needs will be met
+    hint: Local social services may provide a care plan to show how someone's welfare needs will be met
   whenWasCarePlanLastReviewed:
       label: When was the care plan last reviewed?
       hint: (MM/YYYY)
