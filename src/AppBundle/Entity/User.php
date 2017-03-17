@@ -47,7 +47,8 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add",
      *     "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "pa_team_add", } )
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @Assert\NotBlank( message="user.firstname.notBlankOtherUser", groups={"pa_team_add"} )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
      *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa",
      *             "pa_team_add"} )
@@ -59,7 +60,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add", "admin_add_user", "ad_add_user"})
-     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "pa_team_add"} )
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @Assert\NotBlank(message="user.lastname.notBlankOtherUser", groups={"pa_team_add"} )
      * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
      *
      * @var string
