@@ -9,6 +9,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TeamMemberAccount extends AbstractType
 {
+    private $showRoleName;
+
+    /**
+     * @param $showRoleName
+     */
+    public function __construct($showRoleName)
+    {
+        $this->showRoleName = $showRoleName;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', 'text')
@@ -21,20 +31,26 @@ class TeamMemberAccount extends AbstractType
             ->add('email', 'text', [
                 'required' => true,
             ])
-            ->add('roleName', 'choice', [
-                'choices' => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
+            ->add('jobTitle', 'text')
+            ->add('phoneMain', 'text');
+
+        if ($this->showRoleName) {
+            $builder->add('roleName', 'choice', [
+                'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,
                 'required' => true,
-            ])
-            ->add('save', 'submit');
+            ]);
+        }
+
+        $builder->add('save', 'submit');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups' => ['pa_team_add'],
-            'data_class' => User::class,
+            'validation_groups'  => $this->showRoleName ? ['pa_team_add', 'pa_team_role_name'] : ['pa_team_add'],
+            'data_class'         => User::class,
         ]);
     }
 

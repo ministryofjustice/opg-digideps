@@ -23,7 +23,8 @@ Feature: Browser - add and activate user
   Scenario: browser - Set user password
     Given I am on "/logout"
     And I open the "/user/activate/" link from the email
-    And I activate the user with password "Abcd1234"
+    Then the response status code should be 200
+    When I activate the user with password "Abcd1234"
     Then I set the user details to:
       | name    | John             | Doe           |        |          |    |
       | address | 102 Petty France | MOJ           | London | SW1H 9AJ | GB |

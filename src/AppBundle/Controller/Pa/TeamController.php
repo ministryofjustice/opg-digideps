@@ -34,13 +34,15 @@ class TeamController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount());
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(true));
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
             $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+
+            $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
 
             // activation link
             $activationEmail = $this->getMailFactory()->createActivationEmail($user);
@@ -62,13 +64,26 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/'.$id, 'User');
 
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(), $user);
+        if ($this->getUser()->getRoleName() === EntityDir\User::ROLE_PA_TEAM_MEMBER) {
+            throw $this->createAccessDeniedException('Team member cannot edit Team member');
+        }
+        if ($this->getUser()->getRoleName() !== EntityDir\User::ROLE_PA &&
+            $user->getRoleName() === EntityDir\User::ROLE_PA
+        ) {
+            throw $this->createAccessDeniedException('Only Named PAs can edit (other) named PAs');
+        }
+
+
+        $showRoleNameField = $user->getRoleName() !== EntityDir\User::ROLE_PA;
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($showRoleNameField), $user);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
             $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+
+            $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
 
             return $this->redirectToRoute('pa_team');
         }

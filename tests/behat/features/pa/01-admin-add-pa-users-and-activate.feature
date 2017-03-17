@@ -55,7 +55,7 @@ Feature: Add PA users and activate PA user (journey)
       | user_details_firstname  | John Named           |
       | user_details_lastname   | Green      |
       | user_details_jobTitle   | Solicitor      |
-      | user_details_phoneMain  | 46745675674567 |
+      | user_details_phoneMain  | 10000000001 |
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
