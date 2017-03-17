@@ -35,7 +35,7 @@ form:
       label: Do you have any concerns about your deputyship?
       hint: |
           For example, paying care home fees if %client%’s money runs low,
-          managing %client%’s property, making gifts, other family members’ involvement
-          with %client%’s funds, what expenses you can claim
+          managing %client%’s property, other family members’ involvement
+          with %client%’s funds
   doYouHaveConcernsDetails:
-      label: Tell us more
+      label: Please give us more detail

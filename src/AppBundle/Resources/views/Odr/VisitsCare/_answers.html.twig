@@ -38,7 +38,7 @@
         </tr>
         {% if odr.visitsCare.doYouLiveWithClient == 'no' %}
             <tr class="behat-region-how-often-contact-client">
-                <td>{{ 'form.howOftenDoYouContactClient.label' | trans(transOptions) }}</td>
+                <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</td>
                 <td>{{ odr.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
                     <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
