@@ -21,13 +21,14 @@ class TeamMemberAccount extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', 'text')
+        $builder
             ->add('firstname', 'text', [
                 'required' => true,
             ])
             ->add('lastname', 'text', [
                 'required' => true,
             ])
+            ->add('email', 'text')
             ->add('email', 'text', [
                 'required' => true,
             ])
