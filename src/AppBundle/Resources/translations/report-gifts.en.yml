@@ -62,7 +62,7 @@ summaryPage:
 form:
   explanation:
     label: Description of gift
-    hint: Tell us who the gifts were for and what the occasion was
+    hint: Tell us who the gift was for and what the occasion was
   amount:
     label: Amount
   addAnother:
