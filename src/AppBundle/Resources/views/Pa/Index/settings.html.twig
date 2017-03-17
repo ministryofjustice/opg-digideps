@@ -6,6 +6,8 @@
 {% block pageTitle %}Settings{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
+
 {% block breadcrumbs %}
     [breadcrumbs]
     {#{{ macros.breadcrumbsSettings('home') }}#}
@@ -18,6 +20,12 @@
     <a href="{{ path('pa_team') }}" class="behat-link-user-accounts">
         <h2 class="heading-small">User accounts</h2>
     </a>
-    <p class="text text-info">Add, edit and remove user accounts for you and your team members</p>
+    <p class="text text-info">
+        {% if isNamedOrAdmin %}
+            Add, edit and remove user accounts for you and your team members
+        {% else %}
+            View user accounts and team members
+        {% endif %}
+    </p>
 
 {% endblock %}
