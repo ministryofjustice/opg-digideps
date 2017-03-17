@@ -11,7 +11,7 @@ framework:
         strict_requirements: ~
     form:            ~
     csrf_protection: ~
-    validation:      
+    validation:
         enabled: true
         enable_annotations: true
     templating:
@@ -22,7 +22,7 @@ framework:
       name: digideps
       # force session usage, no cookie (we want to logout when the browser closes)
       cookie_lifetime: 0
-      gc_probability: 1 
+      gc_probability: 1
       gc_divisor: 100
       # session timeout (when GC kicks in)
       gc_maxlifetime: %session_expire_seconds%
@@ -32,7 +32,7 @@ framework:
       cookie_secure: %session_cookie_secure%
     fragments:       ~
     http_method_override: true
-    
+
 # Twig Configuration
 twig:
     globals:
@@ -47,7 +47,7 @@ twig:
     form:
         resources:
             - 'AppBundle:Form:fields.html.twig'
-        
+
 
 # Assetic Configuration
 assetic:
@@ -64,7 +64,7 @@ swiftmailer:
     username:  ~
     password:  ~
     spool:     { type: memory }
-    
+
 snc_redis:
     clients:
         default:
@@ -75,20 +75,20 @@ snc_redis:
         client: default
         prefix: %session_prefix%
         use_as_default: %use_redis%
-    
+
 parameters:
     # translation key must be present in report-assets.en.yml, dropdown.<value>
     asset_dropdown:
         - antiques
-        - property
-        - investment_bonds
-        - unit_trusts
-        - national_savings_certificates
-        - stocks_shares
-        - premium_bonds
-        - vehicles
         - artwork
+        - investment_bonds
         - jewellery
+        - national_savings_certificates
+        - premium_bonds
+        - property
+        - stocks_shares
+        - unit_trusts
+        - vehicles
         - other_assets
         - assets_held_outside_england_and_wales
 
