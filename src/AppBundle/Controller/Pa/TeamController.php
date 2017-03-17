@@ -34,7 +34,7 @@ class TeamController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', null, 'Cannot add user');
+        $this->denyAccessUnlessGranted('edit', null, 'Not allowed');
 
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(true));
 
@@ -66,18 +66,7 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/'.$id, 'User');
 
-        $this->denyAccessUnlessGranted('edit', $user, 'Current logged user has no permission to edit user with role' . $user->getRoleName());
-
-//        $loggedUserRole = $this->getUser()->getRoleName();
-//        if ($loggedUserRole === EntityDir\User::ROLE_PA_TEAM_MEMBER) {
-//            throw $this->createAccessDeniedException('Team member cannot edit Team member');
-//        }
-//        if ($loggedUserRole !== EntityDir\User::ROLE_PA &&
-//            $user->getRoleName() === EntityDir\User::ROLE_PA
-//        ) {
-//            throw $this->createAccessDeniedException('Only Named PAs can edit (other) named PAs');
-//        }
-
+        $this->denyAccessUnlessGranted('edit', $user, 'Not allowed');
 
         $showRoleNameField = $user->getRoleName() !== EntityDir\User::ROLE_PA;
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($showRoleNameField), $user);
