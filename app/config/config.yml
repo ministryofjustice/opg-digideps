@@ -77,7 +77,7 @@ snc_redis:
         use_as_default: %use_redis%
 
 parameters:
-    # translation key must be present in report-assets.en.yml, dropdown.<value>
+    # translation key must be present in report-assets.en.yml, odr-assets.en.yml, dropdown.<value>
     asset_dropdown:
         - antiques
         - artwork

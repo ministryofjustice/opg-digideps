@@ -68,7 +68,7 @@ form:
     label: What sort of asset is it?
     legend: What type of asset is it?
     choices:
-      # values will be automatically ordered alphabetically. other_assets will always be kept last
+      # ordering is configured in app/config.yml
       property: Property
       investment_bonds: Investment bonds
       unit_trusts: Unit trusts
@@ -119,7 +119,7 @@ form:
       label: Are there any other charges on the property?
       hint: For example, from the local authority to recover care fees
     isRentedOut:
-      label: Is the property rented out (either partly or fully)? 
+      label: Is the property rented out (either partly or fully)?
     rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: (MM/YYYY)
