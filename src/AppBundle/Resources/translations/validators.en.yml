@@ -24,6 +24,7 @@ user:
       noNumber: Your password must have at least one number
   role:
       notBlank: You must specify a role for the user
+      notBlankPa: Please choose if user has admin rights or not
   address1:
     notBlank: Enter your address
     maxLength: Your address name can't be longer than {{ limit }} letters

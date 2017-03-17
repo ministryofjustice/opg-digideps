@@ -108,7 +108,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add"})
-     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user", "pa_team_role_name"} )
+     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
+     * @Assert\NotBlank( message="user.role.notBlankPa", groups={"pa_team_role_name"} )
      *
      * @var string
      */
