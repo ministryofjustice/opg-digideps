@@ -30,7 +30,7 @@
             <h2 class="heading-medium flush--ends">List of user accounts</h2>
         </div>
         <div class="column-half text--right">
-            {% if isNamedOrAdmin %}
+            {% if is_granted('add') %}
             <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
@@ -53,9 +53,6 @@
 
         <tbody>
         {% for user in teamMembers %}
-            {% set allowedToEdit = app.user.roleName == 'ROLE_PA'
-            or (app.user.roleName == 'ROLE_PA_ADMIN' and user.roleName != 'ROLE_PA')
-            or app.user.id == user.id %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
@@ -84,7 +81,7 @@
                     {% endif %}
                 </td>
                 <td class="change-answer">
-                    {% if allowedToEdit %}
+                    {% if is_granted('edit', user) %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
                     {% endif %}
                 </td>

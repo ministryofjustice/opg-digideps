@@ -1,3 +1,14 @@
+services:
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: AppBundle\Security\UserVoter
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+
+
 security:
     role_hierarchy:
         ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
@@ -71,4 +82,5 @@ security:
         - { path: ^/elements, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
-        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }    
+        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
+
