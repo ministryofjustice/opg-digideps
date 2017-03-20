@@ -30,8 +30,8 @@
             <h2 class="heading-medium flush--ends">List of user accounts</h2>
         </div>
         <div class="column-half text--right">
-            {% if is_granted('add') %}
-            <a href="{{ path('add_team_member') }}"
+            {% if is_granted('add', app.user) %}
+                <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 Add user account
