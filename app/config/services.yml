@@ -40,7 +40,7 @@ services:
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments:
-         - AppBundle\Entity\Report
+         - AppBundle\Entity\Report\Report
 
     opg_digideps.casrec_repository:
         class: AppBundle\Entity\Repository\CasRecRepository
