@@ -28,3 +28,22 @@ services:
         class: AppBundle\Service\StatsService
         arguments: [ "@em" ]
 
+    opg_digideps.report_service:
+        class: AppBundle\Service\ReportService
+        arguments:
+          - "@opg_digideps.report_repository"
+          - "@opg_digideps.casrec_repository"
+
+    opg_digideps.report_repository:
+        class: AppBundle\Entity\Repository\ReportRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+         - AppBundle\Entity\Report
+
+    opg_digideps.casrec_repository:
+        class: AppBundle\Entity\Repository\CasRecRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+         - AppBundle\Entity\CasRec
