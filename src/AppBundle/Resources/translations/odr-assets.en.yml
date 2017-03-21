@@ -90,7 +90,7 @@ form:
     hint: ""
   valuationDate:
     legend: Valuation date (optional)
-    hint: "(DD/MM/YYYY)"
+    hint: For example, 31 3 2010
     label: Valuation date
   property:
     address:
@@ -121,10 +121,10 @@ form:
       label: Are there any other charges on the property?
       hint: For example, from the local authority to recover care fees
     isRentedOut:
-      label: Is the property rented out (either partly or fully)? 
+      label: Is the property rented out (either partly or fully)?
     rentAgreementEndDate:
       label: When does the rental agreement end?
-      hint: (MM/YYYY)
+      hint: For example, 12 2015
     rentIncomeMonth:
       label: What is the rental income each month?
   save:
