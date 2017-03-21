@@ -33,6 +33,7 @@ services:
         arguments:
           - "@opg_digideps.report_repository"
           - "@opg_digideps.casrec_repository"
+          - "@em"
 
     opg_digideps.report_repository:
         class: AppBundle\Entity\Repository\ReportRepository

@@ -113,7 +113,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         //lets create subsequent year's report
-        $nextYearReport = $this->getRepository(Report::class)->createNextYearReport($currentReport);
+        $nextYearReport = $this->get('opg_digideps.report_service')->createNextYearReport($currentReport);
         $this->getEntityManager()->flush($currentReport);
 
         //response to pass back
