@@ -42,7 +42,7 @@ form:
       hint: |
           For example, making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%
   doYouExpectFinancialDecisionsDetails:
-      label: Please tell us more
+      label: Please give us details about your decisions
   doYouHaveConcerns:
       label: Do you have any concerns about your deputyship?
       hint: |
@@ -50,4 +50,4 @@ form:
           managing %client%’s property, other family members’ involvement
           with %client%’s funds
   doYouHaveConcernsDetails:
-      label: Please give us more detail
+      label: Please give us details about your concerns
