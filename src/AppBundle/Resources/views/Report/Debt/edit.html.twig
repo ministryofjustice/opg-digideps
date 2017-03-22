@@ -24,11 +24,11 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for debt in form.debts %}
-        <div class="{{ debt.moreDetails is defined ? ' expand-more-details ' : '' }}">
+        <div class="{{ debt.moreDetails is defined ? ' js-details-expander ' : '' }}">
             {{ form_row(debt.debtTypeId) }}
             {{ form_input(debt.amount, 'amount', {
                 'inputPrefix' : '£',
-                'inputClass' : 'form-control__number js-more-info js-format-currency',
+                'inputClass' : 'form-control__number js-format-currency',
                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
                 'labelRaw': true
@@ -39,7 +39,6 @@
                     {{ form_input(debt.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow',
-                        'inputClass': ' transaction-more-details',
                         'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions),
                         'labelRaw': true
                     }) }}
@@ -51,11 +50,5 @@
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            new GOVUK.ExpandingMoreDetails('.expand-more-details');
-        });
-    </script>
 
 {% endblock %}
