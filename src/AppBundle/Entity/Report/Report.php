@@ -343,6 +343,12 @@ class Report
         $this->setType($this->getTypeBasedOnCasrecRecord($casRec));
     }
 
+    /**
+     * Return Report type based on casrec data
+     * 
+     * @param CasRec $casRec
+     * @return string
+     */
     public function getTypeBasedOnCasrecRecord(CasRec $casRec)
     {
         $typeOfRep = $casRec->getTypeOfReport();
