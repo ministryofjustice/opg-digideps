@@ -9,10 +9,10 @@
         root.GOVUK = {};
     }
 
-    var ExpandingMoreDetails = function (containerSelector) {
+    var detailsExpander = function (containerSelector) {
         var container = $(containerSelector);
-        var inputBox = container.find('.js-more-info');
-        var textareaGroup = container.find('textarea.transaction-more-details').parents('.form-group');
+        var inputBox = container.find('input[type="text"]');
+        var textareaGroup = container.find('textarea').parents('.form-group');
 
         // more details
         inputBox.on('keyup input paste change', function (event) {
@@ -27,6 +27,6 @@
         }).trigger('keyup');
     };
 
-    root.GOVUK.ExpandingMoreDetails = ExpandingMoreDetails;
+    root.GOVUK.detailsExpander = detailsExpander;
 
 }).call(this);

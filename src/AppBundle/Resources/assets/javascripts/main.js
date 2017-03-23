@@ -3,17 +3,20 @@
 
 $(document).ready(function() {
 
-	// Initialising the SelectionButtons GOVUK module
+	// SelectionButtons GOVUK module
 	var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
 	new GOVUK.SelectionButtons($blockLabels);
 
-	// Initialising the format currency module
+	// Format currency module
 	$('.js-format-currency').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
     });
 
-    // Initialising the character limiter module
+    // Character limiter module
     new GOVUK.limitChars('form');
+
+    // Details expander
+    new GOVUK.detailsExpander('.js-details-expander');
 
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
