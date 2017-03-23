@@ -61,7 +61,8 @@ class ReportService
         if ($casRec instanceof CasRecEntity) {
             $newReport->setType($report->getTypeBasedOnCasrecRecord($casRec));
         } else {
-            throw new NotFound('CasRec record not found');
+            // @to-do Should we throw an exception here? Use old type for now
+            $newReport->setType($report->getType());
         }
 
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
