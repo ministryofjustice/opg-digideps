@@ -7,25 +7,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Displays "title" and "next" for the asset.
- */
 class AssetTypeTitle extends AbstractType
 {
     /**
      * @var array
      */
-    private $assetDropdownKeys;
+    protected $assetDropdownKeys;
 
     /**
      * @var Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var string
      */
-    private $translatorDomain;
+    protected $translatorDomain;
 
     public function __construct(array $assetDropdownKeys, TranslatorInterface $translator, $translatorDomain)
     {
@@ -50,11 +47,6 @@ class AssetTypeTitle extends AbstractType
             $translation = $this->translator->trans('form.title.choices.' . $key, [], $this->translatorDomain);
             $ret[$translation] = $translation;
         }
-        // order by name (keep position for the last element)
-        $last = array_pop($ret);
-        // order by name
-        asort($ret);
-        $ret[$last] = $last;
 
         return $ret;
     }
