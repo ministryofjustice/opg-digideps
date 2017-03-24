@@ -36,7 +36,7 @@ startDate:
     hint: For example, 31 3 2015
 endDate:
     legend: End date
-    hint: For example, 31 3 2016
+    hint: For example, 30 3 2016
 form:
   newReportForm:
     subSectionTitle: "Add the reporting period"
@@ -50,7 +50,7 @@ form:
         hint: For example, 31 3 2015
       endDate:
         legend: "End date"
-        hint: For example, 31 3 2016
+        hint: For example, 30 3 2016
       save:
         label: "Save"
       cancel:

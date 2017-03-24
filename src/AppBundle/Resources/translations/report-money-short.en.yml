@@ -149,7 +149,7 @@ form:
         label: Amount
       date:
          label: What date did this money come in? (optional)
-         hint: For example, 12 2015
+         hint: For example, 20 12 2015
       addAnother:
         label: Add another expense
       save:
@@ -162,7 +162,7 @@ form:
           label: Amount
         date:
            label: What date did this money go out? (optional)
-           hint: For example, 12 2015
+           hint: For example, 20 12 2015
         addAnother:
           label: 12345345646
         save:
