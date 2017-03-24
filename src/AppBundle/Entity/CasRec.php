@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
  */
 class CasRec
 {

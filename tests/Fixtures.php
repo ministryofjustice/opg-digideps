@@ -32,6 +32,7 @@ class Fixtures
         $user->setPassword('temp@temp.com');
         $user->setFirstname('name' . time());
         $user->setLastname('surname' . time());
+
         foreach ($settersMap as $k => $v) {
             $user->$k($v);
         }
@@ -39,6 +40,36 @@ class Fixtures
         $this->em->persist($user);
 
         return $user;
+    }
+
+    /**
+     * @return EntityDir\CasRec
+     */
+    public function createCasRec(
+        EntityDir\Client $client,
+        EntityDir\User $user,
+        AppBundle\Entity\Report\Report $report,
+        $corref = 'null',
+        array $settersMap = []
+    ) {
+        // add casRec
+        $casRec = new EntityDir\CasRec(
+            $client->getCaseNumber(),
+            $client->getLastname(),
+            $user->getDeputyNo(),
+            $user->getLastname(),
+            $user->getAddressPostcode(),
+            $report->getType(),
+            $corref
+        );
+
+        foreach ($settersMap as $k => $v) {
+            $casRec->$k($v);
+        }
+
+        $this->em->persist($casRec);
+
+        return $casRec;
     }
 
     /**

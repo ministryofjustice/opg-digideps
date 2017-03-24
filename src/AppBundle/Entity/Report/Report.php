@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  * Reports.
  *
  * @ORM\Table(name="report")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Report\ReportRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
 class Report
 {
@@ -340,14 +340,25 @@ class Report
      */
     public function setTypeBasedOnCasrecRecord(CasRec $casRec)
     {
+        $this->setType($this->getTypeBasedOnCasrecRecord($casRec));
+    }
+
+    /**
+     * Return Report type based on casrec data
+     * 
+     * @param CasRec $casRec
+     * @return string
+     */
+    public function getTypeBasedOnCasrecRecord(CasRec $casRec)
+    {
         $typeOfRep = $casRec->getTypeOfReport();
         $corref = $casRec->getCorref();
         if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
-            $this->setType(Report::TYPE_103);
+            return Report::TYPE_103;
         } else if (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
-            $this->setType(Report::TYPE_104);
+            return Report::TYPE_104;
         } else {
-            $this->setType(Report::TYPE_102);
+            return Report::TYPE_102;
         }
     }
 

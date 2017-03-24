@@ -17,6 +17,7 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     private static $tokenPa = null;
+    private static $casRec1;
 
     // pa
     private static $pa1;
@@ -33,10 +34,15 @@ class ReportControllerTest extends AbstractTestController
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+        self::$client1 = self::fixtures()->createClient(
+            self::$deputy1,
+            ['setFirstname' => 'c1', 'setCaseNumber' => '101010101']
+        );
         self::fixtures()->flush();
 
         self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$casRec1 = self::fixtures()->createCasRec(self::$client1, self::$deputy1, self::$report1);
+
         self::$report103 = self::fixtures()->createReport(self::$client1, ['setType'=>Report::TYPE_103]);
 
         // deputy 2
