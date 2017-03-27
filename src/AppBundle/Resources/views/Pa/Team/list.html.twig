@@ -30,7 +30,7 @@
             <h2 class="heading-medium flush--ends">List of user accounts</h2>
         </div>
         <div class="column-half text--right">
-            {% if is_granted('add', app.user) %}
+            {% if is_granted('add-user') %}
                 <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
@@ -58,7 +58,7 @@
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
-                    {% if user.roleName == 'ROLE_PA' or user.roleName == 'ROLE_PA_ADMIN' %}
+                    {% if isNamedOrAdmin %}
                         <span class="status status-label admin">Administrator</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
@@ -81,7 +81,7 @@
                     {% endif %}
                 </td>
                 <td class="change-answer">
-                    {% if is_granted('edit', user) %}
+                    {% if is_granted('edit-user', user) %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
                     {% endif %}
                 </td>
