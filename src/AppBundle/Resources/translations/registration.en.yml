@@ -3,7 +3,7 @@ addClient:
     h1Title: Add your client's details
 courtDate:
     legend: Court order date
-    hint: (DD/MM/YYYY)
+    hint: For example, 31 3 2015
 firstname:
     label: First name
 lastname:
@@ -33,10 +33,10 @@ createReport:
     h1Title: Create a report
 startDate:
     legend: Start date
-    hint: (DD/MM/YYYY)
+    hint: For example, 31 3 2015
 endDate:
     legend: End date
-    hint: (DD/MM/YYYY)
+    hint: For example, 30 3 2016
 form:
   newReportForm:
     subSectionTitle: "Add the reporting period"
@@ -47,10 +47,10 @@ form:
         label: "Create new report"
       startDate:
         legend: "Start date"
-        hint: "(DD/MM/YYYY)"
+        hint: For example, 31 3 2015
       endDate:
         legend: "End date"
-        hint: "(DD/MM/YYYY)"
+        hint: For example, 30 3 2016
       save:
         label: "Save"
       cancel:

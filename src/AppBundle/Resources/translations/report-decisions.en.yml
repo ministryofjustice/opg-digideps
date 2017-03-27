@@ -36,7 +36,7 @@ mentalCapacity:
         hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
     mentalAssessmentDate:
         legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
-        hint: "(MM/YYYY)"
+        hint: For example, 12 2015
 
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"

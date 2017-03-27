@@ -42,7 +42,7 @@ form:
     hint: Local social services may provide a care plan to show how someone's welfare needs will be met
   whenWasCarePlanLastReviewed:
       label: When was the care plan last reviewed?
-      hint: (MM/YYYY)
+      hint: For example, 12 2015
   choices:
     everyday: Every day
     once_a_week: At least once a week
