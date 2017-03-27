@@ -34,7 +34,7 @@ class TeamController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', null, 'Not allowed');
+        $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
 
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(true));
 
@@ -66,7 +66,7 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/'.$id, 'User');
 
-        $this->denyAccessUnlessGranted('edit', $user, 'Not allowed');
+        $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
 
         $showRoleNameField = $user->getRoleName() !== EntityDir\User::ROLE_PA;
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($showRoleNameField), $user);
