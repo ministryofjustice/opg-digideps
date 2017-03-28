@@ -60,7 +60,7 @@ class UserVoter extends Voter
         $loggedUser= $token->getUser();
         if (!$loggedUser instanceof User) {
             // the loggedUSer must be logged in; if not, deny access
-            return Voter::ACCESS_DENIED;
+            return false;
         }
 
         if ($attribute === self::ADD_USER) {
@@ -71,25 +71,25 @@ class UserVoter extends Voter
         if ($attribute == self::EDIT_USER) {
             if ($subject->getId() === $loggedUser->getId()) {
                 // can always edit one's self
-                return Voter::ACCESS_GRANTED;
+                return true;
             }
 
             switch($loggedUser->getRoleName()) {
                 case User::ROLE_PA:
                     // Named can always edit everyone
-                    return Voter::ACCESS_GRANTED;
+                    return true;
                 case User::ROLE_PA_ADMIN:
                     // Admin can edit everyone except Named
                     if ($subject->getRoleName() !== User::ROLE_PA) {
-                        return Voter::ACCESS_GRANTED;
+                        return true;
                     }
-                    break;
+                    return false;
                 case User::ROLE_PA_TEAM_MEMBER:
                     // Team members can only edit themselves (See above)
-                    return Voter::ACCESS_DENIED;
+                    return false;
             }
         }
 
-        return Voter::ACCESS_DENIED;
+        return false;
     }
 }
