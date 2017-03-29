@@ -422,4 +422,29 @@ class UserController extends RestController
             $user->setRoleName($roleToSet);
         }
     }
+
+    /**
+     * @Route("/{id}/team", requirements={"id":"\d+"})
+     * @Method({"GET"})
+     */
+    public function getTeamByUserId(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+
+        $user = $this->getRepository(EntityDir\User::class)->find($id);
+        if (!$user) {
+            throw new \RuntimeException('User not found', 419);
+        }
+
+        if ($user->getTeams()->first() !== $this->getUser()->getTeams()->first()) {
+            throw $this->createAccessDeniedException('User not part of the same team');
+        }
+
+        $serialisedGroups = $request->query->has('groups')
+            ? (array)$request->query->get('groups') : ['user'];
+        $this->setJmsSerialiserGroups(['user']);
+
+
+        return $user->getTeams()->first();
+    }
 }
