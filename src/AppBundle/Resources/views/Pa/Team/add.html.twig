@@ -26,10 +26,11 @@
 
     {{ form_input(form.phoneMain,'form.phoneMain') }}
 
-    {{ form_checkbox_group(form.roleName, 'form.roleName', {
-        'fieldSetClass' : 'inline',
-    }) }}
-
+    {% if form.roleName is defined and form.roleName != null %}
+        {{ form_checkbox_group(form.roleName, 'form.roleName', {
+            'fieldSetClass' : 'inline',
+        }) }}
+    {%  endif %}
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
