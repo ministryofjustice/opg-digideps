@@ -38,7 +38,7 @@ stepPage:
       htmlTitle: "Deputy report - Money out | GOV.UK"
       supportTitle: Money out
       pageSectionTitle: Add a payment
-      pageSectionTitleWithCategory: Add an expense: %group%
+      pageSectionTitleWithCategory: Add an payment: %group%
       pageSectionDescription:
          step1: You can add one or more types of payment and come back to complete the section later.
 
