@@ -60,84 +60,79 @@ gulp.task('sass.prod', [
 // Compile the sass for the main styles for the site into a .css file
 // Sourcemaps created as well
 gulp.task('sass.debug.application', () => {
-
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sourcemaps.init())
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-
 });
 
 // Compile the sass for the main styles for the site into a minified .css file
 gulp.task('sass.application', () => {
-
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-
 });
 
 // Compile styles that are unique to IE 7.
 gulp.task('sass.application-ie7', () => {
-
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-
 });
 
 // Compile styles that are unique to IE 8
 gulp.task('sass.application-ie8', () => {
-
     return gulp.src(config.sassSrc + '/application-ie8.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-
 });
 
 // Compile styles that are used when the user prints something.
 gulp.task('sass.application-print', () => {
-
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-
 });
 
 // Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
 gulp.task('copy-css', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
+    return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
         .pipe(replace('images/', '/images/'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
 gulp.task('sass.images', () => {
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
+    return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest('./web/images'));
 
-    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
+    return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
         .pipe(gulp.dest('./web/images'));
 
-    gulp.src(config.imgSrc + '/**/*')
+    return gulp.src(config.imgSrc + '/**/*')
         .pipe(gulp.dest('./web/images'));
 });
+
 gulp.task('sass.fonts', () => {
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
+    return gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
 });
 
 // Copy non css related images
 gulp.task('images', () => {
-    gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
-    gulp.src('./node_modules/govuk_template_mustache/assets/images/*').pipe(gulp.dest('./web/images'));
-    gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
-});
+    return gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*')
+        .pipe(gulp.dest('./web/images'));
 
+    return gulp.src('./node_modules/govuk_template_mustache/assets/images/*')
+        .pipe(gulp.dest('./web/images'));
+
+    return gulp.src('./src/AppBundle/Resources/assets/images/**/*')
+        .pipe(gulp.dest('./web/images'));
+});
 
 // Creates the production version of the service javascript.
 // Files are concatinated and then minified with uglify.
@@ -171,13 +166,16 @@ gulp.task('js.debug', function () {
 
 // Create IE javascript with polyfills for missing functions and support.
 gulp.task('js.ie', function() {
-    gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
-    gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/vendor/goog/webfont-debug.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
+    return gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js')
+        .pipe(gulp.dest(config.webAssets + '/javascripts'));
+
+    return gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/vendor/goog/webfont-debug.js')
+        .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
 // Copy across javascript from other vendors.
 gulp.task('vendor', function () {
-    gulp.src('./node_modules/jquery/dist/jquery.min.js')
+    return gulp.src('./node_modules/jquery/dist/jquery.min.js')
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
@@ -189,10 +187,11 @@ gulp.task('lint.sass', function() {
 
 // Check javascript follows some good guidelines and check for obvious errors.
 gulp.task('lint.js', function () {
-    gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
+    return gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
+
 // Watch the source files and recompile in debug mode when there are changed.
 gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'copy-css', 'images', 'js.debug', 'js.ie', 'vendor'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
