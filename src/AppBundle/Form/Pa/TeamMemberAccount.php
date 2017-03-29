@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Pa;
 
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,9 +15,9 @@ class TeamMemberAccount extends AbstractType
     /**
      * @param $showRoleName
      */
-    public function __construct($showRoleName)
+    public function __construct(Team $team)
     {
-        $this->showRoleName = $showRoleName;
+        $this->team = $team;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,7 +36,7 @@ class TeamMemberAccount extends AbstractType
             ->add('jobTitle', 'text')
             ->add('phoneMain', 'text');
 
-        if ($this->showRoleName) {
+        if ($this->team->canAddAdmin()) {
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,

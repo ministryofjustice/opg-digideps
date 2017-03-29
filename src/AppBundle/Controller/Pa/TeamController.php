@@ -36,7 +36,10 @@ class TeamController extends AbstractController
     {
         $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
 
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(true));
+        $loggedInUser = $this->getUser()->getId();
+        $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
+
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team));
 
         $form->handleRequest($request);
 
