@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Entity\User;
 
 /**
  * Team
@@ -158,5 +159,21 @@ class Team
     {
         $this->teamName = $teamName;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAdminCount()
+    {
+        $adminCount = 0;
+        /** @var User $member */
+        foreach ($this->members as $member)
+        {
+            if ($member->isPaAdmin() || $member->isNamedDeputy())
+                $adminCount++;
+        }
+        
+        return $this->members->count();
     }
 }

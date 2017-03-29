@@ -23,6 +23,8 @@ class User implements UserInterface
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+    const ROLE_PROFESSIONAL_DEPUTY = 'ROLE_PROFESSIONAL_DEPUTY';
+    const ROLE_LOCAL_AUTHORITY_DEPUTY = 'ROLE_LOCAL_AUTHORITY_DEPUTY';
 
     /**
      * @var int
@@ -1028,16 +1030,51 @@ class User implements UserInterface
     public static function roleIdToName($id)
     {
         foreach ([
-                     self::ROLE_ADMIN              => ['OPG Admin', 1],
-                     self::ROLE_LAY_DEPUTY         => ['Lay Deputy', 2],
-                     'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
-                     'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
-                     self::ROLE_AD                 => ['Assisted Digital', 5],
-                     self::ROLE_PA                 => ['Pa', 6],
+                     self::ROLE_ADMIN       => ['OPG Admin', 1],
+                     self::ROLE_LAY_DEPUTY  => ['Lay Deputy', 2],
+                     self::ROLE_PROFESSIONAL_DEPUTY => ['Professional Deputy', 3],
+                     self::ROLE_LOCAL_AUTHORITY_DEPUTY => ['Local Authority Deputy', 4],
+                     self::ROLE_AD => ['Assisted Digital', 5],
+                     self::ROLE_PA => ['Pa', 6],
                  ] as $name => $row) {
             if ($row[1] == $id) {
                 return $name;
             }
         }
+    }
+
+    /**
+     * Is this user a PA Admin
+     *
+     * @return bool
+     */
+    public function isPaAdmin()
+    {
+        return $this->getRoleName() === self::ROLE_PA_ADMIN;
+    }
+
+    /**
+     * Is this user a named deputy
+     *
+     * @return bool
+     */
+    public function isNamedDeputy()
+    {
+        return $this->getRoleName() === self::ROLE_PA;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"user-login"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("team_admin_count")
+     */
+    public function getTeamAdminCount()
+    {
+        if ($this->getTeams()->isEmpty()) {
+            return 0;
+        }
+
+        return $this->getTeams()->first()->getAdminCount();
     }
 }
