@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp'),
+    gutil = require('gulp-util'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
@@ -31,7 +32,7 @@ var config = {
 
 // Remove previous builds of javascript and css files
 gulp.task('clean', () => {
-    del(['web/assets']);
+    return del(['web/assets/*']);
 });
 
 // Build all style related files for all browsers and copy
@@ -59,7 +60,7 @@ gulp.task('sass.prod', [
 
 // Compile the sass for the main styles for the site into a .css file
 // Sourcemaps created as well
-gulp.task('sass.debug.application', () => {
+gulp.task('sass.debug.application', ['clean'], () => {
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sourcemaps.init())
         .pipe(sass(config.sass).on('error', sass.logError))
@@ -68,7 +69,7 @@ gulp.task('sass.debug.application', () => {
 });
 
 // Compile the sass for the main styles for the site into a minified .css file
-gulp.task('sass.application', () => {
+gulp.task('sass.application', ['clean'], function () {
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
@@ -76,7 +77,7 @@ gulp.task('sass.application', () => {
 });
 
 // Compile styles that are unique to IE 7.
-gulp.task('sass.application-ie7', () => {
+gulp.task('sass.application-ie7', ['clean'], () => {
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
@@ -84,14 +85,14 @@ gulp.task('sass.application-ie7', () => {
 });
 
 // Compile styles that are unique to IE 8
-gulp.task('sass.application-ie8', () => {
+gulp.task('sass.application-ie8', ['clean'], () => {
     return gulp.src(config.sassSrc + '/application-ie8.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Compile styles that are used when the user prints something.
-gulp.task('sass.application-print', () => {
+gulp.task('sass.application-print', ['clean'], () => {
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
@@ -99,14 +100,14 @@ gulp.task('sass.application-print', () => {
 });
 
 // Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
-gulp.task('copy-css', () => {
+gulp.task('copy-css', ['clean'], function () {
     return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
         .pipe(replace('images/', '/images/'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
-gulp.task('sass.images', () => {
+gulp.task('sass.images', ['clean'], () => {
     return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest('./web/images'));
 
@@ -117,13 +118,13 @@ gulp.task('sass.images', () => {
         .pipe(gulp.dest('./web/images'));
 });
 
-gulp.task('sass.fonts', () => {
+gulp.task('sass.fonts', ['clean'], () => {
     return gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
 });
 
 // Copy non css related images
-gulp.task('images', () => {
+gulp.task('images', ['clean'], () => {
     return gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*')
         .pipe(gulp.dest('./web/images'));
 
@@ -136,7 +137,7 @@ gulp.task('images', () => {
 
 // Creates the production version of the service javascript.
 // Files are concatinated and then minified with uglify.
-gulp.task('js.prod', ['lint.js'], () => {
+gulp.task('js.prod', ['lint.js', 'clean'], () => {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
@@ -152,7 +153,7 @@ gulp.task('js.prod', ['lint.js'], () => {
 // create a debug version of javascript to allow easier debugging by
 // having javascript that can easily have breakpoints and stepped through
 // Used by the watch process.
-gulp.task('js.debug', function () {
+gulp.task('js.debug', ['clean'], function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
@@ -165,7 +166,7 @@ gulp.task('js.debug', function () {
 });
 
 // Create IE javascript with polyfills for missing functions and support.
-gulp.task('js.ie', function() {
+gulp.task('js.ie', ['clean'], function() {
     return gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js')
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 
@@ -174,7 +175,7 @@ gulp.task('js.ie', function() {
 });
 
 // Copy across javascript from other vendors.
-gulp.task('vendor', function () {
+gulp.task('vendor', ['clean'], function () {
     return gulp.src('./node_modules/jquery/dist/jquery.min.js')
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
