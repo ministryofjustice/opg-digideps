@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TeamMemberAccount extends AbstractType
 {
-    private $showRoleName;
+    private $team;
 
     /**
      * @param $showRoleName
@@ -29,7 +29,6 @@ class TeamMemberAccount extends AbstractType
             ->add('lastname', 'text', [
                 'required' => true,
             ])
-            ->add('email', 'text')
             ->add('email', 'text', [
                 'required' => true,
             ])
@@ -51,7 +50,7 @@ class TeamMemberAccount extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups'  => $this->showRoleName ? ['pa_team_add', 'pa_team_role_name'] : ['pa_team_add'],
+            'validation_groups'  => $this->team->canAddAdmin() ? ['pa_team_add', 'pa_team_role_name'] : ['pa_team_add'],
             'data_class'         => User::class,
         ]);
     }
