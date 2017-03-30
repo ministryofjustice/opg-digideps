@@ -72,10 +72,10 @@ security:
         # /admin accessible only from ADMIN, super users and AD users
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
-        - { path: /pa/team/add, roles: [ROLE_PA, ROLE_PA_ADMIN] }
-        - { path: /pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
-        - { path: /pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
-        - { path: /pa, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/team/add, roles: [ROLE_PA, ROLE_PA_ADMIN] }
+        - { path: ^/pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
 
         # open URLs
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
