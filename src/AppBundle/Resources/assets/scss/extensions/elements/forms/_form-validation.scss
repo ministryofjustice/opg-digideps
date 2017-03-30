@@ -1,0 +1,10 @@
+// Form validation
+// ==========================================================================
+
+.error {
+	.form-date {
+		.form-control {
+			border: 4px solid $error-colour;
+		}
+	}
+}
