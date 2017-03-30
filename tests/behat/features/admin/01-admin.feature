@@ -53,7 +53,9 @@ Feature: admin / admin
     Scenario: change user password on admin area
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "admin-pasword-change-init"
-        And I click on "user-account, change-password"
+        And I click on "user-account"
+        Then the response status code should be 200
+        And I click on "change-password"
         Then the response status code should be 200
         # wrong old password
         When I fill in "change_password_current_password" with "this.is.the.wrong.password"
