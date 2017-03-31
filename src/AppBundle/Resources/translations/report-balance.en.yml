@@ -6,7 +6,7 @@ page:
 balance:
     good:
       pageSectionTitle: Balance the accounts
-      pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
+      pageSectionDescription: Based on the information you've given us, we've successfully balanced your accounts
       accountsBalanced: Accounts balanced
       accountsBalancedMessage: Money in and money out match the balance
     bad:
@@ -16,7 +16,7 @@ balance:
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut:
         title: "Total balance after money in and money out:"
-        subtitle: This is what you entered for the opening balance, income and spending including gifts and expenses
+        subtitle: This is what you entered for the opening balance, income and spending including gifts and deputy expenses
       totalFromAccounts:
         title: "Total balance of all bank accounts:"
         subtitle: This is what you entered for the closing balance on %endDate%
@@ -27,7 +27,7 @@ balance:
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
       goBack: |
-         After you have entered all of %client%'s income and expenses,
+         After you have entered all of %client%'s income and outgoing payments,
          you should have a sum of money that matches the one you entered in the
          closing balance in <a href="%accountsLink%">bank accounts</a>.
          %paragraphBreak%
