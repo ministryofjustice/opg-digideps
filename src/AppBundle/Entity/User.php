@@ -811,6 +811,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a PA Named Deputy?
+     *
+     * @return bool
+     */
+    public function isNamedDeputy()
+    {
+        return in_array($this->roleName, [self::ROLE_PA]);
+    }
+
+    /**
      * Is User a Deputy Either PA or Lay?
      * 
      * @return bool true if user role is LAY or PA

@@ -155,8 +155,13 @@ class Team
         return $this;
     }
 
-    public function canAddAdmin()
+    public function canAddAdmin(User $targetUser = null)
     {
+        // don't show role for named deputy
+        if (!empty($targetUser) && $targetUser->isNamedDeputy()) {
+            return false;
+        }
+
         $adminCount = 0;
         /** @var User $member */
         foreach ($this->members as $member)

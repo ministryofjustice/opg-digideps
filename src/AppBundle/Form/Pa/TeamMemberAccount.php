@@ -10,14 +10,23 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TeamMemberAccount extends AbstractType
 {
+    /**
+     * @var Team
+     */
     private $team;
+
+    /**
+     * @var User|null
+     */
+    private $targetUser = null;
 
     /**
      * @param $showRoleName
      */
-    public function __construct(Team $team)
+    public function __construct(Team $team, User $targetUser = null)
     {
         $this->team = $team;
+        $this->targetUser = $targetUser;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,7 +44,7 @@ class TeamMemberAccount extends AbstractType
             ->add('jobTitle', 'text')
             ->add('phoneMain', 'text');
 
-        if ($this->team->canAddAdmin()) {
+        if ($this->team->canAddAdmin($this->targetUser)) {
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,

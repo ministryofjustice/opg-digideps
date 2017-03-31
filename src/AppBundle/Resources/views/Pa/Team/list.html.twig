@@ -2,8 +2,6 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
-
 {% block htmlTitle %}User accounts{% endblock %}
 {% block pageTitle %}User accounts{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
@@ -18,7 +16,7 @@
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {% if isNamedOrAdmin %}
+        {% if (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
             Add, edit and remove user accounts for you and your team members
         {% else %}
             View team members and edit your account
@@ -58,7 +56,7 @@
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
-                    {% if isNamedOrAdmin %}
+                    {% if (user.roleName == 'ROLE_PA' or user.roleName == 'ROLE_PA_ADMIN') %}
                         <span class="status status-label admin">Administrator</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
