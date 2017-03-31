@@ -41,6 +41,19 @@ form:
           behalf of %client% in the next 12 months?
       hint: |
           For example, making a large gift, maintenance and alterations to %client%'s home, or buying and selling property for %client%
+      hiddenText01:
+        summary: Selling property on behalf of your client
+        content:
+          para01: |
+            Unless your court order already gives you authority to sell property %client% owns or
+            has a share in, you need to apply to the Court of Protection for permission.
+          para02: |
+            It costs £400 to apply – paid from the client's funds – and there may be additional
+            costs if there's a court hearing.
+          para03: |
+            You can also apply to pay less or no fee for an application to the court if the
+            client has a small estate (low funds).
+          para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
   doYouExpectFinancialDecisionsDetails:
       label: Please give us details about your decisions
   doYouHaveConcerns:
