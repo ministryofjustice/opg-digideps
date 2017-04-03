@@ -24,6 +24,10 @@ class UserController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
 
+        if (!in_array($request->get('role_name'), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
+            $request->request->set('role_name', EntityDir\User::ROLE_PA_TEAM_MEMBER);
+        }
+
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
             'email' => 'notEmpty',
