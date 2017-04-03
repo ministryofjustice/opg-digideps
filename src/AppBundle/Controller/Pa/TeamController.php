@@ -96,7 +96,18 @@ class TeamController extends AbstractController
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+
+            try {
+                $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+            } catch (\Exception $e) {
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $form->addError(new FormError($e->getData()['message']));
+                }
+
+                return [
+                    'form' => $form->createView()
+                ];
+            }
 
             $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
 
