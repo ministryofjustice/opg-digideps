@@ -7,7 +7,11 @@
 
 {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.h1Title' | trans }}{% endblock %}
-    {% block pageTitleClass %}heading-large{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">User accounts</span>
+{% endblock %}
 
 {% block breadcrumbs %}
     [breadcrumbs]
