@@ -41,6 +41,19 @@
                 </div>
             </div>
         </div>
+
+        <details class="text push--bottom">
+            <summary>
+                <span class="summary">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
+                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
+
     {% endif %}
 
     {% if step == 2 %}

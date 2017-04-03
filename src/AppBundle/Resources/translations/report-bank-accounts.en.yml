@@ -5,14 +5,15 @@ startPage:
     An important part of your role as a deputy is to keep a record of
     the money that comes in and goes out of %client%'s accounts.
   pageSectionDescription2: |
-    Use this section to tell us about all of %client%'s bank accounts, building society accounts, savings accounts and ISAs.
+    Use this section to tell us about all of %client%'s bank accounts, building society
+    accounts, savings accounts and ISAs.
   pageSectionDescription3: |
     We will also need to know the balance of each account.
-    hiddenText01:
-  summary: More on how to carry out your duties
-  content:
-    para01: |
-        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed advice on how to look after %client%'s financial affairs.
+  hiddenText01:
+    summary: More on how to carry out your duties
+    content:
+      para01: |
+          OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed advice on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:

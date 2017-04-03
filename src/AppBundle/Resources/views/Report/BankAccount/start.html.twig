@@ -18,6 +18,15 @@
         <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
         <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
         <p>{{ 'startPage.pageSectionDescription3' | trans(transOptions) }}</p>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
     </div>
 
     <a href="{{ path('bank_accounts_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
