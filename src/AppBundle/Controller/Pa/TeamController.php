@@ -3,8 +3,11 @@
 namespace AppBundle\Controller\Pa;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\RestClientException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
@@ -44,7 +47,22 @@ class TeamController extends AbstractController
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+
+            if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
+                $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
+            }
+
+            try {
+                $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+            } catch (\Exception $e) {
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $form->addError(new FormError($e->getData()['message']));
+                }
+
+                return [
+                    'form' => $form->createView()
+                ];
+            }
 
             $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
 
