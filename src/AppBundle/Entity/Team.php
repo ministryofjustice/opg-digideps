@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Team
 {
-    const MAX_PA_ADMINS = 2;
+    const MAX_PA_ADMINS = 3;
 
     /**
      * @JMS\Type("integer")
