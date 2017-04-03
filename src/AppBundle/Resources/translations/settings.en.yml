@@ -1,15 +1,17 @@
 page:
-  htmlTitle: "Deputy report - Your account | GOV.UK"
-  pageSectionTitle: "Your account"
+  htmlTitle: "Deputy report - Your deputyship details | GOV.UK"
+  pageSectionTitle: "Your deputyship details"
 
 links:
   clientDetails:
-    label: %client%'s details
-    hint: Edit %client%'s contact details.
+    title: %client%'s details
+    description: Edit %client%'s name, address, phone number, case number and your court order date.
   userDetails:
-    label: Your details
-    hint: Edit your contact details.
+    title: Your details
+    description: Edit your name, address and phone number.
+    description2: To edit your email address, please call the Helpline and ask to speak to your case worker.
+
   password:
-    label: Password
-    hint: Change the password which you use to sign in.
+    title: Password
+    description: Change the password which you use to sign in.
 

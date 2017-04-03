@@ -15,12 +15,50 @@
 {% block pageContent %}
     <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
 
-        <a href="{{ path('user_edit') }}"
-           class="edit-button behat-link-deputy-edit">{{ 'yourDetails.edit'| trans }}</a>
+        <table class="text">
+            <tbody>
+                <tr>
+                    <th scope="row">Full name</th>
+                    <td>{{ user.getFullname }}</td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">{{ 'yourDetails.address' | trans }}</th>
+                    <td>
+                        {% if user.address1 is not empty %}
+                            <div itemprop="streetAddress">{{ user.address1 }}</div>
+                        {% endif %}
+                        {% if user.address2 is not empty %}
+                            <div itemprop="addressLocality">{{ user.address2 }}</div>
+                        {% endif %}
+                        {% if user.address3 is not empty %}
+                            <div itemprop="addressRegion">{{ user.address3 }}</div>
+                        {% endif %}
+                        {% if user.addressPostcode is not empty %}
+                            <div itemprop="postalCode">{{ user.addressPostcode }}</div>
+                        {% endif %}
+                        {% if user.addressCountry is not empty %}
+                            <div itemprop="addressCountry">{{ user.addressCountry | country_name }}</div>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ 'yourDetails.mainPhoneNumber' | trans }}</th>
+                    <td>{{ user.phoneMain }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ 'yourDetails.alternativePhoneNumber' | trans }}</th>
+                    <td>{{ user.phoneAlternative }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ 'yourDetails.emailAddress' | trans }}</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-       <h2 class="title behat-region-my-details-name" itemprop="name">{{ user.getFullname }}</h2>
+       <h2 class="title behat-region-my-details-name visuallyhidden" itemprop="name">{{ user.getFullname }}</h2>
 
-        <dl class="item-data item-data-fixed behat-region-my-details">
+        <dl class="item-data item-data-fixed behat-region-my-details visuallyhidden">
             <dt class="item-label">{{ 'yourDetails.address' | trans }}</dt>
             <dd class="item-value behat-region-my-details-address" itemprop="address" itemscope
                 itemtype="http://schema.org/PostalAddress">
@@ -42,7 +80,7 @@
             </dd>
 
             <dt class="item-label">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
-            <dd class="item-value behat-region-my-details-phone-main">{{ user.phoneMain }}&nbsp;</dd>
+            <dd class="item-value behat-region-my-details-phone-main">{{ user.phoneMain }}</dd>
 
             <dt class="item-label">{{ 'yourDetails.alternativePhoneNumber' | trans }}</dt>
             <dd class="item-value behat-region-my-details-phone-alt">{{ user.phoneAlternative }}&nbsp;</dd>
@@ -50,6 +88,11 @@
             <dt class="item-label">{{ 'yourDetails.emailAddress' | trans }}</dt>
             <dd class="item-value behat-region-my-details-email">{{ user.email }}&nbsp;</dd>
         </dl>
+
+
     </div>
+
+    <a href="{{ path('user_edit') }}"
+       class="button push--top behat-link-deputy-edit">{{ 'yourDetails.edit'| trans }}</a>
 
 {% endblock %}
