@@ -7,9 +7,10 @@
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
 {% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block linkBack %}
-    <a href="{{ path('pa_team') }}" class="link-back behat-link-back">Back</a>
+{% block supportTitleTop %}
+    <span class="heading-secondary">User accounts</span>
 {% endblock %}
 
 {% block breadcrumbs %}
