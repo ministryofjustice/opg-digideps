@@ -11,9 +11,9 @@ balance:
       accountsBalancedMessage: Money in and money out match the balance
     bad:
       pageSectionTitle: Balance the accounts
-      pageSectionDescription: There’s a difference of £%totalOffset% between what you’ve told us the total money in and money out was, and the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.
+      pageSectionDescription: There's a difference of £%totalOffset% between what you've told us the total money in and money out was, and the final balance of %client%'s accounts. This means we haven't been able to balance the accounts.
       accountsBalanced: Accounts not balanced
-      accountsBalancedMessage: Money in and money out don’t match the balance
+      accountsBalancedMessage: Money in and money out don't match the balance
       totalAfterMoneyInOut:
         title: "Total balance after money in and money out:"
         subtitle: This is what you entered for the opening balance, income and spending including gifts and deputy expenses
@@ -38,7 +38,7 @@ balance:
          <a href="%giftsLink%">gifts</a> and
          <a href="%expensesLink%">expenses</a>
           sections.
-      cantFind: Can’t find the problem?
+      cantFind: Can't find the problem?
       form:
         explanation:
           label: If, having checked, you still can't see what's gone wrong, you can use the form below to explain why you weren't able to make the sums add up. You can still submit your report, and we may be able to help.

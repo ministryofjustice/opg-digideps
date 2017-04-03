@@ -4,14 +4,14 @@ startPage:
     pageSectionTitle: Money in
     pageSectionDescription1: |
       Tell us about how you have managed %client%'s money during this reporting period.
-      We need this information to understand the client’s financial situation.
+      We need this information to understand the client's financial situation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
       Tell us about how you have managed %client%'s money during this reporting period.
-      We need this information to understand the client’s financial situation.
+      We need this information to understand the client's financial situation.
     startButton: Start money out
 
 
@@ -61,7 +61,7 @@ addPage:
         List all one-off payments of over £1,000
       pageSectionDescription2: |
         You may find it easier to use %client%'s bank statements to find this information.
-        Don’t tell us about any regular payments, such as care home fees.
+        Don't tell us about any regular payments, such as care home fees.
       pageSectionDescription3: |
         You can add one or more payment items and come back to complete the section later.
 

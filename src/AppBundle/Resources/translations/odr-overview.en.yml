@@ -46,14 +46,14 @@ deputy_expenses:
       done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 income_benefits:
     subSectionTitle: "Income and benefits"
-    subSectionDescription: "Give us details of %client%’s income and any state benefits"
+    subSectionDescription: "Give us details of %client%'s income and any state benefits"
     edit: "Edit"
     start: "Start"
     label:
       done: "Finished"
 bank_accounts:
     subSectionTitle: "Accounts"
-    subSectionDescription: "Add %client%’s bank, building society and savings accounts"
+    subSectionDescription: "Add %client%'s bank, building society and savings accounts"
     edit: "Edit"
     start: "Start"
     label:
@@ -103,7 +103,7 @@ odrSubmit:
 decisionsMadeAsDeputy: Decisions made as deputy
 
 announcement: |
-  We’ve made some changes to the layout of this page.<br/>
+  We've made some changes to the layout of this page.<br/>
   Use the links on this page to view and edit the different sections of your new deputy report.
 
 

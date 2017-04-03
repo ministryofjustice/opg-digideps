@@ -106,7 +106,7 @@ form:
     owned:
       label: Is the property fully or partly-owned by %client%?
     ownedPercentage:
-      label: What is %client%’s share of the property?
+      label: What is %client%'s share of the property?
     isSubjectToEquityRelease:
       label: Is this property subject to an equity release scheme?
       hint: This means that %client%'s stake, or equity, in the property has been used to generate a lump sum or income
