@@ -16,6 +16,11 @@ class TeamMemberAccount extends AbstractType
     private $team;
 
     /**
+     * @var User
+     */
+    private $loggedInUser = null;
+
+    /**
      * @var User|null
      */
     private $targetUser = null;
@@ -23,9 +28,10 @@ class TeamMemberAccount extends AbstractType
     /**
      * @param $showRoleName
      */
-    public function __construct(Team $team, User $targetUser = null)
+    public function __construct(Team $team, User $loggedInUser, User $targetUser = null)
     {
         $this->team = $team;
+        $this->loggedInUser = $loggedInUser;
         $this->targetUser = $targetUser;
     }
 
@@ -38,7 +44,7 @@ class TeamMemberAccount extends AbstractType
             ->add('jobTitle', 'text', ['required' => !empty($this->targetUser)])
             ->add('phoneMain', 'text', ['required' => !empty($this->targetUser)]);
 
-        if ($this->team->canAddAdmin($this->targetUser)) {
+        if (!$this->loggedInUser->isTeamMember() && $this->team->canAddAdmin($this->targetUser)) {
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,

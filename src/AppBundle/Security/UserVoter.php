@@ -57,8 +57,8 @@ class UserVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $loggedUser= $token->getUser();
-        if (!$loggedUser instanceof User) {
+        $loggedInUser= $token->getUser();
+        if (!$loggedInUser instanceof User) {
             // the loggedUSer must be logged in; if not, deny access
             return false;
         }
@@ -68,15 +68,17 @@ class UserVoter extends Voter
             return $this->decisionManager->decide($token, [User::ROLE_PA, USER::ROLE_PA_ADMIN]);
         }
 
-        if ($attribute == self::EDIT_USER) {
-            if ($subject->getId() === $loggedUser->getId()) {
+        if ($attribute === self::EDIT_USER) {
+            if ($subject->getId() === $loggedInUser->getId()) {
                 // can always edit one's self
                 return true;
             }
 
-            switch($loggedUser->getRoleName()) {
+            switch($loggedInUser->getRoleName()) {
                 case User::ROLE_PA:
-                    // Named can always edit everyone
+                case User::ROLE_ADMIN:
+                case User::ROLE_AD:
+                    // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
                     return true;
                 case User::ROLE_PA_ADMIN:
                     // Admin can edit everyone except Named

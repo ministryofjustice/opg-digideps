@@ -157,7 +157,7 @@ class Team
 
     public function canAddAdmin(User $targetUser = null)
     {
-        // don't show role for named deputy
+        // don't show role for named deputy or if logged in user doesn't have permission
         if (!empty($targetUser) && $targetUser->isNamedDeputy()) {
             return false;
         }
