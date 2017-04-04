@@ -80,7 +80,11 @@
                 </td>
                 <td class="change-answer">
                     {% if is_granted('edit-user', user) %}
-                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
+                        {% if user.id == app.user.id %}
+                            <a class="behat-link-edit" href="{{  path('user_edit') }}">Edit</a>
+                        {% else %}
+                            <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

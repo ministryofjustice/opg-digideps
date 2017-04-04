@@ -791,6 +791,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a Team Member?
+     *
+     * @return bool
+     */
+    public function isTeamMember()
+    {
+        return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
+    }
+
+    /**
      * Is user a PA Deputy?
      *
      * @return bool
