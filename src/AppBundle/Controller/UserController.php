@@ -410,7 +410,7 @@ class UserController extends RestController
             $isPaMemberBeingCreated = in_array($roleToSet, [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
             if ($isPaMemberBeingCreated) {
                 if (!$isPaCreator) {
-                    throw $this->createAccessDeniedException("$roleLoggedUser now allowed to create $roleToSet user");
+                    throw $this->createAccessDeniedException("$roleLoggedUser not allowed to create $roleToSet user");
                 }
                 // add to creator's team
                 if ($team = $this->getUser()->getTeams()->first()) {
