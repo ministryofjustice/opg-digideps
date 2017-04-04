@@ -32,17 +32,11 @@ class TeamMemberAccount extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstname', 'text', [
-                'required' => true,
-            ])
-            ->add('lastname', 'text', [
-                'required' => true,
-            ])
-            ->add('email', 'text', [
-                'required' => true,
-            ])
-            ->add('jobTitle', 'text')
-            ->add('phoneMain', 'text');
+            ->add('firstname', 'text', ['required' => true])
+            ->add('lastname', 'text', ['required' => true])
+            ->add('email', 'text', ['required' => true])
+            ->add('jobTitle', 'text', ['required' => !empty($this->targetUser)])
+            ->add('phoneMain', 'text', ['required' => !empty($this->targetUser)]);
 
         if ($this->team->canAddAdmin($this->targetUser)) {
             $builder->add('roleName', 'choice', [
