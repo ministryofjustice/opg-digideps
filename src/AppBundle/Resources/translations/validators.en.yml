@@ -8,26 +8,26 @@ user:
   firstname:
     notBlank: Enter your first name
     notBlankOtherUser: Enter the first name
-    minLength: Your first name must be at least {{ limit }} letters long
-    maxLength: Your first name can't be longer than {{ limit }} letters
+    minLength: The first name must be at least {{ limit }} letters long
+    maxLength: The first name can't be longer than {{ limit }} letters
   lastname:
     notBlank: Enter your last name
     notBlankOtherUser: Enter the last name
-    minLength: Your last name must be at least {{ limit }} letters long
-    maxLength: Your last name can't be longer than {{ limit }} letters
+    minLength: The last name must be at least {{ limit }} letters long
+    maxLength: The last name can't be longer than {{ limit }} letters
   password:
       notBlank: You can't leave this blank: please enter a password
-      minLength: Your password must have at least {{ limit }} letters
+      minLength: The password must have at least {{ limit }} letters
       maxLength: The password can't be longer than {{ limit }} letters
-      noLowerCaseChars: Your password must have at least one lowercase letter
-      noUpperCaseChars: Your password must have at least one capital letter
-      noNumber: Your password must have at least one number
+      noLowerCaseChars: The password must have at least one lowercase letter
+      noUpperCaseChars: The password must have at least one capital letter
+      noNumber: The password must have at least one number
   role:
       notBlank: You must specify a role for the user
       notBlankPa: Please choose if user has admin rights or not
   address1:
     notBlank: Enter your address
-    maxLength: Your address name can't be longer than {{ limit }} letters
+    maxLength: The address name can't be longer than {{ limit }} letters
   address2:
     notBlank: Enter your address
   address3:
@@ -40,9 +40,11 @@ user:
     notBlank: Enter your country
   jobTitle:
     notBlank: Enter your job title
+    notBlankOtherUser: Enter the job title
     maxMessage: The job title can't be longer than {{ limit }} letters
   phoneMain:
     notBlank: Enter your phone number
+    notBlankOtherUser: Enter the phone number
   paTeamName:
     maxMessage: The team name can't be longer than {{ limit }} letters
   agreeTermsUse:
@@ -58,7 +60,7 @@ client:
         maxMessage: The last name can't be longer than {{ limit }} letters
     caseNumber:
         notBlank: Enter your case number
-        exactMessage1:  Your case number should be 8 characters long.
+        exactMessage1:  The case number should be 8 characters long.
         exactMessage2:  Check the last 8 characters of your case reference number and try again
     courtDate:
         message: Enter a valid date in this format: DD/MM/YYYY
