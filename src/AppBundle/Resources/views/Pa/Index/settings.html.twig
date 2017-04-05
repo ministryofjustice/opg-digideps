@@ -8,11 +8,6 @@
 
 {% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
 
-{% block breadcrumbs %}
-    [breadcrumbs]
-    {#{{ macros.breadcrumbsSettings('home') }}#}
-{% endblock %}
-
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}

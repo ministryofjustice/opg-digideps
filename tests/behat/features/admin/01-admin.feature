@@ -10,7 +10,7 @@ Feature: admin / admin
         Then I should be on "/admin/"
         And I create a new "ODR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
-        #Then the response status code should be 200
+        Then the response status code should be 200
         And I should see "OPG Admin" in the "users" region
         And I save the page as "admin-admin-added"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
@@ -26,7 +26,7 @@ Feature: admin / admin
         Then the response status code should be 500
         # follow link as it is
         When I open the "/user/activate/" link from the email
-        #Then the response status code should be 200
+        Then the response status code should be 200
         And I save the page as "admin-step1"
         # only testing the correct case, as the form is the same for deputy
         When I fill in the following: 
@@ -40,19 +40,23 @@ Feature: admin / admin
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to admin page "/admin/upload"
         And I save the page as "admin-upload"
-        #Then the response status code should be 200
+        Then the response status code should be 200
         When I go to admin page "/admin/stats"
         And I save the page as "admin-stats"
-        #Then the response status code should be 200
-        When I go to admin page "/user"
-        And I save the page as "admin-user"
-        #Then the response status code should be 200
+        Then the response status code should be 200
+        # /user no longer exists, changed to main home screen (user page)
+        When I am on admin page "/"
+        And I save the page as "admin-home"
+        Then the response status code should be 200
         
 
     Scenario: change user password on admin area
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "admin-pasword-change-init"
-        And I click on "user-account, change-password"
+        And I click on "user-account"
+        Then the response status code should be 200
+        And I click on "change-password"
+        Then the response status code should be 200
         # wrong old password
         When I fill in "change_password_current_password" with "this.is.the.wrong.password"
         And I press "change_password_save"

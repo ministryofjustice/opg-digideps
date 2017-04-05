@@ -105,7 +105,7 @@ Feature: PA team
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
-    #And I should not see the "add" link
+    And I should not see the "add" link
 
   Scenario: PA (named) logs in and edit users
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

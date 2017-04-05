@@ -3,8 +3,11 @@
 namespace AppBundle\Controller\Pa;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception\RestClientException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
@@ -34,13 +37,32 @@ class TeamController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount(true));
+        $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
+
+        $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
+
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team, $this->getUser()));
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+
+            if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
+                $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
+            }
+
+            try {
+                $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+            } catch (\Exception $e) {
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $form->addError(new FormError($e->getData()['message']));
+                }
+
+                return [
+                    'form' => $form->createView()
+                ];
+            }
 
             $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
 
@@ -64,25 +86,28 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/'.$id, 'User');
 
-        $loggedUserRole = $this->getUser()->getRoleName();
-        if ($loggedUserRole === EntityDir\User::ROLE_PA_TEAM_MEMBER) {
-            throw $this->createAccessDeniedException('Team member cannot edit Team member');
-        }
-        if ($loggedUserRole !== EntityDir\User::ROLE_PA &&
-            $user->getRoleName() === EntityDir\User::ROLE_PA
-        ) {
-            throw $this->createAccessDeniedException('Only Named PAs can edit (other) named PAs');
-        }
+        $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
 
+        $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
 
-        $showRoleNameField = $user->getRoleName() !== EntityDir\User::ROLE_PA;
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($showRoleNameField), $user);
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team, $this->getUser(), $user), $user);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+
+            try {
+                $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+            } catch (\Exception $e) {
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $form->addError(new FormError($e->getData()['message']));
+                }
+
+                return [
+                    'form' => $form->createView()
+                ];
+            }
 
             $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
 
