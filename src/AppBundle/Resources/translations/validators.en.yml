@@ -7,12 +7,12 @@ user:
     doesNotMatch: Email does not match
   firstname:
     notBlank: Enter your first name
-    notBlankOtherUser: Enter the first name
+    notBlankOtherUser: Enter a first name
     minLength: Your first name must be at least {{ limit }} letters long
     maxLength: Your first name can't be longer than {{ limit }} letters
   lastname:
     notBlank: Enter your last name
-    notBlankOtherUser: Enter the last name
+    notBlankOtherUser: Enter a last name
     minLength: Your last name must be at least {{ limit }} letters long
     maxLength: Your last name can't be longer than {{ limit }} letters
   password:
@@ -40,9 +40,11 @@ user:
     notBlank: Enter your country
   jobTitle:
     notBlank: Enter your job title
+    notBlankOtherUser: Enter a job title
     maxMessage: The job title can't be longer than {{ limit }} letters
   phoneMain:
     notBlank: Enter your phone number
+    notBlankOtherUser: Enter a phone number
   paTeamName:
     maxMessage: The team name can't be longer than {{ limit }} letters
   agreeTermsUse:
