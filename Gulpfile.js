@@ -27,117 +27,63 @@ var config = {
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
     imgSrc: 'src/AppBundle/Resources/assets/images',
     sassSrc: 'src/AppBundle/Resources/assets/scss',
-    webAssets: 'web/assets/' + now
+    webAssets: 'web/assets/' + now,
+    production: true
 };
 
-// Remove previous builds of javascript and css files
+// Set to development
+gulp.task('set-development', function () {
+    config.production = false;
+});
+
+// Clean out old assets
 gulp.task('clean', function () {
     return del(['web/assets/*']);
 });
 
-// Build all style related files for all browsers and copy
-// related images and font files along with them
-// DEBUG MODE: No minification
-gulp.task('sass.debug', [
-    'sass.debug.application',
-    'sass.application-ie7',
-    'sass.application-ie8',
-    'sass.application-print',
-    'sass.images',
-    'sass.fonts']);
-
-// Build all style related files for all browsers and copy
-// related images and font files along with them
-// PRODUCTION: Lint and minification
-gulp.task('sass.prod', [
-    'lint.sass',
-    'sass.application',
-    'sass.application-ie7',
-    'sass.application-ie8',
-    'sass.application-print',
-    'sass.images',
-    'sass.fonts']);
-
-// Compile the sass for the main styles for the site into a .css file
-// Sourcemaps created as well
-gulp.task('sass.debug.application', ['clean'], function () {
-    return gulp.src(config.sassSrc + '/application.scss')
-        .pipe(sourcemaps.init())
+// Compile sass files
+// Development builds sourcemaps
+// Production minifies
+gulp.task('sass', ['clean', 'lint.sass'], function () {
+    return gulp.src([
+            config.sassSrc + '/application.scss',
+            config.sassSrc + '/application-ie7.scss',
+            config.sassSrc + '/application-ie8.scss',
+            config.sassSrc + '/application-print.scss'])
+        .pipe(!config.production ? sourcemaps.init() : gutil.noop())
         .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-// Compile the sass for the main styles for the site into a minified .css file
-gulp.task('sass.application', ['clean'], function () {
-    return gulp.src(config.sassSrc + '/application.scss')
-        .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(uglifycss())
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-// Compile styles that are unique to IE 7.
-gulp.task('sass.application-ie7', ['clean'], function () {
-    return gulp.src(config.sassSrc + '/application-ie7.scss')
-        .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(uglifycss())
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-// Compile styles that are unique to IE 8
-gulp.task('sass.application-ie8', ['clean'], function () {
-    return gulp.src(config.sassSrc + '/application-ie8.scss')
-        .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-});
-
-// Compile styles that are used when the user prints something.
-gulp.task('sass.application-print', ['clean'], function () {
-    return gulp.src(config.sassSrc + '/application-print.scss')
-        .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(uglifycss())
+        .pipe(!config.production ? sourcemaps.write('./') : gutil.noop())
+        .pipe(config.production ? uglifycss() : gutil.noop())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
 // Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
-gulp.task('copy-css', ['clean'], function () {
+gulp.task('govuk-template-css', ['clean'], function () {
     return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/*.css')
         .pipe(replace('images/', '/images/'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
-// Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
-gulp.task('sass.images', ['clean'], function () {
-    return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
-        .pipe(gulp.dest('./web/images'));
-
-    return gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
-        .pipe(gulp.dest('./web/images'));
-
-    return gulp.src(config.imgSrc + '/**/*')
-        .pipe(gulp.dest('./web/images'));
-});
-
-gulp.task('sass.fonts', ['clean'], function () {
+// fonts
+gulp.task('fonts', ['clean'], function () {
     return gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
 });
 
-// Copy non css related images
+// Copy all images
 gulp.task('images', ['clean'], function () {
-    return gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*')
-        .pipe(gulp.dest('./web/images'));
-
-    return gulp.src('./node_modules/govuk_template_mustache/assets/images/*')
-        .pipe(gulp.dest('./web/images'));
-
-    return gulp.src('./src/AppBundle/Resources/assets/images/**/*')
+    return gulp.src([
+        './node_modules/govuk_frontend_toolkit/images/**/*',
+        './node_modules/govuk_template_mustache/assets/images/*',
+        './node_modules/govuk_template_mustache/assets/stylesheets/images/**/*',
+        './node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png',
+        config.imgSrc + '/**/*'])
         .pipe(gulp.dest('./web/images'));
 });
 
-// Creates the production version of the service javascript.
-// Files are concatinated and then minified with uglify.
-gulp.task('js.prod', ['lint.js', 'clean'], function () {
+// Concats js into application.js
+// Production minifies
+gulp.task('js.application', ['lint.js', 'clean'], function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
@@ -146,60 +92,45 @@ gulp.task('js.prod', ['lint.js', 'clean'], function () {
             config.jsSrc + '/modules/*.js',
             config.jsSrc + '/main.js'])
         .pipe(concat('application.js'))
-        .pipe(uglify())
+        .pipe(config.production ? uglify() : gutil.noop())
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// create a debug version of javascript to allow easier debugging by
-// having javascript that can easily have breakpoints and stepped through
-// Used by the watch process.
-gulp.task('js.debug', ['clean'], function () {
+// ie.js and jQuery copied
+gulp.task('js.other', ['clean'], function() {
     return gulp.src([
-            './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
-            './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
-            config.jsSrc + '/govuk/polyfill/*.js',
-            config.jsSrc + '/modules/*.js',
-            config.jsSrc + '/main.js'])
-        .pipe(concat('application.js'))
+        './node_modules/govuk_template_mustache/assets/javascripts/ie.js',
+        './node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// Create IE javascript with polyfills for missing functions and support.
-gulp.task('js.ie', ['clean'], function() {
-    return gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js')
-        .pipe(gulp.dest(config.webAssets + '/javascripts'));
-
-    return gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/vendor/goog/webfont-debug.js')
-        .pipe(gulp.dest(config.webAssets + '/javascripts'));
-});
-
-// Copy across javascript from other vendors.
-gulp.task('vendor', ['clean'], function () {
-    return gulp.src('./node_modules/jquery/dist/jquery.min.js')
-        .pipe(gulp.dest(config.webAssets + '/javascripts'));
-});
-
-// Check that the sass complies with simple rules for its creation to encourage good code.
+// sass quality control
 gulp.task('lint.sass', function() {
-    return gulp.src('src/AppBundle/Resources/assets/scss/**/*.scss')
+    return gulp.src([
+        config.sassSrc + '/**/*.scss',
+        config.sassSrc + '/*.scss'])
         .pipe(scsslint());
 });
 
-// Check javascript follows some good guidelines and check for obvious errors.
+// js quality control
 gulp.task('lint.js', function () {
     return gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-// Watch the source files and recompile in debug mode when there are changed.
-gulp.task('watch', ['clean', 'lint.js', 'sass.debug', 'copy-css', 'images', 'js.debug', 'js.ie', 'vendor'], function () {
-    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass.debug']);
-    gulp.watch(config.sassSrc + '/*', { interval: 1000 }, ['sass.debug']);
-    gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
-    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
+// Watch sass, images and js and recompile as Development
+gulp.task('watch', ['development'], function () {
+    gulp.watch([
+        config.sassSrc + '/**/*',
+        config.sassSrc + '/*',
+        config.imgSrc + '/**/*',
+        config.jsSrc + '/**/*.js',
+        config.jsSrc + '/*.js'],
+        { interval: 1000 },
+        ['development']);
 });
 
-// Build all assets in production ready mode.
-gulp.task('default', ['clean', 'lint.js', 'sass.prod', 'copy-css', 'images', 'js.prod', 'js.ie', 'vendor']);
+// Prepare and build all assets
+gulp.task('default', ['clean', 'sass', 'govuk-template-css', 'images', 'fonts', 'js.application', 'js.other']);
+gulp.task('development', ['set-development', 'default']);

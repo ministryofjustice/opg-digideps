@@ -11,5 +11,5 @@ links:
     hint: Edit your contact details.
   password:
     label: Password
-    hint: Change the password which you use to sign in.
+    hint: Change the password you use to sign in.
 

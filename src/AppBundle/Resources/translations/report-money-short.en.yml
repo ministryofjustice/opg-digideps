@@ -37,7 +37,7 @@ existPage:
     moneyTransactionsShortInExist:
       label: Have there been any one-off income payments over £1,000?
     moneyTransactionsShortOutExist:
-      label: Have there been any one-off items of expense over £1,000?
+      label: Have there been any one-off payments over £1,000?
     save:
       label: Save and continue
 
@@ -55,15 +55,15 @@ addPage:
       You can add one or more items of income and come back to complete the section later.
   moneyOut:
       htmlTitle: "Deputy report - money out | GOV.UK"
-      pageSectionTitle: Add an expense
+      pageSectionTitle: Add a payment
       supportTitle: Money out
       pageSectionDescription1: |
-        List all one-off items of expense over £1,000
+        List all one-off payments of over £1,000
       pageSectionDescription2: |
         You may find it easier to use %client%'s bank statements to find this information.
         Don’t tell us about any regular payments, such as care home fees.
       pageSectionDescription3: |
-        You can add one or more items of expense and come back to complete the section later.
+        You can add one or more payment items and come back to complete the section later.
 
 editPage:
   moneyIn:
@@ -71,9 +71,9 @@ editPage:
     supportTitle: Money in
     pageSectionTitle: Edit item of income
   moneyOut:
-    htmlTitle: "Deputy report - money out - edit expense | GOV.UK"
+    htmlTitle: "Deputy report - money out - edit payment | GOV.UK"
     supportTitle: Money out
-    pageSectionTitle: Edit expense
+    pageSectionTitle: Edit payment
 
 addAnotherPage:
   moneyIn:
@@ -87,13 +87,13 @@ addAnotherPage:
       save:
          label: Continue
   moneyOut:
-    htmlTitle: "Deputy report - Add another expense | GOV.UK"
+    htmlTitle: "Deputy report - Add another payment | GOV.UK"
     supportTitle: Money out
-    pageSectionTitle: Add another expense
+    pageSectionTitle: Add another payment
     form:
       addAnother:
-        label: The expense has been saved. Would you like to add another expense over £1,000 now?
-        hint: If you prefer, you can come back to this section later to add more expenses
+        label: The payment has been saved. Would you like to add another payment of over £1,000 now?
+        hint: If you prefer, you can come back to this section later to add more payments
       save:
         label: Continue
 
@@ -104,16 +104,16 @@ summaryPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
     weAskAbout: |
-      In this section we asked you to tell us about how you have managed
-      %client%'s money during this reporting period
+      In this section we ask for details of how you have managed
+      %client%'s money during this reporting period.
     addButton: Add an item of income over £1,000
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     weAskAbout: |
-      In this section we asked you to tell us about how you have managed
+      In this section we ask for details of how you have managed
       %client%'s money during this reporting period.
-    addButton: Add an expense over £1,000
+    addButton: Add an payment over £1,000
 
 
 form:
@@ -151,13 +151,13 @@ form:
          label: What date did this money come in? (optional)
          hint: For example, 20 12 2015
       addAnother:
-        label: Add another expense
+        label: Add another item
       save:
-          label: Save expense
+          label: Save item
 
   transactionsOut:
         description:
-          label: Description of expense
+          label: Description of payment
         amount:
           label: Amount
         date:
@@ -166,6 +166,6 @@ form:
         addAnother:
           label: 12345345646
         save:
-            label: Save expense
+            label: Save payment
 
 
