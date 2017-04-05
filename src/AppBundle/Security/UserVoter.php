@@ -69,8 +69,9 @@ class UserVoter extends Voter
         }
 
         if ($attribute === self::EDIT_USER) {
-            if ($subject->getId() === $loggedInUser->getId()) {
-                // can always edit one's self
+            if ($subject->getId() === $loggedInUser->getId() &&
+                $loggedInUser->getRoleName() !== User::ROLE_PA_TEAM_MEMBER) {
+                // can always edit one's self except team members
                 return true;
             }
 
