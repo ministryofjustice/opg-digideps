@@ -33,7 +33,7 @@
 
     {% if form.roleName is defined %}
         {{ form_checkbox_group(form.roleName, 'form.roleName', {
-            'legendClass' : 'form-label-bold'
+            'fieldSetClass' : 'inline'
         }) }}
     {% endif %}
 
