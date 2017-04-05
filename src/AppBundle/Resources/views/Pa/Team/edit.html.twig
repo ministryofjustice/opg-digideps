@@ -13,9 +13,7 @@
     <span class="heading-secondary">User accounts</span>
 {% endblock %}
 
-{% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings('user-add') }}
-{% endblock %}
+{% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
@@ -38,6 +36,13 @@
     {% endif %}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'Cancel',
+        linkClass: 'button-link',
+        linkHref: path('pa_team')
+    } %}
 
     {{ form_end(form) }}
 
