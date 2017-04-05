@@ -1,4 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "home" %}
     {% trans_default_domain translationDomain %}
 
@@ -12,7 +15,7 @@
         <div class="column-two-thirds">
             <div class="text">
                 <p class="lede">{{ 'intro.lede' |trans }}</p>
-                <p>{{ 'intro.para01' |trans }}</p>
+                {{ macros.notification('info', 'intro.para01' |trans) }}
                 <p>{{ 'intro.para02' |trans }}</p>
                 <p>{{ 'intro.para03' |trans }}</p>
             </div>
