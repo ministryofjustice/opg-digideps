@@ -41,7 +41,7 @@ class TeamController extends AbstractController
 
         $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
 
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team), $this->getUser());
+        $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team, $this->getUser()));
 
         $form->handleRequest($request);
 
