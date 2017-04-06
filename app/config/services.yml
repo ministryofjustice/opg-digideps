@@ -18,6 +18,13 @@ services:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em" ]
 
+    opg_digideps.user_service:
+        class: AppBundle\Service\UserService
+        arguments:
+          - "@opg_digideps.user_repository"
+          - "@opg_digideps.team_repository"
+          - "@em"
+
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor
         arguments:  [ "@service_container" ]
@@ -48,3 +55,17 @@ services:
         factory_method: getRepository
         arguments:
          - AppBundle\Entity\CasRec
+
+    opg_digideps.user_repository:
+        class: AppBundle\Entity\Repository\UserRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+         - AppBundle\Entity\User
+
+    opg_digideps.team_repository:
+        class: AppBundle\Entity\Repository\TeamRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments:
+         - AppBundle\Entity\Team
