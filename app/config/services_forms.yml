@@ -25,3 +25,10 @@ services:
             - [ setTranslator, ["@translator"] ]
         tags:
             - { name: form.type, alias: feedback_report }
+
+    app.form.validator.email_same_domain:
+        class: AppBundle\Validator\Constraints\EmailSameDomainValidator
+        calls:
+            - [ setSecurityContext, ["@security.context"] ]
+        tags:
+            - { name: validator.constraint_validator, alias: email_same_domain }
