@@ -38,6 +38,7 @@
             <tr>
                 <th>Name and job</th>
                 <th>Contact information</th>
+                <th scope="col">Active</th>
                 <th>
                     <span class="visuallyhidden">Actions</span>
                 </th>
@@ -72,6 +73,19 @@
                         {{ user.phoneMain }}
                     </p>
                     {% endif %}
+                </td>
+
+                <td>
+                    {% if user.active %}
+                        Yes
+                    {% else %}
+                        No
+                        <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
+                                href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                        (Re)send activation email
+                    </a>
+                    {% endif %}
+
                 </td>
                 <td class="change-answer">
                     {% if is_granted('edit-user', user) %}
