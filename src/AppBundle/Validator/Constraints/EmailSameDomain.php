@@ -8,6 +8,16 @@ use Symfony\Component\Validator\Exception\MissingOptionsException;
 class EmailSameDomain extends Constraint
 {
     /**
+     * @var string error message
+     */
+    public $message = 'Email domains do not match';
+
+    /**
+     * @var array validation groups
+     */
+    public $groups = [];
+
+    /**
      * EmailSameDomain constructor.
      *
      * @param mixed|null $options
@@ -15,12 +25,14 @@ class EmailSameDomain extends Constraint
     public function __construct($options)
     {
         $requiredOptions = ['message', 'groups'];
+
         foreach ($requiredOptions as $option)
         {
             if (isset($options[$option]))
             {
                 $this->$option = $options[$option];
             } else {
+
                 throw new MissingOptionsException("Missing option: '" . $option . "' required for constraint");
             }
         }
