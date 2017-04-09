@@ -24,10 +24,6 @@ class UserController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
 
-        if (!in_array($request->get('role_name'), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
-            $request->request->set('role_name', EntityDir\User::ROLE_PA_TEAM_MEMBER);
-        }
-
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
             'email' => 'notEmpty',
@@ -35,9 +31,17 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
+        $loggedInUser = $this->getUser();
         $user = new EntityDir\User();
 
-        $this->populateUser($user, $data);
+        $user = $this->populateUser($user, $data);
+
+        // If Adding PA user
+        if ($loggedInUser->isPaAdministrator()) {
+            $userService = $this->get('opg_digideps.user_service');
+            $userService->addPaUser($loggedInUser, $user, $data);
+        };
+
         $user->setRegistrationDate(new \DateTime());
 
         /*
@@ -80,6 +84,15 @@ class UserController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         $this->populateUser($user, $data);
+
+        $loggedInUser = $this->getUser();
+
+        // If Editing PA user
+        if ($loggedInUser->isPaAdministrator()) {
+            if (empty($user->getRoleName())) {
+                $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
+            }
+        };
 
         $this->getEntityManager()->flush($user);
 
@@ -395,36 +408,12 @@ class UserController extends RestController
             $user->setTokenDate(new \DateTime($data['token_date']));
         }
 
-        $roleLoggedUser = $this->getUser()->getRoleName();
-        $isPaCreator = in_array($roleLoggedUser, [EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
-
-        if ($roleLoggedUser === EntityDir\User::ROLE_PA && !empty($data['pa_team_name']) && $user->getTeams()->isEmpty()) {
-            $team = $user->getTeams()->first()->setTeamName($data['pa_team_name']);
-            $this->getEntityManager()->flush($team);
-        }
-
         if (!empty($data['role_name'])) {
             $roleToSet = $data['role_name'];
-
-            // TODO: all this should be moved to a service
-            $isPaMemberBeingCreated = in_array($roleToSet, [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
-            if ($isPaMemberBeingCreated) {
-                if (!$isPaCreator) {
-                    throw $this->createAccessDeniedException("$roleLoggedUser not allowed to create $roleToSet user");
-                }
-                // add to creator's team
-                if ($team = $this->getUser()->getTeams()->first()) {
-                    $user->addTeam($team);
-                    $this->getEntityManager()->flush($team);
-                }
-
-                //copy clients
-                foreach($this->getUser()->getClients() as $client) {
-                    $user->addClient($client);
-                }
-            }
             $user->setRoleName($roleToSet);
         }
+
+        return $user;
     }
 
     /**
@@ -450,5 +439,21 @@ class UserController extends RestController
 
 
         return $user->getTeams()->first();
+    }
+
+    /**
+     * Is the logged in user a PA user?
+     *
+     * @return bool
+     */
+    private function isPaCreator()
+    {
+        return in_array(
+            $this->getUser()->getRoleName(),
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN
+            ]
+        );
     }
 }

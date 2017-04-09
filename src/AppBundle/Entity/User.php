@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Users.
  *
  * @ORM\Table(name="dd_user")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\UserRepository")
  */
 class User implements UserInterface
 {
@@ -1017,6 +1017,50 @@ class User implements UserInterface
         return $this->agreeTermsUseDate;
     }
 
+    /**
+     * Is a PA (any role)?
+     *
+     * @return bool
+     */
+    public function isPaDeputy()
+    {
+        return ($this->isPaAdministrator() || $this->isPaTeamMember());
+    }
+
+    /**
+     * Is PA Named deputy?
+     *
+     * @return bool
+     */
+    public function isPaNamedDeputy(){
+        return $this->getRoleName() === self::ROLE_PA;
+    }
+
+    /**
+     * Is PA Administrator?
+     *
+     * @return bool
+     */
+    public function isPaAdministrator()
+    {
+        return in_array(
+            $this->getRoleName(),
+            [
+                self::ROLE_PA,
+                self::ROLE_PA_ADMIN
+            ]
+        );
+    }
+
+    /**
+     * Is PA Team member?
+     *
+     * @return bool
+     */
+    public function isPaTeamMember()
+    {
+        return $this->getRoleName() === self::ROLE_PA_TEAM_MEMBER;
+    }
 
     /**
      * @deprecated ID shouldn't be used anymore anywhere
@@ -1038,6 +1082,28 @@ class User implements UserInterface
             if ($row[1] == $id) {
                 return $name;
             }
+        }
+    }
+
+    /**
+     * Ensures a PA User has a role, if not default to TEAM MEMBER
+     */
+    public function ensureRoleNameSet()
+    {
+        if ($this->isPaDeputy()) {
+            if (!in_array($this->getRoleName(), [self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER])) {
+                $this->setRoleName(self::ROLE_PA_TEAM_MEMBER);
+            }
+        }
+    }
+
+    public function generatePaTeam(User $creator, $data)
+    {
+        if ($creator->isPaNamedDeputy() &&
+            !empty($data['pa_team_name']) &&
+            $this->getTeams()->isEmpty()
+        ) {
+            $this->getTeams()->first()->setTeamName($data['pa_team_name']);
         }
     }
 }

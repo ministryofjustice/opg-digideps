@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  * Team
  *
  * @ORM\Table(name="dd_team")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\TeamRepository")
  */
 class Team
 {
