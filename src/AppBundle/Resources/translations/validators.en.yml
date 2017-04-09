@@ -5,6 +5,7 @@ user:
     notBlank: Enter an email address
     maxLength: The email can't be longer than {{ limit }} characters
     doesNotMatch: Email does not match
+    invalidDomain: Email does match the team domain: @creatorDomain
   firstname:
     notBlank: Enter your first name
     notBlankOtherUser: Enter the first name

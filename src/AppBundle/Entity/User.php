@@ -6,6 +6,7 @@ use AppBundle\Entity\Traits\LoginInfoTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\EmailSameDomain;
 
 /**
  * @codeCoverageIgnore
@@ -78,6 +79,7 @@ class User implements AdvancedUserInterface
      * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_pa", "pa_team_add", "password_reset"} )
      * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_pa", "pa_team_add"}, checkMX=false, checkHost=false )
      * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_pa", "pa_team_add"} )
+     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_pa"})
      *
      * @var string
      */
