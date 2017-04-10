@@ -55,11 +55,8 @@
                         <span class="status status-label admin">Administrator</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
-                    <p class="flush--top">{{ user.jobTitle }}</p>
+                        <p class="flush--top">{{ user.jobTitle }}</p>
                     {% endif %}
-                    <span class="visuallyhidden">
-                        active: {{ user.active ?'yes':'no' }} |
-                    </span>
                 </td>
                 <td>
                     <p class="flush--ends">
@@ -76,6 +73,13 @@
                 <td class="change-answer">
                     {% if is_granted('edit-user', user) %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
+                        {% if not user.active %}
+                            <div>
+                                <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">
+                                    Resend activation
+                                </a>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

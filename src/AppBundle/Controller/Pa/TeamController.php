@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Form as FormDir;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/pa/team")
@@ -117,5 +118,42 @@ class TeamController extends AbstractController
         return [
             'form' => $form->createView()
         ];
+    }
+
+    /**
+     * Resend activation email to pa team member
+     *
+     * @Route("/send-activation-link/{id}", name="team_send_activation_link")
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function resendActivationEmailAction(Request $request, $id)
+    {
+        try {
+            /* @var $user EntityDir\User */
+            $user = $this->getRestClient()->get('team/member/'.$id, 'User');
+
+            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+            $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+            $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'An activation email has been sent to the user.'
+            );
+
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'An activation email could not be sent.'
+            );
+        }
+
+        return $this->redirectToRoute('pa_team');
+
     }
 }
