@@ -81,7 +81,7 @@
                     {% else %}
                         No
                         <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
-                                href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                                href="{{ path('team_send_activation_link', {'id': user.id}) }}">
                         (Re)send activation email
                     </a>
                     {% endif %}
