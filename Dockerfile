@@ -1,4 +1,4 @@
-FROM registry.service.opg.digital/opguk/php-fpm:0.1.209
+FROM registry.service.opg.digital/opguk/php-fpm:0.0.29-dev
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis php5-pgsql \
