@@ -1,5 +1,5 @@
 [/var/log/app/application.log]
 format: rawjson
 type: php-fpm
-tags: php-fpm, {{ getv "/opg/service" }}, application
+tags: php-fpm, {{ getv "/opg/service" }}, application {{ if exists "/opg/stackname" }}, {{ getv "/opg/stackname" }} {{ end }}
 delimiter: \n
