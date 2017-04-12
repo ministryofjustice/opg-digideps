@@ -62,6 +62,14 @@
                     <td>Total money out:</td>
                     <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
                 </tr>
+                <tr>
+                    <td>Total deputy expenses:</td>
+                    <td class="grey numeric">&pound;{{ report.getExpensesTotalValue | money_format}}</td>
+                </tr>
+                <tr>
+                    <td>Total gifts:</td>
+                    <td class="grey numeric">&pound;{{ report.getGiftsTotalValue | money_format}}</td>
+                </tr>
                 <tr class="totals">
                     <td>&nbsp;</td>
                     <td class="numeric reverse">&pound;{{ report.calculatedBalance | money_format}}</td>
