@@ -1,4 +1,4 @@
-FROM registry.service.opg.digital/opguk/php-fpm:0.1.209
+FROM registry.service.opg.digital/opguk/php-fpm:0.1.215
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis php5-pgsql \
@@ -44,4 +44,3 @@ ADD  docker/my_init.d /etc/my_init.d
 RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE api
-ADD  docker/beaver.d /etc/beaver.d
