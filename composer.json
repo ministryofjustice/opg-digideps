@@ -32,7 +32,8 @@
     "doctrine/doctrine-migrations-bundle": "1.0.*",
     "sendgrid/sendgrid": "2.2.1",
     "snc/redis-bundle": "1.1.*",
-    "predis/predis": "1.0.*"
+    "predis/predis": "1.0.*",
+    "stof/doctrine-extensions-bundle": "^1.2"
   },
   "require-dev": {
     "phpunit/phpunit": "4.*",
