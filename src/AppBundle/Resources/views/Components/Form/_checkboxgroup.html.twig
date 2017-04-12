@@ -8,8 +8,8 @@
             {% if hintText is not null %}
                 <span class="form-hint text">{{ hintText }}</span>
             {% endif %}
+            {{  form_errors(element) }}
         </legend>
-        {{  form_errors(element) }}
         {% for key,choiceElement in element %}
 
             {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}

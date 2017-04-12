@@ -5,14 +5,14 @@ startPage:
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
   pageSectionDescription2: |
-    Your actions might include making a large gift, maintenance and alterations to %client%'s
+    Your actions might include making a large gift, alterations to %client%'s
     home, or buying and selling property for %client%.
   hiddenText01:
     summary: Making decisions on the client's behalf
     content:
       para01: |
         You should refer to your court order for a reminder of what you can and can't do
-        on behalf of your client.
+        on behalf of the client.
       para02: "When you're making a decision or planning future actions as a deputy, you must:"
       listItem01: make sure it's in the client's best interests
       listItem02: consider what they've done in the past
@@ -20,7 +20,7 @@ startPage:
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
       para03: |
-        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed advice on how to look after %client%'s financial affairs.
+        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start actions
 
 stepPage:
@@ -42,7 +42,7 @@ stepPage:
           There are strict limits on gift-giving as a deputy. These rules help to look
           after %client%'s best interests.
         para03: |
-          OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed advice on giving gifts as a deputy.
+          OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed guidance on giving gifts as a deputy.
   property:
     pageSectionTitle: Property
     selling:

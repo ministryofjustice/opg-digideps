@@ -52,7 +52,6 @@
                     {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
-                {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
             {% endif %}
 
             {% if is103 %}
@@ -83,6 +82,10 @@
 
         {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
+
+        {% if is102 or is103 %}
+            {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
+        {% endif %}
 
         {% if report.action is not null %}
             {% include 'AppBundle:Report/Formatted:_action.html.twig' with {

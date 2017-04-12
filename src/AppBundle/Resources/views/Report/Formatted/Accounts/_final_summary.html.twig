@@ -9,8 +9,16 @@
         <div class="value">&pound;{{ report.moneyInTotal | money_format}}</div>
     </div>
     <div class="transaction">
-        <div class="label">Total money out:</div>
+        <div class="label">Money out:</div>
         <div class="value">&pound;{{ report.moneyOutTotal | money_format}}</div>
+    </div>
+    <div class="transaction">
+        <div class="label">Deputy expenses:</div>
+        <div class="value">&pound;{{ report.getExpensesTotalValue | money_format}}</div>
+    </div>
+    <div class="transaction">
+        <div class="label">Gifts:</div>
+        <div class="value">&pound;{{ report.getGiftsTotalValue | money_format}}</div>
     </div>
     <div class="transaction total">
         <div class="label">Balance after income and expenditure:</div>

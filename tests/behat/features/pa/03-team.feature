@@ -19,7 +19,16 @@ Feature: PA team
       | team_member_account_email      |
       | team_member_account_roleName_0 |
       | team_member_account_roleName_1 |
-    # add user ADMIN
+    # add user ADMIN invalid domain
+    When I fill in the following:
+      | team_member_account_firstname  | Markk Admin                               |
+      | team_member_account_lastname   | Yelloww                                   |
+      | team_member_account_email      | behat-pa1-admin@someotherdomain.gsi.gov.uk |
+      | team_member_account_roleName_0 | ROLE_PA_ADMIN                             |
+    And I press "team_member_account_save"
+    Then the following fields should have an error:
+      | team_member_account_email      |
+    # add valid user details
     When I fill in the following:
       | team_member_account_firstname  | Markk Admin                               |
       | team_member_account_lastname   | Yelloww                                   |
@@ -105,7 +114,7 @@ Feature: PA team
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
-    #And I should not see the "add" link
+    And I should not see the "add" link
 
   Scenario: PA (named) logs in and edit users
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

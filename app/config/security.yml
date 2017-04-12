@@ -1,3 +1,15 @@
+services:
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: AppBundle\Security\UserVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+
+
 security:
     role_hierarchy:
         ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
@@ -60,7 +72,11 @@ security:
         # /admin accessible only from ADMIN, super users and AD users
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
-        - { path: ^/pa, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/team/add, roles: [ROLE_PA, ROLE_PA_ADMIN] }
+        - { path: ^/pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+
         # open URLs
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login-ad, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -71,4 +87,5 @@ security:
         - { path: ^/elements, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
-        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }    
+        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
+
