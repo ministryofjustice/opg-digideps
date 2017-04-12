@@ -95,7 +95,17 @@
 
     {% block helpline %}
     <div class="helpline">
-        <h3>Helpline<br/>0115 934 2700</h3>
+        <h3>Helpline<br/>
+            {% if app.user %}
+                {% if app.user.isDeputyPa() %}
+                    0115 934 2817
+                {% else %}
+                    0115 934 2700
+                {% endif %}
+            {% else %}
+                0115 934 2700
+            {% endif %}
+            </h3>
     </div>
     {% endblock %}
 
