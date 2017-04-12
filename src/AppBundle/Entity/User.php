@@ -6,15 +6,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Users.
  *
  * @ORM\Table(name="dd_user")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\UserRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class User implements UserInterface
 {
+    use IsSoftDeleteableEntity;
+
     const TOKEN_EXPIRE_HOURS = 48;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
