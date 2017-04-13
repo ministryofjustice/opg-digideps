@@ -156,7 +156,7 @@ class TeamController extends AbstractController
         return $this->redirectToRoute('pa_team');
 
     }
-    
+
     /**
      * Confirm delete user form
      *
@@ -167,7 +167,7 @@ class TeamController extends AbstractController
     {
         $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
-        $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
+        $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
 
         $options = [
             'message' => 'Are you sure you want to remove this user?',
@@ -194,10 +194,12 @@ class TeamController extends AbstractController
      */
     public function actonConfirmed($args)
     {
-        $this->denyAccessUnlessGranted('edit-user', $args['userToRemove'], 'Access denied');
+        $this->denyAccessUnlessGranted('delete-user', $args['userToRemove'], 'Access denied');
 
-        $args['request']->getSession()->getFlashBag()->add('notice',
-            $args['userToRemove']->getFullName() . ' has been removed');
+        $args['request']->getSession()->getFlashBag()->add(
+            'notice',
+            $args['userToRemove']->getFullName() . ' has been removed'
+        );
 
         return $this->redirectToRoute('pa_team');
     }
