@@ -165,6 +165,7 @@ class TeamController extends AbstractController
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {
+        // The rest call ensures that only team members get returned and permission checks work as expected
         $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
         $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
