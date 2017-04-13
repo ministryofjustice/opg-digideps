@@ -11,6 +11,7 @@ class UserVoter extends Voter
 {
     const ADD_USER = 'add-user';
     const EDIT_USER = 'edit-user';
+    const DELETE_USER = 'delete-user';
 
     private $decisionManager;
 
@@ -35,6 +36,7 @@ class UserVoter extends Voter
     {
         switch($attribute) {
             case self::ADD_USER:
+            case self::DELETE_USER:
                 return true;
             case self::EDIT_USER:
                 // only vote on User objects inside this voter
@@ -68,31 +70,80 @@ class UserVoter extends Voter
             return $this->decisionManager->decide($token, [User::ROLE_PA, USER::ROLE_PA_ADMIN]);
         }
 
-        if ($attribute === self::EDIT_USER) {
-            if ($subject->getId() === $loggedInUser->getId() &&
-                $loggedInUser->getRoleName() !== User::ROLE_PA_TEAM_MEMBER) {
-                // can always edit one's self except team members
-                return true;
-            }
-
-            switch($loggedInUser->getRoleName()) {
-                case User::ROLE_PA:
-                case User::ROLE_ADMIN:
-                case User::ROLE_AD:
-                    // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
-                    return true;
-                case User::ROLE_PA_ADMIN:
-                    // Admin can edit everyone except Named
-                    if ($subject->getRoleName() !== User::ROLE_PA) {
-                        return true;
-                    }
-                    return false;
-                case User::ROLE_PA_TEAM_MEMBER:
-                    // Team members can only edit themselves (See above)
-                    return false;
-            }
+        if ($attribute === self::DELETE_USER) {
+            return $this->determineDeletePermission($loggedInUser, $subject);
         }
 
+        if ($attribute === self::EDIT_USER) {
+            return $this->determineEditPermission($loggedInUser, $subject);
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether logged in user can edit a subject user
+     *
+     * @param User $loggedInUser
+     * @param User $subject
+     * @return bool
+     */
+    private function determineEditPermission(User $loggedInUser, User $subject)
+    {
+        if ($subject->getId() === $loggedInUser->getId() &&
+            $loggedInUser->getRoleName() !== User::ROLE_PA_TEAM_MEMBER) {
+            // can always edit one's self except team members
+            return true;
+        }
+
+        switch($loggedInUser->getRoleName()) {
+            case User::ROLE_PA:
+            case User::ROLE_ADMIN:
+            case User::ROLE_AD:
+                // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
+                return true;
+            case User::ROLE_PA_ADMIN:
+                // Admin can edit everyone except Named
+                if ($subject->getRoleName() !== User::ROLE_PA) {
+                    return true;
+                }
+                return false;
+            case User::ROLE_PA_TEAM_MEMBER:
+                // Team members can only edit themselves (See above)
+                return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether logged in user can delete a subject user
+     *
+     * @param User $loggedInUser
+     * @param User $subject
+     * @return bool
+     */
+    private function determineDeletePermission(User $loggedInUser, User $subject)
+    {
+        // Cannot remove oneself
+        if ($subject->getId() === $loggedInUser->getId()) {
+            return false;
+        }
+
+        switch($loggedInUser->getRoleName()) {
+            case User::ROLE_PA:
+                // Named deputies can remove anyone
+                return true;
+            case User::ROLE_PA_ADMIN:
+                // Admin can remove everyone except Named
+                if ($subject->getRoleName() !== User::ROLE_PA) {
+                    return true;
+                }
+                return false;
+            case User::ROLE_PA_TEAM_MEMBER:
+                // Team members cannot remove anyone
+                return false;
+        }
         return false;
     }
 }
