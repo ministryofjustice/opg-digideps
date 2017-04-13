@@ -73,6 +73,7 @@
                 <td class="change-answer">
                     {% if is_granted('edit-user', user) %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
+                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">Remove</a>
                         {% if not user.active %}
                             <div>
                                 <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">
