@@ -433,27 +433,8 @@ class UserController extends RestController
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups(['user']);
 
-
         return $user->getTeams()->first();
-    }
-
-    /**
-     * Is the logged in user a PA user?
-     *
-     * @return bool
-     */
-    private function isPaCreator()
-    {
-        return in_array(
-            $this->getUser()->getRoleName(),
-            [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN
-            ]
-        );
     }
 }
