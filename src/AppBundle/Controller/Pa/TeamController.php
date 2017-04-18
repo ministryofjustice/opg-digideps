@@ -197,10 +197,25 @@ class TeamController extends AbstractController
     {
         $this->denyAccessUnlessGranted('delete-user', $args['userToRemove'], 'Access denied');
 
-        $args['request']->getSession()->getFlashBag()->add(
-            'notice',
-            $args['userToRemove']->getFullName() . ' has been removed'
-        );
+        try {
+            $this->getRestClient()->delete('team/delete-user/' . $args['userToRemove']->getId());
+
+            $args['request']->getSession()->getFlashBag()->add(
+                'notice',
+                $args['userToRemove']->getFullName() . ' has been removed'
+            );
+
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+
+            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                $args['request']->getSession()->getFlashBag()->add(
+                    'error',
+                    'User ' . $args['userToRemove']->getFullName() . ' could not be removed'
+                );
+            }
+
+        }
 
         return $this->redirectToRoute('pa_team');
     }
