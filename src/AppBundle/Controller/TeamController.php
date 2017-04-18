@@ -58,7 +58,7 @@ class TeamController extends RestController
     /**
      * Delete PA team member user.
      *
-     * @Route("/team/delete-user/{id}")
+     * @Route("/delete-user/{id}")
      * @Method({"DELETE"})
      *
      * @param Request $request
