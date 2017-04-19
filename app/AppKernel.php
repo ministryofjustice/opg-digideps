@@ -24,7 +24,6 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
-            new \SymfonyContrib\Bundle\ConfirmBundle\ConfirmBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'])) {

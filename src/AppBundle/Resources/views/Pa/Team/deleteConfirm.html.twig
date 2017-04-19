@@ -1,0 +1,33 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block htmlTitle %}Administration - Users{% endblock %}
+{% block pageTitle %}Admin{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">User management</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <h2 class="heading-medium">Delete user</h2>
+
+    <p class="text">Are you sure that you want to delete <strong class="bold"> {{user.getFullname()}} </strong>?</p>
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'yes.label',
+        linkClass: 'button-warning push-half--right',
+        linkHref: path('delete_team_member_confirm', { id: user.id })
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'no.label',
+        linkClass: 'button-secondary',
+        linkHref: path('pa_team')
+    } %}
+
+{% endblock %}
+
