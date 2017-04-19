@@ -33,6 +33,7 @@ Feature: odr / report submit
             | odr_declaration_agreedBehalfDeputy_0 |
             | odr_declaration_agreedBehalfDeputy_1 |
             | odr_declaration_agreedBehalfDeputy_2 |
+            | odr_declaration_agreedBehalfDeputyExplanation |
         # missing explanation
         When I fill in the following:
             | odr_declaration_agree | 1 |
