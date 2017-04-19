@@ -170,35 +170,23 @@ class TeamController extends AbstractController
 
         $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
 
-        $options = [
-            'message' => 'Are you sure you want to remove this user?',
-            'warning' => 'This action cannot be undone.',
-            'confirm_button_text' => 'Confirm',
-            'confirm_action' => [$this, 'actonConfirmed'],
-            'confirm_action_args' => [
-                'request' => $request,
-                'userToRemove' => $user,
-
-            ],
-            'translation_domain' => 'confirmation',
-            'cancel_link_text' => 'Cancel',
-            'cancel_url' => $this->generateUrl('pa_team'),
-        ];
-
-        return $this->forward('ConfirmBundle:Confirm:confirm', ['options' => $options]);
+        return ['user' => $user];
     }
 
     /**
      * Removes a user, adds a flash message and redirects to page
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("/delete-user/{id}/confirm", name="delete_team_member_confirm")
+     * @Template()
      */
-    public function actonConfirmed($args)
+    public function deleteConfirmedAction($id)
     {
-        $this->denyAccessUnlessGranted('delete-user', $args['userToRemove'], 'Access denied');
-
         try {
-            $this->getRestClient()->delete('team/delete-user/' . $args['userToRemove']->getId());
+            $userToRemove = $this->getRestClient()->delete('team/delete-user/' . $id);
+
+            $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
+
+            $this->getRestClient()->delete('team/delete-user/' . $userToRemove->getId());
 
             $args['request']->getSession()->getFlashBag()->add(
                 'notice',
