@@ -1,6 +1,0 @@
-deleteUser:
-  message: Are you sure you want to remove this user?
-  warning: This action cannot be undone.
-  confirmButtonLabel: Confirm
-  cancelButtonLabel: Cancel
-
