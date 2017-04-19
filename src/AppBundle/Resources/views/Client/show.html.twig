@@ -13,38 +13,40 @@
 {% endblock %}
 
 {% block pageContent %}
-    <p>{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
+    <table class="text">
+        <tbody>
+            <tr>
+                <th scope="row">{{ 'clientDetails.caseNumber' | trans }}</th>
+                <td>{{ client.getCaseNumber }}</td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">{{ 'clientDetails.address' | trans({'%client%': client.firstname}) }}</th>
+                <td>
+                    {% if client.address is not empty %}
+                        <div itemprop="streetAddress">{{ client.address }}</div>
+                    {% endif %}
+                    {% if client.address2 is not empty %}
+                        <div itemprop="addressLocality">{{ client.address2 }}</div>
+                    {% endif %}
+                    {% if client.county is not empty %}
+                        <div itemprop="addressRegion">{{ client.county }}</div>
+                    {% endif %}
+                    {% if client.postcode is not empty %}
+                        <div itemprop="postalCode" class="behat-region-client-address-postcode">{{ client.postcode }}</div>
+                    {% endif %}
+                    {% if client.country is not empty %}
+                        <div itemprop="addressCountry">{{ client.country | country_name }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">{{ 'clientDetails.courtDate' | trans }}</th>
+                <td>{{ client.courtDate | date("d/m/Y") }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    <div itemscope itemtype="http://schema.org/Person" class="item client-details">
-        <a href="{{ path('client_edit') }}#edit-client"
-           class="edit-button behat-link-client-edit">{{ 'clientDetails.edit'| trans({'%client%': client.firstname}, translationDomain) }}</a>
-
-        <dl class="item-data item-data-fixed large-labels">
-            <dt class="item-label">{{ 'clientDetails.caseNumber' | trans }}</dt>
-            <dd class="item-value behat-region-case-number">{{ client.getCaseNumber }}</dd>
-
-            <dt class="item-label">{{ 'clientDetails.address' | trans({'%client%': client.firstname}) }}</dt>
-            <dd class="item-value" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                {% if client.address is not empty %}
-                    <div itemprop="streetAddress">{{ client.address }}</div>
-                {% endif %}
-                {% if client.address2 is not empty %}
-                    <div itemprop="addressLocality">{{ client.address2 }}</div>
-                {% endif %}
-                {% if client.county is not empty %}
-                    <div itemprop="addressRegion">{{ client.county }}</div>
-                {% endif %}
-                {% if client.postcode is not empty %}
-                    <div itemprop="postalCode" class="behat-region-client-address-postcode">{{ client.postcode }}</div>
-                {% endif %}
-                {% if client.country is not empty %}
-                    <div itemprop="addressCountry">{{ client.country | country_name }}</div>
-                {% endif %}
-            </dd>
-
-            <dt class="item-label">{{ 'clientDetails.courtDate' | trans }}</dt>
-            <dd class="item-value behat-region-case-number">{{ client.courtDate | date("d/m/Y") }}</dd>
-        </dl>
-    </div>
+    <a href="{{ path('client_edit') }}#edit-client"
+       class="button push--top behat-link-client-edit">{{ 'clientDetails.edit'| trans({'%client%': client.firstname}, translationDomain) }}</a>
 
 {% endblock %}

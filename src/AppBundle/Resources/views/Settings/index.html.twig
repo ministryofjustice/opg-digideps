@@ -18,23 +18,25 @@
 
         {% set transOptions = {'%client%': client.firstname} %}
         <a href="{{ path('client_show') }}" class="behat-link-client-show">
-            <h2 class="heading-small">{{ 'links.clientDetails.label' | trans(transOptions) }}</h2>
+            <h2 class="heading-small">{{ 'links.clientDetails.title' | trans(transOptions) }}</h2>
         </a>
-        <p class="text text-info">{{ 'links.clientDetails.hint' | trans(transOptions) }}</p>
+        <p class="text text-info">{{ 'links.clientDetails.description' | trans(transOptions) }}</p>
     {% else %}
         {% set transOptions = {} %}
     {% endif %}
 
     <a href="{{ path('user_show') }}" class="behat-link-deputy-show">
-        <h2 class="heading-small">{{ 'links.userDetails.label' | trans(transOptions) }}</h2>
+        <h2 class="heading-small">{{ 'links.userDetails.title' | trans(transOptions) }}</h2>
     </a>
-    <p class="text text-info">{{ 'links.userDetails.hint' | trans(transOptions) }}</p>
+    <p class="text text-info">{{ 'links.userDetails.description' | trans(transOptions) }}</p>
+    <p class="text text-info">{{ 'links.userDetails.description2' | trans(transOptions) }}</p>
+
 
 
     <a href="{{ path('user_password_edit') }}" class="behat-link-change-password">
-        <h2 class="heading-small">{{ 'links.password.label' | trans(transOptions) }}</h2>
+        <h2 class="heading-small">{{ 'links.password.title' | trans(transOptions) }}</h2>
     </a>
-    <p class="text text-info">{{ 'links.password.hint' | trans(transOptions) }}</p>
+    <p class="text text-info">{{ 'links.password.description' | trans(transOptions) }}</p>
 
 
 {% endblock %}
