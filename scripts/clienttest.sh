@@ -24,4 +24,4 @@ rm -rf app/cache/*
 export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"selenium2\" : { \"wd_host\" : \"$WD_HOST\" }, \"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputy --profile=${PROFILE:=headless}
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputyodr --profile=${PROFILE:=headless}
-#/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless}
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless}
