@@ -1,9 +1,16 @@
 addPage:
-  htmlTitle: "Deputy report - add user account | GOV.UK"
+  htmlTitle: Deputy report - add user account | GOV.UK
   h1Title: Add user account
+  supportTitle: User account
 editPage:
-  htmlTitle: "Deputy report - edit user account | GOV.UK"
+  htmlTitle: Deputy report - edit user account | GOV.UK
   h1Title: Edit user account
+  supportTitle: User account
+removePage:
+  htmlTitle: Deputy report - remove user account | GOV.UK
+  h1Title: Remove user account
+  supportTitle: User account
+  question: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
 view:
     pageTitle: My details
 form:
