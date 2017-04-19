@@ -17,7 +17,7 @@
         <tbody>
             <tr>
                 <th scope="row">{{ 'clientDetails.caseNumber' | trans }}</th>
-                <td>{{ client.getCaseNumber }}</td>
+                <td class="behat-region-case-number">{{ client.getCaseNumber }}</td>
             </tr>
             <tr valign="top">
                 <th scope="row">{{ 'clientDetails.address' | trans({'%client%': client.firstname}) }}</th>

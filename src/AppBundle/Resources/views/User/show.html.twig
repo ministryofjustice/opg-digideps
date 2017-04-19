@@ -19,11 +19,11 @@
             <tbody>
                 <tr>
                     <th scope="row">Full name</th>
-                    <td>{{ user.getFullname }}</td>
+                    <td class="behat-region-my-details-name">{{ user.getFullname }}</td>
                 </tr>
                 <tr valign="top">
                     <th scope="row">{{ 'yourDetails.address' | trans }}</th>
-                    <td>
+                    <td class="behat-region-my-details-address">
                         {% if user.address1 is not empty %}
                             <div itemprop="streetAddress">{{ user.address1 }}</div>
                         {% endif %}
