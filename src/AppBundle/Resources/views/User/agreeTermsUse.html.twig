@@ -9,8 +9,12 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
+{% block breadcrumbs %}{% endblock %}
 
-{% block breadcrumbs %}
+{% block helpline %}
+<div class="helpline">
+    <h3>Helpline<br/>{{ 'helplinePA' | trans({}, 'layout') }}</h3>
+</div>
 {% endblock %}
 
 {% block pageContent %}
