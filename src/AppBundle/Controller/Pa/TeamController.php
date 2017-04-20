@@ -179,16 +179,13 @@ class TeamController extends AbstractController
     {
         try {
 
-            $userToRemove = $this->getRestClient()->delete('team/delete-user/' . $id);
+            $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
 
             $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
 
-            $this->getRestClient()->delete('team/delete-user/' . $userToRemove->getId());
+            $this->getRestClient()->delete('/team/delete-user/' . $userToRemove->getId());
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'User has been removed.'
-            );
+            $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
 
         } catch (\Exception $e) {
             $this->get('logger')->debug($e->getMessage());
