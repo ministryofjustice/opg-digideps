@@ -7,7 +7,6 @@ use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
-use AppBundle\Exception\NotFound;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Report\Report;
@@ -99,4 +98,53 @@ class ReportService
 
         return $newReport;
     }
+
+    /**
+     * Using an array of CasRec entities update any corresponding report type if it has been changed
+     *
+     * @param array $casRecEntities
+     * @throws \Exception
+     */
+    public function updateCurrentReportTypes(array $casRecEntities)
+    {
+        //  Check the contents of the entities array and check the integrity of the components
+        $casRecEntitiesWithKey = [];
+
+        foreach ($casRecEntities as $casRecEntity) {
+            if (!$casRecEntity instanceof CasRecEntity) {
+                throw new \Exception('Invalid casrec entity encountered. AppBundle\Entity\CasRec expected');
+            }
+
+            $casRecEntitiesWithKey[$casRecEntity->getCaseNumber()] = $casRecEntity;
+        }
+
+        //  Create a case numbers string from the keys
+        $caseNumbersString = '\'' . implode('\',\'', array_keys($casRecEntitiesWithKey)) . '\'';
+
+        //  Use the case numbers to get any existing reports (not submitted)
+        $qb = $this->reportRepository->createQueryBuilder('r');
+
+        $qb->leftJoin('r.client', 'c')
+           ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
+
+        $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+
+        //  Loop through the reports and update the report type if necessary
+        foreach ($reports as $report) {
+            $reportClientCaseNumber = $report->getClient()->getCaseNumber();
+
+            if (isset($casRecEntitiesWithKey[$reportClientCaseNumber])) {
+                //  Get the report type based on the CasRec record
+                $casRecReportType = $report->getTypeBasedOnCasrecRecord($casRecEntitiesWithKey[$reportClientCaseNumber]);
+
+                if ($report->getType() != $casRecReportType) {
+                    $report->setType($casRecReportType);
+                    $this->_em->persist($report);
+                }
+            }
+        }
+
+        $this->_em->flush();
+    }
+
 }
