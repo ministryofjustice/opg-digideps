@@ -6,9 +6,9 @@
             <li>
                 {# NDR users have a different homepage. Remove once NDR and non-NDR homepages are merged #}
                 {% if isUserOdrEnabled %}
-                    <a href="{{ path('odr_index') }}">Deputy Reports</a>
+                    <a href="{{ path('odr_index') }}">Deputy reports</a>
                 {% else %}
-                    <a href="{{ path('reports', {'type': '102'}) }}">Deputy Reports</a>
+                    <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
                 {% endif %}
             </li>
             <li>
@@ -30,11 +30,11 @@
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
-                <a href="{{ path('reports', {'type': '102'}) }}">Deputy Reports</a>
+                <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
             </li>
             {% if section != 'home' %}
                 <li>
-                    <a href="{{ path('account_settings') }}">Your account</a>
+                    <a href="{{ path('account_settings') }}">Deputyship details</a>
                 </li>
             {% endif %}
         </ol>
