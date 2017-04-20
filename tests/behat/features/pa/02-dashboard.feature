@@ -1,3 +1,4 @@
+#Can be run repeatedly assuming user in place
 Feature: PA dashboard
 
   Scenario: PA dashboard check visibility, pagination and search
