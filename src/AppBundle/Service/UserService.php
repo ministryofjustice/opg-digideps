@@ -30,7 +30,7 @@ class UserService
         $this->_em = $em;
     }
 
-    public function addPaUser(User $loggedInUser, $userToAdd, $data)
+    public function addPaUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
         $userToAdd->generatePaTeam($loggedInUser, $data);
@@ -53,6 +53,7 @@ class UserService
 
             //copy clients
             foreach($loggedInUser->getClients() as $client) {
+
                 $userToAdd->addClient($client);
             }
         }

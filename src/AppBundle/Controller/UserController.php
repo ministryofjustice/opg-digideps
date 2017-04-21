@@ -36,6 +36,14 @@ class UserController extends RestController
 
         $user = $this->populateUser($user, $data);
 
+        /*
+         * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception
+         * thrown when persist flush ?
+         */
+        if ($user->getEmail() && $this->getRepository(EntityDir\User::class)->findUnfilteredOneBy(['email' => $user->getEmail()])) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
+        }
+
         // If Adding PA user
         if ($loggedInUser->isPaAdministrator()) {
             $userService = $this->get('opg_digideps.user_service');
@@ -43,14 +51,6 @@ class UserController extends RestController
         };
 
         $user->setRegistrationDate(new \DateTime());
-
-        /*
-         * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception
-         * thrown when persist flush ?
-         */
-        if ($user->getEmail() && $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $user->getEmail()])) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
-        }
 
         $user->recreateRegistrationToken();
 
@@ -433,27 +433,8 @@ class UserController extends RestController
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups(['user']);
 
-
         return $user->getTeams()->first();
-    }
-
-    /**
-     * Is the logged in user a PA user?
-     *
-     * @return bool
-     */
-    private function isPaCreator()
-    {
-        return in_array(
-            $this->getUser()->getRoleName(),
-            [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN
-            ]
-        );
     }
 }

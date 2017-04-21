@@ -55,4 +55,31 @@ class TeamController extends RestController
         return $user;
     }
 
+    /**
+     * Delete PA team member user.
+     *
+     * @Route("/delete-user/{id}")
+     * @Method({"DELETE"})
+     *
+     * @param Request $request
+     * @param int $id
+     * @return array
+     */
+    public function deletePaTeamUser(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN
+            ]
+        );
+
+        /* @var $user EntityDir\User */
+        $user = $this->getMemberById($request, $id);
+
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+
+        return [];
+    }
 }
