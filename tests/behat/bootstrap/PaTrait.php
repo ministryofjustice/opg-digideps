@@ -9,36 +9,26 @@ trait PaTrait
      */
     public static function setUpPaTeamFeature()
     {
-        echo "Run before PA Team feature\n";
-        echo getcwd() . "\n";
-        echo exec("ls");
+        tearDownPaTeamFeature();
 
-        $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pateam.sql");
-        echo $command;
-        #echo exec(sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pateam.sql"));
-        echo exec($command);
-        #echo exec($command);
+        echo "Adding PA Team data\n";
 
-        /*$dbconn = pg_connect("host=localhost dbname=api user=api password=api") or die("Could not connect: " . pg_last_error());
-
-        $existingUser = pg_query($dbconn, "SELECT id FROM dd_user") or die('Query failed: ' . pg_last_error());
-        if(pg_num_rows($existingUser) === 0)
-        {
-            //Delete everything
-            echo "User exists. Deleting";
-        }
-        else
-        {
-            echo "Creating user";
-        }*/
+        //TODO: Remove hard coded path
+        //TODO: Investigate automatically running these scripts based on tag?
+        $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pateam-setup.sql");
+        exec($command);
     }
 
     /**
-     * @AfterFeature @pateam
+     * @AfterFeature @pa @pateam
      */
     public static function tearDownPaTeamFeature()
     {
-        echo "Run after PA Team feature";
+        echo "Clearing PA data";
+
+        //TODO: Remove hard coded path
+        $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pa-teardown.sql");
+        exec($command);
     }
 
     /**
