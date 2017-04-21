@@ -10,12 +10,6 @@
     <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
 {% endblock %}
 
-{% block notification %}
-    <div class="push--top">
-        {{ macros.notification('info', 'serviceNotification' | trans({}, 'common')) }}
-    </div>
-{% endblock %}
-
 {% block pageContent %}
 
     {% if odrStatus.isReadyToSubmit %}
