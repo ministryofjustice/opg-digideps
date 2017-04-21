@@ -13,7 +13,7 @@ startPage:
     summary: More on how to carry out your duties
     content:
       para01: |
-          OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+          OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:

@@ -34,7 +34,7 @@ addPage:
   pageSectionTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
-    Please tell us more about the people you’ve consulted for your deputyship. Start by adding the first person; you’ll be able to add more people later if you need to.
+    Please tell us more about the people you've consulted for your deputyship. Start by adding the first person; you'll be able to add more people later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"

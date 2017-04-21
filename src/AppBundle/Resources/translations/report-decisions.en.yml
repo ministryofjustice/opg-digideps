@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Decisions
   startButton: Start decisions
-  description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you’ve made on %client%'s behalf."
+  description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
   whatisMentalCapacitySummary: What is mental capacity?
   whatisMentalCapacityPara1: |
     'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
@@ -61,7 +61,7 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: We need to know the details of the significant decisions you’ve made for %client%. Describe the first decision here. You’ll be able to add more decisions later if you need to.
+  pageSectionDescription: We need to know the details of the significant decisions you've made for %client%. Describe the first decision here. You'll be able to add more decisions later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
@@ -70,7 +70,7 @@ editPage:
 
 summaryPage:
   weAskAbout: |
-      In this section, we ask about %client%’s mental capacity and the significant decisions you've made for %client% over the reporting period.
+      In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Decisions
   addButton: Add significant decision

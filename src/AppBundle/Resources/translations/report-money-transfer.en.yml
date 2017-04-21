@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageSectionTitle: Money transfers
   pageSectionDescription1: |
-    Use this section to tell us about money you’ve transferred between %client%’s accounts.
+    Use this section to tell us about money you've transferred between %client%'s accounts.
   pageSectionDescription2: |
     If you've made more than one transfer from one account to another, you can give us a total for the reporting period.
 
@@ -35,7 +35,7 @@ stepPage:
 summaryPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageSectionTitle: Money transfers
-  weAskAbout: In this section, we ask you about money you’ve transferred between %client%’s accounts.
+  weAskAbout: In this section, we ask you about money you've transferred between %client%'s accounts.
   addButton: Add a transfer
   edit: Edit
 

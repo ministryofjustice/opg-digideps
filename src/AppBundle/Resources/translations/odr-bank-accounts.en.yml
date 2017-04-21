@@ -22,7 +22,7 @@ startPage:
         <a href="https://www.gov.uk/become-deputy/complete-your-annual-report" target="_blank">annual report</a>.
         This report falls due on the first anniversary of your court order.
       para03: |
-        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start accounts
 
 stepPage:

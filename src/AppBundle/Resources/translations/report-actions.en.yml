@@ -17,7 +17,7 @@ startPage:
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
       para03: |
-        OPG’s <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
   startButton: Start actions
 
 stepPage:
@@ -59,8 +59,8 @@ form:
   doYouHaveConcerns:
       label: Do you have any concerns about your deputyship?
       hint: |
-          For example, paying care home fees if %client%’s money runs low,
-          managing %client%’s property, other family members’ involvement
-          with %client%’s funds
+          For example, paying care home fees if %client%'s money runs low,
+          managing %client%'s property, other family members' involvement
+          with %client%'s funds
   doYouHaveConcernsDetails:
       label: Please give us details about your concerns

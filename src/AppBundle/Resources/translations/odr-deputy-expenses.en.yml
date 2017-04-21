@@ -6,12 +6,12 @@ startPage:
   pageSectionDescription2: |
     Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
   pageSectionDescription3: |
-    You can pay yourself back from %client%’s funds as you go along, but you must keep a record of the expenses for your annual deputy report, due on the anniversary of your court order.
+    You can pay yourself back from %client%'s funds as you go along, but you must keep a record of the expenses for your annual deputy report, due on the anniversary of your court order.
   hiddenText01:
     summary: More about what you can and can't claim for
     content:
       para01: |
-        OPG’S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
+        OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
   startButton: Start deputy expenses
 
 existPage:

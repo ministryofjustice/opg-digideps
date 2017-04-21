@@ -1,5 +1,5 @@
 page:
   htmlTitle: "Deputy report - ask for a new link | GOV.UK"
 pageTitle: This page has expired
-subtitle: The link we sent you was only active for %tokenExpireHours% hours, and this page has now expired. You can still create a password, but we’ll have to send you a new link.
+subtitle: The link we sent you was only active for %tokenExpireHours% hours, and this page has now expired. You can still create a password, but we'll have to send you a new link.
 sendLink: Ask us to send you a new link

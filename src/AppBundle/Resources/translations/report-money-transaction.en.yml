@@ -9,7 +9,7 @@ startPage:
       individual amounts and we'll add them up for you.
     pageSectionDescription3: |
       Be sure to enter each individual source of income into one category only,
-      so we don’t count them twice when we do the calculation.
+      so we don't count them twice when we do the calculation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
@@ -22,7 +22,7 @@ startPage:
       individual amounts and we'll add them up for you.
     pageSectionDescription3: |
       Be sure to enter each individual payment into one category only,
-      so we don’t count them twice when we do the calculation.
+      so we don't count them twice when we do the calculation.
     startButton: Start money out
 
 
