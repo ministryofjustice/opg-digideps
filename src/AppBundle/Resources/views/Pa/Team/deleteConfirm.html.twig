@@ -20,14 +20,14 @@
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'Yes, remove user',
-        linkClass: 'button push-half--right',
+        linkClass: 'button push-half--right behat-link-confirm',
         linkHref: path('delete_team_member_confirm', { id: user.id })
     } %}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'Cancel',
-        linkClass: 'button-link',
+        linkClass: 'button-link behat-link-confirm-cancel',
         linkHref: path('pa_team')
     } %}
 
