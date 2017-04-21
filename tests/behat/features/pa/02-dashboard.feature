@@ -1,4 +1,5 @@
-#Can be run repeatedly assuming user in place
+#Requires full import of csv data
+@pa @pateam
 Feature: PA dashboard
 
   Scenario: PA dashboard check visibility, pagination and search

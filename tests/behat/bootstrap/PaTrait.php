@@ -5,12 +5,18 @@ namespace DigidepsBehat;
 trait PaTrait
 {
     /**
+     * @BeforeFeature @pa
+     */
+    public static function setUpPaFeature()
+    {
+        self::tearDownPaFeature();
+    }
+
+    /**
      * @BeforeFeature @pateam
      */
     public static function setUpPaTeamFeature()
     {
-        tearDownPaTeamFeature();
-
         echo "Adding PA Team data\n";
 
         //TODO: Remove hard coded path
@@ -20,11 +26,11 @@ trait PaTrait
     }
 
     /**
-     * @AfterFeature @pa @pateam
+     * @AfterFeature @pa
      */
-    public static function tearDownPaTeamFeature()
+    public static function tearDownPaFeature()
     {
-        echo "Clearing PA data";
+        echo "Clearing PA data\n";
 
         //TODO: Remove hard coded path
         $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pa-teardown.sql");
@@ -36,7 +42,7 @@ trait PaTrait
      */
     public function setUpPaTeamScenario()
     {
-        echo "Run before PA Team scenario";
+
     }
 
     /**
@@ -44,6 +50,6 @@ trait PaTrait
      */
     public function tearDownPaTeamScenario()
     {
-        echo "Run after PA Team scenario";
+
     }
 }

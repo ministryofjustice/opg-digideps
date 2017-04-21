@@ -1,4 +1,4 @@
-#Relies on resetdb.sh having been run
+@pa
 Feature: Add PA users and activate PA user (journey)
 
   Scenario: add PA users
