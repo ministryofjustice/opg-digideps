@@ -1,3 +1,5 @@
+#Relies on resetdb.sh having been run and the 01-admin-add-pa-users-and-activate.feature
+@pateam
 Feature: PA team
 
   Scenario: team page

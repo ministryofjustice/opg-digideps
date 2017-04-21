@@ -26,7 +26,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ReportTrait,
         KernelDictionary,
         ExpressionTrait,
-        UserTrait;
+        UserTrait,
+        PaTrait;
 
     protected static $dbName;
 
