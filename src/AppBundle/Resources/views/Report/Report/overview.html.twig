@@ -13,12 +13,6 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
-{% block notification %}
-    <div class="push--top">
-        {{ macros.notification('info', 'serviceNotification' | trans({}, 'common')) }}
-    </div>
-{% endblock %}
-
 {% block pageContent %}
 
     {% block pageHeader %}
