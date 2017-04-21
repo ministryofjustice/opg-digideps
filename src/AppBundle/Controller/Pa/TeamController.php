@@ -55,23 +55,23 @@ class TeamController extends AbstractController
 
             try {
                 $user = $this->getRestClient()->post('user', $user, ['pa_team_add'], 'User');
+
+                $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
+
+                // activation link
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+                return $this->redirectToRoute('pa_team');
+
             } catch (\Exception $e) {
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $form->addError(new FormError($e->getData()['message']));
                 }
-
                 return [
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 ];
             }
-
-            $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
-
-            // activation link
-            $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-            $this->getMailSender()->send($activationEmail, ['text', 'html']);
-
-            return $this->redirectToRoute('pa_team');
         }
 
         return [
@@ -104,10 +104,6 @@ class TeamController extends AbstractController
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $form->addError(new FormError($e->getData()['message']));
                 }
-
-                return [
-                    'form' => $form->createView()
-                ];
             }
 
             $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
@@ -155,5 +151,53 @@ class TeamController extends AbstractController
 
         return $this->redirectToRoute('pa_team');
 
+    }
+
+    /**
+     * Confirm delete user form
+     *
+     * @Route("/delete-user/{id}", name="delete_team_member")
+     * @Template()
+     */
+    public function deleteConfirmAction(Request $request, $id, $confirmed = false)
+    {
+        // The rest call ensures that only team members get returned and permission checks work as expected
+        $user = $this->getRestClient()->get('team/member/' . $id, 'User');
+
+        $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
+
+        return ['user' => $user];
+    }
+
+    /**
+     * Removes a user, adds a flash message and redirects to page
+     *
+     * @Route("/delete-user/{id}/confirm", name="delete_team_member_confirm")
+     * @Template()
+     */
+    public function deleteConfirmedAction(Request $request, $id)
+    {
+        try {
+
+            $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
+
+            $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
+
+            $this->getRestClient()->delete('/team/delete-user/' . $userToRemove->getId());
+
+            $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
+
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+
+            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                $request->getSession()->getFlashBag()->add(
+                    'error',
+                    'User could not be removed'
+                );
+            }
+        }
+
+        return $this->redirectToRoute('pa_team');
     }
 }

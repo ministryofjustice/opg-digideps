@@ -1,7 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% import 'AppBundle:Macros:macros.html.twig' as macros %}
-
 {% set translationDomain = "pa-team" %}
 {% trans_default_domain translationDomain %}
 
@@ -10,7 +8,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">User accounts</span>
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block pageContent %}

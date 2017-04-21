@@ -162,3 +162,59 @@ Feature: PA team
     Then I should see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     Then I should see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
+
+  Scenario: PA (named) deputy adds, then removes a PA_ADMIN user
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    Then I should not see "Remove" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    When I click on "add"
+    Then the response status code should be 200
+    And I press "team_member_account_save"
+    When I fill in the following:
+      | team_member_account_firstname  | Adam Admin                               |
+      | team_member_account_lastname   | Cyan                                   |
+      | team_member_account_email      | behat-pa2-admin@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_0 | ROLE_PA_ADMIN                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    Then the response status code should be 200
+    Then I should see the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
+    Then I should see "Remove" in the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
+    But I should not see "Remove" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    Then I click on "delete" in the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
+    Then the response status code should be 200
+    # test cancel button on confirmation page
+    When I click on "confirm-cancel"
+    Then the response status code should be 200
+    Then I click on "delete" in the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
+    Then the response status code should be 200
+    # now confirm
+    When I click on "confirm"
+    Then the response status code should be 200
+    Then I should not see the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
+
+  #
+  # Remove user
+  #
+  Scenario: PA_ADMIN logs in, adds then removes a PA_TEAM_MEMBER
+    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts, add"
+    # add user team member
+    When I fill in the following:
+      | team_member_account_firstname  | Andy Team member                             |
+      | team_member_account_lastname   | Team Member                                          |
+      | team_member_account_email      | behat-pa1-team-member2@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    # check all 3 users are displayed
+    Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
+    Then I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
+    Then I should see "Remove" in the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
+    But I should not see "Remove" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    Then I click on "delete" in the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
+    Then the response status code should be 200
+    When I click on "confirm"
+    Then the response status code should be 200
+    Then I should not see the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
