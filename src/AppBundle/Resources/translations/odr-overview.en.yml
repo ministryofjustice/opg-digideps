@@ -25,6 +25,10 @@ status:
     notFinished: "Not finished"
     readyToSubmit: "Ready to submit"
 
+guidanceNotice: |
+  You don't have to fill in all the sections in one go. You can complete the report in any
+  order you want, save it and return to it.
+
 labels:
     not-started: "Not started"
     incomplete: "Not finished"

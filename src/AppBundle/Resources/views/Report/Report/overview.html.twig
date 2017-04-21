@@ -13,12 +13,6 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
-{% block notification %}
-    <div class="push--top">
-        {{ macros.notification('info', 'serviceNotification' | trans({}, 'common')) }}
-    </div>
-{% endblock %}
-
 {% block pageContent %}
 
     {% block pageHeader %}
@@ -44,6 +38,11 @@
             <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
         </div>
     </div>
+
+    <div class="push--top">
+        {{ macros.notification('info', 'guidanceNotice' | trans) }}
+    </div>
+
 
     <ul id="overview-sections" class="overview-sections">
 
@@ -84,7 +83,7 @@
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {% if report.isDue() and not reportStatus.balanceMatches %}
-                    {{ macros.notification('notice', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                    {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {

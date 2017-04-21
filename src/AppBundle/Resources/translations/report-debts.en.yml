@@ -3,7 +3,7 @@ startPage:
   pageSectionTitle: "Debts"
   pageSectionDescription: |
     Use this section to tell us about %client%'s debts, for example,
-    care fees, credit cards or loans
+    care fees, credit cards or loans.
   startButton: Start debts
 
 existPage:

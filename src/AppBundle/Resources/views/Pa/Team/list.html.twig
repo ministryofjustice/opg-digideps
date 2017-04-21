@@ -2,23 +2,14 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
-
 {% block htmlTitle %}User accounts{% endblock %}
 {% block pageTitle %}User accounts{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}
-    [breadcrumbs]
-    {#{{ macros.breadcrumbsSettings('home') }}#}
-{% endblock %}
-
-{% block helpline %}{% endblock %}
-
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {% if isNamedOrAdmin %}
+        {% if (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
             Add, edit and remove user accounts for you and your team members
         {% else %}
             View team members and edit your account
@@ -30,8 +21,8 @@
             <h2 class="heading-medium flush--ends">List of user accounts</h2>
         </div>
         <div class="column-half text--right">
-            {% if isNamedOrAdmin %}
-            <a href="{{ path('add_team_member') }}"
+            {% if is_granted('add-user') %}
+                <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 Add user account
@@ -53,23 +44,17 @@
 
         <tbody>
         {% for user in teamMembers %}
-            {% set allowedToEdit = app.user.roleName == 'ROLE_PA'
-            or (app.user.roleName == 'ROLE_PA_ADMIN' and user.roleName != 'ROLE_PA')
-            or app.user.id == user.id %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
-                    {% if user.roleName == 'ROLE_PA' or user.roleName == 'ROLE_PA_ADMIN' %}
+                    {% if (user.roleName == 'ROLE_PA' or user.roleName == 'ROLE_PA_ADMIN') %}
                         <span class="status status-label admin">Administrator</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
-                    <p class="flush--top">{{ user.jobTitle }}</p>
+                        <p class="flush--top">{{ user.jobTitle }}</p>
                     {% endif %}
-                    <span class="visuallyhidden">
-                        active: {{ user.active ?'yes':'no' }} |
-                    </span>
                 </td>
                 <td>
                     <p class="flush--ends">
@@ -84,8 +69,14 @@
                     {% endif %}
                 </td>
                 <td class="change-answer">
-                    {% if allowedToEdit %}
-                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a>
+                    {% if is_granted('edit-user', user) %}
+                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a><br>
+                    {% endif %}
+                    {% if is_granted('delete-user', user) %}
+                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">Remove</a><br>
+                    {% endif %}
+                    {% if is_granted('edit-user', user) and not user.active %}
+                        <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">Resend activation</a>
                     {% endif %}
                 </td>
             </tr>

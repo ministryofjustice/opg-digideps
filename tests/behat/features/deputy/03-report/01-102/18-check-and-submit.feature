@@ -39,6 +39,7 @@ Feature: Report submit
             | report_declaration_agreedBehalfDeputy_0 |
             | report_declaration_agreedBehalfDeputy_1 |
             | report_declaration_agreedBehalfDeputy_2 |
+            | report_declaration_agreedBehalfDeputyExplanation |
         #
         # missing explanation
         #
