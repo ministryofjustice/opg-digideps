@@ -29,7 +29,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         UserTrait,
         PaTrait;
 
-    protected static $dbName;
+    protected static $dbName = 'api';
 
     protected static $autoDbSnapshot = false;
 
