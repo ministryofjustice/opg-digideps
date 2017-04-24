@@ -20,7 +20,7 @@ trait PaTrait
         echo "Adding PA Team data\n";
 
         //TODO: Investigate automatically running these scripts based on tag?
-        $command = sprintf('psql %s -f "%s%s"', self::$dbName, self::$sqlPath, "pa/pateam-setup.sql");
+        $command = sprintf('sh scripts/dbScript.sh %s "%s%s"', self::$dbName, self::$sqlPath, "pa/pateam-setup.sql");
         exec($command);
     }
 
@@ -31,7 +31,7 @@ trait PaTrait
     {
         echo "Clearing PA data\n";
 
-        $command = sprintf('psql %s -f "%s%s"', self::$dbName, self::$sqlPath, "pa/pa-teardown.sql");
+        $command = sprintf('sh scripts/dbScript.sh %s "%s%s"', self::$dbName, self::$sqlPath, "pa/pa-teardown.sql");
         exec($command);
     }
 
