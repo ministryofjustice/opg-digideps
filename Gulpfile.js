@@ -133,4 +133,5 @@ gulp.task('watch', ['development'], function () {
 
 // Prepare and build all assets
 gulp.task('default', ['clean', 'sass', 'govuk-template-css', 'images', 'fonts', 'js.application', 'js.other']);
+// Prepare and build all assets in Development mode
 gulp.task('development', ['set-development', 'default']);
