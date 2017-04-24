@@ -19,9 +19,8 @@ trait PaTrait
     {
         echo "Adding PA Team data\n";
 
-        //TODO: Remove hard coded path
         //TODO: Investigate automatically running these scripts based on tag?
-        $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pateam-setup.sql");
+        $command = sprintf('psql %s -f "%s%s"', self::$dbName, self::$sqlPath, "pa/pateam-setup.sql");
         exec($command);
     }
 
@@ -32,8 +31,7 @@ trait PaTrait
     {
         echo "Clearing PA data\n";
 
-        //TODO: Remove hard coded path
-        $command = sprintf('psql %s -f "%s"', self::$dbName, "tests/behat/sql/pa/pa-teardown.sql");
+        $command = sprintf('psql %s -f "%s%s"', self::$dbName, self::$sqlPath, "pa/pa-teardown.sql");
         exec($command);
     }
 

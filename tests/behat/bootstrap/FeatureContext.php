@@ -30,6 +30,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         PaTrait;
 
     protected static $dbName = 'api';
+    protected static $sqlPath = 'tests/behat/sql/';
 
     protected static $autoDbSnapshot = false;
 
