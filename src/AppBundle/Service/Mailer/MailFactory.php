@@ -101,8 +101,10 @@ class MailFactory
      */
     private function getRecipientRole(User $user)
     {
-        switch ($user->getRoleFullName()) {
+        switch ($user->getRoleName()) {
             case User::ROLE_PA:
+            case User::ROLE_PA_ADMIN:
+            case User::ROLE_PA_TEAM_MEMBER:
                 return strtolower(str_replace(' ', '-', $user->getRoleFullName()));
             default:
                 return 'default';
@@ -126,6 +128,8 @@ class MailFactory
             ]),
             'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => $this->getRecipientRole($user),
+            'userRole' => $user->getRoleName()
         ];
 
         $email = new ModelDir\Email();
