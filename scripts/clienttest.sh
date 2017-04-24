@@ -15,4 +15,3 @@ export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceConta
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputy --profile=${PROFILE:=headless}
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputyodr --profile=${PROFILE:=headless}
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless}
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} --tags pateam

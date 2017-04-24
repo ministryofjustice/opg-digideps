@@ -11,6 +11,9 @@ export PGUSER=${API_DATABASE_USERNAME:=api}
 export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"selenium2\" : { \"wd_host\" : \"$WD_HOST\" }, \"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
 if [ -z "$2" ]; then
 	/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=$1 --profile=${PROFILE:=headless}
+elif [ ! -z "$3" ]; then
+# assume the presence of a third argument is a specific feature file
+	/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=$1 --profile=${PROFILE:=headless} $3
 else
     /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=$1 --profile=${PROFILE:=headless} --tags $2
 fi
