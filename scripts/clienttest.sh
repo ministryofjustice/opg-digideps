@@ -1,5 +1,5 @@
 #!/bin/bash
-bash scripts/configureEnvironment.sh
+sh scripts/configureEnvironment.sh
 
 # environment variables for psql command
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
