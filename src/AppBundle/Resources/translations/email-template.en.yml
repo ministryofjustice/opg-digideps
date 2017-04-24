@@ -1,35 +1,3 @@
-default:
-    user-activate:
-        para1: Activate your account
-        para2: Thank you for registering for the Office of the Public Guardian’s deputy report service.
-        para3: Please click on the link below to activate and start using your account.
-        para4: If clicking on the link doesn’t work, try copying it into your browser's address bar.
-        para5: You must activate your account before you can create a deputy report.
-        para6: The link we’ve given you expires after 48 hours, but don’t worry if you miss this deadline. You can return to the deputy report service at <a style="word-wrap: break-word;" href="%homepageUrl%">complete-deputy-report.service.gov.uk</a> and register again.
-public-authority:
-    user-activate:
-        para1: Activate your account
-        para2: We’ve now registered you with the Office of the Public Guardian’s deputy service.
-        para3: Please click on the link below to activate your account.
-        para4: If the link doesn’t work, try copying it into your browser's address bar.
-        para5: You must activate your account before you can start using the deputy service.
-        para6: The link we’ve given you expires after 48 hours. If you miss this deadline, please return to your dashboard and click 'Forgotten password' to request a new activation email.
-public-authority-admin:
-    user-activate:
-        para1: Activate your account
-        para2: The named deputy in your organisation has registered you for the Office of the Public Guardian’s deputy service.
-        para3: Please click on the link below to activate your account.
-        para4: If the link doesn’t work, try copying it into your browser's address bar.
-        para5: You must activate your account before you can start using the deputy service.
-        para6: The link we’ve given you expires after 48 hours. If you miss this deadline, you must request a new activation email from your named deputy.
-public-authority-team-member:
-    user-activate:
-        para1: Activate your account
-        para2: The named deputy in your organisation has registered you for the Office of the Public Guardian’s deputy service.
-        para3: Please click on the link below to activate your account.
-        para4: If the link doesn’t work, try copying it into your browser's address bar.
-        para5: You must activate your account before you can start using the deputy service.
-        para6: The link we’ve given you expires after 48 hours. If you miss this deadline, you must request a new activation email from your named deputy.
 footer:
     needhelp: Need help?
     automated: This is an automated email so please don't reply to this address.
@@ -40,3 +8,4 @@ footer:
     opg: Office of the Public Guardian
     address1: PO Box 16185
     address2: Birmingham B2 2WH
+    homepageLinkText: complete-deputy-report.service.gov.uk

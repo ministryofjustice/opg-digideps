@@ -75,8 +75,7 @@ class MailFactory
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => $this->getRecipientRole($user),
-            'emailType' => 'user-activate'
+            'recipientRole' => $this->getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();

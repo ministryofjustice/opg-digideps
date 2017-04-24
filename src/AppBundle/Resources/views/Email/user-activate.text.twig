@@ -1,29 +1,32 @@
-{{ (translationContext ~ '.para1') | trans  }}
+{% set translationDomain = "user-activate" %}
+
+{% trans_default_domain translationDomain %}
+{{ (recipientRole ~ '.para1') | trans  }}
 ---------------------
 
-{{ (translationContext ~ '.para2') | trans  }}.
+{{ (recipientRole ~ '.para2') | trans  }}.
 
-{{ (translationContext ~ '.para3') | trans  }}
+{{ (recipientRole ~ '.para3') | trans  }}
 
 {{link}}
 
-{{ (translationContext ~ '.para4') | trans  }}
+{{ (recipientRole ~ '.para4') | trans  }}
 
-{{ (translationContext ~ '.para5') | trans  }}
+{{ (recipientRole ~ '.para5') | trans  }}
 
-{{ (translationContext ~ '.para6') | trans  }}
+{{ (recipientRole ~ '.para6') | trans  }}
 
 
-{{ 'footer.needhelp' | trans }}
+{{ 'footer.needhelp' | trans([], 'email-template') }}
 ----------
 
-{{ 'footer.automated' | trans }}
+{{ 'footer.automated' | trans([], 'email-template') }}
 
-{{ 'footer.toContactUs' | trans|raw }}
+{{ 'footer.toContactUs' | trans([], 'email-template') | raw }}
 
-{{ 'footer.opg' | trans }}
+{{ 'footer.opg' | trans([], 'email-template') }}
 -----------------------------
-{{ 'footer.address1' | trans }}
-{{ 'footer.address2' | trans }}
-{{ 'footer.homepageLinkText' | trans }}
+{{ 'footer.address1' | trans([], 'email-template') }}
+{{ 'footer.address2' | trans([], 'email-template') }}
+{{ 'footer.homepageLinkText' | trans([], 'email-template') }}
 {{ homepageUrl }}
