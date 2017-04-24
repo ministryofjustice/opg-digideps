@@ -1,21 +1,10 @@
 #!/bin/bash
-set -e
-#let's configure environment
-run-parts /etc/my_init.d
-chown app:app /tmp/behat
-chown app:app /tmp
+bash scripts/configureEnvironment.sh
 
-# create log dir locally failing sometimes)
-mkdir -p /var/log/app
-chown app:app /var/log/app
-
-cd /app
-/sbin/setuser app mkdir -p /tmp/behat
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
 export PGUSER=${API_DATABASE_USERNAME:=api}
-rm -rf app/cache/*
 
 # phpunit
 #/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/ #Unit tests. Initial run can take a significant amount of time but subsequent runs are <10 seconds
@@ -26,5 +15,5 @@ export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceConta
 #/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputyodr --profile=${PROFILE:=headless}
 #/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless}
 #/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} tests/behat/features/pa/01-admin-add-pa-users-and-activate.feature
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} tests/behat/features/pa/02-dashboard.feature
-#/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} --tags pateam
+#/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} tests/behat/features/pa/02-dashboard.feature
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} --tags pateam
