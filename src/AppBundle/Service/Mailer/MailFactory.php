@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
@@ -61,7 +62,7 @@ class MailFactory
      *
      * @return \AppBundle\Model\Email
      */
-    public function createActivationEmail(EntityDir\User $user)
+    public function createActivationEmail(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -74,6 +75,8 @@ class MailFactory
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => $this->getRecipientRole($user),
+            'emailType' => 'user-activate'
         ];
 
         $email = new ModelDir\Email();
@@ -88,6 +91,23 @@ class MailFactory
             ->setBodyText($this->templating->render('AppBundle:Email:user-activate.text.twig', $viewParams));
 
         return $email;
+    }
+
+    /**
+     * Generates the recipient Role aspect of the context string. Most users use the 'default' recipient role.
+     * This maps to the translation file
+     *
+     * @param User $user
+     * @return string
+     */
+    private function getRecipientRole(User $user)
+    {
+        switch ($user->getRoleFullName()) {
+            case User::ROLE_PA:
+                return strtolower(str_replace(' ', '-', $user->getRoleFullName()));
+            default:
+                return 'default';
+        }
     }
 
     /**
