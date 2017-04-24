@@ -1,29 +1,29 @@
-Activate your account
+{{ (translationContext ~ '.para1') | trans  }}
 ---------------------
 
-Thank you for registering for the Office of the Public Guardian’s deputy report service.
+{{ (translationContext ~ '.para2') | trans  }}.
 
-Please click on the link below to activate and start using your account.
+{{ (translationContext ~ '.para3') | trans  }}
 
 {{link}}
 
-If clicking on the link doesn’t work, try copying it into your browser's address bar.
+{{ (translationContext ~ '.para4') | trans  }}
 
-You must activate your account before you can start working on your deputy report.
+{{ (translationContext ~ '.para5') | trans  }}
 
-The link we’ve given you expires after 48 hours, but don’t worry if you miss this deadline. You can return to the deputy report service at complete-deputy-report.service.gov.uk {{ homepageUrl }} and register again.
+{{ (translationContext ~ '.para6') | trans  }}
 
 
-Need help?
+{{ 'footer.needhelp' | trans }}
 ----------
 
-This is an automated email, so please don’t reply to this address.
+{{ 'footer.automated' | trans }}
 
-To contact us, email the Office of the Public Guardian at deputyshipservice@publicguardian.gsi.gov.uk, or call us on 0115 934 2700.
+{{ 'footer.toContactUs' | trans|raw }}
 
-Office of the Public Guardian
+{{ 'footer.opg' | trans }}
 -----------------------------
-PO Box 16185
-Birmingham B2 2WH
-complete-deputy-report.service.gov.uk
+{{ 'footer.address1' | trans }}
+{{ 'footer.address2' | trans }}
+{{ 'footer.homepageLinkText' | trans }}
 {{ homepageUrl }}
