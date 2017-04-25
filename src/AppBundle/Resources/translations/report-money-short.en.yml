@@ -13,7 +13,10 @@ startPage:
       Tell us about how you have managed %client%'s money during this reporting period.
       We need this information to understand the client's financial situation.
     startButton: Start money out
-
+  notification: |
+    We’ve simplified this section for deputies looking after assets worth less than
+    £21,000. We may have removed some information you entered previously because we
+    no longer need it to process your report.
 
 categoryPage:
   backLink: Back
