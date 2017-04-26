@@ -1,3 +1,4 @@
+@pa @pateam
 Feature: PA team
 
   Scenario: team page
