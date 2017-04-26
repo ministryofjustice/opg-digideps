@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\Mailer\MailFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -162,6 +163,7 @@ class BehatController extends AbstractController
             'response' => [
                 'satisfactionLevel' => 'Satisfied',
             ],
+            'recipientRole' => MailFactory::getRecipientRole($this->getUser())
         ]);
     }
 }

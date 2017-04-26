@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Mailer;
 
 use MockeryStub as m;
+use AppBundle\Entity\User;
 
 class MailFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->router = m::mock('Symfony\Component\Routing\Router');
         $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');
-        $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine');
+        $this->templating = m::mock('Symfony\Bundle\TwigBundle\TwigEngine')->makePartial();
         $this->translator->shouldReceive('trans')->andReturnUsing(function ($input) {
             return $input . ' translated';
         });
@@ -39,7 +40,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
             'getFullName' => 'FN',
             'getRegistrationToken' => 'RT',
             'getEmail' => 'user@email',
-        ]);
+        ])->makePartial();
 
         $this->object = new MailFactory($this->container);
     }

@@ -75,7 +75,7 @@ class MailFactory
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => $this->getRecipientRole($user)
+            'recipientRole' => self::getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();
@@ -96,10 +96,12 @@ class MailFactory
      * Generates the recipient Role aspect of the context string. Most users use the 'default' recipient role.
      * This maps to the translation file
      *
+     * Called from BehatController to allow email-viewer to function
+     *
      * @param User $user
      * @return string
      */
-    private function getRecipientRole(User $user)
+    public static function getRecipientRole(User $user)
     {
         switch ($user->getRoleName()) {
             case User::ROLE_PA:
@@ -116,7 +118,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createResetPasswordEmail(EntityDir\User $user)
+    public function createResetPasswordEmail(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -128,8 +130,7 @@ class MailFactory
             ]),
             'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => $this->getRecipientRole($user),
-            'userRole' => $user->getRoleName()
+            'recipientRole' => self::getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();
@@ -151,7 +152,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createChangePasswordEmail(EntityDir\User $user)
+    public function createChangePasswordEmail(User $user)
     {
         $email = new ModelDir\Email();
 
