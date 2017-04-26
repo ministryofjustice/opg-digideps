@@ -69,6 +69,19 @@ Feature: PA team
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
     And I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
 
+  Scenario: PA_ADMIN logs in and adds PA_TEAM_MEMBER with invalid email
+    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts, add"
+    # add user ADMIN
+    When I fill in the following:
+      | team_member_account_firstname  | Robertt Team member                             |
+      | team_member_account_lastname   | Blackk                                          |
+      | team_member_account_email      | behat-pa1-team-member@@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the following fields should have an error:
+      | team_member_account_email      |
+
   Scenario: PA_ADMIN logs in and adds PA_TEAM_MEMBER
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts, add"
