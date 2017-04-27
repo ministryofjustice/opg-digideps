@@ -146,12 +146,12 @@ class BehatController extends AbstractController
      * Display emails into a webpage
      * Login is required
      *
-     * @Route("/email-viewer/{action}", name="email-viewer")
+     * @Route("/email-viewer/{action}/{type}", name="email-viewer", defaults={"type"="html"})
      * @Template()
      */
-    public function emailViewerAction($action)
+    public function emailViewerAction($action, $type = 'html')
     {
-        $emailToView = 'AppBundle:Email:' . $action . '.html.twig';
+        $emailToView = 'AppBundle:Email:' . $action . '.' . $type . '.twig';
 
         return $this->render($emailToView, [
             'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',
