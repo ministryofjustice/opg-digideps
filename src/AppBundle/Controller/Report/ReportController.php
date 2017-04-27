@@ -65,7 +65,14 @@ class ReportController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_LAY_DEPUTY,
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
 
         $groups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['report'];
