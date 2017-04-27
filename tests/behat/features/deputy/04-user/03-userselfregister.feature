@@ -36,8 +36,8 @@ Feature: User Self Registration
     And I fill in the following:
       | self_registration_firstname       | Zac               |
       | self_registration_lastname        | Tolley            |
-      | self_registration_email_first     | aaa@invaliddomain |
-      | self_registration_email_second    | aaa@invaliddomain |
+      | self_registration_email_first     | aaa@@invalid      |
+      | self_registration_email_second    | aaa@@invalid      |
       | self_registration_postcode        | ab12cde           |
       | self_registration_clientFirstname | John              |
       | self_registration_clientLastname  | Cross  tolley     |
