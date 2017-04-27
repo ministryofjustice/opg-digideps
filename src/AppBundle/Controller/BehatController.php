@@ -151,6 +151,7 @@ class BehatController extends AbstractController
      */
     public function emailViewerAction($action, $type = 'html')
     {
+        $type = $type === 'html' ? $type : 'text';
         $emailToView = 'AppBundle:Email:' . $action . '.' . $type . '.twig';
 
         return $this->render($emailToView, [
