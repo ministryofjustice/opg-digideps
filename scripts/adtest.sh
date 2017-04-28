@@ -1,14 +1,10 @@
 #!/bin/bash
-#let's configure environment
-run-parts /etc/my_init.d
-chown app:app /tmp/behat
+sh scripts/configureEnvironment.sh
 
-cd /app
-/sbin/setuser app mkdir -p /tmp/behat
-apt-get update > /dev/null 2>&1
+# environment variables for psql command
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
 export PGUSER=${API_DATABASE_USERNAME:=api}
-rm -rf app/cache/*
+
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=ad --profile=${PROFILE:=headless} --stop-on-failure

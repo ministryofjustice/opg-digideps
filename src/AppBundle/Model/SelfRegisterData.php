@@ -38,6 +38,7 @@ class SelfRegisterData
     /**
      * @var string email
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank")
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
      */
     private $postcode;
