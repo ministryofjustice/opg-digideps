@@ -39,17 +39,32 @@ class WkHtmlToPdfGenerator
      */
     public function getPdfFromHtml($html)
     {
+        //Example from https://github.com/openlabs/docker-wkhtmltopdf-aas/issues/18
+        $data = array(
+            'contents' => base64_encode($html),
+            'options' => array(
+                'encoding' => 'utf-8'
+            ),
+        );
+        $dataString = json_encode($data);
+        $headers = array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($dataString),
+        );
+
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); //timeout in seconds
         curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/json']); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $body = json_encode([
-            'contents' => base64_encode($html),
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 
-        return curl_exec($ch);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
     }
 }
