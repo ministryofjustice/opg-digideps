@@ -1,32 +1,21 @@
-{% set translationDomain = "user-activate" %}
+{% set translationDomain = "email-user-activate" %}
 
 {% trans_default_domain translationDomain %}
-{{ (recipientRole ~ '.para1') | trans  }}
+
+{{ 'default.heading' | trans  }}
 ---------------------
 
-{{ (recipientRole ~ '.para2') | trans  }}.
+{{ (recipientRole ~ '.youAreRegistered') | trans  }}.
 
-{{ (recipientRole ~ '.para3') | trans  }}
+{{ 'default.clickOnLink' | trans  }}
 
 {{link}}
 
-{{ (recipientRole ~ '.para4') | trans  }}
+{{ 'default.ifLinkDoesntWork' | trans  }}
 
-{{ (recipientRole ~ '.para5') | trans  }}
+{{ (recipientRole ~ '.youMustActivate') | trans  }}
 
-{{ (recipientRole ~ '.para6') | trans  }}
+{{ (recipientRole ~ '.linkExpires') | trans  }}
 
 
-{{ 'footer.needhelp' | trans([], 'email-template') }}
-----------
-
-{{ 'footer.automated' | trans([], 'email-template') }}
-
-{{ 'footer.toContactUs' | trans([], 'email-template') | raw }}
-
-{{ 'footer.opg' | trans([], 'email-template') }}
------------------------------
-{{ 'footer.address1' | trans([], 'email-template') }}
-{{ 'footer.address2' | trans([], 'email-template') }}
-{{ 'footer.homepageLinkText' | trans([], 'email-template') }}
-{{ homepageUrl }}
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

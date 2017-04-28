@@ -167,24 +167,20 @@
             {% block content %}{% endblock %}
 
             {# Need Help? #}
-            <h3 style="Margin: 40px 0 20px 0; padding: 0; font-size: 19px; line-height: 25px; font-weight: bold; color: #0B0C0C;">{{ 'footer.needhelp' | trans }}</h3>
+            <h3 style="Margin: 40px 0 20px 0; padding: 0; font-size: 19px; line-height: 25px; font-weight: bold; color: #0B0C0C;">{{ 'default.footer.needhelp' | trans }}</h3>
 
-            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ 'footer.automated' | trans }}</p>
+            <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ 'default.footer.automated' | trans }}</p>
 
             <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-                {% if recipientRole == "default" %}
-                    {{ 'footer.toContactUs' | trans|raw }}
-                {% else %}
-                    {{ 'footer.toContactUsPA' | trans|raw }}
-                {% endif %}
+                {{ (recipientRole ~ '.footer.toContactUs') | trans|raw }}
             </p>
 
             {# Office of the Public Guardian #}
-            <h3 style="Margin: 0 0 0 0; padding: 0; font-size: 19px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ 'footer.opg' | trans }}</h3>
+            <h3 style="Margin: 0 0 0 0; padding: 0; font-size: 19px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ 'default.footer.opg' | trans }}</h3>
 
             <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-                {{ 'footer.address1' | trans }}<br>
-                {{ 'footer.address2' | trans }}<br>
+                {{ 'default.footer.address1' | trans }}<br>
+                {{ 'default.footer.address2' | trans }}<br>
                 <a style="word-wrap: break-word;" href="{{ homepageUrl }}">{{ homepageUrl }}</a>
             </p>
             <!--[if (gte mso 9)|(IE)]>

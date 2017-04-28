@@ -1,15 +1,34 @@
-footer:
-    needhelp: Need help?
-    automated: This is an automated email so please don't reply to this address.
-    toContactUs: |
-        To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-        break-word;" href="mailto:deputyshipservice@publicguardian.gsi.gov.uk">
-        deputyshipservice@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2700.
-    toContactUsPA: |
-        To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-        break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gsi.gov.uk">
-        opg.publicauthorityteam@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2817.
-    opg: Office of the Public Guardian
-    address1: PO Box 16185
-    address2: Birmingham B2 2WH
-    homepageLinkText: complete-deputy-report.service.gov.uk
+default:
+    footer:
+        needhelp: Need help?
+        automated: This is an automated email so please don't reply to this address.
+        toContactUs: |
+            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+            break-word;" href="mailto:deputyshipservice@publicguardian.gsi.gov.uk">
+            deputyshipservice@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2700.
+        opg: Office of the Public Guardian
+        address1: PO Box 16185
+        address2: Birmingham B2 2WH
+        homepageLinkText: complete-deputy-report.service.gov.uk
+
+public-authority:
+    footer:
+        toContactUs: |
+            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gsi.gov.uk">
+            opg.publicauthorityteam@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2817.
+
+public-authority-admin:
+    footer:
+        toContactUs: |
+            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gsi.gov.uk">
+            opg.publicauthorityteam@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2817.
+
+public-authority-team-member:
+    footer:
+        toContactUs: |
+            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gsi.gov.uk">
+            opg.publicauthorityteam@publicguardian.gsi.gov.uk</a> or call us on 0115 934 2817.
+
