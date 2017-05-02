@@ -13,6 +13,9 @@ class UserVoter extends Voter
     const EDIT_USER = 'edit-user';
     const DELETE_USER = 'delete-user';
 
+    /**
+     * @var AccessDecisionManagerInterface
+     */
     private $decisionManager;
 
     /**
