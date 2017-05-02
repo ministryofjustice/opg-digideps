@@ -1,27 +1,31 @@
 {% extends 'AppBundle:Email:_template.html.twig' %}
 
-{% block emailHTMLHeaderTitle %}Deputy report service - Activate account{% endblock %}
+{% set translationDomain = "email-user-activate" %}
+
+{% trans_default_domain translationDomain %}
+
+{% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans  }}{% endblock %}
 
 {% block content %}
 
-    <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">Activate your account</h2>
+    <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ ('default.heading') | trans  }}</h2>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Thank you for registering for the Office of the Public Guardian’s deputy report service.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ (recipientRole ~ '.youAreRegistered') | trans  }}</p>
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-        <strong>Please click on the link below to activate and start using your account.</strong>
+        <strong>{{ ('default.clickOnLink') | trans  }}</strong>
     </p>
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
         <a style="word-wrap: break-word;" href="{{ link }}">{{ link }}</a>
     </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If clicking on the link doesn’t work, try copying it into your browser's address bar.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.ifLinkDoesntWork') | trans  }}</p>
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-        <strong>You must activate your account before you can create a deputy report.</strong>
+        <strong>{{ (recipientRole ~ '.youMustActivate') | trans  }}</strong>
     </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">The link we’ve given you expires after 48 hours, but don’t worry if you miss this deadline. You can return to the deputy report service at <a style="word-wrap: break-word;" href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> and register again.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ (recipientRole ~ '.linkExpires') | trans({'%homepageUrl%': homepageUrl}) | raw  }}</p>
 
 {% endblock %}

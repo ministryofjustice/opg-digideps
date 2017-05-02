@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
@@ -61,7 +62,7 @@ class MailFactory
      *
      * @return \AppBundle\Model\Email
      */
-    public function createActivationEmail(EntityDir\User $user)
+    public function createActivationEmail(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -74,6 +75,7 @@ class MailFactory
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => self::getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();
@@ -91,11 +93,32 @@ class MailFactory
     }
 
     /**
+     * Generates the recipient Role aspect of the context string. Most users use the 'default' recipient role.
+     * This maps to the translation file
+     *
+     * Called from BehatController to allow email-viewer to function
+     *
+     * @param User $user
+     * @return string
+     */
+    public static function getRecipientRole(User $user)
+    {
+        switch ($user->getRoleName()) {
+            case User::ROLE_PA:
+            case User::ROLE_PA_ADMIN:
+            case User::ROLE_PA_TEAM_MEMBER:
+                return strtolower(str_replace(' ', '-', $user->getRoleFullName()));
+            default:
+                return 'default';
+        }
+    }
+
+    /**
      * @param EntityDir\User $user
      *
      * @return ModelDir\Email
      */
-    public function createResetPasswordEmail(EntityDir\User $user)
+    public function createResetPasswordEmail(User $user)
     {
         $area = $this->getUserArea($user);
 
@@ -107,6 +130,7 @@ class MailFactory
             ]),
             'domain'      => $this->generateAbsoluteLink($area, 'homepage'),
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => self::getRecipientRole($user)
         ];
 
         $email = new ModelDir\Email();
@@ -128,7 +152,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createChangePasswordEmail(EntityDir\User $user)
+    public function createChangePasswordEmail(User $user)
     {
         $email = new ModelDir\Email();
 

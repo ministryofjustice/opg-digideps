@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\Mailer\MailFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -145,12 +146,13 @@ class BehatController extends AbstractController
      * Display emails into a webpage
      * Login is required
      *
-     * @Route("/email-viewer/{action}", name="email-viewer")
+     * @Route("/email-viewer/{action}/{type}", name="email-viewer", defaults={"type"="html"})
      * @Template()
      */
-    public function emailViewerAction($action)
+    public function emailViewerAction($action, $type = 'html')
     {
-        $emailToView = 'AppBundle:Email:' . $action . '.html.twig';
+        $type = $type === 'html' ? $type : 'text';
+        $emailToView = 'AppBundle:Email:' . $action . '.' . $type . '.twig';
 
         return $this->render($emailToView, [
             'homepageUrl' => 'https://complete-deputy-report.service.gov.uk/',
@@ -162,6 +164,7 @@ class BehatController extends AbstractController
             'response' => [
                 'satisfactionLevel' => 'Satisfied',
             ],
+            'recipientRole' => MailFactory::getRecipientRole($this->getUser())
         ]);
     }
 }

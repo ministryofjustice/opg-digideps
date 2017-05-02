@@ -1,0 +1,13 @@
+{{ 'default.footer.needhelp' | trans([], 'email-template') }}
+----------
+
+{{ 'default.footer.automated' | trans([], 'email-template') }}
+
+{{ (recipientRole ~ '.footer.toContactUs') | trans([], 'email-template') | raw }}
+
+{{ 'default.footer.opg' | trans([], 'email-template') }}
+-----------------------------
+{{ 'default.footer.address1' | trans([], 'email-template') }}
+{{ 'default.footer.address2' | trans([], 'email-template') }}
+{{ 'default.footer.homepageLinkText' | trans([], 'email-template') }}
+{{ homepageUrl }}
