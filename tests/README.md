@@ -1,4 +1,4 @@
-# Digideps - Browser Testing
+# Digideps - Behat Testing
 
 The BEHAT tests have 2 functions. There initial function was to provide a way to test 
 stories and flows and provide integration testing. As the platform evolves more unit tests 
@@ -7,6 +7,14 @@ are created but there are still areas that need end to end testing.
 In addition to initially testing code using a headless, none Javascript browser, the 
 tests are now evolving to allow testing with real browser in order to test javascript 
 led functionality, such as the auto save features.
+
+## Fixtures and snapshots
+Look at `DbTrait` for steps that save and restore the application status, consisting
+in a postgres database snapshot and restore, allowing to test multiple 
+execution paths without re-running the same steps.
+Look at `behat-debug` script in the `opg-digi-deps-docker` repo as an example to debug a single scenario.
+Test suites can be executed separately. Each test suite needs a fresh db with default admin user, 
+refer to `test*` scripts in the `opg-digi-deps-docker` repository to understand more.
 
 ## Tags
 A small note about tags. Tags have been used to mark the main 'paths' that needed to 

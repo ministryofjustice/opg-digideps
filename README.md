@@ -24,9 +24,14 @@ Complete the deputy report is composed by
 
 ## Setup
 
-Setup local environment following instructions on the docker repository.
+Setup local environment following instructions on the `opg-digi-deps-docker` repository.
 
 `app/config/parameters.yml` is generated via docker init scripts.
+
+## Architectural notes
+
+### Testing
+see [here](tests/README.md)
 
 ## Frontend technical notes
 
@@ -64,6 +69,8 @@ Dependencies are versioned to avoid accidently breaking the build. From time to 
 ## Coding standards
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
+
+Run `php-cs-fixer fix` to format files
 
 ## License
 
