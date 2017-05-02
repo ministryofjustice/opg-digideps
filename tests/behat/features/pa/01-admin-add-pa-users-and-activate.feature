@@ -64,8 +64,6 @@ Feature: Add PA users and activate PA user (journey)
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should not see "send-activation-email" in the "user-behat-pa1publicguardiangsigovuk" region
-    And I should see "send-activation-email" in the "user-behat-pa2publicguardiangsigovuk" region
-    And I should see "send-activation-email" in the "user-behat-pa3publicguardiangsigovuk" region
 
   Scenario: Register PA2 user
     Given emails are sent from "admin" area

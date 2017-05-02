@@ -20,12 +20,7 @@ trait PaTrait
      */
     public static function setUpPaTeamFeature()
     {
-        //TODO: Should use snapshot functionality
-        echo "Adding PA Team data\n";
 
-        //TODO: Investigate automatically running these scripts based on tag?
-        $command = sprintf('sh scripts/dbScript.sh %s "%s%s"', self::$dbName, self::$sqlPath, "pa/pateam-setup.sql");
-        exec($command);
     }
 
     /**

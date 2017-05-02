@@ -2,7 +2,8 @@
 Feature: PA team
 
   Scenario: team page
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I load the application status from "pa-users-uploaded"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings"
     # settings page
     And I click on "user-accounts"
