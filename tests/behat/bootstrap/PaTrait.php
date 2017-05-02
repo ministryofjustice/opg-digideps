@@ -9,7 +9,10 @@ trait PaTrait
      */
     public static function setUpPaFeature()
     {
-        self::tearDownPaFeature();
+        echo "Clearing PA data\n";
+
+        $command = sprintf('sh scripts/dbScript.sh %s "%s%s"', self::$dbName, self::$sqlPath, "pa/pa-teardown.sql");
+        exec($command);
     }
 
     /**
@@ -17,6 +20,7 @@ trait PaTrait
      */
     public static function setUpPaTeamFeature()
     {
+        //TODO: Should use snapshot functionality
         echo "Adding PA Team data\n";
 
         //TODO: Investigate automatically running these scripts based on tag?
@@ -29,10 +33,7 @@ trait PaTrait
      */
     public static function tearDownPaFeature()
     {
-        echo "Clearing PA data\n";
 
-        $command = sprintf('sh scripts/dbScript.sh %s "%s%s"', self::$dbName, self::$sqlPath, "pa/pa-teardown.sql");
-        exec($command);
     }
 
     /**
