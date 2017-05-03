@@ -62,11 +62,11 @@
         </thead>
         <tbody>
         {% for report in reports %}
+            {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+
             <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}">
                 <td>
-                    <a href="#">
-                        {{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}
-                    </a>
+                    <a href="{{ linkToReportOverviewPage }}" class="behat-link-pa-report-open behat-link-pa-report-{{ report.getPeriod() | behat_namify }}-open">{{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}</a>
                 </td>
                 <td>
                     {{ report.client.caseNumber|upper }}
