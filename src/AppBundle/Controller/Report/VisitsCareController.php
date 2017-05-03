@@ -19,7 +19,7 @@ class VisitsCareController extends RestController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $visitsCare = new EntityDir\Report\VisitsCare();
         $data = $this->deserializeBodyContent($request);
@@ -41,7 +41,7 @@ class VisitsCareController extends RestController
      */
     public function updateAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
@@ -62,7 +62,7 @@ class VisitsCareController extends RestController
      */
     public function findByReportIdAction($reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -80,7 +80,7 @@ class VisitsCareController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['visits-care'];
@@ -98,7 +98,7 @@ class VisitsCareController extends RestController
      */
     public function deleteVisitsCare($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
