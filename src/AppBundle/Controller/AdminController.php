@@ -7,6 +7,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
+use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -278,13 +279,27 @@ class AdminController extends AbstractController
                     ])
                     ->getData();
 
+                // small amount of data -> immediate posting and redirect (needed for behat)
+                if (count($data) < $chunkSize) {
+                    $compressedData = CsvUploader::compressData($data);
+                    $this->getRestClient()->delete('casrec/truncate');
+                    $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
+                    );
+
+                    return $this->redirect($this->generateUrl('casrec_upload'));
+                }
+
+                // big amount of data => redirect with nOfChunks for ajax upload in chunks
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
-                    $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
+                    $compressedData = CsvUploader::compressData($chunk);
                     $this->get("snc_redis.default")->set('chunk' . $k, $compressedData);
                 }
 
-                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks'=> count($chunks)]));
+                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -340,7 +355,7 @@ class AdminController extends AbstractController
                 $added = ['users' => [], 'clients' => [], 'reports' => []];
                 $errors = [];
                 foreach (array_chunk($data, $chunkSize) as $chunk) {
-                    $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
+                    $compressedData = CsvUploader::compressData($chunk);
                     $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
                     $added['users'] = array_merge($added['users'], $ret['added']['users']);
                     $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);

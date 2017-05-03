@@ -15,10 +15,11 @@
 {% block pageContent %}
 
     {% if nOfChunks %}
+
         <p class="text">Uploading... please wait.<br/>
             Do not refresh this page</p>
 
-        <img src="/images/spinner.gif"/>
+        <progress id="uploadProgress" value="0" max="{{ nOfChunks + 1 }}">
 
         <script>
             // truncate
@@ -27,8 +28,7 @@
                 async: false,
                 dataType: 'json'
             }).done(function (data) {
-                console.log(data.before + " CASREC records currently in the system\n");
-                console.log(data.after + " CASREC records currently in the system after truncating\n");
+                $('#uploadProgress').val(1);
             });
 
             // add chunk
@@ -38,7 +38,7 @@
                     async: false,
                     dataType: 'json'
                 }).done(function (data) {
-                    console.log(" " + data.added + " added\n");
+                    $('#uploadProgress').val(currentChunk + 1);
                 });
             }
             console.log("done");
