@@ -14,25 +14,60 @@
 
 {% block pageContent %}
 
-    <div class="data">
-        <span class="data-item bold-xlarge">{{currentRecords}}</span>
-        <span class="data-item bold-small">users in the database</span>
-    </div>
+    {% if nOfChunks %}
+        <textarea id="uploadLog" cols="50" rows="10"></textarea>
+        <a href="{{ path('admin_upload') }}">Cancel</a>
 
-    <h2 class="heading-medium">Upload users</h2>
+        <script>
+            var totalRecord = 0;
+
+            // truncate
+            $.ajax({
+                url: "{{ path('casrec_truncate_ajax') }}",
+                async: false,
+                dataType: 'json'
+            }).done(function (data) {
+                console.log(data.before + " CASREC records currently in the system\n");
+                console.log(data.after + " CASREC records currently in the system after truncating\n");
+            });
+
+            // add chunk
+            for (var currentChunk = 0; currentChunk <{{ nOfChunks }}; currentChunk++) {
+                $.ajax({
+                    url: "{{ path('casrec_add_ajax') }}?chunk=" + currentChunk,
+                    async: false,
+                    dataType: 'json'
+                }).done(function (data) {
+                    console.log(" " + data.added + " added\n");
+                });
+            }
+            console.log("done");
+            window.location.href  = "{{ path('admin_upload') }}";
+
+        </script>
+
+    {% else %}
+
+        <div class="data">
+            <span class="data-item bold-xlarge">{{ currentRecords }}</span>
+            <span class="data-item bold-small">users in the database</span>
+        </div>
 
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        <h2 class="heading-medium">Upload users</h2>
 
-    {{ form_input(form.file, '', {
-        'labelRaw': true,
-        'labelText': 'Select CSV file exported from CASREC',
-        'hintText': 'Max upload size is ' ~ maxUploadSize,
-        'inputClass': 'no-border'
-    }) }}
 
-    {{ form_submit(form.upload, '', {'labelText': 'Upload users'}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_end(form) }}
+        {{ form_input(form.file, '', {
+            'labelRaw': true,
+            'labelText': 'Select CSV file exported from CASREC',
+            'hintText': 'Max upload size is ' ~ maxUploadSize,
+            'inputClass': 'no-border'
+        }) }}
 
+        {{ form_submit(form.upload, '', {'labelText': 'Upload users'}) }}
+
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}

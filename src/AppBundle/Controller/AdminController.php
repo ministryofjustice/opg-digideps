@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,16 +28,16 @@ class AdminController extends AbstractController
     public function indexAction(Request $request)
     {
         $filters = [
-            'limit' => 100,
-            'offset' => $request->get('offset', 'id'),
-            'role_name' => '',
-            'q' => '',
+            'limit'       => 100,
+            'offset'      => $request->get('offset', 'id'),
+            'role_name'   => '',
+            'q'           => '',
             'odr_enabled' => '',
-            'order_by' => 'id',
-            'sort_order' => 'DESC',
+            'order_by'    => 'id',
+            'sort_order'  => 'DESC',
         ];
 
-        $form = $this->createForm(new FormDir\Admin\SearchType(),null, [ 'method' => 'GET']);
+        $form = $this->createForm(new FormDir\Admin\SearchType(), null, ['method' => 'GET']);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $filters = $form->getData() + $filters;
@@ -45,9 +46,9 @@ class AdminController extends AbstractController
         $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
 
         return [
-            'form'        => $form->createView(),
-            'users'        => $users,
-            'filters'     => $filters,
+            'form'    => $form->createView(),
+            'users'   => $users,
+            'filters' => $filters,
         ];
     }
 
@@ -142,8 +143,8 @@ class AdminController extends AbstractController
                 EntityDir\User::ROLE_PA         => 'Public Authority',
             ],
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-            'roleNameSetTo'   => $roleNameSetTo, //can't edit current user's role
-            'odrEnabledType' => $user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY ? 'checkbox' : 'hidden',
+            'roleNameSetTo'      => $roleNameSetTo, //can't edit current user's role
+            'odrEnabledType'     => $user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY ? 'checkbox' : 'hidden',
         ]), $user);
 
         $clients = $user->getClients();
@@ -255,7 +256,7 @@ class AdminController extends AbstractController
      */
     public function uploadUsersAction(Request $request)
     {
-        $chunkSize = 5000;
+        $chunkSize = 1000;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
             'method' => 'POST',
@@ -278,37 +279,13 @@ class AdminController extends AbstractController
                     ])
                     ->getData();
 
-
-                // truncate records
-                $this->getRestClient()->delete('casrec/truncate');
-                $request->getSession()->getFlashBag()->add(
-                    'notice', 'Existing casrec data truncated prior to upload'
-                );
-
-
-                $added = 0;
-                $errors = [];
-                foreach (array_chunk($data, $chunkSize) as $chunk) {
+                $chunks = array_chunk($data, $chunkSize);
+                foreach ($chunks as $k => $chunk) {
                     $compressedData = base64_encode(gzcompress(json_encode($chunk), 9));
-                    $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
-                    $added += $ret['added'];
-                    $errors = array_merge($errors, $ret['errors']);
+                    $this->get("snc_redis.default")->set('chunk' . $k, $compressedData);
                 }
 
-                // notifications
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    sprintf('%d record uploaded, %d error(s)', $added, count($errors))
-                );
-                if ($errors) {
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        implode('<br/>', $errors)
-                    );
-                }
-
-
-                return $this->redirect($this->generateUrl('admin_upload'));
+                return $this->redirect($this->generateUrl('admin_upload', ['nOfChunks'=> count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -319,11 +296,57 @@ class AdminController extends AbstractController
         }
 
         return [
+            'nOfChunks'      => $request->get('nOfChunks'),
             'currentRecords' => $this->getRestClient()->get('casrec/count', 'array'),
             'form'           => $form->createView(),
             'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
+
+
+    /**
+     * @Route("/casrec-truncate-ajax", name="casrec_truncate_ajax")
+     * @Template
+     */
+    public function truncateUsersAjaxAction(Request $request)
+    {
+        try {
+            $before = $this->getRestClient()->get('casrec/count', 'array');
+            $this->getRestClient()->delete('casrec/truncate');
+            $after = $this->getRestClient()->get('casrec/count', 'array');
+
+            return new JsonResponse(['before'=>$before, 'after'=>$after]);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/casrec-add-ajax", name="casrec_add_ajax")
+     * @Template
+     */
+    public function uploadUsersAjaxAction(Request $request)
+    {
+        $chunkId = 'chunk' . $request->get('chunk');
+        $redis = $this->get("snc_redis.default");
+
+        try {
+            $compressedData = $redis->get($chunkId);
+            if ($compressedData) {
+                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                //$redis->delete($chunkId);
+            } else {
+                $ret['added'] = 0;
+            }
+
+            return new JsonResponse($ret);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage());
+        }
+    }
+
+
+
 
     /**
      * @Route("/pa-upload", name="admin_pa_upload")
