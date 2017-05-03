@@ -1,4 +1,3 @@
-@pa @pareport
 Feature: PA report
 
   Scenario: PA user links to report
