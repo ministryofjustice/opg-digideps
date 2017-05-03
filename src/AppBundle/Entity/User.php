@@ -370,7 +370,7 @@ class User implements UserInterface
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
@@ -573,6 +573,7 @@ class User implements UserInterface
     public function setTeams($teams)
     {
         $this->teams = $teams;
+
         return $this;
     }
 
@@ -1037,7 +1038,8 @@ class User implements UserInterface
      *
      * @return bool
      */
-    public function isPaNamedDeputy(){
+    public function isPaNamedDeputy()
+    {
         return $this->getRoleName() === self::ROLE_PA;
     }
 
@@ -1052,7 +1054,7 @@ class User implements UserInterface
             $this->getRoleName(),
             [
                 self::ROLE_PA,
-                self::ROLE_PA_ADMIN
+                self::ROLE_PA_ADMIN,
             ]
         );
     }
@@ -1083,6 +1085,8 @@ class User implements UserInterface
                      'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
                      self::ROLE_AD                 => ['Assisted Digital', 5],
                      self::ROLE_PA                 => ['Pa', 6],
+                     self::ROLE_PA_ADMIN           => ['Pa Admin', 7],
+                     self::ROLE_PA_TEAM_MEMBER     => ['Pa Team member', 8],
                  ] as $name => $row) {
             if ($row[1] == $id) {
                 return $name;

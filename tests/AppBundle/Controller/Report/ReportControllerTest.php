@@ -17,10 +17,14 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     private static $tokenPa = null;
+    private static $tokenPaAdmin = null;
+    private static $tokenPaTeamMember = null;
     private static $casRec1;
 
     // pa
     private static $pa1;
+    private static $pa1Admin;
+    private static $pa1TeamMember;
     private static $paClient1;
     private static $paClient1Report1;
     private static $paClient2;
@@ -54,8 +58,16 @@ class ReportControllerTest extends AbstractTestController
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$paClient1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient1']);
         self::$paClient1Report1 = self::fixtures()->createReport(self::$paClient1);
+        self::$pa1Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
+        self::$pa1Admin->addClient(self::$paClient1);
+        self::$pa1TeamMember = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
+        self::$pa1TeamMember->addClient(self::$paClient1);
+
+        // pa 2
         self::$paClient2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient2']);
         self::$paClient2Report1 = self::fixtures()->createReport(self::$paClient2);
+
+        // pa 3
         self::$paClient3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'paClient3']);
         self::$paClient3Report1 = self::fixtures()->createReport(self::$paClient3);
 
@@ -78,6 +90,8 @@ class ReportControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenPa = $this->loginAsPa();
+            self::$tokenPaAdmin = $this->loginAsPaAdmin();
+            self::$tokenPaTeamMember = $this->loginAsPaTeamMember();
         }
     }
 
@@ -130,12 +144,25 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
+
+    public function testGetByIdAuthPa()
+    {
+        $url = '/report/' . self::$paClient1Report1->getId();
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPa);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaAdmin);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaTeamMember);
+
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+    }
+
+
     public function testGetByIdAcl()
     {
         $url2 = '/report/' . self::$report2->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
+
 
     /**
      * @depends testAdd
