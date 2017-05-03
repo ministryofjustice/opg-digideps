@@ -12,7 +12,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -251,7 +250,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/upload", name="admin_upload")
+     * @Route("/casrec-upload", name="casrec_upload")
      * @Template
      */
     public function uploadUsersAction(Request $request)
@@ -285,7 +284,7 @@ class AdminController extends AbstractController
                     $this->get("snc_redis.default")->set('chunk' . $k, $compressedData);
                 }
 
-                return $this->redirect($this->generateUrl('admin_upload', ['nOfChunks'=> count($chunks)]));
+                return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks'=> count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -302,50 +301,6 @@ class AdminController extends AbstractController
             'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
-
-
-    /**
-     * @Route("/casrec-truncate-ajax", name="casrec_truncate_ajax")
-     * @Template
-     */
-    public function truncateUsersAjaxAction(Request $request)
-    {
-        try {
-            $before = $this->getRestClient()->get('casrec/count', 'array');
-            $this->getRestClient()->delete('casrec/truncate');
-            $after = $this->getRestClient()->get('casrec/count', 'array');
-
-            return new JsonResponse(['before'=>$before, 'after'=>$after]);
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage());
-        }
-    }
-
-    /**
-     * @Route("/casrec-add-ajax", name="casrec_add_ajax")
-     * @Template
-     */
-    public function uploadUsersAjaxAction(Request $request)
-    {
-        $chunkId = 'chunk' . $request->get('chunk');
-        $redis = $this->get("snc_redis.default");
-
-        try {
-            $compressedData = $redis->get($chunkId);
-            if ($compressedData) {
-                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
-                //$redis->delete($chunkId);
-            } else {
-                $ret['added'] = 0;
-            }
-
-            return new JsonResponse($ret);
-        } catch (\Exception $e) {
-            return new JsonResponse($e->getMessage());
-        }
-    }
-
-
 
 
     /**

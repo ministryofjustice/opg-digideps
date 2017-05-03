@@ -15,12 +15,12 @@
 {% block pageContent %}
 
     {% if nOfChunks %}
-        <textarea id="uploadLog" cols="50" rows="10"></textarea>
-        <a href="{{ path('admin_upload') }}">Cancel</a>
+        <p class="text">Uploading... please wait.<br/>
+            Do not refresh this page</p>
+
+        <img src="/images/spinner.gif"/>
 
         <script>
-            var totalRecord = 0;
-
             // truncate
             $.ajax({
                 url: "{{ path('casrec_truncate_ajax') }}",
@@ -42,7 +42,7 @@
                 });
             }
             console.log("done");
-            window.location.href  = "{{ path('admin_upload') }}";
+            window.location.href = "{{ path('casrec_upload') }}";
 
         </script>
 
