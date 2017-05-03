@@ -63,3 +63,15 @@ parameters:
             lastname: pa
             roleId: 6
             password: Abcd1234
+
+        pa_admin@example.org:
+            firstname: test
+            lastname: pa-admin
+            roleId: 7
+            password: Abcd1234
+
+        pa_team_member@example.org:
+            firstname: test
+            lastname: pa-team-member
+            roleId: 8
+            password: Abcd1234
