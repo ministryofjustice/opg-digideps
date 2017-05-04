@@ -178,9 +178,14 @@ class PaService
         if (!$report) {
             $report = new EntityDir\Report\Report();
             $client->addReport($report);
+            $reportEndDate = clone $reportDueDate;
+            $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
+            $reportStartDate = clone $reportEndDate;
+            $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
             $report
                 ->setType(EntityDir\Report\Report::TYPE_102)
-                ->setEndDate($reportDueDate);
+                ->setStartDate($reportStartDate)
+                ->setEndDate($reportEndDate);
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();
