@@ -38,7 +38,7 @@ Feature: admin / admin
     
     Scenario: check pages
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to admin page "/admin/upload"
+        When I click on "csv-upload" in the "navbar" region
         And I save the page as "admin-upload"
         Then the response status code should be 200
         When I go to admin page "/admin/stats"
