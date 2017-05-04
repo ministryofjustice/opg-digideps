@@ -174,12 +174,12 @@ class PaService
         if (!$reportDueDate) {
             throw new \RuntimeException("Cannot parse date {$row['Report Due']}");
         }
-        $report = $client->getReportByDueDate($reportDueDate);
+        $reportEndDate = clone $reportDueDate;
+        $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
+        $report = $client->getReportByDueDate($reportEndDate);
         if (!$report) {
             $report = new EntityDir\Report\Report();
             $client->addReport($report);
-            $reportEndDate = clone $reportDueDate;
-            $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
             $reportStartDate = clone $reportEndDate;
             $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
             $report

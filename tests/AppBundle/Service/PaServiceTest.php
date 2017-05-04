@@ -123,7 +123,6 @@ class PaServiceTest extends WebTestCase
             'users'   => [],
             'clients' => [],
             'reports' => [],
-            'reports' => [],
         ], $ret2['added']);
         self::$em->clear();
 
@@ -141,7 +140,8 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('2013-10-21', $client1Report1->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2014-10-21', $client1Report1->getEndDate()->format('Y-m-d'));
 
         // assert 2nd client and report
         $client2 = $user1->getClientByCaseNumber('10000002');
