@@ -25,7 +25,6 @@ Feature: User Self Registration
       | self_registration_firstname       |
       | self_registration_lastname        |
       | self_registration_email_first     |
-      | self_registration_postcode        |
       | self_registration_clientFirstname |
       | self_registration_clientLastname  |
       | self_registration_caseNumber      |
@@ -38,7 +37,7 @@ Feature: User Self Registration
       | self_registration_lastname        | Tolley            |
       | self_registration_email_first     | aaa@@invalid      |
       | self_registration_email_second    | aaa@@invalid      |
-      | self_registration_postcode        | ab12cde           |
+      | self_registration_postcode        |                   |
       | self_registration_clientFirstname | John              |
       | self_registration_clientLastname  | Cross  tolley     |
       | self_registration_caseNumber      | 11112222          |
@@ -55,7 +54,7 @@ Feature: User Self Registration
       | self_registration_lastname        | Tolley                                       |
       | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk      |
       | self_registration_email_second    | behat-zac.tolley-diff@digital.justice.gov.uk |
-      | self_registration_postcode        | ab12cde                                      |
+      | self_registration_postcode        |                                              |
       | self_registration_clientFirstname | John                                         |
       | self_registration_clientLastname  | Cross  tolley                                |
       | self_registration_caseNumber      | 11112222                                     |
@@ -72,7 +71,7 @@ Feature: User Self Registration
       | self_registration_lastname        | Tolley                                  |
       | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
       | self_registration_email_second    | behat-zac.tolley@digital.justice.gov.uk |
-      | self_registration_postcode        | ab12cde                                 |
+      | self_registration_postcode        |                                         |
       | self_registration_clientFirstname | John                                    |
       | self_registration_clientLastname  | Cross  tolley                           |
       | self_registration_caseNumber      | 11112222                                |

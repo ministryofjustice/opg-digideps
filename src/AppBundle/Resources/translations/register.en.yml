@@ -49,7 +49,5 @@ formErrors:
     matching: |
           The information you've given us does not match our records.
           Please call 0115 934 2700 to make sure we have a record of your deputyship.
-    generic: |
-          The information you've given us does not match our records.
-          Please call 0115 934 2700 to make sure we have a record of your deputyship.
+    generic: Cannot register with the given details
     caseNumberAlreadyUsed: Someone else has already registered with this case number. Please check your case number and try again. If you're worried that someone else has used your case number, call our helpline on 0115 934 2700.
