@@ -79,15 +79,15 @@ class ReportStatusService
         $visitsCare = $this->report->getVisitsCare();
         $answers = $visitsCare ? [
             $visitsCare->getDoYouLiveWithClient(),
-            $visitsCare->getDoesClientHaveACarePlan(),
+            $visitsCare->getDoesClientReceivePaidCare(),
             $visitsCare->getWhoIsDoingTheCaring(),
-            $visitsCare->getDoesClientHaveACarePlan()
+            $visitsCare->getDoesClientHaveACarePlan(),
         ] : [];
 
         switch (count(array_filter($answers))) {
             case 0:
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 4:
+            case count($answers):
                 return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
             default:
                 return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
@@ -295,7 +295,7 @@ class ReportStatusService
         switch (count(array_filter($answers))) {
             case 0:
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 2:
+            case count($answers):
                 return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
             default:
                 return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];

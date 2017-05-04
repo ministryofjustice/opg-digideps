@@ -37,7 +37,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getReasonForNoDecisions'           => null,
                 'getVisitsCare'                     => m::mock(VisitsCare::class, [
                     'getDoYouLiveWithClient'     => null,
-                    'getDoesClientHaveACarePlan' => null,
+                    'getDoesClientReceivePaidCare' => null,
                     'getWhoIsDoingTheCaring'     => null,
                     'getDoesClientHaveACarePlan' => null,
                 ]),
@@ -136,19 +136,19 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $empty = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient'     => null,
-            'getDoesClientHaveACarePlan' => null,
+            'getDoesClientReceivePaidCare' => null,
             'getWhoIsDoingTheCaring'     => null,
             'getDoesClientHaveACarePlan' => null,
         ]);
         $incomplete = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient'     => 'yes',
-            'getDoesClientHaveACarePlan' => null,
+            'getDoesClientReceivePaidCare' => null,
             'getWhoIsDoingTheCaring'     => null,
             'getDoesClientHaveACarePlan' => null,
         ]);
         $done = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient'     => 'yes',
-            'getDoesClientHaveACarePlan' => 'yes',
+            'getDoesClientReceivePaidCare' => 'yes',
             'getWhoIsDoingTheCaring'     => 'xxx',
             'getDoesClientHaveACarePlan' => 'yes',
         ]);
