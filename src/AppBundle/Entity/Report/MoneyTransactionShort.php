@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *      "out"  = "AppBundle\Entity\Report\MoneyTransactionShortOut"
  * })
  */
-abstract class MoneyTransactionShort
+abstract class MoneyTransactionShort implements MoneyTransactionInterface
 {
     /**
      * @var int

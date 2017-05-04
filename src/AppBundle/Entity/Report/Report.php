@@ -55,6 +55,8 @@ class Report
     private $id;
 
     /**
+     * TODO: consider using Doctrine table inheritance on report.type
+     *
      * @var string
      *             see TYPE_ class constants
      *
@@ -345,7 +347,7 @@ class Report
 
     /**
      * Return Report type based on casrec data
-     * 
+     *
      * @param CasRec $casRec
      * @return string
      */
@@ -1048,14 +1050,7 @@ class Report
      */
     public function getMoneyInTotal()
     {
-        $ret = 0;
-        foreach ($this->getMoneyTransactions() as $t) {
-            if ($t->getType() == 'in') {
-                $ret += $t->getAmount();
-            }
-        }
-
-        return $ret;
+        return $this->getMoneyTransactionsTotal('in');
     }
 
     /**
@@ -1066,9 +1061,29 @@ class Report
      */
     public function getMoneyOutTotal()
     {
+        return $this->getMoneyTransactionsTotal('out');
+    }
+
+    /**
+     * @param string $type in|put
+     * @return float
+     */
+    private function getMoneyTransactionsTotal($type)
+    {
+        if (!in_array($type, ['in', 'out']) ){
+            throw new \InvalidArgumentException("invalid type");
+        }
+
         $ret = 0;
-        foreach ($this->getMoneyTransactions() as $t) {
-            if ($t->getType() == 'out') {
+
+        if ($this->type === self::TYPE_103) {
+            $transactions = $this->getMoneyTransactionsShort();
+        } else {
+            $transactions = $this->getMoneyTransactions();
+        }
+
+        foreach ($transactions as $t) {
+            if ($t instanceof MoneyTransactionInterface && $t->getType() === $type) {
                 $ret += $t->getAmount();
             }
         }
@@ -1140,6 +1155,7 @@ class Report
         if (!$this->getEndDate() instanceof \DateTime) {
             return false;
         }
+
         return $this->getEndDate()->add(new \DateInterval('P56D'));
     }
 

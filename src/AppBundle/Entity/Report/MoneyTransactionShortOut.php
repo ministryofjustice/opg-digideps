@@ -9,4 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MoneyTransactionShortOut extends MoneyTransactionShort
 {
+    public function getType()
+    {
+        return 'out';
+    }
 }
