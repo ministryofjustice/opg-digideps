@@ -293,6 +293,7 @@ class MailFactory
                 'type' => $newReport->getType(), //TODO take from $submittedReport ?
             ]),
             'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'recipientRole'   => self::getRecipientRole($user)
         ];
 
         $email
@@ -321,6 +322,7 @@ class MailFactory
         $viewParams = [
             'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
+            'recipientRole'   => self::getRecipientRole($user)
         ];
 
         $email

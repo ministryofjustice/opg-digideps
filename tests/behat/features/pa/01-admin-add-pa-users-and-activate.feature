@@ -1,8 +1,8 @@
-@pa @paupload
 Feature: Add PA users and activate PA user (journey)
 
   Scenario: add PA users
-    Given emails are sent from "admin" area
+    Given I load the application status from "init-pa"
+    And emails are sent from "admin" area
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
       # upload PA users
