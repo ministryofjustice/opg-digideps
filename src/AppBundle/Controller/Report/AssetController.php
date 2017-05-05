@@ -16,7 +16,7 @@ class AssetController extends RestController
      */
     public function getOneById(Request $request, $reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -37,7 +37,7 @@ class AssetController extends RestController
      */
     public function add(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -64,7 +64,7 @@ class AssetController extends RestController
      */
     public function edit(Request $request, $reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -87,7 +87,7 @@ class AssetController extends RestController
      */
     public function delete($reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);

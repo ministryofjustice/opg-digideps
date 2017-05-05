@@ -84,4 +84,10 @@ security:
                 authenticator: authenticator.token_header
             provider: user_provider_redis
             stateless:   true
-            
+
+    role_hierarchy:
+        ROLE_LAY_DEPUTY:      ROLE_DEPUTY
+        ROLE_PA:              ROLE_DEPUTY
+        ROLE_PA_ADMIN:        ROLE_DEPUTY
+        ROLE_PA_TEAM_MEMBER:  ROLE_DEPUTY
+

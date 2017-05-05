@@ -16,7 +16,7 @@ class AccountController extends RestController
      */
     public function addAccountAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -41,7 +41,7 @@ class AccountController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
@@ -59,7 +59,7 @@ class AccountController extends RestController
      */
     public function editAccountAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
@@ -83,7 +83,7 @@ class AccountController extends RestController
      */
     public function accountDelete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
