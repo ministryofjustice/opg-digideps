@@ -9,8 +9,11 @@ use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\Report\MoneyTransactionShortIn;
+use AppBundle\Entity\Report\MoneyTransactionShortOut;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
@@ -30,26 +33,32 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
     }
 
-    public function testGetMoneyInTotal()
+    public function testGetMoneyTotal()
     {
+        // 102
         $this->assertEquals(0, $this->report->getMoneyInTotal());
-
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('dividends')->setAmount(1));
-
-        $this->assertEquals(3, $this->report->getMoneyInTotal());
-    }
-
-    public function getMoneyOutTotalProvider($expected, array $data)
-    {
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
+        $this->report->setMoneyTransactions(new ArrayCollection([
+            (new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1),
+            (new MoneyTransaction($this->report))->setCategory('dividends')->setAmount(2),
+            (new MoneyTransaction($this->report))->setCategory('broadband')->setAmount(3),
+            (new MoneyTransaction($this->report))->setCategory('food')->setAmount(4),
+        ]));
+        $this->assertEquals(1+2, $this->report->getMoneyInTotal());
+        $this->assertEquals(3+4, $this->report->getMoneyOutTotal());
 
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('mortgage')->setAmount(1));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('mortgage')->setAmount(1));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(1));
-
-        $this->assertEquals(3, $this->report->getMoneyOutTotal());
+        // 103
+        $this->report->setType(Report::TYPE_103);
+        $this->assertEquals(0, $this->report->getMoneyInTotal());
+        $this->assertEquals(0, $this->report->getMoneyOutTotal());
+        $this->report->setMoneyTransactionsShort(new ArrayCollection([
+            (new MoneyTransactionShortIn($this->report))->setAmount(10),
+            (new MoneyTransactionShortIn($this->report))->setAmount(20),
+            (new MoneyTransactionShortOut($this->report))->setAmount(30),
+            (new MoneyTransactionShortOut($this->report))->setAmount(40),
+        ]));
+        $this->assertEquals(10+20, $this->report->getMoneyInTotal());
+        $this->assertEquals(30+40, $this->report->getMoneyOutTotal());
     }
 
     public function testGetAccountsOpeningBalanceTotal()

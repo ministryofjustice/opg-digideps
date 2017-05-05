@@ -9,4 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MoneyTransactionShortIn extends MoneyTransactionShort
 {
+    public function getType()
+    {
+        return 'in';
+    }
 }

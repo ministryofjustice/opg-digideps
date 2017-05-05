@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="money_transaction")
  * @ORM\Entity
  */
-class MoneyTransaction
+class MoneyTransaction implements MoneyTransactionInterface
 {
     /**
      * Static list of possible money transaction categories

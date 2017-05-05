@@ -5,6 +5,7 @@ use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\MoneyTransactionShortIn;
 use AppBundle\Entity\Report\MoneyTransactionShortOut;
+use Doctrine\Common\Collections\ArrayCollection;
 
 trait ReportMoneyShortTrait
 {
@@ -120,6 +121,14 @@ trait ReportMoneyShortTrait
     public function getMoneyTransactionsShort()
     {
         return $this->moneyTransactionsShort;
+    }
+
+    /**
+     * @param ArrayCollection $moneyTransactionsShort
+     */
+    public function setMoneyTransactionsShort($moneyTransactionsShort)
+    {
+        $this->moneyTransactionsShort = $moneyTransactionsShort;
     }
 
     /**
