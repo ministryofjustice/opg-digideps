@@ -21,10 +21,13 @@
         <div class="value">&pound;{{ report.getGiftsTotalValue | money_format}}</div>
     </div>
 
-
-    <div class="transaction total">{% if report.type != '103'  %}
-        <div class="label">Balance after income and expenditure:</div>
-        <div class="value">&pound;{{ report.calculatedBalance | money_format}}</div> {% endif %}
-    </div>
+    {% if report.type == '103'  %}
+        <div class="transaction"></div>
+    {% else %}
+        <div class="transaction total">
+            <div class="label">Balance after income and expenditure:</div>
+            <div class="value">&pound;{{ report.calculatedBalance | money_format}}</div>
+        </div>
+    {% endif %}
 
 </div>
