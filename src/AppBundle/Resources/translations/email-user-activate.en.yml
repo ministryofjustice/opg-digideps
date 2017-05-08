@@ -18,8 +18,9 @@ public-authority:
         We’ve now registered you with the Office of the Public Guardian’s deputy service.
     youMustActivate: You must activate your account before you can start using the deputy service.
     linkExpires: |
-        If you miss this deadline, please contact the Office of the Public Guardian using the
-        contact details below to request a new activation email.
+        The link we’ve given you expires after 48 hours. If you miss this deadline,
+        please contact the Office of the Public Guardian using the contact details
+        below to request a new activation email.
 
 public-authority-admin:
     youAreRegistered: |
