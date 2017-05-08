@@ -14,6 +14,11 @@ removePage:
 view:
     pageTitle: My details
 form:
+  add:
+    jobTitle:
+      label: Job title (optional)
+    phoneMain:
+      label: Phone (optional)
   firstname:
     label: First name
   lastname:
