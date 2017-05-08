@@ -8,7 +8,7 @@ Feature: PA team
     And I click on "user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
 
-  Scenario: PA (named) logs in and adds PA_ADMIN user
+  Scenario: named PA logs in and adds PA_ADMIN user
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts"
     # add user - test form
@@ -207,9 +207,6 @@ Feature: PA team
     Then the response status code should be 200
     Then I should not see the "team-user-behat-pa2-adminpublicguardiangsigovuk" region
 
-  #
-  # Remove user
-  #
   Scenario: PA_ADMIN logs in, adds then removes a PA_TEAM_MEMBER
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts, add"
@@ -232,3 +229,4 @@ Feature: PA team
     When I click on "confirm"
     Then the response status code should be 200
     Then I should not see the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
+    And I save the application status into "team-users-complete"
