@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-in-progress">
                         <span class="data-item bold-large">{{ counts.notFinished }}</span>
                         <span class="data-item bold-xsmall">In progress</span>
                     </a>
