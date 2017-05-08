@@ -20,9 +20,9 @@
 
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_input(form.jobTitle, 'form.jobTitle') }}
+    {{ form_input(form.jobTitle, 'form.add.jobTitle') }}
 
-    {{ form_input(form.phoneMain,'form.phoneMain') }}
+    {{ form_input(form.phoneMain,'form.add.phoneMain') }}
 
     {% if form.roleName is defined and form.roleName != null %}
         {{ form_checkbox_group(form.roleName, 'form.roleName', {
