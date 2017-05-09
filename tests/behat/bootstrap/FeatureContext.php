@@ -14,18 +14,19 @@ use Behat\Symfony2Extension\Context\KernelDictionary;
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
-    use RegionTrait,
+    use AuthenticationTrait,
         DebugTrait,
         DbTrait,
-        LinksTrait,
-        SiteNavigationTrait,
-        AuthenticationTrait,
         EmailTrait,
-        FormTrait,
-        FormStepTrait,
-        ReportTrait,
-        KernelDictionary,
         ExpressionTrait,
+        FormStepTrait,
+        FormTrait,
+        KernelDictionary,
+        LinksTrait,
+        LinksPreviouslySavedTrait,
+        RegionTrait,
+        ReportTrait,
+        SiteNavigationTrait,
         UserTrait;
 
     protected static $dbName = 'api';
