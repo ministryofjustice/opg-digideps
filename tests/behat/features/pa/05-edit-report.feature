@@ -17,7 +17,7 @@ Feature: PA user edits report sections
       | decision_exist_hasDecisions_1 | no |
       | decision_exist_reasonForNoDecisions | rfnd |
 
-  Scenario: contacts
+  Scenario: Pa saves a contact
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-contacts, start"
@@ -27,7 +27,7 @@ Feature: PA user edits report sections
       | contact_exist_hasContacts_1 | no |
       | contact_exist_reasonForNoContacts | rfnc |
 
-  Scenario: visits and care steps
+  Scenario: PA visits and care steps
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-visits_care, start"
@@ -56,7 +56,7 @@ Feature: PA user edits report sections
       | visits_care_whenWasCarePlanLastReviewed_month | 12   |
       | visits_care_whenWasCarePlanLastReviewed_year  | 2015 |
 
-  Scenario: report actions
+  Scenario: PA report actions
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-actions, start"
@@ -71,7 +71,7 @@ Feature: PA user edits report sections
       | action_doYouHaveConcerns_0      | yes   |
       | action_doYouHaveConcernsDetails | dyhcd |
 
-  Scenario: any other info
+  Scenario: PA any other info
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-other_info, start"
@@ -81,7 +81,7 @@ Feature: PA user edits report sections
       | more_info_actionMoreInfo_0      | yes  |
       | more_info_actionMoreInfoDetails | amid |
 
-  Scenario: deputy expenses
+  Scenario: PA deputy expenses
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-deputy_expenses, start"
@@ -90,7 +90,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_paidForAnything_1 | no |
 
-  Scenario: gifts
+  Scenario: PA gifts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-gifts, start"
@@ -99,7 +99,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_giftsExist_1 | no |
 
-  Scenario: assets
+  Scenario: PA assets
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-assets, start"
@@ -107,7 +107,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_noAssetToAdd_1 | 1 |
 
-  Scenario: debts
+  Scenario: PA debts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-debts, start"
@@ -116,7 +116,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_hasDebts_1 | no |
 
-  Scenario: add account
+  Scenario: PA add account
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-bank_accounts, start"
@@ -137,7 +137,7 @@ Feature: PA user edits report sections
     # add another: no
     And I choose "no" when asked for adding another record
 
-  Scenario: money in 102
+  Scenario: PA money in 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-money_in, start"
@@ -152,7 +152,7 @@ Feature: PA user edits report sections
     # add another: no
     And I choose "no" when asked for adding another record
 
-  Scenario: money out
+  Scenario: PA money out
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-money_out, start"
@@ -167,7 +167,7 @@ Feature: PA user edits report sections
       # add another: no
     And I choose "no" when asked for adding another record
 
-  Scenario: Report should be submittable
+  Scenario: PA Report should be submittable
     Given I save the application status into "pa-report-balance-before"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
