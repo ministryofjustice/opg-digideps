@@ -15,7 +15,7 @@
             <dd class="value">{{ asset.postcode}} </dd>
         </dl>
      </div>
-        
+
     {# proerty details #}
     <div class="box">
         <div class="half-width first">
@@ -23,8 +23,8 @@
                 <dt class="label">  Who lives at the property?</dt>
                 <dd class="value textarea"> {{ asset.occupants | nl2br }}</dd>
             </dl>
-            
-            
+
+
             <dl class="labelvalue">
                 <dt class="label">Is the property fully or part-owned by the client?</dt>
                 <table class="yesno small">
@@ -36,14 +36,14 @@
                     </tr>
                 </tbody></table>
             </dl>
-            
+
             {% if asset.ownedPercentage %}
                 <dl class="labelvalue">
                     <dt class="label">If part-owned, what is the client's share of the property?</dt>
                     <dd class="value inline"> {{ asset.ownedPercentage }} %</dd>
                 </dl>
             {% endif %}
-            
+
             <dl class="labelvalue">
                 <dt class="label">Is the property subject to an equity release scheme?</dt>
                 <table class="yesno small">
@@ -55,17 +55,17 @@
                     </tr>
                 </tbody></table>
             </dl>
-            
+
         </div>
-        
+
         <div class="half-width">
             <dl class="labelvalue">
                 <dt class="label">Estimated value of the property?</dt>
                 <dd class="value inline">&pound;{{ asset.value | money_format }} </dd>
             </dl>
-            
+
             <dl class="labelvalue">
-                <dt class="label">Is there and outstanding mortgage?</dt>
+                <dt class="label">Is there an outstanding mortgage?</dt>
                 <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.hasMortgage =='yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -75,14 +75,14 @@
                     </tr>
                 </tbody></table>
             </dl>
-            
+
             {% if asset.mortgageOutstandingAmount %}
                 <dl class="labelvalue">
                     <dt class="label">If yes, how much is there left to pay?</dt>
                     <dd class="value inline">&pound;{{ asset.mortgageOutstandingAmount | money_format }} </dd>
-                </dl> 
+                </dl>
             {% endif %}
-            
+
              <dl class="labelvalue">
                 <dt class="label">Is there a charge on the property?</br>
                 For example, Local Authority to recover care fees</dt>
@@ -94,8 +94,8 @@
                         <td class="label">No</td>
                     </tr>
                 </tbody></table>
-            </dl> 
-                    
+            </dl>
+
             <dl class="labelvalue">
                 <dt class="label">Is the property rented out?</dt>
                 <table class="yesno small">
@@ -105,18 +105,18 @@
                         <td class="checkbox">{% if asset.isRentedOut =='no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">No</td>
                     </tr>
-                </tbody></table>  
-            </dl> 
-            
+                </tbody></table>
+            </dl>
+
             {% if asset.rentAgreementEndDate %}
                 <dl class="labelvalue">
                     <dt class="label">If yes, when does the rental agreement end?</dt>
-                    <dd class="value inline"> 
-                            {{ asset.rentAgreementEndDate | date("m/Y") }} 
+                    <dd class="value inline">
+                            {{ asset.rentAgreementEndDate | date("m/Y") }}
                     </dd>
-                </dl> 
+                </dl>
             {% endif %}
-            
+
             {% if asset.rentIncomeMonth %}
                 <dl class="labelvalue">
                     <dt class="label">Rental income (per month)</dt>
@@ -125,9 +125,9 @@
                     </dd>
                 </dl>
             {% endif %}
-                    
+
         </div>
     </div>
-            
-            
+
+
 {% endfor %}
