@@ -11,6 +11,8 @@ class StatsControllerTest extends AbstractTestController
     private static $client1;
     private static $report1;
     private static $report2;
+    private static $report3;
+    private static $report4;
     private static $account1;
     private static $account2;
 
@@ -34,7 +36,9 @@ class StatsControllerTest extends AbstractTestController
         self::$report1 = self::fixtures()->createReport(self::$client1, ['setEndDate' => new \DateTime('yesterday')]);
 
         // report2 (submitted)
-        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true);
+        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2014'));
+        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2015'));
+        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2016'));
 
         self::fixtures()->flush();
         self::fixtures()->clear();
@@ -75,11 +79,12 @@ class StatsControllerTest extends AbstractTestController
         $this->assertEquals('deputy', $deputy['lastname']);
         $this->assertEquals('2016-12-30', $deputy['client_court_order_date']);
         $this->assertEquals('2015-10-15', $deputy['registration_date']);
+        $this->assertEquals('2016-01-01', $deputy['report_date_submitted']);
         $this->assertContains(date('Y-m-d'), $deputy['last_logged_in']);
         $this->assertEquals('c1', $deputy['client_name']);
         $this->assertEquals('l1', $deputy['client_lastname']);
         $this->assertEquals('222333t', $deputy['client_casenumber']);
-        $this->assertEquals(2, $deputy['total_reports']);
+        $this->assertEquals(4, $deputy['total_reports']);
         $this->assertEquals(1, $deputy['active_reports']);
     }
 }
