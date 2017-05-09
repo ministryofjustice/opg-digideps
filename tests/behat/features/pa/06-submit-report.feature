@@ -3,6 +3,7 @@ Feature: Report submit
     Scenario: report declaration page
         Given I load the application status from "pa-report-completed"
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "tab-ready"
         And I click on "pa-report-open" in the "client-1000014" region
         Then I should not see the "download-2016-report" link
         # if not found, it means that the report is not submittable
@@ -17,39 +18,7 @@ Feature: Report submit
         And I reset the email log
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-1000014" region
-        # assert after login I'm redirected to report page
-        Then the URL should match "/report/\d+/overview"
-        # assert I cannot access the submitted page directly
-        And the URL "/report/7/submitted" should not be accessible
-        # assert I cannot access the submit page from declaration page
-        When I go to "/report/7/declaration"
-        Then the URL "/report/7/submitted" should not be accessible
-        # submit without ticking "agree"
-        When I go to "/report/7/declaration"
-        And I press "report_declaration_save"
-        #
-        # empty form
-        #
-        When I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_agree |
-            | report_declaration_agreedBehalfDeputy_0 |
-            | report_declaration_agreedBehalfDeputy_1 |
-            | report_declaration_agreedBehalfDeputy_2 |
-            | report_declaration_agreedBehalfDeputyExplanation |
-        #
-        # missing explanation
-        #
-        And I fill in the following:
-            | report_declaration_agree | 1 |
-            | report_declaration_agreedBehalfDeputy_2 | more_deputies_not_behalf |
-            | report_declaration_agreedBehalfDeputyExplanation |  |
-        And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_agreedBehalfDeputyExplanation |
-        #
-        # change to one deputy and submit
-        #
+        And I click on "report-submit, declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
             | report_declaration_agreedBehalfDeputy_0 | only_deputy |
@@ -58,9 +27,10 @@ Feature: Report submit
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
+        And I should not see the "report-submit-submitted" link
         # assert report display page is not broken
-        When I click on "return-to-reports-page"
-        Then the URL should match "/reports/\d+"
+        When I click on "return-to-pa-dashboard"
+        Then the URL should match "/pa"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
         And the last email should have been sent to "behat-pa1@publicguardian.gsi.gov.uk"
@@ -80,19 +50,3 @@ Feature: Report submit
             | HSBC - main account | account-01ca |
             | Current account     | account-01ca |
             | 112233              | account-01ca |
-
-    Scenario: assert report is not editable after submission
-        Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And the URL "/report/7/overview" should not be accessible
-        And the URL "/report/7/decisions/summary" should not be accessible
-        And the URL "/report/7/contacts/summary" should not be accessible
-        And the URL "/report/7/visits-care/summary" should not be accessible
-        And the URL "/report/7/bank-accounts/summary" should not be accessible
-        And the URL "/report/7/money-transfers/summary" should not be accessible
-        And the URL "/report/7/money-in/summary" should not be accessible
-        And the URL "/report/7/money-out/summary" should not be accessible
-        And the URL "/report/7/balance" should not be accessible
-        And the URL "/report/7/assets/summary" should not be accessible
-        And the URL "/report/7/debts/summary" should not be accessible
-        And the URL "/report/7/actions" should not be accessible
-        And the URL "/report/7/declaration" should not be accessible
