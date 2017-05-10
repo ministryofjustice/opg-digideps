@@ -71,10 +71,25 @@ class StatsService
                     ++$row['active_reports'];
                 }
             }
+
             $activeReportId = $user->getActiveReportId();
             if ($activeReportId) {
                 $report = $this->reportRepository->find($activeReportId);
                 $row['report_date_due'] = $report->getDueDate()->format('Y-m-d');
+
+                //Fill in the last submitted column with the submission date of the last submitted report
+                if (!$user->isPaDeputy())
+                {
+                    $clients = $user->getClients();
+                    $client = !empty($clients) ? $clients->first() : null;
+                    if ($client != null) {
+                        $submittedReports = $client->getSubmittedReports();
+                        $lastSubmittedReport = !empty($submittedReports) ? $submittedReports->first() : null;
+                        if ($lastSubmittedReport != null) {
+                            $row['report_date_submitted'] = $lastSubmittedReport->getSubmitDate()->format('Y-m-d');
+                        }
+                    }
+                }
             }
 
             $ret[] = $row;
