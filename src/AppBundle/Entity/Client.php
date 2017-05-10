@@ -513,7 +513,19 @@ class Client
     /**
      * Get un-submitted reports.
      *
-     * @return Report[]
+     * @return ArrayCollection
+     */
+    public function getSubmittedReports()
+    {
+        return $this->reports->filter(function ($report) {
+            return $report->getSubmitted();
+        });
+    }
+
+    /**
+     * Get un-submitted reports.
+     *
+     * @return ArrayCollection
      */
     public function getUnsubmittedReports()
     {
