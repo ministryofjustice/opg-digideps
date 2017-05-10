@@ -178,8 +178,8 @@ Feature: deputy / user / add client and report
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     #Lay deputy links
     Then I should see the "user-account" link
-    Then I should see the "reports" link
-    Then I should see the "logout" link
+    And I should see the "reports" link
+    And I should see the "logout" link
     #PA links
-    Then I should not see the "pa-dashboard" link
-    Then I should not see the "pa-settings" link
+    And I should not see the "pa-dashboard" link
+    And I should not see the "pa-settings" link
