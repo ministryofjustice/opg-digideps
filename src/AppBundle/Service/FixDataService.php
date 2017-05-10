@@ -3,7 +3,9 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\OdrRepository;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\ReportRepository;
 use Doctrine\ORM\EntityManager;
 
 class FixDataService
@@ -12,6 +14,16 @@ class FixDataService
      * @var EntityManager
      */
     protected $em;
+
+    /**
+     * @var ReportRepository
+     */
+    private $reportRepo;
+
+    /**
+     * @var OdrRepository
+     */
+    private $odrRepo;
 
     /**
      * @var array
@@ -34,16 +46,26 @@ class FixDataService
         $this->reportRepo = $this->em->getRepository(Report::class);
         foreach ($this->reportRepo->findAll() as $entity) {
             $debtsAdded = $this->reportRepo->addDebtsToReportIfMissing($entity);
+            if ($debtsAdded) {
+                $this->messages[] = "Report {$entity->getId()}: added $debtsAdded debts";
+            }
             if ($entity->getType() == Report::TYPE_103) {
                 $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
-                $this->messages[] = "Report {$entity->getId()}: $debtsAdded debts, $shortMoneyCatsAdded money short cars added";
+                if ($shortMoneyCatsAdded) {
+                    $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
+                }
             }
         }
 
         foreach ($this->odrRepo->findAll() as $entity) {
             $debtsAdded = $this->odrRepo->addDebtsToOdrIfMissing($entity);
+            if ($debtsAdded) {
+                $this->messages[] = "Odr {$entity->getId()}: added $debtsAdded debts";
+            }
             $incomeBenefitsAdded = $this->odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
-            $this->messages[] = "Report {$entity->getId()}: $debtsAdded debts, $incomeBenefitsAdded income benefits added";
+            if ($incomeBenefitsAdded) {
+                $this->messages[] = "Odr {$entity->getId()}: $incomeBenefitsAdded income benefits added";
+            }
         }
 
         $this->em->flush();
@@ -72,7 +94,6 @@ class FixDataService
     {
         return $this->messages;
     }
-
 
 
 }

@@ -25,8 +25,9 @@ class Version131 extends AbstractMigration  implements ContainerAwareInterface
         $em = $this->container->get('em');
 
         $fixDataService = new FixDataService($em);
+        echo "Fixing missing data in reports (might take several minutes)...\n";
         $messages = $fixDataService->fixReports()->getMessages();
-        echo "Fix report results: " . print_r($messages, true);
+        echo "FixData results: " . print_r($messages, true);
     }
 
     /**
