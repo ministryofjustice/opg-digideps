@@ -21,7 +21,11 @@ email:
       label: "Confirm your email"
 postcode:
     label: "Your post code"
-    matchingError: You haven't entered a post code. Do you live in the UK? If you have a UK post code, please enter it.
+    matchingError: |
+      You haven't entered a post code we recognise. Do you live in the UK?
+      If you have a UK post code, please enter it.
+      If you continue to have problems, please call the helpline to make sure
+      we have a correct record of your details.
 clientFirstname:
     label: "Client's first names"
 clientLastname:
