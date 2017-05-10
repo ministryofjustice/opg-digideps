@@ -3,12 +3,13 @@
 namespace Application\Migrations;
 
 use AppBundle\Service\FixDataService;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\DB
+AL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Version129 extends AbstractMigration  implements ContainerAwareInterface
+class Version131 extends AbstractMigration  implements ContainerAwareInterface
 {
     private $container;
 
