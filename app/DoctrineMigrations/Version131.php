@@ -3,8 +3,7 @@
 namespace Application\Migrations;
 
 use AppBundle\Service\FixDataService;
-use Doctrine\DB
-AL\Migrations\AbstractMigration;
+use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
