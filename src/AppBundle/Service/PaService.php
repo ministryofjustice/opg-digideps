@@ -152,6 +152,24 @@ class PaService
                 ->setCaseNumber($caseNumber)
                 ->setFirstname(trim($row['Forename']))
                 ->setLastname(trim($row['Surname']));
+
+            if (!empty($row['Client Adrs1'])) {
+                $client->setAddress($row['Client Adrs1']);
+            }
+
+            if (!empty($row['Client Adrs2'])) {
+                $client->setAddress2($row['Client Adrs2']);
+            }
+
+            if (!empty($row['Client Adrs3']) || !empty($row['Client Adrs4'])) {
+                $client->setCounty($row['Client Adrs3'] . ' ' . $row['Client Adrs4']);
+            }
+
+            if (!empty($row['Client Postcode'])) {
+                $client->setPostcode($row['Client Postcode']);
+                $client->setCountry('GB'); //postcode given means a UK address is given
+            }
+
             $this->added['clients'][] = $client->getCaseNumber();
             $this->em->persist($client);
         }
