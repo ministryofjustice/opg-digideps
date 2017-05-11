@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Repository;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Debt as ReportDebt;
+use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use Doctrine\ORM\EntityRepository;
 
@@ -35,6 +36,37 @@ class ReportRepository extends EntityRepository
 
         foreach (ReportDebt::$debtTypeIds as $row) {
             $debt = new ReportDebt($report, $row[0], $row[1], null);
+            $this->_em->persist($debt);
+            ++$ret;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * add empty Fees to Report.
+     * Called from doctrine listener.
+     *
+     * @param Report $report
+     *
+     * @return int changed records
+     */
+    public function addFeesToReportIfMissing(Report $report)
+    {
+        // skip reports for non-PA
+        if (!$report->getClient()->getUsers()->first()->isPaDeputy()) {
+            return;
+        }
+
+        $ret = 0;
+
+        // skips if already added
+        if (count($report->getFees()) > 0) {
+            return $ret;
+        }
+
+        foreach (ReportFee::$feeTypeIds as $row) {
+            $debt = new ReportFee($report, $row[0], $row[1], null);
             $this->_em->persist($debt);
             ++$ret;
         }

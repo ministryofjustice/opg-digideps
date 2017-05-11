@@ -116,6 +116,24 @@ class Report
     private $debts;
 
     /**
+     * @var Fee[]
+     *
+     * @JMS\Groups({"fee"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $fees;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report"})
+     * @ORM\Column(name="reason_for_no_fees", type="text", nullable=true)
+     */
+    private $reasonForNoFees;
+
+    /**
      * @var string yes|no|null
      *
      * @JMS\Type("string")
@@ -308,6 +326,7 @@ class Report
         $this->moneyShortCategories = new ArrayCollection();
         $this->moneyTransactionsShort = new ArrayCollection();
         $this->debts = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
@@ -982,6 +1001,7 @@ class Report
         return $this->debts;
     }
 
+
     /**
      * @param string $typeId
      *
@@ -1005,6 +1025,45 @@ class Report
 
         return $this;
     }
+
+
+    /**
+     * @return Fee[]
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * @param Fee $fee
+     */
+    public function addFee(Fee $fee)
+    {
+        if (!$this->fees->contains($fee)) {
+            $this->fees->add($fee);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReasonForNoFees()
+    {
+        return $this->reasonForNoFees;
+    }
+
+    /**
+     * @param mixed $reasonForNoFees
+     */
+    public function setReasonForNoFees($reasonForNoFees)
+    {
+        $this->reasonForNoFees = $reasonForNoFees;
+    }
+
+
 
     /**
      * Get debts total value.
