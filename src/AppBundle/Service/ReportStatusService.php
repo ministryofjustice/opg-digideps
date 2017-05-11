@@ -277,6 +277,27 @@ class ReportStatusService
         }
     }
 
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "fee-state"})
+     *
+     * @return array
+     */
+    public function getPaFeesExpensesState()
+    {
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+
+        //TODO add
+//        $hasFees = count($this->report->getEx()) > 0;
+//        if (!$hasFees && empty($this->report->getReasonForNoFees())) {
+//            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+//        } else {
+//            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getFees())];
+//        }
+    }
+
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
@@ -404,7 +425,6 @@ class ReportStatusService
         if ($type == Report::TYPE_102) {
             $states += [
                 'bankAccounts'  => $this->getBankAccountsState()['state'],
-                'deputyExpense' => $this->getExpensesState()['state'],
                 'moneyIn'       => $this->getMoneyInState()['state'],
                 'moneyOut'      => $this->getMoneyOutState()['state'],
                 'assets'        => $this->getAssetsState()['state'],
@@ -427,6 +447,15 @@ class ReportStatusService
                 'assets'        => $this->getAssetsState()['state'],
                 'debts'         => $this->getDebtsState()['state'],
             ];
+        }
+
+        $isPa = $this->report->getClient()->getUsers()->first()->isPaDeputy();
+        if ($type == Report::TYPE_102 || $type == Report::TYPE_103) {
+            if ($isPa) {
+                $states['paDeputyExpense'] = $this->getPaFeesExpensesState()['state'];
+            } else {
+                $states['deputyExpense'] = $this->getExpensesState()['state'];
+            }
         }
 
         return $states;

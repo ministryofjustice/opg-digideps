@@ -1276,6 +1276,18 @@ class Report
     }
 
     /**
+     * @return Debt[]
+     */
+    public function getFeesWithValidAmount()
+    {
+        $fees = $this->getFees()->filter(function ($debt) {
+            return !empty($debt->getAmount());
+        });
+
+        return $fees;
+    }
+
+    /**
      * Get assets total value.
      *
      * @JMS\VirtualProperty
@@ -1297,6 +1309,7 @@ class Report
      *     "balance-state",
      *     "money-in-short-state",
      *     "money-out-short-state",
+     *     "fee-state",
      * })
      *
      * @return ReportStatusService
