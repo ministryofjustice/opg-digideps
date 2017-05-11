@@ -287,15 +287,13 @@ class ReportStatusService
      */
     public function getPaFeesExpensesState()
     {
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-
         //TODO add
-//        $hasFees = count($this->report->getEx()) > 0;
-//        if (!$hasFees && empty($this->report->getReasonForNoFees())) {
-//            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-//        } else {
-//            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getFees())];
-//        }
+        $hasFees = count($this->report->getFeesWithValidAmount()) > 0;
+        if (!$hasFees && empty($this->report->getReasonForNoFees())) {
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        } else {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getFeesWithValidAmount())];
+        }
     }
 
     /**

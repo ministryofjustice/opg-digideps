@@ -198,6 +198,10 @@ class ReportController extends RestController
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
 
+        if (array_key_exists('reason_for_no_fees', $data)) {
+            $report->setReasonForNoFees($data['reason_for_no_fees']);
+        }
+
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
             if ($report->getNoAssetToAdd()) {
