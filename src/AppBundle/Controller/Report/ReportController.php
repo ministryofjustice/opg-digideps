@@ -28,6 +28,7 @@ class ReportController extends AbstractController
         'action-more-info',
         'asset',
         'debt',
+        'fee',
         'balance',
         'client',
         'contact',

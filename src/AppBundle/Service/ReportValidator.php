@@ -17,6 +17,7 @@ use AppBundle\Controller\Report\MoneyOutController;
 use AppBundle\Controller\Report\MoneyOutShortController;
 use AppBundle\Controller\Report\MoneyTransferController;
 use AppBundle\Controller\Report\OtherInfoController;
+use AppBundle\Controller\Report\PaFeeExpenseController;
 use AppBundle\Controller\Report\VisitsCareController;
 use AppBundle\Controller\Report\ReportController;
 use AppBundle\Entity\Report\Report;
@@ -42,6 +43,7 @@ class ReportValidator
         OtherInfoController::class      => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         ReportController::class         => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         VisitsCareController::class     => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
+        PaFeeExpenseController::class  => [Report::TYPE_102, Report::TYPE_103],
     ];
 
     /**

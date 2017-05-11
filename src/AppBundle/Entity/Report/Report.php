@@ -23,6 +23,7 @@ class Report
     use ReportTraits\ReportMoneyShortTrait;
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
+    use ReportTraits\ReportPaFeeExpensesTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';

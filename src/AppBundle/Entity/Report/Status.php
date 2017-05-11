@@ -121,6 +121,13 @@ class Status
      *
      * @var array
      */
+    private $paFeesExpensesState;
+
+    /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
     private $actionsState;
 
     /**
@@ -362,6 +369,22 @@ class Status
     public function setDebtsState($debtsState)
     {
         $this->debtsState = $debtsState;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPaFeesExpensesState()
+    {
+        return $this->paFeesExpensesState;
+    }
+
+    /**
+     * @param array $paFeesExpensesState
+     */
+    public function setPaFeesExpensesState($paFeesExpensesState)
+    {
+        $this->paFeesExpensesState = $paFeesExpensesState;
     }
 
     /**

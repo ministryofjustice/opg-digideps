@@ -61,6 +61,13 @@ deputy_expenses:
     start: "Start"
     label:
       done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+pa_fee_expense:
+    subSectionTitle: "Deputy fees and expenses"
+    subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 gifts:
     subSectionTitle: "Gifts"
     subSectionDescription: "Gifts you have given to other people on behalf of %client%"
