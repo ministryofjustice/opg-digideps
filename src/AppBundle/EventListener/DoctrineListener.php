@@ -6,7 +6,8 @@ use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
- * Consider moving this to service classes, and unit test triggers
+ * Consider moving this to service classes, and unit test triggers.
+ * There were some cases where those triggers failed
  */
 class DoctrineListener
 {
@@ -16,7 +17,7 @@ class DoctrineListener
         $entityManager = $args->getEntityManager();
 
         if ($entity instanceof EntityDir\Report\Report && !$entity->getId()) {
-            $reportRepo = $entityManager->getRepository('AppBundle\Entity\Report\Report'); /* @var $reportRepo EntityDir\Report\ReportRepository */
+            $reportRepo = $entityManager->getRepository('AppBundle\Entity\Report\Report'); /* @var $reportRepo EntityDir\Repository\ReportRepository */
             $reportRepo->addDebtsToReportIfMissing($entity);
             $reportRepo->addMoneyShortCategoriesIfMissing($entity);
         }
