@@ -28,3 +28,12 @@ existPage:
       label: Please tell us why not
     save:
       label: Save and continue
+
+
+summaryPage:
+  htmlTitle: "Deputy report -  Deputy fees and expenses | GOV.UK"
+  pageSectionTitle:  Deputy fees and expenses
+  pageSectionDescription: |
+    In this section, we asked you to tell us about any fees or expenses you have charged in line with the practice direction.
+  addButton: Add a deputy expense
+  edit: Edit

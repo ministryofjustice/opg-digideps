@@ -33,13 +33,13 @@
     </p>
 
     {# Items list #}
-    {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
+    {% include 'AppBundle:Report/PaFeeExpense:_list.html.twig' with {
     'report': report,
     'transDomain': translationDomain
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'deputyExpenses') }}
+    {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }}
 
 
 

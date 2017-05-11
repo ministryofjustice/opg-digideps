@@ -18,9 +18,9 @@ trait ReportPaFeeExpensesTrait
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
+     * @JMS\Groups({"reasonForNoFees"})
      *
-     * @Assert\NotBlank(message="report.reasonForNoFees.notBlank", groups={"fee"})
+     * @Assert\NotBlank(message="report.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
      *
      * @var string
      */

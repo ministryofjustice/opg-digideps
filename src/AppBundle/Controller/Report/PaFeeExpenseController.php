@@ -48,15 +48,12 @@ class PaFeeExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            switch ($form['hasContacts']->getData()) {
+            switch ($form['hasFees']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('pa_fee_expense_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
-                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
-                    foreach ($report->getContacts() as $contact) {
-                        $this->getRestClient()->delete('/report/contact/' . $contact->getId());
-                    }
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
         }
 
@@ -68,6 +65,26 @@ class PaFeeExpenseController extends AbstractController
         return [
             'backLink' => $backLink,
             'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/pa-fee-expense/summary", name="pa_fee_expense_summary")
+     * @Template()
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function summaryAction($reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getStatus()->getPaFeesExpensesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
+        }
+
+        return [
             'report' => $report,
         ];
     }
