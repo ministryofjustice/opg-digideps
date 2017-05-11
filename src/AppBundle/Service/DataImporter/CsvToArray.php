@@ -19,6 +19,11 @@ class CsvToArray
     private $expectedColumns = [];
 
     /**
+     * @var array
+     */
+    private $optionalColumns = [];
+
+    /**
      * @var bool
      */
     private $normaliseNewLines;
@@ -51,6 +56,13 @@ class CsvToArray
     public function setExpectedColumns(array $expectedColumns)
     {
         $this->expectedColumns = $expectedColumns;
+
+        return $this;
+    }
+
+    public function setOptionalColumns(array $optionalColumns)
+    {
+        $this->optionalColumns = $optionalColumns;
 
         return $this;
     }
@@ -90,6 +102,12 @@ class CsvToArray
                     $index = array_search($expectedColumn, $header);
                     if ($index !== false) {
                         $rowArray[$expectedColumn] = $row[$index];
+                    }
+                }
+                foreach ($this->optionalColumns as $optionalColumn) {
+                    $index = array_search($optionalColumn, $header);
+                    if ($index !== false) {
+                        $rowArray[$optionalColumn] = $row[$index];
                     }
                 }
                 $ret[] = $rowArray;
