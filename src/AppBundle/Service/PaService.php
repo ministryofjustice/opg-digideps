@@ -173,7 +173,13 @@ class PaService
             $this->added['clients'][] = $client->getCaseNumber();
             $this->em->persist($client);
         }
-        $user->addClient($client);
+
+        foreach ($user->getTeams() as $team) {
+            foreach ($team->getMembers() as $member) {
+                $member->addClient($client);
+            }
+        }
+
         $this->em->flush($client);
 
         return $client;
