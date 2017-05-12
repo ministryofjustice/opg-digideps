@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace AppBundle\Entity\Report;
 
@@ -116,6 +116,18 @@ class Report
     private $debts;
 
     /**
+     * @var string yes|no|null
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"debt"})
+     *
+     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
+     *
+     * @var string
+     */
+    private $hasDebts;
+
+    /**
      * @var Fee[]
      *
      * @JMS\Groups({"fee"})
@@ -133,17 +145,6 @@ class Report
      */
     private $reasonForNoFees;
 
-    /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
-     *
-     * @var string
-     */
-    private $hasDebts;
 
     /**
      * @var Decision[]
@@ -1027,42 +1028,6 @@ class Report
     }
 
 
-    /**
-     * @return Fee[]
-     */
-    public function getFees()
-    {
-        return $this->fees;
-    }
-
-    /**
-     * @param Fee $fee
-     */
-    public function addFee(Fee $fee)
-    {
-        if (!$this->fees->contains($fee)) {
-            $this->fees->add($fee);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReasonForNoFees()
-    {
-        return $this->reasonForNoFees;
-    }
-
-    /**
-     * @param mixed $reasonForNoFees
-     */
-    public function setReasonForNoFees($reasonForNoFees)
-    {
-        $this->reasonForNoFees = $reasonForNoFees;
-    }
-
 
 
     /**
@@ -1084,6 +1049,76 @@ class Report
 
         return $ret;
     }
+
+
+    /**
+     * @return Fee[]
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * @param Fee $fee
+     */
+    public function addFee(Fee $fee)
+    {
+        if (!$this->fees->contains($fee)) {
+            $this->fees->add($fee);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $typeId
+     *
+     * @return Fee
+     */
+    public function getFeeByTypeId($typeId)
+    {
+        return $this->getFees()->filter(function (Fee $fee) use ($typeId) {
+            return $fee->getFeeTypeId() == $typeId;
+        })->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReasonForNoFees()
+    {
+        return $this->reasonForNoFees;
+    }
+
+    /**
+     * @param mixed $reasonForNoFees
+     */
+    public function setReasonForNoFees($reasonForNoFees)
+    {
+        $this->reasonForNoFees = $reasonForNoFees;
+    }
+
+    /**
+     * Get fee total value.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\SerializedName("fees_total_amount")
+     * @JMS\Groups({"fee"})
+     *
+     * @return float
+     */
+    public function getFeesTotalAmount()
+    {
+        $ret = 0;
+        foreach ($this->getFees() as $debt) {
+            $ret += $debt->getAmount();
+        }
+
+        return $ret;
+    }
+
 
     /**
      * @return mixed

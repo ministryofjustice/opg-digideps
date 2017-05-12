@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace AppBundle\Entity\Report;
 
@@ -18,13 +18,14 @@ class Fee
      * @var array
      */
     public static $feeTypeIds = [
-        ['work-up-to-and-including-cot-made', false],
-        ['annual-management-fee', false],
-        ['annual-property-management-fee', false],
-        ['preparing-and-lodging-annual-report', false],
-        ['completition-of-tax-return', false],
-        ['travel-costs', true],
-        ['specialist-service', false],
+        // id => hasMoreDetails
+        'work-up-to-and-including-cot-made' => false,
+        'annual-management-fee' => false,
+        'annual-property-management-fee' => false,
+        'preparing-and-lodging-annual-report' => false,
+        'completition-of-tax-return' => false,
+        'travel-costs' => true,
+        'specialist-service' => true,
     ];
 
     /**
@@ -67,16 +68,6 @@ class Fee
     private $amount;
 
     /**
-     * @var bool
-     *
-     * @JMS\Groups({"fee"})
-     * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
-     */
-    private $hasMoreDetails;
-
-    /**
      * @var string
      *
      * @JMS\Groups({"fee"})
@@ -91,13 +82,12 @@ class Fee
      * @param bool   $hasMoreDetails
      * @param float  $amount
      */
-    public function __construct(Report $report, $feeTypeId, $hasMoreDetails, $amount)
+    public function __construct(Report $report, $feeTypeId, $amount)
     {
         $this->report = $report;
         $report->addFee($this);
 
         $this->feeTypeId = $feeTypeId;
-        $this->hasMoreDetails = $hasMoreDetails;
         $this->amount = $amount;
     }
 
@@ -164,6 +154,8 @@ class Fee
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -183,18 +175,27 @@ class Fee
     }
 
     /**
+     * @JMS\Type("boolean")
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("has_more_details")
+     * @JMS\Groups({"fee"})
+     *
      * @return bool
      */
     public function getHasMoreDetails()
     {
-        return $this->hasMoreDetails;
+        return self::$feeTypeIds[$this->getFeeTypeId()];
     }
 
-    /**
-     * @param bool $hasMoreDetails
-     */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setAmountAndDetails($amount, $details)
     {
-        $this->hasMoreDetails = $hasMoreDetails;
+        $this->setAmount($amount);
+
+        // reset details if amount is not given, or if more details are not expected
+        if (empty($amount) || !$this->getHasMoreDetails()) {
+            $details = null;
+        }
+
+        $this->setMoreDetails($details);
     }
 }

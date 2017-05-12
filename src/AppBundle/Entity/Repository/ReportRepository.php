@@ -65,8 +65,8 @@ class ReportRepository extends EntityRepository
             return $ret;
         }
 
-        foreach (ReportFee::$feeTypeIds as $row) {
-            $debt = new ReportFee($report, $row[0], $row[1], null);
+        foreach (ReportFee::$feeTypeIds as $id => $row) {
+            $debt = new ReportFee($report, $id, null);
             $this->_em->persist($debt);
             ++$ret;
         }
