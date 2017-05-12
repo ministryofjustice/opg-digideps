@@ -188,13 +188,6 @@ class MailFactory
             'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
         ];
 
-        $client = $report->getClient();
-        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
-            $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
-            $client->getCaseNumber()
-        );
-
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
@@ -202,7 +195,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($report), 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
     }
@@ -309,6 +302,22 @@ class MailFactory
     }
 
     /**
+     * @param EntityDir\User          $user
+     * @param EntityDir\Report\Report $submittedReport
+     * @param EntityDir\Report        $newReport
+     * @param $pdfBinaryContent
+     *
+     * @return ModelDir\Email
+     */
+    public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport, $pdfBinaryContent)
+    {
+        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport)
+            ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($submittedReport), 'application/pdf', $pdfBinaryContent)]);
+
+        return $email;
+    }
+
+    /**
      * @param EntityDir\User    $user
      * @param EntityDir\Odr\Odr $odr
      * @param EntityDir\Report  $newReport
@@ -345,5 +354,20 @@ class MailFactory
     private function translate($key)
     {
         return $this->translator->trans($key, [], 'email');
+    }
+
+    /**
+     * @param EntityDir\Report\Report $report
+     * @return string
+     */
+    public function getReportAttachmentName(EntityDir\Report\Report $report)
+    {
+        $client = $report->getClient();
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $client->getCaseNumber()
+        );
+        return $attachmentName;
     }
 }
