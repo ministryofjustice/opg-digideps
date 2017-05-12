@@ -38,10 +38,10 @@ class PaFeeExpenseController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense/exist", name="pa_fee_expense_exist")
+     * @Route("/report/{reportId}/pa-fee-expense/fee-exist", name="pa_fee_expense_fee_exist")
      * @Template()
      */
-    public function existAction(Request $request, $reportId)
+    public function feeExistAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(new FormDir\Report\PaFeeExistType(), $report);
@@ -50,7 +50,9 @@ class PaFeeExpenseController extends AbstractController
         if ($form->isValid()) {
             switch ($form['hasFees']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('pa_fee_expense_add', ['reportId' => $reportId, 'from'=>'exist']);
+                    $report->setReasonForNoFees(null);
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                    return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
                     return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
@@ -66,6 +68,38 @@ class PaFeeExpenseController extends AbstractController
             'backLink' => $backLink,
             'form' => $form->createView(),
             'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/pa-fee-expense/fee-edit", name="pa_fee_expense_fee_edit")
+     * @Template()
+     */
+    public function feeEditAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(new FormDir\Report\FeesType(), $report);
+        $form->handleRequest($request);
+        $fromPage = $request->get('from');
+
+        if ($form->isValid()) {
+            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['fee']);
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
+            }
+
+            return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
+        }
+
+        $backLink = $this->generateUrl('pa_fee_expense_fee_exist', ['reportId'=>$reportId]);
+        if ($fromPage == 'summary') {
+            $backLink = $this->generateUrl('pa_fee_expense_summary', ['reportId'=>$reportId]);
+        }
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
         ];
     }
 

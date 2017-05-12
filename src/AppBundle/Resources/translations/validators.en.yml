@@ -319,6 +319,17 @@ debt:
     moreDetails:
       notEmpty: You must give us more information about this amount
 
+fee:
+    reasonForNoFees:
+       notBlank: Enter a reason why you don't have charged the client any fees for your services
+    noFeesChoice.notBlank: Choose Yes or No
+    amount:
+      notNumeric: Please use numbers only to enter the amount
+      minMessage: The amount must be positive
+      maxMessage: The amount must be less than £100,000,000,000
+    moreDetails:
+      notEmpty: You must give us more information about this amount
+
 
 # validation messages for common elements (e.g. phone fields)
 common:

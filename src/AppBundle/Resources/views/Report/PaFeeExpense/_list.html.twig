@@ -20,7 +20,7 @@
             {{ report.hasFees | capitalize }}
         </td>
         <td class="change-answer">
-            <a href="{{ url('pa_fee_expense_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
         </td>
     </tr>
     {% if report.reasonForNoFees %}
@@ -28,11 +28,87 @@
             <td>Reason for not having charged the client any fees for your services during the reporting period</td>
             <td>{{ report.reasonForNoFees | nl2br }}</td>
             <td class="change-answer">
-                <a href="{{ path('pa_fee_expense_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
     {% endif %}
     </tbody>
 </table>
+
+{% if report.hasFees == 'yes' %}
+
+    {# Items list heading #}
+    <div class="grid-row behat-region-debts-list">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">Edit</a>
+        </div>
+    </div>
+
+    {# Items list table #}
+    <table class="check-your-answers columns-2">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th class="numeric">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fee in report.fees %}
+            <tr class="behat-region-debt-{{ fee.feeTypeId | behat_namify }}">
+                <td>
+                    {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
+                    {% if fee.hasMoreDetails %}
+                       <p >{{ feeLabel }}</p>
+                       <p class="form-hint">{{ fee.moreDetails | nl2br }}</p>
+                    {% else %}
+                         {{ feeLabel }}
+                    {% endif %}
+
+                </td>
+                <td class="numeric-small">£{{ fee.amount | money_format }}</td>
+            </tr>
+
+        {% endfor %}
+        <tr>
+            <td class="no-border">
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="no-border text--right">
+                <span class="bold-small">£{{ report.feesTotalAmount | money_format }}</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    {#{% set feeTravelCost = report.getFeeById('travel-cost') %}#}
+    {#{% if feeTravelCost.moreDetails %}#}
+
+         {#Questions and answers table#}
+        {#<table class="check-your-answers push--top">#}
+            {#<thead>#}
+            {#<tr>#}
+                {#<th>Question</th>#}
+                {#<th>Answer</th>#}
+                {#<th>#}
+                    {#<span class="visuallyhidden">Actions</span>#}
+                {#</th>#}
+            {#</tr>#}
+            {#</thead>#}
+            {#<tbody>#}
+            {#<tr class="behat-region-debt-other-more-details">#}
+                {#<td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': feeTravelCost.amount })) }}</td>#}
+                {#<td>{{ debtOther.moreDetails | nl2br }}</td>#}
+                {#<td class="change-answer">#}
+                    {#<a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">Edit</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#</tbody>#}
+        {#</table>#}
+    {#{% endif %}#}
+
+{% endif %}
 
 {# copy debts layout here #}

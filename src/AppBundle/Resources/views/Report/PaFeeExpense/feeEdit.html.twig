@@ -1,0 +1,52 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <h3 class="heading-small push-half--bottom">
+        {{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
+        {#<span class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</span>#}
+    </h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {% for fee in form.fees %}
+        <div class="{{ fee.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {{ form_row(fee.feeTypeId) }}
+            {{ form_input(fee.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control__number js-format-currency',
+                'labelText': ('form.entries.' ~ fee.feeTypeId.vars.value ~ '.label') | trans,
+                'labelRaw': true
+            }) }}
+
+            {% if fee.moreDetails is defined %}
+                <div class="hidden">
+                    {{ form_input(fee.moreDetails, 'moreDetails', {
+                        'labelText': ('form.entries.' ~ fee.feeTypeId.vars.value ~ '.moreInformations') | trans,
+                        'formGroupClass': 'panel panel-border-narrow',
+                        'labelRaw': true
+                    }) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

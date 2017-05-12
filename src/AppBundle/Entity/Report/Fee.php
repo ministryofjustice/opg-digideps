@@ -20,8 +20,8 @@ class Fee
      *
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"debts"})
+     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"fees"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
      */
     private $amount;
 
@@ -37,7 +37,7 @@ class Fee
      * @JMS\Groups({"fee"})
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank(message="fee.moreDetails.notEmpty", groups={"debts-more-details"})
+     * @Assert\NotBlank(message="fee.moreDetails.notEmpty", groups={"fees-more-details"})
      */
     private $moreDetails;
 

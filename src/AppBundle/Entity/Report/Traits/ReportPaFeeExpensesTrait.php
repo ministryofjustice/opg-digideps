@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report\Traits;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use AppBundle\Entity\Report\Fee;
 
 trait ReportPaFeeExpensesTrait
 {
@@ -20,7 +21,7 @@ trait ReportPaFeeExpensesTrait
      * @JMS\Type("string")
      * @JMS\Groups({"reasonForNoFees"})
      *
-     * @Assert\NotBlank(message="report.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
+     * @Assert\NotBlank(message="fee.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
      *
      * @var string
      */
@@ -28,7 +29,6 @@ trait ReportPaFeeExpensesTrait
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
      *
      * @var decimal
      */
