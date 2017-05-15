@@ -59,21 +59,32 @@ class UserService
         }
     }
 
-    public function editPaUser(User $userToEdit)
+    public function editUser(User $originalUser, User $userToEdit)
     {
         if (empty($userToEdit->getRoleName())) {
             $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
         }
 
-        if ($this->userRepository->findOneBy(['email' => $userToEdit->getEmail()])) {
-            throw new \RuntimeException("PA User with email {$userToEdit->getEmail()} already exists.", 422);
+        if($originalUser->getEmail() != $userToEdit->getEmail()) {
+            if ($this->userRepository->findOneBy(['email' => $userToEdit->getEmail()])) {
+                throw new \RuntimeException("PA User with email {$userToEdit->getEmail()} already exists.", 422);
+            }
+
+            $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $userToEdit->getEmail()]);
+            if ($existingSoftDeletedUser != null) {
+                // delete soft deleted user a second time to hard delete it
+                $this->getEntityManager()->remove($existingSoftDeletedUser);
+                $this->getEntityManager()->flush();
+            }
+        }
+    }
+
+    public function editPaUser(User $originalUser, User $userToEdit)
+    {
+        if (empty($userToEdit->getRoleName())) {
+            $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
         }
 
-        $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $userToEdit->getEmail()]);
-        if ($existingSoftDeletedUser != null) {
-            // delete soft deleted user a second time to hard delete it
-            $this->getEntityManager()->remove($existingSoftDeletedUser);
-            $this->getEntityManager()->flush();
-        }
+        $this->editUser($originalUser, $userToEdit);
     }
 }
