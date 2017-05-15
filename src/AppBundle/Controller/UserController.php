@@ -89,9 +89,8 @@ class UserController extends RestController
 
         // If Editing PA user
         if ($loggedInUser->isPaAdministrator()) {
-            if (empty($user->getRoleName())) {
-                $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
-            }
+            $userService = $this->get('opg_digideps.user_service');
+            $userService->editPaUser($user, $data);
         };
 
         $this->getEntityManager()->flush($user);
