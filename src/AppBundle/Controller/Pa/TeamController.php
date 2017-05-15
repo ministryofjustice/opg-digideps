@@ -100,15 +100,18 @@ class TeamController extends AbstractController
 
             try {
                 $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+                $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
+                return $this->redirectToRoute('pa_team');
             } catch (\Exception $e) {
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $form->addError(new FormError($e->getData()['message']));
+                switch ((int)$e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        break;
+
+                    default:
+                        throw $e;
                 }
             }
-
-            $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
-
-            return $this->redirectToRoute('pa_team');
         }
 
         return [
