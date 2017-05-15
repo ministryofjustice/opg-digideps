@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'feeExistPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'feeExistPage.pageSectionTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -20,7 +20,7 @@
 
         <div class="form-section push--bottom">
             <div class="form-group flush--bottom {% if not form.hasFees.vars.valid %}error{% endif %}">
-                {{ form_checkbox_group(form.hasFees, 'existPage.form.hasFees', {
+                {{ form_checkbox_group(form.hasFees, 'feeExistPage.form.hasFees', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': transOptions,
@@ -33,7 +33,7 @@
                 }) }}
 
                 <div id="reason-for-no-fee" class="panel panel-border-narrow js-hidden">
-                    {{ form_input(form.reasonForNoFees, 'existPage.form.reasonForNoFees', {
+                    {{ form_input(form.reasonForNoFees, 'feeExistPage.form.reasonForNoFees', {
                         'labelClass': 'required',
                         'labelParameters': transOptions
                     }) }}

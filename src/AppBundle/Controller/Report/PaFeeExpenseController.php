@@ -9,6 +9,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Base route
+ *
+ * @Route("/report/{reportId}/pa-fee-expense")
+ */
 class PaFeeExpenseController extends AbstractController
 {
     private static $jmsGroups = [
@@ -18,7 +23,7 @@ class PaFeeExpenseController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense", name="pa_fee_expense")
+     * @Route("", name="pa_fee_expense")
      * @Template()
      *
      * @param int $reportId
@@ -39,7 +44,7 @@ class PaFeeExpenseController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense/fee-exist", name="pa_fee_expense_fee_exist")
+     * @Route("/fee-exist", name="pa_fee_expense_fee_exist")
      * @Template()
      */
     public function feeExistAction(Request $request, $reportId)
@@ -73,7 +78,7 @@ class PaFeeExpenseController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense/fee-edit", name="pa_fee_expense_fee_edit")
+     * @Route("/fee-edit", name="pa_fee_expense_fee_edit")
      * @Template()
      */
     public function feeEditAction(Request $request, $reportId)
@@ -106,7 +111,7 @@ class PaFeeExpenseController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense/other-exist", name="pa_fee_expense_other_exist")
+     * @Route("/other/exist", name="pa_fee_expense_other_exist")
      * @Template()
      */
     public function otherExistAction(Request $request, $reportId)
@@ -120,7 +125,7 @@ class PaFeeExpenseController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
                 case 'yes':
-                    return $this->redirectToRoute('IMPLEMENTMEpa_fee_expense_other_edit', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId, 'from'=>'exist']);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $data, ['expenses-paid-anything']);
                     return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
@@ -140,7 +145,93 @@ class PaFeeExpenseController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/pa-fee-expense/summary", name="pa_fee_expense_summary")
+     * @Route("/other/add", name="pa_fee_expense_other_add")
+     * @Template()
+     */
+    public function addAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $expense = new EntityDir\Report\Expense();
+
+        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $data->setReport($report);
+
+            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expense']);
+
+            return $this->redirect($this->generateUrl('XXXX_add_another', ['reportId' => $reportId]));
+        }
+
+        $backLinkRoute = 'pa_fee_expense_' . $request->get('from');
+        $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
+
+
+        return [
+            'backLink' => $backLink,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/other/add-another", name="pa_fee_expense_add_another")
+     * @Template()
+     */
+    public function addAnotherAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-deputy-expenses'), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('pa_fee_expense_add', ['reportId' => $reportId, 'from' => 'add_another']);
+                case 'no':
+                    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/other-edit/{expenseId}", name="pa_fee_expense_edit")
+     * @Template()
+     */
+    public function editAction(Request $request, $reportId, $expenseId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+
+        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
+
+            $this->getRestClient()->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expense']);
+
+            return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
+        }
+
+        return [
+            'backLink' => $this->generateUrl('pa_fee_expense_summary', ['reportId' => $reportId]),
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/summary", name="pa_fee_expense_summary")
      * @Template()
      *
      * @param int $reportId

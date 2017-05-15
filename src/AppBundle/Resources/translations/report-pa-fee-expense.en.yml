@@ -18,7 +18,7 @@ startPage:
     Rules 2017.
   startButton: Start deputy fees and expenses
 
-existPage:
+feeExistPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
   pageSectionTitle: Deputy fees and expenses
   form:
