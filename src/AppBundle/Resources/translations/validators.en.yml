@@ -323,6 +323,7 @@ fee:
     reasonForNoFees:
        notBlank: Enter a reason why you don't have charged the client any fees for your services
     noFeesChoice.notBlank: Choose Yes or No
+    mustHaveAtLeastOneFee: You must enter at least one fee
     amount:
       notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive

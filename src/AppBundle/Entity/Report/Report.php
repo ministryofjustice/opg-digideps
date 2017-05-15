@@ -11,6 +11,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
+ * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
  */
 class Report
 {

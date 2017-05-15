@@ -98,6 +98,16 @@ trait ReportPaFeeExpensesTrait
     }
 
 
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function feesValid(ExecutionContextInterface $context)
+    {
+        if (empty($this->getReasonForNoFees()) && count($this->getFeesWithValidAmount()) === 0) {
+            $context->addViolation('fee.mustHaveAtLeastOneFee');
+        }
+    }
+
 
     /**
      * Get debts total value.
@@ -162,14 +172,12 @@ trait ReportPaFeeExpensesTrait
 //    }
 
     /**
-     * @return Debt[]
+     * @return Fee[]
      */
-//    public function getDebtsWithValidAmount()
-//    {
-//        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
-//            return !empty($debt->getAmount());
-//        });
-//
-//        return $debtsWithAValidAmount;
-//    }
+    public function getFeesWithValidAmount()
+    {
+        return array_filter($this->fees, function ($fee) {
+            return !empty($fee->getAmount());
+        });
+    }
 }
