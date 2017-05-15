@@ -44,6 +44,7 @@
         {% if action == 'edit' %}
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
             transDomain: 'admin',
+            linkId: 'admin_cancel',
             linkButtonLabel: 'cancel.label',
             linkClass: 'button-link',
             linkHref: path('admin_homepage')

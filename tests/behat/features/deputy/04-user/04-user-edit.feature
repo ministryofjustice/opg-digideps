@@ -99,6 +99,25 @@ Feature: deputy / report / edit user
           | change_password_plain_password_second | Abcd1234 |
         And I press "change_password_save"
         Then the form should be valid
-        And I should be on "/user-account/password-edit-done"   
-      
-    
+        And I should be on "/user-account/password-edit-done"
+
+  @deputy
+  Scenario: Change
+    And emails are sent from "deputy" area
+    And I reset the email log
+    When I am on "/register"
+    And I add the following users to CASREC:
+      | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
+      | BEHAT001 | Hent    | BEHAT001  | Doe         | P0ST C0D3    | OPG102    |
+    And I fill in the following:
+      | self_registration_firstname       | John                                 |
+      | self_registration_lastname        | Doe                                  |
+      | self_registration_email_first     | behat-user@publicguardian.gsi.gov.uk |
+      | self_registration_email_second    | behat-user@publicguardian.gsi.gov.uk |
+      | self_registration_postcode        | P0ST C0D3                            |
+      | self_registration_clientFirstname | Cly                                  |
+      | self_registration_clientLastname  | Hent                                 |
+      | self_registration_caseNumber      | BEHAT001                             |
+    And I press "self_registration_save"
+    Then I should see "Please check your email"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
