@@ -25,18 +25,20 @@
 
     {% for fee in form.fees %}
         <div class="{{ fee.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {% set feeId = fee.feeTypeId.vars.value %}
             {{ form_row(fee.feeTypeId) }}
             {{ form_input(fee.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control__number js-format-currency',
-                'labelText': ('form.entries.' ~ fee.feeTypeId.vars.value ~ '.label') | trans,
-                'labelRaw': true
+                'labelText': ('form.entries.' ~ feeId ~ '.label') | trans,
+                'labelRaw': true,
+                'labelDataTargetTOIMPLEMENT': 'fee-' ~ feeId ~  '-textarea'
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div class="hidden">
+                <div id="fee-{{ feeId }}-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
-                        'labelText': ('form.entries.' ~ fee.feeTypeId.vars.value ~ '.moreInformations') | trans,
+                        'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow',
                         'labelRaw': true
                     }) }}
