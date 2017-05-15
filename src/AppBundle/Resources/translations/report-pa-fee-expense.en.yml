@@ -3,19 +3,19 @@ startPage:
   pageSectionTitle: Deputy fees and expenses
   #TODO format me
   pageSectionDescription1: |
-    Public authority deputies can be paid, or claim expenses, for the following areas of work or cost:
-
-    • work done up to and including the date of the court order
-    • annual management (including incidental costs)
-    • property management
-    • completing an annual deputy report
-    • completing a tax return
-    • travel expenses
-    • specialist services (conveyancing, obtaining expert valuations and investment advice)
-
-    For more detail, you should refer to the court’s Practice Direction B Fixed Costs in the Court of Protection, published as part of the Court of Protection (Amendment) Rules 2017.
-
-
+    Public authority deputies can be paid, or claim expenses, for the following
+    areas of work or cost:
+  listItem01: work done up to and including the date of the court order
+  listItem02: annual management (including incidental costs)
+  listItem03: property management
+  listItem04: completing an annual deputy report
+  listItem05: completing a tax return
+  listItem06: travel expenses
+  listItem07: specialist services (conveyancing, obtaining expert valuations and investment advice)
+  pageSectionDescription2: |
+    For more detail, you should refer to the court’s Practice Direction B Fixed Costs
+    in the Court of Protection, published as part of the Court of Protection (Amendment)
+    Rules 2017.
   startButton: Start deputy fees and expenses
 
 existPage:
