@@ -50,3 +50,4 @@ Feature: Report submit
             | HSBC - main account | account-01ca |
             | Current account     | account-01ca |
             | 112233              | account-01ca |
+        And I save the application status into "pa-report-submitted"

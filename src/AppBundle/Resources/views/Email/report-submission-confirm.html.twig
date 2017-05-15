@@ -12,10 +12,14 @@
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’re in the process of reviewing your report, and will contact you when this has been done. </p>
 
-     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>Download a pdf of your report</strong></p>
+    {% if app.user.isDeputyPa() %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">A pdf copy of the report is attached to this email for your records.</p>
+    {% else %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>Download a pdf of your report</strong></p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">To view and download a copy of the report for your records, <a style="word-wrap: break-word;" href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
-    </p>
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">To view and download a copy of the report for your records, <a style="word-wrap: break-word;" href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
+        </p>
+    {% endif %}
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>What happens next</strong></p>
 

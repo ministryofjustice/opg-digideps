@@ -229,4 +229,58 @@ Feature: PA team
     When I click on "confirm"
     Then the response status code should be 200
     Then I should not see the "team-user-behat-pa1-team-member2publicguardiangsigovuk" region
+
+  Scenario: named PA3 logs in, adds and activates PA_ADMIN user
+    Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    And I click on "add"
+    And I fill in the following:
+      | team_member_account_firstname  | PA3                                       |
+      | team_member_account_lastname   | Admin                                     |
+      | team_member_account_email      | behat-pa3-admin@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_0 | ROLE_PA_ADMIN                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    Then I should see the "team-user-behat-pa3-adminpublicguardiangsigovuk" region
+    When emails are sent from "deputy" area
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    Then the response status code should be 200
+    When I fill in the following:
+      | set_password_password_first  | Abcd1234 |
+      | set_password_password_second | Abcd1234 |
+    When I click on "save"
+    Then the form should be valid
+    When I fill in the following:
+      | user_details_jobTitle  | Solicitor assistant |
+      | user_details_phoneMain | 20000000002         |
+    And I press "user_details_save"
+    Then the form should be valid
+    And I should see the "client-3000001" region
+
+  Scenario: PA_ADMIN3 logs in, adds and activates PA_TEAM_MEMBER
+    Given I am logged in as "behat-pa3-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts, add"
+    When I fill in the following:
+      | team_member_account_firstname  | PA3                                             |
+      | team_member_account_lastname   | Team Member                                     |
+      | team_member_account_email      | behat-pa3-team-member@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    When emails are sent from "deputy" area
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    Then the response status code should be 200
+    When I fill in the following:
+      | set_password_password_first  | Abcd1234 |
+      | set_password_password_second | Abcd1234 |
+    When I click on "save"
+    Then the form should be valid
+    When I fill in the following:
+      | user_details_jobTitle  | Solicitor helper   |
+      | user_details_phoneMain | 30000000003        |
+    And I press "user_details_save"
+    Then the form should be valid
     And I save the application status into "team-users-complete"
+    And I should see the "client-3000001" region

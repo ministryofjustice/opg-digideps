@@ -186,8 +186,13 @@ class ReportController extends AbstractController
             $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
 
             //send confirmation email
-            $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-            $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+            if ($user->isDeputyPa()) {
+                $reportConfirmEmail = $this->getMailFactory()->createPaReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport, $pdfBinaryContent);
+                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
+            } else {
+                $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+            }
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }

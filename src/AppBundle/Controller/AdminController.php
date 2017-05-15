@@ -350,6 +350,19 @@ class AdminController extends AbstractController
                         //'Corref', (should decide report type, but no specs given yet)
                         'Report Due',
                     ])
+                    ->setOptionalColumns([
+                        'Client Adrs1',
+                        'Client Adrs2',
+                        'Client Adrs3',
+                        'Client Adrs4',
+                        'Client Postcode',
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
+                        'Dep Postcode'
+                    ])
                     ->getData();
 
                 $added = ['users' => [], 'clients' => [], 'reports' => []];

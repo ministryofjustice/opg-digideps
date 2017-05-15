@@ -54,6 +54,17 @@ trait AuthenticationTrait
     }
 
     /**
+     * @Then the URL :url should be forbidden
+     */
+    public function theUrlShouldBeForbidden($url)
+    {
+        $previousUrl = $this->getSession()->getCurrentUrl();
+        $this->visit($url);
+        $this->assertResponseStatus(403);
+        $this->visit($previousUrl);
+    }
+
+    /**
      * @Then I expire the session
      */
     public function iExpireTheSession()

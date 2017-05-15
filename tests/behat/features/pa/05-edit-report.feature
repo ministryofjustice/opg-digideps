@@ -1,7 +1,7 @@
 Feature: PA user edits report sections
 
   Scenario: PA user edit decisions section
-    Given I load the application status from "pa-users-uploaded"
+    Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-decisions, start"

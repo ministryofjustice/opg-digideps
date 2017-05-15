@@ -42,6 +42,13 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
             'getEmail' => 'user@email',
         ])->makePartial();
 
+        $this->paUser = m::mock('AppBundle\Entity\User', [
+            'isDeputyPa' => true,
+            'getFullName' => 'FN',
+            'getRegistrationToken' => 'RT',
+            'getEmail' => 'pauser@email',
+        ])->makePartial();
+
         $this->object = new MailFactory($this->container);
     }
 
@@ -89,6 +96,35 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('ers_to@email', $email->getToEmail());
+        $this->assertEquals('DigiRep-2016_2017-01-01_1234567t.pdf', $email->getAttachments()[0]->getFilename());
+        $this->assertEquals('[REPORT-CONTENT-PDF]', $email->getAttachments()[0]->getContent());
+        $this->assertEquals('application/pdf', $email->getAttachments()[0]->getContentType());
+    }
+
+    public function testcreatePaReportSubmissionConfirmationEmail()
+    {
+        $this->router->shouldReceive('generate')->withAnyArgs()->andReturn('https://mock.com');
+
+        $this->templating->shouldReceive('render')->withAnyArgs()->andReturn('[TEMPLATE]');
+
+        $client = m::mock('AppBundle\Entity\Client', [
+            'getCaseNumber' => '1234567t',
+        ]);
+        $report = m::mock('AppBundle\Entity\Report\Report', [
+            'getClient' => $client,
+            'getEndDate' => new \DateTime('2016-12-31'),
+            'getSubmitDate' => new \DateTime('2017-01-01'),
+        ]);
+        $newReport = m::mock('AppBundle\Entity\Report\Report', [
+            'getClient' => $client,
+            'getType' => '102',
+            'getEndDate' => new \DateTime('2017-12-31'),
+            'getSubmitDate' => new \DateTime('2018-01-01'),
+        ]);
+        $email = $this->object->createPaReportSubmissionConfirmationEmail($this->paUser, $report, $newReport,'[REPORT-CONTENT-PDF]');
+
+        $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
+        $this->assertEquals('pauser@email', $email->getToEmail());
         $this->assertEquals('DigiRep-2016_2017-01-01_1234567t.pdf', $email->getAttachments()[0]->getFilename());
         $this->assertEquals('[REPORT-CONTENT-PDF]', $email->getAttachments()[0]->getContent());
         $this->assertEquals('application/pdf', $email->getAttachments()[0]->getContentType());

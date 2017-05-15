@@ -5,10 +5,14 @@ Thank you for submitting your annual deputy report for {{ submittedReport.startD
 We’re in the process of reviewing your report, and will contact you when this has been done.
 
 
+{% if app.user.isDeputyPa() %}
+A pdf copy of the report is attached to this email for your records.
+{% else %}
 Download a pdf of your report
 -----------------------------
 
 To view and download a copy of the report for your records, sign back into the deputy report service {{ homepageUrl }}. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
+{% endif %}
 
 
 What happens next
