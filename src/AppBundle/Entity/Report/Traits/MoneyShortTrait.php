@@ -7,7 +7,7 @@ use AppBundle\Entity\Report\MoneyTransactionShortIn;
 use AppBundle\Entity\Report\MoneyTransactionShortOut;
 use Doctrine\Common\Collections\ArrayCollection;
 
-trait ReportMoneyShortTrait
+trait MoneyShortTrait
 {
     /**
      * @var MoneyShortCategory[]
