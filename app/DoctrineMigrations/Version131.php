@@ -2,32 +2,26 @@
 
 namespace Application\Migrations;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Service\FixDataService;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Version131 extends AbstractMigration  implements ContainerAwareInterface
+/**
+ * clean up merged migrations
+ */
+class Version131 extends AbstractMigration
 {
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
 
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
-        $em = $this->container->get('em');
+        // needs to be present to avoid previously migrated database to 131
 
-        $fixDataService = new FixDataService($em);
-        echo "Fixing missing data in reports (might take several minutes)...\n";
-        $messages = $fixDataService->fixReports()->getMessages();
-        echo "FixData results: " . print_r($messages, true);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Odr\ndrRepository;
 use AppBundle\Entity\Odr\OdrRepository;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ReportRepository;
@@ -23,7 +24,7 @@ class FixDataService
     /**
      * @var OdrRepository
      */
-    private $odrRepo;
+    private $ndrRepo;
 
     /**
      * @var array
@@ -38,13 +39,17 @@ class FixDataService
     {
         $this->em = $em;
         $this->reportRepo = $this->em->getRepository(Report::class);
-        $this->odrRepo = $this->em->getRepository(Odr::class);
+        $this->ndrRepo = $this->em->getRepository(Odr::class);
     }
 
     public function fixReports()
     {
-        $this->reportRepo = $this->em->getRepository(Report::class);
-        foreach ($this->reportRepo->findAll() as $entity) {
+        $reports = $this->reportRepo->findAll();
+
+        foreach ($reports as $entity) {
+            if (!$entity->getSubmitted()) {
+                continue;
+            }
             $debtsAdded = $this->reportRepo->addDebtsToReportIfMissing($entity);
             if ($debtsAdded) {
                 $this->messages[] = "Report {$entity->getId()}: added $debtsAdded debts";
@@ -57,17 +62,6 @@ class FixDataService
             }
         }
 
-        foreach ($this->odrRepo->findAll() as $entity) {
-            $debtsAdded = $this->odrRepo->addDebtsToOdrIfMissing($entity);
-            if ($debtsAdded) {
-                $this->messages[] = "Odr {$entity->getId()}: added $debtsAdded debts";
-            }
-            $incomeBenefitsAdded = $this->odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
-            if ($incomeBenefitsAdded) {
-                $this->messages[] = "Odr {$entity->getId()}: $incomeBenefitsAdded income benefits added";
-            }
-        }
-
         $this->em->flush();
 
         return $this;
@@ -76,10 +70,20 @@ class FixDataService
 
     public function fixNdrs()
     {
-        foreach ($this->odrRepo->findAll() as $entity) {
-            $debtsAdded = $this->odrRepo->addDebtsToOdrIfMissing($entity);
-            $incomeBenefitsAdded = $this->odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
-            $this->messages[] = "Report {$entity->getId()}: $debtsAdded debts, $incomeBenefitsAdded income benefits added";
+        $ndrs = $this->ndrRepo->findAll();
+
+        foreach ($ndrs as $entity) {
+            if (!$entity->getSubmitted()) {
+                continue;
+            }
+            $debtsAdded = $this->ndrRepo->addDebtsToOdrIfMissing($entity);
+            if ($debtsAdded) {
+                $this->messages[] = "Odr {$entity->getId()}: added $debtsAdded debts";
+            }
+            $incomeBenefitsAdded = $this->ndrRepo->addIncomeBenefitsToOdrIfMissing($entity);
+            if ($incomeBenefitsAdded) {
+                $this->messages[] = "Odr {$entity->getId()}: $incomeBenefitsAdded income benefits added";
+            }
         }
 
         $this->em->flush();
