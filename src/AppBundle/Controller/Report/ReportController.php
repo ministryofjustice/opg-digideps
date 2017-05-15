@@ -1,4 +1,4 @@
-src/AppBundle/Controller/Report/ReportController.php<?php
+<?php
 
 namespace AppBundle\Controller\Report;
 
