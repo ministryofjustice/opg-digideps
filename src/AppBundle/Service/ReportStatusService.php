@@ -447,7 +447,7 @@ class ReportStatusService
             ];
         }
 
-        $isPa = $this->report->getClient()->getUsers()->first()->isPaDeputy();
+        $isPa = $this->report->getClient() ? $this->report->getClient()->getUsers()->first()->isPaDeputy() : false;
         if ($type == Report::TYPE_102 || $type == Report::TYPE_103) {
             if ($isPa) {
                 $states['paDeputyExpense'] = $this->getPaFeesExpensesState()['state'];
