@@ -16,7 +16,7 @@ class PaFeeExistType extends AbstractType
             ->add('hasFees', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'xxxx.noContactsChoice.notBlank', 'groups' => ['fee-exist']])],
+                'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['fee-exist']])],
             ])
             ->add('reasonForNoFees', 'textarea')
             ->add('save', 'submit', ['label' => 'save.label']);
@@ -27,7 +27,7 @@ class PaFeeExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-pa-fee-expense',
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['contact-exist'];
+                $validationGroups = ['fee-exist'];
                 if ($form['hasFees']->getData() === 'no') {
                     $validationGroups = ['reasonForNoFees'];
                 }
