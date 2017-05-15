@@ -14,6 +14,7 @@ class PaFeeExpenseController extends AbstractController
     private static $jmsGroups = [
         'fee',
         'fee-state',
+        'expenses', //second part uses same endpoints as deputy expenses
     ];
 
     /**
@@ -86,9 +87,10 @@ class PaFeeExpenseController extends AbstractController
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['fee']);
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
+                return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
+            return $this->redirectToRoute('pa_fee_expense_other_exist', ['reportId' => $reportId]);
         }
 
         $backLink = $this->generateUrl('pa_fee_expense_fee_exist', ['reportId'=>$reportId]);
@@ -100,6 +102,40 @@ class PaFeeExpenseController extends AbstractController
             'backLink' => $backLink,
             'report' => $report,
             'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/pa-fee-expense/other-exist", name="pa_fee_expense_other_exist")
+     * @Template()
+     */
+    public function otherExistAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(new FormDir\YesNoType('paidForAnything', 'report-pa-fee-expense', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            /* @var $data EntityDir\Report\Report */
+            switch ($data->getPaidForAnything()) {
+                case 'yes':
+                    return $this->redirectToRoute('IMPLEMENTMEpa_fee_expense_other_edit', ['reportId' => $reportId, 'from'=>'exist']);
+                case 'no':
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['expenses-paid-anything']);
+                    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
+            }
+        }
+
+        $backLink = $this->generateUrl('pa_fee_expense_fee_edit', ['reportId' => $reportId]);
+        if ($request->get('from') == 'summary') {
+            $backLink = $this->generateUrl('pa_fee_expense_summary', ['reportId' => $reportId]);
+        }
+
+        return [
+            'backLink' => $backLink,
+            'form' => $form->createView(),
+            'report' => $report,
         ];
     }
 

@@ -1,0 +1,53 @@
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+
+
+{% if report.hasFees == 'yes' %}
+
+    {# Items list heading #}
+    <div class="grid-row behat-region-debts-list">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">Edit</a>
+        </div>
+    </div>
+
+    {# Items list table #}
+    <table class="check-your-answers columns-2">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th class="numeric">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for fee in report.fees %}
+            <tr class="behat-region-debt-{{ fee.feeTypeId | behat_namify }}">
+                <td>
+                    {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
+                    {% if fee.hasMoreDetails %}
+                        <p >{{ feeLabel }}</p>
+                        <p class="form-hint">{{ fee.moreDetails | nl2br }}</p>
+                    {% else %}
+                        {{ feeLabel }}
+                    {% endif %}
+
+                </td>
+                <td class="numeric-small">£{{ fee.amount | money_format }}</td>
+            </tr>
+
+        {% endfor %}
+        <tr>
+            <td class="no-border">
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="no-border text--right">
+                <span class="bold-small">£{{ report.feesTotalAmount | money_format }}</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+{% endif %}

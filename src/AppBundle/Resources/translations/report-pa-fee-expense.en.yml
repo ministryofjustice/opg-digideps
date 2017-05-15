@@ -34,6 +34,16 @@ editPage:
   pageSectionTitle: Deputy fees and expenses
   pageSectionDescription: Please tell us about any fees or expenses you've claimed from the client's funds in line with the practice direction.
 
+
+otherExistPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses  | GOV.UK"
+  pageSectionTitle: Deputy fees and expenses
+  form:
+    paidForAnything:
+      label: Have you claimed any other expenses or fees outside of the practice direction?
+    save:
+      label: Save and continue
+
 summaryPage:
   htmlTitle: "Deputy report -  Deputy fees and expenses | GOV.UK"
   pageSectionTitle:  Deputy fees and expenses
@@ -54,3 +64,4 @@ form.entries:
   specialist-service:
     label: Specialist services
     moreInformations: Please provide some detail
+
