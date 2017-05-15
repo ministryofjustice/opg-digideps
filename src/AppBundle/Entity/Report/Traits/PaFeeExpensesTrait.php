@@ -22,7 +22,7 @@ trait PaFeeExpensesTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"fee"})
      * @ORM\Column(name="reason_for_no_fees", type="text", nullable=true)
      */
     private $reasonForNoFees;
