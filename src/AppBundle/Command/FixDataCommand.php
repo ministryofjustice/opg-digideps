@@ -27,6 +27,7 @@ class FixDataCommand extends AddSingleUserCommand
     {
         $em = $this->getContainer()->get('em');
 
+        $output->write('Fixing data. Should take around 30 seconds. Please wait ...');
         $fixDataService = new FixDataService($em);
         $messages = $fixDataService->fixReports()->fixNdrs()->getMessages();
         foreach($messages as $m) {
