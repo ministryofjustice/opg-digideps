@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">
+    <h3 class="heading-small push--bottom">
         {{ 'editPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
         {#<span class="form-hint text push-half--bottom">{{ 'editPage.pageHint' | trans(transOptions, translationDomain) }}</span>#}
     </h3>
@@ -24,22 +24,21 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for fee in form.fees %}
-        <div class="{{ fee.moreDetails is defined ? ' js-details-expander ' : '' }}">
-            {% set feeId = fee.feeTypeId.vars.value %}
+        {% set feeId = fee.feeTypeId.vars.value %}
+        <div class="{{ fee.moreDetails is defined ? ' js-details-expander-' ~ feeId  : '' }} inputs-right-aligned">
             {{ form_row(fee.feeTypeId) }}
             {{ form_input(fee.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control__number js-format-currency',
                 'labelText': ('form.entries.' ~ feeId ~ '.label') | trans,
-                'labelRaw': true,
-                'labelDataTargetTOIMPLEMENT': 'fee-' ~ feeId ~  '-textarea'
+                'labelRaw': true
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div id="fee-{{ feeId }}-textarea" class="js-hiddenENABLEME">
+                <div class="hidden">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
-                        'formGroupClass': 'panel panel-border-narrow',
+                        'formGroupClass': 'panel panel-border-narrow hard--top',
                         'labelRaw': true
                     }) }}
                 </div>
@@ -50,5 +49,13 @@
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
+
+    <script>
+        $(document).ready(function () {
+            // Details expander
+            new GOVUK.detailsExpander('.js-details-expander-travel-costs');
+            new GOVUK.detailsExpander('.js-details-expander-specialist-service');
+        });
+    </script>
 
 {% endblock %}

@@ -115,3 +115,27 @@ ul.form-hint {
         width: auto;
     }
 }
+
+.inputs-right-aligned {
+    .form-label {
+        padding-top: 8px;
+    }
+
+    .form-label,
+    .error-message {
+        float: left;
+        width: 50%;
+        padding-right: 20px;
+    }
+
+    .error {
+        .form-label,
+        .error-message {
+            width: 49%;
+        }
+    }
+
+    .panel {
+        margin-top: -20px;
+    }
+}
