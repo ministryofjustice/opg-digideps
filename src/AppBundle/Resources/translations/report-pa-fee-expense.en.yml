@@ -44,6 +44,26 @@ otherExistPage:
     save:
       label: Save and continue
 
+
+
+otherAddPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Add an expense
+
+otherAddAnotherPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Add an expense
+  form:
+    addAnother:
+      label: The expense has been saved. Would you like to add another expense now?
+      hint: If you prefer, you can come back to this section later to add more expenses
+    save:
+       label: Continue
+
+otherEditPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Edit expense
+
 summaryPage:
   htmlTitle: "Deputy report -  Deputy fees and expenses | GOV.UK"
   pageSectionTitle:  Deputy fees and expenses
@@ -65,3 +85,5 @@ form.entries:
     label: Specialist services
     moreInformations: Please provide some detail
 
+common:
+ supportTitle: Deputy fees and expenses

@@ -42,6 +42,11 @@
     'transDomain': translationDomain
     } %}
 
+    {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
+    'report': report,
+    'transDomain': translationDomain
+    } %}
+
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }}
 

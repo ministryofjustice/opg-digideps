@@ -1,0 +1,55 @@
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+
+{# @biggs: layout copied from deputy expenses #}
+{% if report.paidForAnything == 'yes' %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">Expenses outside the practice direction</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="{{ path('pa_fee_expense_other_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                Add expense
+            </a>
+        </div>
+    </div>
+
+    <table class="check-your-answers columns-3">
+        <thead>
+        <tr>
+            <th>Description of expense</th>
+            <th class="text--right">Amount</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for expense in report.expenses %}
+            <tr class="behat-region-expense-{{ expense.explanation | behat_namify }}">
+                <td class="">
+                    {{ expense.explanation }}<br/>
+                </td>
+                <td class="numeric-small">
+                    £{{ expense.amount | money_format }}
+                </td>
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('pa_fee_expense_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                    <a href="{{ path('pa_fee_expense_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr class="no-border">
+            <td>
+                <span class="bold-small">Total amount</span>
+            </td>
+            <td class="numeric-small">
+                <span class="bold-small behat-region-expense-total">£{{ report.expensesTotalValue | money_format }}</span>
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+
+{% endif %}

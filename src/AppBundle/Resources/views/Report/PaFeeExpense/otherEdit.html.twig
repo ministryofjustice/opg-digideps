@@ -1,0 +1,26 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'otherEditPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'otherEditPage.pageSectionTitle' | trans }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'common.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'editPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% include 'AppBundle:Report/PaFeeExpense:_other_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'form': form
+    } %}
+{% endblock %}
