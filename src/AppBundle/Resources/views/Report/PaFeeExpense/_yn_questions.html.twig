@@ -1,7 +1,7 @@
 {% set translationDomain = "report-pa-fee-expense" %}
 {% trans_default_domain translationDomain %}
 
-{# Have you charged the client any fees or expensesfor your services during the reporting period? #}
+
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
     <tr>
@@ -13,6 +13,10 @@
     </tr>
     </thead>
     <tbody>
+    {#
+        Have you charged the client any fees or expensesfor your
+        services during the reporting period?
+    #}
     <tr class="behat-region-has-contacts">
         <td>
             {{ 'existPage.form.hasFees.label' | trans(transOptions)  }}
@@ -33,22 +37,10 @@
             </td>
         </tr>
     {% endif %}
-    </tbody>
-</table>
-
-
-{# Have you claimed any other expenses or fees outside of the practice direction? #}
-<table class="check-your-answers columns-2 push-double--bottom">
-    <thead>
-    <tr>
-        <th>Question</th>
-        <th>Answer</th>
-        <th>
-            <span class="visuallyhidden">Actions</span>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+    {#
+        Have you claimed any other expenses or fees outside
+        of the practice direction?
+    #}
     <tr class="behat-region-paid-for-anything">
         <td>
             {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
@@ -60,9 +52,6 @@
             <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
         </td>
     </tr>
+
     </tbody>
 </table>
-
-
-
-{# copy debts layout here #}
