@@ -51,4 +51,6 @@ form.entries:
   travel-costs:
     label: Travel costs
     moreInformations: Please provide some detail
-  specialist-service.label: Specialist services
+  specialist-service:
+    label: Specialist services
+    moreInformations: Please provide some detail

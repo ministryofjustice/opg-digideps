@@ -36,7 +36,7 @@
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div id="fee-{{ feeId }}-textarea" class="panel panel-border-narrow js-hidden">
+                <div id="fee-{{ feeId }}-textarea" class="js-hiddenENABLEME">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow',
