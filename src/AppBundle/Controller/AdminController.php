@@ -354,13 +354,10 @@ class AdminController extends AbstractController
                         'Client Adrs1',
                         'Client Adrs2',
                         'Client Adrs3',
-                        'Client Adrs4',
                         'Client Postcode',
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
-                        'Dep Adrs4',
-                        'Dep Adrs5',
                         'Dep Postcode'
                     ])
                     ->getData();
