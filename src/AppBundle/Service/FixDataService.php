@@ -51,11 +51,9 @@ class FixDataService
             if ($debtsAdded) {
                 $this->messages[] = "Report {$entity->getId()}: added $debtsAdded debts";
             }
-            if ($entity->getType() == Report::TYPE_103) {
-                $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
-                if ($shortMoneyCatsAdded) {
-                    $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
-                }
+            $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            if ($shortMoneyCatsAdded) {
+                $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
             }
         }
 
