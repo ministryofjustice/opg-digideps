@@ -74,7 +74,7 @@ trait ReportPaFeeExpensesTrait
         return $this->feesTotalAmount;
     }
 
-    public function hasFees()
+    public function getHasFees()
     {
         if (empty($this->getFees()) && $this->getReasonForNoFees() === null) {
             return null;
