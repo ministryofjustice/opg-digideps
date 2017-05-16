@@ -108,4 +108,25 @@ trait PaFeeExpensesTrait
         return $fees;
     }
 
+    /**
+     * Implement the report.hasFees based on the content of fees and reaons for no fees
+     * Alternative to have a column
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\SerializedName("has_fees")
+     * @JMS\Groups({"fee"})
+     *
+     * @return float
+     */
+    public function getHasFees()
+    {
+        // never set -> return null
+        if (0 === count($this->getFeesWithValidAmount()) && $this->getReasonForNoFees() === null) {
+            return null;
+        }
+
+        return $this->getReasonForNoFees() ? 'no' : 'yes';
+    }
+
 }
