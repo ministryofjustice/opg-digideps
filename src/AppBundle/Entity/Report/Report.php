@@ -47,6 +47,14 @@ class Report
      */
     private $type;
 
+
+    /**
+     * @JMS\Type("boolean")
+     *
+     * @var boolean
+     */
+    private $has106flag;
+
     /**
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
@@ -256,6 +264,22 @@ class Report
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHas106flag()
+    {
+        return $this->has106flag;
+    }
+
+    /**
+     * @param boolean $has106flag
+     */
+    public function setHas106flag($has106flag)
+    {
+        $this->has106flag = $has106flag;
     }
 
     /**

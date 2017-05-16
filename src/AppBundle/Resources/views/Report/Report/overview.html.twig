@@ -86,12 +86,12 @@
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
-                {% if app.user.isDeputyPa %}
+                {% if report.has106Flag %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'pa_fee_expense',
                     report: report,
-                    state: reportStatus.expensesState,
+                    state: reportStatus.paFeesExpensesState,
                     linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
                     description: true
                     } %}
