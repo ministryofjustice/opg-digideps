@@ -287,13 +287,25 @@ class ReportStatusService
      */
     public function getPaFeesExpensesState()
     {
-        //TODO add
-        $hasFees = count($this->report->getFeesWithValidAmount()) > 0;
-        if (!$hasFees && empty($this->report->getReasonForNoFees())) {
+        $countValidFees = count($this->report->getFeesWithValidAmount());
+        $countExpenses = count($this->report->getExpenses());
+
+        if (0 === $countValidFees
+            && empty($this->report->getReasonForNoFees())
+            && 0 === $countExpenses
+            && empty($this->report->getPaidForAnything())
+        ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        } else {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getFeesWithValidAmount())];
         }
+
+        $feeComplete = $countValidFees || !empty($this->report->getReasonForNoFees());
+        $expenseComplete = $countExpenses || $this->report->getPaidForAnything() === 'no';
+
+        if ($feeComplete && $expenseComplete) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => $countValidFees];
+        }
+
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => $countValidFees];
     }
 
     /**
@@ -308,7 +320,7 @@ class ReportStatusService
         $action = $this->report->getAction();
         $answers = $action ? [
             $action->getDoYouHaveConcerns(),
-            $action->getDoYouExpectFinancialDecisions()
+            $action->getDoYouExpectFinancialDecisions(),
         ] : [];
 
         switch (count(array_filter($answers))) {
@@ -422,11 +434,11 @@ class ReportStatusService
 
         if ($type == Report::TYPE_102) {
             $states += [
-                'bankAccounts'  => $this->getBankAccountsState()['state'],
-                'moneyIn'       => $this->getMoneyInState()['state'],
-                'moneyOut'      => $this->getMoneyOutState()['state'],
-                'assets'        => $this->getAssetsState()['state'],
-                'debts'         => $this->getDebtsState()['state'],
+                'bankAccounts' => $this->getBankAccountsState()['state'],
+                'moneyIn'      => $this->getMoneyInState()['state'],
+                'moneyOut'     => $this->getMoneyOutState()['state'],
+                'assets'       => $this->getAssetsState()['state'],
+                'debts'        => $this->getDebtsState()['state'],
             ];
 
             if (count($this->report->getBankAccounts())) {
@@ -447,9 +459,8 @@ class ReportStatusService
             ];
         }
 
-        $isPa = $this->report->getClient() ? $this->report->getClient()->getUsers()->first()->isPaDeputy() : false;
         if ($type == Report::TYPE_102 || $type == Report::TYPE_103) {
-            if ($isPa) {
+            if ($this->report->has106Flag()) {
                 $states['paDeputyExpense'] = $this->getPaFeesExpensesState()['state'];
             } else {
                 $states['deputyExpense'] = $this->getExpensesState()['state'];
@@ -496,8 +507,8 @@ class ReportStatusService
     public function getStatus()
     {
         if (count(array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_NOT_STARTED;
-        })) === 0
+                return $e != self::STATE_NOT_STARTED;
+            })) === 0
         ) {
             return 'notStarted';
         }
