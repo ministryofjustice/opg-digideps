@@ -16,10 +16,18 @@
     </div>
 
     {# Items list table #}
-    <table class="check-your-answers columns-2">
+    <table class="check-your-answers">
         <thead>
         <tr>
             <th>Description</th>
+            {% set break = false %}
+            {% for fee in report.fees if not break %}
+                {% if fee.hasMoreDetails %}
+                    <th>Details</th>
+                    {% set break = true %}
+                {% endif %}
+            {% endfor %}
+            <th></th>
             <th class="numeric">Amount</th>
         </tr>
         </thead>
@@ -28,22 +36,23 @@
             <tr class="behat-region-debt-{{ fee.feeTypeId | behat_namify }}">
                 <td>
                     {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
-                    {% if fee.hasMoreDetails %}
-                        <p >{{ feeLabel }}</p>
-                        <p class="form-hint">{{ fee.moreDetails | nl2br }}</p>
-                    {% else %}
-                        {{ feeLabel }}
-                    {% endif %}
+                    {{ feeLabel }}
                 </td>
+                {% if fee.hasMoreDetails %}
+                    <td class="width-half">
+                        {{ fee.moreDetails | nl2br }}
+                    </td>
+                {% endif %}
                 <td class="numeric-small">£{{ fee.amount | money_format }}</td>
             </tr>
 
         {% endfor %}
-        <tr>
-            <td class="no-border">
+        <tr class="no-border">
+            <td>
                 <span class="bold-small">Total amount</span>
             </td>
-            <td class="no-border text--right">
+            <td></td>
+            <td class="text--right">
                 <span class="bold-small">£{{ report.feesTotalAmount | money_format }}</span>
             </td>
         </tr>
