@@ -29,6 +29,14 @@ trait ReportPaFeeExpensesTrait
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"fee"})
+     *
+     * @var string
+     */
+    private $hasFees;
+
+    /**
+     * @JMS\Type("string")
      *
      * @var decimal
      */
@@ -74,20 +82,6 @@ trait ReportPaFeeExpensesTrait
         return $this->feesTotalAmount;
     }
 
-    public function getHasFees()
-    {
-        if (empty($this->getFees()) && $this->getReasonForNoFees() === null) {
-            return null;
-        }
-
-        return $this->getReasonForNoFees() ? 'no' : 'yes';
-    }
-
-    public function setHasFees($value)
-    {
-        // necessary to simplify form logic
-        return null;
-    }
 
     /**
      * @param decimal $feesTotalAmount
@@ -106,6 +100,22 @@ trait ReportPaFeeExpensesTrait
         if (empty($this->getReasonForNoFees()) && count($this->getFeesWithValidAmount()) === 0) {
             $context->addViolation('fee.mustHaveAtLeastOneFee');
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasFees()
+    {
+        return $this->hasFees;
+    }
+
+    /**
+     * @param string $hasFees
+     */
+    public function setHasFees($hasFees)
+    {
+        $this->hasFees = $hasFees;
     }
 
 
