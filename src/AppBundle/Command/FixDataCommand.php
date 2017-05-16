@@ -33,6 +33,7 @@ class FixDataCommand extends AddSingleUserCommand
         foreach($messages as $m) {
             $output->writeln($m);
         }
+        $output->writeln(count($messages)." total report fixes");
         $output->writeln('Done');
     }
 }
