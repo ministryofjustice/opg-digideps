@@ -5,6 +5,13 @@
 
 {% if report.hasFees == 'yes' %}
 
+    {% set showDetailsColumn = false %}
+    {% for fee in report.fees  %}
+        {% if fee.moreDetails %}
+            {% set showDetailsColumn = true %}
+        {% endif %}
+    {% endfor %}
+
     {# Items list heading #}
     <div class="grid-row behat-region-debts-list">
         <div class="column-half">
@@ -16,31 +23,30 @@
     </div>
 
     {# Items list table #}
+    {{ dump(showDetailsColumn) }}
     <table class="check-your-answers">
         <thead>
         <tr>
             <th>Description</th>
-            {% set break = false %}
-            {% for fee in report.fees if not break %}
-                {% if fee.hasMoreDetails %}
-                    <th>Details</th>
-                    {% set break = true %}
-                {% endif %}
-            {% endfor %}
-            <th></th>
+            {% if showDetailsColumn %}
+                <th>Details</th>
+            {% endif %}
             <th class="numeric">Amount</th>
         </tr>
         </thead>
         <tbody>
+
         {% for fee in report.fees %}
             <tr class="behat-region-debt-{{ fee.feeTypeId | behat_namify }}">
                 <td>
                     {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
                     {{ feeLabel }}
                 </td>
-                {% if fee.hasMoreDetails %}
+                {% if showDetailsColumn %}
                     <td class="width-half">
+                        {% if fee.moreDetails %}
                         {{ fee.moreDetails | nl2br }}
+                    {% endif %}
                     </td>
                 {% endif %}
                 <td class="numeric-small">£{{ fee.amount | money_format }}</td>
@@ -51,7 +57,9 @@
             <td>
                 <span class="bold-small">Total amount</span>
             </td>
-            <td></td>
+            {% if showDetailsColumn %}
+                <td></td>
+            {% endif %}
             <td class="text--right">
                 <span class="bold-small">£{{ report.feesTotalAmount | money_format }}</span>
             </td>
