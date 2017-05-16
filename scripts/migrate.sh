@@ -10,4 +10,4 @@ cd /app
 /sbin/setuser app php app/console digideps:fixtures
 # add missing data potentially notmissing due to failing migrations or previous bugs on data listeners
 # takes time. only enable when needed
-/sbin/setuser app php app/console digideps:fix-data --env=prod
+#/sbin/setuser app php app/console digideps:fix-data --env=prod
