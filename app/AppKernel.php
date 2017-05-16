@@ -8,6 +8,10 @@ class AppKernel extends Kernel
     public function __construct($environment, $debug)
     {
         date_default_timezone_set('Europe/London');
+        ini_set('session.hash_function', 'sha256');
+        ini_set('session.entropy_length', '32');
+        ini_set('session.cookie_httponly', 1);
+
         parent::__construct($environment, $debug);
     }
 
