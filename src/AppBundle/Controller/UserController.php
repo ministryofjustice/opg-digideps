@@ -98,8 +98,6 @@ class UserController extends RestController
             $userService->editUser($originalUser, $user);
         };
 
-        $this->getEntityManager()->flush($user);
-
         return ['id' => $user->getId()];
     }
 

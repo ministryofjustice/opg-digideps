@@ -30,6 +30,13 @@ class UserService
         $this->_em = $em;
     }
 
+    /**
+     * Adds a new user to the database
+     *
+     * @param User $loggedInUser
+     * @param User $userToAdd
+     * @param $data
+     */
     public function addPaUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
@@ -59,6 +66,12 @@ class UserService
         }
     }
 
+    /**
+     * Update a user. Checks that the email is not in use then persists the entity
+     *
+     * @param User $originalUser Original user for comparison checks
+     * @param User $userToEdit The user to edit
+     */
     public function editUser(User $originalUser, User $userToEdit)
     {
         if (empty($userToEdit->getRoleName())) {
@@ -77,6 +90,8 @@ class UserService
                 $this->getEntityManager()->flush();
             }
         }
+
+        $this->getEntityManager()->flush($userToEdit);
     }
 
     public function editPaUser(User $originalUser, User $userToEdit)
