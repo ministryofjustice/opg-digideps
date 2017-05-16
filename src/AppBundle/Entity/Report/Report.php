@@ -623,6 +623,12 @@ class Report
      * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103
      *
      * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("has106flag")
+     * @JMS\Groups({"report"})
+     *
      */
     public function has106Flag()
     {
