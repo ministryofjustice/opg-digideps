@@ -10,7 +10,10 @@ class Status
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
-    /** @var Report */
+    /**
+     * @var Report
+     * @JMS\Type("AppBundle\Entity\Report\Report")
+     */
     private $report;
 
     public function __construct(Report $report)
