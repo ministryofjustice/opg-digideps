@@ -16,6 +16,7 @@ class MoneyTransactionShort
     private $id;
 
     /**
+     * @JMS\Type("AppBundle\Entity\Report\Report")
      * @var Report
      */
     private $report;
