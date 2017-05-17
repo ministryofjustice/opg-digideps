@@ -52,13 +52,16 @@
 {% endmacro %}
 
 {% macro reportSectionPrevNext(report, currentSectionId) %}
+
+    {% set expenseSectionId = app.user.isDeputyPa ? 'paFeeExpense' : 'deputyExpenses' %}
+
     {% if report.type == '102' %}
         {% set config = [
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
         {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
         {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-        {'section':'deputyExpenses','link': path('deputy_expenses', {'reportId': report.id})},
+        {'section': expenseSectionId,'link': path('deputy_expenses', {'reportId': report.id})},
         {'section':'gifts','link': path('gifts', {'reportId': report.id})},
         {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
         {'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
@@ -76,7 +79,7 @@
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
         {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
         {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-        {'section':'deputyExpenses','link': path('deputy_expenses', {'reportId': report.id})},
+        {'section': expenseSectionId,'link': path('deputy_expenses', {'reportId': report.id})},
         {'section':'gifts','link': path('gifts', {'reportId': report.id})},
         {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
         {'section':'moneyInShort', 'link': path('money_in_short', {'reportId': report.id})},
