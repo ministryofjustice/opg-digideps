@@ -47,18 +47,13 @@ class FixDataService
         $reports = $this->reportRepo->findAll();
 
         foreach ($reports as $entity) {
-            if (!$entity->getSubmitted()) {
-                continue;
-            }
             $debtsAdded = $this->reportRepo->addDebtsToReportIfMissing($entity);
             if ($debtsAdded) {
                 $this->messages[] = "Report {$entity->getId()}: added $debtsAdded debts";
             }
-            if ($entity->getType() == Report::TYPE_103) {
-                $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
-                if ($shortMoneyCatsAdded) {
-                    $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
-                }
+            $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            if ($shortMoneyCatsAdded) {
+                $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
             }
         }
 
@@ -73,9 +68,6 @@ class FixDataService
         $ndrs = $this->ndrRepo->findAll();
 
         foreach ($ndrs as $entity) {
-            if (!$entity->getSubmitted()) {
-                continue;
-            }
             $debtsAdded = $this->ndrRepo->addDebtsToOdrIfMissing($entity);
             if ($debtsAdded) {
                 $this->messages[] = "Odr {$entity->getId()}: added $debtsAdded debts";
