@@ -12,6 +12,7 @@ services:
 
 security:
     role_hierarchy:
+        # needs re-thinking. we need a ROLE_PA where existing ROLE_PA extends from
         ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
         ROLE_PA: [ ROLE_PA ]
         ROLE_PROFESSIONAL_DEPUTY: [ ROLE_DEPUTY ]
@@ -79,6 +80,7 @@ security:
         - { path: ^/pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
         - { path: ^/pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
         - { path: ^/pa/, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
 
         # open URLs
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
