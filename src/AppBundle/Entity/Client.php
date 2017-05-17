@@ -517,9 +517,16 @@ class Client
      */
     public function getSubmittedReports()
     {
-        return $this->reports->filter(function ($report) {
+        $arrayIterator = $this->reports->filter(function ($report) {
             return $report->getSubmitted();
+        })->getIterator();
+
+        # Sort by submitted date so the most recently submitted are first
+        $arrayIterator->uasort(function ($first, $second) {
+            return $first->getSubmitDate() < $second->getSubmitDate() ? 1 : -1;
         });
+
+        return new ArrayCollection(iterator_to_array($arrayIterator));
     }
 
     /**

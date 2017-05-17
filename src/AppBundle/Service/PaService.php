@@ -106,8 +106,8 @@ class PaService
                 $user->setAddress2($row['Dep Adrs2']);
             }
 
-            if (!empty($row['Dep Adrs3']) || !empty($row['Dep Adrs4']) || !empty($row['Dep Adrs5'])) {
-                $user->setAddress3($row['Dep Adrs3'] . ' ' . $row['Dep Adrs4'] . ' ' . $row['Dep Adrs5']);
+            if (!empty($row['Dep Adrs3'])) {
+                $user->setAddress3($row['Dep Adrs3']);
             }
 
             if (!empty($row['Dep Postcode'])) {
@@ -161,8 +161,8 @@ class PaService
                 $client->setAddress2($row['Client Adrs2']);
             }
 
-            if (!empty($row['Client Adrs3']) || !empty($row['Client Adrs4'])) {
-                $client->setCounty($row['Client Adrs3'] . ' ' . $row['Client Adrs4']);
+            if (!empty($row['Client Adrs3'])) {
+                $client->setCounty($row['Client Adrs3']);
             }
 
             if (!empty($row['Client Postcode'])) {

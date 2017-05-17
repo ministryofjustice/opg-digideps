@@ -83,10 +83,6 @@ class ReportRepository extends EntityRepository
      */
     public function addMoneyShortCategoriesIfMissing(Report $report)
     {
-        // this only makes sense for 103 reports, but we dev reasons we might have to switch report with an SQL query without recreating it
-        // Also, behat tests (for simplicity and speed reasons), change the report type, so this is kept for all the reports for now
-        //if ($report->getType() != Report::TYPE_103) { return 0; }
-
         $ret = 0;
 
         if (count($report->getMoneyShortCategories()) > 0) {
