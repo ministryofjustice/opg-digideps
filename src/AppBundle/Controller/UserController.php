@@ -340,6 +340,9 @@ class UserController extends RestController
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
+        // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
+        $this->setJmsSerialiserGroups(['user', 'user-login']);
+
         return $user;
     }
 
