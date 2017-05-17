@@ -23,10 +23,12 @@
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>What happens next</strong></p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If you like, you can start working on your next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If you like, you can start working on {% if app.user.isDeputyPa() %}the{% else %}your{% endif %} next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Sign in to <a style="word-wrap: break-word;" href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
+    {% if app.user.isDeputyPa() != true %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
+    {% endif %}
 
 {% endblock %}
