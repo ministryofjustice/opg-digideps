@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,6 +89,8 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
+        $this->denyAccessIfAccountHasTransfers($account);
+
         $this->getEntityManager()->remove($account);
 
         $this->getEntityManager()->flush();
@@ -133,6 +136,26 @@ class AccountController extends RestController
 
         if (array_key_exists('is_joint_account', $data)) {
             $account->setIsJointAccount($data['is_joint_account']);
+        }
+    }
+
+    /**
+     * Check bank account has transfers
+     *
+     * @param EntityDir\Report\BankAccount $account
+     */
+    protected function denyAccessIfAccountHasTransfers(EntityDir\Report\BankAccount $account)
+    {
+        $transfers = $account->getReport()->getMoneyTransfers();
+
+        /** @var EntityDir\Report\MoneyTransfer $transfer */
+        foreach ($transfers as $transfer) {
+            if ($account === $transfer->getAccountFrom() || ($account === $transfer->getAccountTo())) {
+                throw new \RuntimeException(
+                    'Bank Account cannot be removed because it has associated money transfers. Please remove the money transfers first.',
+                    401
+                );
+            }
         }
     }
 }
