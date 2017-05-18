@@ -359,7 +359,8 @@ class AdminController extends AbstractController
                         'Email', //mandatory, used as user ID whem uploading
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
-                        //'Corref', (should decide report type, but no specs given yet)
+                        'Corref',
+                        'Typeofrep',
                         'Report Due',
                     ])
                     ->setOptionalColumns([
