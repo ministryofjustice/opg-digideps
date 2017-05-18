@@ -216,7 +216,7 @@ class PaService
                 ->setStartDate($reportStartDate)
                 ->setEndDate($reportEndDate);
 
-            //Set type based on casrec
+            //Set type based on casrec. Has to be done this way due to data cleansing logic in CasRec constructor
             $casrec = new EntityDir\CasRec(
                 $client->getCaseNumber(),
                 $client->getLastname(),
