@@ -23,6 +23,7 @@ class ReportController extends AbstractController
     private static $reportGroupsAll = [
         'account',
         'expenses',
+        'fee',
         'gifts',
         'action',
         'action-more-info',
