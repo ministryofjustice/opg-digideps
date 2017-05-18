@@ -150,7 +150,7 @@ class AccountController extends RestController
 
         /** @var EntityDir\Report\MoneyTransfer $transfer */
         foreach ($transfers as $transfer) {
-            if ($account === $transfer->getAccountFrom() || ($account === $transfer->getAccountTo())) {
+            if ($account === $transfer->getFrom() || ($account === $transfer->getTo())) {
                 throw new \RuntimeException(
                     'Bank Account cannot be removed because it has associated money transfers. Please remove the money transfers first.',
                     401
