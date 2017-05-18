@@ -273,9 +273,13 @@ class ReportController extends AbstractController
         // check status
         $status= $report->getStatus();
 
+        $user = $this->getUser();
+        $team = $user->isDeputyPa() ? $team = $this->getRestClient()->get('user/' .  $user->getId() . '/team', 'Team') : null;
+
         return [
             'report' => $report,
-            'deputy' => $this->getUser(),
+            'deputy' => $user,
+            'deputyAddress' => $team ?: $user,
             'reportStatus' => $status,
         ];
     }
