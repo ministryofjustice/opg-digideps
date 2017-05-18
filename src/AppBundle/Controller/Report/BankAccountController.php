@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\StepRedirector;
@@ -209,8 +210,14 @@ class BankAccountController extends AbstractController
             'Bank account deleted'
         );
 
-        if ($report->getBankAccountById($accountId)) {
-            $this->getRestClient()->delete("/account/{$accountId}");
+        try {
+            if ($report->getBankAccountById($accountId)) {
+                $this->getRestClient()->delete("/account/{$accountId}");
+            }
+        } catch (\Exception $e) {
+            var_dump($e->getCode());
+            var_dump($e->getMessage());
+            exit;
         }
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
