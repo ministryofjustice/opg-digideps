@@ -64,7 +64,7 @@ class PaService
 
                 $user = $this->createUser($row);
                 $client = $this->createClient($row, $user);
-                $this->createReport($row, $client);
+                $this->createReport($row, $client, $user);
             } catch (\RuntimeException $e) {
                 $errors[] = $e->getMessage() . ' in line ' . ($index + 2);
             }
@@ -197,7 +197,7 @@ class PaService
      *
      * @return EntityDir\Report\Report
      */
-    private function createReport(array $row, EntityDir\Client $client)
+    private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
         $reportDueDate = self::parseDate($row['Report Due']);
@@ -213,9 +213,21 @@ class PaService
             $reportStartDate = clone $reportEndDate;
             $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
             $report
-                ->setType(EntityDir\Report\Report::TYPE_102)
                 ->setStartDate($reportStartDate)
                 ->setEndDate($reportEndDate);
+
+            //Set type based on casrec. Has to be done this way due to data cleansing logic in CasRec constructor
+            $casrec = new EntityDir\CasRec(
+                $client->getCaseNumber(),
+                $client->getLastname(),
+                $user->getDeputyNo(),
+                $user->getLastname(),
+                $user->getAddressPostcode(),
+                $row['Typeofrep'],
+                $row['Corref']
+            );
+            $report->setTypeBasedOnCasrecRecord($casrec);
+
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();

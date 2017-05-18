@@ -86,12 +86,12 @@ class UserService
             $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $userToEdit->getEmail()]);
             if ($existingSoftDeletedUser != null) {
                 // delete soft deleted user a second time to hard delete it
-                $this->getEntityManager()->remove($existingSoftDeletedUser);
-                $this->getEntityManager()->flush();
+                $this->_em->remove($existingSoftDeletedUser);
+                $this->_em->flush();
             }
         }
 
-        $this->getEntityManager()->flush($userToEdit);
+        $this->_em->flush($userToEdit);
     }
 
     public function editPaUser(User $originalUser, User $userToEdit)
