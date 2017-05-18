@@ -61,7 +61,7 @@ class PaFeeExpenseController extends AbstractController
                     return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from'=>'fee_exist']);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
-                    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
+                    return $this->redirectToRoute('pa_fee_expense_other_exist', ['reportId' => $reportId, 'from'=>'fee_exist']);
             }
         }
 
@@ -128,7 +128,12 @@ class PaFeeExpenseController extends AbstractController
             }
         }
 
-        $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_edit';
+        $from = $request->get('from');
+        $fromToRoute = [
+            'summary' => 'pa_fee_expense_summary',
+            'fee_exist' => 'pa_fee_expense_fee_exist',
+        ];
+        $backRoute = isset($fromToRoute[$from]) ? $fromToRoute[$from] : 'pa_fee_expense_fee_edit';
         $backLink = $this->generateUrl($backRoute, ['reportId'=>$reportId]);
 
         return [
