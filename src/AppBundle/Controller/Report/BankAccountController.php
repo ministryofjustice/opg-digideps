@@ -205,19 +205,18 @@ class BankAccountController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Bank account deleted'
-        );
-
         try {
             if ($report->getBankAccountById($accountId)) {
                 $this->getRestClient()->delete("/account/{$accountId}");
             }
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Bank account deleted'
+            );
+            
         } catch (\Exception $e) {
-            var_dump($e->getCode());
-            var_dump($e->getMessage());
-            exit;
+            $request->getSession()->getFlashBag()->add('error', $e->getData()['message']);
         }
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
