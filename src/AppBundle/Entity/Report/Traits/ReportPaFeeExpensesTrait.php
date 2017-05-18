@@ -118,69 +118,6 @@ trait ReportPaFeeExpensesTrait
         $this->hasFees = $hasFees;
     }
 
-
-    /**
-     * Get debts total value.
-     *
-     * @return float
-     */
-//    public function getFeesTotalValue()
-//    {
-//        $ret = 0;
-//        foreach ($this->getFeesTotalValue() as $debt) {
-//            $ret += $debt->getAmount();
-//        }
-//
-//        return $ret;
-//    }
-
-    /**
-     * @param $debtId
-     *
-     * @return Debt|null
-     */
-//    public function getDebtById($debtId)
-//    {
-//        foreach ($this->getDebts() as $debt) {
-//            if ($debt->getDebtTypeId() == $debtId) {
-//                return $debt;
-//            }
-//        }
-//
-//        return null;
-//    }
-
-
-
-    /**
-     * @return decimal
-     */
-//    public function getDebtsTotalAmount()
-//    {
-//        return $this->debtsTotalAmount;
-//    }
-//
-//    /**
-//     * @param decimal $debtsTotalAmount
-//     */
-//    public function setDebtsTotalAmount($debtsTotalAmount)
-//    {
-//        $this->debtsTotalAmount = $debtsTotalAmount;
-//
-//        return $this;
-//    }
-
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-//    public function debtsValid(ExecutionContextInterface $context)
-//    {
-//        if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
-//            $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
-//        }
-//    }
-
     /**
      * @return Fee[]
      */
