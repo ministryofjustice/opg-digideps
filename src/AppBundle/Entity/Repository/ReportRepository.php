@@ -53,8 +53,9 @@ class ReportRepository extends EntityRepository
      */
     public function addFeesToReportIfMissing(Report $report)
     {
-        // skip reports for non-PA
-        if (!$report->getClient()->getUsers()->first()->isPaDeputy()) {
+        // do not add if there are no PAs associated to this client
+        $isPaF = function($user) { return $user->isPaDeputy(); };
+        if (0 === $report->getClient()->getUsers()->filter($isPaF)->count()) {
             return;
         }
 

@@ -20,6 +20,7 @@ class DoctrineListener
             $reportRepo = $entityManager->getRepository('AppBundle\Entity\Report\Report'); /* @var $reportRepo EntityDir\Repository\ReportRepository */
             $reportRepo->addDebtsToReportIfMissing($entity);
             $reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            $reportRepo->addFeesToReportIfMissing($entity);
         }
 
         if ($entity instanceof EntityDir\Odr\Odr && !$entity->getId()) {
