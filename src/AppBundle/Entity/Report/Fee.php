@@ -14,6 +14,8 @@ class Fee
     /**
      * Hold fee type
      * 1st value = id, 2nd value = hasMoreInformation.
+     * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
+     *  in order to keep it simple
      *
      * @var array
      */
