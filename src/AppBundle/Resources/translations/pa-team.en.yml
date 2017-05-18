@@ -25,6 +25,7 @@ form:
     label: Last name
   email:
     label: Email
+    existingError: That email has already been registered with this service.
   jobTitle:
     label: Job title
   phoneMain:

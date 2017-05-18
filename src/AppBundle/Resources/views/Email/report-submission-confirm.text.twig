@@ -18,11 +18,13 @@ To view and download a copy of the report for your records, sign back into the d
 What happens next
 -----------------
 
-If you like, you can start working on your next annual deputy report {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }} right away.
+If you like, you can start working on {% if app.user.isDeputyPa() %}the{% else %}your{% endif %} next annual deputy report {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }} right away.
 
 Sign in to complete-deputy-report.service.gov.uk {{ homepageUrl }} to keep track of your deputyship decisions and spending throughout the year.
 
+{% if app.user.isDeputyPa() != true %}
 We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).
+{% endif %}
 
 
 Need help?

@@ -164,11 +164,23 @@ class AdminController extends AbstractController
 
             if ($form->isValid()) {
                 $updateUser = $form->getData();
-                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+                try {
+                    $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
+                    $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+
+                    $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
+                } catch (\Exception $e) {
+                    switch ((int)$e->getCode()) {
+                        case 422:
+                            $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
+                            break;
+
+                        default:
+                            throw $e;
+                    }
+                }
             }
         }
         $view = [
@@ -347,7 +359,8 @@ class AdminController extends AbstractController
                         'Email', //mandatory, used as user ID whem uploading
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
-                        //'Corref', (should decide report type, but no specs given yet)
+                        'Corref',
+                        'Typeofrep',
                         'Report Due',
                     ])
                     ->setOptionalColumns([
