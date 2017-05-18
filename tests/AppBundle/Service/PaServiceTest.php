@@ -56,7 +56,8 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000001',
         'Forename'   => 'Cly1',
         'Surname'    => 'Hent1',
-        //'Corref'     => 'A2',
+        'Corref'     => 'L2',
+        'Typeofrep'  => 'OPG102',
         'Report Due' => '16-Dec-2014',
     ];
 
@@ -65,7 +66,8 @@ class PaServiceTest extends WebTestCase
         'Case'       => '10000002',
         'Forename'   => 'Cly2',
         'Surname'    => 'Hent2',
-        //'Corref'     => 'A3',
+        'Corref'     => 'L3',
+        'Typeofrep'  => 'OPG103',
         'Report Due' => '04-Feb-2015',
     ];
 
@@ -73,7 +75,8 @@ class PaServiceTest extends WebTestCase
         'Case'       => '1000000T',
         'Forename'   => 'Cly3',
         'Surname'    => 'Hent3',
-        //'Corref'     => 'A3',
+        'Corref'     => 'L3G',
+        'Typeofrep'  => 'OPG103',
         'Report Due' => '05-Feb-2015',
     ];
 
@@ -142,6 +145,7 @@ class PaServiceTest extends WebTestCase
         /* @var $client1Report1 EntityDir\Report\Report */
         $this->assertEquals('2013-10-21', $client1Report1->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2014-10-21', $client1Report1->getEndDate()->format('Y-m-d'));
+        $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client1Report1->getType());
 
         // assert 2nd client and report
         $client2 = $user1->getClientByCaseNumber('10000002');
@@ -150,7 +154,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client2->getReports());
         $client2Report1 = $client2->getReports()->first();
         /* @var $client2Report1 EntityDir\Report\Report */
-        $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client2Report1->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client2Report1->getType());
 
         // assert 2nd deputy
         $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');

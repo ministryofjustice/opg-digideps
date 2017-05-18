@@ -81,20 +81,22 @@ class UserController extends RestController
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
 
+        $originalUser = clone $user;
+
         $data = $this->deserializeBodyContent($request);
 
         $this->populateUser($user, $data);
 
         $loggedInUser = $this->getUser();
 
+        $userService = $this->get('opg_digideps.user_service');
+
         // If Editing PA user
         if ($loggedInUser->isPaAdministrator()) {
-            if (empty($user->getRoleName())) {
-                $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
-            }
+            $userService->editPaUser($originalUser, $user);
+        } else {
+            $userService->editUser($originalUser, $user);
         };
-
-        $this->getEntityManager()->flush($user);
 
         return ['id' => $user->getId()];
     }

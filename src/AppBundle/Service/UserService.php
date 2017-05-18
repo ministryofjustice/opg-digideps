@@ -30,6 +30,13 @@ class UserService
         $this->_em = $em;
     }
 
+    /**
+     * Adds a new user to the database
+     *
+     * @param User $loggedInUser
+     * @param User $userToAdd
+     * @param $data
+     */
     public function addPaUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
@@ -57,5 +64,42 @@ class UserService
                 $userToAdd->addClient($client);
             }
         }
+    }
+
+    /**
+     * Update a user. Checks that the email is not in use then persists the entity
+     *
+     * @param User $originalUser Original user for comparison checks
+     * @param User $userToEdit The user to edit
+     */
+    public function editUser(User $originalUser, User $userToEdit)
+    {
+        if (empty($userToEdit->getRoleName())) {
+            $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+        }
+
+        if($originalUser->getEmail() != $userToEdit->getEmail()) {
+            if ($this->userRepository->findOneBy(['email' => $userToEdit->getEmail()])) {
+                throw new \RuntimeException("PA User with email {$userToEdit->getEmail()} already exists.", 422);
+            }
+
+            $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $userToEdit->getEmail()]);
+            if ($existingSoftDeletedUser != null) {
+                // delete soft deleted user a second time to hard delete it
+                $this->_em->remove($existingSoftDeletedUser);
+                $this->_em->flush();
+            }
+        }
+
+        $this->_em->flush($userToEdit);
+    }
+
+    public function editPaUser(User $originalUser, User $userToEdit)
+    {
+        if (empty($userToEdit->getRoleName())) {
+            $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+        }
+
+        $this->editUser($originalUser, $userToEdit);
     }
 }
