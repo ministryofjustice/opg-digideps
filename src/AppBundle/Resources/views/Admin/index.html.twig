@@ -76,7 +76,7 @@
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id }) }}'
-                                class="behat-link-user-{{ user.email }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
+                                class="behat-link-user-{{ user.email | behat_namify }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
                         {% endif %}
                         <div class="text-secondary">
                             {{ user.roleFullName }}

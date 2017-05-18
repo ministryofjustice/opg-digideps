@@ -284,3 +284,16 @@ Feature: PA team
     Then the form should be valid
     And I save the application status into "team-users-complete"
     And I should see the "client-3000001" region
+
+  Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address
+    Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    # edit PA named
+    When I click on "edit" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
+    And I fill in the following:
+      | team_member_account_firstname | Edited PA3                                |
+      | team_member_account_lastname  | Edited Team Member                        |
+      | team_member_account_email     | behat-pa3-admin@publicguardian.gsi.gov.uk |
+    And I press "team_member_account_save"
+    Then the following fields should have an error:
+      | team_member_account_email |
