@@ -1,8 +1,10 @@
 {% macro breadcrumbs(report) %}
     {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
+    {% set isPaUser = app.user.isDeputyPa() %}
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
+            {% if not isPaUser %}
             <li>
                 {# NDR users have a different homepage. Remove once NDR and non-NDR homepages are merged #}
                 {% if isUserOdrEnabled %}
@@ -11,6 +13,7 @@
                     <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
                 {% endif %}
             </li>
+            {% endif %}
             <li>
                 {% if report.type == 'ndr' %}
                     <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">

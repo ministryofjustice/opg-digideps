@@ -12,6 +12,8 @@
         <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
             {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
         </a><br>
+        {% if not app.user.isDeputyPa() %}
         <a href="{{ path('reports', {'type': report.type})}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
+        {% endif %}
 
 {% endblock %}
