@@ -17,6 +17,8 @@ addUserForm:
   submit:
     label: Save user
 editUserForm:
+  email:
+    existingError: That email has already been registered with this service.
   submit:
     label: Update user
 cancel:
