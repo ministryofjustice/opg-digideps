@@ -152,7 +152,7 @@ class AccountController extends RestController
         foreach ($transfers as $transfer) {
             if ($account === $transfer->getFrom() || ($account === $transfer->getTo())) {
                 throw new \RuntimeException(
-                    'Bank Account cannot be removed because it has associated money transfers. Please remove the money transfers first.',
+                    'report.bankAccount.deleteWithTransfers',
                     401
                 );
             }
