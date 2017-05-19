@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Entity\Traits\AddressTrait;
 
 /**
  * Team
@@ -13,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Team
 {
+    use AddressTrait;
+
     const MAX_PA_ADMINS = 2;
 
     /**
