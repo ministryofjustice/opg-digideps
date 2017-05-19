@@ -124,7 +124,7 @@
 
     {% block errors %}
         {% for flashMessage in app.session.flashbag.get('error') %}
-            <div class="push--top">
+            <div class="push--top behat-region-error">
                 {{ macros.notification('error', flashMessage) }}
             </div>
         {% endfor %}
