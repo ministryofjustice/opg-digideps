@@ -41,7 +41,6 @@
         Have you claimed any other expenses or fees outside
         of the practice direction?
     #}
-    {% if report.hasFees == 'yes' %}
         <tr class="behat-region-paid-for-anything">
             <td>
                 {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
@@ -53,7 +52,6 @@
                 <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
-    {% endif %}
 
     </tbody>
 </table>

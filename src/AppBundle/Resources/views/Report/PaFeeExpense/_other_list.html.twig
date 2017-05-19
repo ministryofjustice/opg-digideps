@@ -1,6 +1,7 @@
 {% set translationDomain = "report-pa-fee-expense" %}
 {% trans_default_domain translationDomain %}
 
+{% if report.hasFees == 'yes' %}
 <div class="grid-row">
     <div class="column-half">
         <h2 class="heading-medium flush--ends">Expenses outside the practice direction</h2>
@@ -49,3 +50,4 @@
     </tr>
     </tbody>
     </table>
+{% endif %}
