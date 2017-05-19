@@ -299,7 +299,8 @@ class ReportStatusService
         }
 
         $feeComplete = $countValidFees || !empty($this->report->getReasonForNoFees());
-        $expenseComplete = $countExpenses || $this->report->getPaidForAnything() === 'no';
+        $expenseComplete = $this->report->getPaidForAnything() === 'no'
+            || ($this->report->getPaidForAnything() === 'no' && count($countExpenses));
 
         if ($feeComplete && $expenseComplete) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
