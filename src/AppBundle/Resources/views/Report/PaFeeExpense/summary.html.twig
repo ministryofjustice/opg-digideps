@@ -25,6 +25,11 @@
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
+    {# Missing questions alerts #}
+    {% if report.status.paFeesExpensesState.state != 'done' %}
+        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
+    {% endif %}
+
     {# Return to overview link #}
     <p class="text--right flush--bottom">
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
