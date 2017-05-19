@@ -139,4 +139,31 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
 
     }
+
+    public function isOtherFeesSectionCompleteProvider()
+    {
+        return [
+            [null, [], false],
+            ['yes', [], false],
+            [null, ['exp1'], false],
+            ['no', [], true],
+            ['no', ['exp1'], true],
+            ['yes', ['exp1'], true],
+            ['no', [], true],
+        ];
+    }
+
+
+    /**
+     * @dataProvider isOtherFeesSectionCompleteProvider
+     */
+    public function testisOtherFeesSectionComplete($paidForAnything, $getExpenses, $expected)
+    {
+        $report = m::mock(Report::class . '[getPaidForAnything, getExpenses]');
+        $report->shouldReceive('getPaidForAnything')->andReturn($paidForAnything);
+        $report->shouldReceive('getExpenses')->andReturn($getExpenses);
+
+        $this->assertEquals($expected, $report->isOtherFeesSectionComplete());
+
+    }
 }

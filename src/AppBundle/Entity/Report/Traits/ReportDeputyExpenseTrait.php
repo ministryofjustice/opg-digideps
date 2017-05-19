@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ReportDeputyExpenseTrait
 {
     /**
-     * @var string
+     * @var string yes/no
      *
      * @JMS\Type("string")
      * @JMS\Groups({"expenses-paid-anything"})

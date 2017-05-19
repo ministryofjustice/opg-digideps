@@ -127,4 +127,14 @@ trait ReportPaFeeExpensesTrait
             return !empty($fee->getAmount());
         });
     }
+
+    /**
+     * Used to improve the section flow. see usage in Controller
+     * @return boolean
+     */
+    public function isOtherFeesSectionComplete()
+    {
+        return $this->getPaidForAnything() === 'no'
+        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses()));
+    }
 }

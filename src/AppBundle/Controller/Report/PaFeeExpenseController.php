@@ -62,7 +62,8 @@ class PaFeeExpenseController extends AbstractController
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $report, ['reasonForNoFees']);
                     // if 2nd seciont is complete, go to summary
-                    return $this->redirectToRoute('pa_fee_expense_other_exist', ['reportId' => $reportId, 'from'=>'fee_exist']);
+                    $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
+                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from'=>'fee_exist']);
             }
         }
 
@@ -94,7 +95,8 @@ class PaFeeExpenseController extends AbstractController
                 return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
 
-            return $this->redirectToRoute('pa_fee_expense_other_exist', ['reportId' => $reportId]);
+            $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
 
         $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_exist';
