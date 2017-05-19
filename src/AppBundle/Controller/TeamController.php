@@ -23,7 +23,7 @@ class TeamController extends RestController
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user'];
+            ? (array)$request->query->get('groups') : ['user', 'team'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $team = $this->getUser()->getTeams()->first(); /* @var $team EntityDir\Team */
@@ -48,7 +48,7 @@ class TeamController extends RestController
         }
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user'];
+            ? (array)$request->query->get('groups') : ['user', 'team'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
 
