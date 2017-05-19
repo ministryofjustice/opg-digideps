@@ -36,10 +36,20 @@
 
                 <dt class="label">Address</dt>
                 <dd class="value textarea address-value">
-                    {{ deputyAddress.address1 }}<br/>
-                    {{ deputyAddress.address2 }}<br/>
-                    {{ deputyAddress.address3 }}<br/>
-                    {{ deputyAddress.addressPostcode }}
+                    {% if app.user.isDeputyPa %}
+                        {% set team = app.user.teams | first %} {# you could place this in the parent template if needed#}
+                        {{ team.address1 }}<br/>
+                        {{ team.address2 }}<br/>
+                        {{ team.address3 }}<br/>
+                        {{ team.addressPostcode }}
+                    {% else %}
+                        {{ app.user.address1 }}<br/>
+                        {{ app.user.address2 }}<br/>
+                        {{ app.user.address3 }}<br/>
+                        {{ app.user.addressPostcode }}
+                    {% endif %}
+
+
                 </dd>
 
                 <dt class="label">Telephone number</dt>
