@@ -302,10 +302,10 @@ class ReportStatusService
         $expenseComplete = $countExpenses || $this->report->getPaidForAnything() === 'no';
 
         if ($feeComplete && $expenseComplete) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => $countValidFees];
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => $countValidFees];
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
     /**
