@@ -333,7 +333,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $feeDone1 = ['getFeesWithValidAmount'=>[$fee]];
         $feeDone2 = ['getReasonForNoFees'=>'x'];
-        $expenseDone1 = ['getExpenses'=>[$expense]];
+        $expenseDone1 = ['getExpenses'=>[$expense], 'getPaidForAnything'=>'yes'];
         $expenseDone2 = ['getPaidForAnything'=>'no'];
 
         return [
