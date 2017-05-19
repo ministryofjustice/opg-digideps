@@ -487,7 +487,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
             'data' => [
                 'reason_for_no_fees' => 'rfnf',
-                'debts' => [],
+                'fees' => [],
             ],
         ]);
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
