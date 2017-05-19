@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
+use AppBundle\Entity\Traits\AddressTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -19,6 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class User implements UserInterface
 {
     use IsSoftDeleteableEntity;
+    use AddressTrait;
 
     const TOKEN_EXPIRE_HOURS = 48;
 
@@ -154,51 +156,6 @@ class User implements UserInterface
      * @JMS\Groups({"user"})
      */
     private $gaTrackingId;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
-     */
-    private $address1;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
-     */
-    private $address2;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
-     */
-    private $address3;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
-     */
-    private $addressPostcode;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"user"})
-     * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
-     */
-    private $addressCountry;
 
     /**
      * @var string
