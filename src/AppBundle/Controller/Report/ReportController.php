@@ -316,8 +316,12 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
+        $user = $this->getUser();
+        $team = $user->isDeputyPa() ? $team = $this->getRestClient()->get('user/' .  $user->getId() . '/team', 'Team') : null;
+
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
+                'deputyAddress' => $team ?: $user,
             ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
