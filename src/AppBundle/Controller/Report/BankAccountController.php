@@ -216,7 +216,10 @@ class BankAccountController extends AbstractController
             );
             
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add('error', $e->getData()['message']);
+            $translator = $this->get('translator');
+            $translatedMessage = $translator->trans($e->getData()['message'], [], 'report-bank-accounts');
+
+            $request->getSession()->getFlashBag()->add('error', $translatedMessage);
         }
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));

@@ -65,3 +65,6 @@ form:
     label: Save and continue
   cancel:
     label: Cancel
+report:
+  bankAccount:
+    deleteWithTransfers: Bank Account cannot be removed because it has associated money transfers. Please remove all money transfers involving this account.
