@@ -278,7 +278,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'deputy' => $user,
             'deputyAddress' => $team ?: $user,
             'reportStatus' => $status,
         ];
