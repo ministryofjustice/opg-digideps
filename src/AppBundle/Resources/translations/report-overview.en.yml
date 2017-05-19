@@ -67,7 +67,7 @@ pa_fee_expense:
     edit: "Edit"
     start: "Start"
     label:
-      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+      done: "Finished"
 gifts:
     subSectionTitle: "Gifts"
     subSectionDescription: "Gifts you have given to other people on behalf of %client%"
