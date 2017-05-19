@@ -60,3 +60,13 @@ Feature: Report account transfers
       | money_transfers_type_amount | 1,234.57 |
     And each text should be present in the corresponding region:
       | £1,234.57 | transfer-11cf-02ca-123457 |
+
+  @deputy
+  Scenario: Remove account with transfers
+    # navigate to accounts list (that now have transfers)
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-2016, edit-bank_accounts"
+    And I click on "delete" in the "account-11cf" region
+    # Account still visible
+    Then I should see the "account-11cf" region
+    And I should see the "error" region

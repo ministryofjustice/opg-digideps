@@ -6,3 +6,6 @@ generic:
   title: Page not found
   description: If you entered a web address please check it was correct.
 returnToHomePage: Create an account or sign in
+report:
+  bankAccount:
+    deleteWithTransfers: Bank Account cannot be removed because it has associated money transfers. Please remove all money transfers involving this account.

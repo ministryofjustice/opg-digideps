@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\StepRedirector;
@@ -204,13 +205,18 @@ class BankAccountController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Bank account deleted'
-        );
+        try {
+            if ($report->getBankAccountById($accountId)) {
+                $this->getRestClient()->delete("/account/{$accountId}");
+            }
 
-        if ($report->getBankAccountById($accountId)) {
-            $this->getRestClient()->delete("/account/{$accountId}");
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Bank account deleted'
+            );
+            
+        } catch (\Exception $e) {
+            $request->getSession()->getFlashBag()->add('error', $e->getData()['message']);
         }
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
