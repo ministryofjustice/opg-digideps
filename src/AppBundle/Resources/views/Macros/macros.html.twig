@@ -140,7 +140,7 @@
         {% elseif alertType == 'error' %}
             <div class="alert-error panel panel-border-narrow">
                 <span class="icon icon-cross"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="alert-message"><p>{{ message | trans([], 'error') }}</p></div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="alert-info panel panel-border-narrow">
