@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\MoneyTransactionShortIn;
@@ -25,7 +26,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->report = new Report();
+        $this->report = m::mock(Report::class . '[has106Flag]');
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
@@ -88,6 +89,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCalculatedBalance()
     {
+        $this->report->shouldReceive('has106Flag')->andReturn(false);
+
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
         $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
@@ -105,8 +108,14 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
     }
 
+    /**
+     * //TODO consider rewriting, unit testing methods composing the total
+     * (see testgetExpensesTotal as an example) and using mocks here
+     */
     public function testGetTotalsOffsetAndMatch()
     {
+        $this->report->shouldReceive('has106Flag')->andReturn(false);
+
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
@@ -126,6 +135,24 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
+    }
+
+    public function testgetExpensesTotal()
+    {
+        $reportWith = function($has106Flag, $expenses, $fees) {
+            return m::mock(Report::class . '[has106Flag,getExpenses,getFees]')
+                ->shouldReceive('has106Flag')->andReturn($has106Flag)
+                ->shouldReceive('getExpenses')->andReturn($expenses)
+                ->shouldReceive('getFees')->andReturn($fees)
+                ->getMock();
+        };
+
+        $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
+        $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
+
+        $this->assertEquals(0, $reportWith(false, [], [])->getExpensesTotal());
+        $this->assertEquals(1+1, $reportWith(false, [$exp1, $exp1], [$fee1, $fee1])->getExpensesTotal());
+        $this->assertEquals(1+1+2+2, $reportWith(true, [$exp1, $exp1], [$fee1, $fee1])->getExpensesTotal());
     }
 
     public function testDueDate()

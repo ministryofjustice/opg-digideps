@@ -92,6 +92,11 @@ trait ExpensesTrait
         foreach ($this->getExpenses() as $record) {
             $ret += $record->getAmount();
         }
+        if ($this->has106Flag()) {
+            foreach ($this->getFees() as $record) {
+                $ret += $record->getAmount();
+            }
+        }
 
         return $ret;
     }
