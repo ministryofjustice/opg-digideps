@@ -42,14 +42,27 @@
         of the practice direction?
     #}
         <tr class="behat-region-paid-for-anything">
-            <td>
-                {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.paidForAnything | capitalize }}
-            </td>
+
+            {% if report.paidForAnything is null %}
+                <td>
+                    <span class="error">
+                        {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
+                </td>
+                <td>
+                    {{ report.paidForAnything | capitalize }}
+                </td>
+            {% endif %}
             <td class="change-answer">
-                <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
+                   class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
             </td>
         </tr>
 
