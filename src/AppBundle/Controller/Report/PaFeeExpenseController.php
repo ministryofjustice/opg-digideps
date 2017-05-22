@@ -211,6 +211,11 @@ class PaFeeExpenseController extends AbstractController
     /**
      * @Route("/other-edit/{expenseId}", name="pa_fee_expense_edit")
      * @Template()
+     *
+     * @param Request $request
+     * @param $reportId
+     * @param $expenseId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function otherEditAction(Request $request, $reportId, $expenseId)
     {
@@ -238,11 +243,13 @@ class PaFeeExpenseController extends AbstractController
 
 
     /**
-     * @Route("/other/delete", name="pa_fee_expense_delete")
+     * @Route("/other/delete/{expenseId}", name="pa_fee_expense_delete")
+     * @Template()
      *
-     * @param int $id
-     *
-     * @return RedirectResponse
+     * @param Request $request
+     * @param $reportId
+     * @param $expenseId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $expenseId)
     {
