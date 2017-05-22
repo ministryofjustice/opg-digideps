@@ -11,7 +11,7 @@
     {% endfor %}
 
     {# Items list heading #}
-    <div class="grid-row behat-region-debts-list">
+    <div class="grid-row behat-region-fees-list">
         <div class="column-half">
             <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
         </div>
@@ -34,7 +34,7 @@
         <tbody>
 
         {% for fee in report.fees %}
-            <tr class="behat-region-debt-{{ fee.feeTypeId | behat_namify }}">
+            <tr class="behat-region-fee-{{ fee.feeTypeId | behat_namify }}">
                 <td>
                     {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
                     {{ feeLabel }}

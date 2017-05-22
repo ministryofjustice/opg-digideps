@@ -17,7 +17,7 @@
         Have you charged the client any fees or expensesfor your
         services during the reporting period?
     #}
-    <tr class="behat-region-has-contacts">
+    <tr class="behat-region-has-fees">
         <td>
             {{ 'feeExistPage.form.hasFees.label' | trans(transOptions)  }}
         </td>
@@ -29,7 +29,7 @@
         </td>
     </tr>
     {% if report.reasonForNoFees %}
-        <tr class="behat-region-reason-no-contacts">
+        <tr class="behat-region-reason-no-fees">
             <td>Reason for not having charged the client any fees for your services during the reporting period</td>
             <td>{{ report.reasonForNoFees | nl2br }}</td>
             <td class="change-answer">
