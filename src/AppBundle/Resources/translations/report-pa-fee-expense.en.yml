@@ -1,0 +1,89 @@
+startPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Deputy fees and expenses
+  #TODO format me
+  pageSectionDescription1: |
+    Public authority deputies can be paid, or claim expenses, for the following
+    areas of work or cost:
+  listItem01: work done up to and including the date of the court order
+  listItem02: annual management (including incidental costs)
+  listItem03: property management
+  listItem04: completing an annual deputy report
+  listItem05: completing a tax return
+  listItem06: travel expenses
+  listItem07: specialist services (conveyancing, obtaining expert valuations and investment advice)
+  pageSectionDescription2: |
+    For more detail, you should refer to the court’s Practice Direction B Fixed Costs
+    in the Court of Protection, published as part of the Court of Protection (Amendment)
+    Rules 2017.
+  startButton: Start deputy fees and expenses
+
+feeExistPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Deputy fees and expenses
+  form:
+    hasFees:
+      label: Have you charged the client any fees for your services during the reporting period?
+    reasonForNoFees:
+      label: Please tell us why not
+    save:
+      label: Save and continue
+
+editPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Deputy fees and expenses
+  pageSectionDescription: Please tell us about any fees or expenses you've claimed from the client's funds in line with the practice direction.
+
+
+otherExistPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses  | GOV.UK"
+  pageSectionTitle: Deputy fees and expenses
+  form:
+    paidForAnything:
+      label: Have you claimed any other expenses or fees outside of the practice direction?
+    save:
+      label: Save and continue
+
+
+
+otherAddPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Add an expense
+
+otherAddAnotherPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Add an expense
+  form:
+    addAnother:
+      label: The expense has been saved. Would you like to add another expense now?
+      hint: If you prefer, you can come back to this section later to add more expenses
+    save:
+       label: Continue
+
+otherEditPage:
+  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
+  pageSectionTitle: Edit expense
+
+summaryPage:
+  htmlTitle: "Deputy report -  Deputy fees and expenses | GOV.UK"
+  pageSectionTitle:  Deputy fees and expenses
+  pageSectionDescription: |
+    In this section, we asked you to tell us about any fees or expenses you have charged in line with the practice direction.
+  addButton: Add a deputy expense
+  edit: Edit
+
+form.entries:
+  work-up-to-and-including-cot-made.label: Work up to and including date court order made
+  annual-management-fee.label: Annual management fee
+  annual-property-management-fee.label: Annual property management fee
+  preparing-and-lodging-annual-report.label: Preparing and lodging the annual report
+  completition-of-tax-return.label: Completion of tax return
+  travel-costs:
+    label: Travel costs
+    moreInformations: Please provide some detail
+  specialist-service:
+    label: Specialist services
+    moreInformations: Please provide some detail
+
+common:
+ supportTitle: Deputy fees and expenses

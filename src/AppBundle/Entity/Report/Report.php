@@ -11,6 +11,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
+ * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
  */
 class Report
 {
@@ -23,6 +24,7 @@ class Report
     use ReportTraits\ReportMoneyShortTrait;
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
+    use ReportTraits\ReportPaFeeExpensesTrait;
 
     const TYPE_102 = '102';
     const TYPE_103 = '103';
@@ -44,6 +46,14 @@ class Report
      * @var string
      */
     private $type;
+
+
+    /**
+     * @JMS\Type("boolean")
+     *
+     * @var boolean
+     */
+    private $has106flag;
 
     /**
      * @Assert\NotBlank( message="report.startDate.notBlank")
@@ -254,6 +264,22 @@ class Report
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHas106flag()
+    {
+        return $this->has106flag;
+    }
+
+    /**
+     * @param boolean $has106flag
+     */
+    public function setHas106flag($has106flag)
+    {
+        $this->has106flag = $has106flag;
     }
 
     /**

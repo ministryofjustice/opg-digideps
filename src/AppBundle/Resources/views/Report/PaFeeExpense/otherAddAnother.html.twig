@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'otherAddAnotherPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'otherAddAnotherPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'common.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, 'otherAddAnotherPage.form.addAnother', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label-bold'
+    }) }}
+
+    {{ macros.addAnotherSaveButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

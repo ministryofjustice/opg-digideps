@@ -1,0 +1,48 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'feeExistPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'feeExistPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.hasFees.vars.valid %}error{% endif %}">
+                {{ form_checkbox_group(form.hasFees, 'feeExistPage.form.hasFees', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': transOptions,
+                    'legendClass' : 'form-label-bold text',
+                    'items': [
+                        {},
+                        {'dataTarget': 'reason-for-no-fee'}
+                    ],
+                    'formGroupClass': 'flush--bottom'
+                }) }}
+
+                <div id="reason-for-no-fee" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.reasonForNoFees, 'feeExistPage.form.reasonForNoFees', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

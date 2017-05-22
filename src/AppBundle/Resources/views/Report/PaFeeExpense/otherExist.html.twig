@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'otherExistPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'otherExistPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'existsPage.backLink' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+    {{ form_checkbox_group(form.paidForAnything, 'otherExistPage.form.paidForAnything', {
+        'fieldSetClass' : 'inline',
+        'labelParameters': transOptions,
+        'legendClass' : 'form-label-bold text',
+        'formGroupClass': 'flush--bottom'
+    }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

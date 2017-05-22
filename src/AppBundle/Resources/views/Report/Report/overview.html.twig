@@ -86,14 +86,25 @@
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                {% if report.has106Flag %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
-                    subSection: 'deputy_expenses',
+                    subSection: 'pa_fee_expense',
                     report: report,
-                    state: reportStatus.expensesState,
-                    linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
+                    state: reportStatus.paFeesExpensesState,
+                    linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
                     description: true
-                } %}
+                    } %}
+                {% else %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                        transDomain: translationDomain,
+                        subSection: 'deputy_expenses',
+                        report: report,
+                        state: reportStatus.expensesState,
+                        linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
+                        description: true
+                    } %}
+                {% endif %}
 
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
