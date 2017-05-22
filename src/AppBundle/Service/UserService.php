@@ -87,7 +87,7 @@ class UserService
             if ($existingSoftDeletedUser != null) {
                 // delete soft deleted user a second time to hard delete it
                 $this->_em->remove($existingSoftDeletedUser);
-                $this->_em->flush();
+                $this->_em->flush($existingSoftDeletedUser);
             }
         }
 

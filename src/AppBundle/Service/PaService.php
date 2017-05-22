@@ -98,26 +98,28 @@ class PaService
                 ->setLastname($row['Dep Surname'])
                 ->setRoleName(EntityDir\User::ROLE_PA);
 
-            if (!empty($row['Dep Adrs1'])) {
-                $user->setAddress1($row['Dep Adrs1']);
-            }
-
-            if (!empty($row['Dep Adrs2'])) {
-                $user->setAddress2($row['Dep Adrs2']);
-            }
-
-            if (!empty($row['Dep Adrs3'])) {
-                $user->setAddress3($row['Dep Adrs3']);
-            }
-
-            if (!empty($row['Dep Postcode'])) {
-                $user->setAddressPostcode($row['Dep Postcode']);
-                $user->setAddressCountry('GB'); //postcode given means a UK address is given
-            }
-
             // create team (if not already existing)
             if ($user->getTeams()->isEmpty()) {
                 $team = new EntityDir\Team(null);
+
+                // Address from upload is the team's address, not the user's
+                if (!empty($row['Dep Adrs1'])) {
+                    $team->setAddress1($row['Dep Adrs1']);
+                }
+
+                if (!empty($row['Dep Adrs2'])) {
+                    $team->setAddress2($row['Dep Adrs2']);
+                }
+
+                if (!empty($row['Dep Adrs3'])) {
+                    $team->setAddress3($row['Dep Adrs3']);
+                }
+
+                if (!empty($row['Dep Postcode'])) {
+                    $team->setAddressPostcode($row['Dep Postcode']);
+                    $team->setAddressCountry('GB'); //postcode given means a UK address is given
+                }
+
                 $user->addTeam($team);
                 $this->em->persist($team);
                 $this->em->flush($team);
