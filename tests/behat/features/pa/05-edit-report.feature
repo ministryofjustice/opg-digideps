@@ -81,14 +81,17 @@ Feature: PA user edits report sections
       | more_info_actionMoreInfo_0      | yes  |
       | more_info_actionMoreInfoDetails | amid |
 
-  Scenario: PA deputy expenses
+  Scenario: PA deputy expenses (No fees exist)
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
-    And I click on "edit-deputy_expenses, start"
-    # chose "no records"
+    And I click on "edit-pa_fee_expense, start"
+    # chose "no option"
+    Given the step cannot be submitted without making a selection
+    And the step with the following values cannot be submitted:
+      | fee_exist_hasFees_1 | no |
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
-      | yes_no_paidForAnything_1 | no |
+      | fee_exist_reasonForNoFees | Some reason for no fees|
 
   Scenario: PA gifts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
