@@ -92,6 +92,15 @@ Feature: PA user edits report sections
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | fee_exist_reasonForNoFees | Some reason for no fees|
+    # "Fees outside practice direction" question
+    Given the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | yes_no_paidForAnything_1 | no |
+    # check record in summary page
+    And each text should be present in the corresponding region:
+      | no                            | no-contacts        |
+      | Some reason for no fees       | reason-no-contacts |
+      | no                            | paid-for-anything  |
 
   Scenario: PA gifts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
