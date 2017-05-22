@@ -13,8 +13,13 @@
         <div class="value">&pound;{{ report.moneyOutTotal | money_format}}</div>
     </div>
     <div class="transaction">
-        <div class="label">Deputy expenses:</div>
-        <div class="value">&pound;{{ report.getExpensesTotalValue | money_format}}</div>
+        {% if report.has106flag %}
+            <div class="label">Deputy fees and expenses:</div>
+            <div class="value">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</div>
+        {% else %}
+            <div class="label">Deputy expenses:</div>
+            <div class="value">&pound;{{ report.getExpensesTotal | money_format}}</div>
+        {% endif %}
     </div>
     <div class="transaction">
         <div class="label">Gifts:</div>

@@ -1,0 +1,33 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <ul class="list list-bullet">
+        	<li>{{ 'startPage.listItem01' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem02' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem03' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem04' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem05' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem06' | trans(transOptions) }}</li>
+        	<li>{{ 'startPage.listItem07' | trans(transOptions) }}</li>
+        </ul>
+        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+    </div>
+
+    <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}

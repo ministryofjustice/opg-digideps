@@ -1,6 +1,6 @@
 {% set client = odr.client %}
+{% set team = app.user.teams | first %}
 {% set isEmailAttachment = true %}
-{% set deputy = app.user %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}

@@ -7,6 +7,7 @@ use AppBundle\Controller\Report\AssetController;
 use AppBundle\Controller\Report\BankAccountController;
 use AppBundle\Controller\Report\DebtController;
 use AppBundle\Controller\Report\DeputyExpenseController;
+use AppBundle\Controller\Report\PaFeeExpenseController;
 use AppBundle\Controller\Report\GiftController;
 use AppBundle\Controller\Report\MoneyInController;
 use AppBundle\Controller\Report\MoneyInShortController;
@@ -65,6 +66,7 @@ class ReportValidatorTest extends MockeryTestCase
                 [Report::TYPE_102, DebtController::class, true],
                 [Report::TYPE_102, DecisionController::class, true],
                 [Report::TYPE_102, DeputyExpenseController::class, true],
+                [Report::TYPE_102, PaFeeExpenseController::class, true],
                 [Report::TYPE_102, GiftController::class, true],
                 [Report::TYPE_102, MoneyInController::class, true],
                 [Report::TYPE_102, MoneyInShortController::class, false],
@@ -84,6 +86,7 @@ class ReportValidatorTest extends MockeryTestCase
                 [Report::TYPE_103, DebtController::class, true],
                 [Report::TYPE_103, DecisionController::class, true],
                 [Report::TYPE_103, DeputyExpenseController::class, true],
+                [Report::TYPE_103, PaFeeExpenseController::class, true],
                 [Report::TYPE_103, GiftController::class, true],
                 [Report::TYPE_103, MoneyInController::class, false],
                 [Report::TYPE_103, MoneyInShortController::class, true],

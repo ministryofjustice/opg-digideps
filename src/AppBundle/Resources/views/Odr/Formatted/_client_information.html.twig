@@ -26,24 +26,31 @@
             <dl class="labelvalue">
 
                 <dt class="label">First names</dt>
-                <dd class="value">{{ deputy.firstname }}</dd>
+                <dd class="value">{{ app.user.firstname }}</dd>
 
                 <dt class="label">Last name</dt>
-                <dd class="value">{{ deputy.lastname }}</dd>
+                <dd class="value">{{ app.user.lastname }}</dd>
 
                 <dt class="label">Address</dt>
                 <dd class="value textarea address-value">
-                    {{ deputy.address1 }}<br/>
-                    {{ deputy.address2 }}<br/>
-                    {{ deputy.address3 }}<br/>
-                    {{ deputy.addressPostcode }}
+                    {% if app.user.isDeputyPa %}
+                        {{ team.address1 }}<br/>
+                        {{ team.address2 }}<br/>
+                        {{ team.address3 }}<br/>
+                        {{ team.addressPostcode }}
+                    {% else %}
+                        {{ app.user.address1 }}<br/>
+                        {{ app.user.address2 }}<br/>
+                        {{ app.user.address3 }}<br/>
+                        {{ app.user.addressPostcode }}
+                    {% endif %}
                 </dd>
 
                 <dt class="label">Telephone number</dt>
                 <dd class="value">
-                    {{ deputy.phoneMain }}
-                    {% if (deputy.phoneAlternative is defined) %}
-                        <br/>{{ deputy.phoneAlternative }}
+                    {{ app.user.phoneMain }}
+                    {% if (app.user.phoneAlternative is defined) %}
+                        <br/>{{ app.user.phoneAlternative }}
                     {% endif %}
                 </dd>
             </dl>
@@ -74,7 +81,7 @@
         {% if not adLoggedAsDeputy %}
         <dl class="labelvalue cleared">
             <dt class="label">Email (optional)</dt>
-            <dd class="value">{{ deputy.email }}</dd>
+            <dd class="value">{{ app.user.email }}</dd>
         </dl>
         {% endif %}
 

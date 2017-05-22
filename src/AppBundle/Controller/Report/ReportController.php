@@ -23,11 +23,13 @@ class ReportController extends AbstractController
     private static $reportGroupsAll = [
         'account',
         'expenses',
+        'fee',
         'gifts',
         'action',
         'action-more-info',
         'asset',
         'debt',
+        'fee',
         'balance',
         'client',
         'contact',
@@ -275,7 +277,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'deputy' => $this->getUser(),
             'reportStatus' => $status,
         ];
     }

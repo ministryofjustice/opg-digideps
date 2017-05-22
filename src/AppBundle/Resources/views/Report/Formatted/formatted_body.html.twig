@@ -4,7 +4,7 @@
 {% set contacts = report.getContacts %}
 {% set decisions = report.getDecisions %}
 {% set isEmailAttachment = true %}
-{% set deputy = app.user %}
+{% set team = app.user.teams | first %}
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
@@ -79,8 +79,12 @@
 
         </div>
 
+        {% if report.has106Flag %}
+            {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
+        {% else %}
+            {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
+        {% endif %}
 
-        {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
 
         {% if is102 or is103 %}
