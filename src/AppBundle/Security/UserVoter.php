@@ -4,8 +4,8 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
@@ -31,13 +31,13 @@ class UserVoter extends Voter
     /**
      * Does this voter support the attribute?
      *
-     * @param string $attribute
-     * @param mixed $subject
+     * @param  string $attribute
+     * @param  mixed  $subject
      * @return bool
      */
     protected function supports($attribute, $subject)
     {
-        switch($attribute) {
+        switch ($attribute) {
             case self::ADD_USER:
             case self::DELETE_USER:
                 return true;
@@ -55,9 +55,9 @@ class UserVoter extends Voter
     /**
      * Vote on whether to grant attribute permission on subject
      *
-     * @param string $attribute
-     * @param mixed $subject
-     * @param TokenInterface $token
+     * @param  string         $attribute
+     * @param  mixed          $subject
+     * @param  TokenInterface $token
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -87,8 +87,8 @@ class UserVoter extends Voter
     /**
      * Determine whether logged in user can edit a subject user
      *
-     * @param User $loggedInUser
-     * @param User $subject
+     * @param  User $loggedInUser
+     * @param  User $subject
      * @return bool
      */
     private function determineEditPermission(User $loggedInUser, User $subject)
@@ -99,7 +99,7 @@ class UserVoter extends Voter
             return true;
         }
 
-        switch($loggedInUser->getRoleName()) {
+        switch ($loggedInUser->getRoleName()) {
             case User::ROLE_PA:
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
@@ -122,8 +122,8 @@ class UserVoter extends Voter
     /**
      * Determine whether logged in user can delete a subject user
      *
-     * @param User $loggedInUser
-     * @param User $subject
+     * @param  User $loggedInUser
+     * @param  User $subject
      * @return bool
      */
     private function determineDeletePermission(User $loggedInUser, User $subject)
@@ -133,7 +133,7 @@ class UserVoter extends Voter
             return false;
         }
 
-        switch($loggedInUser->getRoleName()) {
+        switch ($loggedInUser->getRoleName()) {
             case User::ROLE_PA:
                 // Named deputies can remove anyone
                 return true;

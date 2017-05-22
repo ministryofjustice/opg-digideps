@@ -98,7 +98,7 @@ class MailFactory
      *
      * Called from BehatController to allow email-viewer to function
      *
-     * @param User $user
+     * @param  User   $user
      * @return string
      */
     public static function getRecipientRole(User $user)
@@ -357,7 +357,7 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\Report\Report $report
+     * @param  EntityDir\Report\Report $report
      * @return string
      */
     public function getReportAttachmentName(EntityDir\Report\Report $report)

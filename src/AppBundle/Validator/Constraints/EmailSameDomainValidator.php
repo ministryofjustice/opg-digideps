@@ -1,11 +1,11 @@
 <?php
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Model\Email;
-use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Constraint;
 use AppBundle\Form\Traits\HasSecurityContextTrait;
 use AppBundle\Form\Traits\HasTranslatorTrait;
+use AppBundle\Model\Email;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 class EmailSameDomainValidator extends ConstraintValidator
 {
@@ -15,7 +15,7 @@ class EmailSameDomainValidator extends ConstraintValidator
     /**
      * Validates a given email address matches the same domain as the logged in user
      *
-     * @param mixed $email
+     * @param mixed      $email
      * @param Constraint $constraint
      */
     public function validate($email, Constraint $constraint)
@@ -39,6 +39,6 @@ class EmailSameDomainValidator extends ConstraintValidator
      */
     private function getDomain($email)
     {
-        return substr(strrchr($email, "@"), 1);
+        return substr(strrchr($email, '@'), 1);
     }
 }

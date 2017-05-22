@@ -2,15 +2,14 @@
 
 namespace AppBundle\Controller\Pa;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
+use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Controller\AbstractController;
-use AppBundle\Form as FormDir;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -31,7 +30,6 @@ class TeamController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/add", name="add_team_member")
      * @Template()
@@ -40,7 +38,7 @@ class TeamController extends AbstractController
     {
         $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
 
-        $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
+        $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
 
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team, $this->getUser()));
 
@@ -63,7 +61,6 @@ class TeamController extends AbstractController
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('pa_team');
-
             } catch (\Exception $e) {
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $form->addError(new FormError($e->getData()['message']));
@@ -85,11 +82,11 @@ class TeamController extends AbstractController
      */
     public function editAction(Request $request, $id)
     {
-        $user = $this->getRestClient()->get('team/member/'.$id, 'User');
+        $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
         $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
 
-        $team = $this->getRestClient()->get('user/' .  $this->getUser()->getId() . '/team', 'Team');
+        $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
 
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccount($team, $this->getUser(), $user), $user);
 
@@ -99,11 +96,11 @@ class TeamController extends AbstractController
             $user = $form->getData();
 
             try {
-                $this->getRestClient()->put('user/'  .$id, $user, ['pa_team_add'], 'User');
+                $this->getRestClient()->put('user/' . $id, $user, ['pa_team_add'], 'User');
                 $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
                 return $this->redirectToRoute('pa_team');
             } catch (\Exception $e) {
-                switch ((int)$e->getCode()) {
+                switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
                         break;
@@ -133,7 +130,7 @@ class TeamController extends AbstractController
     {
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get('team/member/'.$id, 'User');
+            $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
             $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
             $activationEmail = $this->getMailFactory()->createActivationEmail($user);
@@ -143,7 +140,6 @@ class TeamController extends AbstractController
                 'notice',
                 'An activation email has been sent to the user.'
             );
-
         } catch (\Exception $e) {
             $this->get('logger')->debug($e->getMessage());
             $request->getSession()->getFlashBag()->add(
@@ -153,7 +149,6 @@ class TeamController extends AbstractController
         }
 
         return $this->redirectToRoute('pa_team');
-
     }
 
     /**
@@ -181,7 +176,6 @@ class TeamController extends AbstractController
     public function deleteConfirmedAction(Request $request, $id)
     {
         try {
-
             $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
 
             $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
@@ -189,7 +183,6 @@ class TeamController extends AbstractController
             $this->getRestClient()->delete('/team/delete-user/' . $userToRemove->getId());
 
             $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
-
         } catch (\Exception $e) {
             $this->get('logger')->debug($e->getMessage());
 

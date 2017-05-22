@@ -40,17 +40,17 @@ class WkHtmlToPdfGenerator
     public function getPdfFromHtml($html)
     {
         //Example from https://github.com/openlabs/docker-wkhtmltopdf-aas/issues/18
-        $data = array(
+        $data = [
             'contents' => base64_encode($html),
-            'options' => array(
+            'options' => [
                 'encoding' => 'utf-8'
-            ),
-        );
+            ],
+        ];
         $dataString = json_encode($data);
-        $headers = array(
+        $headers = [
             'Content-Type: application/json',
             'Content-Length: ' . strlen($dataString),
-        );
+        ];
 
         $ch = curl_init();
 

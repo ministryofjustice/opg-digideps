@@ -137,7 +137,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $actual = $report->getDueDateDiffDays($currentDate);
         $this->assertEquals($expected, $actual);
-
     }
 
     public function isOtherFeesSectionCompleteProvider()
@@ -153,7 +152,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider isOtherFeesSectionCompleteProvider
      */
@@ -164,6 +162,5 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $report->shouldReceive('getExpenses')->andReturn($getExpenses);
 
         $this->assertEquals($expected, $report->isOtherFeesSectionComplete());
-
     }
 }

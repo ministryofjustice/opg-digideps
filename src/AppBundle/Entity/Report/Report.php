@@ -51,7 +51,7 @@ class Report
     /**
      * @JMS\Type("boolean")
      *
-     * @var boolean
+     * @var bool
      */
     private $has106flag;
 
@@ -267,7 +267,7 @@ class Report
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHas106flag()
     {
@@ -275,7 +275,7 @@ class Report
     }
 
     /**
-     * @param boolean $has106flag
+     * @param bool $has106flag
      */
     public function setHas106flag($has106flag)
     {
@@ -335,7 +335,7 @@ class Report
      * -1 = overdue by 1 day
      * 1 = 1 day
      *
-     * @param \DateTime|null $currentDate
+     * @param  \DateTime|null $currentDate
      * @return int|void
      */
     public function getDueDateDiffDays(\DateTime $currentDate = null)
@@ -348,11 +348,11 @@ class Report
 
         // clone and set time to 0,0,0 (might not be needed)
         $currentDate = clone $currentDate;
-        $currentDate->setTime(0,0,0);
+        $currentDate->setTime(0, 0, 0);
         $dueDate = clone $this->getDueDate();
-        $dueDate->setTime(0,0,0);
+        $dueDate->setTime(0, 0, 0);
 
-        $days = (int)$currentDate->diff($dueDate)->format("%R%a");
+        $days = (int) $currentDate->diff($dueDate)->format('%R%a');
 
         return $days;
     }

@@ -43,7 +43,7 @@ class AdminController extends AbstractController
             $filters = $form->getData() + $filters;
         }
 
-        $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
+        $users = $this->getRestClient()->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         return [
             'form'    => $form->createView(),
@@ -172,7 +172,7 @@ class AdminController extends AbstractController
 
                     $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
                 } catch (\Exception $e) {
-                    switch ((int)$e->getCode()) {
+                    switch ((int) $e->getCode()) {
                         case 422:
                             $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
                             break;
@@ -308,7 +308,7 @@ class AdminController extends AbstractController
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $this->get("snc_redis.default")->set('chunk' . $k, $compressedData);
+                    $this->get('snc_redis.default')->set('chunk' . $k, $compressedData);
                 }
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
@@ -328,7 +328,6 @@ class AdminController extends AbstractController
             'maxUploadSize'  => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
-
 
     /**
      * @Route("/pa-upload", name="admin_pa_upload")

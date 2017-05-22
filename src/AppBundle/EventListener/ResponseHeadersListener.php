@@ -8,7 +8,7 @@ class ResponseHeadersListener
 {
     /**
      * Sets additional headers following PEN test results.
-     * 
+     *
      * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)

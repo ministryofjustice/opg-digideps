@@ -18,8 +18,8 @@ use AppBundle\Controller\Report\MoneyOutShortController;
 use AppBundle\Controller\Report\MoneyTransferController;
 use AppBundle\Controller\Report\OtherInfoController;
 use AppBundle\Controller\Report\PaFeeExpenseController;
-use AppBundle\Controller\Report\VisitsCareController;
 use AppBundle\Controller\Report\ReportController;
+use AppBundle\Controller\Report\VisitsCareController;
 use AppBundle\Entity\Report\Report;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -65,15 +65,15 @@ class ReportValidator
      * Validates whether a controller should be allowed to execute it's actions for this report. Used to protect
      * sections from being accessed when no relevance to the report type.
      *
-     * @param Report $report
+     * @param  Report $report
      * @return bool
      */
     public function isAllowedSection(Report $report)
     {
-        $controllerParams = explode('::',$this->requestStack->getCurrentRequest()->get('_controller'));
+        $controllerParams = explode('::', $this->requestStack->getCurrentRequest()->get('_controller'));
         $currentRequestController = $controllerParams[0];
 
-        if(!isset($this->validReportSections[$currentRequestController]) ||
+        if (!isset($this->validReportSections[$currentRequestController]) ||
             !in_array($report->getType(), $this->validReportSections[$currentRequestController])
         ) {
             return false;

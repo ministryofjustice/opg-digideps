@@ -4,10 +4,12 @@ namespace AppBundle\Service;
 
 use AppBundle\Controller\Report\ActionController;
 use AppBundle\Controller\Report\AssetController;
+use AppBundle\Controller\Report\BalanceController;
 use AppBundle\Controller\Report\BankAccountController;
+use AppBundle\Controller\Report\ContactController;
 use AppBundle\Controller\Report\DebtController;
+use AppBundle\Controller\Report\DecisionController;
 use AppBundle\Controller\Report\DeputyExpenseController;
-use AppBundle\Controller\Report\PaFeeExpenseController;
 use AppBundle\Controller\Report\GiftController;
 use AppBundle\Controller\Report\MoneyInController;
 use AppBundle\Controller\Report\MoneyInShortController;
@@ -15,14 +17,12 @@ use AppBundle\Controller\Report\MoneyOutController;
 use AppBundle\Controller\Report\MoneyOutShortController;
 use AppBundle\Controller\Report\MoneyTransferController;
 use AppBundle\Controller\Report\OtherInfoController;
-use AppBundle\Controller\Report\VisitsCareController;
-use AppBundle\Controller\Report\BalanceController;
-use AppBundle\Controller\Report\ContactController;
-use AppBundle\Controller\Report\DecisionController;
+use AppBundle\Controller\Report\PaFeeExpenseController;
 use AppBundle\Controller\Report\ReportController;
+use AppBundle\Controller\Report\VisitsCareController;
 use AppBundle\Entity\Report\Report;
-use MockeryStub as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use MockeryStub as m;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ReportValidatorTest extends MockeryTestCase
@@ -50,8 +50,6 @@ class ReportValidatorTest extends MockeryTestCase
         $this->sut = new ReportValidator($mockRequestStack);
 
         $this->assertEquals($expected, $this->sut->isAllowedSection($mockReport));
-
-
     }
 
     public function sectionProvidor()
@@ -119,5 +117,4 @@ class ReportValidatorTest extends MockeryTestCase
 
         ];
     }
-
 }

@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Fee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use AppBundle\Entity\Report\Fee;
 
 trait ReportPaFeeExpensesTrait
 {
@@ -82,7 +82,6 @@ trait ReportPaFeeExpensesTrait
         return $this->feesTotal;
     }
 
-
     /**
      * @param decimal $feesTotal
      */
@@ -90,7 +89,6 @@ trait ReportPaFeeExpensesTrait
     {
         $this->feesTotal = $feesTotal;
     }
-
 
     /**
      * @param ExecutionContextInterface $context
@@ -130,7 +128,7 @@ trait ReportPaFeeExpensesTrait
 
     /**
      * Used to improve the section flow. see usage in Controller
-     * @return boolean
+     * @return bool
      */
     public function isOtherFeesSectionComplete()
     {
