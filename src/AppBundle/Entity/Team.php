@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -124,7 +123,7 @@ class Team
     /**
      * Add a member
      *
-     * @param User $user
+     * @param  User  $user
      * @return $this
      */
     public function addMember(User $user)
@@ -199,8 +198,7 @@ class Team
 
         $adminCount = 0;
         /** @var User $member */
-        foreach ($this->members as $member)
-        {
+        foreach ($this->members as $member) {
             if ($member->isPaAdministrator()) {
                 $adminCount++;
             }

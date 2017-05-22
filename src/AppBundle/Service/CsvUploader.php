@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 class CsvUploader
 {
     /**
-     * @param mixed $data
+     * @param  mixed  $data
      * @return string
      */
     public static function compressData($data)

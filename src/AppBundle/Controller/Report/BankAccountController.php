@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\StepRedirector;
@@ -214,7 +213,6 @@ class BankAccountController extends AbstractController
                 'notice',
                 'Bank account deleted'
             );
-            
         } catch (\Exception $e) {
             $translator = $this->get('translator');
             $translatedMessage = $translator->trans($e->getData()['message'], [], 'report-bank-accounts');

@@ -2,19 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
-use AppBundle\Exception\RestClientException;
-use AppBundle\Form as FormDir;
-use AppBundle\Model\Email;
-use AppBundle\Service\DataImporter\CsvToArray;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/admin/ajax/")
@@ -45,7 +36,7 @@ class AdminAjaxController extends AbstractController
     public function uploadUsersAjaxAction(Request $request)
     {
         $chunkId = 'chunk' . $request->get('chunk');
-        $redis = $this->get("snc_redis.default");
+        $redis = $this->get('snc_redis.default');
 
         try {
             $compressedData = $redis->get($chunkId);
@@ -60,5 +51,4 @@ class AdminAjaxController extends AbstractController
             return new JsonResponse($e->getMessage());
         }
     }
-
 }

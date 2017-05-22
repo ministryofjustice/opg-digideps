@@ -120,8 +120,4 @@ class Fee
     {
         $this->moreDetails = $moreDetails;
     }
-
-
-
-
 }

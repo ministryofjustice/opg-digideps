@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Odr;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Form\Odr\ReportDeclarationType;
 use AppBundle\Service\OdrStatusService;

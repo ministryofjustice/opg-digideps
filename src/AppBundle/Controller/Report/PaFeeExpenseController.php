@@ -241,7 +241,6 @@ class PaFeeExpenseController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/other/delete/{expenseId}", name="pa_fee_expense_delete")
      * @Template()
@@ -284,6 +283,4 @@ class PaFeeExpenseController extends AbstractController
             'report' => $report,
         ];
     }
-
-
 }

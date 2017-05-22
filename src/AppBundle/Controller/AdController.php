@@ -29,7 +29,7 @@ class AdController extends AbstractController
             'ad_managed' => true,
             'q' => $request->get('q'),
         ];
-        $users = $this->getRestClient()->get("user/get-all?" . http_build_query($filters), 'User[]');
+        $users = $this->getRestClient()->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         // form add
         $form = $this->createForm(new FormDir\Ad\AddUserType([

@@ -2,20 +2,9 @@
 
 namespace AppBundle\Resources\views\Report;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Account;
-use AppBundle\Entity\Report\Action;
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
-use AppBundle\Entity\Report\Debt;
-use AppBundle\Entity\Report\Decision;
-use AppBundle\Entity\Report\MoneyTransfer;
-use AppBundle\Entity\Report\Report as Report;
-use AppBundle\Entity\User;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
 class PaginatorTest extends WebTestCase
@@ -78,7 +67,6 @@ class PaginatorTest extends WebTestCase
         $this->assertNotContains('Next', $html);
     }
 
-
     public static function multiPageProvider()
     {
         return [
@@ -100,7 +88,7 @@ class PaginatorTest extends WebTestCase
     /**
      * @dataProvider multiPageProvider
      */
-    public function testMultiPage($currentOffset, $totalRecords, $expectedText,$expectedLink)
+    public function testMultiPage($currentOffset, $totalRecords, $expectedText, $expectedLink)
     {
         $html = $this->html([
             'currentOffset'  => $currentOffset,
@@ -128,5 +116,4 @@ class PaginatorTest extends WebTestCase
         $this->assertEquals($expectedLink, $actualLinks);
         $this->assertContains($expectedText, $crawler->filter('.pager-summary')->eq(0)->html());
     }
-
 }

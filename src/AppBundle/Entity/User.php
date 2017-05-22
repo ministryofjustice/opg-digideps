@@ -3,10 +3,10 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Traits\LoginInfoTrait;
+use AppBundle\Validator\Constraints\EmailSameDomain;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Validator\Constraints\EmailSameDomain;
 
 /**
  * @codeCoverageIgnore
@@ -820,7 +820,6 @@ class User implements AdvancedUserInterface
         $this->teams = $teams;
     }
 
-
     /**
      * Is user a Team Member?
      *
@@ -863,7 +862,7 @@ class User implements AdvancedUserInterface
 
     /**
      * Is User a Deputy Either PA or Lay?
-     * 
+     *
      * @return bool true if user role is LAY or PA
      */
     public function isDeputy()

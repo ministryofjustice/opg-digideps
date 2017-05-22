@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service\Mailer;
 
-use MockeryStub as m;
 use AppBundle\Entity\User;
+use MockeryStub as m;
 
 class MailFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -121,7 +121,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
             'getEndDate' => new \DateTime('2017-12-31'),
             'getSubmitDate' => new \DateTime('2018-01-01'),
         ]);
-        $email = $this->object->createPaReportSubmissionConfirmationEmail($this->paUser, $report, $newReport,'[REPORT-CONTENT-PDF]');
+        $email = $this->object->createPaReportSubmissionConfirmationEmail($this->paUser, $report, $newReport, '[REPORT-CONTENT-PDF]');
 
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('pauser@email', $email->getToEmail());

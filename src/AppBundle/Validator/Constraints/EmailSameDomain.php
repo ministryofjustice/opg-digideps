@@ -26,13 +26,10 @@ class EmailSameDomain extends Constraint
     {
         $requiredOptions = ['message', 'groups'];
 
-        foreach ($requiredOptions as $option)
-        {
-            if (isset($options[$option]))
-            {
+        foreach ($requiredOptions as $option) {
+            if (isset($options[$option])) {
                 $this->$option = $options[$option];
             } else {
-
                 throw new MissingOptionsException("Missing option: '" . $option . "' required for constraint");
             }
         }

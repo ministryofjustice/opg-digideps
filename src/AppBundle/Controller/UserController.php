@@ -349,7 +349,7 @@ class UserController extends AbstractController
                     'email'    => $email,
                 ]);
             } catch (\Exception $e) {
-                switch ((int)$e->getCode()) {
+                switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;

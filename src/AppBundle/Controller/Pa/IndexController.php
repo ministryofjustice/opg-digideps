@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller\Pa;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +55,4 @@ class IndexController extends AbstractController
     {
         return [];
     }
-
-
 }
