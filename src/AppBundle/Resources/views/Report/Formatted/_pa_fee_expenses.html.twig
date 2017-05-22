@@ -45,7 +45,7 @@
             <div class="box total">
                 <div class="labelvalue inline">
                     <div class="label">Total amount</div>
-                    <div class="value" id="assetsTotal">&pound;{{ report.feesTotalAmount | money_format }}</div>
+                    <div class="value" id="assetsTotal">&pound;{{ report.feesTotal | money_format }}</div>
                 </div>
             </div>
         {% endif %}
@@ -85,7 +85,7 @@
             <div class="box total">
                 <div class="labelvalue inline">
                     <div class="label">Total amount</div>
-                    <div class="value" id="assetsTotal">&pound;{{ report.expensesTotalValue | money_format }}</div>
+                    <div class="value" id="assetsTotal">&pound;{{ report.expensesTotal | money_format }}</div>
                 </div>
             </div>
         {% endif %}

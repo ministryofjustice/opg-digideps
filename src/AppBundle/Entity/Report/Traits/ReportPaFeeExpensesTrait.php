@@ -36,11 +36,11 @@ trait ReportPaFeeExpensesTrait
     private $hasFees;
 
     /**
-     * @JMS\Type("string")
+     * @JMS\Type("double")
      *
      * @var decimal
      */
-    private $feesTotalAmount;
+    private $feesTotal;
 
     /**
      * @return ArrayCollection
@@ -77,18 +77,18 @@ trait ReportPaFeeExpensesTrait
     /**
      * @return decimal
      */
-    public function getFeesTotalAmount()
+    public function getFeesTotal()
     {
-        return $this->feesTotalAmount;
+        return $this->feesTotal;
     }
 
 
     /**
-     * @param decimal $feesTotalAmount
+     * @param decimal $feesTotal
      */
-    public function setFeesTotalAmount($feesTotalAmount)
+    public function setFeesTotal($feesTotal)
     {
-        $this->feesTotalAmount = $feesTotalAmount;
+        $this->feesTotal = $feesTotal;
     }
 
 

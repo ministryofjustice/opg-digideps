@@ -26,6 +26,14 @@ trait ReportDeputyExpenseTrait
     private $expenses;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("double")
+     * @JMS\Groups({"expenses-total"})
+     */
+    private $expensesTotal;
+
+    /**
      * @return string
      */
     public function getPaidForAnything()
@@ -76,17 +84,18 @@ trait ReportDeputyExpenseTrait
     }
 
     /**
-     * Get expenses total value.
-     *
-     * @return float
+     * @return string
      */
-    public function getExpensesTotalValue()
+    public function getExpensesTotal()
     {
-        $ret = 0;
-        foreach ($this->getExpenses() as $expense) {
-            $ret += $expense->getAmount();
-        }
+        return $this->expensesTotal;
+    }
 
-        return $ret;
+    /**
+     * @param string $expensesTotal
+     */
+    public function setExpensesTotal($expensesTotal)
+    {
+        $this->expensesTotal = $expensesTotal;
     }
 }
