@@ -99,7 +99,7 @@ Feature: PA user edits report sections
     # check record in summary page
     And each text should be present in the corresponding region:
       | no                            | no-contacts        |
-      | Some reason for no fees       | reason-no-contacts |
+      | Some reason for no fees       | reason-no-fees     |
       | no                            | paid-for-anything  |
 
   Scenario: PA gifts
