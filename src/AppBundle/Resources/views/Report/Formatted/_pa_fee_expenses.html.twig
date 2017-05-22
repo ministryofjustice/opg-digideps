@@ -36,6 +36,8 @@
                             </li>
                         {% endfor %}
                     </ul>
+                {%  else %}
+                    <div class="value textarea">{{ report.reasonForNoFees | nl2br}}</div>
                 {% endif %}
             </div>
         </div>
