@@ -1,0 +1,93 @@
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+
+<div class="section" id="pa-fees-expenses-section">
+    <h2 class="section-heading">{{ 'startPage.pageSectionTitle'|trans }}</h2>
+
+    {% set reportHasFees = report.hasFees == 'yes' %}
+    {% set reportPaidForAnything = report.paidForAnything == 'yes' %}
+
+    <div class="dont-break">
+        <div class="box">
+            <div class="checkboxes horizontal">
+                <div class="question">{{ 'feeExistPage.form.hasFees.label'|trans }}</div>
+
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox"
+                            data-checkbox="report-has-pa-fees--yes">{% if reportHasFees %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox"
+                            data-checkbox="report-has-pa-fees--no">{% if reportHasFees == false %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+                {% if reportHasFees %}
+                    <ul class="transactions">
+                        {% for fee in report.fees %}
+                            <li class="transaction {% if fee.amount == 0 %}{{ fee.amount }} disable{% endif %}">
+                                <div class="label">{{ ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans }}</div>
+                                <div class="value">&pound;{{ fee.amount | money_format }}</div>
+                                {% if fee.moreDetails %}
+                                    <div class="description">
+                                        {{ fee.moreDetails | nl2br }}
+                                    </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if reportHasFees %}
+            {# total value #}
+            <div class="box total">
+                <div class="labelvalue inline">
+                    <div class="label">Total amount</div>
+                    <div class="value" id="assetsTotal">&pound;{{ report.feesTotalAmount | money_format }}</div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="box">
+            <div class="checkboxes horizontal">
+
+                <div class="question">{{ 'otherExistPage.form.paidForAnything.label'|trans }}</div>
+
+                <table class="yesno small">
+                    <tr>
+                        <td class="checkbox"
+                            data-checkbox="report-pa-paid-for-anything--yes">{% if reportPaidForAnything %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="checkbox"
+                            data-checkbox="report-pa-paid-for-anything--yes">{% if reportPaidForAnything == false %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+            </div>
+            {% if reportPaidForAnything %}
+                <div class="category">
+                    <ul class="transactions">
+                        {% for expense in report.expenses %}
+                            <li class="transaction ">
+                                <div class="label">{{ expense.explanation }}</div>
+                                <div class="value">&pound; {{ expense.amount | money_format }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if reportPaidForAnything %}
+            {# total value #}
+            <div class="box total">
+                <div class="labelvalue inline">
+                    <div class="label">Total amount</div>
+                    <div class="value" id="assetsTotal">&pound;{{ report.expensesTotalValue | money_format }}</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

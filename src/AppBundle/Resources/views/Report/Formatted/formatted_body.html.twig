@@ -79,8 +79,12 @@
 
         </div>
 
+        {% if report.has106Flag %}
+            {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
+        {% else %}
+            {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
+        {% endif %}
 
-        {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
 
         {% if is102 or is103 %}
