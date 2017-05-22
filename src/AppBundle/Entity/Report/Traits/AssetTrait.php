@@ -3,8 +3,6 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\AssetOther;
-use AppBundle\Entity\Report\AssetProperty;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -31,9 +29,6 @@ trait AssetTrait
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
-
-
-
 
     /**
      * Add assets.
@@ -112,5 +107,4 @@ trait AssetTrait
     {
         return $this->noAssetToAdd;
     }
-
 }

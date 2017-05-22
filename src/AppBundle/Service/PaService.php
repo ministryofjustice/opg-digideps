@@ -134,7 +134,7 @@ class PaService
     }
 
     /**
-     * @param array $row
+     * @param array          $row
      * @param EntityDir\User $user
      *
      * @return EntityDir\Client
@@ -194,7 +194,7 @@ class PaService
     }
 
     /**
-     * @param array $row
+     * @param array            $row
      * @param EntityDir\Client $client
      *
      * @return EntityDir\Report\Report
@@ -249,7 +249,7 @@ class PaService
     public static function parseDate($dateString)
     {
         $ret = \DateTime::createFromFormat('d-M-Y', $dateString);
-        if (!$ret instanceof \DateTime || (int)$ret->format('Y') < 99) {
+        if (!$ret instanceof \DateTime || (int) $ret->format('Y') < 99) {
             $ret = \DateTime::createFromFormat('d-M-y', $dateString);
         }
 

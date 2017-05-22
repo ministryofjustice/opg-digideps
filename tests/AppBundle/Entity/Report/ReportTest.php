@@ -140,7 +140,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     public function testgetFeesTotal()
     {
         $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
-        $reportWith = function($fees) {
+        $reportWith = function ($fees) {
             return m::mock(Report::class . '[getFees]')
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
@@ -154,7 +154,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
 
-        $reportWith = function($expenses) {
+        $reportWith = function ($expenses) {
             return m::mock(Report::class . '[getExpenses]')
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();

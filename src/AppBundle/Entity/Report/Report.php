@@ -255,6 +255,7 @@ class Report
      * Return Report type based on casrec data
      *
      * @param CasRec $casRec
+     *
      * @return string
      */
     public function getTypeBasedOnCasrecRecord(CasRec $casRec)
@@ -263,7 +264,7 @@ class Report
         $corref = $casRec->getCorref();
         if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
             return Report::TYPE_103;
-        } else if (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
+        } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
             return Report::TYPE_104;
         } else {
             return Report::TYPE_102;
@@ -429,9 +430,6 @@ class Report
         return $this->client->getId();
     }
 
-
-
-
     /**
      * @return VisitsCare
      */
@@ -489,8 +487,6 @@ class Report
 
         return $this;
     }
-
-
 
     /**
      * Set reportSeen.
@@ -555,7 +551,6 @@ class Report
         return $this;
     }
 
-
     public function isDue()
     {
         if (!$this->getEndDate() instanceof \DateTime) {
@@ -603,7 +598,6 @@ class Report
         return $this->getEndDate()->add(new \DateInterval('P56D'));
     }
 
-
     /**
      ** @return bool
      */
@@ -614,7 +608,6 @@ class Report
         || !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
     }
-
 
     /**
      * Temporary until specs gets more clear around report types
@@ -632,7 +625,7 @@ class Report
      */
     public function has106Flag()
     {
-       return $this->getClient()->getUsers()->first()->isPaDeputy();
+        return $this->getClient()->getUsers()->first()->isPaDeputy();
     }
 
     /**
@@ -666,5 +659,4 @@ class Report
     {
         return new ReportStatusService($this);
     }
-
 }

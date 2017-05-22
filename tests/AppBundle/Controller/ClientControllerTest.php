@@ -158,5 +158,4 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$client1->getId(), $data['id']);
         $this->assertEquals('Firstname', $data['firstname']);
     }
-
 }

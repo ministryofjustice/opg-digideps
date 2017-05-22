@@ -16,7 +16,6 @@ trait MoneyTransactionTrait
      */
     private $moneyTransactions;
 
-
     /**
      *
      * @JMS\VirtualProperty
@@ -31,7 +30,6 @@ trait MoneyTransactionTrait
             return $t->getType() == 'in';
         });
     }
-
 
     /**
      *
@@ -74,7 +72,6 @@ trait MoneyTransactionTrait
         }
     }
 
-
     /**
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsIn"})
@@ -99,12 +96,13 @@ trait MoneyTransactionTrait
 
     /**
      * @param string $type in|put
+     *
      * @return float
      */
     private function getMoneyTransactionsTotal($type)
     {
         if (!in_array($type, ['in', 'out'])) {
-            throw new \InvalidArgumentException("invalid type");
+            throw new \InvalidArgumentException('invalid type');
         }
 
         $ret = 0;
@@ -123,7 +121,6 @@ trait MoneyTransactionTrait
 
         return $ret;
     }
-
 
     /**
      * @param Transaction[] $transactions
@@ -145,7 +142,6 @@ trait MoneyTransactionTrait
 
         return $ret;
     }
-
 
     /**
      ** @return bool

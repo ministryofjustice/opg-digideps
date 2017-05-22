@@ -189,5 +189,4 @@ class PaServiceTest extends WebTestCase
     {
         m::close();
     }
-
 }

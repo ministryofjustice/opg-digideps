@@ -23,7 +23,7 @@ abstract class EntityTester extends MockeryTestCase
         }
         $entityClass = $this->entityClass;
 
-        $this->entity = new $entityClass;
+        $this->entity = new $entityClass();
     }
 
     public function tearDown()

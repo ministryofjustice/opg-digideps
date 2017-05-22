@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Repository;
 
-use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -16,10 +15,10 @@ class UserRepository extends EntityRepository
     /**
      * Finds a single entity by a set of criteria. Unfiltered, softdelete disabled.
      *
-     * @param array $criteria
+     * @param array      $criteria
      * @param array|null $orderBy
      *
-     * @return object|null The entity instance or NULL if the entity can not be found.
+     * @return object|null the entity instance or NULL if the entity can not be found
      */
     public function findUnfilteredOneBy(array $criteria, array $orderBy = null)
     {

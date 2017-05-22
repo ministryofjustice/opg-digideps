@@ -3,19 +3,16 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Report\Report as ReportEntity;
 use AppBundle\Entity\Casrec as CasRecEntity;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
+use AppBundle\Entity\Report\Report as ReportEntity;
 
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Fixtures;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Tests\AppBundle\Entity;
 
-use AppBundle\Entity\Team as Entity;
 use AppBundle\Entity\Team;
+use AppBundle\Entity\Team as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Tests\AppBundle\Entity\Abstracts\EntityTester;
 
@@ -13,7 +13,7 @@ use Tests\AppBundle\Entity\Abstracts\EntityTester;
 class TeamTest extends EntityTester
 {
     /**
-     * Override as ctor args are needed  
+     * Override as ctor args are needed
      */
     public function setUp()
     {

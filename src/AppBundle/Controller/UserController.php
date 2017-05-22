@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -267,7 +266,7 @@ class UserController extends RestController
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
-        $qb->orderBy('u.'.$order_by, $sort_order);
+        $qb->orderBy('u.' . $order_by, $sort_order);
 
         if ($roleName) {
             $qb->andWhere('u.roleName = :role');
@@ -290,7 +289,7 @@ class UserController extends RestController
             } else { // mail or first/lastname or user or client
                 $qb->leftJoin('u.clients', 'c');
                 $qb->andWhere('lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike OR lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike ');
-                $qb->setParameter('qLike', '%'.strtolower($q).'%');
+                $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             }
         }
 

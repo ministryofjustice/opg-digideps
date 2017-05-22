@@ -3,11 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * @Route("/team")
@@ -23,7 +21,7 @@ class TeamController extends RestController
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user', 'team'];
+            ? (array) $request->query->get('groups') : ['user', 'team'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $team = $this->getUser()->getTeams()->first(); /* @var $team EntityDir\Team */
@@ -48,7 +46,7 @@ class TeamController extends RestController
         }
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['user', 'team'];
+            ? (array) $request->query->get('groups') : ['user', 'team'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
 
@@ -62,7 +60,8 @@ class TeamController extends RestController
      * @Method({"DELETE"})
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
+     *
      * @return array
      */
     public function deletePaTeamUser(Request $request, $id)
