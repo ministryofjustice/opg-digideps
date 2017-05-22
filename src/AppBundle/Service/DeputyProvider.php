@@ -65,7 +65,7 @@ class DeputyProvider implements UserProviderInterface
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
             ->setLoggedUserId($id)
-            ->get('user/' . $id, 'User', ['user', 'role', 'user-login']);
+            ->get('user/' . $id, 'User', ['user', 'role', 'user-login', 'team']);
     }
 
     /**
