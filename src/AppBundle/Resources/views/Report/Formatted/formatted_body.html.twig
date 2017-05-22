@@ -4,7 +4,7 @@
 {% set contacts = report.getContacts %}
 {% set decisions = report.getDecisions %}
 {% set isEmailAttachment = true %}
-{% set deputy = app.user %}
+{% set team = app.user.teams | first %}
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}

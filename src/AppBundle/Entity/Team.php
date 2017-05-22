@@ -39,6 +39,41 @@ class Team
     private $teamName;
 
     /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $address1;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $address2;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $address3;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $addressPostcode;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $addressCountry;
+
+    /**
      * Team constructor.
      * @param string $teamName
      */
@@ -172,5 +207,55 @@ class Team
         }
 
         return $adminCount < self::MAX_PA_ADMINS;
+    }
+
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+    }
+
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+    }
+
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+    }
+
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+    }
+
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
     }
 }

@@ -25,7 +25,7 @@
             <dt class="label">Declaration time</dt>
             <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
             <dt class="label">Deputy name</dt>
-            <dd class="value" id="statusDeputyName">{{ deputy.fullname }}</dd>
+            <dd class="value" id="statusDeputyName">{{ app.user.fullname }}</dd>
         </dl>
     </div>
 </div>

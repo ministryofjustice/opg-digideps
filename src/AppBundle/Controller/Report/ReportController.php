@@ -277,7 +277,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'deputy' => $this->getUser(),
             'reportStatus' => $status,
         ];
     }

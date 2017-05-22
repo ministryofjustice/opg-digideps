@@ -280,6 +280,13 @@ class User implements AdvancedUserInterface
     private $agreeTermsUse;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Team>")
+     *
+     * @var ArrayCollection
+     */
+    private $teams;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -796,6 +803,23 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTeams()
+    {
+        return $this->teams;
+    }
+
+    /**
+     * @param ArrayCollection $teams
+     */
+    public function setTeams($teams)
+    {
+        $this->teams = $teams;
+    }
+
 
     /**
      * Is user a Team Member?
