@@ -464,7 +464,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertCount(7, $data['fees']);
-        $this->assertEquals(1.1+ 1.2, $data['fees_total_amount']);
+        $this->assertEquals(1.1+ 1.2, $data['fees_total']);
         $this->assertEquals('yes', $data['has_fees']);
 
         $row = $data['fees'][1]; //position in Fee::$feeTypeIds
@@ -497,7 +497,7 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals('rfnf', $data['reason_for_no_fees']);
         $this->assertCount(count(Fee::$feeTypeIds), $data['fees']);
-        $this->assertEquals(0, $data['fees_total_amount']);
+        $this->assertEquals(0, $data['fees_total']);
         $this->assertEquals('no', $data['has_fees']);
     }
 

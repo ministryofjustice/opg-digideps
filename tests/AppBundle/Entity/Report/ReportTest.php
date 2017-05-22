@@ -137,22 +137,31 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
 
-    public function testgetExpensesTotal()
+    public function testgetFeesTotal()
     {
-        $reportWith = function($has106Flag, $expenses, $fees) {
-            return m::mock(Report::class . '[has106Flag,getExpenses,getFees]')
-                ->shouldReceive('has106Flag')->andReturn($has106Flag)
-                ->shouldReceive('getExpenses')->andReturn($expenses)
+        $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
+        $reportWith = function($fees) {
+            return m::mock(Report::class . '[getFees]')
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
 
-        $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
-        $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
+        $this->assertEquals(0, $reportWith([])->getFeesTotal());
+        $this->assertEquals(2+2, $reportWith([$fee1, $fee1])->getFeesTotal());
+    }
 
-        $this->assertEquals(0, $reportWith(false, [], [])->getExpensesTotal());
-        $this->assertEquals(1+1, $reportWith(false, [$exp1, $exp1], [$fee1, $fee1])->getExpensesTotal());
-        $this->assertEquals(1+1+2+2, $reportWith(true, [$exp1, $exp1], [$fee1, $fee1])->getExpensesTotal());
+    public function testgetExpensesTotal()
+    {
+        $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
+
+        $reportWith = function($expenses) {
+            return m::mock(Report::class . '[getExpenses]')
+                ->shouldReceive('getExpenses')->andReturn($expenses)
+                ->getMock();
+        };
+
+        $this->assertEquals(0, $reportWith([])->getExpensesTotal());
+        $this->assertEquals(1+1, $reportWith([$exp1, $exp1])->getExpensesTotal());
     }
 
     public function testDueDate()

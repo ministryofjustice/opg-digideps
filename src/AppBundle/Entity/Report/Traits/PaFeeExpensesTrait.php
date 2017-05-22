@@ -80,13 +80,13 @@ trait PaFeeExpensesTrait
      * Get fee total value.
      *
      * @JMS\VirtualProperty
-     * @JMS\Type("string")
-     * @JMS\SerializedName("fees_total_amount")
+     * @JMS\Type("double")
+     * @JMS\SerializedName("fees_total")
      * @JMS\Groups({"fee"})
      *
      * @return float
      */
-    public function getFeesTotalAmount()
+    public function getFeesTotal()
     {
         $ret = 0;
         foreach ($this->getFees() as $fee) {

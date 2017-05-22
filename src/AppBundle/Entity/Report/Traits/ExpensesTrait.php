@@ -84,6 +84,11 @@ trait ExpensesTrait
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("double")
+     * @JMS\SerializedName("expenses_total")
+     * @JMS\Groups({"expenses"})
+     *
      * @return float
      */
     public function getExpensesTotal()
@@ -91,11 +96,6 @@ trait ExpensesTrait
         $ret = 0;
         foreach ($this->getExpenses() as $record) {
             $ret += $record->getAmount();
-        }
-        if ($this->has106Flag()) {
-            foreach ($this->getFees() as $record) {
-                $ret += $record->getAmount();
-            }
         }
 
         return $ret;
