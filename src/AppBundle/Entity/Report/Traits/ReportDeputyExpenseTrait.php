@@ -26,8 +26,6 @@ trait ReportDeputyExpenseTrait
     private $expenses;
 
     /**
-     * @var string yes/no
-     *
      * @JMS\Type("double")
      * @JMS\Groups({"expenses-total"})
      */

@@ -15,7 +15,7 @@
     <div class="transaction">
         {% if report.has106flag %}
             <div class="label">Deputy fees and expenses:</div>
-            <div class="value">&pound;{{ report.getExpensesTotal + report.getFeesTotal | money_format}}</div>
+            <div class="value">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</div>
         {% else %}
             <div class="label">Deputy expenses:</div>
             <div class="value">&pound;{{ report.getExpensesTotal | money_format}}</div>
