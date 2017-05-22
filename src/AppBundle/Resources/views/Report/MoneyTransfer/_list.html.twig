@@ -64,7 +64,7 @@
                             {{ account.accountTypeText }}<br/>
                             Sort code: {{ account.sortCode }}<br/>
                             Account number: ****{{ account.accountNumber }}<br/>
-                            Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                            Joint account: {{ account.isJointAccount == 'no' ? 'No' : 'Yes' }}<br/>
                         </p>
                     </td>
                     <td class="width-quarter">
@@ -76,7 +76,7 @@
                             {{ account.accountTypeText }}<br/>
                             Sort code: {{ account.sortCode }}<br/>
                             Account number: ****{{ account.accountNumber }}<br/>
-                            Joint account: {{ account.isJointAccount ? 'Yes' : 'No' }}<br/>
+                            Joint account: {{ account.isJointAccount == 'no'? 'No' : 'Yes' }}<br/>
                         </p>
                     </td>
                     <td class="numeric-small">
