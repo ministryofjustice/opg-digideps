@@ -91,6 +91,7 @@ trait BalanceTrait
         return $this->getAccountsOpeningBalanceTotal()
             + $this->getMoneyInTotal()
             - $this->getMoneyOutTotal()
+            - ($this->has106Flag() ? $this->getFeesTotal() : 0)
             - $this->getExpensesTotal()
             - $this->getGiftsTotal();
         ;

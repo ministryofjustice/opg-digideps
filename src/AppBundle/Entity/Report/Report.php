@@ -19,11 +19,19 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Report
 {
-    use ReportTraits\MoreInfoTrait;
+    use ReportTraits\AssetTrait;
+    use ReportTraits\BankAccountTrait;
+    use ReportTraits\BalanceTrait;
+    use ReportTraits\ContactTrait;
+    use ReportTraits\DecisionTrait;
     use ReportTraits\ExpensesTrait;
     use ReportTraits\GiftsTrait;
-    use ReportTraits\ReportMoneyShortTrait;
-    use ReportTraits\BalanceTrait;
+    use ReportTraits\MoneyShortTrait;
+    use ReportTraits\MoneyTransactionTrait;
+    use ReportTraits\MoneyTransferTrait;
+    use ReportTraits\MoreInfoTrait;
+    use ReportTraits\DebtTrait;
+    use ReportTraits\PaFeeExpensesTrait;
 
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
@@ -75,75 +83,6 @@ class Report
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
-
-    /**
-     * @JMS\Groups({"contact"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Contact>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Contact", mappedBy="report", cascade={"persist"})
-     */
-    private $contacts;
-
-    /**
-     * @JMS\Groups({"account"})
-     * @JMS\Type("array<AppBundle\Entity\Report\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\BankAccount", mappedBy="report", cascade={"persist"})
-     */
-    private $bankAccounts;
-
-    /**
-     * @JMS\Groups({"money-transfer"})
-     * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransfer>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
-     */
-    private $moneyTransfers;
-
-    /**
-     * @var MoneyTransaction[]
-     *
-     * @JMS\Groups({"transaction"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist"})
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $moneyTransactions;
-
-    /**
-     * @var Debt[]
-     *
-     * @JMS\Groups({"debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Debt", mappedBy="report", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $debts;
-
-    /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
-     *
-     * @var string
-     */
-    private $hasDebts;
-
-    /**
-     * @var Decision[]
-     *
-     * @JMS\Groups({"decision"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist"})
-     */
-    private $decisions;
-
-    /**
-     * @var Asset[]
-     *
-     * @JMS\Groups({"asset"})
-     * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Asset", mappedBy="report", cascade={"persist"})
-     */
-    private $assets;
 
     /**
      * @var VisitsCare
@@ -210,41 +149,7 @@ class Report
      */
     private $lastedit;
 
-    /**
-     * @var bool deputy declaration saying there are no assets. Required (true/false) if no decisions are added
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"report"})
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
-     */
-    private $noAssetToAdd;
 
-    /**
-     * @var bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"report", "money-transfer"})
-     * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
-     */
-    private $noTransfersToAdd;
-
-    /**
-     * @var string deputy reason for not having contacts. Required if no contacts are added
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report"})
-     * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
-     */
-    private $reasonForNoContacts;
-
-    /**
-     * @var string deputy reason for not having decision. Required if no decisions are added
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report","decision"})
-     * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
-     **/
-    private $reasonForNoDecisions;
 
     /**
      * @var bool whether the report is submitted or not
@@ -308,6 +213,7 @@ class Report
         $this->moneyShortCategories = new ArrayCollection();
         $this->moneyTransactionsShort = new ArrayCollection();
         $this->debts = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
@@ -523,223 +429,8 @@ class Report
         return $this->client->getId();
     }
 
-    /**
-     * Add contacts.
-     *
-     * @param Contact $contacts
-     *
-     * @return Report
-     */
-    public function addContact(Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
 
-        return $this;
-    }
 
-    /**
-     * Remove contacts.
-     *
-     * @param Contact $contacts
-     */
-    public function removeContact(Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Get contacts.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getContacts()
-    {
-        return $this->contacts;
-    }
-
-    /**
-     * Add accounts.
-     *
-     * @param BankAccount $accounts
-     *
-     * @return Report
-     */
-    public function addAccount(BankAccount $accounts)
-    {
-        $this->bankAccounts[] = $accounts;
-
-        return $this;
-    }
-
-    /**
-     * Remove accounts.
-     *
-     * @param BankAccount $accounts
-     */
-    public function removeAccount(BankAccount $accounts)
-    {
-        $this->bankAccounts->removeElement($accounts);
-    }
-
-    /**
-     * Get accounts.
-     *
-     * @return BankAccount[]
-     */
-    public function getBankAccounts()
-    {
-        return $this->bankAccounts;
-    }
-
-    /**
-     * @return MoneyTransfer[]
-     */
-    public function getMoneyTransfers()
-    {
-        return $this->moneyTransfers;
-    }
-
-    /**
-     * @param MoneyTransfer $moneyTransfer
-     *
-     * @return \Report
-     */
-    public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
-    {
-        $this->moneyTransfers->add($moneyTransfer);
-
-        return $this;
-    }
-
-    /**
-     * Add decisions.
-     *
-     * @param Decision $decision
-     *
-     * @return Report
-     */
-    public function addDecision(Decision $decision)
-    {
-        $this->decisions[] = $decision;
-
-        return $this;
-    }
-
-    /**
-     * Remove decisions.
-     *
-     * @param Decision $decision
-     */
-    public function removeDecision(Decision $decision)
-    {
-        $this->decisions->removeElement($decision);
-    }
-
-    /**
-     * Get decisions.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDecisions()
-    {
-        return $this->decisions;
-    }
-
-    /**
-     * Add assets.
-     *
-     * @param Asset $assets
-     *
-     * @return Report
-     */
-    public function addAsset(Asset $assets)
-    {
-        $this->assets[] = $assets;
-
-        return $this;
-    }
-
-    /**
-     * Remove assets.
-     *
-     * @param Asset $assets
-     */
-    public function removeAsset(Asset $assets)
-    {
-        $this->assets->removeElement($assets);
-    }
-
-    /**
-     * Get assets.
-     *
-     * @return Asset[]
-     */
-    public function getAssets()
-    {
-        return $this->assets;
-    }
-
-    /**
-     * Get assets total value.
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("double")
-     * @JMS\SerializedName("assets_total_value")
-     * @JMS\Groups({"asset"})
-     *
-     * @return float
-     */
-    public function getAssetsTotalValue()
-    {
-        $ret = 0;
-        foreach ($this->getAssets() as $asset) {
-            $ret += $asset->getValueTotal();
-        }
-
-        return $ret;
-    }
-
-    /**
-     * Set noAssetToAdd.
-     *
-     * @param bool $noAssetToAdd
-     *
-     * @return Report
-     */
-    public function setNoAssetToAdd($noAssetToAdd)
-    {
-        $this->noAssetToAdd = $noAssetToAdd;
-
-        return $this;
-    }
-
-    /**
-     * Get noAssetToAdd.
-     *
-     * @return bool
-     */
-    public function getNoAssetToAdd()
-    {
-        return $this->noAssetToAdd;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getNoTransfersToAdd()
-    {
-        return $this->noTransfersToAdd;
-    }
-
-    /**
-     * @param bool $noTransfersToAdd
-     */
-    public function setNoTransfersToAdd($noTransfersToAdd)
-    {
-        $this->noTransfersToAdd = $noTransfersToAdd;
-
-        return $this;
-    }
 
     /**
      * @return VisitsCare
@@ -799,53 +490,7 @@ class Report
         return $this;
     }
 
-    /**
-     * Set reasonForNoContact.
-     *
-     * @param string $reasonForNoContacts
-     *
-     * @return Report
-     */
-    public function setReasonForNoContacts($reasonForNoContacts)
-    {
-        $this->reasonForNoContacts = $reasonForNoContacts;
 
-        return $this;
-    }
-
-    /**
-     * Get reasonForNoContacts.
-     *
-     * @return string
-     */
-    public function getReasonForNoContacts()
-    {
-        return $this->reasonForNoContacts;
-    }
-
-    /**
-     * Set reasonForNoDecisions.
-     *
-     * @param string $reasonForNoDecisions
-     *
-     * @return Report
-     **/
-    public function setReasonForNoDecisions($reasonForNoDecisions)
-    {
-        $this->reasonForNoDecisions = trim($reasonForNoDecisions, " \n");
-
-        return $this;
-    }
-
-    /**
-     * Get ReasonForNoDecisions.
-     *
-     * @return string
-     */
-    public function getReasonForNoDecisions()
-    {
-        return $this->reasonForNoDecisions;
-    }
 
     /**
      * Set reportSeen.
@@ -910,207 +555,6 @@ class Report
         return $this;
     }
 
-    /**
-     *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("money_transactions_in")
-     * @JMS\Groups({"transactionsIn"})
-     *
-     * @return MoneyTransaction[]
-     */
-    public function getMoneyTransactionsIn()
-    {
-        return $this->moneyTransactions->filter(function ($t) {
-            return $t->getType() == 'in';
-        });
-    }
-
-    /**
-     *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("money_transactions_out")
-     * @JMS\Groups({"transactionsOut"})
-     *
-     * @return MoneyTransaction[]
-     */
-    public function getMoneyTransactionsOut()
-    {
-        return $this->moneyTransactions->filter(function ($t) {
-            return $t->getType() == 'out';
-        });
-    }
-
-    /**
-     * @return MoneyTransaction[]
-     */
-    public function getMoneyTransactions()
-    {
-        return $this->moneyTransactions;
-    }
-
-    /**
-     * @param mixed $moneyTransactions
-     */
-    public function setMoneyTransactions($moneyTransactions)
-    {
-        $this->moneyTransactions = $moneyTransactions;
-    }
-
-    /**
-     * @param mixed $moneyTransactions
-     */
-    public function addMoneyTransaction(MoneyTransaction $t)
-    {
-        if (!$this->moneyTransactions->contains($t)) {
-            $this->moneyTransactions->add($t);
-        }
-    }
-
-    /**
-     * @param mixed $debts
-     */
-    public function setDebts($debts)
-    {
-        $this->debts = $debts;
-    }
-
-    /**
-     * @return Debt[]
-     */
-    public function getDebts()
-    {
-        return $this->debts;
-    }
-
-    /**
-     * @param string $typeId
-     *
-     * @return Debt
-     */
-    public function getDebtByTypeId($typeId)
-    {
-        return $this->getDebts()->filter(function (Debt $debt) use ($typeId) {
-            return $debt->getDebtTypeId() == $typeId;
-        })->first();
-    }
-
-    /**
-     * @param Debt $debt
-     */
-    public function addDebt(Debt $debt)
-    {
-        if (!$this->debts->contains($debt)) {
-            $this->debts->add($debt);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get debts total value.
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("string")
-     * @JMS\SerializedName("debts_total_amount")
-     * @JMS\Groups({"debt"})
-     *
-     * @return float
-     */
-    public function getDebtsTotalAmount()
-    {
-        $ret = 0;
-        foreach ($this->getDebts() as $debt) {
-            $ret += $debt->getAmount();
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHasDebts()
-    {
-        return $this->hasDebts;
-    }
-
-    /**
-     * @param mixed $hasDebts
-     */
-    public function setHasDebts($hasDebts)
-    {
-        $this->hasDebts = $hasDebts;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsIn"})
-     * @JMS\Type("double")
-     * @JMS\SerializedName("money_in_total")
-     */
-    public function getMoneyInTotal()
-    {
-        return $this->getMoneyTransactionsTotal('in');
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"transactionsOut"})
-     * @JMS\Type("double")
-     * @JMS\SerializedName("money_out_total")
-     */
-    public function getMoneyOutTotal()
-    {
-        return $this->getMoneyTransactionsTotal('out');
-    }
-
-    /**
-     * @param string $type in|put
-     * @return float
-     */
-    private function getMoneyTransactionsTotal($type)
-    {
-        if (!in_array($type, ['in', 'out']) ){
-            throw new \InvalidArgumentException("invalid type");
-        }
-
-        $ret = 0;
-
-        if ($this->type === self::TYPE_103) {
-            $transactions = $this->getMoneyTransactionsShort();
-        } else {
-            $transactions = $this->getMoneyTransactions();
-        }
-
-        foreach ($transactions as $t) {
-            if ($t instanceof MoneyTransactionInterface && $t->getType() === $type) {
-                $ret += $t->getAmount();
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param Transaction[] $transactions
-     *
-     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
-     */
-    public function groupByCategory($transactions)
-    {
-        $ret = [];
-
-        foreach ($transactions as $id => $t) {
-            $cat = $t->getCategoryString();
-            if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
-            }
-            $ret[$cat]['entries'][$id] = $t; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $t->getAmountsTotal();
-        }
-
-        return $ret;
-    }
 
     public function isDue()
     {
@@ -1159,39 +603,6 @@ class Report
         return $this->getEndDate()->add(new \DateInterval('P56D'));
     }
 
-    /**
-     * @return BankAccount[]
-     */
-    public function getBankAccountsIncomplete()
-    {
-        return $this->getBankAccounts()->filter(function ($b) {
-            return $b->getClosingBalance() == null;
-        });
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasMoneyIn()
-    {
-        return count($this->getMoneyTransactionsIn()) > 0;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasMoneyOut()
-    {
-        return count($this->getMoneyTransactionsOut()) > 0;
-    }
-
-    /**
-     ** @return bool
-     */
-    public function hasAccounts()
-    {
-        return count($this->getBankAccounts()) > 0;
-    }
 
     /**
      ** @return bool
@@ -1204,20 +615,28 @@ class Report
         || count($this->getBankAccountsIncomplete()) > 0;
     }
 
-    /**
-     * @return Debt[]
-     */
-    public function getDebtsWithValidAmount()
-    {
-        $debtsWithAValidAmount = $this->getDebts()->filter(function ($debt) {
-            return !empty($debt->getAmount());
-        });
 
-        return $debtsWithAValidAmount;
+    /**
+     * Temporary until specs gets more clear around report types
+     * This value could be set at creation time if needed in the future.
+     * Until now, 106 is for all the PAs, so we get this value from the (only) user accessing the report.
+     * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103
+     *
+     * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("has106flag")
+     * @JMS\Groups({"report"})
+     *
+     */
+    public function has106Flag()
+    {
+       return $this->getClient()->getUsers()->first()->isPaDeputy();
     }
 
     /**
-     * Get assets total value.
+     * Get sections status, using ReportStatusService built on this class.
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({
@@ -1238,6 +657,7 @@ class Report
      *     "balance-state",
      *     "money-in-short-state",
      *     "money-out-short-state",
+     *     "fee-state",
      * })
      *
      * @return ReportStatusService
@@ -1246,4 +666,5 @@ class Report
     {
         return new ReportStatusService($this);
     }
+
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Action;
+use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\Report;
@@ -36,10 +37,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getReasonForNoContacts'            => null,
                 'getReasonForNoDecisions'           => null,
                 'getVisitsCare'                     => m::mock(VisitsCare::class, [
-                    'getDoYouLiveWithClient'     => null,
+                    'getDoYouLiveWithClient'       => null,
                     'getDoesClientReceivePaidCare' => null,
-                    'getWhoIsDoingTheCaring'     => null,
-                    'getDoesClientHaveACarePlan' => null,
+                    'getWhoIsDoingTheCaring'       => null,
+                    'getDoesClientHaveACarePlan'   => null,
                 ]),
                 'getAction'                         => m::mock(Action::class, [
                     'getDoYouExpectFinancialDecisions' => null,
@@ -54,7 +55,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getHasDebts'                       => null,
                 'getDebts'                          => [],
                 'getDebtsWithValidAmount'           => [],
-                'getTotalsMatch'                     => null,
+                'getTotalsMatch'                    => null,
                 'getBalanceMismatchExplanation'     => null,
                 // 103
                 'getMoneyShortCategoriesIn'         => [],
@@ -66,6 +67,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getMoneyTransactionsShortOutExist' => null,
                 'getMoneyTransactionsShortOut'      => [],
                 'getType'                           => Report::TYPE_102,
+                // 106
+                'has106Flag'                        => false,
+                'getFeesWithValidAmount'                           => [],
+                'getReasonForNoFees'                => null,
+                //'getExpenses'                       => [],
+                //'getPaidForAnything'                => null,
             ]);
 
         return new StatusService($report);
@@ -135,22 +142,22 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function visitsCareProvider()
     {
         $empty = m::mock(VisitsCare::class, [
-            'getDoYouLiveWithClient'     => null,
+            'getDoYouLiveWithClient'       => null,
             'getDoesClientReceivePaidCare' => null,
-            'getWhoIsDoingTheCaring'     => null,
-            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring'       => null,
+            'getDoesClientHaveACarePlan'   => null,
         ]);
         $incomplete = m::mock(VisitsCare::class, [
-            'getDoYouLiveWithClient'     => 'yes',
+            'getDoYouLiveWithClient'       => 'yes',
             'getDoesClientReceivePaidCare' => null,
-            'getWhoIsDoingTheCaring'     => null,
-            'getDoesClientHaveACarePlan' => null,
+            'getWhoIsDoingTheCaring'       => null,
+            'getDoesClientHaveACarePlan'   => null,
         ]);
         $done = m::mock(VisitsCare::class, [
-            'getDoYouLiveWithClient'     => 'yes',
+            'getDoYouLiveWithClient'       => 'yes',
             'getDoesClientReceivePaidCare' => 'yes',
-            'getWhoIsDoingTheCaring'     => 'xxx',
-            'getDoesClientHaveACarePlan' => 'yes',
+            'getWhoIsDoingTheCaring'       => 'xxx',
+            'getDoesClientHaveACarePlan'   => 'yes',
         ]);
 
         return [
@@ -319,6 +326,37 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
+    public function paFeesExpensesProvider()
+    {
+        $fee = m::mock(Fee::class);
+        $expense = m::mock(Expense::class);
+
+        $feeDone1 = ['getFeesWithValidAmount'=>[$fee]];
+        $feeDone2 = ['getReasonForNoFees'=>'x'];
+        $expenseDone1 = ['getExpenses'=>[$expense], 'getPaidForAnything'=>'yes'];
+        $expenseDone2 = ['getPaidForAnything'=>'no'];
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED],
+            [$feeDone1, StatusService::STATE_INCOMPLETE],
+            [$feeDone2, StatusService::STATE_INCOMPLETE],
+            [$expenseDone1, StatusService::STATE_INCOMPLETE],
+            [$expenseDone2, StatusService::STATE_INCOMPLETE],
+            [$feeDone1 + $expenseDone1, StatusService::STATE_DONE],// no need to test all the combinations
+            [$feeDone2 + $expenseDone2, StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider paFeesExpensesProvider
+     */
+    public function paFeeExpenses($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked(['has106Flag'=>true] + $mocks);
+        $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
+    }
+
     public function giftsProvider()
     {
         $expense = m::mock(Gift::class);
@@ -453,7 +491,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $object->balanceMatches());
     }
 
-    public function mockedMethodsCompletingReport($type)
+    public function mockedMethodsCompletingReport($type, $has106Flag = false)
     {
         $ret = ['getType' => $type];
 
@@ -483,6 +521,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             $ret += array_pop($this->MoneyOutShortProvider())[0];
         }
 
+        if ($has106Flag && in_array($type, [Report::TYPE_102, Report::TYPE_103])) {
+            $ret += array_pop($this->paFeesExpensesProvider())[0];
+        }
+
         return $ret;
     }
 
@@ -501,6 +543,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         // all complete 103
         $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
+        $this->assertEquals([], $object->getRemainingSections());
+
+        // all complete 106
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102, true));
         $this->assertEquals([], $object->getRemainingSections());
     }
 

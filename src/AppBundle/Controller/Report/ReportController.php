@@ -164,6 +164,27 @@ class ReportController extends RestController
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
 
+        if (array_key_exists('fees', $data)) {
+            foreach ($data['fees'] as $row) {
+                $fee = $report->getFeeByTypeId($row['fee_type_id']);
+                if (!$fee instanceof EntityDir\Report\Fee) {
+                    continue; //not clear when that might happen. kept similar to transaction below
+                }
+                $fee->setAmountAndDetails($row['amount'], $row['more_details']);
+                $this->getEntityManager()->flush($fee);
+            }
+        }
+
+        if (array_key_exists('reason_for_no_fees', $data)) {
+            $report->setReasonForNoFees($data['reason_for_no_fees']);
+            if ($data['reason_for_no_fees']) {
+                foreach($report->getFees() as $fee) {
+                    $fee->setAmount(null)
+                        ->setMoreDetails(null);
+                }
+            }
+        }
+
         if (array_key_exists('paid_for_anything', $data)) {
             if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
@@ -197,6 +218,7 @@ class ReportController extends RestController
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
+
 
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);

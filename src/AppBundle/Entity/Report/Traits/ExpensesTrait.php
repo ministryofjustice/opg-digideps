@@ -84,6 +84,11 @@ trait ExpensesTrait
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("double")
+     * @JMS\SerializedName("expenses_total")
+     * @JMS\Groups({"expenses"})
+     *
      * @return float
      */
     public function getExpensesTotal()

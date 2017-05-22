@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
@@ -187,6 +188,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
         $this->assertArrayNotHasKey('debts', $data);
+        $this->assertArrayNotHasKey('fees', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
         $this->assertEquals(self::$client1->getId(), $data['client']['id']);
         $this->assertArrayHasKey('start_date', $data);
@@ -213,6 +215,13 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertArrayHasKey('debts', $data);
 
+        // assert fees
+        $data = $this->assertJsonRequest('GET', $url . '?groups=fee', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertArrayHasKey('fees', $data);
+
         // assert status
         $data = $this->assertJsonRequest('GET', $url . '?groups=status', [
             'mustSucceed' => true,
@@ -220,6 +229,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['status'];
 
         foreach ([
+            // add here the jms_serialised_version of the ReportStatus getters
             'decisions_state',
             'contacts_state',
             'visits_care_state',
@@ -232,6 +242,7 @@ class ReportControllerTest extends AbstractTestController
             'balance_state',
             'assets_state',
             'debts_state',
+            'pa_fees_expenses_state',
             'actions_state',
             'other_info_state',
             'expenses_state',
@@ -427,6 +438,69 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('no', $data['has_debts']);
     }
 
+    public function testPaFeesEditResetAndTotals()
+    {
+        $reportId = self::$pa1Client1Report1->getId();
+        $url = '/report/' . $reportId;
+
+        // save 2 fees and check they are retrieved
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+            'data' => [
+                'reason_for_no_fees' => null,
+                'fees' => [
+                    ['fee_type_id' => 'annual-management-fee', 'amount'=>1.1, 'more_details'=>'should be ignored'],
+                    ['fee_type_id' => 'travel-costs', 'amount'=>1.2, 'more_details'=>'tc.md'],
+                ],
+            ],
+        ]);
+
+        $q = http_build_query(['groups' => ['fee']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
+
+        $this->assertCount(7, $data['fees']);
+        $this->assertEquals(1.1+ 1.2, $data['fees_total']);
+        $this->assertEquals('yes', $data['has_fees']);
+
+        $row = $data['fees'][1]; //position in Fee::$feeTypeIds
+        $this->assertEquals('annual-management-fee', $row['fee_type_id']);
+        $this->assertEquals(1.1, $row['amount']);
+        $this->assertEquals(false, $row['has_more_details']);
+        $this->assertEquals(null, $row['more_details']);
+
+        $row = $data['fees'][5]; //position in Fee::$feeTypeIds
+        $this->assertEquals('travel-costs', $row['fee_type_id']);
+        $this->assertEquals(1.2, $row['amount']);
+        $this->assertEquals(true, $row['has_more_details']);
+        $this->assertEquals("tc.md", $row['more_details']);
+
+
+        // "add reason. And assert fees are reset
+        self::fixtures()->flush()->clear();
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+            'data' => [
+                'reason_for_no_fees' => 'rfnf',
+                'fees' => [],
+            ],
+        ]);
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
+
+        $this->assertEquals('rfnf', $data['reason_for_no_fees']);
+        $this->assertCount(count(Fee::$feeTypeIds), $data['fees']);
+        $this->assertEquals(0, $data['fees_total']);
+        $this->assertEquals('no', $data['has_fees']);
+    }
+
     public function testActions()
     {
         $url = '/report/' . self::$report1->getId();
@@ -567,7 +641,7 @@ class ReportControllerTest extends AbstractTestController
         $reportsNotStarted = $reportsGetAllRequest([
             'status'    => 'notStarted',
         ]);
-        $this->assertCount(3,  $reportsNotStarted['reports']);
+        $this->assertTrue(count($reportsNotStarted['reports'])>0);
         $reportsFilteredReadyToSubmit = $reportsGetAllRequest([
             'status'    => 'readyToSubmit',
         ]);
