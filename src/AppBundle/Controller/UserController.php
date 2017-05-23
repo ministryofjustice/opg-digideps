@@ -36,26 +36,8 @@ class UserController extends RestController
 
         $user = $this->populateUser($user, $data);
 
-        /*
-         * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception
-         * thrown when persist flush ?
-         */
-        if ($user->getEmail() && $this->getRepository(EntityDir\User::class)->findUnfilteredOneBy(['email' => $user->getEmail()])) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
-        }
-
-        // If Adding PA user
-        if ($loggedInUser->isPaAdministrator()) {
-            $userService = $this->get('opg_digideps.user_service');
-            $userService->addPaUser($loggedInUser, $user, $data);
-        };
-
-        $user->setRegistrationDate(new \DateTime());
-
-        $user->recreateRegistrationToken();
-
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
+        $userService = $this->get('opg_digideps.user_service');
+        $userService->addUser($loggedInUser, $user, $data);
 
         $groups = $request->query->has('groups') ?
             $request->query->get('groups') : ['user'];
