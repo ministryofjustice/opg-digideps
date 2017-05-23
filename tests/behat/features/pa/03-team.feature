@@ -297,3 +297,51 @@ Feature: PA team
     And I press "team_member_account_save"
     Then the following fields should have an error:
       | team_member_account_email |
+
+  Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address for a deleted user
+    Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    # delete existing admin user
+    And I click on "delete" in the "team-user-behat-pa3-adminpublicguardiangsigovuk" region
+    And I click on "confirm"
+    # edit PA named
+    When I click on "edit" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
+    And I fill in the following:
+      | team_member_account_firstname | Edited PA3                                |
+      | team_member_account_lastname  | Edited Team Member                        |
+      | team_member_account_email     | behat-pa3-admin@publicguardian.gsi.gov.uk |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    And I should see "behat-pa3-admin@publicguardian.gsi.gov.uk" in the "team-user-behat-pa3-adminpublicguardiangsigovuk" region
+
+  Scenario: PA_ADMIN3 logs in and adds PA_TEAM_MEMBER using existing email address
+    Given I load the application status from "team-users-complete"
+    And I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts, add"
+    # add user team member
+    And I fill in the following:
+      | team_member_account_firstname  | PA3                                             |
+      | team_member_account_lastname   | Team Member                                     |
+      | team_member_account_email      | behat-pa3-team-member@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the following fields should have an error:
+      | team_member_account_email |
+
+  Scenario: PA_ADMIN3 logs in and adds PA_TEAM_MEMBER using existing email address for a deleted user
+    Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    # delete existing admin user
+    And I click on "delete" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
+    And I click on "confirm"
+    When I click on "pa-settings, user-accounts, add"
+    # add user team member
+    And I fill in the following:
+      | team_member_account_firstname  | PA3                                             |
+      | team_member_account_lastname   | Team Member                                     |
+      | team_member_account_email      | behat-pa3-team-member@publicguardian.gsi.gov.uk |
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    And I should see "behat-pa3-team-member@publicguardian.gsi.gov.uk" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
+    And I load the application status from "team-users-complete"

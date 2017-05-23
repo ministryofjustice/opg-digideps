@@ -62,12 +62,14 @@ class TeamController extends AbstractController
 
                 return $this->redirectToRoute('pa_team');
             } catch (\Exception $e) {
-                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                    $form->addError(new FormError($e->getData()['message']));
+                switch ((int) $e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        break;
+
+                    default:
+                        throw $e;
                 }
-                return [
-                    'form' => $form->createView(),
-                ];
             }
         }
 
