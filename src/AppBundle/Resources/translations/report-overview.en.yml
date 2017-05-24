@@ -12,14 +12,21 @@ dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
-
 sectionsRemaining: "sections remaining"
 overview: Report overview
-
 status:
   notStarted: "Not started"
   notFinished: "Not finished"
   readyToSubmit: "Ready to submit"
+reportDueDate: "Report due date"
+currentReport: "Current report"
+reportStatus: "Report status"
+reportOptions: "Report options"
+reportSectionsToComplete: "Report sections to complete"
+
+options:
+  viewReport: "View report"
+  uploadDocumentation: "Upload documentation"
 
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
