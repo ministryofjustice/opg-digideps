@@ -124,6 +124,8 @@ class PaFeeExpenseController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             switch ($data->getPaidForAnything()) {
                 case 'yes':
+                    // the "yes" value is set automatically when expense are added. It cannot set by now or if the user leaves the page
+                    // it'd leave the data inconsistent
                     return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId]);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $data, ['expenses-paid-anything']);
