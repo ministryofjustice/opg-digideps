@@ -18,12 +18,23 @@
         services during the reporting period?
     #}
     <tr class="behat-region-has-fees">
-        <td>
-            {{ 'feeExistPage.form.hasFees.label' | trans(transOptions)  }}
-        </td>
-        <td>
-            {{ report.hasFees | capitalize }}
-        </td>
+        {% if report.hasFees is null %}
+            <td>
+                <span class="error">
+                    {{ 'feeExistPage.form.hasFees.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'feeExistPage.form.hasFees.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.hasFees | capitalize }}
+            </td>
+        {% endif %}
         <td class="change-answer">
             <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
         </td>
