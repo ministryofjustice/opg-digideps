@@ -80,7 +80,9 @@ security:
         - { path: ^/pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
         - { path: ^/pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
         - { path: ^/pa/, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        # report expenses section access for Lay and PA
         - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
 
         # open URLs
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
