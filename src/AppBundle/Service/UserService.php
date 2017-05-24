@@ -33,7 +33,32 @@ class UserService
      * @param User $userToAdd
      * @param $data
      */
-    public function addPaUser(User $loggedInUser, User $userToAdd, $data)
+    public function addUser(User $loggedInUser, User $userToAdd, $data)
+    {
+        $this->checkUserEmail($userToAdd);
+
+        if ($loggedInUser->isPaAdministrator()) {
+            $this->addPaUser($loggedInUser, $userToAdd, $data);
+        }
+
+        $userToAdd->setRegistrationDate(new \DateTime());
+
+        $userToAdd->recreateRegistrationToken();
+
+        $this->hardDeleteExistingUser($userToAdd);
+
+        $this->_em->persist($userToAdd);
+        $this->_em->flush();
+    }
+
+    /**
+     * Adds a new pa user to the database
+     *
+     * @param User $loggedInUser
+     * @param User $userToAdd
+     * @param $data
+     */
+    private function addPaUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
         $userToAdd->generatePaTeam($loggedInUser, $data);
@@ -74,16 +99,8 @@ class UserService
         }
 
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
-            if ($this->userRepository->findOneBy(['email' => $userToEdit->getEmail()])) {
-                throw new \RuntimeException("PA User with email {$userToEdit->getEmail()} already exists.", 422);
-            }
-
-            $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $userToEdit->getEmail()]);
-            if ($existingSoftDeletedUser != null) {
-                // delete soft deleted user a second time to hard delete it
-                $this->_em->remove($existingSoftDeletedUser);
-                $this->_em->flush($existingSoftDeletedUser);
-            }
+            $this->checkUserEmail($userToEdit);
+            $this->hardDeleteExistingUser($userToEdit);
         }
 
         $this->_em->flush($userToEdit);
@@ -96,5 +113,28 @@ class UserService
         }
 
         $this->editUser($originalUser, $userToEdit);
+    }
+
+    /**
+     * @param User $user
+     */
+    private function checkUserEmail(User $user)
+    {
+        if ($this->userRepository->findOneBy(['email' => $user->getEmail()])) {
+            throw new \RuntimeException("PA User with email {$user->getEmail()} already exists.", 422);
+        }
+    }
+
+    /**
+     * @param User $user
+     */
+    private function hardDeleteExistingUser(User $user)
+    {
+        $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $user->getEmail()]);
+        if ($existingSoftDeletedUser != null) {
+            // delete soft deleted user a second time to hard delete it
+            $this->_em->remove($existingSoftDeletedUser);
+            $this->_em->flush($existingSoftDeletedUser);
+        }
     }
 }
