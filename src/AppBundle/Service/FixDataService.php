@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\Odr;
-use AppBundle\Entity\Odr\ndrRepository;
 use AppBundle\Entity\Odr\OdrRepository;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\ReportRepository;
@@ -33,6 +32,7 @@ class FixDataService
 
     /**
      * FixDataService constructor.
+     *
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
@@ -66,7 +66,6 @@ class FixDataService
         return $this;
     }
 
-
     public function fixNdrs()
     {
         $ndrs = $this->ndrRepo->findAll();
@@ -94,6 +93,4 @@ class FixDataService
     {
         return $this->messages;
     }
-
-
 }

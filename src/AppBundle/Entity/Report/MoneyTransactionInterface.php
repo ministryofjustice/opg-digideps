@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-
 interface MoneyTransactionInterface
 {
     /**
@@ -14,5 +13,4 @@ interface MoneyTransactionInterface
      * @return float
      */
     public function getAmount();
-
 }

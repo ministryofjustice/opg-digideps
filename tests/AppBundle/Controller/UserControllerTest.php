@@ -148,7 +148,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertCount(0, self::$deputy1->getTeams());
 
         // assert get
-        foreach(['pt.old', 'pt.new'] as $teamName) {
+        foreach (['pt.old', 'pt.new'] as $teamName) {
             $this->assertJsonRequest('PUT', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
@@ -164,7 +164,6 @@ class UserControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals('pt.new', $data['pa_team_name']);
-
     }
 
     public function testIsPasswordCorrectAuth()
@@ -424,7 +423,6 @@ class UserControllerTest extends AbstractTestController
         $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
         $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
     }
-
 
     public function testGetByToken()
     {

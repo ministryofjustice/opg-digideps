@@ -31,7 +31,6 @@ trait DebtTrait
      */
     private $hasDebts;
 
-
     /**
      * @param mixed $debts
      */
@@ -47,7 +46,6 @@ trait DebtTrait
     {
         return $this->debts;
     }
-
 
     /**
      * @param string $typeId
@@ -73,7 +71,6 @@ trait DebtTrait
         return $this;
     }
 
-
     /**
      * Get debts total value.
      *
@@ -94,7 +91,6 @@ trait DebtTrait
         return $ret;
     }
 
-
     /**
      * @return mixed
      */
@@ -111,7 +107,6 @@ trait DebtTrait
         $this->hasDebts = $hasDebts;
     }
 
-
     /**
      * @return Debt[]
      */
@@ -123,5 +118,4 @@ trait DebtTrait
 
         return $debtsWithAValidAmount;
     }
-
 }

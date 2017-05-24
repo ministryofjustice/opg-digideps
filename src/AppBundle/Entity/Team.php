@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Traits\AddressTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Traits\AddressTrait;
 
 /**
  * Team
@@ -48,6 +48,7 @@ class Team
 
     /**
      * Team constructor.
+     *
      * @param string $teamName
      */
     public function __construct($teamName)
@@ -98,6 +99,7 @@ class Team
      * Add a member
      *
      * @param User $user
+     *
      * @return $this
      */
     public function addMember(User $user)

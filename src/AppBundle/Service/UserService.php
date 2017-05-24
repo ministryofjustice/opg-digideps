@@ -5,11 +5,8 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
-use AppBundle\Exception\NotFound;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 
 class UserService
 {
@@ -23,8 +20,7 @@ class UserService
         UserRepository $userRepository,
         TeamRepository $teamRepository,
         EntityManager $em
-    )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->teamRepository = $teamRepository;
         $this->_em = $em;
@@ -84,8 +80,7 @@ class UserService
             }
 
             //copy clients
-            foreach($loggedInUser->getClients() as $client) {
-
+            foreach ($loggedInUser->getClients() as $client) {
                 $userToAdd->addClient($client);
             }
         }
@@ -95,7 +90,7 @@ class UserService
      * Update a user. Checks that the email is not in use then persists the entity
      *
      * @param User $originalUser Original user for comparison checks
-     * @param User $userToEdit The user to edit
+     * @param User $userToEdit   The user to edit
      */
     public function editUser(User $originalUser, User $userToEdit)
     {
@@ -103,9 +98,8 @@ class UserService
             $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
         }
 
-        if($originalUser->getEmail() != $userToEdit->getEmail()) {
+        if ($originalUser->getEmail() != $userToEdit->getEmail()) {
             $this->checkUserEmail($userToEdit);
-
             $this->hardDeleteExistingUser($userToEdit);
         }
 

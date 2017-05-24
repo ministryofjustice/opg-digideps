@@ -141,7 +141,6 @@ class Fee
         $this->feeTypeId = $feeTypeId;
     }
 
-
     /**
      * @return string
      */

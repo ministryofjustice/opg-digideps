@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Repository;
 
-use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -13,5 +12,4 @@ use Doctrine\ORM\EntityRepository;
  */
 class TeamRepository extends EntityRepository
 {
-
 }

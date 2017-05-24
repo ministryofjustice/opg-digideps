@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\FixDataService;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,10 +29,10 @@ class FixDataCommand extends AddSingleUserCommand
         $output->write('Fixing data. Please wait ...');
         $fixDataService = new FixDataService($em);
         $messages = $fixDataService->fixReports()->fixNdrs()->getMessages();
-        foreach($messages as $m) {
+        foreach ($messages as $m) {
             $output->writeln($m);
         }
-        $output->writeln(count($messages)." total report fixes");
+        $output->writeln(count($messages) . ' total report fixes');
         $output->writeln('Done');
     }
 }

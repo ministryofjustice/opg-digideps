@@ -78,8 +78,7 @@ class StatsService
                 $row['report_date_due'] = $report->getDueDate()->format('Y-m-d');
 
                 //Fill in the last submitted column with the submission date of the last submitted report
-                if (!$user->isPaDeputy())
-                {
+                if (!$user->isPaDeputy()) {
                     $clients = $user->getClients();
                     $client = !empty($clients) ? $clients->first() : null;
                     if ($client != null) {

@@ -49,8 +49,6 @@ trait AddressTrait
      */
     private $addressCountry;
 
-
-
     /**
      * @return string
      */

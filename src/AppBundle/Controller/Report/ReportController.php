@@ -178,7 +178,7 @@ class ReportController extends RestController
         if (array_key_exists('reason_for_no_fees', $data)) {
             $report->setReasonForNoFees($data['reason_for_no_fees']);
             if ($data['reason_for_no_fees']) {
-                foreach($report->getFees() as $fee) {
+                foreach ($report->getFees() as $fee) {
                     $fee->setAmount(null)
                         ->setMoreDetails(null);
                 }
@@ -335,7 +335,7 @@ class ReportController extends RestController
 
         if ($q) {
             $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
-            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             $qb->setParameter('q', $q);
         }
 
@@ -346,14 +346,14 @@ class ReportController extends RestController
                    'notStarted' => 0,
                    'notFinished' => 0,
                    'readyToSubmit' => 0];
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
             $counts[$report->getStatus()->getStatus()]++;
             $counts['total']++;
         }
 
         // status filters
         if ($status) {
-            $reports = array_filter($reports, function($report) use($status) {
+            $reports = array_filter($reports, function ($report) use ($status) {
                 return $report->getStatus()->getStatus() == $status;
             });
         }
@@ -361,7 +361,7 @@ class ReportController extends RestController
         $reports = array_slice($reports, $offset, $limit);
 
 
-        $serialisedGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['client', 'report'];
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['client', 'report'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return [

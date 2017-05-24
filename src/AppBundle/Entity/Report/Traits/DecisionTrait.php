@@ -27,8 +27,6 @@ trait DecisionTrait
      **/
     private $reasonForNoDecisions;
 
-
-
     /**
      * Get decisions.
      *
@@ -38,7 +36,6 @@ trait DecisionTrait
     {
         return $this->decisions;
     }
-
 
     /**
      * Add decisions.

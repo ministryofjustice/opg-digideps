@@ -25,7 +25,6 @@ trait MoneyTransferTrait
      */
     private $noTransfersToAdd;
 
-
     /**
      * @return MoneyTransfer[]
      */
@@ -63,5 +62,4 @@ trait MoneyTransferTrait
 
         return $this;
     }
-
 }

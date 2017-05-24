@@ -6,7 +6,6 @@ use AppBundle\Service\PaService;
 
 class PaServiceStaticTest extends \PHPUnit_Framework_TestCase
 {
-
     public static function parseDateProvider()
     {
         return [

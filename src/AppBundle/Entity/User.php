@@ -2,13 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Traits\AddressTrait;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
-use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
-use AppBundle\Entity\Traits\AddressTrait;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Users.
@@ -329,7 +329,7 @@ class User implements UserInterface
      */
     public function setActive($active)
     {
-        $this->active = (bool)$active;
+        $this->active = (bool) $active;
 
         return $this;
     }
@@ -540,6 +540,7 @@ class User implements UserInterface
      * Add a team
      *
      * @param Team $team
+     *
      * @return $this
      */
     public function addTeam(Team $team)
@@ -933,6 +934,7 @@ class User implements UserInterface
 
     /**
      * @param string $jobTitle
+     *
      * @return User
      */
     public function setJobTitle($jobTitle)
@@ -958,7 +960,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAgreeTermsUse()
     {
@@ -966,7 +968,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param boolean $agreeTermsUse
+     * @param bool $agreeTermsUse
      */
     public function setAgreeTermsUse($agreeTermsUse)
     {
@@ -989,7 +991,7 @@ class User implements UserInterface
      */
     public function isPaDeputy()
     {
-        return ($this->isPaAdministrator() || $this->isPaTeamMember());
+        return $this->isPaAdministrator() || $this->isPaTeamMember();
     }
 
     /**

@@ -74,7 +74,7 @@ class ClientController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['client'];
+            ? (array) $request->query->get('groups') : ['client'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
@@ -85,6 +85,4 @@ class ClientController extends RestController
 
         return $client;
     }
-
-
 }

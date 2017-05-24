@@ -477,7 +477,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('travel-costs', $row['fee_type_id']);
         $this->assertEquals(1.2, $row['amount']);
         $this->assertEquals(true, $row['has_more_details']);
-        $this->assertEquals("tc.md", $row['more_details']);
+        $this->assertEquals('tc.md', $row['more_details']);
 
 
         // "add reason. And assert fees are reset
@@ -588,7 +588,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
     }
 
-
     public function testGetAllAuth()
     {
         $url = '/report/get-all';
@@ -608,7 +607,7 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/get-all';
 
-        $reportsGetAllRequest = function(array $params)  {
+        $reportsGetAllRequest = function (array $params) {
             $url = '/report/get-all?' . http_build_query($params);
             return $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
@@ -625,9 +624,9 @@ class ReportControllerTest extends AbstractTestController
 //        $this->assertEquals(0, $ret['counts']['readyToSubmit']);
 
         //assert results
-        $this->assertCount(3,  $ret['reports']);
-        $this->assertEquals('102',  $ret['reports'][0]['type']);
-        $this->assertEquals('pa1Client1',  $ret['reports'][0]['client']['firstname']);
+        $this->assertCount(3, $ret['reports']);
+        $this->assertEquals('102', $ret['reports'][0]['type']);
+        $this->assertEquals('pa1Client1', $ret['reports'][0]['client']['firstname']);
 
         //test pagination
         $reportsPaginated = $reportsGetAllRequest([
@@ -645,12 +644,12 @@ class ReportControllerTest extends AbstractTestController
         $reportsFilteredReadyToSubmit = $reportsGetAllRequest([
             'status'    => 'readyToSubmit',
         ]);
-        $this->assertCount(0,  $reportsFilteredReadyToSubmit['reports']);
+        $this->assertCount(0, $reportsFilteredReadyToSubmit['reports']);
 
         // test search
         $reportsSearched = $reportsGetAllRequest([
             'q'    => 'pa1Client3',
         ]);
-        $this->assertCount(1,  $reportsSearched['reports']);
+        $this->assertCount(1, $reportsSearched['reports']);
     }
 }

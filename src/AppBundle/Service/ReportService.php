@@ -5,12 +5,12 @@ namespace AppBundle\Service;
 use AppBundle\Entity\CasRec as CasRecEntity;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
+use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 
 class ReportService
 {
@@ -26,8 +26,7 @@ class ReportService
         ReportRepository $reportRepository,
         CasRecRepository $casRecRepository,
         EntityManager $em
-    )
-    {
+    ) {
         $this->reportRepository = $reportRepository;
         $this->casRecRepository = $casRecRepository;
         $this->_em = $em;
@@ -103,6 +102,7 @@ class ReportService
      * Using an array of CasRec entities update any corresponding report type if it has been changed
      *
      * @param array $casRecEntities
+     *
      * @throws \Exception
      */
     public function updateCurrentReportTypes(array $casRecEntities)
@@ -146,5 +146,4 @@ class ReportService
 
         $this->_em->flush();
     }
-
 }

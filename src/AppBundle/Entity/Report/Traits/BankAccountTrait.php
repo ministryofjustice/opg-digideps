@@ -16,7 +16,6 @@ trait BankAccountTrait
      */
     private $bankAccounts;
 
-
     /**
      * Add accounts.
      *
@@ -51,7 +50,6 @@ trait BankAccountTrait
         return $this->bankAccounts;
     }
 
-
     /**
      * @return BankAccount[]
      */
@@ -61,7 +59,6 @@ trait BankAccountTrait
             return $b->getClosingBalance() == null;
         });
     }
-
 
     /**
      ** @return bool

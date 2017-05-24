@@ -2,11 +2,10 @@
 
 namespace AppBundle\Entity\Repository;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Debt as ReportDebt;
 use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
+use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -54,7 +53,9 @@ class ReportRepository extends EntityRepository
     public function addFeesToReportIfMissing(Report $report)
     {
         // do not add if there are no PAs associated to this client
-        $isPaF = function($user) { return $user->isPaDeputy(); };
+        $isPaF = function ($user) {
+            return $user->isPaDeputy();
+        };
         if (0 === $report->getClient()->getUsers()->filter($isPaF)->count()) {
             return;
         }

@@ -27,7 +27,6 @@ trait PaFeeExpensesTrait
      */
     private $reasonForNoFees;
 
-
     /**
      * @return Fee[]
      */
@@ -128,5 +127,4 @@ trait PaFeeExpensesTrait
 
         return $this->getReasonForNoFees() ? 'no' : 'yes';
     }
-
 }

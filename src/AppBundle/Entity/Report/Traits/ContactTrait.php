@@ -61,7 +61,6 @@ trait ContactTrait
         return $this->contacts;
     }
 
-
     /**
      * Set reasonForNoContact.
      *
@@ -85,5 +84,4 @@ trait ContactTrait
     {
         return $this->reasonForNoContacts;
     }
-
 }
