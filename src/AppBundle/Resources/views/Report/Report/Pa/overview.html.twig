@@ -108,13 +108,21 @@
                 warning: true,
                 description: true
             } %}
-        {% endif %}
 
-        {% if report.isDue() and not reportStatus.balanceMatches %}
-            <!-- TO DO -->
-            <li id="accounts-not-balanced-section" class="overview-section">
-                {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
-            </li>
+            {% if report.isDue() and not reportStatus.balanceMatches %}
+                <li id="bank_accounts_not_balanced-section" class="overview-section">
+                    <div id="bank_accounts_not_balanced-sub-section" class="descriptive-list-item">
+                        <h3 class="heading heading-medium">
+                                <a class="behat-link-edit-bank_accounts" id="edit-bank-accounts" href="{{ path('balance', {reportId: report.id}) }}" aria-label="{{ ('bank_accounts' ~ '.edit') | trans }}">
+                                    {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
+                                </a>
+                        </h3>
+                        <span class="status flush--bottom {{ reportStatus.bankAccountsState.state }}">
+                            {{ ('bank_accounts.label.addReason') | trans }}
+                        </span>
+                    </div>
+                </li>
+            {% endif %}
         {% endif %}
 
         {% if is102 %}

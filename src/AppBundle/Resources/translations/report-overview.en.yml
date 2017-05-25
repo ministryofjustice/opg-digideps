@@ -84,11 +84,13 @@ gifts:
       done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
     subSectionTitle: "Accounts"
+    subSectionTitleNotBalanced: "Accounts not balanced"
     subSectionDescription: "Add %client%'s bank, building society and savings accounts"
     edit: "Edit"
     start: "Start"
     label:
       done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+      addReason: "Add reason"
 money_transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Provide details of money transferred between %client%'s accounts"
