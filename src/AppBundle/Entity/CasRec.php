@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -217,4 +218,29 @@ class CasRec
     {
         return $this->corref;
     }
+
+    /**
+     * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
+     * 103: when corref = l3/l3g and typeofRep = opg103
+     * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
+     * 103: all the other cases;
+     *
+     * @param string $typeOfRep e.g. opg103
+     * @param string $corref e.g. l3, l3g
+     * @return string  Report::TYPE_*
+     */
+    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref)
+    {
+        $typeOfRep = trim(strtolower($typeOfRep));
+        $corref = trim(strtolower($corref));
+
+        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
+            return Report::TYPE_103;
+        } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
+            return Report::TYPE_104;
+        }
+
+        return Report::TYPE_102;
+    }
+
 }

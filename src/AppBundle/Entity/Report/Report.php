@@ -244,34 +244,6 @@ class Report
     }
 
     /**
-     * @param string $type
-     */
-    public function setTypeBasedOnCasrecRecord(CasRec $casRec)
-    {
-        $this->setType($this->getTypeBasedOnCasrecRecord($casRec));
-    }
-
-    /**
-     * Return Report type based on casrec data
-     *
-     * @param CasRec $casRec
-     *
-     * @return string
-     */
-    public function getTypeBasedOnCasrecRecord(CasRec $casRec)
-    {
-        $typeOfRep = $casRec->getTypeOfReport();
-        $corref = $casRec->getCorref();
-        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
-            return Report::TYPE_103;
-        } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
-            return Report::TYPE_104;
-        } else {
-            return Report::TYPE_102;
-        }
-    }
-
-    /**
      * Get id.
      *
      * @return int
