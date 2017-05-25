@@ -32,16 +32,8 @@ class ReportController extends RestController
         $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $report = new Report();
-        $report->setClient($client);
-
-        // if a casrec record is present, the report type is decided by the casrec Record
-        $casRec = $this->getRepository(EntityDir\CasRec::class)->findOneBy(['caseNumber'=>$client->getCaseNumber()]); /* @var $casRec EntityDir\CasRec */
-        if ($casRec instanceof EntityDir\CasRec) {
-            $report->setType(EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
-        } else {
-            $report->setType(Report::TYPE_102);
-        }
+        $report = new Report($client);
+        $this->get('opg_digideps.report_service')->setReportTypeBasedOnCasrec($report);
 
         $this->validateArray($reportData, [
             'start_date' => 'notEmpty',

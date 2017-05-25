@@ -202,10 +202,12 @@ class Report
     private $metadata;
 
     /**
-     * Constructor.
+     * Report constructor.
+     * @param Client $client
      */
-    public function __construct()
+    public function __construct(Client $client)
     {
+        $this->client = $client;
         $this->contacts = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();

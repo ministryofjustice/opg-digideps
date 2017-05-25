@@ -40,6 +40,21 @@ class ReportService
     }
 
     /**
+     * Set report type based on CasRec record (if existing), found matching the client case number
+     * @param Report $report
+     */
+    public function setReportTypeBasedOnCasrec(Report $report)
+    {
+        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $report->getClient()->getCaseNumber()]);
+        if ($casRec instanceof CasRec) {
+            $report->setType(CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
+        } else {
+            // @to-do Should we throw an exception here? Use old type for now
+            $report->setType($report->getType());
+        }
+    }
+
+    /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
      * @param Report $report
@@ -49,19 +64,9 @@ class ReportService
     public function createNextYearReport(Report $report)
     {
         //lets clone the report
-        $newReport = new Report();
         $client = $report->getClient();
-
-        $newReport->setClient($client);
-
-        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
-
-        if ($casRec instanceof CasRec) {
-            $newReport->setType(CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
-        } else {
-            // @to-do Should we throw an exception here? Use old type for now
-            $newReport->setType($report->getType());
-        }
+        $newReport = new Report($client);
+        $this->setReportTypeBasedOnCasrec($newReport);
 
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));

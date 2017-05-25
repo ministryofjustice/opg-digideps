@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount;
@@ -26,7 +27,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->report = m::mock(Report::class . '[has106Flag]');
+        $this->client = m::mock(Client::class);
+        $this->report = m::mock(Report::class . '[has106Flag]', [$this->client]);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
@@ -141,7 +143,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
         $reportWith = function ($fees) {
-            return m::mock(Report::class . '[getFees]')
+            return m::mock(Report::class . '[getFees]', [$this->client])
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
@@ -155,7 +157,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
 
         $reportWith = function ($expenses) {
-            return m::mock(Report::class . '[getExpenses]')
+            return m::mock(Report::class . '[getExpenses]', [$this->client])
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();
         };

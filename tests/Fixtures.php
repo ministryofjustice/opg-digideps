@@ -115,7 +115,7 @@ class Fixtures
      */
     public function createReport(EntityDir\Client $client, array $settersMap = [])
     {
-        $report = new EntityDir\Report\Report();
+        $report = new EntityDir\Report\Report($client);
 
         // start/end dates from today for 365 days
         $today = new DateTime();
@@ -123,7 +123,6 @@ class Fixtures
         $today->modify('+365 days');
         $report->setEndDate($today);
 
-        $report->setClient($client);
         $report->setType(EntityDir\Report\Report::TYPE_102);
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
