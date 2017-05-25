@@ -208,8 +208,15 @@ class PaService
         }
         $reportEndDate = clone $reportDueDate;
         $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
         $report = $client->getReportByDueDate($reportEndDate);
-        if (!$report) {
+        if ($report) {
+            if ($report->getType() != $reportType) {
+                $report->setType($reportType);
+                $this->em->persist($report);
+                $this->em->flush();
+            }
+        } else {
             $report = new EntityDir\Report\Report($client);
             $client->addReport($report);   //double link for testing reasons
             $reportStartDate = clone $reportEndDate;
@@ -217,12 +224,13 @@ class PaService
             $report
                 ->setStartDate($reportStartDate)
                 ->setEndDate($reportEndDate)
-                ->setType(EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']));
+                ->setType($reportType);
 
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();
         }
+
 
         return $report;
     }
