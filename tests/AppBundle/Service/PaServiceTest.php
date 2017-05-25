@@ -107,10 +107,10 @@ class PaServiceTest extends WebTestCase
         // create two clients for the same deputy, each one with a report
         $data = [
             // deputy 1 with client 1 and client 2
-            self::$deputy1 + self::$client1,
-            self::$deputy1 + self::$client2,
+            0 => self::$deputy1 + self::$client1,
+            1 => self::$deputy1 + self::$client2,
             // deputy 2 with client 3
-            self::$deputy2 + self::$client3,
+            2 => self::$deputy2 + self::$client3,
         ];
 
         $ret1 = $this->pa->addFromCasrecRows($data);
@@ -167,6 +167,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
 
 
         // check client 3 is associated with deputy2
