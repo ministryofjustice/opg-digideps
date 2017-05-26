@@ -13,7 +13,8 @@ Feature: Terßms and Conditions
         
     @deputy
     Scenario: The terms and conditions page contains a back link
-        Given I go to "/login"
+        Given I go to "/logout"
+        And I go to "/login"
         And I go to "/terms"
         Then the "Back" link url should contain "/login"
     
