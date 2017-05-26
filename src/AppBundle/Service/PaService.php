@@ -70,7 +70,7 @@ class PaService
 
             $row = array_map('trim', $row);
             $line = $data['line'] + $index;
-
+            
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
@@ -81,18 +81,8 @@ class PaService
                 $this->createReport($row, $client, $user);
             } catch (\RuntimeException $e) {
                 $errors[] = $e->getMessage() . ' in line ' . $line;
-            } catch (ORMException $e) {
-                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
-                $message .= ': ' . $e->getMessage();
-                $errors[] = $message;
-            } catch (UniqueConstraintViolationException $e) {
-                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
-                $message .= ': Email already exists. ';
-
-                $errors[] = $message;
             } catch (\Exception $e) {
                 $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
-                $message .= ': ' . $e->getMessage();
                 $errors[] = $message;
             }
             // clean up for next iteration
@@ -120,46 +110,54 @@ class PaService
         $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
 
         if (!$user) {
-            $user = new EntityDir\User();
-            $user
-                ->setRegistrationDate(new \DateTime())
-                ->setDeputyNo($row['Deputy No'])
-                ->setEmail($row['Email'])
-                ->setFirstname($row['Dep Forename'])
-                ->setLastname($row['Dep Surname'])
-                ->setRoleName(EntityDir\User::ROLE_PA);
+            // check for duplicate email address
+            $user = $this->userRepository->findOneBy(['email' => $row['Email']]);
+            if ($user) {
+                $this->warnings[] = 'Deputy ' . $row['Deputy No'] .
+                    ' cannot be added with email ' . $user->getEmail() .
+                    '. Email already exists';
+            } else {
 
-            // create team (if not already existing)
-            if ($user->getTeams()->isEmpty()) {
-                $team = new EntityDir\Team(null);
+                $user = new EntityDir\User();
+                $user
+                    ->setRegistrationDate(new \DateTime())
+                    ->setDeputyNo($row['Deputy No'])
+                    ->setEmail($row['Email'])
+                    ->setFirstname($row['Dep Forename'])
+                    ->setLastname($row['Dep Surname'])
+                    ->setRoleName(EntityDir\User::ROLE_PA);
 
-                // Address from upload is the team's address, not the user's
-                if (!empty($row['Dep Adrs1'])) {
-                    $team->setAddress1($row['Dep Adrs1']);
+                // create team (if not already existing)
+                if ($user->getTeams()->isEmpty()) {
+                    $team = new EntityDir\Team(null);
+
+                    // Address from upload is the team's address, not the user's
+                    if (!empty($row['Dep Adrs1'])) {
+                        $team->setAddress1($row['Dep Adrs1']);
+                    }
+
+                    if (!empty($row['Dep Adrs2'])) {
+                        $team->setAddress2($row['Dep Adrs2']);
+                    }
+
+                    if (!empty($row['Dep Adrs3'])) {
+                        $team->setAddress3($row['Dep Adrs3']);
+                    }
+
+                    if (!empty($row['Dep Postcode'])) {
+                        $team->setAddressPostcode($row['Dep Postcode']);
+                        $team->setAddressCountry('GB'); //postcode given means a UK address is given
+                    }
+
+                    $user->addTeam($team);
+                    $this->em->persist($team);
+                    $this->em->flush($team);
                 }
 
-                if (!empty($row['Dep Adrs2'])) {
-                    $team->setAddress2($row['Dep Adrs2']);
-                }
-
-                if (!empty($row['Dep Adrs3'])) {
-                    $team->setAddress3($row['Dep Adrs3']);
-                }
-
-                if (!empty($row['Dep Postcode'])) {
-                    $team->setAddressPostcode($row['Dep Postcode']);
-                    $team->setAddressCountry('GB'); //postcode given means a UK address is given
-                }
-
-                $user->addTeam($team);
-                $this->em->persist($team);
-                $this->em->flush($team);
+                $this->em->persist($user);
+                $this->em->flush($user);
+                $this->added['users'][] = $row['Email'];
             }
-
-            $this->em->persist($user);
-            $this->em->flush($user);
-            $this->added['users'][] = $row['Email'];
-
         } else {
             // Notify email change
             if ($user->getEmail() !== $row['Email']) {
