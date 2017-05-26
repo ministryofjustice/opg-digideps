@@ -70,7 +70,7 @@ class PaService
 
             $row = array_map('trim', $row);
             $line = $data['line'] + $index;
-            
+
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
@@ -89,9 +89,9 @@ class PaService
             $this->em->clear();
         }
 
-        //sort($this->added['users']);
-        //sort($this->added['clients']);
-        //sort($this->added['reports']);
+        sort($this->added['users']);
+        sort($this->added['clients']);
+        sort($this->added['reports']);
 
         return [
             'added' => $this->added,
@@ -115,7 +115,7 @@ class PaService
             if ($user) {
                 $this->warnings[] = 'Deputy ' . $row['Deputy No'] .
                     ' cannot be added with email ' . $user->getEmail() .
-                    '. Email already exists';
+                    '. Email already taken by Deputy No: ' . $user->getDeputyNo();
             } else {
 
                 $user = new EntityDir\User();
