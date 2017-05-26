@@ -12,6 +12,16 @@ class PaService
      */
     protected $em;
 
+    /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
+     * @var array
+     */
+    protected $warnings = [];
+
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -50,13 +60,14 @@ class PaService
      *
      * @return array
      */
-    public function addFromCasrecRows(array $rows)
+    public function addFromCasrecRows(array $data)
     {
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
-
-        foreach ($rows as $index => $row) {
+        foreach ($data['rows'] as $index => $row) {
             $row = array_map('trim', $row);
+            $line = $data['line'] + $index;
+
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
@@ -66,7 +77,9 @@ class PaService
                 $client = $this->createClient($row, $user);
                 $this->createReport($row, $client, $user);
             } catch (\RuntimeException $e) {
-                $errors[] = $e->getMessage() . ' in line ' . ($index + 2);
+                $errors[] = $e->getMessage() . ' in line ' . $line;
+            } catch (\Exception $e) {
+                $errors[] = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
             }
             // clean up for next iteration
             $this->em->clear();
@@ -76,7 +89,11 @@ class PaService
         sort($this->added['clients']);
         sort($this->added['reports']);
 
-        return ['added' => $this->added, 'errors' => $errors];
+        return [
+            'added' => $this->added,
+            'errors' => $errors,
+            'warnings' => $this->warnings
+        ];
     }
 
     /**
@@ -86,14 +103,14 @@ class PaService
      */
     private function createUser(array $row)
     {
-        $email = $row['Email'];
-        $user = $this->userRepository->findOneBy(['email' => $email]);
+        $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
+
         if (!$user) {
             $user = new EntityDir\User();
             $user
                 ->setRegistrationDate(new \DateTime())
                 ->setDeputyNo($row['Deputy No'])
-                ->setEmail($email)
+                ->setEmail($row['Email'])
                 ->setFirstname($row['Dep Forename'])
                 ->setLastname($row['Dep Surname'])
                 ->setRoleName(EntityDir\User::ROLE_PA);
@@ -125,9 +142,17 @@ class PaService
                 $this->em->flush($team);
             }
 
-            $this->added['users'][] = $email;
             $this->em->persist($user);
             $this->em->flush($user);
+            $this->added['users'][] = $row['Email'];
+
+        } else {
+            // Notify email change
+            if ($user->getEmail() !== $row['Email']) {
+                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
+                    ' previously with email ' . $user->getEmail() .
+                    ' has changed email to ' . $row['Email'];
+            }
         }
 
         return $user;
