@@ -3,7 +3,9 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 
 class PaService
 {
@@ -65,6 +67,7 @@ class PaService
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data['rows'] as $index => $row) {
+
             $row = array_map('trim', $row);
             $line = $data['line'] + $index;
 
@@ -78,16 +81,27 @@ class PaService
                 $this->createReport($row, $client, $user);
             } catch (\RuntimeException $e) {
                 $errors[] = $e->getMessage() . ' in line ' . $line;
+            } catch (ORMException $e) {
+                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message .= ': ' . $e->getMessage();
+                $errors[] = $message;
+            } catch (UniqueConstraintViolationException $e) {
+                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message .= ': Email already exists. ';
+
+                $errors[] = $message;
             } catch (\Exception $e) {
-                $errors[] = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message .= ': ' . $e->getMessage();
+                $errors[] = $message;
             }
             // clean up for next iteration
             $this->em->clear();
         }
 
-        sort($this->added['users']);
-        sort($this->added['clients']);
-        sort($this->added['reports']);
+        //sort($this->added['users']);
+        //sort($this->added['clients']);
+        //sort($this->added['reports']);
 
         return [
             'added' => $this->added,
