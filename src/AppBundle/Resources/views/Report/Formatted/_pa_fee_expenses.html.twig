@@ -4,9 +4,6 @@
 <div class="section" id="pa-fees-expenses-section">
     <h2 class="section-heading">{{ 'startPage.pageSectionTitle'|trans }}</h2>
 
-    {% set reportHasFees = report.hasFees == 'yes' %}
-    {% set reportPaidForAnything = report.paidForAnything == 'yes' %}
-
     <div class="dont-break">
         <div class="box">
             <div class="checkboxes horizontal">
@@ -14,15 +11,14 @@
 
                 <table class="yesno small">
                     <tr>
-                        <td class="checkbox"
-                            data-checkbox="report-has-pa-fees--yes">{% if reportHasFees %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox"
-                            data-checkbox="report-has-pa-fees--no">{% if reportHasFees == false %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        {% for answer in ['yes', 'no'] %}
+                            <td class="checkbox"
+                                data-checkbox="report-has-pa-fees--{{ answer }}">{% if report.hasFees == answer %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">{{ answer | capitalize }}</td>
+                        {% endfor %}
                     </tr>
                 </table>
-                {% if reportHasFees %}
+                {% if report.hasFees =='yes' %}
                     <ul class="transactions">
                         {% for fee in report.fees %}
                             <li class="transaction {% if fee.amount == 0 %}{{ fee.amount }} disable{% endif %}">
@@ -36,13 +32,13 @@
                             </li>
                         {% endfor %}
                     </ul>
-                {%  else %}
-                    <div class="value textarea">{{ report.reasonForNoFees | nl2br}}</div>
+                {% else %}
+                    <div class="value textarea">{{ report.reasonForNoFees | nl2br }}</div>
                 {% endif %}
             </div>
         </div>
 
-        {% if reportHasFees %}
+        {% if report.hasFees == 'yes' %}
             {# total value #}
             <div class="box total">
                 <div class="labelvalue inline">
@@ -59,16 +55,15 @@
 
                 <table class="yesno small">
                     <tr>
-                        <td class="checkbox"
-                            data-checkbox="report-pa-paid-for-anything--yes">{% if reportPaidForAnything %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox"
-                            data-checkbox="report-pa-paid-for-anything--yes">{% if reportPaidForAnything == false %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        {% for answer in ['yes', 'no'] %}
+                            <td class="checkbox"
+                                data-checkbox="report-pa-paid-for-anything--{{ answer }}">{% if report.paidForAnything == answer %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">{{ answer | capitalize }}</td>
+                        {% endfor %}
                     </tr>
                 </table>
             </div>
-            {% if reportPaidForAnything %}
+            {% if report.paidForAnything == 'yes' %}
                 <div class="category">
                     <ul class="transactions">
                         {% for expense in report.expenses %}
@@ -82,7 +77,7 @@
             {% endif %}
         </div>
 
-        {% if reportPaidForAnything %}
+        {% if report.paidForAnything == 'yes' %}
             {# total value #}
             <div class="box total">
                 <div class="labelvalue inline">

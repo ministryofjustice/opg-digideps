@@ -63,8 +63,13 @@
                     <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
                 </tr>
                 <tr>
+                    {% if report.has106flag %}
+                    <td>Total deputy fees and expenses:</td>
+                    <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
+                    {% else %}
                     <td>Total deputy expenses:</td>
                     <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td>Total gifts:</td>
