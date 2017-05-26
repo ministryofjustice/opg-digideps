@@ -381,7 +381,7 @@ class AdminController extends AbstractController
                 $postData['chunkSize'] = $chunkSize;
                 foreach (array_chunk($data, $chunkSize) as $chunk) {
                     $postData['compressedData'] = CsvUploader::compressData($chunk);
-                    $postData['line'] = $chunksProcessed * $chunkSize;
+                    $postData['line'] = ($chunksProcessed * $chunkSize) + 1;
 
                     $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $postData);
 
