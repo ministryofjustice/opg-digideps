@@ -130,6 +130,14 @@
         {% endfor %}
     {% endblock %}
 
+    {% block warnings %}
+        {% for flashMessage in app.session.flashbag.get('warning') %}
+            <div class="push--top behat-region-error">
+                {{ macros.notification('warning', flashMessage) }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
     <h1 class="{% block pageTitleClass %}heading-xlarge{% endblock %} text">
         {% block supportTitleTop %}{% endblock %}
         {% block pageTitle %} Deputy report {% endblock %}
