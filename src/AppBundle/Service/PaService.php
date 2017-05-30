@@ -108,10 +108,11 @@ class PaService
     private function createUser(array $row)
     {
         $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
+        $userEmail = strtolower($row['Email']);
 
         if (!$user) {
             // check for duplicate email address
-            $user = $this->userRepository->findOneBy(['email' => $row['Email']]);
+            $user = $this->userRepository->findOneBy(['email' => $userEmail]);
             if ($user) {
                 $this->warnings[] = 'Deputy ' . $row['Deputy No'] .
                     ' cannot be added with email ' . $user->getEmail() .
@@ -161,10 +162,10 @@ class PaService
             }
         } else {
             // Notify email change
-            if ($user->getEmail() !== $row['Email']) {
+            if ($user->getEmail() !== $userEmail) {
                 $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
                     ' previously with email ' . $user->getEmail() .
-                    ' has changed email to ' . $row['Email'];
+                    ' has changed email to ' . $userEmail;
             }
         }
 
