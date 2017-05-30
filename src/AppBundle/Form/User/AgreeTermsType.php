@@ -22,7 +22,7 @@ class AgreeTermsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'user-terms-use',
+            'translation_domain' => 'pa-terms-use',
             'validation_groups' => ['agree-terms-use'],
         ]);
     }
