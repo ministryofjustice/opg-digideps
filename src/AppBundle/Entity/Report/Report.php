@@ -262,7 +262,7 @@ class Report
     {
         $typeOfRep = $casRec->getTypeOfReport();
         $corref = $casRec->getCorref();
-        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g']) && $typeOfRep === 'opg103') {
+        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g', 'a3']) && $typeOfRep === 'opg103') {
             return Report::TYPE_103;
         } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
             return Report::TYPE_104;
