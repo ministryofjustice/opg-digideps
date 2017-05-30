@@ -63,14 +63,18 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             // 103 created with L3(G) - OPG103
             ['l3', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
             ['l3g', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+            ['a3', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_103],
 
             // 104 create with
             ['hw', '', Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
 
-            // all the rest is a 102 (default)
+            // other cases
             [null, null, Report::TYPE_102],
             [null, 'opg103', Report::TYPE_102],
             [null, 'opg103', Report::TYPE_102],
+            ['l3', 'whatever', Report::TYPE_102],
+            ['l3g', 'whatever', Report::TYPE_102],
+            ['a3', 'whatever', Report::TYPE_102],
             ['l2', 'opg103', Report::TYPE_102],
             ['hw', 'opg103', Report::TYPE_102],
             ['hw', 'opg102', Report::TYPE_102],
