@@ -61,6 +61,7 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
     }
 
     /**
+     * this test could be refactor moking reportService.setReportTypeBasedOnCasrec
      * @test
      * @dataProvider createNextYearReportChangesTypeProvider
      */
@@ -126,80 +127,9 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
     public static function createNextYearReportChangesTypeProvider()
     {
         return [
-            //102
-            [ReportEntity::TYPE_102, 'l2', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'a2', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'l3', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'a3', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'l3g', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'hw', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, '', 'opg102', ReportEntity::TYPE_102],
-
-            [ReportEntity::TYPE_102, 'l2', 'opg103', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'a2', 'opg103', ReportEntity::TYPE_102],
+            // more cases on CasrecTest::getTypeBasedOnTypeofRepAndCorrefProvider
             [ReportEntity::TYPE_102, 'l3', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_102, 'a3', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_102, 'l3g', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_102, 'hw', 'opg103', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, '', 'opg103', ReportEntity::TYPE_102],
-
-            [ReportEntity::TYPE_102, 'l2', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'a2', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'l3', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'a3', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'l3g', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, 'hw', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_102, '', '', ReportEntity::TYPE_102],
-
-            // 103
             [ReportEntity::TYPE_103, 'l2', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'a2', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'l3', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'a3', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'l3g', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'hw', 'opg102', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, '', 'opg102', ReportEntity::TYPE_102],
-
-            [ReportEntity::TYPE_103, 'l2', 'opg103', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'a2', 'opg103', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'l3', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_103, 'a3', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_103, 'l3g', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_103, 'hw', 'opg103', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, '', 'opg103', ReportEntity::TYPE_102],
-
-            [ReportEntity::TYPE_103, 'l2', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'a2', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'l3', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'a3', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'l3g', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, 'hw', '', ReportEntity::TYPE_102],
-            [ReportEntity::TYPE_103, '', '', ReportEntity::TYPE_102],
-
-            // 104
-            [ReportEntity::TYPE_104, 'l2', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a2', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a3', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3g', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'hw', 'opg102', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, '', 'opg102', ReportEntity::TYPE_104],
-
-            [ReportEntity::TYPE_104, 'l2', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a2', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a3', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3g', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'hw', 'opg103', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, '', 'opg103', ReportEntity::TYPE_104],
-
-            [ReportEntity::TYPE_104, 'l2', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a2', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'a3', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'l3g', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, 'hw', '', ReportEntity::TYPE_104],
-            [ReportEntity::TYPE_104, '', '', ReportEntity::TYPE_104],
         ];
     }
 }
