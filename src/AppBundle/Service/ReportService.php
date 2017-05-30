@@ -40,7 +40,9 @@ class ReportService
     }
 
     /**
-     * Set report type based on CasRec record (if existing), found matching the client case number
+     * Set report type based on CasRec record (if existing)
+     * If not found, sets a 102 report (to discuss if an execption works better here)
+     *
      * @param Report $report
      */
     public function setReportTypeBasedOnCasrec(Report $report)
@@ -48,10 +50,10 @@ class ReportService
         $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $report->getClient()->getCaseNumber()]);
         if ($casRec instanceof CasRec) {
             $report->setType(CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
-        } else {
-            // @to-do Should we throw an exception here? Use old type for now
-            $report->setType($report->getType());
+            return;
         }
+
+        $report->setType(Report::TYPE_102);
     }
 
     /**
