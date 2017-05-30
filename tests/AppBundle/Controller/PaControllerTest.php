@@ -54,11 +54,13 @@ class PaControllerTest extends AbstractTestController
 
     public function testAddBulk()
     {
+        $postData['chunkSize'] = 2;
+        $postData['compressedData'] = $this->compress([PaServiceTest::$deputy1 + PaServiceTest::$client1]);
+        $postData['line'] = 0;
+
         // add
         $data = $this->assertJsonRequest('POST', '/pa/bulk-add', [
-            'rawData' => $this->compress([
-                PaServiceTest::$deputy1 + PaServiceTest::$client1
-            ]),
+            'data' => $postData,
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
