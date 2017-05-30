@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -29,5 +30,18 @@ class UserRepository extends EntityRepository
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $result;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function hardDeleteExistingUser(User $user)
+    {
+        $existingSoftDeletedUser = $this->findUnfilteredOneBy(['email' => $user->getEmail()]);
+        if ($existingSoftDeletedUser != null) {
+            // delete soft deleted user a second time to hard delete it
+            $this->_em->remove($existingSoftDeletedUser);
+            $this->_em->flush($existingSoftDeletedUser);
+        }
     }
 }

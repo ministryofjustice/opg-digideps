@@ -154,6 +154,7 @@ class PaService
                     $this->em->flush($team);
                 }
 
+                $this->userRepository->hardDeleteExistingUser($user);
                 $this->em->persist($user);
                 $this->em->flush($user);
                 $this->added['users'][] = $row['Email'];
