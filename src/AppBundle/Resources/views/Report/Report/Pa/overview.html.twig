@@ -151,7 +151,7 @@
                                     description: true
                                 } %}
 
-                                {# {% if report.isDue() and not reportStatus.balanceMatches %} #}
+                                {% if report.isDue() and not reportStatus.balanceMatches %}
                                     <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
 
@@ -175,7 +175,7 @@
                                             </span> #}
                                         </div>
                                     </li>
-                                {# {% endif %} #}
+                                {% endif %}
                             {% endif %}
 
                             {% if is102 %}
