@@ -19,200 +19,211 @@
         {% include 'AppBundle:Report/Report/Pa:_header.html.twig' %}
     {% endblock %}
 
-    <h2>{{ 'currentReport' | trans() }}</h2>
-    <div class="grid-row">
-        <div class="column-one-half">
-            <ul>
-                <li>{{ 'reportStatus' | trans() }}:
-                    <span class="status status-large {{ 'reportStatus' }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
-                    {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
-                        <span class="bold-small"><a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a></span>
-                    {% endif %}
-                </li>
-                <li>{{ 'reportOptions' | trans() }}:
-                    <span class="bold-small"><a class="" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a></span>
-                    <span class="bold-small"><a class="" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a></span>
-                </li>
-                <li>{{ 'reportingPeriod' | trans() }}:
-                    <span class="bold-small">{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</span>
-                </li>
-                <li>{{ 'reportDueDate' | trans() }}:
-                    <span class="bold-small">{{ report.dueDate | date(" d F Y") }}</span>
-                </li>
-            </ul>
+    <div class="panel panel-admin">
+        <h2 class="heading-medium panel-heading">{{ 'currentReport' | trans() }}</h2>
+        <div class="grid-row">
+            <div class="column-one-third">
+                <p>{{ 'reportStatus' | trans() }}:<br>
+                <span class="status status-large {{ 'reportStatus' }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                    <span class="bold-small"><a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a></span>
+                {% endif %}
+                </p>
+
+            </div>
+            <div class="column-one-third">
+                <p>{{ 'reportOptions' | trans() }}:
+                    <span class="bold-small">
+                        <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a>
+                    </span>
+                    <span class="bold-small">
+                        <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a>
+                    </span>
+                </p>
+            </div>
+
+            <div class="column-one-third">
+                    <p>{{ 'reportingPeriod' | trans() }}:
+                        <span class="bold-small">{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</span>
+                    </p>
+                    <p>{{ 'reportDueDate' | trans() }}:
+                        <span class="bold-small">{{ report.dueDate | date(" d F Y") }}</span>
+                    </p>
+
+            </div>
+
         </div>
 
-    </div>
+        <h2>{{ 'reportSectionsToComplete' | trans() }}</h2>
 
-    <h2>{{ 'reportSectionsToComplete' | trans() }}</h2>
+        <ul id="overview-sections" class="overview-sections">
 
-    <ul id="overview-sections" class="overview-sections">
+            <!-- LEFT COL -->
 
-        <!-- LEFT COL -->
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'decisions',
-            report: report,
-            description: true,
-            state: reportStatus.decisionsState,
-            list: true
-        } %}
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'contacts',
-            report: report,
-            description: true,
-            list: true,
-            info: true,
-            state: reportStatus.contactsState,
-        } %}
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'visits_care',
-            report: report,
-            info: true,
-            description: true,
-            state: reportStatus.visitsCareState
-        } %}
-
-        <!-- TODO - MISSING HEALTH AND LIFESTYLE?? -->
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'pa_fee_expense',
-            report: report,
-            state: reportStatus.paFeesExpensesState,
-            linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
-            description: true
-        } %}
-
-        {% if is102 or is103 %}
-            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'gifts',
-            report: report,
-            state: reportStatus.giftsState,
-            linkToSubSection: path('gifts', {'reportId': report.id}),
-            description: true
-            } %}
-        {% endif %}
-
-        <!-- RIGHT COL -->
-
-        {% if is102 or is103 %}
             {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'bank_accounts',
+                subSection: 'decisions',
                 report: report,
-                state: reportStatus.bankAccountsState,
-                warning: true,
+                description: true,
+                state: reportStatus.decisionsState,
+                list: true
+            } %}
+
+            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'contacts',
+                report: report,
+                description: true,
+                list: true,
+                info: true,
+                state: reportStatus.contactsState,
+            } %}
+
+            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'visits_care',
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.visitsCareState
+            } %}
+
+            <!-- TODO - MISSING HEALTH AND LIFESTYLE?? -->
+
+            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'pa_fee_expense',
+                report: report,
+                state: reportStatus.paFeesExpensesState,
+                linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
                 description: true
             } %}
 
-            {% if report.isDue() and not reportStatus.balanceMatches %}
-                <li id="bank_accounts_not_balanced-section" class="overview-section">
-                    <div id="bank_accounts_not_balanced-sub-section" class="descriptive-list-item">
-                        <h3 class="heading heading-medium">
-                                <a class="behat-link-edit-bank_accounts" id="edit-bank-accounts" href="{{ path('balance', {reportId: report.id}) }}" aria-label="{{ ('bank_accounts' ~ '.edit') | trans }}">
-                                    {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
-                                </a>
-                        </h3>
-                        <span class="status flush--bottom {{ reportStatus.bankAccountsState.state }}">
-                            {{ ('bank_accounts.label.addReason') | trans }}
-                        </span>
-                    </div>
-                </li>
+            {% if is102 or is103 %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'gifts',
+                report: report,
+                state: reportStatus.giftsState,
+                linkToSubSection: path('gifts', {'reportId': report.id}),
+                description: true
+                } %}
             {% endif %}
-        {% endif %}
 
-        {% if is102 %}
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'money_transfers',
-            report: report,
-            state: reportStatus.moneyTransferState,
-            warning: true,
-            description: true
-            } %}
-        {% endif %}
+            <!-- RIGHT COL -->
 
-        {% if is102 %}
+            {% if is102 or is103 %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'bank_accounts',
+                    report: report,
+                    state: reportStatus.bankAccountsState,
+                    warning: true,
+                    description: true
+                } %}
+
+                {% if report.isDue() and not reportStatus.balanceMatches %}
+                    <li id="bank_accounts_not_balanced-section" class="overview-section">
+                        <div id="bank_accounts_not_balanced-sub-section" class="descriptive-list-item">
+                            <h3 class="heading heading-medium">
+                                    <a class="behat-link-edit-bank_accounts" id="edit-bank-accounts" href="{{ path('balance', {reportId: report.id}) }}" aria-label="{{ ('bank_accounts' ~ '.edit') | trans }}">
+                                        {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
+                                    </a>
+                            </h3>
+                            <span class="status flush--bottom {{ reportStatus.bankAccountsState.state }}">
+                                {{ ('bank_accounts.label.addReason') | trans }}
+                            </span>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+            {% if is102 %}
             {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'money_in',
+                subSection: 'money_transfers',
                 report: report,
-                state: reportStatus.moneyInState,
+                state: reportStatus.moneyTransferState,
                 warning: true,
                 description: true
-            } %}
+                } %}
+            {% endif %}
+
+            {% if is102 %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_in',
+                    report: report,
+                    state: reportStatus.moneyInState,
+                    warning: true,
+                    description: true
+                } %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_out',
+                    report: report,
+                    state: reportStatus.moneyOutState,
+                    warning: true,
+                    description: true
+                } %}
+            {% endif %}
+            {% if is103 %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_in_short',
+                    report: report,
+                    state: reportStatus.MoneyInShortState,
+                    warning: true,
+                    description: true
+                } %}
+                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'money_out_short',
+                    report: report,
+                    state: reportStatus.MoneyOutShortState,
+                    warning: true,
+                    description: true
+                } %}
+            {% endif %}
+
             {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'money_out',
+                subSection: 'assets',
                 report: report,
-                state: reportStatus.moneyOutState,
-                warning: true,
+                state: reportStatus.assetsState,
+                list: true,
                 description: true
             } %}
-        {% endif %}
-        {% if is103 %}
+
             {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'money_in_short',
+                subSection: 'debts',
                 report: report,
-                state: reportStatus.MoneyInShortState,
-                warning: true,
+                state: reportStatus.debtsState,
+                list: true,
                 description: true
             } %}
+
             {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
                 transDomain: translationDomain,
-                subSection: 'money_out_short',
+                subSection: 'actions',
                 report: report,
-                state: reportStatus.MoneyOutShortState,
-                warning: true,
-                description: true
+                description: true,
+                state: reportStatus.actionsState,
+                list: true
             } %}
-        {% endif %}
 
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            report: report,
-            state: reportStatus.assetsState,
-            list: true,
-            description: true
-        } %}
+            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('other_info', {reportId: report.id}),
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.otherInfoState,
+            } %}
 
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'debts',
-            report: report,
-            state: reportStatus.debtsState,
-            list: true,
-            description: true
-        } %}
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'actions',
-            report: report,
-            description: true,
-            state: reportStatus.actionsState,
-            list: true
-        } %}
-
-        {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'other_info',
-            linkToSubSection: path('other_info', {reportId: report.id}),
-            report: report,
-            info: true,
-            description: true,
-            state: reportStatus.otherInfoState,
-        } %}
-
-    </ul>
+        </ul>
+    </div>
 
 {% endblock %}

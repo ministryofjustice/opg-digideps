@@ -1,7 +1,7 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 
-<h1 class="heading-xlarge flush--bottom behat-region-report-title">
-    {{ 'report.header.clientProfile' | trans() }} {{ report.client.fullname }}
+<h1 class="heading-large flush--bottom behat-region-report-title">
+    {{ 'report.header.clientProfile' | trans() }} {{ report.client.fullname | title }}
 </h1>
-<h2 class="heading-large flush--top">{{ 'report.header.courtOrderNo' | trans() }} {{ report.client.caseNumber }}</h2>
+<p class="right bold">{{ 'report.header.courtOrderNo' | trans() }} {{ report.client.caseNumber }}</p>
