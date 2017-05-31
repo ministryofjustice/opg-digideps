@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\CasRec as CasRecEntity;
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -40,6 +40,23 @@ class ReportService
     }
 
     /**
+     * Set report type based on CasRec record (if existing)
+     * If not found, sets a 102 report (to discuss if an execption works better here)
+     *
+     * @param Report $report
+     */
+    public function setReportTypeBasedOnCasrec(Report $report)
+    {
+        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $report->getClient()->getCaseNumber()]);
+        if ($casRec instanceof CasRec) {
+            $report->setType(CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
+            return;
+        }
+
+        $report->setType(Report::TYPE_102);
+    }
+
+    /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
      * @param Report $report
@@ -49,19 +66,9 @@ class ReportService
     public function createNextYearReport(Report $report)
     {
         //lets clone the report
-        $newReport = new Report();
         $client = $report->getClient();
-
-        $newReport->setClient($client);
-
-        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
-
-        if ($casRec instanceof CasRecEntity) {
-            $newReport->setType($report->getTypeBasedOnCasrecRecord($casRec));
-        } else {
-            // @to-do Should we throw an exception here? Use old type for now
-            $newReport->setType($report->getType());
-        }
+        $newReport = new Report($client);
+        $this->setReportTypeBasedOnCasrec($newReport);
 
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
@@ -110,12 +117,12 @@ class ReportService
         //  Check the contents of the entities array and check the integrity of the components
         $casRecEntitiesWithKey = [];
 
-        foreach ($casRecEntities as $casRecEntity) {
-            if (!$casRecEntity instanceof CasRecEntity) {
+        foreach ($casRecEntities as $CasRec) {
+            if (!$CasRec instanceof CasRec) {
                 throw new \Exception('Invalid casrec entity encountered. AppBundle\Entity\CasRec expected');
             }
 
-            $casRecEntitiesWithKey[$casRecEntity->getCaseNumber()] = $casRecEntity;
+            $casRecEntitiesWithKey[$CasRec->getCaseNumber()] = $CasRec;
         }
 
         //  Create a case numbers string from the keys
@@ -135,7 +142,8 @@ class ReportService
 
             if (isset($casRecEntitiesWithKey[$reportClientCaseNumber])) {
                 //  Get the report type based on the CasRec record
-                $casRecReportType = $report->getTypeBasedOnCasrecRecord($casRecEntitiesWithKey[$reportClientCaseNumber]);
+                $casRec = $casRecEntitiesWithKey[$reportClientCaseNumber];
+                $casRecReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref());
 
                 if ($report->getType() != $casRecReportType) {
                     $report->setType($casRecReportType);

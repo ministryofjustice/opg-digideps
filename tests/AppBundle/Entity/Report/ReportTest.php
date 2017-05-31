@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount;
@@ -26,7 +27,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->report = m::mock(Report::class . '[has106Flag]');
+        $this->client = m::mock(Client::class);
+        $this->report = m::mock(Report::class . '[has106Flag]', [$this->client]);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
@@ -141,7 +143,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
         $reportWith = function ($fees) {
-            return m::mock(Report::class . '[getFees]')
+            return m::mock(Report::class . '[getFees]', [$this->client])
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
@@ -155,7 +157,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
 
         $reportWith = function ($expenses) {
-            return m::mock(Report::class . '[getExpenses]')
+            return m::mock(Report::class . '[getExpenses]', [$this->client])
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();
         };
@@ -185,40 +187,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
 
-    public function setTypeBasedOnCasrecRecordPRovider()
-    {
-        return [
-            //corref, type of rep, expected created report
 
-            // 103 created with L3(G) - OPG103
-            ['l3', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-            ['l3g', 'opg103', Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-
-            // 104 create with
-            ['hw', '', Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
-
-            // all the rest is a 102 (default)
-            [null, null, Report::TYPE_102],
-            [null, 'opg103', Report::TYPE_102],
-            [null, 'opg103', Report::TYPE_102],
-            ['l2', 'opg103', Report::TYPE_102],
-            ['hw', 'opg103', Report::TYPE_102],
-            ['hw', 'opg102', Report::TYPE_102],
-        ];
-    }
-
-    /**
-     * @dataProvider  setTypeBasedOnCasrecRecordPRovider
-     */
-    public function testsetTypeBasedOnCasrecRecord($corref, $typeOfRep, $expectedType)
-    {
-        $casRec = m::mock(CasRec::class, ['getCorref' => $corref, 'getTypeOfReport' => $typeOfRep]);
-
-        $this->report->setTypeBasedOnCasrecRecord($casRec);
-
-        $this->report->setTypeBasedOnCasrecRecord($casRec);
-        $this->assertEquals($expectedType, $this->report->getType());
-    }
 
     public function testStatus()
     {

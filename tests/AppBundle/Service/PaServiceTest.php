@@ -107,10 +107,10 @@ class PaServiceTest extends WebTestCase
         // create two clients for the same deputy, each one with a report
         $data['rows'] = [
             // deputy 1 with client 1 and client 2
-            self::$deputy1 + self::$client1,
-            self::$deputy1 + self::$client2,
+            0 => self::$deputy1 + self::$client1,
+            1 => self::$deputy1 + self::$client2,
             // deputy 2 with client 3
-            self::$deputy2 + self::$client3,
+            2 => self::$deputy2 + self::$client3,
         ];
         $data['line'] = 0;
 
@@ -168,6 +168,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
 
 
         // check client 3 is associated with deputy2
@@ -175,16 +176,34 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
         // move client2 from deputy1 -> deputy2
-        $data['rows'] = [
+        $dataMove['rows'] = [
             self::$deputy2 + self::$client2,
         ];
-        $data['line'] = 0;
-        $ret = $this->pa->addFromCasrecRows($data);
+        $dataMove['line'] = 0;
+        $this->pa->addFromCasrecRows($dataMove);
         self::$em->clear();
 
         // check client 3 is now associated with deputy1
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
+
+        // check that report type changes are applied
+        $data['rows'][0]['Corref'] = 'L3G';
+        $data['rows'][0]['Typeofrep'] = 'OPG103';
+        $this->pa->addFromCasrecRows($data);
+        $this->assertEquals([
+            'users'   => [],
+            'clients' => [],
+            'reports' => [],
+        ], $ret2['added']);
+        self::$em->clear();
+        self::$em->clear();
+
+        $user1 = self::$fixtures->findUserByEmail('dep1@provider.com');
+        $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
+        $client1 = $user1->getClientByCaseNumber('10000001');
+        $this->assertCount(1, $client1->getReports());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
     }
 
     public function tearDown()

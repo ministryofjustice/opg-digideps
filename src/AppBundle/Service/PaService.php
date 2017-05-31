@@ -247,32 +247,29 @@ class PaService
         }
         $reportEndDate = clone $reportDueDate;
         $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
         $report = $client->getReportByDueDate($reportEndDate);
-        if (!$report) {
-            $report = new EntityDir\Report\Report();
-            $client->addReport($report);
+        if ($report) {
+            if ($report->getType() != $reportType) {
+                $report->setType($reportType);
+                $this->em->persist($report);
+                $this->em->flush();
+            }
+        } else {
+            $report = new EntityDir\Report\Report($client);
+            $client->addReport($report);   //double link for testing reasons
             $reportStartDate = clone $reportEndDate;
             $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
             $report
                 ->setStartDate($reportStartDate)
-                ->setEndDate($reportEndDate);
-
-            //Set type based on casrec. Has to be done this way due to data cleansing logic in CasRec constructor
-            $casrec = new EntityDir\CasRec(
-                $client->getCaseNumber(),
-                $client->getLastname(),
-                $user->getDeputyNo(),
-                $user->getLastname(),
-                $user->getAddressPostcode(),
-                $row['Typeofrep'],
-                $row['Corref']
-            );
-            $report->setTypeBasedOnCasrecRecord($casrec);
+                ->setEndDate($reportEndDate)
+                ->setType($reportType);
 
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();
         }
+
 
         return $report;
     }
