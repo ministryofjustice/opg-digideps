@@ -63,6 +63,13 @@
                         <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
                     </dt>
                     <dd>{{ report.dueDate | date(" d F Y") }}</dd>
+	            {% if report.dueDateDiffDays < 0 %}
+	                <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+	            {% elseif report.dueDateDiffDays == 0 %}
+	                <span class="font-xsmall bold">Due today</span>
+	            {% elseif report.dueDateDiffDays <= 30 %}
+	                <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+	            {% endif %}
                 </dl>
             </div>
 
