@@ -88,10 +88,8 @@ class PaService
                 $user = $this->createUser($row);
                 $client = $this->createClient($row, $user);
                 $this->createReport($row, $client, $user);
-            } catch (\RuntimeException $e) {
-                $errors[] = $e->getMessage() . ' in line ' . $line;
             } catch (\Exception $e) {
-                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message = 'Error for Deputy No: ' . $row['Deputy No'] . ', case '.$row['Case'].': ' . $e->getMessage();
                 $errors[] = $message;
             }
         }
