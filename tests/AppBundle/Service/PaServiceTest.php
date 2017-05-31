@@ -188,8 +188,8 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
         // check that report type changes are applied
-        $data[0]['Corref'] = 'L3G';
-        $data[0]['Typeofrep'] = 'OPG103';
+        $data['rows'][0]['Corref'] = 'L3G';
+        $data['rows'][0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
             'users'   => [],
