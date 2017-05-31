@@ -20,7 +20,21 @@
     {% endblock %}
 
     <div class="panel panel-admin hard">
-        <h2 class="heading-medium panel-heading flush--bottom">{{ 'currentReport' | trans() }}</h2>
+        <h2 class="heading-medium panel-heading flush--bottom">
+            <div class="left push--right">{{ 'currentReport' | trans() }}</div>
+            {% if is102 or is103 %}
+                {% if report.isDue() and not reportStatus.balanceMatches %}
+                    <div class="alert alert-important ">
+                        <span class="icon icon-important-small"></span>
+                        <div class="alert-message">
+                            <p class="font-small">
+                                {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </h2>
         <div class="panel-body soft-half">
             <div class="grid-row">
                 <div class="column-one-half">
@@ -57,7 +71,7 @@
                         </dt>
                         <dd>{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</dd>
                     </dl>
-                    <dl>
+                    <dl class="push--bottom">
                         <dt>
                             <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
                         </dt>
@@ -135,6 +149,26 @@
                                 description: true
                                 } %}
                             {% endif %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'actions',
+                                report: report,
+                                description: true,
+                                state: reportStatus.actionsState,
+                                list: true
+                            } %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'other_info',
+                                linkToSubSection: path('other_info', {reportId: report.id}),
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.otherInfoState,
+                            } %}
+
                         </ul>
                     </div>
 
@@ -155,8 +189,8 @@
                                     <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
 
-                                            <div class="alert-notice panel panel-border-narrow">
-                                                <span class="icon icon-notification"></span>
+                                            <div class="alert-important panel panel-border-narrow">
+                                                <span class="icon icon-important-small"></span>
                                                 <div class="alert-message">
                                                     <p>
                                                         {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
@@ -242,25 +276,6 @@
                                 state: reportStatus.debtsState,
                                 list: true,
                                 description: true
-                            } %}
-
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'actions',
-                                report: report,
-                                description: true,
-                                state: reportStatus.actionsState,
-                                list: true
-                            } %}
-
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'other_info',
-                                linkToSubSection: path('other_info', {reportId: report.id}),
-                                report: report,
-                                info: true,
-                                description: true,
-                                state: reportStatus.otherInfoState,
                             } %}
 
                         </ul>

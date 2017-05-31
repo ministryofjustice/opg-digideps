@@ -50,6 +50,14 @@
     }
 }
 
+.icon-important-small {
+    @include icon(icon-important-small, 22, 22, 'icons');
+    @include media(mobile) {
+        @include icon(icon-important-small, 16, 16);
+        margin-right: 6px;
+    }
+}
+
 //adjusting icon within a link
 .icon {
     a & {
