@@ -14,17 +14,46 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">Upload PA users along with clients and reports</h2>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {% if nOfChunks %}
 
-    {{ form_input(form.file, '', {
-    	'labelText': 'Select CSV file',
-    	'inputClass': 'no-border'
-    }) }}
+<p class="text">Uploading... please wait.<br/>
+    Do not refresh this page</p>
 
-    {{ form_submit(form.upload, '', {'labelText': 'Upload PA users'}) }}
+<progress id="uploadProgress" value="0" max="{{ nOfChunks + 1 }}">
 
-    {{ form_end(form) }}
+    <script>
+        $(document).ready(function () {
+            // add chunk
+            for (var currentChunk = 0; currentChunk <{{ nOfChunks }}; currentChunk++) {
+                $.ajax({
+                    url: "{{ path('pa_add_ajax') }}?chunk=" + currentChunk,
+                    async: false,
+                    dataType: 'json'
+                }).done(function (data) {
+                    $('#uploadProgress').val(currentChunk + 1);
+                });
+            }
+            console.log("done");
+            window.location.href = "{{ path('admin_pa_upload') }}";
+        });
+    </script>
 
-{% endblock %}
+    {% else %}
+
+        <h2 class="heading-medium">Upload PA users along with clients and reports</h2>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.file, '', {
+            'labelText': 'Select CSV file',
+            'inputClass': 'no-border'
+        }) }}
+
+        {{ form_submit(form.upload, '', {'labelText': 'Upload PA users'}) }}
+
+        {{ form_end(form) }}
+
+    {% endif %}
+
+    {% endblock %}
