@@ -24,7 +24,7 @@
         <div class="grid-row">
             <div class="column-one-third">
                 <p>{{ 'reportStatus' | trans() }}:<br>
-                <span class="status status-large {{ 'reportStatus' }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                <span class="status status-large {{ reportStatus.getState() }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
                 {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                     <span class="bold-small"><a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a></span>
                 {% endif %}
