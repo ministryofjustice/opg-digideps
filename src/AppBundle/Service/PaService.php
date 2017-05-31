@@ -20,6 +20,12 @@ class PaService
      */
     protected $logger;
 
+
+    /**
+     * @var array
+     */
+    protected $added = [];
+
     /**
      * @var array
      */
@@ -30,6 +36,11 @@ class PaService
      */
     protected $warnings = [];
 
+    /**
+     * PaService constructor.
+     * @param EntityManager $em
+     * @param LoggerInterface $logger
+     */
     public function __construct(EntityManager $em, LoggerInterface $logger)
     {
         $this->em = $em;
@@ -78,8 +89,6 @@ class PaService
         foreach ($data as $index => $row) {
 
             $row = array_map('trim', $row);
-            $line = $index + 1;
-
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
