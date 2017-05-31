@@ -2,12 +2,12 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "user-terms-use" %}
+{% set translationDomain = "pa-terms-use" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%userFirstname%': user.firstname}  %}
 
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
@@ -19,13 +19,40 @@
 
 {% block pageContent %}
 
-    <p class="heading-medium text">
-        {{ 'page.pageSectionDescription' | trans(transOptions) }}
-    </p>
-
     <div class="text">
-        <p>{{ 'page.descriptionPara01' | trans(transOptions) }}</p>
-        <p>{{ 'page.descriptionPara02' | trans(transOptions) }}</p>
+        <h2 class="heading-medium">
+            {{ 'section01.heading' | trans(transOptions) }}
+        </h2>
+
+        <p>{{ 'section01.para01' | trans(transOptions) }}</p>
+        <p>{{ 'section01.para02' | trans(transOptions) }}</p>
+        <p>{{ 'section01.para03' | trans(transOptions) }}</p>
+
+
+        <h3 class="heading-small">
+            {{ 'section02.heading' | trans(transOptions) }}
+        </h3>
+
+        <p>{{ 'section02.para01' | trans(transOptions) }}</p>
+        <p>{{ 'section02.para02' | trans(transOptions) }}</p>
+
+        <ul class="list list-bullet">
+            <li>{{ 'section02.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem02' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem03' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem04' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem05' | trans(transOptions) }}</li>
+        </ul>
+
+        <p>{{ 'section02.para03' | trans(transOptions) }}</p>
+        <p>{{ 'section02.para04' | trans(transOptions) }}</p>
+
+
+        <h3 class="heading-small">
+            {{ 'section03.heading' | trans(transOptions) }}
+        </h3>
+
+        <p>{{ 'section03.para01' | trans(transOptions) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
