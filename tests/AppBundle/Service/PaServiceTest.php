@@ -105,13 +105,14 @@ class PaServiceTest extends WebTestCase
     public function testAddFromCasrecRows()
     {
         // create two clients for the same deputy, each one with a report
-        $data = [
+        $data['rows'] = [
             // deputy 1 with client 1 and client 2
             self::$deputy1 + self::$client1,
             self::$deputy1 + self::$client2,
             // deputy 2 with client 3
             self::$deputy2 + self::$client3,
         ];
+        $data['line'] = 0;
 
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors']);
@@ -174,9 +175,10 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
         // move client2 from deputy1 -> deputy2
-        $data = [
+        $data['rows'] = [
             self::$deputy2 + self::$client2,
         ];
+        $data['line'] = 0;
         $ret = $this->pa->addFromCasrecRows($data);
         self::$em->clear();
 

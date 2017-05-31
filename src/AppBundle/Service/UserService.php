@@ -45,7 +45,7 @@ class UserService
 
         $userToAdd->recreateRegistrationToken();
 
-        $this->hardDeleteExistingUser($userToAdd);
+        $this->userRepository->hardDeleteExistingUser($userToAdd);
 
         $this->_em->persist($userToAdd);
         $this->_em->flush();
@@ -100,7 +100,7 @@ class UserService
 
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
             $this->checkUserEmail($userToEdit);
-            $this->hardDeleteExistingUser($userToEdit);
+            $this->userRepository->hardDeleteExistingUser($userToEdit);
         }
 
         $this->_em->flush($userToEdit);
@@ -122,19 +122,6 @@ class UserService
     {
         if ($this->userRepository->findOneBy(['email' => $user->getEmail()])) {
             throw new \RuntimeException("PA User with email {$user->getEmail()} already exists.", 422);
-        }
-    }
-
-    /**
-     * @param User $user
-     */
-    private function hardDeleteExistingUser(User $user)
-    {
-        $existingSoftDeletedUser = $this->userRepository->findUnfilteredOneBy(['email' => $user->getEmail()]);
-        if ($existingSoftDeletedUser != null) {
-            // delete soft deleted user a second time to hard delete it
-            $this->_em->remove($existingSoftDeletedUser);
-            $this->_em->flush($existingSoftDeletedUser);
         }
     }
 }

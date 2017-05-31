@@ -27,9 +27,10 @@ class PaController extends RestController
 
         ini_set('memory_limit', '1024M');
         set_time_limit(600);
+        $postData = json_decode($request->getContent(), true);
 
-        $data = json_decode(gzuncompress(base64_decode($request->getContent())), true);
-        $count = count($data);
+        $postData['rows'] = json_decode(gzuncompress(base64_decode($postData['compressedData'])), true);
+        $count = count($postData['rows']);
 
         if (!$count) {
             throw new \RuntimeException('No records received from the API');
@@ -41,7 +42,7 @@ class PaController extends RestController
         $pa = new PaService($this->get('em'));
 
         try {
-            $ret = $pa->addFromCasrecRows($data);
+            $ret = $pa->addFromCasrecRows($postData);
             return $ret;
         } catch (\Exception $e) {
             return ['users' => [], 'clients' => [], 'reports' => []] + ['errors' => [$e->getMessage()]];
