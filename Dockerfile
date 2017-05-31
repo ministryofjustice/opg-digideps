@@ -10,6 +10,8 @@ RUN  apt-get update && apt-get install -y \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
+#upgrade npm
+RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN  npm install --global gulp
