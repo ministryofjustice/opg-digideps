@@ -415,7 +415,7 @@ class AdminController extends AbstractController
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
-                
+
                 return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
