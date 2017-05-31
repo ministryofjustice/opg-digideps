@@ -3,7 +3,9 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 
 class PaService
 {
@@ -11,6 +13,16 @@ class PaService
      * @var EntityManager
      */
     protected $em;
+
+    /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
+     * @var array
+     */
+    protected $warnings = [];
 
     public function __construct(EntityManager $em)
     {
@@ -50,13 +62,15 @@ class PaService
      *
      * @return array
      */
-    public function addFromCasrecRows(array $rows)
+    public function addFromCasrecRows(array $data)
     {
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
+        foreach ($data['rows'] as $index => $row) {
 
-        foreach ($rows as $index => $row) {
             $row = array_map('trim', $row);
+            $line = $data['line'] + $index;
+
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
@@ -66,7 +80,10 @@ class PaService
                 $client = $this->createClient($row, $user);
                 $this->createReport($row, $client, $user);
             } catch (\RuntimeException $e) {
-                $errors[] = $e->getMessage() . ' in line ' . ($index + 2);
+                $errors[] = $e->getMessage() . ' in line ' . $line;
+            } catch (\Exception $e) {
+                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $errors[] = $message;
             }
             // clean up for next iteration
             $this->em->clear();
@@ -76,7 +93,11 @@ class PaService
         sort($this->added['clients']);
         sort($this->added['reports']);
 
-        return ['added' => $this->added, 'errors' => $errors];
+        return [
+            'added' => $this->added,
+            'errors' => $errors,
+            'warnings' => $this->warnings
+        ];
     }
 
     /**
@@ -86,48 +107,66 @@ class PaService
      */
     private function createUser(array $row)
     {
-        $email = $row['Email'];
-        $user = $this->userRepository->findOneBy(['email' => $email]);
+        $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
+        $userEmail = strtolower($row['Email']);
+
         if (!$user) {
-            $user = new EntityDir\User();
-            $user
-                ->setRegistrationDate(new \DateTime())
-                ->setDeputyNo($row['Deputy No'])
-                ->setEmail($email)
-                ->setFirstname($row['Dep Forename'])
-                ->setLastname($row['Dep Surname'])
-                ->setRoleName(EntityDir\User::ROLE_PA);
+            // check for duplicate email address
+            $user = $this->userRepository->findOneBy(['email' => $userEmail]);
+            if ($user) {
+                $this->warnings[] = 'Deputy ' . $row['Deputy No'] .
+                    ' cannot be added with email ' . $user->getEmail() .
+                    '. Email already taken by Deputy No: ' . $user->getDeputyNo();
+            } else {
 
-            // create team (if not already existing)
-            if ($user->getTeams()->isEmpty()) {
-                $team = new EntityDir\Team(null);
+                $user = new EntityDir\User();
+                $user
+                    ->setRegistrationDate(new \DateTime())
+                    ->setDeputyNo($row['Deputy No'])
+                    ->setEmail($row['Email'])
+                    ->setFirstname($row['Dep Forename'])
+                    ->setLastname($row['Dep Surname'])
+                    ->setRoleName(EntityDir\User::ROLE_PA);
 
-                // Address from upload is the team's address, not the user's
-                if (!empty($row['Dep Adrs1'])) {
-                    $team->setAddress1($row['Dep Adrs1']);
+                // create team (if not already existing)
+                if ($user->getTeams()->isEmpty()) {
+                    $team = new EntityDir\Team(null);
+
+                    // Address from upload is the team's address, not the user's
+                    if (!empty($row['Dep Adrs1'])) {
+                        $team->setAddress1($row['Dep Adrs1']);
+                    }
+
+                    if (!empty($row['Dep Adrs2'])) {
+                        $team->setAddress2($row['Dep Adrs2']);
+                    }
+
+                    if (!empty($row['Dep Adrs3'])) {
+                        $team->setAddress3($row['Dep Adrs3']);
+                    }
+
+                    if (!empty($row['Dep Postcode'])) {
+                        $team->setAddressPostcode($row['Dep Postcode']);
+                        $team->setAddressCountry('GB'); //postcode given means a UK address is given
+                    }
+
+                    $user->addTeam($team);
+                    $this->em->persist($team);
+                    $this->em->flush($team);
                 }
 
-                if (!empty($row['Dep Adrs2'])) {
-                    $team->setAddress2($row['Dep Adrs2']);
-                }
-
-                if (!empty($row['Dep Adrs3'])) {
-                    $team->setAddress3($row['Dep Adrs3']);
-                }
-
-                if (!empty($row['Dep Postcode'])) {
-                    $team->setAddressPostcode($row['Dep Postcode']);
-                    $team->setAddressCountry('GB'); //postcode given means a UK address is given
-                }
-
-                $user->addTeam($team);
-                $this->em->persist($team);
-                $this->em->flush($team);
+                $this->userRepository->hardDeleteExistingUser($user);
+                $this->em->persist($user);
+                $this->em->flush($user);
+                $this->added['users'][] = $row['Email'];
             }
-
-            $this->added['users'][] = $email;
-            $this->em->persist($user);
-            $this->em->flush($user);
+        } else {
+            // Notify email change
+            if ($user->getEmail() !== $userEmail) {
+                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
+                    ' previously with email ' . $user->getEmail() .
+                    ' has changed email to ' . $userEmail;
+            }
         }
 
         return $user;
