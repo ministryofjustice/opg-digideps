@@ -71,7 +71,7 @@ class PaService
      */
     public function addFromCasrecRows(array $data)
     {
-        $this->logger->debug('Received '.count($data).' records');
+        $this->log('Received '.count($data).' records');
 
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
@@ -118,7 +118,7 @@ class PaService
         $userEmail = strtolower($row['Email']);
 
         if (!$user) {
-            $this->logger->debug('Creating user');
+            $this->log('Creating user');
             // check for duplicate email address
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
             if ($user) {
@@ -200,7 +200,7 @@ class PaService
                 $client->getUsers()->removeElement($cu);
             }
         } else {
-            $this->logger->debug('Creating client');
+            $this->log('Creating client');
             $client = new EntityDir\Client();
             $client
                 ->setCaseNumber($caseNumber)
@@ -264,13 +264,13 @@ class PaService
         $report = $client->getReportByDueDate($reportEndDate);
         if ($report) {
             if ($report->getType() != $reportType) {
-                $this->logger->debug('Changing report type');
+                $this->log('Changing report type');
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
             }
         } else {
-            $this->logger->debug('Creating report');
+            $this->log('Creating report');
             $report = new EntityDir\Report\Report($client);
             $client->addReport($report);   //double link for testing reasons
             $reportStartDate = clone $reportEndDate;
@@ -305,5 +305,13 @@ class PaService
         }
 
         return $ret;
+    }
+
+    /**
+     * @param $message
+     */
+    private function log($message)
+    {
+        $this->logger->debug(__CLASS__.':'.$message);
     }
 }
