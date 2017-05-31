@@ -376,13 +376,21 @@ class AdminController extends AbstractController
 
                 $added = ['users' => [], 'clients' => [], 'reports' => []];
                 $errors = [];
+                $warnings = [];
+                $chunksProcessed = 0;
+                $postData['chunkSize'] = $chunkSize;
                 foreach (array_chunk($data, $chunkSize) as $chunk) {
-                    $compressedData = CsvUploader::compressData($chunk);
-                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
+                    $postData['compressedData'] = CsvUploader::compressData($chunk);
+                    $postData['line'] = ($chunksProcessed * $chunkSize) + 1;
+
+                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $postData);
+
                     $added['users'] = array_merge($added['users'], $ret['added']['users']);
                     $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);
                     $added['reports'] = array_merge($added['reports'], $ret['added']['reports']);
                     $errors = array_merge($errors, $ret['errors']);
+                    $warnings = array_merge($warnings, $ret['warnings']);
+                    $chunksProcessed++;
                 }
 
                 // notifications
@@ -394,10 +402,17 @@ class AdminController extends AbstractController
                         count($added['reports'])
                     )
                 );
-                if ($errors) {
+                if (!empty($errors)) {
                     $request->getSession()->getFlashBag()->add(
-                        'notice',
+                        'error',
                         implode('<br/>', $errors)
+                    );
+                }
+
+                if (!empty($warnings)) {
+                    $request->getSession()->getFlashBag()->add(
+                        'warning',
+                        implode('<br/>', $warnings)
                     );
                 }
 
