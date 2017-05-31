@@ -7,6 +7,7 @@ use AppBundle\Service\PaService;
 use Doctrine\ORM\EntityManager;
 use Fixtures;
 use Mockery as m;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -97,7 +98,8 @@ class PaServiceTest extends WebTestCase
 
     public function setup()
     {
-        $this->pa = new PaService(self::$em);
+        $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
+        $this->pa = new PaService(self::$em, $logger);
         Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
     }
@@ -105,14 +107,13 @@ class PaServiceTest extends WebTestCase
     public function testAddFromCasrecRows()
     {
         // create two clients for the same deputy, each one with a report
-        $data['rows'] = [
+        $data = [
             // deputy 1 with client 1 and client 2
             0 => self::$deputy1 + self::$client1,
             1 => self::$deputy1 + self::$client2,
             // deputy 2 with client 3
             2 => self::$deputy2 + self::$client3,
         ];
-        $data['line'] = 0;
 
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors']);
@@ -176,10 +177,9 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
         // move client2 from deputy1 -> deputy2
-        $dataMove['rows'] = [
+        $dataMove = [
             self::$deputy2 + self::$client2,
         ];
-        $dataMove['line'] = 0;
         $this->pa->addFromCasrecRows($dataMove);
         self::$em->clear();
 
@@ -188,8 +188,8 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
         // check that report type changes are applied
-        $data['rows'][0]['Corref'] = 'L3G';
-        $data['rows'][0]['Typeofrep'] = 'OPG103';
+        $data[0]['Corref'] = 'L3G';
+        $data[0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
             'users'   => [],
