@@ -1,20 +1,21 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set transDomain = 'admin' %}
+{% trans_default_domain "admin" %}
+{% set page = 'editUser' %}
 
-{% block htmlTitle %}Administration - Users{% endblock %}
-{% block pageTitle %}Admin{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">User management</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">Edit user</h2>
+    <h2 class="heading-medium">{{ 'editUserForm.heading' | trans }}</h2>
 
     {% set numberOfClients = user.clients | length %}
     {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
@@ -29,7 +30,7 @@
     {{ form_input(form.lastname,'addUserForm.lastname') }}
     {{ form_select(form.roleName,'addUserForm.roleName') }}
     {% if reportsCount > 0 %}
-        <p class="text">Reports already exist for this user. If NDR is enabled, the deputy won't see them until NDR is submitted.</p>
+        <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
     {% endif %}
     {% if user.roleName == 'ROLE_LAY_DEPUTY' %}
         {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
@@ -53,13 +54,13 @@
     {% endif %}
 
     {% if numberOfClients > 0 %}
-        <h2 class="heading-medium">Clients and reports</h2>
+        <h2 class="heading-medium">{{ (page ~ '.clientTable.heading') | trans }}</h2>
         <table class="client-table">
             <thead>
                 <tr>
-                    <th>Client</th>
-                    <th class="numeric-small text--right">Case number</th>
-                    <th class="numeric-small text--right">Number of reports</th>
+                    <th>{{ (page ~ '.clientTable.header.client') | trans }}</th>
+                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
+                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.reports') | trans }}</th>
                 </tr>
 
             </thead>
@@ -87,7 +88,7 @@
                     linkHref: path('admin_delete_confirm', { id: id })
                     } %}
                 {% else %}
-                    <p class="text text-secondary push--top">Delete is disabled as there is at least one report</p>
+                    <p class="text text-secondary push--top">{{ (page ~ '.deleteDisabled') | trans }}</p>
                 {% endif %}
             {% endif %}
         {% endif %}

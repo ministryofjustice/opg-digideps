@@ -1,3 +1,6 @@
+action:
+  cancel: Cancel
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"

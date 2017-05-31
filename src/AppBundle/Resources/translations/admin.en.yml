@@ -1,4 +1,34 @@
+home:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+
+addUser:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+
+deleteConfirm:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+  heading: Delete user
+  question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>?
+
+editUser:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+  clientTable:
+    heading: Clients and reports
+    header:
+      client: Client
+      caseNumber: Case number
+      reports: Number of reports
+  deleteDisabled: Delete is disabled as there is at least one report
+
 addUserForm:
+  heading: Add a user
   email:
     label: Email
     hint: 'An activation email will be sent to the provided email address'
@@ -16,20 +46,31 @@ addUserForm:
     label: Enable NDR for this user (Lay deputy only)
   submit:
     label: Save user
+
 editUserForm:
+  heading: Edit user
+  reportsExist: |
+    Reports already exist for this user. If NDR is enabled, the deputy won't see them
+    until NDR is submitted.
   email:
     existingError: That email has already been registered with this service.
   submit:
     label: Update user
+
 cancel:
     label: Cancel
+
 expiration:
     label: Expire registration token
+
 delete:
     label: Delete User
+
 no:
     label: No, take me back
+
 yes:
     label: Yes, I'm sure
+
 action:
     message: Your changes were saved
