@@ -151,6 +151,11 @@
                 <span class="icon icon-information"></span>
                 <div class="alert-message"><p>{{ message | raw }}</p></div>
             </div>
+        {% elseif alertType == 'important' %}
+            <div class="alert-important panel panel-border-narrow">
+                <span class="icon icon-important-small"></span>
+                <div class="alert-message"><p>{{ message | raw }}</p></div>
+            </div>
         {% else %}
             <div class="alert panel panel-border-narrow">
                 <div class="alert-message"><p>{{ message | raw }}</p></div>

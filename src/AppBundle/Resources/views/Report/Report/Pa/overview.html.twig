@@ -20,21 +20,21 @@
     {% endblock %}
 
     <div class="panel panel-admin hard">
-        <h2 class="heading-medium panel-heading flush--bottom">
-            <div class="left push--right">{{ 'currentReport' | trans() }}</div>
+        <div class="panel-heading">
+            <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
             {% if is102 or is103 %}
                 {% if report.isDue() and not reportStatus.balanceMatches %}
-                    <div class="alert alert-important ">
+                    <div class="alert alert-important">
                         <span class="icon icon-important-small"></span>
                         <div class="alert-message">
                             <p class="font-small">
-                                {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
+                                {{ ('balance.notBalancedWarningPA') | trans }}
                             </p>
                         </div>
                     </div>
                 {% endif %}
             {% endif %}
-        </h2>
+        </div>
         <div class="panel-body soft-half">
             <div class="grid-row">
                 <div class="column-one-half">
@@ -188,25 +188,7 @@
                                 {% if report.isDue() and not reportStatus.balanceMatches %}
                                     <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
-
-                                            <div class="alert-important panel panel-border-narrow">
-                                                <span class="icon icon-important-small"></span>
-                                                <div class="alert-message">
-                                                    <p>
-                                                        {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
-                                                        <a href="{{ path('balance', {reportId: report.id}) }}" class="behat-link-edit-bank_accounts right">View details</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {# <h3 class="heading heading-medium">
-                                                    <a class="behat-link-edit-bank_accounts" id="edit-bank-accounts" href="{{ path('balance', {reportId: report.id}) }}" aria-label="{{ ('bank_accounts' ~ '.edit') | trans }}">
-                                                        {{ ('bank_accounts.subSectionTitleNotBalanced') | trans }}
-                                                    </a>
-                                            </h3>
-                                            <span class="status flush--bottom {{ reportStatus.bankAccountsState.state }}">
-                                                {{ ('bank_accounts.label.addReason') | trans }}
-                                            </span> #}
+                                            {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                                         </div>
                                     </li>
                                 {% endif %}

@@ -13,8 +13,14 @@
 
 .panel-heading {
 	overflow: hidden;
-	padding: 10px $gutter-half;
+	padding: 10px $gutter-half 7px $gutter-half;
 	background-color: $grey-3;
+
+	.heading-medium {
+		@include media(tablet) {
+			float: left;
+		}
+	}
 
 	.alert {
 		position: relative;

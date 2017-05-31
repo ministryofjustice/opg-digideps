@@ -132,8 +132,12 @@ balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""
     notBalancedWarning: |
-        Your accounts are not balanced.
-        <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
+      Your accounts are not balanced.
+      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
+    notBalancedWarningPAWithLink: |
+      Accounts not balanced
+      <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
+    notBalancedWarningPA: Accounts not balanced
     edit: "Edit"
     start: "Start"
     label:
