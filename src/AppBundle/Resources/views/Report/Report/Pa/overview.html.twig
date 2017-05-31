@@ -43,14 +43,14 @@
                             <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
                         </dt>
                         <dd>
-                            <span class="status status-large {{ reportStatus.getState() }}">
+                            <span class="status status-large {{ reportStatus.getState() }} flush--bottom">
                                 {{ ('status.' ~ reportStatus.status) | trans() }}
                             </span>
                             {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
-                            <span class="bold-small">
-                                <a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
-                            </span>
-                        {% endif %}
+                                <p>
+                                    <a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
+                                </p>
+                            {% endif %}
                         </dd>
                     </dl>
                     <dl class="push--bottom">
