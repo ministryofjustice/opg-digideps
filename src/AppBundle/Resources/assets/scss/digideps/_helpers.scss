@@ -103,13 +103,9 @@
     text-transform: capitalize;
 }
 
-.right {
-    float: right;
-}
-
-.left {
-    float: left;
-}
+// Proactively override as this needs to trump
+.right { float: right !important; }
+.left { float: left !important; }
 
 // Use .js-hidden to hide elements when js is enabled
 // Proactively override as this needs to trump

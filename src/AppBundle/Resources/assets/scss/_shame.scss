@@ -6,8 +6,13 @@
 .panel-admin {
 	border: 1px solid $grey-3;
 	background-color: $grey-4;
+
+	.status {
+		background-color: $white;
+	}
 }
 
 .panel-heading {
-
+	padding: 6px $gutter-half;
+	background-color: $grey-3;
 }

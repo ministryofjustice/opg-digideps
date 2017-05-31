@@ -72,4 +72,15 @@
         border-top: none;
     }
 
+    // PA Client Profile panels adjustments
+    .panel-admin & {
+        &:last-child {
+            border-bottom: 1px solid $grey-3;
+        }
+
+        .link-edit {
+            display: block;
+            text-decoration: underline;
+        }
+    }
 }
