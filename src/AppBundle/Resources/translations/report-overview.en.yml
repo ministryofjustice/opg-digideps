@@ -25,6 +25,7 @@ reportOptions: "Report options"
 reportSectionsToComplete: "Report sections to complete"
 
 options:
+  submitReport: "Submit report"
   viewReport: "View report"
   uploadDocumentation: "Upload documentation"
 

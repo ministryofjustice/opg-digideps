@@ -7,7 +7,7 @@ Feature: Report submit
         And I click on "pa-report-open" in the "client-1000014" region
         Then I should not see the "download-2016-report" link
         # if not found, it means that the report is not submittable
-        And I click on "report-submit"
+        And I click on "edit-report_submit"
         Then the URL should match "/report/\d+/review"
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
@@ -18,7 +18,7 @@ Feature: Report submit
         And I reset the email log
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-1000014" region
-        And I click on "report-submit, declaration-page"
+        And I click on "edit-report_submit, declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
             | report_declaration_agreedBehalfDeputy_0 | only_deputy |

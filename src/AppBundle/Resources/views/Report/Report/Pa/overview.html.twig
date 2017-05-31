@@ -25,6 +25,9 @@
             <ul>
                 <li>{{ 'reportStatus' | trans() }}:
                     <span class="status status-large {{ 'reportStatus' }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                    {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                        <span class="bold-small"><a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a></span>
+                    {% endif %}
                 </li>
                 <li>{{ 'reportOptions' | trans() }}:
                     <span class="bold-small"><a class="" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a></span>
