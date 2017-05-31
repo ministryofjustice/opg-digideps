@@ -172,7 +172,7 @@ class AdminController extends AbstractController
 
                     $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
                 } catch (\Exception $e) {
-                    switch ((int) $e->getCode()) {
+                    switch ((int)$e->getCode()) {
                         case 422:
                             $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
                             break;
@@ -335,7 +335,7 @@ class AdminController extends AbstractController
      */
     public function uploadPaUsersAction(Request $request)
     {
-        $chunkSize = 2;
+        $chunkSize = 100;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
             'method' => 'POST',
@@ -370,53 +370,53 @@ class AdminController extends AbstractController
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
-                        'Dep Postcode'
+                        'Dep Postcode',
                     ])
                     ->getData();
 
-                $added = ['users' => [], 'clients' => [], 'reports' => []];
-                $errors = [];
-                $warnings = [];
-                $chunksProcessed = 0;
-                $postData['chunkSize'] = $chunkSize;
-                foreach (array_chunk($data, $chunkSize) as $chunk) {
-                    $postData['compressedData'] = CsvUploader::compressData($chunk);
-                    $postData['line'] = ($chunksProcessed * $chunkSize) + 1;
+                if (count($data) < $chunkSize) {
 
-                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $postData);
+                    $compressedData = CsvUploader::compressData($data);
 
-                    $added['users'] = array_merge($added['users'], $ret['added']['users']);
-                    $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);
-                    $added['reports'] = array_merge($added['reports'], $ret['added']['reports']);
-                    $errors = array_merge($errors, $ret['errors']);
-                    $warnings = array_merge($warnings, $ret['warnings']);
-                    $chunksProcessed++;
-                }
-
-                // notifications
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
-                        count($added['users']),
-                        count($added['clients']),
-                        count($added['reports'])
-                    )
-                );
-                if (!empty($errors)) {
+                    // MOVE TO SERVICE
+                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
                     $request->getSession()->getFlashBag()->add(
-                        'error',
-                        implode('<br/>', $errors)
+                        'notice',
+                        sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
+                            count($ret['added']['users']),
+                            count($ret['added']['clients']),
+                            count($ret['added']['reports'])
+                        )
                     );
+                    $errors = isset($ret['errors']) ? $ret['errors'] : [];
+                    $warnings = isset($ret['warnings']) ? $ret['warnings'] : [];
+                    if (!empty($errors)) {
+                        $request->getSession()->getFlashBag()->add(
+                            'error',
+                            implode('<br/>', $errors)
+                        );
+                    }
+
+                    if (!empty($warnings)) {
+                        $request->getSession()->getFlashBag()->add(
+                            'warning',
+                            implode('<br/>', $warnings)
+                        );
+                    }
+                    // END MOVE TO SERVICE
+
+                    return $this->redirect($this->generateUrl('admin_pa_upload'));
+
                 }
 
-                if (!empty($warnings)) {
-                    $request->getSession()->getFlashBag()->add(
-                        'warning',
-                        implode('<br/>', $warnings)
-                    );
+                // big amount of data => redirect with nOfChunks for ajax upload in chunks
+                $chunks = array_chunk($data, $chunkSize);
+                foreach ($chunks as $k => $chunk) {
+                    $compressedData = CsvUploader::compressData($chunk);
+                    $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
-
-                return $this->redirect($this->generateUrl('admin_pa_upload'));
+                
+                return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -427,6 +427,7 @@ class AdminController extends AbstractController
         }
 
         return [
+            'nOfChunks'      => $request->get('nOfChunks'),
             'form'          => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];

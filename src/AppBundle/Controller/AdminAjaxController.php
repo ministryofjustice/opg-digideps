@@ -30,7 +30,7 @@ class AdminAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/casrec-add-ajax", name="casrec_add_ajax")
+     * @Route("/casrec-add", name="casrec_add_ajax")
      * @Template
      */
     public function uploadUsersAjaxAction(Request $request)
@@ -44,6 +44,58 @@ class AdminAjaxController extends AbstractController
                 $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
             } else {
                 $ret['added'] = 0;
+            }
+
+            return new JsonResponse($ret);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/pa-add", name="pa_add_ajax")
+     * @Template
+     */
+    public function uploadPaAjaxAction(Request $request)
+    {
+        $chunkId = 'pa_chunk' . $request->get('chunk');
+        $redis = $this->get('snc_redis.default');
+
+        try {
+            $compressedData = $redis->get($chunkId);
+            if ($compressedData) {
+
+                // MOVE TO SERVICE
+                $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
+                // MOVE TO SERVICE
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
+                        count($ret['added']['users']),
+                        count($ret['added']['clients']),
+                        count($ret['added']['reports'])
+                    )
+                );
+
+                $errors = isset($ret['errors']) ? $ret['errors'] : [];
+                $warnings = isset($ret['warnings']) ? $ret['warnings'] : [];
+                if (!empty($errors)) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        implode('<br/>', $errors)
+                    );
+                }
+
+                if (!empty($warnings)) {
+                    $request->getSession()->getFlashBag()->add(
+                        'warning',
+                        implode('<br/>', $warnings)
+                    );
+                }
+                // END MOVE TO SERVICE
+
+                // TODO delete chunk
+
             }
 
             return new JsonResponse($ret);
