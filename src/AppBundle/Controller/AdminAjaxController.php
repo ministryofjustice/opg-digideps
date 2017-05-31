@@ -69,34 +69,7 @@ class AdminAjaxController extends AbstractController
                 new JsonResponse('Chunk not found', 500);
             }
 
-            // MOVE TO SERVICE
-            $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
-            // MOVE TO SERVICE
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
-                    count($ret['added']['users']),
-                    count($ret['added']['clients']),
-                    count($ret['added']['reports'])
-                )
-            );
-
-            $errors = isset($ret['errors']) ? $ret['errors'] : [];
-            $warnings = isset($ret['warnings']) ? $ret['warnings'] : [];
-            if (!empty($errors)) {
-                $request->getSession()->getFlashBag()->add(
-                    'error',
-                    implode('<br/>', $errors)
-                );
-            }
-
-            if (!empty($warnings)) {
-                $request->getSession()->getFlashBag()->add(
-                    'warning',
-                    implode('<br/>', $warnings)
-                );
-            }
-            // END MOVE TO SERVICE
+            $ret = $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
 
             $redis->del($chunkId);
 
@@ -105,4 +78,6 @@ class AdminAjaxController extends AbstractController
             return new JsonResponse($e->getMessage());
         }
     }
+
+
 }

@@ -335,6 +335,7 @@ class AdminController extends AbstractController
      */
     public function uploadPaUsersAction(Request $request)
     {
+        $this->get('pa_service');
         $chunkSize = 100;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
@@ -374,49 +375,21 @@ class AdminController extends AbstractController
                     ])
                     ->getData();
 
+                // small chunk => upload in same request
                 if (count($data) < $chunkSize) {
-
                     $compressedData = CsvUploader::compressData($data);
-
-                    // MOVE TO SERVICE
-                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
-                            count($ret['added']['users']),
-                            count($ret['added']['clients']),
-                            count($ret['added']['reports'])
-                        )
-                    );
-                    $errors = isset($ret['errors']) ? $ret['errors'] : [];
-                    $warnings = isset($ret['warnings']) ? $ret['warnings'] : [];
-                    if (!empty($errors)) {
-                        $request->getSession()->getFlashBag()->add(
-                            'error',
-                            implode('<br/>', $errors)
-                        );
-                    }
-
-                    if (!empty($warnings)) {
-                        $request->getSession()->getFlashBag()->add(
-                            'warning',
-                            implode('<br/>', $warnings)
-                        );
-                    }
-                    // END MOVE TO SERVICE
-
+                    $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
                     return $this->redirect($this->generateUrl('admin_pa_upload'));
-
                 }
 
-                // big amount of data => redirect with nOfChunks for ajax upload in chunks
+                // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
-
                 return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
+
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
