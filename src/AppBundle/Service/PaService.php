@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 
 class PaService
 {
@@ -13,6 +14,17 @@ class PaService
      * @var EntityManager
      */
     protected $em;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+
+    /**
+     * @var array
+     */
+    protected $added = [];
 
     /**
      * @var array
@@ -24,9 +36,15 @@ class PaService
      */
     protected $warnings = [];
 
-    public function __construct(EntityManager $em)
+    /**
+     * PaService constructor.
+     * @param EntityManager $em
+     * @param LoggerInterface $logger
+     */
+    public function __construct(EntityManager $em, LoggerInterface $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
         $this->userRepository = $em->getRepository(EntityDir\User::class);
         $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
         $this->clientRepository = $em->getRepository(EntityDir\Client::class);
@@ -64,13 +82,13 @@ class PaService
      */
     public function addFromCasrecRows(array $data)
     {
+        $this->log('Received '.count($data).' records');
+
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
-        foreach ($data['rows'] as $index => $row) {
+        foreach ($data as $index => $row) {
 
             $row = array_map('trim', $row);
-            $line = $data['line'] + $index;
-
             try {
                 if ($row['Dep Type'] != 23) {
                     throw new \RuntimeException('Not a PA');
@@ -79,14 +97,10 @@ class PaService
                 $user = $this->createUser($row);
                 $client = $this->createClient($row, $user);
                 $this->createReport($row, $client, $user);
-            } catch (\RuntimeException $e) {
-                $errors[] = $e->getMessage() . ' in line ' . $line;
             } catch (\Exception $e) {
-                $message = 'Unable to add Deputy No: ' . $row['Deputy No'] . ' at line ' . $line;
+                $message = 'Error for Deputy No: ' . $row['Deputy No'] . ', case '.$row['Case'].': ' . $e->getMessage();
                 $errors[] = $message;
             }
-            // clean up for next iteration
-            $this->em->clear();
         }
 
         sort($this->added['users']);
@@ -111,6 +125,7 @@ class PaService
         $userEmail = strtolower($row['Email']);
 
         if (!$user) {
+            $this->log('Creating user');
             // check for duplicate email address
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
             if ($user) {
@@ -173,6 +188,10 @@ class PaService
     }
 
     /**
+     * //TODO subsquents uploads removes all the clients, and re-add them from the team.
+     * Slow and a code smell that the db structure needs a change and connect clients to the team, or
+     * a more general "deputyship" new entity, used by both Teams of PA, and Lay
+     *
      * @param array          $row
      * @param EntityDir\User $user
      *
@@ -188,6 +207,7 @@ class PaService
                 $client->getUsers()->removeElement($cu);
             }
         } else {
+            $this->log('Creating client');
             $client = new EntityDir\Client();
             $client
                 ->setCaseNumber($caseNumber)
@@ -251,11 +271,13 @@ class PaService
         $report = $client->getReportByDueDate($reportEndDate);
         if ($report) {
             if ($report->getType() != $reportType) {
+                $this->log('Changing report type');
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
             }
         } else {
+            $this->log('Creating report');
             $report = new EntityDir\Report\Report($client);
             $client->addReport($report);   //double link for testing reasons
             $reportStartDate = clone $reportEndDate;
@@ -290,5 +312,13 @@ class PaService
         }
 
         return $ret;
+    }
+
+    /**
+     * @param $message
+     */
+    private function log($message)
+    {
+        $this->logger->debug(__CLASS__.':'.$message);
     }
 }

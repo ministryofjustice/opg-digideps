@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\CsvUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,10 +42,10 @@ class CasRecController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
-        set_time_limit(600);
 
         $retErrors = [];
-        $data = json_decode(gzuncompress(base64_decode($request->getContent())), true);
+        //$data = json_decode(gzuncompress(base64_decode($request->getContent())), true);
+        $data = CsvUploader::decompressData($request->getContent());
         $count = count($data);
 
         if (!$count) {

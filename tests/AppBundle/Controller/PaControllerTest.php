@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\pa;
+use AppBundle\Service\CsvUploader;
 use Fixtures;
 use Tests\AppBundle\Service\PaServiceTest;
 
@@ -54,13 +55,9 @@ class PaControllerTest extends AbstractTestController
 
     public function testAddBulk()
     {
-        $postData['chunkSize'] = 2;
-        $postData['compressedData'] = $this->compress([PaServiceTest::$deputy1 + PaServiceTest::$client1]);
-        $postData['line'] = 0;
-
         // add
         $data = $this->assertJsonRequest('POST', '/pa/bulk-add', [
-            'data' => $postData,
+            'data' => CsvUploader::compressData([PaServiceTest::$deputy1 + PaServiceTest::$client1]),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
@@ -68,10 +65,5 @@ class PaControllerTest extends AbstractTestController
         $this->assertEquals('dep1@provider.com', $data['added']['users'][0]);
         $this->assertEquals('10000001', $data['added']['clients'][0]);
         $this->assertEquals('10000001-2014-12-16', $data['added']['reports'][0]);
-    }
-
-    private function compress($data)
-    {
-        return base64_encode(gzcompress(json_encode($data), 9));
     }
 }
