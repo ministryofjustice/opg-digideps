@@ -172,7 +172,7 @@ class AdminController extends AbstractController
 
                     $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
                 } catch (\Exception $e) {
-                    switch ((int) $e->getCode()) {
+                    switch ((int)$e->getCode()) {
                         case 422:
                             $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
                             break;
@@ -335,7 +335,8 @@ class AdminController extends AbstractController
      */
     public function uploadPaUsersAction(Request $request)
     {
-        $chunkSize = 2;
+        $this->get('pa_service');
+        $chunkSize = 100;
 
         $form = $this->createForm(new FormDir\UploadCsvType(), null, [
             'method' => 'POST',
@@ -370,38 +371,25 @@ class AdminController extends AbstractController
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
-                        'Dep Postcode'
+                        'Dep Postcode',
                     ])
                     ->getData();
 
-                $added = ['users' => [], 'clients' => [], 'reports' => []];
-                $errors = [];
-                foreach (array_chunk($data, $chunkSize) as $chunk) {
+                // small chunk => upload in same request
+                if (count($data) < $chunkSize) {
+                    $compressedData = CsvUploader::compressData($data);
+                    $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+                    return $this->redirect($this->generateUrl('admin_pa_upload'));
+                }
+
+                // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
+                $chunks = array_chunk($data, $chunkSize);
+                foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $ret = $this->getRestClient()->setTimeout(600)->post('pa/bulk-add', $compressedData);
-                    $added['users'] = array_merge($added['users'], $ret['added']['users']);
-                    $added['clients'] = array_merge($added['clients'], $ret['added']['clients']);
-                    $added['reports'] = array_merge($added['reports'], $ret['added']['reports']);
-                    $errors = array_merge($errors, $ret['errors']);
+                    $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
+                return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
 
-                // notifications
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    sprintf('Added %d PA users, %d clients, %d reports. Go to users tab to enable them',
-                        count($added['users']),
-                        count($added['clients']),
-                        count($added['reports'])
-                    )
-                );
-                if ($errors) {
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        implode('<br/>', $errors)
-                    );
-                }
-
-                return $this->redirect($this->generateUrl('admin_pa_upload'));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -412,6 +400,7 @@ class AdminController extends AbstractController
         }
 
         return [
+            'nOfChunks'      => $request->get('nOfChunks'),
             'form'          => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];

@@ -2,7 +2,8 @@ Feature: Terßms and Conditions
     
     @deputy
     Scenario: The footer provides a link to terms and conditions in the login page
-        Given I go to "/login"
+        Given I go to "/logout"
+        And I go to "/login"
         Then the "Terms and Conditions" link, in the footer, url should contain "/terms"
     
     @deputy
@@ -12,7 +13,8 @@ Feature: Terßms and Conditions
         
     @deputy
     Scenario: The terms and conditions page contains a back link
-        Given I go to "/login"
+        Given I go to "/logout"
+        And I go to "/login"
         And I go to "/terms"
         Then the "Back" link url should contain "/login"
     

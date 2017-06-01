@@ -14,17 +14,61 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">Upload PA users along with clients and reports</h2>
+    {% if nOfChunks %}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        <p class="text">Uploading... please wait.<br/>
+            Do not refresh this page</p>
 
-    {{ form_input(form.file, '', {
-    	'labelText': 'Select CSV file',
-    	'inputClass': 'no-border'
-    }) }}
+        <progress id="uploadProgress" value="0" max="{{ nOfChunks }}"/>
 
-    {{ form_submit(form.upload, '', {'labelText': 'Upload PA users'}) }}
+        <script>
+            $(window).load(function () {
+                setTimeout(function () {
+                    uploadProgress(0);
+                }, 50);
+            });
 
-    {{ form_end(form) }}
+            function uploadProgress(currentChunk) {
+
+                if (currentChunk == {{ nOfChunks + 1 }}) {
+                    window.location.href = "{{ path('admin_pa_upload') }}";
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ path('pa_add_ajax') }}?chunk=" + currentChunk,
+                    method: "POST",
+                    async: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#uploadProgress').val(currentChunk);
+                    }
+                });
+
+                // launch next
+                setTimeout(function () {
+                    uploadProgress(currentChunk + 1);
+                }, 100);
+
+            }
+
+        </script>
+
+    {% else %}
+
+        <h2 class="heading-medium">Upload PA users along with clients and reports</h2>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.file, '', {
+            'labelText': 'Select CSV file',
+            'inputClass': 'no-border'
+        }) }}
+
+        {{ form_submit(form.upload, '', {'labelText': 'Upload PA users'}) }}
+
+        {{ form_end(form) }}
+
+    {% endif %}
 
 {% endblock %}

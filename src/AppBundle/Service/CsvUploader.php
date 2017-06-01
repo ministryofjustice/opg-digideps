@@ -2,6 +2,9 @@
 
 namespace AppBundle\Service;
 
+/**
+ * keep in sync with API
+ */
 class CsvUploader
 {
     /**

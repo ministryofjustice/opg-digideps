@@ -4,11 +4,12 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/admin/ajax/")
+ * @Route("/admin/ajax")
  */
 class AdminAjaxController extends AbstractController
 {
@@ -30,7 +31,7 @@ class AdminAjaxController extends AbstractController
     }
 
     /**
-     * @Route("/casrec-add-ajax", name="casrec_add_ajax")
+     * @Route("/casrec-add", name="casrec_add_ajax")
      * @Template
      */
     public function uploadUsersAjaxAction(Request $request)
@@ -51,4 +52,32 @@ class AdminAjaxController extends AbstractController
             return new JsonResponse($e->getMessage());
         }
     }
+
+    /**
+     * @Route("/pa-add", name="pa_add_ajax")
+     * @Method({"POST"})
+     * @Template
+     */
+    public function uploadPaAjaxAction(Request $request)
+    {
+        $chunkId = 'pa_chunk' . $request->get('chunk');
+        $redis = $this->get('snc_redis.default');
+
+        try {
+            $compressedData = $redis->get($chunkId);
+            if (!$compressedData) {
+                new JsonResponse('Chunk not found', 500);
+            }
+
+            $ret = $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+
+            $redis->del($chunkId);
+
+            return new JsonResponse($ret);
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage());
+        }
+    }
+
+
 }
