@@ -53,6 +53,12 @@ class ReportService
             return;
         }
 
+        if($report instanceof Report and $report->getType() !== null)
+        {
+            $report->setType($report->getType());
+            return;
+        }
+
         $report->setType(Report::TYPE_102);
     }
 
@@ -68,6 +74,7 @@ class ReportService
         //lets clone the report
         $client = $report->getClient();
         $newReport = new Report($client);
+        $newReport->setType($report->getType());
         $this->setReportTypeBasedOnCasrec($newReport);
 
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
