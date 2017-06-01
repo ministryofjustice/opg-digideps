@@ -53,7 +53,7 @@ class ReportService
             return;
         }
 
-        if($report instanceof Report)
+        if($report instanceof Report and $report->getType() !== null)
         {
             $report->setType($report->getType());
             return;
