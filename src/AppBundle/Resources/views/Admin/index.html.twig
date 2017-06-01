@@ -33,7 +33,7 @@
     </div>
     {{ form_submit(form.search, 'Search', {
         'labelText': 'Search'}) }}
-    <a href="{{ path('admin_homepage') }}" class="button-link">Clear filters</a>
+    <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
     {{ form_end(form) }}
 
     <hr>
@@ -44,17 +44,17 @@
 
         <div class="grid-row">
             <div class="column-one-half">
-                <h2 id="users-list-title" class="heading-medium flush--ends">User list</h2>
+                <h2 id="users-list-title" class="heading-medium flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
                 {% if users | length  == filters.limit %}
-                    <p class="text">Results limited to 100 users.<br>Use search to filter the wanted users.</p>
+                    <p class="text">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
                 {% else %}
-                    <p>Found {{ users | length }} users</p>
+                    <p>{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
                 {% endif %}
             </div>
             <div class="column-one-half text--right">
                 <a href="{{ path('admin_add_user') }}" class="bold-small move-quarter--up action-link behat-link-user-add-new">
                     <span class="icon icon-plus"></span>
-                    Add a new user
+                    {{ (page ~ '.addUserButton') | trans }}
                 </a>
             </div>
         </div>
@@ -63,12 +63,11 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">NDR
-                    </th>
-                    <th scope="col">Active</th>
-                    <th scope="col" class="numeric">Registration date</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.ndr') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
+                    <th scope="col" class="numeric">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,11 +80,11 @@
                         {% endif %}
                         <div class="text-secondary">
                             {{ user.roleFullName }}
-                            {% if user.adManaged %} Assisted{% endif %}
-                            {% if app.user.id == user.id %} (currenty logged){% endif %}
+                            {% if user.adManaged %} {{ (page ~ '.userTable.assistedState') | trans }}{% endif %}
+                            {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}
                         </div>
                         {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
-                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">View</a>
+                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">{{ 'view' | trans({}, 'common') }}</a>
                         {% endif %}
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>
@@ -94,12 +93,12 @@
                     </td>
                     <td>
                         {% if user.active %}
-                            Yes
+                            {{ 'yes' | trans({}, 'common') }}
                         {% else %}
-                            No
+                            {{ 'no' | trans({}, 'common') }}
                             <br/><a data-role="ajax-link" class="behat-link-send-activation-email"
                                     href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
-                            (Re)send activation email
+                            {{ (page ~ '.userTable.sendEmail') | trans }}
                         </a>
                         {% endif %}
 

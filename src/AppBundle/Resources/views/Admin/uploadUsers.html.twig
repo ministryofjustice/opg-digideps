@@ -1,13 +1,14 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin" %}
+{% set page = 'uploadUsers' %}
 
-{% block htmlTitle %}Administration - Upload users{% endblock %}
-{% block pageTitle %}Admin{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">User management</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
@@ -16,8 +17,7 @@
 
     {% if nOfChunks %}
 
-<p class="text">Uploading... please wait.<br/>
-    Do not refresh this page</p>
+<p class="text">{{ (page ~ '.uploading') | trans | raw }}</p>
 
 <progress id="uploadProgress" value="0" max="{{ nOfChunks + 1 }}">
 
@@ -51,11 +51,11 @@
 
         <div class="data">
             <span class="data-item bold-xlarge">{{ currentRecords }}</span>
-            <span class="data-item bold-small">users in the database</span>
+            <span class="data-item bold-small">{{ (page ~ '.usersInTheDB') | trans }}</span>
         </div>
 
 
-        <h2 class="heading-medium">Upload users</h2>
+        <h2 class="heading-medium">{{ (page ~ '.heading') | trans }}</h2>
 
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

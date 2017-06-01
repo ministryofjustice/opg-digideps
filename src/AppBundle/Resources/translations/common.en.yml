@@ -1,5 +1,8 @@
-action:
-  cancel: Cancel
+cancel: Cancel
+view: View
+yes: Yes
+no: No
+
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
