@@ -95,23 +95,26 @@ class CsvToArray
         }
 
         // read rows
+        $rowNumber = 0;
         while (($row = $this->getRow()) !== false) {
-            if (count($header) === count($row)) {
-                $rowArray = [];
-                foreach ($this->expectedColumns as $expectedColumn) {
-                    $index = array_search($expectedColumn, $header);
-                    if ($index !== false) {
-                        $rowArray[$expectedColumn] = $row[$index];
+            $rowNumber++;
+            $rowArray = [];
+            foreach ($this->expectedColumns as $expectedColumn) {
+                $index = array_search($expectedColumn, $header);
+                if ($index !== false) {
+                    if (!array_key_exists($index, $row)) {
+                        throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
+                    $rowArray[$expectedColumn] = $row[$index];
                 }
-                foreach ($this->optionalColumns as $optionalColumn) {
-                    $index = array_search($optionalColumn, $header);
-                    if ($index !== false) {
-                        $rowArray[$optionalColumn] = $row[$index];
-                    }
-                }
-                $ret[] = $rowArray;
             }
+            foreach ($this->optionalColumns as $optionalColumn) {
+                $index = array_search($optionalColumn, $header);
+                if ($index !== false) {
+                    $rowArray[$optionalColumn] = $row[$index];
+                }
+            }
+            $ret[] = $rowArray;
         }
 
         return $ret;
