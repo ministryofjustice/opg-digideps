@@ -1,0 +1,4 @@
+services:
+    pa_service:
+        class:  AppBundle\Service\PaService
+        arguments: [ "@rest_client" ]
