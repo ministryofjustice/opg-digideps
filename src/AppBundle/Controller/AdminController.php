@@ -368,6 +368,7 @@ class AdminController extends AbstractController
                         'Client Adrs2',
                         'Client Adrs3',
                         'Client Postcode',
+                        'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
                         'Dep Adrs1',

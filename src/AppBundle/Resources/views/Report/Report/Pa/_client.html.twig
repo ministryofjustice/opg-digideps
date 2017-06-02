@@ -23,7 +23,7 @@
                             <strong class="bold">Date of birth</strong>
                         </dt>
                         <dd>
-                            {{ client.dateOfBirth }}
+                            {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
                         </dd>
                     </dl>
                 </div>

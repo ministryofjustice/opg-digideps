@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -573,5 +574,14 @@ class Client
         $this->dateOfBirth = $dateOfBirth;
 
         return $this;
+    }
+
+    /*
+     * @return int
+     */
+    public function getAge()
+    {
+        $to = new DateTime('today');
+        return $this->dateOfBirth->diff($to)->y;
     }
 }
