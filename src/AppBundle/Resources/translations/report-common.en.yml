@@ -42,5 +42,15 @@ prevNextLinks:
     paFeeExpense: Deputy fees and expenses
     gifts: Gifts
 
+# PA Client Details
+clientDetails:
+  heading: Client details
+  name: Name
+  dateOfBirth: Date of birth
+  phone: Phone
+  email: Email
+  address: Address
+  editClient: Edit client details
+
 
 

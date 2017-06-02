@@ -1,64 +1,64 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
+{% set page = "clientDetails" %}
 
-<div class="panel panel-admin hard">
+<details class="panel panel-admin hard">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
     <div class="panel-body soft-half">
-        <details>
-            <summary>Client details</summary>
-            <div class="grid-row behat-region-client-profile">
-                <div class="column-one-quarter">
-                    <dl>
-                        <dt>
-                            <strong class="bold">Name</strong>
-                        </dt>
-                        <dd>
-                            {{ client.fullname | title }}
-                        </dd>
-                    </dl>
-                </div>
+        <div class="grid-row behat-region-client-profile">
+            <div class="column-one-half">
+                <dl>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.name') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {{ client.fullname | title }}
+                    </dd>
 
-                <div class="column-one-quarter">
-                    <dl>
-                        <dt>
-                            <strong class="bold">Date of birth</strong>
-                        </dt>
-                        <dd>
-                            {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
-                        </dd>
-                    </dl>
-                </div>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
+                    </dd>
 
-                <div class="column-one-quarter">
-                    <dl>
-                        <dt>
-                            <strong class="bold">Phone</strong>
-                        </dt>
-                        <dd>
-                            {{ client.phone }}
-                        </dd>
-                        <dt>
-                            <strong class="bold">Email</strong>
-                        </dt>
-                        <dd>
-                            {{ client.email }}
-                        </dd>
-                    </dl>
-                </div>
-
-                <div class="column-one-quarter">
-                    <dl>
-                        <dt>
-                            <strong class="bold">Address</strong>
-                        </dt>
-                        <dd>
-                            {{ client.address }}<br/>
-                            {{ client.address2 }}<br/>
-                            {{ client.county }}<br/>
-                            {{ client.postcode }}
-                        </dd>
-                    </dl>
-                </div>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {{ client.phone }}
+                    </dd>
+                </dl>
             </div>
-        </details>
+
+            <div class="column-one-half">
+                <dl>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom dont-break-out">
+                        {{ client.email }}
+                    </dd>
+
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
+                    </dt>
+                    <dd>
+                        {{ client.address }}<br/>
+                        {{ client.address2 }}<br/>
+                        {{ client.county }}<br/>
+                        {{ client.postcode }}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <p>
+            <a href="#" class="btn">{{ (page ~ '.editClient') | trans }}</a>
+        </p>
     </div>
-</div>
+
+</details>
