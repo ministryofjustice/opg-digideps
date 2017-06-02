@@ -231,6 +231,10 @@ class PaService
                 $client->setCountry('GB'); //postcode given means a UK address is given
             }
 
+            if (!empty($row['Client Phone'])) {
+                $client->setPhone($row['Client Phone']);
+            }
+
             if (!empty($row['Client Email'])) {
                 $client->setEmail($row['Client Email']);
             }
