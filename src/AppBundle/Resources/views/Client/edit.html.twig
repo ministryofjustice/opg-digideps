@@ -4,9 +4,10 @@
 
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'editClient' %}
 
-{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('client') }}
