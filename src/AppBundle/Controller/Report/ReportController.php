@@ -143,13 +143,24 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
+        $template = 'AppBundle:Report/Report:overview.html.twig';
+
         // get all the groups (needed by EntityDir\Report\Status
+        /** @var EntityDir\Report\Report $report */
         $report = $this->getReportIfNotSubmitted($reportId, ['status']);
 
-        return [
-            'report' => $report,
-            'reportStatus' => $report->getStatus(),
-        ];
+        // PA users get alternative template
+        if ($report->getHas106flag()) {
+            $template = 'AppBundle:Report/Report/Pa:overview.html.twig';
+        }
+
+        return $this->render(
+            $template,
+            [
+                'report' => $report,
+                'reportStatus' => $report->getStatus(),
+            ]
+        );
     }
 
     /**

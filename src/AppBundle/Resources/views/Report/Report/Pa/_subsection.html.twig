@@ -1,0 +1,29 @@
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% if disableedit is defined and disableedit == true %}
+    {% set allowEdit = false %}
+{% else %}
+    {% set allowEdit = true %}
+{% endif %}
+
+{% if linkToSubSection is not defined %}
+    {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
+{% endif %}
+
+<li id="{{ subSection }}-section" class="descriptive-list-item">
+    <div id="{{ subSection }}-sub-section">
+        <a class="behat-link-edit-{{ subSection }} link-edit soft-half--ends" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+            {{ (subSection ~ '.subSectionTitle') | trans }}
+            <span class="right status flush--bottom {{ state.state }}">
+                {% if state.state == 'done' %}
+                    {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+                {% else %}
+                    {{ ('labels.' ~ state.state) | trans }}
+                {% endif %}
+            </span>
+        </a>
+
+    </div>
+</li>

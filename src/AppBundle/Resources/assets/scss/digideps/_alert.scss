@@ -38,6 +38,12 @@
     background-color: rgba($light-blue, .1);
 }
 
+.alert-important {
+    @extend %alert-base;
+    border-color: $black;
+    background-color: rgba($grey-3, .1);
+}
+
 .alert-message {
     overflow: hidden;
 }
