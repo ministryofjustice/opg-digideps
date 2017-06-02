@@ -167,7 +167,7 @@ Feature: Report submit
         Given I load the application status from "pa-report-103-ready-to-submit"
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-1000011" region
-        And I click on "report-submit, declaration-page"
+        And I click on "edit-report_submit, declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
             | report_declaration_agreedBehalfDeputy_0 | only_deputy |
