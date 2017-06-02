@@ -154,6 +154,20 @@ class Client
      */
     private $phone;
 
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     *
+     * @var DateTime
+     */
+    private $dateOfBirth;
+
     public function __construct()
     {
         $this->users = [];
@@ -517,6 +531,46 @@ class Client
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return Client
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime $dateOfBirth
+     */
+    public function getDateOfBirth()
+    {
+        return $this->dateOfBirth;
+    }
+
+    /**
+     * @param \DateTime $dateOfBirth
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function setDateOfBirth(\DateTime $dateOfBirth = null)
+    {
+        $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }
