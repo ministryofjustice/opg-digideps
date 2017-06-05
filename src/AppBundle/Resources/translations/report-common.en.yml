@@ -15,6 +15,8 @@ report:
           label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"
+    clientProfile: "Client profile:"
+    courtOrderNo: 'Court order no:'
 
 prevNextLinks:
   next: Next section

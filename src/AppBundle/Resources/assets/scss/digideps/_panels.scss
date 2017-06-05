@@ -1,0 +1,29 @@
+// ==========================================================================
+// PANELS
+// Container panels for the admin/PA views
+
+.panel-admin {
+	border: 1px solid $grey-3;
+	background-color: $grey-4;
+
+	.status {
+		background-color: $white;
+	}
+}
+
+.panel-heading {
+	overflow: hidden;
+	padding: 10px $gutter-half 7px $gutter-half;
+	background-color: $grey-3;
+
+	.heading-medium {
+		@include media(tablet) {
+			float: left;
+		}
+	}
+
+	.alert {
+		position: relative;
+		top: 2px;
+	}
+}

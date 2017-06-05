@@ -238,3 +238,4 @@ Feature: PA user edits report sections
       | december rent | transaction-december-rent |
       | £1,401.00     | transaction-december-rent |
       | £1,401.00     | transaction-total         |
+    And I save the application status into "pa-report-103-inprogress"

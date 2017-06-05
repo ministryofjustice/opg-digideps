@@ -17,7 +17,7 @@
 .icon-notification {
     @include icon(icon-notification, 22, 22, 'icons');
     @include media(mobile) {
-        @include icon(icon-notification, 16, 16);
+        @include icon(icon-notification, 16, 16, 'icons');
         margin-right: 6px;
         background-size: contain;
     }
@@ -26,7 +26,7 @@
 .icon-tick {
     @include icon(icon-tick, 22, 22, 'icons');
     @include media(mobile) {
-        @include icon(icon-tick, 16, 16);
+        @include icon(icon-tick, 16, 16, 'icons');
         margin-right: 6px;
         background-size: contain;
     }
@@ -35,7 +35,7 @@
 .icon-cross {
     @include icon(icon-cross, 22, 22, 'icons');
     @include media(mobile) {
-        @include icon(icon-cross, 16, 16);
+        @include icon(icon-cross, 16, 16, 'icons');
         margin-right: 6px;
         background-size: contain;
     }
@@ -44,7 +44,16 @@
 .icon-information {
     @include icon(icon-information, 22, 22, 'icons');
     @include media(mobile) {
-        @include icon(icon-information, 16, 16);
+        @include icon(icon-information, 16, 16, 'icons');
+        margin-right: 6px;
+        background-size: contain;
+    }
+}
+
+.icon-important-small {
+    @include icon(icon-important-small, 22, 22, 'icons');
+    @include media(mobile) {
+        @include icon(icon-important-small, 16, 16, 'icons');
         margin-right: 6px;
         background-size: contain;
     }

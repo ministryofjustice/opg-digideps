@@ -1,0 +1,270 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set is102 = report.type == '102' %}
+{% set is103 = report.type == '103' %}
+{% set is104 = report.type == '104' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{% endblock %}
+
+{% block pageContent %}
+
+    {% block pageHeader %}
+        {% include 'AppBundle:Report/Report/Pa:_header.html.twig' %}
+    {% endblock %}
+
+    <div class="panel panel-admin hard">
+        <div class="panel-heading">
+            <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
+            {% if is102 or is103 %}
+                {% if report.isDue() and not reportStatus.balanceMatches %}
+                    <div class="alert alert-important">
+                        <span class="icon icon-important-small"></span>
+                        <div class="alert-message">
+                            <p class="font-small">
+                                {{ ('balance.notBalancedWarningPA') | trans }}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="panel-body soft-half">
+            <div class="grid-row">
+                <div class="column-one-half">
+                    <dl class="push--bottom">
+                        <dt>
+                            <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
+                        </dt>
+                        <dd>
+                            <span class="status status-large {{ reportStatus.getState() }} flush--bottom">
+                                {{ ('status.' ~ reportStatus.status) | trans() }}
+                            </span>
+                            {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                                <p>
+                                    <a class="behat-link-edit-report_submit" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
+                                </p>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                    <dl class="push--bottom">
+                        <dt class="visuallyhidden">
+                            <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
+                        </dt>
+                        <dd>
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a><br>
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a>
+                        </dd>
+                    </dl>
+                </div>
+
+                <div class="column-one-half">
+                    <dl class="push--bottom">
+                        <dt>
+                            <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
+                        </dt>
+                        <dd>{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</dd>
+                    </dl>
+                    <dl class="push--bottom">
+                        <dt>
+                            <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
+                        </dt>
+                        <dd>
+                            {{ report.dueDate | date(" d F Y") }}<br>
+                            {% if report.dueDateDiffDays < 0 %}
+                                <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                            {% elseif report.dueDateDiffDays == 0 %}
+                                <span class="font-xsmall bold">Due today</span>
+                            {% elseif report.dueDateDiffDays <= 30 %}
+                                <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+
+            </div>
+
+            <p>
+                <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
+            </p>
+
+            <div id="overview-sections" class="overview-sections">
+
+                <div class="grid-row">
+                    <div class="column-one-half">
+                        <ul>
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'decisions',
+                                report: report,
+                                description: true,
+                                state: reportStatus.decisionsState,
+                                list: true
+                            } %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'contacts',
+                                report: report,
+                                description: true,
+                                list: true,
+                                info: true,
+                                state: reportStatus.contactsState,
+                            } %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'visits_care',
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.visitsCareState
+                            } %}
+
+                            <!-- TODO - MISSING HEALTH AND LIFESTYLE?? -->
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'pa_fee_expense',
+                                report: report,
+                                state: reportStatus.paFeesExpensesState,
+                                linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
+                                description: true
+                            } %}
+
+                            {% if is102 or is103 %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'gifts',
+                                report: report,
+                                state: reportStatus.giftsState,
+                                linkToSubSection: path('gifts', {'reportId': report.id}),
+                                description: true
+                                } %}
+                            {% endif %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'actions',
+                                report: report,
+                                description: true,
+                                state: reportStatus.actionsState,
+                                list: true
+                            } %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'other_info',
+                                linkToSubSection: path('other_info', {reportId: report.id}),
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.otherInfoState,
+                            } %}
+
+                        </ul>
+                    </div>
+
+                    <div class="column-one-half">
+                        <ul>
+
+                            {% if is102 or is103 %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                    transDomain: translationDomain,
+                                    subSection: 'bank_accounts',
+                                    report: report,
+                                    state: reportStatus.bankAccountsState,
+                                    warning: true,
+                                    description: true
+                                } %}
+
+                                {% if report.isDue() and not reportStatus.balanceMatches %}
+                                    <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
+                                        <div id="bank_accounts_not_balanced-sub-section">
+                                            {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if is102 %}
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_transfers',
+                                report: report,
+                                state: reportStatus.moneyTransferState,
+                                warning: true,
+                                description: true
+                                } %}
+                            {% endif %}
+
+                            {% if is102 %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                    transDomain: translationDomain,
+                                    subSection: 'money_in',
+                                    report: report,
+                                    state: reportStatus.moneyInState,
+                                    warning: true,
+                                    description: true
+                                } %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                    transDomain: translationDomain,
+                                    subSection: 'money_out',
+                                    report: report,
+                                    state: reportStatus.moneyOutState,
+                                    warning: true,
+                                    description: true
+                                } %}
+                            {% endif %}
+                            {% if is103 %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                    transDomain: translationDomain,
+                                    subSection: 'money_in_short',
+                                    report: report,
+                                    state: reportStatus.MoneyInShortState,
+                                    warning: true,
+                                    description: true
+                                } %}
+                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                    transDomain: translationDomain,
+                                    subSection: 'money_out_short',
+                                    report: report,
+                                    state: reportStatus.MoneyOutShortState,
+                                    warning: true,
+                                    description: true
+                                } %}
+                            {% endif %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'assets',
+                                report: report,
+                                state: reportStatus.assetsState,
+                                list: true,
+                                description: true
+                            } %}
+
+                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'debts',
+                                report: report,
+                                state: reportStatus.debtsState,
+                                list: true,
+                                description: true
+                            } %}
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

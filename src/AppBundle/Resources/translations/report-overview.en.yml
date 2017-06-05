@@ -12,14 +12,22 @@ dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Check and submit"
-
 sectionsRemaining: "sections remaining"
 overview: Report overview
-
 status:
   notStarted: "Not started"
   notFinished: "Not finished"
   readyToSubmit: "Ready to submit"
+reportDueDate: "Report due date"
+currentReport: "Current report"
+reportStatus: "Report status"
+reportOptions: "Report options"
+reportSectionsToComplete: "Report sections to complete"
+
+options:
+  submitReport: "Submit report"
+  viewReport: "View report"
+  uploadDocumentation: "Upload documentation"
 
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
@@ -77,11 +85,13 @@ gifts:
       done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
     subSectionTitle: "Accounts"
+    subSectionTitleNotBalanced: "Accounts not balanced"
     subSectionDescription: "Add %client%'s bank, building society and savings accounts"
     edit: "Edit"
     start: "Start"
     label:
       done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+      addReason: "Add reason"
 money_transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Provide details of money transferred between %client%'s accounts"
@@ -122,8 +132,12 @@ balance:
     subSectionTitle: "Balance"
     subSectionDescription: ""
     notBalancedWarning: |
-        Your accounts are not balanced.
-        <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
+      Your accounts are not balanced.
+      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
+    notBalancedWarningPAWithLink: |
+      Accounts not balanced
+      <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
+    notBalancedWarningPA: Accounts not balanced
     edit: "Edit"
     start: "Start"
     label:
