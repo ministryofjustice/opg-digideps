@@ -42,7 +42,7 @@
                         <dt>
                             <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
                         </dt>
-                        <dd>
+                        <dd class="push--bottom">
                             <span class="status status-large {{ reportStatus.getState() }} flush--bottom">
                                 {{ ('status.' ~ reportStatus.status) | trans() }}
                             </span>
@@ -52,12 +52,11 @@
                                 </p>
                             {% endif %}
                         </dd>
-                    </dl>
-                    <dl class="push--bottom">
+
                         <dt class="visuallyhidden">
                             <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
                         </dt>
-                        <dd>
+                        <dd class="push--bottom">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a><br>
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a>
                         </dd>
@@ -69,13 +68,14 @@
                         <dt>
                             <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
                         </dt>
-                        <dd>{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</dd>
-                    </dl>
-                    <dl class="push--bottom">
+                        <dd class="push--bottom">
+                            {{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}
+                        </dd>
+
                         <dt>
                             <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
                         </dt>
-                        <dd>
+                        <dd class="push--bottom">
                             {{ report.dueDate | date(" d F Y") }}<br>
                             {% if report.dueDateDiffDays < 0 %}
                                 <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
@@ -266,5 +266,9 @@
             </div>
         </div>
     </div>
+
+    {% include 'AppBundle:Report/Report/Pa:_client.html.twig' with {
+        client: report.client,
+    } %}
 
 {% endblock %}

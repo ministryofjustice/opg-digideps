@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -154,6 +155,20 @@ class Client
      */
     private $phone;
 
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     *
+     * @var DateTime
+     */
+    private $dateOfBirth;
+
     public function __construct()
     {
         $this->users = [];
@@ -288,13 +303,13 @@ class Client
 
     public function setCourtDateWithoutTime($courtDate = null)
     {
-        $this->courtDate = ($courtDate instanceof \DateTime) ?
-                new \DateTime($courtDate->format('Y-m-d')) : null;
+        $this->courtDate = ($courtDate instanceof DateTime) ?
+                new DateTime($courtDate->format('Y-m-d')) : null;
     }
 
     public function isValidCourtDate(ExecutionContextInterface $context)
     {
-        $today = new \DateTime();
+        $today = new DateTime();
 
         if ($this->courtDate > $today) {
             $context->addViolationAt('courtDate', 'Court Date cannot be in the future');
@@ -502,6 +517,19 @@ class Client
     }
 
     /**
+     * @return array
+     */
+    public function getAddressNotEmptyParts()
+    {
+        return array_filter([
+            $this->address,
+            $this->address2,
+            $this->county,
+            $this->postcode,
+        ]);
+    }
+
+    /**
      * @return string
      */
     public function getPhone()
@@ -519,5 +547,57 @@ class Client
         $this->phone = $phone;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return Client
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime $dateOfBirth
+     */
+    public function getDateOfBirth()
+    {
+        return $this->dateOfBirth;
+    }
+
+    /**
+     * @param DateTime $dateOfBirth
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function setDateOfBirth(DateTime $dateOfBirth = null)
+    {
+        $this->dateOfBirth = $dateOfBirth;
+
+        return $this;
+    }
+
+    /*
+     * @return int
+     */
+    public function getAge()
+    {
+        if (!$this->dateOfBirth) {
+            return;
+        }
+        $to = new DateTime('today');
+        return $this->dateOfBirth->diff($to)->y;
     }
 }

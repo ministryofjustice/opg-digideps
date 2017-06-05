@@ -1,0 +1,78 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+{% set page = "clientDetails" %}
+
+<details class="panel panel-admin hard">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
+    <div class="panel-body soft-half">
+        <div class="grid-row behat-region-client-profile">
+            <div class="column-one-half">
+                <dl>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.name') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {{ client.fullname | title }}
+                    </dd>
+
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {% if client.dateOfBirth %}
+                             {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {% if client.phone %}
+                            {{ client.phone }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+
+                </dl>
+            </div>
+
+            <div class="column-one-half">
+                <dl>
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom dont-break-out">
+                        {% if client.email %}
+                            {{ client.email }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
+                    </dt>
+                    <dd>
+                        {% if client.addressNotEmptyParts %}
+                            {{ client.addressNotEmptyParts | join('<br/>') | raw }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        {#<p>#}
+            {#<a href="#" class="btn">{{ (page ~ '.editClient') | trans }}</a>#}
+        {#</p>#}
+    </div>
+
+</details>
