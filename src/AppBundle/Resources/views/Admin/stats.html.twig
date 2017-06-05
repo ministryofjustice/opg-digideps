@@ -1,25 +1,25 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin" %}
+{% set page = 'statsPage' %}
 
-{% block htmlTitle %}Administration - Statistics{% endblock %}
-{% block pageTitle %}Admin{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">Statistics</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <h1 class="heading-medium">Deputy's analysis</h1>
+    <h1 class="heading-medium">{{ (page ~ '.heading') | trans }}</h1>
 
-    <p>Limited to last 100 users.</p>
+    <p>{{ (page ~ '.limitedTo100') | trans }}</p>
     <p>
-        <a href="{{ path('admin_stats_csv', {'timestamp': date().timestamp }) }}">Download the CSV</a>
-        to get the full list.
+        {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'timestamp': date().timestamp }) }) | raw }}
     </p>
 
     {# dynamically display data #}
@@ -45,7 +45,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-
 
 {% endblock %}

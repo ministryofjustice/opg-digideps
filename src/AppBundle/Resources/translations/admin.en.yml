@@ -1,4 +1,32 @@
+home:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+  addUserButton: Add a new user
+  userTable:
+    heading: User list
+    resultsLimited: Results limited to 100 users.<br>Use search to filter the wanted users.
+    results: Found %numberOfUsers% users
+    header:
+      name: Name
+      email: Email
+      ndr: NDR
+      active: Active
+      regDate: Registration date
+    assistedState: Assisted
+    loggedInState: (currenty logged)
+    sendEmail: (Re)send activation email
+
+homeForm:
+  clear: Clear filters
+
+addUser:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+
 addUserForm:
+  heading: Add a user
   email:
     label: Email
     hint: 'An activation email will be sent to the provided email address'
@@ -16,20 +44,76 @@ addUserForm:
     label: Enable NDR for this user (Lay deputy only)
   submit:
     label: Save user
+
+deleteConfirm:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+  heading: Delete user
+  question: Are you sure that you want to delete <strong class="bold">%fullName%</strong>?
+
+editUser:
+  htmlTitle: Administration - Users
+  pageTitle: Admin
+  supportTitle: User management
+  clientTable:
+    heading: Clients and reports
+    header:
+      client: Client
+      caseNumber: Case number
+      reports: Number of reports
+  deleteDisabled: Delete is disabled as there is at least one report
+
 editUserForm:
+  heading: Edit user
+  reportsExist: |
+    Reports already exist for this user. If NDR is enabled, the deputy won't see them
+    until NDR is submitted.
   email:
     existingError: That email has already been registered with this service.
   submit:
     label: Update user
+
+statsPage:
+  htmlTitle: Administration - Statistics
+  pageTitle: Admin
+  supportTitle: Statistics
+  heading: Deputy's analysis
+  limitedTo100: Limited to last 100 users.
+  downloadCSV: <a href="%csvFile%">Download the CSV</a> to get the full list.
+  pleaseWait: Please wait ...
+  dataGenerated: |
+    Data is being generated, Click here to <a href="%csvFile%">download</a>
+
+uploadPA:
+  htmlTitle: Administration - Upload PA users
+  pageTitle: Admin
+  supportTitle: PA user management
+  heading: Upload PA users along with clients and reports
+  uploading: Uploading... please wait.<br/>Do not refresh this page
+
+uploadUsers:
+  htmlTitle: Administration - Upload users
+  pageTitle: Admin
+  supportTitle: User management
+  heading: Upload users
+  usersInTheDB: users in the database
+  uploading: Uploading... please wait.<br/>Do not refresh this page
+
 cancel:
     label: Cancel
+
 expiration:
     label: Expire registration token
+
 delete:
     label: Delete User
+
 no:
     label: No, take me back
+
 yes:
     label: Yes, I'm sure
+
 action:
     message: Your changes were saved

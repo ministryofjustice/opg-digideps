@@ -1,3 +1,9 @@
+cancel: Cancel
+view: View
+yes: Yes
+no: No
+
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"

@@ -1,19 +1,23 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}Administration - Users{% endblock %}
-{% block pageTitle %}Admin{% endblock %}
+{% trans_default_domain "admin" %}
+{% set page = 'deleteConfirm' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">User management</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <h2 class="heading-medium">Delete user</h2>
 
-    <p class="text">Are you sure that you want to delete <strong class="bold"> {{user.getFullname()}} </strong>?</p>
+    <h2 class="heading-medium">{{ (page ~ '.heading') | trans }}</h2>
+
+    <p class="text">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: 'admin',

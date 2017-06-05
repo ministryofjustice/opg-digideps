@@ -1,14 +1,18 @@
-page:
-  htmlTitle: "Deputy report - your client | GOV.UK"
-  pageSectionTitle: "My client"
+editClient:
+  htmlTitle: "Deputy report - %client%'s details | GOV.UK"
+  pageTitle: "%client%'s details"
   pageSectionDescription: "You can update %client%'s details and your court order date below."
   lastLoggedIn: "Last signed in:"
-clientDetails:
-  editClient: "Edit client"
-  edit: "Edit %client%'s details"
-  caseNumber: "Case number"
-  address: "%client%'s address"
-  courtDate: "Court order date"
+
+showClient:
+  htmlTitle: "Deputy report - %client%'s details | GOV.UK"
+  pageTitle: "%client%'s details"
+  clientTable:
+    header:
+      caseNumber: Case number
+      address: "%client%'s address"
+      courtDate: Court order date
+  editClient: "Edit %client%'s details"
 
 form:
   editClientForm:

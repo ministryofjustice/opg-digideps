@@ -4,9 +4,10 @@
 
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'showClient' %}
 
-{% block htmlTitle %}{{ 'htmlTitle.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title.client-edit' | trans({'%client%': client.firstname}, 'user-account') }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('client') }}
@@ -16,11 +17,11 @@
     <table class="text">
         <tbody>
             <tr>
-                <th scope="row">{{ 'clientDetails.caseNumber' | trans }}</th>
+                <th scope="row">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
                 <td class="behat-region-case-number">{{ client.getCaseNumber }}</td>
             </tr>
             <tr valign="top">
-                <th scope="row">{{ 'clientDetails.address' | trans({'%client%': client.firstname}) }}</th>
+                <th scope="row">{{ (page ~ '.clientTable.header.address') | trans({'%client%': client.firstname}) }}</th>
                 <td>
                     {% if client.address is not empty %}
                         <div itemprop="streetAddress">{{ client.address }}</div>
@@ -40,13 +41,14 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">{{ 'clientDetails.courtDate' | trans }}</th>
+                <th scope="row">{{ (page ~ '.clientTable.header.courtDate') | trans }}</th>
                 <td>{{ client.courtDate | date("d/m/Y") }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('client_edit') }}#edit-client"
-       class="button push--top behat-link-client-edit">{{ 'clientDetails.edit'| trans({'%client%': client.firstname}, translationDomain) }}</a>
+    <a href="{{ path('client_edit') }}#edit-client" class="button push--top behat-link-client-edit">
+       {{ (page ~ '.editClient') | trans({'%client%': client.firstname}, translationDomain) }}
+   </a>
 
 {% endblock %}

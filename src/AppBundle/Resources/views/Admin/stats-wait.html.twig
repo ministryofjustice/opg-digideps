@@ -1,24 +1,25 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin" %}
+{% set page = 'statsPage' %}
 
-{% block htmlTitle %}Administration - Statistics{% endblock %}
-{% block pageTitle %}Admin{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">Statistics</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <h1 class="heading-medium">Deputy's analysis</h1>
+    <h1 class="heading-medium">{{ (page ~ '.heading') | trans }}</h1>
 
-    <p class="text" id="loading">Please wait ...</p>
-    <p class="text hidden" id="done">
-        Data is being generated, Click here to <a href="{{ path('admin_stats_csv', {'timestamp': timestamp}) }}">download</a>
+    <p class="text" id="loading">{{ (page ~ '.pleaseWait') | trans }}</p>
+    <p class="text" id="done">
+        {{ (page ~ '.dataGenerated') | trans({'%csvFile%': path('admin_stats_csv', {'timestamp': timestamp}) }) | raw }}
     </p>
 
     <script>
