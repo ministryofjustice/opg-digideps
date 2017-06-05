@@ -39,12 +39,14 @@
 
             <div class="column-one-half">
                 <dl>
-                    <dt>
-                        <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom dont-break-out">
-                        {{ client.email }}
-                    </dd>
+                    {% if client.email %}
+                        <dt>
+                            <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
+                        </dt>
+                        <dd class="push--bottom dont-break-out">
+                            {{ client.email }}
+                        </dd>
+                    {% endif %}
 
                     <dt>
                         <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
