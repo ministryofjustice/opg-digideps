@@ -303,13 +303,13 @@ class Client
 
     public function setCourtDateWithoutTime($courtDate = null)
     {
-        $this->courtDate = ($courtDate instanceof \DateTime) ?
-                new \DateTime($courtDate->format('Y-m-d')) : null;
+        $this->courtDate = ($courtDate instanceof DateTime) ?
+                new DateTime($courtDate->format('Y-m-d')) : null;
     }
 
     public function isValidCourtDate(ExecutionContextInterface $context)
     {
-        $today = new \DateTime();
+        $today = new DateTime();
 
         if ($this->courtDate > $today) {
             $context->addViolationAt('courtDate', 'Court Date cannot be in the future');
@@ -570,7 +570,7 @@ class Client
     }
 
     /**
-     * @return \DateTime $dateOfBirth
+     * @return DateTime $dateOfBirth
      */
     public function getDateOfBirth()
     {
@@ -578,11 +578,11 @@ class Client
     }
 
     /**
-     * @param \DateTime $dateOfBirth
+     * @param DateTime $dateOfBirth
      *
      * @return \AppBundle\Entity\User
      */
-    public function setDateOfBirth(\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
 
