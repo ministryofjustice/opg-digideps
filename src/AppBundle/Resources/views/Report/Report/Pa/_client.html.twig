@@ -48,6 +48,7 @@
                         </dd>
                     {% endif %}
 
+                    {% if client.address OR client.address2 OR client.county OR client.postcode %}
                     <dt>
                         <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
@@ -57,6 +58,7 @@
                         {{ client.county }}<br/>
                         {{ client.postcode }}
                     </dd>
+                    {% endif %}
                 </dl>
             </div>
         </div>
