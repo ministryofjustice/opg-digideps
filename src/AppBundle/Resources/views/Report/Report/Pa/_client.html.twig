@@ -28,12 +28,15 @@
                     </dd>
                     {% endif %}
 
-                    <dt>
-                        <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ client.phone }}
-                    </dd>
+                    {% if client.phone %}
+                        <dt>
+                            <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
+                        </dt>
+                        <dd class="push--bottom">
+                            {{ client.phone }}
+                        </dd>
+                    {% endif %}
+
                 </dl>
             </div>
 
