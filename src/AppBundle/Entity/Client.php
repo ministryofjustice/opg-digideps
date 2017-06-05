@@ -581,6 +581,9 @@ class Client
      */
     public function getAge()
     {
+        if (!$this->dateOfBirth) {
+            return;
+        }
         $to = new DateTime('today');
         return $this->dateOfBirth->diff($to)->y;
     }

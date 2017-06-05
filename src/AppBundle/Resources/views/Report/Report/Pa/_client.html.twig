@@ -19,12 +19,14 @@
                         {{ client.fullname | title }}
                     </dd>
 
+                    {% if client.dateOfBirth %}
                     <dt>
                         <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
                         {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
                     </dd>
+                    {% endif %}
 
                     <dt>
                         <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
