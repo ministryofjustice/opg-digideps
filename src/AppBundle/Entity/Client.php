@@ -174,6 +174,16 @@ class Client
     private $lastedit;
 
     /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"client"})
+     *
+     * @var \Date
+     *
+     * @ORM\Column(name="date_of_birth", type="date", nullable=true)
+     */
+    private $dateOfBirth;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -659,5 +669,25 @@ class Client
     public function hasDetails()
     {
         return !empty($this->getAddress());
+    }
+
+    /**
+     * @return \DateTime $dateOfBirth
+     */
+    public function getDateOfBirth()
+    {
+        return $this->dateOfBirth;
+    }
+
+    /**
+     * @param \DateTime $dateOfBirth
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function setDateOfBirth(\DateTime $dateOfBirth = null)
+    {
+        $this->dateOfBirth = $dateOfBirth;
+
+        return $this;
     }
 }
