@@ -48,15 +48,12 @@
                         </dd>
                     {% endif %}
 
-                    {% if client.address OR client.address2 OR client.county OR client.postcode %}
+                    {% if client.addressNotEmptyParts %}
                     <dt>
                         <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd>
-                        {{ client.address }}<br/>
-                        {{ client.address2 }}<br/>
-                        {{ client.county }}<br/>
-                        {{ client.postcode }}
+                        {{ client.addressNotEmptyParts | join('<br/>') | raw }}
                     </dd>
                     {% endif %}
                 </dl>

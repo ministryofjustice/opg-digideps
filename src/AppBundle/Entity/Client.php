@@ -517,6 +517,19 @@ class Client
     }
 
     /**
+     * @return array
+     */
+    public function getAddressNotEmptyParts()
+    {
+        return array_filter([
+            $this->address,
+            $this->address2,
+            $this->county,
+            $this->postcode,
+        ]);
+    }
+
+    /**
      * @return string
      */
     public function getPhone()
