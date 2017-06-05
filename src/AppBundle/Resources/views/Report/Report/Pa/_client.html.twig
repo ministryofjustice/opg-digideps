@@ -19,46 +19,54 @@
                         {{ client.fullname | title }}
                     </dd>
 
-                    {% if client.dateOfBirth %}
                     <dt>
                         <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
+                        {% if client.dateOfBirth %}
+                             {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
+                        {% else %}
+                            -
+                        {% endif %}
                     </dd>
-                    {% endif %}
 
-                    {% if client.phone %}
-                        <dt>
-                            <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
-                        </dt>
-                        <dd class="push--bottom">
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom">
+                        {% if client.phone %}
                             {{ client.phone }}
-                        </dd>
-                    {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
 
                 </dl>
             </div>
 
             <div class="column-one-half">
                 <dl>
-                    {% if client.email %}
-                        <dt>
-                            <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
-                        </dt>
-                        <dd class="push--bottom dont-break-out">
+                    <dt>
+                        <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
+                    </dt>
+                    <dd class="push--bottom dont-break-out">
+                        {% if client.email %}
                             {{ client.email }}
-                        </dd>
-                    {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
 
-                    {% if client.addressNotEmptyParts %}
                     <dt>
                         <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd>
-                        {{ client.addressNotEmptyParts | join('<br/>') | raw }}
+                        {% if client.addressNotEmptyParts %}
+                            {{ client.addressNotEmptyParts | join('<br/>') | raw }}
+                        {% else %}
+                            -
+                        {% endif %}
                     </dd>
-                    {% endif %}
                 </dl>
             </div>
         </div>
