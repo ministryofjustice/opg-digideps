@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
-class Report
+class Report implements ReportInterface
 {
     use ReportTraits\AssetTrait;
     use ReportTraits\BankAccountTrait;
