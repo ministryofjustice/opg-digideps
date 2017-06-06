@@ -19,6 +19,10 @@ trait ExpensesTrait
     private $paidForAnything;
 
     /**
+     * Used for both
+     * - Lay deputy expenses
+     * - PA Fees outside practice direction
+     *
      * @var Expense[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Expense>")

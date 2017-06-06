@@ -6,6 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * Used for both
+ * - Lay deputy expenses
+ * - PA Fees outside practice direction
+ * 
  * @ORM\Entity()
  * @ORM\Table(name="expense")
  */
