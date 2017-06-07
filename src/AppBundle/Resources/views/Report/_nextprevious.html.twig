@@ -3,6 +3,10 @@
 
 {# iterate the config. When the section if found (k=n), includes the nextprevious.html.twig with
    the k=n-1 and k=n+1 config.
+   For each config entry:
+    - section = section Id that has to match what's passed to `reportSectionPrevNext(sectionId)` macro
+    - transKey (optional) = trans key to use under "prevNextLinks.sections" in report.common. "section" is used if not found
+    - link= full link to the section
    When all the NDR OTPP section are implemented, consider merge up the included template
  #}
 {% set previousLink = false %}
@@ -13,11 +17,13 @@
     {% if s.section == section %}
         {% if config[k-1] is defined %}
             {% set previousLink = config[k-1].link %}
-            {% set previousLabel = ('prevNextLinks.sections.' ~ config[k-1].section) | trans %}
+            {% set labelKey = config[k-1].transKey | default(config[k-1].section) %}
+            {% set previousLabel = ('prevNextLinks.sections.' ~ labelKey) | trans %}
         {% endif %}
         {% if config[k+1] is defined %}
             {% set nextLink = config[k+1].link%}
-            {% set nextLabel = ('prevNextLinks.sections.' ~ config[k+1].section) | trans %}
+            {% set labelKey = config[k+1].transKey | default(config[k+1].section) %}
+            {% set nextLabel = ('prevNextLinks.sections.' ~ labelKey) | trans %}
         {% endif %}
 
         <nav class="pagination" role="navigation" aria-label="Pagination">
