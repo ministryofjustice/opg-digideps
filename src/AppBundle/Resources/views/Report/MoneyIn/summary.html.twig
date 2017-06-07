@@ -29,12 +29,8 @@
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
-    {# Return to overview link #}
-    <p class="text--right flush--bottom">
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
-            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
-        </a>
-    </p>
+    {# Return to overview/client profile link #}
+    {{ macros.returnToOverview(report) }}
 
     {# Items list #}
     {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}

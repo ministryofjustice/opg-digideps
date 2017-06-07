@@ -22,7 +22,12 @@
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
                        class="behat-link-breadcrumbs-report-overview">
-                        Deputy report overview</a>
+                        {% if isPaUser %}
+                            Client profile
+                        {% else %}
+                            Deputy report overview
+                        {% endif %}
+                    </a>
                 {% endif %}
             </li>
         </ol>
@@ -168,4 +173,17 @@
             </div>
         </div>
     {% endif %}
+{% endmacro %}
+
+{# Return to overview / client profile link on the summary pages #}
+{% macro returnToOverview(report) %}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
+            {% if app.user.isDeputyPa() %}
+                {{ 'summaryPage.pageContent.returnToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'summaryPage.pageContent.returnToReport' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+    </p>
 {% endmacro %}

@@ -34,12 +34,8 @@
         {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
     {% endif %}
 
-    {# Return to overview link #}
-    <p class="text--right flush--bottom">
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
-            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
-        </a>
-    </p>
+    {# Return to overview/client profile link #}
+    {{ macros.returnToOverview(report) }}
 
     {# Questions and answers table #}
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
