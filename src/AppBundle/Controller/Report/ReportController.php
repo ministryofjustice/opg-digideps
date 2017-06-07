@@ -143,24 +143,20 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        $template = 'AppBundle:Report/Report:overview.html.twig';
-
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
         $report = $this->getReportIfNotSubmitted($reportId, ['status']);
 
-        // PA users get alternative template
-        if ($report->getHas106flag()) {
-            $template = 'AppBundle:Report/Report/Pa:overview.html.twig';
-        }
+        // Lay and PA users have different views.
+        // PA overview is named "client profile" from the business side
+        $template = $report->getHas106flag()
+            ? 'AppBundle:Report/Report/Pa:overview.html.twig'
+            : 'AppBundle:Report/Report:overview.html.twig';
 
-        return $this->render(
-            $template,
-            [
-                'report' => $report,
-                'reportStatus' => $report->getStatus(),
-            ]
-        );
+        return $this->render($template, [
+            'report' => $report,
+            'reportStatus' => $report->getStatus(),
+        ]);
     }
 
     /**
