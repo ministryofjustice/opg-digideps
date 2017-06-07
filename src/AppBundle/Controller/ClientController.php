@@ -71,7 +71,7 @@ class ClientController extends RestController
      */
     public function findByIdAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
