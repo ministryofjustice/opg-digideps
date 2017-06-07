@@ -273,14 +273,14 @@ class PaService
     private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
-        $reportDueDate = self::parseDate($row['Report Due']);
-        if (!$reportDueDate) {
-            throw new \RuntimeException("Cannot parse date {$row['Report Due']}");
+        $reportEndDate = self::parseDate($row['Last Report Day']);
+        if (!$reportEndDate) {
+            throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportEndDate = clone $reportDueDate;
-        $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
+        $reportDueDate = clone $reportEndDate;
+        $reportDueDate->add(new \DateInterval('P56D')); //Eight weeks ahead of end date
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
-        $report = $client->getReportByDueDate($reportEndDate);
+        $report = $client->getReportByDueDate($reportDueDate);
         if ($report) {
             if ($report->getType() != $reportType) {
                 $this->log('Changing report type');
