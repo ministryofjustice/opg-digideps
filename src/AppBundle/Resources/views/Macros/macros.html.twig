@@ -22,7 +22,12 @@
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
                        class="behat-link-breadcrumbs-report-overview">
-                        Deputy report overview</a>
+                        {% if isPaUser %}
+                            Client profile
+                        {% else %}
+                            Deputy report overview
+                        {% endif %}
+                    </a>
                 {% endif %}
             </li>
         </ol>
@@ -58,6 +63,7 @@
 
     {% set expenseSectionId = app.user.isDeputyPa ? 'paFeeExpense' : 'deputyExpenses' %}
     {% set expenseSectionRoute = app.user.isDeputyPa ? 'pa_fee_expense': 'deputy_expenses' %}
+    {% set reportOverviewTransKey = app.user.isDeputyPa ? 'clientProfile': 'reportOverview' %}
 
     {% if report.type == '102' %}
         {% set config = [
@@ -75,7 +81,7 @@
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
         {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
-        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == '103' %}
         {% set config = [
@@ -92,7 +98,7 @@
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
         {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
-        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == 'ndr' %}
         {% set config = [
@@ -105,7 +111,7 @@
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
         {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
+        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
         ] %}
     {% endif %}
 
@@ -168,4 +174,17 @@
             </div>
         </div>
     {% endif %}
+{% endmacro %}
+
+{# Return to overview / client profile link on the summary pages #}
+{% macro returnToOverview(report) %}
+    <p class="text--right flush--bottom">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
+            {% if app.user.isDeputyPa() %}
+                {{ 'summaryPage.pageContent.returnToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'summaryPage.pageContent.returnToReport' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+    </p>
 {% endmacro %}

@@ -23,6 +23,7 @@ prevNextLinks:
   previous: Previous section
   sections:
     reportOverview: Report overview
+    clientProfile: Client profile
     decisions: Decisions
     mentalCapacity: Mental capacity
     contacts: Contacts
