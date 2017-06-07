@@ -1005,6 +1005,14 @@ class User implements UserInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isLayDeputy()
+    {
+        return $this->getRoleName() === self::ROLE_LAY_DEPUTY;
+    }
+
+    /**
      * Is PA Administrator?
      *
      * @return bool
