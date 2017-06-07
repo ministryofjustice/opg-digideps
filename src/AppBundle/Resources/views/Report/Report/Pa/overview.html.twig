@@ -69,14 +69,14 @@
                             <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            {{ report.startDate | date(" d M Y") }} to {{ report.endDate | date(" d M Y") }}
+                            {{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}
                         </dd>
 
                         <dt>
                             <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            {{ report.dueDate | date(" d M Y") }}<br>
+                            {{ report.dueDate | date(" d F Y") }}<br>
                             {% if report.dueDateDiffDays < 0 %}
                                 <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
                             {% elseif report.dueDateDiffDays == 0 %}
