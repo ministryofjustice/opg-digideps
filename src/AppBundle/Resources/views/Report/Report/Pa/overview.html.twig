@@ -69,14 +69,14 @@
                             <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            {{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}
+                            {{ report.startDate | date(" d M Y") }} to {{ report.endDate | date(" d M Y") }}
                         </dd>
 
                         <dt>
                             <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            {{ report.dueDate | date(" d F Y") }}<br>
+                            {{ report.dueDate | date(" d M Y") }}<br>
                             {% if report.dueDateDiffDays < 0 %}
                                 <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
                             {% elseif report.dueDateDiffDays == 0 %}
@@ -267,8 +267,11 @@
         </div>
     </div>
 
-    {% include 'AppBundle:Report/Report/Pa:_client.html.twig' with {
-        client: report.client,
+    {% include 'AppBundle:Report/Report/Pa:_reports.html.twig' with {
+    reports: report.client.reports,
     } %}
 
+    {% include 'AppBundle:Report/Report/Pa:_client.html.twig' with {
+    client: report.client,
+    } %}
 {% endblock %}

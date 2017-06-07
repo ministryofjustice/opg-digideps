@@ -1,0 +1,47 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+{% set page = "reports" %}
+
+<details class="panel panel-admin hard">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
+    <div class="panel-body soft-half">
+        <div class="grid-row behat-region-client-profile">
+            {% if reports is not empty %}
+
+            <table>
+                <thead>
+                    <th><strong class="bold">{{ (page ~ '.table-header-reporting-period') | trans }}</strong></th>
+                    <th><strong class="bold">{{ (page ~ '.table-header-date-submitted') | trans }}</strong></th>
+                    <th><strong class="bold">{{ (page ~ '.table-header-report-status') | trans }}</strong></th>
+                    <th></th>
+                </thead>
+
+                {% for report in reports %}
+                    {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+                    {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
+                    <tr>
+                        <td>{{ report.startDate | date(" d M Y") }} to {{ report.endDate | date(" d M Y") }}</td>
+                        <td>{{ report.getSubmitDate() | date(" d M Y") }}</td>
+                        <td>
+
+                            <span class="status status-large {{ report.status.getState() }} flush--bottom">
+                                {{ ('reportDataList.' ~ report.status.getState()) | trans({}, 'report') }}
+                            </span></td>
+                        <td>
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a><br>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            {% else %}
+                <p>{{ (page ~ '.no-reports') | trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+</details>

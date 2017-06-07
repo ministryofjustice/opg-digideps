@@ -20,6 +20,7 @@ reportDataList:
   pa: "Property and affairs"
   dueDate: "Due date:"
   open: "Open report"
+  not-started: "Not started"
 form:
   editClientForm:
     subSectionTitle: "Edit %client%'s details"

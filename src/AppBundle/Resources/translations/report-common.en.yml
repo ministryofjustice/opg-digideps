@@ -43,7 +43,7 @@ prevNextLinks:
     paFeeExpense: Deputy fees and expenses
     gifts: Gifts
 
-# PA Client Details
+# PA Client Details section
 clientDetails:
   heading: Client details
   name: Name
@@ -53,5 +53,10 @@ clientDetails:
   address: Address
   editClient: Edit client details
 
-
-
+# PA Reports section
+reports:
+  heading: Reports
+  no-reports: You have no reports submitted
+  table-header-reporting-period: Reporting period
+  table-header-date-submitted: Date submitted
+  table-header-report-status: Report status
