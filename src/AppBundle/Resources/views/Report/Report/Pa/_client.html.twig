@@ -70,9 +70,9 @@
                 </dl>
             </div>
         </div>
-        {#<p>#}
-            {#<a href="#" class="btn">{{ (page ~ '.editClient') | trans }}</a>#}
-        {#</p>#}
+        <p>
+            <a href="{{ path('pa_client_edit', {'clientId': client.idx}) }}" class="btn">{{ (page ~ '.editClient') | trans }}</a>
+        </p>
     </div>
 
 </details>

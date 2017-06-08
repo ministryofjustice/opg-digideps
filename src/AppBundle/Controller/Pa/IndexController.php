@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,40 @@ class IndexController extends AbstractController
                 'notFinished'   => $ret['counts']['notFinished'],
                 'readyToSubmit' => $ret['counts']['readyToSubmit'],
             ],
+        ];
+    }
+
+    /**
+     * Client edit page
+     * Report is only associated to one client, and it's needed for back link routing,
+     * so it's retrieved with the report with a single API call
+     *
+     * @Route("/client/{clientId}/edit", name="pa_client_edit")
+     * @Template
+     */
+    public function clientEditAction(Request $request, $clientId)
+    {
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'report-current']);
+        // PA client profile is ATM relying on report ID, this is a working until next refactor
+        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getReportCurrent()->getId()]);
+        $form = $this->createForm(new FormDir\Pa\ClientType(), $client);
+        $form->handleRequest($request);
+
+        // edit client form
+        if ($form->isValid()) {
+            $clientUpdated = $form->getData();
+            $clientUpdated->setId($client->getId());
+            $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
+            $request->getSession()->getFlashBag()->add('notice', htmlentities($client->getFirstname()) . "'s data edited");
+
+            return $this->redirect($returnLink);
+        }
+
+        return [
+            'backLink' => $returnLink,
+            'form' => $form->createView(),
+            'client'=>$client,
         ];
     }
 

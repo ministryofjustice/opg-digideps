@@ -1,0 +1,26 @@
+form:
+  firstname:
+      label: First name
+  lastname:
+      label: Last name
+  address:
+      label: Address
+  address2:
+      label: ' '
+  county:
+      label: ' '
+  postcode:
+      label: Postcode
+  dateOfBirth:
+      legend: Date of Birth
+      hint: For example, 31 3 1955
+      label: Date of Birth
+  email:
+      label: Email
+#  country:
+#      label: Country
+#      defaultOption: Please select
+  phone:
+      label: Phone number
+  save:
+      label: Save client details

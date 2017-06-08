@@ -15,7 +15,7 @@ class Client
 {
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
 
      * @var int
      */
@@ -23,7 +23,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.firstname.notBlank" )
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
@@ -31,6 +31,18 @@ class Client
      * @var string
      */
     private $firstname;
+
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\NotBlank( message="client.lastname.notBlank" )
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
+     *
+     * @var string
+     */
+    private $lastname;
 
     /**
      * @JMS\Type("array")
@@ -47,22 +59,19 @@ class Client
     private $reports;
 
     /**
+     * @JMS\Type("AppBundle\Entity\Report\Report")
+     *
+     * @var array
+     */
+    private $reportCurrent;
+
+    /**
      * @var Odr\Odr
      *
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
      */
     private $odr;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
-     *
-     * @Assert\NotBlank( message="client.lastname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
-     *
-     * @var string
-     */
-    private $lastname;
 
     /**
      * @JMS\Exclude()
@@ -97,7 +106,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.address.notBlank")
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
@@ -108,7 +117,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      *
@@ -118,7 +127,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(max=75, maxMessage="client.county.maxMessage")
      *
@@ -128,7 +137,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\NotBlank( message="client.postcode.notBlank")
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
@@ -147,7 +156,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
      *
@@ -157,6 +166,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"pa-edit"})
      *
      * @var string
      */
@@ -164,6 +174,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"pa-edit"})
      *
      * @var DateTime
      */
@@ -241,6 +252,23 @@ class Client
 
         return $this;
     }
+
+    /**
+     * @return Report
+     */
+    public function getReportCurrent()
+    {
+        return $this->reportCurrent;
+    }
+
+    /**
+     * @param mixed $reportCurrent
+     */
+    public function setReportCurrent($reportCurrent)
+    {
+        $this->reportCurrent = $reportCurrent;
+    }
+
 
     /**
      * @return Odr\Odr
