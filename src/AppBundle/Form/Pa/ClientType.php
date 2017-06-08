@@ -26,11 +26,7 @@ class ClientType extends AbstractType
                         'format' => 'dd-MM-yyyy',
                         'invalid_message' => 'Enter a valid date',
                 ])
-                ->add('email', 'email', [
-                    'constraints' => [
-                        new Email(['message' => 'SETME']),
-                    ],
-                ])
+                ->add('email', 'email')
                 ->add('address', 'text')
                 ->add('address2', 'text')
                 ->add('postcode', 'text')
@@ -57,6 +53,7 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-client-edit',
+            'validation_groups' => 'pa-client',
         ]);
     }
 

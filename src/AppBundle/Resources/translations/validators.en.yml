@@ -75,6 +75,14 @@ client:
         notBlank: Enter the client's postcode
         minMessage: The postcode must be at least {{ limit }} letters long
         maxMessage: The postcode can't be longer than {{ limit }} letters
+    # Pa only
+    email:
+        invalid: This email is not valid
+        notBlank: Enter an email address
+        maxLength: The email can't be longer than {{ limit }} characters
+    dateOfBirth:
+       lessThan: This date cannot be in the future
+
 report:
     startDate:
         notBlank: Enter the date when your reporting period starts
@@ -552,3 +560,8 @@ odr:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
     #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
+
+
+common:
+  phone:
+    maxMessage: The phone number can't be longer than {{ limit }} numbers

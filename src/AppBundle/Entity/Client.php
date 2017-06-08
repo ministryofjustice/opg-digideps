@@ -25,8 +25,13 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\NotBlank( message="client.firstname.notBlank" )
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
+     *
+     * PA
+     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"pa-client"})
+     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -37,8 +42,13 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\NotBlank( message="client.lastname.notBlank" )
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
+     *
+     * PA
+     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"pa-client"})
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -108,8 +118,13 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\NotBlank( message="client.address.notBlank")
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
+     *
+     * PA
+     * @Assert\NotBlank( message="client.address.notBlank", groups={"pa-client"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -119,7 +134,11 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
+     *
+     * Pa
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -129,7 +148,11 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\Length(max=75, maxMessage="client.county.maxMessage")
+     *
+     * Pa
+     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -139,8 +162,13 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\NotBlank( message="client.postcode.notBlank")
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
+     *
+     * Pa
+     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"pa-client"})
+     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"pa-client"})
      *
      * @var string
      */
@@ -158,7 +186,11 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
+     * Lay
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
+     *
+     * Pa
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"pa-client"})
      *
      * @var string
      */
@@ -168,6 +200,9 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"pa-edit"})
      *
+     * Pa
+     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false, groups={"pa-client"})
+     *
      * @var string
      */
     private $email;
@@ -175,6 +210,9 @@ class Client
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"pa-edit"})
+     *
+     * Pa
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
      *
      * @var DateTime
      */
