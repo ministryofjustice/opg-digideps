@@ -123,7 +123,6 @@ class Client
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      *
      * PA
-     * @Assert\NotBlank( message="client.address.notBlank", groups={"pa-client"})
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"pa-client"})
      *
      * @var string
@@ -167,7 +166,6 @@ class Client
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
      *
      * Pa
-     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"pa-client"})
      * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"pa-client"})
      *
      * @var string
