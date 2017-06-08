@@ -280,7 +280,7 @@ class PaService
         $reportDueDate = clone $reportEndDate;
         $reportDueDate->add(new \DateInterval('P56D')); //Eight weeks ahead of end date
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
-        $report = $client->getReportByDueDate($reportDueDate);
+        $report = $client->getReportByEndDate($reportDueDate);
         if ($report) {
             if ($report->getType() != $reportType) {
                 $this->log('Changing report type');
