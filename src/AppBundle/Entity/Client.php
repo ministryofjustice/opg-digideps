@@ -561,7 +561,7 @@ class Client
      */
     public function getReportCurrent()
     {
-        return $this->getUnsubmittedReports()->first();
+        return $this->getUnsubmittedReports()->first() ?: null;
     }
 
     /**
