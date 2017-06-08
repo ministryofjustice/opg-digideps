@@ -60,7 +60,10 @@ class ClientController extends RestController
         }
 
         if ($this->isGranted(EntityDir\User::ROLE_PA)) {
-            $client->setDateOfBirth(new \DateTime($data['date_of_birth']));
+            if (array_key_exists('date_of_birth', $data)) {
+                $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
+                $client->setDateOfBirth($dob);
+            }
         }
 
 
