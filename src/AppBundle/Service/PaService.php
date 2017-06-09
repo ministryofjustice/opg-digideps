@@ -277,8 +277,6 @@ class PaService
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportDueDate = clone $reportEndDate;
-        $reportDueDate->add(new \DateInterval('P56D')); //Eight weeks ahead of end date
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
@@ -299,7 +297,7 @@ class PaService
                 ->setEndDate($reportEndDate)
                 ->setType($reportType);
 
-            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
+            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();
         }
