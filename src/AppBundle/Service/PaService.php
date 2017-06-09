@@ -273,14 +273,12 @@ class PaService
     private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
-        $reportDueDate = self::parseDate($row['Report Due']);
-        if (!$reportDueDate) {
-            throw new \RuntimeException("Cannot parse date {$row['Report Due']}");
+        $reportEndDate = self::parseDate($row['Last Report Day']);
+        if (!$reportEndDate) {
+            throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportEndDate = clone $reportDueDate;
-        $reportEndDate->sub(new \DateInterval('P56D')); //Eight weeks behind due date
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
-        $report = $client->getReportByDueDate($reportEndDate);
+        $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
             if ($report->getType() != $reportType) {
                 $this->log('Changing report type');
@@ -299,7 +297,7 @@ class PaService
                 ->setEndDate($reportEndDate)
                 ->setType($reportType);
 
-            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportDueDate->format('Y-m-d');
+            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
             $this->em->persist($report);
             $this->em->flush();
         }
