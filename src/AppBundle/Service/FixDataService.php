@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Odr\OdrRepository;
 use AppBundle\Entity\Report\Report;
@@ -41,36 +40,11 @@ class FixDataService
         $this->em = $em;
         $this->reportRepo = $this->em->getRepository(Report::class);
         $this->ndrRepo = $this->em->getRepository(Odr::class);
-        $this->clientrRepo = $this->em->getRepository(Client::class);
     }
 
     public function fixReports()
     {
         $reports = $this->reportRepo->findAll();
-
-        foreach ($reports as $entity) {
-            $debtsAdded = $this->reportRepo->addDebtsToReportIfMissing($entity);
-            if ($debtsAdded) {
-                $this->messages[] = "Report {$entity->getId()}: added $debtsAdded debts";
-            }
-            $feesAdded = $this->reportRepo->addFeesToReportIfMissing($entity);
-            if ($feesAdded) {
-                $this->messages[] = "Report {$entity->getId()}: added $feesAdded fees";
-            }
-            $shortMoneyCatsAdded = $this->reportRepo->addMoneyShortCategoriesIfMissing($entity);
-            if ($shortMoneyCatsAdded) {
-                $this->messages[] = "Report {$entity->getId()}: $shortMoneyCatsAdded money short cats added";
-            }
-        }
-
-        $this->em->flush();
-
-        return $this;
-    }
-
-    public function fixPaReportingPeriods()
-    {
-        $reports = $this->clientRepo->findAll();
 
         foreach ($reports as $entity) {
             $debtsAdded = $this->reportRepo->addDebtsToReportIfMissing($entity);
@@ -113,6 +87,47 @@ class FixDataService
     }
 
     /**
+     * Fixes the reporting dates by pushing the start and end dates forward by
+     * a period of 56 days.
+     */
+    public function fixPaReportingPeriods()
+    {
+        $reports = $this->reportRepo->findAll();
+
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            try {
+                if ($report->has106Flag()) {
+                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
+                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
+
+                    $this->em->flush();
+
+                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
+                        $oldPeriod . ' TO ' .
+                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                } else {
+                    $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
+                }
+
+            } catch (\Exception $e) {
+                $this->messages[] = "Report {$report->getId()}: 
+                ERROR - could not be processed with start date of " .
+                    $report->getStartDate()->format('d-M-Y') . " to " .
+                    $report->getStartDate()->format('d-M-Y') .
+                    "Exception: " . $e->getMessage();
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMessages()
@@ -120,3 +135,4 @@ class FixDataService
         return $this->messages;
     }
 }
+

@@ -18,41 +18,21 @@ class FixReportingPeriodsCommand extends AddSingleUserCommand
     protected function configure()
     {
         $this
-            ->setName('digideps:fix-data')
-            ->setDescription('fix report period for PA clients reports');
+            ->setName('digideps:fix-reporting-periods')
+            ->setDescription('Fixes report period for PA clients reports. Moving forward by 56 days');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $reports = $this->reportRepo->findAll();
+        $em = $this->getContainer()->get('em');
 
-        /** @var Report $report */
-        foreach ($reports as $report) {
-            try {
-
-                $startDate = $this->getStartDate();
-                if ($report->has106Flag()) {
-                    $report->setStartDate(
-                        $this->getStartDate()->add(new \DateInterval('P56D'))
-                    );
-                    $report->setEndDate(
-                        $this->getEndDate()->add(new \DateInterval('P56D'))
-                    );
-                    $this->messages[] = "Report {$report->getId()}: start date updated from " .
-                        $startDate->format('d-M-Y') . " to " .
-                        $this->getStartDate()->format('d-M-Y');
-
-                    $this->em->flush();
-                }
-            } catch (\Exception $e) {
-                $this->messages[] = "Report {$report->getId()}: 
-                ERROR - could not be processed with start date of " .
-                        $startDate->format('d-M-Y') . " to " .
-                        $this->getStartDate()->format('d-M-Y') .
-                    "Exception: " . $e->getMessage();
-            }
+        $output->write('Fixing data. Please wait ...');
+        $fixDataService = new FixDataService($em);
+        $messages = $fixDataService->fixPaReportingPeriods()->getMessages();
+        foreach ($messages as $m) {
+            $output->writeln($m);
         }
-
-        return $this;
+        $output->writeln(count($messages) . ' total report fixes');
+        $output->writeln('Done');
     }
 }
