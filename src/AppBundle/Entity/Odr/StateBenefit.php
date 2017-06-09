@@ -41,7 +41,7 @@ class StateBenefit
     /**
      * @var Odr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="stateBenefits")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
      */
     private $odr;

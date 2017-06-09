@@ -55,7 +55,7 @@ class Note
      * @JMS\Type("string")
      * @JMS\Groups({ "report"})
      *
-     * @ORM\Column(name="content", type="string", length=150, nullable=false)
+     * @ORM\Column(name="title", type="string", length=150, nullable=false)
      */
     private $title;
 

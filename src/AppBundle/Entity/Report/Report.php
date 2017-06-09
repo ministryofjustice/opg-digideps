@@ -150,8 +150,6 @@ class Report implements ReportInterface
      */
     private $lastedit;
 
-
-
     /**
      * @var bool whether the report is submitted or not
      *
@@ -160,7 +158,6 @@ class Report implements ReportInterface
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
     private $submitted;
-
 
     /**
      * @deprecated client shouldn't need this anymore
@@ -171,7 +168,6 @@ class Report implements ReportInterface
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
     private $reportSeen;
-
 
     /**
      * @var string only_deputy|more_deputies_behalf|more_deputies_not_behalf
@@ -203,6 +199,15 @@ class Report implements ReportInterface
     private $metadata;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
+     * @JMS\Groups({"report"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="report", cascade={"persist"})
+     */
+    private $notes;
+
+    /**
      * Report constructor.
      * @param Client $client
      */
@@ -224,6 +229,7 @@ class Report implements ReportInterface
         $this->reportSeen = true;
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     /**
@@ -556,6 +562,26 @@ class Report implements ReportInterface
     public function setMetadata($metadata)
     {
         $this->metadata = $metadata;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param $notes
+     *
+     * @return $this
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
     }
 
     /**
