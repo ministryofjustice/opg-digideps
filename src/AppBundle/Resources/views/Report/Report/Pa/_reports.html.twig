@@ -1,0 +1,43 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+{% set page = "clientReports" %}
+
+<details class="panel panel-admin hard">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
+    <div class="panel-body soft-half behat-region-client-profile">
+        {% if reports is not empty %}
+
+            <table>
+                <thead>
+                    <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th>{{ (page ~ '.dateSubmitted') | trans }}</th>
+                    <th></th>
+                </thead>
+
+                <tbody>
+                    {% for report in reports %}
+                        {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+                        {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
+                        <tr>
+                            <td>{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</td>
+                            <td>{{ report.getSubmitDate() | date(" d F Y") }}</td>
+                            <td class="text--right hard--right">
+                                <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>{{ (page ~ '.noReports') | trans }}</p>
+
+        {% endif %}
+    </div>
+
+</details>
