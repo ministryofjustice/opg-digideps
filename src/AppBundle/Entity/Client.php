@@ -509,14 +509,16 @@ class Client
     }
 
     /**
-     * @param \DateTime $dueDate
+     * Get report by end date
+     * 
+     * @param \DateTime $endDate
      *
      * @return Report
      */
-    public function getReportByDueDate(\DateTime $dueDate)
+    public function getReportByEndDate(\DateTime $endDate)
     {
-        return $this->reports->filter(function ($report) use ($dueDate) {
-            return $dueDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
+        return $this->reports->filter(function ($report) use ($endDate) {
+            return $endDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
         })->first();
     }
 

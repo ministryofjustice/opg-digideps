@@ -66,7 +66,7 @@ class PaServiceTest extends WebTestCase
         'Client Postcode' => 'ap',
         'Client Phone' => 'caphone',
         'Client Email' => 'client@provider.com',
-        'Client Date of Birth' => '05-Jan-1965',
+        'Client Date of Birth' => '05-Jan-47',
     ];
 
 
@@ -154,7 +154,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('a3', $client1->getCounty());
         $this->assertEquals('ap', $client1->getPostcode());
         $this->assertEquals('client@provider.com', $client1->getEmail());
-        $this->assertEquals('1965-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
+        $this->assertEquals('1947-01-05', $client1->getDateOfBirth()->format('Y-m-d'));
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */

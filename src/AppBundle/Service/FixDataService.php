@@ -30,6 +30,14 @@ class FixDataService
      */
     private $messages = [];
 
+
+    /**
+     * Total records processed
+     *
+     * @var int
+     */
+    private $totalProcessed = 0;
+
     /**
      * FixDataService constructor.
      *
@@ -87,10 +95,62 @@ class FixDataService
     }
 
     /**
+     * Fixes the reporting dates by pushing the start and end dates forward by
+     * a period of 56 days.
+     */
+    public function fixPaReportingPeriods()
+    {
+        $reports = $this->reportRepo->findAll();
+        $this->totalProcessed = 0;
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            try {
+                if ($report->has106Flag()) {
+                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
+                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
+
+                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
+                        $oldPeriod . ' TO ' .
+                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                } else {
+                    $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
+                    $this->totalProcessed++;
+                }
+
+            } catch (\Exception $e) {
+                $this->messages[] = "Report {$report->getId()}: 
+                ERROR - could not be processed with start date of " .
+                    $report->getStartDate()->format('d-M-Y') . " to " .
+                    $report->getStartDate()->format('d-M-Y') .
+                    "Exception: " . $e->getMessage();
+            }
+        }
+
+        $this->em->flush();
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMessages()
     {
         return $this->messages;
     }
+
+    /**
+     * @return int
+     */
+    public function getTotalProcessed()
+    {
+        return $this->totalProcessed;
+    }
+
 }
+
