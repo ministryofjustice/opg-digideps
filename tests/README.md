@@ -36,12 +36,6 @@ If you wish to run tests just for the admin area then whilst in opg-digi-deps-do
     docker-compose run --rm api sh scripts/resetdb.sh
     docker-compose run --rm test sh scripts/admintest.sh
 
-### Asssited Digital Tests
-If you wish to run tests just for the assissted digital functionality then whilst in opg-digi-deps-docker type:
-
-    docker-compose run --rm api sh scripts/resetdb.sh
-    docker-compose run --rm test sh scripts/adtest.sh
-
 ### Deputy Tests
 If you wish to run tests just for functionality then whilst in opg-digi-deps-docker type:
 

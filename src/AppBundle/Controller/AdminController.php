@@ -361,7 +361,7 @@ class AdminController extends AbstractController
                         'Forename', 'Surname', //client forename and surname
                         'Corref',
                         'Typeofrep',
-                        'Report Due',
+                        'Last Report Day',
                     ])
                     ->setOptionalColumns([
                         'Client Adrs1',
