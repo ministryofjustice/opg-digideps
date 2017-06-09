@@ -30,6 +30,14 @@ class FixDataService
      */
     private $messages = [];
 
+
+    /**
+     * Total records processed
+     *
+     * @var int
+     */
+    private $totalProcessed = 0;
+
     /**
      * FixDataService constructor.
      *
@@ -93,7 +101,7 @@ class FixDataService
     public function fixPaReportingPeriods()
     {
         $reports = $this->reportRepo->findAll();
-
+        $this->totalProcessed = 0;
         /** @var Report $report */
         foreach ($reports as $report) {
             try {
@@ -113,6 +121,7 @@ class FixDataService
 
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
+                    $this->totalProcessed++;
                 }
 
             } catch (\Exception $e) {
@@ -134,5 +143,14 @@ class FixDataService
     {
         return $this->messages;
     }
+
+    /**
+     * @return int
+     */
+    public function getTotalProcessed()
+    {
+        return $this->totalProcessed;
+    }
+
 }
 

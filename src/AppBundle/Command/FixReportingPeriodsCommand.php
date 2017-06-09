@@ -29,10 +29,12 @@ class FixReportingPeriodsCommand extends AddSingleUserCommand
         $output->write('Fixing data. Please wait ...');
         $fixDataService = new FixDataService($em);
         $messages = $fixDataService->fixPaReportingPeriods()->getMessages();
+
         foreach ($messages as $m) {
             $output->writeln($m);
         }
-        $output->writeln(count($messages) . ' total report fixes');
+        $output->writeln(count($messages) . ' report fixes');
+        $output->writeln($fixDataService->getTotalProcessed() . ' reports skipped');
         $output->writeln('Done');
     }
 }
