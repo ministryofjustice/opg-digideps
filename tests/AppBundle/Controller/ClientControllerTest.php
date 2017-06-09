@@ -198,12 +198,13 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Firstname', $data['firstname']);
 
         // PA
-        $url = '/client/' . self::$pa1Client1->getId();
+        $url = '/client/' . self::$pa1Client1->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
         ])['data'];
         $this->assertEquals(self::$pa1->getId(), $data['id']);
         $this->assertEquals('f', $data['firstname']);
+        $this->assertEquals(self::$pa1Client1Report1->getId(), $data['current_report']['id']);
     }
 }
