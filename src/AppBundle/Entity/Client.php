@@ -59,9 +59,9 @@ class Client
     /**
      * @JMS\Type("AppBundle\Entity\Report\Report")
      *
-     * @var array
+     * @var Report
      */
-    private $reportCurrent;
+    private $currentReport;
 
     /**
      * @var Odr\Odr
@@ -260,17 +260,17 @@ class Client
     /**
      * @return Report
      */
-    public function getReportCurrent()
+    public function getCurrentReport()
     {
-        return $this->reportCurrent;
+        return $this->currentReport;
     }
 
     /**
-     * @param mixed $reportCurrent
+     * @param Report $currentReport
      */
-    public function setReportCurrent($reportCurrent)
+    public function setCurrentReport($currentReport)
     {
-        $this->reportCurrent = $reportCurrent;
+        $this->currentReport = $currentReport;
     }
 
 

@@ -59,9 +59,9 @@ class IndexController extends AbstractController
     public function clientEditAction(Request $request, $clientId)
     {
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'report-current']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
         // PA client profile is ATM relying on report ID, this is a working until next refactor
-        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getReportCurrent()->getId()]);
+        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
         $form = $this->createForm(new FormDir\Pa\ClientType(), $client);
         $form->handleRequest($request);
 
