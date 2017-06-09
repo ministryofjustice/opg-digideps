@@ -554,12 +554,12 @@ class Client
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @JMS\SerializedName("report_current")
-     * @JMS\Groups({"report-current"})
+     * @JMS\SerializedName("current-report")
+     * @JMS\Groups({"current-report"})
      *
      * @return Report|null
      */
-    public function getReportCurrent()
+    public function getCurrentReport()
     {
         return $this->getUnsubmittedReports()->first() ?: null;
     }
