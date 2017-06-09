@@ -554,7 +554,7 @@ class Client
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @JMS\SerializedName("current-report")
+     * @JMS\SerializedName("current_report")
      * @JMS\Groups({"current-report"})
      *
      * @return Report|null
