@@ -112,8 +112,6 @@ class FixDataService
                     $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
                     $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
 
-                    $this->em->flush();
-
                     $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
                         $oldPeriod . ' TO ' .
                         $report->getStartDate()->format('d-M-Y') . ' --> ' .
@@ -132,6 +130,8 @@ class FixDataService
                     "Exception: " . $e->getMessage();
             }
         }
+
+        $this->em->flush();
 
         return $this;
     }
