@@ -240,7 +240,7 @@ class PaService
             }
 
             if (!empty($row['Client Date of Birth'])) {
-                $client->setDateOfBirth(self::parseDate($row['Client Date of Birth']));
+                $client->setDateOfBirth(self::parseDate($row['Client Date of Birth'], '19') ?: null);
             }
 
             $this->added['clients'][] = $client->getCaseNumber();
@@ -273,7 +273,7 @@ class PaService
     private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
-        $reportEndDate = self::parseDate($row['Last Report Day']);
+        $reportEndDate = self::parseDate($row['Last Report Day'], '20');
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
@@ -311,14 +311,30 @@ class PaService
      * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
+     * @param string $century e.g. 20/19 Prefix added to 2-digits year
      *
      * @return \DateTime|false
      */
-    public static function parseDate($dateString)
+    public static function parseDate($dateString, $century)
     {
-        $ret = \DateTime::createFromFormat('d-M-Y', $dateString);
-        if (!$ret instanceof \DateTime || (int) $ret->format('Y') < 99) {
-            $ret = \DateTime::createFromFormat('d-M-y', $dateString);
+        $sep = '-';
+        //$errorMessage = "Can't recognise format for date $dateString. expected d-M-Y or d-M-y e.g. 05-MAR-2005 or 05-MAR-05";
+        $pieces = explode($sep, $dateString);
+
+        // prefix century if needed
+        if (strlen($pieces[2]) === 2) {
+            $pieces[2] = ((string)$century).$pieces[2];
+        }
+        // check format is d-M-Y
+        if ((int)$pieces[0] < 1 || (int)$pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
+            return false;
+            //throw new \InvalidArgumentException($errorMessage);
+        }
+
+        $ret = \DateTime::createFromFormat('d-M-Y', implode($sep, $pieces));
+        if (!$ret instanceof \DateTime) {
+            return false;
+            //throw new \InvalidArgumentException($errorMessage);
         }
 
         return $ret;
