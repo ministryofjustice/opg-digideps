@@ -66,7 +66,6 @@ class ClientController extends RestController
             }
         }
 
-
         $this->persistAndFlush($client);
 
         //add ODR if not added yet
