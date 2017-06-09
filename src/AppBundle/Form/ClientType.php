@@ -53,6 +53,7 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'registration',
+            'validation_groups' => 'lay-deputy-client',
         ]);
     }
 

@@ -70,6 +70,7 @@ client:
     courtDate:
         message: Enter a valid date in this format: DD/MM/YYYY
         notBlank: Enter the date of your court order
+        lessThan: Court Date cannot be in the future
     address:
         notBlank: Enter the client's address
         maxMessage: The address can't be longer than {{ limit }} letters
