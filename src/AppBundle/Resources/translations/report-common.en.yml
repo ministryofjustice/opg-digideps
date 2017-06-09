@@ -55,7 +55,7 @@ clientDetails:
 
 # PA Reports section
 clientReports:
-  heading: Reports
+  heading: Submitted reports
   noReports: No submitted reports
   reportingPeriod: Reporting period
   dateSubmitted: Date submitted
