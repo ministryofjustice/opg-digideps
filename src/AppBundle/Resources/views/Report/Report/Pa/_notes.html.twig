@@ -8,9 +8,12 @@
         <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
     </summary>
 
-    <div class="panel-body soft-half behat-region-client-profile">
+    <div class="panel-body soft-half behat-region-client-profile-notes">
 
-        <a href="{{ path('add_note', {'reportId': report.id}) }}">{{ 'options.addNote' | trans({} , 'report-overview') }}</a>
+        <a href="{{ path('add_note', {'reportId': report.id}) }}" class="bold-small action-link right">
+            <span class="icon icon-plus"></span>
+            {{ (page ~ '.addNote') | trans }}
+        </a>
 
         {% if notes is not empty %}
 
@@ -31,7 +34,7 @@
                         <td>{{ note.addedBy.firstName }} {{ note.addedBy.lastName }}</td>
                         <td>{{ note.createdOn | date(" d F Y") }}</td>
                         <td class="text--right hard--right">
-                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
                         </td>
 
                     </tr>
