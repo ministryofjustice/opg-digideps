@@ -1,6 +1,6 @@
-addPage:
+addNotes:
   htmlTitle: Deputy report - add note | GOV.UK
-  h1Title: Add note
+  pageTitle: Add note
   supportTitle: Report notes
 editPage:
   htmlTitle: Deputy report - edit note | GOV.UK
@@ -11,9 +11,14 @@ removePage:
   h1Title: Remove note
   supportTitle: Report notes
   question: Are you sure you want to remove the note entitled <strong class="bold">%note_title%</strong> from this report?
+
 form:
   category:
     label: Category
+    entries:
+      misc: Misc
+      todo: To Do
+      opg: OPG
   title:
     label: Title
   content:
