@@ -1,4 +1,4 @@
-Feature: Report submit
+Feature: Report submit (client 1000014)
 
     Scenario: report declaration page
         Given I load the application status from "pa-report-completed"
@@ -35,7 +35,20 @@ Feature: Report submit
         And the last email should contain "Thank you for submitting"
         And the last email should have been sent to "behat-pa1@publicguardian.gsi.gov.uk"
 
-    Scenario: assert 2nd year report has been created
+    Scenario: assert submitted report displays correctly in client profile page
+        Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "tab-in-progress"
+        And I click on "pa-report-open" in the "client-1000014" region
+        And I should see the "submitted-report-20170528" region
+        And I save the current URL as "client-1000014-profile"
+        # view report
+        When I click on "view-report" in the "submitted-report-20170528" region
+        Then I should see the "deputy-declaration" region
+        And I click on "return-to-pa-dashboard"
+        # back link currently brings back to dashboard, not to the client profile page
+        #Then the current URL should match with the URL previously saved as "client-1000014-profile"
+
+    Scenario: assert 2nd year report has been created and displays correctly
         Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-1000014" region
@@ -50,6 +63,8 @@ Feature: Report submit
             | Current account     | account-01ca |
             | 112233              | account-01ca |
         And I save the application status into "pa-report-submitted"
+        And die 2
+
 
     Scenario: Submit 103 report
         Given I load the application status from "pa-report-103-inprogress"
@@ -183,3 +198,4 @@ Feature: Report submit
         Then I should see a "#edit-money_in_short" element
         And I should see a "#edit-money_out_short" element
         And I save the application status into "pa-report-103-submitted"
+
