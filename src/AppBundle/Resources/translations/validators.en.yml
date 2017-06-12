@@ -86,7 +86,7 @@ client:
         #notBlank: Enter an email address
         maxLength: The email can't be longer than {{ limit }} characters
     dateOfBirth:
-       lessThan: This date cannot be in the future
+       lessThan: Date of birth cannot be in the future
 
 report:
     startDate:
