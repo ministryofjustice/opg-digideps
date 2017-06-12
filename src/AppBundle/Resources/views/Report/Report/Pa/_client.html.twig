@@ -24,7 +24,7 @@
                     </dt>
                     <dd class="push--bottom">
                         {% if client.dateOfBirth %}
-                             {{ client.dateOfBirth | date(" d M Y") }} (aged {{ client.getAge() }})
+                             {{ client.dateOfBirth | date(" d F Y") }} (aged {{ client.getAge() }})
                         {% else %}
                             -
                         {% endif %}
