@@ -52,7 +52,9 @@
                             <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a><br>
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a>
+                            {# Enable upload documentation link when feature is ready #}
+                            {# <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a> #}
                             {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                                 <p class="push--top">
                                     <a class="behat-link-edit-report_submit button" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>

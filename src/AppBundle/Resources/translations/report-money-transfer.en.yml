@@ -45,6 +45,7 @@ errorPage:
   errors:
     atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
   backToOverview: Back to overview page
+  backToClientProfile: Back to client profile
 
 
 form:
