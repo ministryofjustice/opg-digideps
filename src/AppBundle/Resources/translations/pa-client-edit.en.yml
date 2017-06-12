@@ -1,4 +1,10 @@
+htmlTitle: "Edit client details | GOV.UK"
+pageTitle: Edit client details
+supportTitle: "Client profile: %fullName%"
+
 form:
+  nameHeading: Client name
+  contactHeading: Contact details
   firstname:
       label: First name
   lastname:
