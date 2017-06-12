@@ -5,11 +5,11 @@ Feature: PA client profile
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000010" region
     Then each text should be present in the corresponding region:
-      | Cly1 Hent1    | client-profile |
-      | 01 Jan 1967   | client-profile |
-      | 078912345678  | client-profile |
-      | cly1@hent.com | client-profile |
-      | B301QL        | client-profile |
+      | Cly1 Hent1    | client-profile-details |
+      | 01 Jan 1967   | client-profile-details |
+      | 078912345678  | client-profile-details |
+      | cly1@hent.com | client-profile-details |
+      | B301QL        | client-profile-details |
     # edit
     When I click on "client-edit"
       # submit empty form and check errors

@@ -18,7 +18,13 @@
         <p>{{ ('errorPage.errors.' ~ error) | trans(transOptions) }}</p>
     </div>
 
-    <a href="{{ path('report_overview', { 'reportId': report.id}) }}" class="">{{ 'errorPage.backToOverview' | trans }}</a>
+    <a href="{{ path('report_overview', { 'reportId': report.id}) }}">
+        {% if app.user.isDeputyPa() %}
+			{{ 'errorPage.backToClientProfile' | trans }}
+		{% else %}
+    		{{ 'errorPage.backToOverview' | trans }}
+		{% endif %}
+	</a>
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'moneyTransfers') }}
