@@ -59,3 +59,12 @@ clientReports:
   noReports: No submitted reports
   reportingPeriod: Reporting period
   dateSubmitted: Date submitted
+
+# PA Notes section
+notes:
+  heading: Notes
+  noNotes: No notes
+  note: Note
+  category: Category
+  addedBy: Added By
+  dateAdded: Date added

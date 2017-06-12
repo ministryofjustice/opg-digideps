@@ -1,0 +1,49 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+{% set page = "notes" %}
+
+<details class="panel panel-admin hard">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
+    <div class="panel-body soft-half behat-region-client-profile">
+
+        <a href="{{ path('add_note', {'reportId': report.id}) }}">{{ 'options.addNote' | trans({} , 'report-overview') }}</a>
+
+        {% if notes is not empty %}
+
+            <table>
+                <thead>
+                <th>{{ (page ~ '.note') | trans }}</th>
+                <th>{{ (page ~ '.category') | trans }}</th>
+                <th>{{ (page ~ '.addedBy') | trans }}</th>
+                <th>{{ (page ~ '.dateAdded') | trans }}</th>
+                <th></th>
+                </thead>
+
+                <tbody>
+                {% for note in notes %}
+                    <tr>
+                        <td>{{ note.title }}</td>
+                        <td>{{ note.category }}</td>
+                        <td>{{ note.addedBy.firstName }} {{ note.addedBy.lastName }}</td>
+                        <td>{{ note.createdOn | date(" d F Y") }}</td>
+                        <td class="text--right hard--right">
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>{{ (page ~ '.noNotes') | trans }}</p>
+
+        {% endif %}
+    </div>
+
+</details>

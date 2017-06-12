@@ -28,6 +28,8 @@ options:
   submitReport: "Submit report"
   viewReport: "View report"
   uploadDocumentation: "Upload documentation"
+  addNote: "Add note"
+  editNote: "Edit note"
 
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any

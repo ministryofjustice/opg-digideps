@@ -1,0 +1,27 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "note" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.h1Title' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.title,'form.title') }}
+
+    {{ form_input(form.category,'form.category') }}
+
+    {{ form_input(form.content,'form.content') }}
+
+    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

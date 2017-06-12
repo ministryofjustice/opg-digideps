@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Controller\Pa\NoteController;
 use AppBundle\Controller\Report\ActionController;
 use AppBundle\Controller\Report\AssetController;
 use AppBundle\Controller\Report\BalanceController;
@@ -43,7 +44,8 @@ class ReportValidator
         OtherInfoController::class      => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         ReportController::class         => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         VisitsCareController::class     => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
-        PaFeeExpenseController::class  => [Report::TYPE_102, Report::TYPE_103],
+        PaFeeExpenseController::class   => [Report::TYPE_102, Report::TYPE_103],
+        NoteController::class           => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
     ];
 
     /**

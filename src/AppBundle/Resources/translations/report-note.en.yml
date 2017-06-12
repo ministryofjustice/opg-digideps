@@ -1,0 +1,6 @@
+form:
+  category:
+    entries:
+      misc: Misc
+      todo: To Do
+      opg: OPG
