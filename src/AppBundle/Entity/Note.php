@@ -32,9 +32,12 @@ class Note
      */
     public static $categories = [
         // categoryId | categoryTranslationKey
-        'Misc' => 'misc',
-        'To Do' => 'todo',
-        'OPG' => 'opg'
+        'Todo' => 'todo',
+        'DWP' => 'dwp',
+        'OPG' => 'opg',
+        'Welfare' => 'welfare',
+        'Bank' => 'bank',
+        'Report' => 'report'
     ];
 
     /**
