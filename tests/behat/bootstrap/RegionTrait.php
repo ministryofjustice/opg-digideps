@@ -47,9 +47,9 @@ trait RegionTrait
     {
         //$this->assertResponseStatus(200);
         $regionCss = self::behatElementToCssSelector($element, $type);
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element $regionCss not found");
+        $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
+        if ($found !== 1) {
+            throw new \RuntimeException("One $regionCss class expected, $found found");
         }
     }
 
@@ -84,8 +84,14 @@ trait RegionTrait
      */
     public function iShouldSeeInTheRegion($text, $region)
     {
-        //$this->assertResponseStatus(200);
-        $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
+        // assert only one region is present
+        $regionCss = self::behatElementToCssSelector($region, 'region');
+        $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
+        if ($found !== 1) {
+            throw new \RuntimeException("Can't assert text existing in region, $found found");
+        }
+
+        $this->assertSession()->elementTextContains('css', $regionCss, $text);
     }
 
     /**

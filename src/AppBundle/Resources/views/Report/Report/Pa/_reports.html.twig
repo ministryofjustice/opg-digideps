@@ -8,7 +8,7 @@
         <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
     </summary>
 
-    <div class="panel-body soft-half behat-region-client-profile">
+    <div class="panel-body soft-half">
         {% if reports is not empty %}
 
             <table>
@@ -22,11 +22,11 @@
                     {% for report in reports %}
                         {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
                         {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
-                        <tr>
+                        <tr class="behat-region-submitted-report-{{ report.endDate | date("Ymd") }}">
                             <td>{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</td>
                             <td>{{ report.getSubmitDate() | date(" d F Y") }}</td>
                             <td class="text--right hard--right">
-                                <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                                <a class="behat-link-view-report" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
                             </td>
                         </tr>
                     {% endfor %}
