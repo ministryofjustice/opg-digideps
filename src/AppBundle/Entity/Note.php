@@ -30,9 +30,24 @@ class Note
     use IsSoftDeleteableEntity;
 
     /**
+     * Keep in sync with API
+     *
+     * Possible refactor would be moving some entities data into a shared library
+     *
+     * @JMS\Exclude
+     */
+    public static $categories = [
+        // categoryId | categoryTranslationKey
+        'Misc' => 'misc',
+        'To Do' => 'todo',
+        'OPG' => 'opg'
+    ];
+
+
+    /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","report"})
+     * @JMS\Groups({"audit_log","note"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -44,7 +59,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "report"})
+     * @JMS\Groups({"note"})
      *
      * @ORM\Column(name="category", type="string", length=100, nullable=false)
      */
@@ -53,7 +68,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "report"})
+     * @JMS\Groups({"note"})
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=false)
      */
@@ -62,7 +77,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "report"})
+     * @JMS\Groups({"note"})
      *
      * @ORM\Column(name="content", type="text", nullable=false)
      */
@@ -71,7 +86,7 @@ class Note
     /**
      * @var int
      *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"note"})
      * @JMS\Type("AppBundle\Entity\Report")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="notes")
      */

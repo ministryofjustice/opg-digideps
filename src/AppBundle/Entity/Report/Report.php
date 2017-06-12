@@ -202,7 +202,7 @@ class Report implements ReportInterface
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"notes"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="report", cascade={"persist"})
      */
     private $notes;
