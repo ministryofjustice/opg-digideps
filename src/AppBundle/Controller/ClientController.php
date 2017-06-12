@@ -59,11 +59,9 @@ class ClientController extends RestController
             ]);
         }
 
-        if ($this->isGranted(EntityDir\User::ROLE_PA)) {
-            if (array_key_exists('date_of_birth', $data)) {
-                $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
-                $client->setDateOfBirth($dob);
-            }
+        if (array_key_exists('date_of_birth', $data)) {
+            $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
+            $client->setDateOfBirth($dob);
         }
 
         $this->persistAndFlush($client);
