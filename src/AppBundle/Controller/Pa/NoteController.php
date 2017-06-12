@@ -33,11 +33,16 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
-                case 'no':
-                    return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
+            $note = $form->getData();
+
+            try {
+                $note = $this->getRestClient()->post('note', $note, ['note'], 'Note');
+
+                $request->getSession()->getFlashBag()->add('info', 'The note has been added');
+
+                return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+            } catch (\Exception $e) {
+                throw $e;
             }
         }
 
