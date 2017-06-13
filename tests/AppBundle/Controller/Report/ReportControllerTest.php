@@ -320,6 +320,7 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->clear()->getRepo('Report\Report')->find($reportId);
         /* @var $report \AppBundle\Entity\Report\Report */
         $this->assertEquals(true, $report->getSubmitted());
+        $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
         $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));

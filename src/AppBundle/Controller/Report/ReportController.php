@@ -103,6 +103,7 @@ class ReportController extends RestController
         }
 
         $currentReport->setSubmitted(true);
+        $currentReport->setSubmittedBy($this->getUser());
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         //lets create subsequent year's report
