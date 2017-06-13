@@ -8,8 +8,7 @@ use Doctrine\ORM\EntityManager;
  */
 class Fixtures
 {
-    const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
-    const PG_EXPORT_COMMAND = 'export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;';
+    const   PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
     /**
      * @var EntityManager
@@ -19,6 +18,18 @@ class Fixtures
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+    }
+
+    /**
+     * @return string
+     **/
+    private static function getPGExportCommand()
+    {
+        $pgHost = getenv('PGHOST') ?: 'postgres';
+        $pgPass = getenv('PGPASSWORD') ?: 'api';
+        $pgUser = getenv('PGUSER') ?: 'api';
+
+        return "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE=digideps_unit_test; export PGUSER={$pgUser};";
     }
 
     /**
@@ -367,7 +378,7 @@ class Fixtures
 
     private static function pgCommand($cmd)
     {
-        exec(self::PG_EXPORT_COMMAND . $cmd);
+        exec(self::getPGExportCommand() . $cmd);
     }
 
     public static function initDb()

@@ -5,7 +5,7 @@ run-parts /etc/my_init.d
 
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
-export PGDATABASE=${API_DATABASE_NAME:=api}
+export PGDATABASE=${API_DATABASE_NAME:=digideps_unit_test}
 export PGUSER=${API_DATABASE_USERNAME:=api}
 
 cd /app
