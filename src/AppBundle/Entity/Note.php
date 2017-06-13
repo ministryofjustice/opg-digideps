@@ -190,11 +190,11 @@ class Note
     }
 
     /**
-     * @param ReportInterface $report
+     * @param Report $report
      *
      * @return $this
      */
-    public function setReport(ReportInterface $report)
+    public function setReport(Report $report)
     {
         $this->report = $report;
         return $this;

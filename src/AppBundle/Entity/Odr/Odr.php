@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Odr;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
-use AppBundle\Entity\ReportInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -13,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
  * @ORM\Table(name="odr")
  */
-class Odr implements ReportInterface
+class Odr
 {
     use OdrTraits\IncomeBenefitTrait;
     use OdrTraits\ExpensesTrait;
