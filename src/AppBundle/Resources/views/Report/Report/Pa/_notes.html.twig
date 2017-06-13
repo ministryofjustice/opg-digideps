@@ -31,7 +31,7 @@
                     <tr>
                         <td>{{ note.title }}</td>
                         <td>{{ note.category }}</td>
-                        <td>{{ note.createdBy.firstname }} {{ note.createdBy.lastName }}</td>
+                        <td>{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}</td>
                         <td>{{ note.createdOn | date(" d F Y") }}</td>
                         <td class="text--right hard--right">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
