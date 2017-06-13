@@ -85,6 +85,14 @@ class Report
     private $submitDate;
 
     /**
+     * @JMS\Type("AppBundle\Entity\User")
+     *
+     * @var User
+     */
+    private $submittedBy;
+
+
+    /**
      * @JMS\Type("AppBundle\Entity\Client")
      *
      * @var Client
@@ -392,6 +400,14 @@ class Report
         $this->submitDate = $submitDate;
 
         return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSubmittedBy()
+    {
+        return $this->submittedBy;
     }
 
     /**
