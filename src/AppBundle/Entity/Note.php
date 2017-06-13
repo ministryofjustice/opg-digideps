@@ -181,7 +181,7 @@ class Note
     }
 
     /**
-     * @param ReportInterface $report
+     * @param Report $report
      *
      * @return $this
      */
