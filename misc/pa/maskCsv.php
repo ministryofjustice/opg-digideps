@@ -65,6 +65,12 @@ class Replacer
 
                     case 'Forename':
                     case 'Surname':
+                    case 'Client Adrs1':
+                    case 'Client Adrs2':
+                    case 'Client Adrs3':
+                    case 'Client Adrs4':
+                    case 'Client Adrs5':
+                    case 'Client Postcode':
                     case 'Adrs1':
                     case 'Adrs2':
                     case 'Adrs2':
