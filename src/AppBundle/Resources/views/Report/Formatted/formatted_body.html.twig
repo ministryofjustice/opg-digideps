@@ -11,6 +11,8 @@
 {% set is102 = report.type == '102' %}
 {% set is103 = report.type == '103' %}
 {% set is104 = report.type == '104' %}
+{# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
+{% set submittedBy = report.submittedBy | default(app.user) %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.html.twig' %}
