@@ -147,7 +147,7 @@ class ReportController extends AbstractController
 
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user']);
 
         // PA users get alternative template
         if ($report->getHas106flag()) {
