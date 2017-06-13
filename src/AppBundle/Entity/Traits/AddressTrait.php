@@ -8,7 +8,7 @@ trait AddressTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "team"})
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
@@ -17,7 +17,7 @@ trait AddressTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "team"})
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
@@ -26,7 +26,7 @@ trait AddressTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "team"})
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
     private $address3;
@@ -35,7 +35,7 @@ trait AddressTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "team"})
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
@@ -44,7 +44,7 @@ trait AddressTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "team"})
+     * @JMS\Groups({"user", "team", "report-submitted-by"})
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
     private $addressCountry;
