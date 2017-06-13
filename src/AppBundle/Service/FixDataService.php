@@ -136,6 +136,36 @@ class FixDataService
         return $this;
     }
 
+    public function fixReportSubmittedBy()
+    {
+        $reports = $this->reportRepo->findAll();
+        $this->totalProcessed = 0;
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            $reportId = $report->getId();
+            try {
+                if ($report->getSubmittedBy()) {
+                    throw new \RuntimeException("submittedBy alreay set.skipped");
+                }
+
+                $users = $report->getClient()->getUsers();
+                $user = $users->first();
+                if (!$user) {
+                    throw new \RuntimeException("no user. skipped"); // should never happen, but live data not available for testing atm
+                }
+
+                $report->setSubmittedBy($user);
+                $this->messages[] = "Report $reportId : user set correctly among the " . count($users) . " user(s)";
+            } catch (\Exception $e) {
+                $this->messages[] = "Report $reportId: " . $e->getMessage();
+            }
+        }
+
+        $this->em->flush();
+
+        return $this;
+    }
+
     /**
      * @return array
      */

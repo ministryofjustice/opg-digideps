@@ -7,28 +7,26 @@ use AppBundle\Service\FixDataService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FixReportingPeriodsCommand extends AddSingleUserCommand
+class FixSubmittedByCommand extends AddSingleUserCommand
 {
     protected function configure()
     {
         $this
-            ->setName('digideps:fix-reporting-periods')
-            ->setDescription('Fixes report period for PA clients reports. Moving forward by 56 days');
+            ->setName('digideps:fix-report-submitted-by')
+            ->setDescription('add report.submittedBy to reports taking the first user');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getContainer()->get('em');
 
-        $output->write('Fixing data. Please wait ...');
+        $output->write('Adding user.submittedBy. Please wait ...');
         $fixDataService = new FixDataService($em);
-        $messages = $fixDataService->fixPaReportingPeriods()->getMessages();
-
+        $messages = $fixDataService->fixReportSubmittedBy()->getMessages();
         foreach ($messages as $m) {
             $output->writeln($m);
         }
-        $output->writeln(count($messages) . ' report fixes');
-        $output->writeln($fixDataService->getTotalProcessed() . ' reports skipped');
+        $output->writeln(count($messages) . ' total report fixes');
         $output->writeln('Done');
     }
 }

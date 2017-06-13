@@ -160,6 +160,16 @@ class Report implements ReportInterface
     private $submitted;
 
     /**
+     * @var User
+     *
+     * @JMS\Groups({"report-submitted-by"})
+     * @JMS\Type("AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id")
+     */
+    private $submittedBy;
+
+    /**
      * @deprecated client shouldn't need this anymore
      *
      * @var bool
@@ -380,6 +390,26 @@ class Report implements ReportInterface
     public function getSubmitted()
     {
         return $this->submitted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmittedBy()
+    {
+        return $this->submittedBy;
+    }
+
+    /**
+     * @param mixed $submittedBy
+     *
+     *  @return Report
+     */
+    public function setSubmittedBy($submittedBy)
+    {
+        $this->submittedBy = $submittedBy;
+
+        return $this;
     }
 
     /**
