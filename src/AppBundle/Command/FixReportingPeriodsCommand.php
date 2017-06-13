@@ -7,12 +7,6 @@ use AppBundle\Service\FixDataService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Add data that wasn't added with listeners
- * Firstly wrote when data wasn't added with temporary 103 user on staging
- *
- * @codeCoverageIgnore
- */
 class FixReportingPeriodsCommand extends AddSingleUserCommand
 {
     protected function configure()
