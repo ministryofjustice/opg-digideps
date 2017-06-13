@@ -8,8 +8,13 @@ use Doctrine\ORM\EntityManager;
  */
 class Fixtures
 {
+    private $pgHost     = $_ENV['PGHOST']?: 'postgres';
+    private $pgPass     = $_ENV['PGPASSWORD']?: 'api';
+    private $pgDatabase = $_ENV['PGDATABASE']?: 'digideps_unit_test';
+    private $pgUser     = $_ENV['PGUSER']?: 'api';
+
     const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
-    const PG_EXPORT_COMMAND = 'export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;';
+    const PG_EXPORT_COMMAND = "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE={$pgDatabase}; export PGUSER={$pgUser};";
 
     /**
      * @var EntityManager
