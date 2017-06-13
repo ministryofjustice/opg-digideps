@@ -6,23 +6,19 @@ use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Traits\CreationAudit;
+use AppBundle\Entity\Traits\ModifyAudit;
 
 /**
- * Notes.
- *
- * @ORM\Table(name="note",
- *    indexes={
- *        @ORM\Index(name="ix_note_report_id", columns={"report_id"}),
- *        @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
- *    }
- * ))
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NoteRepository")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * Note.
  *
  */
 class Note
 {
+    use CreationAudit;
+    use ModifyAudit;
+
     /**
      * Keep in sync with API
      *
@@ -86,7 +82,6 @@ class Note
      *
      * @JMS\Groups({"note"})
      * @JMS\Type("AppBundle\Entity\Report")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="notes")
      */
     private $report;
 
