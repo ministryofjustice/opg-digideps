@@ -33,6 +33,8 @@ class NoteController extends RestController
         ]);
         $note = new EntityDir\Note($report, $data['category'], $data['title'], $data['content']);
 
+        $note->setCreatedBy($this->getUser());
+
         $this->persistAndFlush($note);
 
         return ['id' => $note->getId()];

@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\User;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * CreationAudit Trait, usable with PHP >= 5.4
@@ -20,7 +21,6 @@ trait CreationAudit
      * @JMS\Groups({"notes"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
-     * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
 
@@ -32,6 +32,7 @@ trait CreationAudit
      * @JMS\Type("DateTime")
      * @JMS\Groups({"notes"})
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     protected $createdOn;
 

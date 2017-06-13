@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ModifyAudit Trait, usable with PHP >= 5.4
@@ -17,7 +18,6 @@ trait ModifyAudit
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="LAZY")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
-     * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
 
@@ -27,6 +27,7 @@ trait ModifyAudit
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     protected $lastModifiedOn;
 }
