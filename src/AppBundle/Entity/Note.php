@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use AppBundle\Entity\Traits\ModifyAudit;
@@ -13,12 +14,11 @@ use JMS\Serializer\Annotation as JMS;
  * Notes.
  *
  * @ORM\Table(name="note",
- *    indexes={
- *        @ORM\Index(name="ix_note_report_id", columns={"report_id"}),
- *        @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
- *    }
- * ))
+ *     indexes={
+ *     @ORM\Index(name="ix_note_report_id", columns={"report_id"}),
+ *     @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
+ *     @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
+ *     })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NoteRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  *
@@ -50,7 +50,7 @@ class Note
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","note"})
+     * @JMS\Groups({"audit_log","notes"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -62,7 +62,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"note"})
+     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="category", type="string", length=100, nullable=false)
      */
@@ -71,7 +71,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"note"})
+     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=false)
      */
@@ -80,7 +80,7 @@ class Note
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"note"})
+     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="content", type="text", nullable=false)
      */
@@ -89,7 +89,6 @@ class Note
     /**
      * @var int
      *
-     * @JMS\Groups({"note"})
      * @JMS\Type("AppBundle\Entity\Report")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="notes")
      */
@@ -98,7 +97,7 @@ class Note
     /**
      * Constructor.
      */
-    public function __construct(ReportInterface $report, $category, $title, $content)
+    public function __construct(Report $report, $category, $title, $content)
     {
         $this->setCategory($category);
         $this->setTitle($title);

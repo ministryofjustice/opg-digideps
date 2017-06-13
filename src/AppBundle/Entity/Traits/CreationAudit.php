@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\User;
 
 /**
  * CreationAudit Trait, usable with PHP >= 5.4
@@ -15,7 +16,9 @@ trait CreationAudit
      *
      * @var \AppBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="LAZY")
+     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"notes"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
@@ -26,7 +29,49 @@ trait CreationAudit
      *
      * @var \DateTime
      *
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"notes"})
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * @return \AppBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @param \AppBundle\Entity\User $createdBy
+     *
+     * @return $this
+     */
+    public function setCreatedBy(User $createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * @param \DateTime $createdOn
+     *
+     * @return $this
+     */
+    public function setCreatedOn(\DateTime $createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
 }
