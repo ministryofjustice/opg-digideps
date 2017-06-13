@@ -59,7 +59,7 @@ class PaServiceTest extends WebTestCase
         'Surname'    => 'Hent1',
         'Corref'     => 'L2',
         'Typeofrep'  => 'OPG102',
-        'Report Due' => '16-Dec-2014',
+        'Last Report Day' => '16-Dec-2014',
         'Client Adrs1' => 'a1',
         'Client Adrs2' => 'a2',
         'Client Adrs3' => 'a3',
@@ -76,7 +76,7 @@ class PaServiceTest extends WebTestCase
         'Surname'    => 'Hent2',
         'Corref'     => 'L3',
         'Typeofrep'  => 'OPG103',
-        'Report Due' => '04-Feb-2015',
+        'Last Report Day' => '04-Feb-2015',
     ];
 
     public static $client3 = [
@@ -85,7 +85,7 @@ class PaServiceTest extends WebTestCase
         'Surname'    => 'Hent3',
         'Corref'     => 'L3G',
         'Typeofrep'  => 'OPG103',
-        'Report Due' => '05-Feb-2015',
+        'Last Report Day' => '05-Feb-2015',
     ];
 
 
@@ -123,7 +123,7 @@ class PaServiceTest extends WebTestCase
         ];
 
         $ret1 = $this->pa->addFromCasrecRows($data);
-        $this->assertEmpty($ret1['errors']);
+        $this->assertEmpty($ret1['errors'], implode(',', $ret1['errors']));
         $this->assertEquals([
             'users'   => ['dep1@provider.com', 'dep2@provider.com'],
             'clients' => ['10000001', '10000002', '1000000t'],
@@ -158,8 +158,8 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2013-10-21', $client1Report1->getStartDate()->format('Y-m-d'));
-        $this->assertEquals('2014-10-21', $client1Report1->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('2013-12-16', $client1Report1->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
         $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client1Report1->getType());
 
         // assert 2nd client and report
