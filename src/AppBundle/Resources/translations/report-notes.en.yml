@@ -16,9 +16,13 @@ form:
   category:
     label: Category
     entries:
-      misc: Misc
+      undefined: undefined
       todo: To Do
+      dwp: DWP
       opg: OPG
+      welfare: Welfare
+      bank: Bank
+      report: Report
   title:
     label: Title
   content:
