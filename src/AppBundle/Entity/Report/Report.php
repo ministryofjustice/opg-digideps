@@ -163,7 +163,7 @@ class Report
     /**
      * @var User
      *
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"report-submitted-by"})
      * @JMS\Type("AppBundle\Entity\User")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id")
@@ -394,10 +394,14 @@ class Report
 
     /**
      * @param mixed $submittedBy
+     *
+     *  @return Report
      */
     public function setSubmittedBy($submittedBy)
     {
         $this->submittedBy = $submittedBy;
+
+        return $this;
     }
 
 

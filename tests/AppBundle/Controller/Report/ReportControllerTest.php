@@ -49,7 +49,7 @@ class ReportControllerTest extends AbstractTestController
         );
         self::fixtures()->flush();
 
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$report1 = self::fixtures()->createReport(self::$client1)->setSubmittedBy(self::$deputy1);
         self::$casRec1 = self::fixtures()->createCasRec(self::$client1, self::$deputy1, self::$report1);
 
         self::$report103 = self::fixtures()->createReport(self::$client1, ['setType'=>Report::TYPE_103]);
@@ -221,6 +221,14 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('fees', $data);
+
+        // assert report-submitted-by + user info
+        $data = $this->assertJsonRequest('GET', $url . '?groups=report-submitted-by', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals(self::$deputy1->getId(), $data['submitted_by']['id']);
+        $this->assertEquals('deputy@example.org', $data['submitted_by']['email']);
 
         // assert status
         $data = $this->assertJsonRequest('GET', $url . '?groups=status', [

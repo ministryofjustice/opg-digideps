@@ -35,7 +35,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","user"})
+     * @JMS\Groups({"audit_log","user", "report-submitted-by"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -63,7 +63,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user"})
+     * @JMS\Groups({ "audit_log","user", "report-submitted-by"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -74,7 +74,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user"})
+     * @JMS\Groups({ "audit_log","user", "report-submitted-by"})
      */
     private $lastname;
 
@@ -87,7 +87,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -141,7 +141,7 @@ class User implements UserInterface
      *             see roles in Role class
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
@@ -161,7 +161,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;
@@ -170,7 +170,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
     private $phoneAlternative;
