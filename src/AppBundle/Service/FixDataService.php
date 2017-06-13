@@ -144,17 +144,20 @@ class FixDataService
         foreach ($reports as $report) {
             $reportId = $report->getId();
             try {
+                if ($report->getSubmittedBy()) {
+                    throw new \RuntimeException("submittedBy alreay set.skipped");
+                }
+
                 $users = $report->getClient()->getUsers();
                 $user = $users->first();
                 if (!$user) {
-                    // should never happen, but live data not available for testing atm
-                    throw new \RuntimeException("no user. skipped");
+                    throw new \RuntimeException("no user. skipped"); // should never happen, but live data not available for testing atm
                 }
 
                 $report->setSubmittedBy($user);
                 $this->messages[] = "Report $reportId : user set correctly among the " . count($users) . " user(s)";
             } catch (\Exception $e) {
-                $this->messages[] = "Report $reportId: " . $e;
+                $this->messages[] = "Report $reportId: " . $e->getMessage();
             }
         }
 
