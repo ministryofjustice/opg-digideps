@@ -1,3 +1,5 @@
+
+
 <div class="section" id="deputy-client-information-section">
     <h2 class="section-heading">Deputy and client information</h2>
     <div class="box" id="case-number">
@@ -29,31 +31,31 @@
             <dl class="labelvalue">
 
                 <dt class="label">First names</dt>
-                <dd class="value">{{app.user.firstname}}</dd>
+                <dd class="value">{{submittedBy.firstname}}</dd>
 
                 <dt class="label">Last name</dt>
-                <dd class="value">{{app.user.lastname}}</dd>
+                <dd class="value">{{submittedBy.lastname}}</dd>
 
                 <dt class="label">Address</dt>
                 <dd class="value textarea address-value">
-                    {% if app.user.isDeputyPa %}
+                    {% if submittedBy.isDeputyPa %}
                         {{ team.address1 }}<br/>
                         {{ team.address2 }}<br/>
                         {{ team.address3 }}<br/>
                         {{ team.addressPostcode }}
                     {% else %}
-                        {{ app.user.address1 }}<br/>
-                        {{ app.user.address2 }}<br/>
-                        {{ app.user.address3 }}<br/>
-                        {{ app.user.addressPostcode }}
+                        {{ submittedBy.address1 }}<br/>
+                        {{ submittedBy.address2 }}<br/>
+                        {{ submittedBy.address3 }}<br/>
+                        {{ submittedBy.addressPostcode }}
                     {% endif %}
                 </dd>
 
                 <dt class="label">Telephone number</dt>
                 <dd class="value">
-                    {{app.user.phoneMain}}
-                    {% if (app.user.phoneAlternative is defined) %}
-                        <br />{{app.user.phoneAlternative}}
+                    {{submittedBy.phoneMain}}
+                    {% if (submittedBy.phoneAlternative is defined) %}
+                        <br />{{submittedBy.phoneAlternative}}
                     {% endif %}
                 </dd>
             </dl>
@@ -82,7 +84,7 @@
         </div>
         <dl class="labelvalue cleared">
             <dt class="label">Email</dt>
-            <dd class="value">{{app.user.email}}</dd>
+            <dd class="value">{{submittedBy.email}}</dd>
         </dl>
     </div>
 

@@ -46,6 +46,7 @@ class ReportController extends AbstractController
         'moneyTransactionsShortIn',
         'moneyTransactionsShortOut',
         'status',
+        'report-submitted-by',
     ];
 
     /**
