@@ -9,11 +9,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class TeamMemberAccount
+ * Class TeamMemberAccountType
  **
  * @package AppBundle\Form\Pa
  */
-class TeamMemberAccount extends AbstractType
+class TeamMemberAccountType extends AbstractType
 {
     /**
      * @var Team

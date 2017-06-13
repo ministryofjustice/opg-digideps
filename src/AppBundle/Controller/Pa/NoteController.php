@@ -25,7 +25,7 @@ class NoteController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(
-            new FormDir\Pa\Note(
+            new FormDir\Pa\NoteType(
                 $this->get('translator'),
                 new EntityDir\Note($report)
             )
@@ -36,7 +36,7 @@ class NoteController extends AbstractController
             $note = $form->getData();
 
             try {
-                $note = $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['note'], 'Note');
+                $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['note'], 'Note');
 
                 $request->getSession()->getFlashBag()->add('info', 'The note has been added');
 

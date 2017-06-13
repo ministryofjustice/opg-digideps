@@ -11,11 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class Note
+ * Class NoteType
  *
  * @package AppBundle\Form\Pa
  */
-class Note extends AbstractType
+class NoteType extends AbstractType
 {
     protected $translationDomain = 'report-notes';
 
