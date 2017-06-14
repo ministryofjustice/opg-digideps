@@ -16,7 +16,7 @@
 {% block pageContent %}
 
     {% block pageHeader %}
-        {% include 'AppBundle:Report/Report/Pa:_header.html.twig' %}
+        {% include 'AppBundle:Pa/ClientProfile:_header.html.twig' %}
     {% endblock %}
 
     <div class="panel panel-admin hard">
@@ -101,7 +101,7 @@
                     <div class="column-one-half">
                         <ul>
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'decisions',
                                 report: report,
@@ -110,7 +110,7 @@
                                 list: true
                             } %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'contacts',
                                 report: report,
@@ -120,7 +120,7 @@
                                 state: reportStatus.contactsState,
                             } %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'visits_care',
                                 report: report,
@@ -131,7 +131,7 @@
 
                             <!-- TODO - MISSING HEALTH AND LIFESTYLE?? -->
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'pa_fee_expense',
                                 report: report,
@@ -141,7 +141,7 @@
                             } %}
 
                             {% if is102 or is103 %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'gifts',
                                 report: report,
@@ -151,7 +151,7 @@
                                 } %}
                             {% endif %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'actions',
                                 report: report,
@@ -160,7 +160,7 @@
                                 list: true
                             } %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'other_info',
                                 linkToSubSection: path('other_info', {reportId: report.id}),
@@ -177,7 +177,7 @@
                         <ul>
 
                             {% if is102 or is103 %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'bank_accounts',
                                     report: report,
@@ -196,7 +196,7 @@
                             {% endif %}
 
                             {% if is102 %}
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'money_transfers',
                                 report: report,
@@ -207,7 +207,7 @@
                             {% endif %}
 
                             {% if is102 %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_in',
                                     report: report,
@@ -215,7 +215,7 @@
                                     warning: true,
                                     description: true
                                 } %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_out',
                                     report: report,
@@ -225,7 +225,7 @@
                                 } %}
                             {% endif %}
                             {% if is103 %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_in_short',
                                     report: report,
@@ -233,7 +233,7 @@
                                     warning: true,
                                     description: true
                                 } %}
-                                {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_out_short',
                                     report: report,
@@ -243,7 +243,7 @@
                                 } %}
                             {% endif %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'assets',
                                 report: report,
@@ -252,7 +252,7 @@
                                 description: true
                             } %}
 
-                            {% include 'AppBundle:Report/Report/Pa:_subsection.html.twig' with {
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'debts',
                                 report: report,
@@ -268,15 +268,15 @@
         </div>
     </div>
 
-    {% include 'AppBundle:Report/Report/Pa:_notes.html.twig' with {
+    {% include 'AppBundle:Pa/ClientProfile:_notes.html.twig' with {
     notes: report.notes,
     } %}
 
-    {% include 'AppBundle:Report/Report/Pa:_reports.html.twig' with {
+    {% include 'AppBundle:Pa/ClientProfile:_reports.html.twig' with {
     reports: report.client.reports,
     } %}
 
-    {% include 'AppBundle:Report/Report/Pa:_client.html.twig' with {
+    {% include 'AppBundle:Pa/ClientProfile:_client.html.twig' with {
     client: report.client,
     } %}
 

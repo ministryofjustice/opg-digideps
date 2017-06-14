@@ -152,7 +152,7 @@ class ReportController extends AbstractController
 
         // PA users get alternative template
         if ($report->getHas106flag()) {
-            $template = 'AppBundle:Report/Report/Pa:overview.html.twig';
+            $template = 'AppBundle:Pa/ClientProfile:overview.html.twig';
         }
 
         return $this->render(

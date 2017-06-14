@@ -26,6 +26,8 @@ class NoteController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
+        $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
+
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
                 $this->get('translator'),
@@ -51,9 +53,9 @@ class NoteController extends AbstractController
             }
         }
 
-        return [
-            'form' => $form->createView(),
+        return $this->render($template, [
+            'form'  => $form->createView(),
             'report' => $report,
-        ];
+        ]);
     }
 }
