@@ -46,7 +46,7 @@
                         <td>{{ note.category }}</td>
                         <td class="width-eighth">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</td>
                         <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
-                        <td class="width-eighth text--right hard--right">
+                        <td class="text--right hard--right">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
                         </td>
 
