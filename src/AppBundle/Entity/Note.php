@@ -28,20 +28,20 @@ class Note
      */
     public static $categories = [
         // categoryId | categoryTranslationKey
-        '' => 'undefined',
         'Todo' => 'todo',
         'DWP' => 'dwp',
         'OPG' => 'opg',
         'Welfare' => 'welfare',
         'Bank' => 'bank',
-        'Report' => 'report'
+        'Report' => 'report',
+        'other' => 'other'
     ];
 
     /**
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","add_note"})
+     * @JMS\Groups({"audit_log"})
      */
     private $id;
 
@@ -49,11 +49,7 @@ class Note
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      *
-     * @Assert\NotBlank( message="note.category.notBlank",
-     *     groups={"add_note", "edit_note"}
-     * )
      */
     private $category;
 
@@ -81,7 +77,6 @@ class Note
     /**
      * @var int
      *
-     * @JMS\Groups({"note"})
      * @JMS\Type("AppBundle\Entity\Report")
      */
     private $report;

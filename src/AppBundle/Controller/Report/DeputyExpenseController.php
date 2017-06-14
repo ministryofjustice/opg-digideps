@@ -95,7 +95,6 @@ class DeputyExpenseController extends AbstractController
         $backLinkRoute = 'deputy_expenses_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
 
-
         return [
             'backLink' => $backLink,
             'form' => $form->createView(),

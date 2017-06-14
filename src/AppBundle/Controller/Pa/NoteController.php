@@ -4,7 +4,9 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,19 +32,22 @@ class NoteController extends AbstractController
                 new EntityDir\Note($report)
             )
         );
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+
             $note = $form->getData();
 
             try {
-                $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['note'], 'Note');
+                $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note'], 'Note');
 
                 $request->getSession()->getFlashBag()->add('info', 'The note has been added');
 
                 return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
-            } catch (\Exception $e) {
-                throw $e;
+            } catch (RestClientException $e) {
+                $form->get('title')->addError(new FormError($e->getData()['message']));
+
             }
         }
 
