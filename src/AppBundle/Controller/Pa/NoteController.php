@@ -26,11 +26,13 @@ class NoteController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
+        $note = new EntityDir\Note($report);
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
                 $this->get('translator'),
-                new EntityDir\Note($report)
-            )
+                $note
+            ),
+            $note
         );
 
         $form->handleRequest($request);
@@ -39,16 +41,10 @@ class NoteController extends AbstractController
 
             $note = $form->getData();
 
-            try {
-                $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note'], 'Note');
+            $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note'], 'Note');
+            $request->getSession()->getFlashBag()->add('info', 'The note has been added');
 
-                $request->getSession()->getFlashBag()->add('info', 'The note has been added');
-
-                return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
-            } catch (RestClientException $e) {
-                $form->get('title')->addError(new FormError($e->getData()['message']));
-
-            }
+            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
         }
 
         return [
