@@ -27,7 +27,6 @@ class FixReportingPeriodsCommand extends AddSingleUserCommand
         foreach ($messages as $m) {
             $output->writeln($m);
         }
-        $output->writeln(count($messages) . ' report fixes');
         $output->writeln($fixDataService->getTotalProcessed() . ' reports skipped');
         $output->writeln('Done');
     }
