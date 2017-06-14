@@ -115,17 +115,18 @@ class FixDataService
                 }
 
                 if ($user->isPaDeputy()) {
-                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
-                        $report->getEndDate()->format('d-M-Y');
+                    $this->messages[] = "Report {$report->getId()}: already executed on 14/6/2017";
+//                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+//                        $report->getEndDate()->format('d-M-Y');
 
-                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
-                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
+//                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
+//                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
 
-                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
-                        $oldPeriod . ' TO ' .
-                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
-                        $report->getEndDate()->format('d-M-Y');
-                    $this->totalProcessed++;
+//                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
+//                        $oldPeriod . ' TO ' .
+//                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
+//                        $report->getEndDate()->format('d-M-Y');
+//                    $this->totalProcessed++;
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
                 }
