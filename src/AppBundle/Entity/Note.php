@@ -43,7 +43,8 @@ class Note
         'OPG' => 'opg',
         'Welfare' => 'welfare',
         'Bank' => 'bank',
-        'Report' => 'report'
+        'Report' => 'report',
+        'other' => 'other'
     ];
 
 
