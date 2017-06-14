@@ -23,6 +23,7 @@ form:
       welfare: Welfare
       bank: Bank
       report: Report
+      other: Other
   title:
     label: Title
   content:

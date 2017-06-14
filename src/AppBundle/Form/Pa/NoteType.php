@@ -65,9 +65,11 @@ class NoteType extends AbstractType
                 [
                     'choices' => self::getCategories(),
                     'expanded' => false,
+                    'required' => false,
+                    'empty_value' => 'Please select',
                 ]
             )
-            ->add('title', 'text')
+            ->add('title', 'text', ['required' => true])
             ->add('content', 'textarea')
             ->add('save', 'submit');
     }
@@ -81,7 +83,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => ['note'],
+                'validation_groups' => ['add_note'],
                 'translation_domain' => $this->translationDomain,
                 'data-class' => NoteEntity::class
             ]
