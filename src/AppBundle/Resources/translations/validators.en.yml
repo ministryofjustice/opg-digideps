@@ -1,4 +1,8 @@
-# translations for validation messages. Rules in validation
+# Translations for validation messages, mainly pointed from Assert annotations in Entities, 'message' key
+# If one message is shared across multiple fields, see the common section
+
+#       ENTITIES
+# ====================================================================================================
 user:
   email:
     invalid: This email is not valid
@@ -66,6 +70,7 @@ client:
     courtDate:
         message: Enter a valid date in this format: DD/MM/YYYY
         notBlank: Enter the date of your court order
+        lessThan: Court Date cannot be in the future
     address:
         notBlank: Enter the client's address
         maxMessage: The address can't be longer than {{ limit }} letters
@@ -75,6 +80,14 @@ client:
         notBlank: Enter the client's postcode
         minMessage: The postcode must be at least {{ limit }} letters long
         maxMessage: The postcode can't be longer than {{ limit }} letters
+    # Pa only
+    email:
+        invalid: This email is not valid
+        #notBlank: Enter an email address
+        maxLength: The email can't be longer than {{ limit }} characters
+    dateOfBirth:
+       lessThan: Date of birth cannot be in the future
+
 report:
     startDate:
         notBlank: Enter the date when your reporting period starts
@@ -331,31 +344,6 @@ fee:
     moreDetails:
       notEmpty: You must give us more information about this amount
 
-
-# validation messages for common elements (e.g. phone fields)
-common:
-  genericPhone:
-    minLength: Check the phone number: it must have at least {{ limit }} numbers
-    maxLength: Check the phone number: it can't be more than {{ limit }} numbers long
-sendEmail:
-    toEmail:
-        notBlank: Please supply recipient's email (toEmail)
-        invalid:  Recipient email address is invalid
-    toName:
-        notBlank: Please supply recipient's name (toName)
-        invalid: Recipient name is invalid
-    fromEmail:
-        notBlank: Please supply sender's email (fromEmail)
-        invalid:  Sender email address is invalid
-    fromName:
-        notBlank: Please supply sender's name (fromName)
-        invalid: Sender name is invalid
-    subject:
-        notBlank: Please supply email subject
-    bodyText:
-        notBlank: Please supply message for your email
-    bodyHtml:
-        notBlank: Please supply message for your email
 visitsCare:
     doYouLiveWithClient:
         notBlank: Choose Yes or No
@@ -389,11 +377,15 @@ action:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
 
-
 feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option
 
+
+
+# ====================================================================================================
+#       NDR
+# ====================================================================================================
 odr:
   agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
@@ -552,3 +544,32 @@ odr:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
     #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
+
+
+
+#       COMMON ELEMENTS
+# ====================================================================================================
+
+common:
+  genericPhone:
+    minLength: Check the phone number: it must have at least {{ limit }} numbers
+    maxLength: Check the phone number: it can't be more than {{ limit }} numbers long
+sendEmail:
+    toEmail:
+        notBlank: Please supply recipient's email (toEmail)
+        invalid:  Recipient email address is invalid
+    toName:
+        notBlank: Please supply recipient's name (toName)
+        invalid: Recipient name is invalid
+    fromEmail:
+        notBlank: Please supply sender's email (fromEmail)
+        invalid:  Sender email address is invalid
+    fromName:
+        notBlank: Please supply sender's name (fromName)
+        invalid: Sender name is invalid
+    subject:
+        notBlank: Please supply email subject
+    bodyText:
+        notBlank: Please supply message for your email
+    bodyHtml:
+        notBlank: Please supply message for your email
