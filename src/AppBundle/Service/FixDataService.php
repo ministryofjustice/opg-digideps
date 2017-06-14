@@ -105,7 +105,16 @@ class FixDataService
         /** @var Report $report */
         foreach ($reports as $report) {
             try {
-                if ($report->has106Flag()) {
+                $client = $report->getClient();
+                if (!$client) {
+                    throw new \RuntimeException("no client found");
+                }
+                $user = $client->getUsers()->first();
+                if (!$user) {
+                    throw new \RuntimeException("no user found");
+                }
+
+                if ($user->isPaDeputy()) {
                     $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
                         $report->getEndDate()->format('d-M-Y');
 
