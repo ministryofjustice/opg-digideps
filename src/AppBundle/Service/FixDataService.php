@@ -125,10 +125,9 @@ class FixDataService
                         $oldPeriod . ' TO ' .
                         $report->getStartDate()->format('d-M-Y') . ' --> ' .
                         $report->getEndDate()->format('d-M-Y');
-
+                    $this->totalProcessed++;
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
-                    $this->totalProcessed++;
                 }
 
             } catch (\Exception $e) {
