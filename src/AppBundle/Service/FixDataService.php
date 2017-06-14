@@ -155,6 +155,9 @@ class FixDataService
                 // fix reports submitted, and without a submittedBy
                 if ($report->getSubmitted()) {
                     if (!$report->getSubmittedBy()) {
+                        if (!$report->getClient()) {
+                            throw new \RuntimeException("no client found");
+                        }
                         $users = $report->getClient()->getUsers();
                         $user = $users->first();
                         if (!$user) {
