@@ -43,7 +43,7 @@ class NoteController extends AbstractController
 
             $note = $form->getData();
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note'], 'Note');
+            $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['notes'], 'Note');
             $request->getSession()->getFlashBag()->add('info', 'The note has been added');
 
             return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
