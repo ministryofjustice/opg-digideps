@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "report-notes" %}
+{% set translationDomain = "client-notes" %}
 {% trans_default_domain translationDomain %}
 {% set page = "addNotes" %}
 
@@ -9,7 +9,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans({'%clientName%': report.client.fullname | title}) }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}

@@ -17,7 +17,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class NoteType extends AbstractType
 {
-    protected $translationDomain = 'report-notes';
+    protected $translationDomain = 'client-notes';
 
     /**
      * @var TranslatorInterface

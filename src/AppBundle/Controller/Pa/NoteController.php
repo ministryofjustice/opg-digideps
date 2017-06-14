@@ -27,6 +27,8 @@ class NoteController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $note = new EntityDir\Note($report);
+        $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
+
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
                 $this->get('translator'),
@@ -47,9 +49,9 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
         }
 
-        return [
-            'form' => $form->createView(),
+        return $this->render($template, [
+            'form'  => $form->createView(),
             'report' => $report,
-        ];
+        ]);
     }
 }

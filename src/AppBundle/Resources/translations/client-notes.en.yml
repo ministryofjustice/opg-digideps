@@ -1,15 +1,15 @@
 addNotes:
-  htmlTitle: Deputy report - add note | GOV.UK
+  htmlTitle: Client profile - add note | GOV.UK
   pageTitle: Add note
-  supportTitle: Report notes
+  supportTitle: "Client profile: %clientName%"
 editPage:
-  htmlTitle: Deputy report - edit note | GOV.UK
+  htmlTitle: Client profile - edit note | GOV.UK
   h1Title: Edit note
-  supportTitle: Report notes
+  supportTitle: "Client profile: %clientName%"
 removePage:
-  htmlTitle: Deputy report - remove note | GOV.UK
+  htmlTitle: Client profile - remove note | GOV.UK
   h1Title: Remove note
-  supportTitle: Report notes
+  supportTitle: "Client profile: %clientName%"
   question: Are you sure you want to remove the note entitled <strong class="bold">%note_title%</strong> from this report?
 
 form:
@@ -27,6 +27,6 @@ form:
   title:
     label: Title
   content:
-    label: Content
+    label: Description
   save:
-    label: "Save"
+    label: Save
