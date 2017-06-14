@@ -20,7 +20,7 @@ class ClientController extends RestController
      */
     public function upsertAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
@@ -39,18 +39,30 @@ class ClientController extends RestController
             }
         }
 
+
         $this->hydrateEntityWithArrayData($client, $data, [
             'firstname'   => 'setFirstname',
             'lastname'    => 'setLastname',
-            'case_number' => 'setCaseNumber',
             'address'     => 'setAddress',
             'address2'    => 'setAddress2',
             'postcode'    => 'setPostcode',
             'country'     => 'setCountry',
             'county'      => 'setCounty',
             'phone'       => 'setPhone',
+            'email'       => 'setEmail',
         ]);
-        $client->setCourtDate(new \DateTime($data['court_date']));
+
+        if ($this->getUser()->isLayDeputy()) {
+            $client->setCourtDate(new \DateTime($data['court_date']));
+            $this->hydrateEntityWithArrayData($client, $data, [
+                'case_number' => 'setCaseNumber',
+            ]);
+        }
+
+        if (array_key_exists('date_of_birth', $data)) {
+            $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
+            $client->setDateOfBirth($dob);
+        }
 
         $this->persistAndFlush($client);
 
@@ -71,7 +83,7 @@ class ClientController extends RestController
      */
     public function findByIdAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
