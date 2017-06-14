@@ -29,12 +29,24 @@
                 <tbody>
                 {% for note in notes %}
                     <tr>
-                        <td>{{ note.title }}<br />
-                            {{ note.content }}</td>
+                        <td>
+                            {% if note.content %}
+                                <details>
+                                    <summary>
+                                        <span class="summary">{{ note.title }}</span>
+                                    </summary>
+                                    <div class="panel panel-border-narrow">
+                                        {{ note.content }}
+                                    </div>
+                                </details>
+                            {% else %}
+                                <p>{{ note.title }}</p>
+                            {% endif %}
+                        </td>
                         <td>{{ note.category }}</td>
-                        <td>{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}</td>
-                        <td>{{ note.createdOn | date(" d F Y") }}</td>
-                        <td class="text--right hard--right">
+                        <td class="width-eighth">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</td>
+                        <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
+                        <td class="width-eighth text--right hard--right">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
                         </td>
 

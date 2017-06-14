@@ -26,6 +26,6 @@ form:
   title:
     label: Title
   content:
-    label: Content
+    label: Description
   save:
     label: "Save"
