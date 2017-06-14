@@ -49,6 +49,7 @@ class Note
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"add_note"})
      *
      */
     private $category;
@@ -57,6 +58,7 @@ class Note
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"add_note"})
      *
      * @Assert\NotBlank( message="note.form.title.notBlank", groups={"add_note", "edit_note"})
      *
