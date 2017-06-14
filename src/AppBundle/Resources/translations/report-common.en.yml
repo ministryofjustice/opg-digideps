@@ -42,31 +42,3 @@ prevNextLinks:
     deputyExpenses: Deputy expenses
     paFeeExpense: Deputy fees and expenses
     gifts: Gifts
-
-# PA Client Details section
-clientDetails:
-  heading: Client details
-  name: Name
-  dateOfBirth: Date of birth
-  phone: Phone
-  email: Email
-  address: Address
-  editClient: Edit client details
-
-# PA Reports section
-clientReports:
-  heading: Submitted reports
-  noReports: No submitted reports
-  reportingPeriod: Reporting period
-  dateSubmitted: Date submitted
-
-# PA Notes section
-notes:
-  heading: Notes
-  noNotes: No notes
-  note: Note
-  category: Category
-  addedBy: Added by
-  dateAdded: Date added
-  addNote: Add note
-  editNote: Edit
