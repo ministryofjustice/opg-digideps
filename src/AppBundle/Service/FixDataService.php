@@ -105,21 +105,30 @@ class FixDataService
         /** @var Report $report */
         foreach ($reports as $report) {
             try {
-                if ($report->has106Flag()) {
-                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
-                        $report->getEndDate()->format('d-M-Y');
+                $client = $report->getClient();
+                if (!$client) {
+                    throw new \RuntimeException("no client found");
+                }
+                $user = $client->getUsers()->first();
+                if (!$user) {
+                    throw new \RuntimeException("no user found");
+                }
 
-                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
-                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
+                if ($user->isPaDeputy()) {
+                    $this->messages[] = "Report {$report->getId()}: already executed on 14/6/2017";
+//                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+//                        $report->getEndDate()->format('d-M-Y');
 
-                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
-                        $oldPeriod . ' TO ' .
-                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
-                        $report->getEndDate()->format('d-M-Y');
+//                    $report->setStartDate($report->getStartDate()->add(new \DateInterval('P56D')));
+//                    $report->setEndDate($report->getEndDate()->add(new \DateInterval('P56D')));
 
+//                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
+//                        $oldPeriod . ' TO ' .
+//                        $report->getStartDate()->format('d-M-Y') . ' --> ' .
+//                        $report->getEndDate()->format('d-M-Y');
+//                    $this->totalProcessed++;
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
-                    $this->totalProcessed++;
                 }
 
             } catch (\Exception $e) {
@@ -144,18 +153,28 @@ class FixDataService
         foreach ($reports as $report) {
             $reportId = $report->getId();
             try {
-                if ($report->getSubmittedBy()) {
-                    throw new \RuntimeException("submittedBy alreay set.skipped");
+                // fix reports submitted, and without a submittedBy
+                if ($report->getSubmitted()) {
+                    if (!$report->getSubmittedBy()) {
+                        if (!$report->getClient()) {
+                            throw new \RuntimeException("no client found");
+                        }
+                        $users = $report->getClient()->getUsers();
+                        $user = $users->first();
+                        if (!$user) {
+                            throw new \RuntimeException("no user. skipped"); // should never happen, but live data not available for testing atm
+                        }
+
+                        $report->setSubmittedBy($user);
+                        $this->messages[] = "Report $reportId : set correctly among the " . count($users) . " user(s)";
+                    }
+                } else {
+                    if ($report->getSubmittedBy()) {
+                        $report->setSubmittedBy(null);// fix previous migration on staging that acted on all the reports
+                        $this->messages[] = "Report $reportId : not submitted. setSubmittedBy set to null";
+                    }
                 }
 
-                $users = $report->getClient()->getUsers();
-                $user = $users->first();
-                if (!$user) {
-                    throw new \RuntimeException("no user. skipped"); // should never happen, but live data not available for testing atm
-                }
-
-                $report->setSubmittedBy($user);
-                $this->messages[] = "Report $reportId : user set correctly among the " . count($users) . " user(s)";
             } catch (\Exception $e) {
                 $this->messages[] = "Report $reportId: " . $e->getMessage();
             }

@@ -52,7 +52,7 @@ class Report
     /**
      * @var int
      *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-id"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
