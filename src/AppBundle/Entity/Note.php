@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -75,21 +74,21 @@ class Note
     private $content;
 
     /**
-     * @var int
+     * @var  Client
      *
-     * @JMS\Type("AppBundle\Entity\Report")
+     * @JMS\Type("AppBundle\Entity\Client")
      */
-    private $report;
+    private $client;
 
     /**
      * Constructor.
      */
-    public function __construct(Report $report, $category = '', $title = '', $content = '')
+    public function __construct(Client $client, $category = '', $title = '', $content = '')
     {
         $this->setCategory($category);
         $this->setTitle($title);
         $this->setContent($content);
-        $this->setReport($report);
+        $this->setClient($client);
     }
 
     /**
@@ -169,21 +168,21 @@ class Note
     }
 
     /**
-     * @return int
+     * @return Client
      */
-    public function getReport()
+    public function getClient()
     {
-        return $this->report;
+        return $this->client;
     }
 
     /**
-     * @param Report $report
+     * @param Client $client
      *
      * @return $this
      */
-    public function setReport(Report $report)
+    public function setClient(Client $client)
     {
-        $this->report = $report;
+        $this->client = $client;
         return $this;
     }
 }

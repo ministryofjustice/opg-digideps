@@ -269,7 +269,7 @@
     </div>
 
     {% include 'AppBundle:Pa/ClientProfile:_notes.html.twig' with {
-    notes: report.notes,
+    notes: report.client.notes,
     } %}
 
     {% include 'AppBundle:Pa/ClientProfile:_reports.html.twig' with {

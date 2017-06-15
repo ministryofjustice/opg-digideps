@@ -240,14 +240,6 @@ class Report
     private $status;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
-     * @JMS\Groups({"notes"})
-     */
-    private $notes;
-
-    /**
      * @return int $id
      */
     public function getId()
@@ -856,21 +848,5 @@ class Report
     public function setStatus($status)
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
-     * @param ArrayCollection $notes
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
     }
 }

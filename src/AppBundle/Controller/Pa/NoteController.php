@@ -26,7 +26,7 @@ class NoteController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $note = new EntityDir\Note($report);
+        $note = new EntityDir\Note($report->getClient());
         $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
         $form = $this->createForm(

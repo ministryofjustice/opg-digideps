@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -168,6 +169,14 @@ class Client
      * @var DateTime
      */
     private $dateOfBirth;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
+     * @JMS\Groups({"notes"})
+     */
+    private $notes;
 
     public function __construct()
     {
@@ -599,5 +608,21 @@ class Client
         }
         $to = new DateTime('today');
         return $this->dateOfBirth->diff($to)->y;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param ArrayCollection $notes
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
     }
 }
