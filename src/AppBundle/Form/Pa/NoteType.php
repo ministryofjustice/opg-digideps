@@ -45,6 +45,7 @@ class NoteType extends AbstractType
      */
     private $content;
 
+    // TODO remove 2nd param. no need to have entity vars here
     public function __construct(TranslatorInterface $translator, NoteEntity $note)
     {
         /** @var \Translator translator */
