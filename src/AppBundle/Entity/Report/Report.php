@@ -207,15 +207,6 @@ class Report
     private $metadata;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
-     * @JMS\Groups({"notes"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="report", cascade={"persist"})
-     */
-    private $notes;
-
-    /**
      * Report constructor.
      * @param Client $client
      */
@@ -237,7 +228,6 @@ class Report
         $this->reportSeen = true;
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
-        $this->notes = new ArrayCollection();
     }
 
     /**
@@ -590,26 +580,6 @@ class Report
     public function setMetadata($metadata)
     {
         $this->metadata = $metadata;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    /**
-     * @param $notes
-     *
-     * @return $this
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
     }
 
     /**

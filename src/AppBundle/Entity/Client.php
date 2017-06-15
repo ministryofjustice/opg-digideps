@@ -184,12 +184,22 @@ class Client
     private $dateOfBirth;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
+     * @JMS\Groups({"notes"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist"})
+     */
+    private $notes;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     /**
@@ -689,6 +699,26 @@ class Client
     public function setDateOfBirth(\DateTime $dateOfBirth = null)
     {
         $this->dateOfBirth = $dateOfBirth;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param $notes
+     *
+     * @return $this
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
 
         return $this;
     }

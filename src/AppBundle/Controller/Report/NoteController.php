@@ -29,7 +29,7 @@ class NoteController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $note = new EntityDir\Note($report, $data['category'], $data['title'], $data['content']);
+        $note = new EntityDir\Note($report->getClient(), $data['category'], $data['title'], $data['content']);
 
         $note->setCreatedBy($this->getUser());
 

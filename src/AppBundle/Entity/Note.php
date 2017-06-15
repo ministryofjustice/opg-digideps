@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use AppBundle\Entity\Traits\ModifyAudit;
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="note",
  *     indexes={
- *     @ORM\Index(name="ix_note_report_id", columns={"report_id"}),
+ *     @ORM\Index(name="ix_note_client_id", columns={"client_id"}),
  *     @ORM\Index(name="ix_note_created_by", columns={"created_by"}),
  *     @ORM\Index(name="ix_note_last_modified_by", columns={"last_modified_by"})
  *     })
@@ -88,22 +88,22 @@ class Note
     private $content;
 
     /**
-     * @var int
+     * @var Client
      *
-     * @JMS\Type("AppBundle\Entity\Report")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="notes")
+     * @JMS\Type("AppBundle\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="notes")
      */
-    private $report;
+    private $client;
 
     /**
      * Constructor.
      */
-    public function __construct(Report $report, $category, $title, $content)
+    public function __construct(Client $client, $category, $title, $content)
     {
         $this->setCategory($category);
         $this->setTitle($title);
         $this->setContent($content);
-        $this->setReport($report);
+        $this->setClient($client);
     }
 
     /**
@@ -183,21 +183,21 @@ class Note
     }
 
     /**
-     * @return int
+     * @return Client
      */
-    public function getReport()
+    public function getClient()
     {
-        return $this->report;
+        return $this->client;
     }
 
     /**
-     * @param Report $report
+     * @param Client $client
      *
      * @return $this
      */
-    public function setReport(Report $report)
+    public function setClient(Client $client)
     {
-        $this->report = $report;
+        $this->client = $client;
         return $this;
     }
 }
