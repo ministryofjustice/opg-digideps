@@ -1,0 +1,53 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "pa-client-edit" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">
+        {{ 'supportTitle' | trans({'%fullName%': client.fullname | title }) }}
+    </span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(client.currentReport) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    <fieldset>
+        <legend class="visuallyhidden">{{ 'form.nameHeading' | trans }}</legend>
+        {{ form_input(form.firstname, 'form.firstname') }}
+        {{ form_input(form.lastname, 'form.lastname') }}
+    </fieldset>
+
+    {{ form_known_date(form.dateOfBirth, 'form.dateOfBirth') }}
+
+    <fieldset>
+        <legend class="heading-medium">{{ 'form.contactHeading' | trans }}</legend>
+        {{ form_input(form.phone, 'form.phone') }}
+        {{ form_input(form.email, 'form.email') }}
+
+        {{ form_input(form.address, 'form.address') }}
+        {{ form_input(form.address2, 'form.address2') }}
+        {{ form_input(form.county, 'form.county') }}
+        {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control__postcode' }) }}
+        {{ form_widget(form.id) }}
+        {#{{ form_select(form.country, 'country') }}#}
+    </fieldset>
+
+    {{ form_submit(form.save, 'form.save') }}
+
+    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

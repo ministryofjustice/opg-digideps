@@ -9,14 +9,11 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(methods={"isValidCourtDate"})
- */
 class Client
 {
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
 
      * @var int
      */
@@ -24,14 +21,27 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.firstname.notBlank" )
-     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
+     * Lay + PA
+     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
     private $firstname;
+
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"edit", "pa-edit"})
+     *
+     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "pa-client"})
+     *
+     * @var string
+     */
+    private $lastname;
 
     /**
      * @JMS\Type("array")
@@ -48,22 +58,19 @@ class Client
     private $reports;
 
     /**
+     * @JMS\Type("AppBundle\Entity\Report\Report")
+     *
+     * @var Report
+     */
+    private $currentReport;
+
+    /**
      * @var Odr\Odr
      *
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
      */
     private $odr;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
-     *
-     * @Assert\NotBlank( message="client.lastname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
-     *
-     * @var string
-     */
-    private $lastname;
 
     /**
      * @JMS\Exclude()
@@ -76,9 +83,9 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit"})
      *
-     * @Assert\NotBlank( message="client.caseNumber.notBlank")
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1")
-     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2")
+     * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client"})
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1", groups={"lay-deputy-client"})
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2", groups={"lay-deputy-client"})
      *
      * @var string
      */
@@ -89,19 +96,20 @@ class Client
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"edit"})
      *
-     * @Assert\NotBlank( message="client.courtDate.notBlank")
-     * @Assert\Date( message="client.courtDate.message")
+     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
+     * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client"})
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
      *
-     * @var array
+     * @var DateTime
      */
     private $courtDate;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.address.notBlank")
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
+     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -109,9 +117,9 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -119,9 +127,9 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.county.maxMessage")
+     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -129,10 +137,10 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.postcode.notBlank")
-     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
+     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client"})
+     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -148,9 +156,9 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -158,6 +166,10 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"pa-edit"})
+     *
+     * @Assert\Email( message="client.email.invalid", checkMX=false, checkHost=false, groups={"pa-client"})
+     * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
      *
      * @var string
      */
@@ -165,6 +177,9 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"pa-edit"})
+     *
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
      *
      * @var DateTime
      */
@@ -252,6 +267,23 @@ class Client
     }
 
     /**
+     * @return Report
+     */
+    public function getCurrentReport()
+    {
+        return $this->currentReport;
+    }
+
+    /**
+     * @param Report $currentReport
+     */
+    public function setCurrentReport($currentReport)
+    {
+        $this->currentReport = $currentReport;
+    }
+
+
+    /**
      * @return Odr\Odr
      */
     public function getOdr()
@@ -314,15 +346,6 @@ class Client
     {
         $this->courtDate = ($courtDate instanceof DateTime) ?
                 new DateTime($courtDate->format('Y-m-d')) : null;
-    }
-
-    public function isValidCourtDate(ExecutionContextInterface $context)
-    {
-        $today = new DateTime();
-
-        if ($this->courtDate > $today) {
-            $context->addViolationAt('courtDate', 'Court Date cannot be in the future');
-        }
     }
 
     /**
