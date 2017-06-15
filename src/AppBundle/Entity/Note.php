@@ -90,6 +90,8 @@ class Note
     /**
      * @var Client
      *
+     *  @JMS\Groups({"report-client"})
+     *
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="notes")
      */
