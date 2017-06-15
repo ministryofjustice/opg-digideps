@@ -18,7 +18,7 @@ class Version136 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE note (id SERIAL NOT NULL, client_id INT DEFAULT NULL, created_by INT DEFAULT NULL, last_modified_by INT DEFAULT NULL, category VARCHAR(100) NOT NULL, title VARCHAR(150) NOT NULL, content TEXT NOT NULL, created_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, last_modified_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE note (id SERIAL NOT NULL, client_id INT DEFAULT NULL, created_by INT DEFAULT NULL, last_modified_by INT DEFAULT NULL, category VARCHAR(100) DEFAULT NULL, title VARCHAR(150) NOT NULL, content TEXT DEFAULT NULL, created_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, last_modified_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX ix_note_client_id ON note (client_id)');
         $this->addSql('CREATE INDEX ix_note_created_by ON note (created_by)');
         $this->addSql('CREATE INDEX ix_note_last_modified_by ON note (last_modified_by)');
