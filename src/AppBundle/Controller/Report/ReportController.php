@@ -151,7 +151,7 @@ class ReportController extends AbstractController
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
         $template = $report->getHas106flag()
-            ? 'AppBundle:Report/Report/Pa:overview.html.twig'
+            ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
         return $this->render($template, [
