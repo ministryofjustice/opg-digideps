@@ -2,15 +2,15 @@
 {% trans_default_domain translationDomain %}
 {% set page = "clientNotes" %}
 
-<details class="panel panel-admin hard">
+<details class="panel panel-admin hard behat-region-client-profile-notes">
 
     <summary class="panel-heading flush--bottom">
-        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+        <a class="summary heading-medium client-profile-notes-toggle">{{ (page ~ '.heading') | trans }}</a>
     </summary>
 
-    <div class="panel-body soft-half behat-region-client-profile-notes">
+    <div class="panel-body soft-half">
 
-        <a href="{{ path('add_note', {'reportId': report.id}) }}" class="bold-small action-link right">
+        <a href="{{ path('add_note', {'reportId': report.id}) }}" class="bold-small action-link right add-notes-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addNote') | trans }}
         </a>
@@ -33,7 +33,7 @@
                             {% if note.content %}
                                 <details>
                                     <summary>
-                                        <span class="summary">{{ note.title }}</span>
+                                        <a class="summary note-title-expand">{{ note.title }}</a>
                                     </summary>
                                     <div class="panel panel-border-narrow">
                                         {{ note.content }}

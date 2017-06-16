@@ -60,7 +60,8 @@ class Note
      * @JMS\Groups({"add_note"})
      *
      * @Assert\NotBlank( message="note.form.title.notBlank", groups={"add_note", "edit_note"})
-     *
+     * @Assert\Length(max=150, maxMessage="note.form.title.maxLength",
+     *     groups={"add_note", "edit_note"} )
      */
     private $title;
 
