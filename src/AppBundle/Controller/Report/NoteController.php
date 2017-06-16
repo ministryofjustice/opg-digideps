@@ -58,7 +58,7 @@ class NoteController extends RestController
         );
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['notes'];
+            ? (array) $request->query->get('groups') : ['notes', 'user'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */

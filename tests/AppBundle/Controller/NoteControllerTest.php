@@ -101,6 +101,7 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('cat', $data['category']);
         $this->assertEquals('title', $data['title']);
         $this->assertEquals('content', $data['content']);
+        $this->assertEquals(self::$pa1->getId(), $data['created_by']['id']);
         $this->assertEquals(true, time() - strtotime($data['created_on']) < 3600);
 
     }
