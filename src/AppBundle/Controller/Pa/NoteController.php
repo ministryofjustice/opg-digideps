@@ -61,7 +61,11 @@ class NoteController extends AbstractController
      */
     public function editAction(Request $request, $noteId)
     {
-        $note = $this->getRestClient()->get('note/' . $noteId, 'Note');
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note'); /* @var $note EntityDir\Note*/
+        // hack check
+        if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
+            throw $this->createAccessDeniedException('Cannot edit notes creaed by others');
+        }
 
         //TMP: remove when the new client profile page uses clientId
         $report = $this->getReportIfNotSubmitted($request->get('reportId'), self::$jmsGroups);
