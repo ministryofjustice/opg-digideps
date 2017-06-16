@@ -16,6 +16,7 @@ class NoteController extends RestController
      */
     public function add(Request $request, $clientId)
     {
+        // checks
         $this->denyAccessUnlessGranted(
             [
                 EntityDir\User::ROLE_PA,
@@ -23,22 +24,17 @@ class NoteController extends RestController
                 EntityDir\User::ROLE_PA_TEAM_MEMBER
             ]
         );
-
-        $data = $this->deserializeBodyContent($request, ['title' => 'mustExist']);
-
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $this->validateArray($data, [
-            'category' => 'notEmpty',
+        // hydrate and persist
+        $data = $this->deserializeBodyContent($request, [
             'title' => 'notEmpty',
-            'content' => 'notEmpty',
+            'category' => 'mustExist',
+            'content' => 'mustExist',
         ]);
-
         $note = new EntityDir\Note($client, $data['category'], $data['title'], $data['content']);
-
         $note->setCreatedBy($this->getUser());
-
         $this->persistAndFlush($note);
 
         return ['id' => $note->getId()];
