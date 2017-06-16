@@ -36,8 +36,7 @@ class NoteController extends AbstractController
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
-                $this->get('translator'),
-                $note
+                $this->get('translator')
             ),
             $note
         );
@@ -78,8 +77,7 @@ class NoteController extends AbstractController
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
-                $this->get('translator'),
-                $note
+                $this->get('translator')
             ),
             $note
         );
