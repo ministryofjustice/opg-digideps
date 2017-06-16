@@ -24,8 +24,8 @@ class NoteControllerTest extends AbstractTestController
     private static $pa1Client1;
     private static $pa1Client1Note1;
     private static $pa1Client2;
-    private static $pa2Admin;
-    private static $pa2Client1;
+    private static $pa3Admin;
+    private static $pa3Client1;
 
 
     public static function setUpBeforeClass()
@@ -42,9 +42,9 @@ class NoteControllerTest extends AbstractTestController
         self::$pa1Client1Note1 = new Note(self::$pa1Client1, 'cat', 'title', 'content');
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2']);
 
-        // pa 2 (other team)
-        self::$pa2Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
-        self::$pa2Client1 = self::fixtures()->createClient(self::$pa2Admin, ['setFirstname' => 'pa2Client1']);
+        // pa 3 (other team)
+        self::$pa3Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
+        self::$pa3Client1 = self::fixtures()->createClient(self::$pa3Admin, ['setFirstname' => 'pa2Client1']);
 
         self::fixtures()->persist(self::$pa1Client1Note1)->flush()->clear();
     }
@@ -127,6 +127,18 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('title-edited', $data['title']);
         $this->assertEquals('content-edited', $data['content']);
         $this->assertEquals(true, -time() - strtotime($data['created_on']) < 3600);
+
+        //assert cannot change others' notes
+        // assert PUT
+        $data = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => false,
+            'AuthToken'   => self::$tokenPaAdmin,
+            'data'        => [
+                'category'     => 'cat-edited2',
+                'title'   => 'title-edited2',
+                'content' => 'content-edited2',
+            ],
+        ])['data'];
     }
 
 }
