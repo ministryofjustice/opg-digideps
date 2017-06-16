@@ -70,16 +70,9 @@ class NoteControllerTest extends AbstractTestController
         }
     }
 
-
-    public function testgetOneByIdAuthAndAcl()
+    public function testAdd()
     {
-        $url = '/note/' . self::$pa1Client1Note1->getId();
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-
-        // PA not in the team
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenPaAdmin);
+        $this->markTestIncomplete('needs endpoint to rely on client Id first');
     }
 
 
@@ -87,17 +80,53 @@ class NoteControllerTest extends AbstractTestController
     {
         $url = '/note/' . self::$pa1Client1Note1->getId();
 
+        // assert Auth
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+        // assert ACL
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenPaAdmin);
+
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenPa,
+            'AuthToken'   => self::$tokenPa,
         ])['data'];
 
         $this->assertEquals(self::$pa1Client1Note1->getId(), $data['id']);
         $this->assertEquals('cat', $data['category']);
         $this->assertEquals('title', $data['title']);
         $this->assertEquals('content', $data['content']);
-        $this->assertEquals(true, - time() - strtotime($data['created_on']) < 3600 );
+        // TODO check created_by, using ID created from add test
+        //$this->assertEquals(self::$pa1->getId(), $data['created_by']['id']);
+        $this->assertEquals(true, -time() - strtotime($data['created_on']) < 3600);
     }
-    
+
+    public function testupdateNote()
+    {
+        $url = '/note/' . self::$pa1Client1Note1->getId();
+
+        // assert Auth
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+        // assert ACL
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPaAdmin);
+
+        // assert get
+        $data = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenPa,
+            'data'        => [
+                'category'     => 'cat-edited',
+                'title'   => 'title-edited',
+                'content' => 'content-edited',
+            ],
+        ])['data'];
+
+        $this->assertEquals(self::$pa1Client1Note1->getId(), $data['id']);
+        $this->assertEquals('cat-edited', $data['category']);
+        $this->assertEquals('title-edited', $data['title']);
+        $this->assertEquals('content-edited', $data['content']);
+        $this->assertEquals(true, -time() - strtotime($data['created_on']) < 3600);
+    }
+
 }
