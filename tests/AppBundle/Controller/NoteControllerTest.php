@@ -13,7 +13,8 @@ class NoteControllerTest extends AbstractTestController
     private static $tokenDeputy;
     private static $tokenAdmin;
     private static $tokenPa;
-    private static $tokenPaAdmin;
+    private static $tokenPa2;
+    private static $tokenPa3;
 
     // lay
     private static $deputy1;
@@ -24,7 +25,8 @@ class NoteControllerTest extends AbstractTestController
     private static $pa1Client1;
     private static $pa1Client1Note1;
     private static $pa1Client2;
-    private static $pa3Admin;
+    private static $pa2;
+    private static $pa3;
     private static $pa3Client1;
 
 
@@ -39,14 +41,16 @@ class NoteControllerTest extends AbstractTestController
         // pa 1
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1']);
-        self::$pa1Client1Note1 = new Note(self::$pa1Client1, 'cat', 'title', 'content');
+        self::$pa1Client1Note1 = self::fixtures()->createNote(self::$pa1Client1, self::$pa1, 'cat', 'title', 'content');
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2']);
+        // pa2 (same team as pa1)
+        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org')->addClient(self::$pa1Client1);
 
-        // pa 3 (other team)
-        self::$pa3Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
-        self::$pa3Client1 = self::fixtures()->createClient(self::$pa3Admin, ['setFirstname' => 'pa2Client1']);
+        // pa 3 with other client (other team)
+        self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
+        self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
-        self::fixtures()->persist(self::$pa1Client1Note1)->flush()->clear();
+        self::fixtures()->flush()->clear();
     }
 
     /**
@@ -66,7 +70,8 @@ class NoteControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenPa = $this->loginAsPa();
-            self::$tokenPaAdmin = $this->loginAsPaAdmin();
+            self::$tokenPa2 = $this->loginAsPaAdmin();
+            self::$tokenPa3 = $this->loginAsPaTeamMember();
         }
     }
 
@@ -80,11 +85,11 @@ class NoteControllerTest extends AbstractTestController
     {
         $url = '/note/' . self::$pa1Client1Note1->getId();
 
-        // assert Auth
+        // assert Auth and ACL
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-        // assert ACL
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenPaAdmin);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPa2);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenPa3);
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -96,9 +101,8 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('cat', $data['category']);
         $this->assertEquals('title', $data['title']);
         $this->assertEquals('content', $data['content']);
-        // TODO check created_by, using ID created from add test
-        //$this->assertEquals(self::$pa1->getId(), $data['created_by']['id']);
-        $this->assertEquals(true, -time() - strtotime($data['created_on']) < 3600);
+        $this->assertEquals(true, time() - strtotime($data['created_on']) < 3600);
+
     }
 
     public function testupdateNote()
@@ -108,8 +112,8 @@ class NoteControllerTest extends AbstractTestController
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-        // assert ACL
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPaAdmin);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPa2);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPa3);
 
         // assert PUT
         $data = $this->assertJsonRequest('PUT', $url, [
@@ -126,13 +130,13 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('cat-edited', $data['category']);
         $this->assertEquals('title-edited', $data['title']);
         $this->assertEquals('content-edited', $data['content']);
-        $this->assertEquals(true, -time() - strtotime($data['created_on']) < 3600);
+        $this->assertEquals(true, time() - strtotime($data['created_on']) < 3600);
 
         //assert cannot change others' notes
         // assert PUT
         $data = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
-            'AuthToken'   => self::$tokenPaAdmin,
+            'AuthToken'   => self::$tokenPa2,
             'data'        => [
                 'category'     => 'cat-edited2',
                 'title'   => 'title-edited2',

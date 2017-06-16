@@ -316,6 +316,20 @@ class Fixtures
         return $decision;
     }
 
+
+    /**
+     * @return EntityDir\Note
+     */
+    public function createNote(EntityDir\Client $client, EntityDir\User $createdBy, $cat, $title, $content)
+    {
+        $note = new EntityDir\Note($client, $cat, $title, $content);
+        $note->setCreatedBy($createdBy);
+
+        $this->em->persist($note);
+
+        return $note;
+    }
+
     public function flush()
     {
         $args = func_get_args();

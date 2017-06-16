@@ -39,6 +39,11 @@ class NoteController extends RestController
     }
 
     /**
+     * GET note by id
+     *
+     * User that created the note is not returned as default, as not currently needed from the CLIENT.
+     * Add "user" group if needed
+     *
      * @Route("/note/{id}")
      * @Method({"GET"})
      */
@@ -63,6 +68,9 @@ class NoteController extends RestController
     }
 
     /**
+     * Update note
+     * Only the creator can update the note
+     *
      * @Route("/note/{id}")
      * @Method({"PUT"})
      */
@@ -77,7 +85,11 @@ class NoteController extends RestController
         );
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
-        $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
+        if ($note->getCreatedBy()->getId() !== $this->getUser()->getId()) {
+            throw $this->createAccessDeniedException('Cannot edit note created by other users');
+        }
+        // enable if the check above is removed and the note is available for editing for the whole team
+        //$this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
         $data = $this->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($note, $data, [
