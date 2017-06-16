@@ -19,8 +19,7 @@ class ClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstname', 'text')
-                 ->add('lastname', 'text')
+        $builder
                 ->add('dateOfBirth', 'date', ['widget' => 'text',
                         'input' => 'datetime',
                         'format' => 'dd-MM-yyyy',
@@ -39,14 +38,6 @@ class ClientType extends AbstractType
                 ->add('phone', 'text')
                 ->add('id', 'hidden')
                 ->add('save', 'submit');
-
-        // strip tags to prevent XSS as the name is often displayed around mixed with translation with the twig "raw" filter
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-            $data['firstname'] = strip_tags($data['firstname']);
-            $data['lastname'] = strip_tags($data['lastname']);
-            $event->setData($data);
-        });
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
