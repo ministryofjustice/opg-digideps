@@ -98,6 +98,8 @@ class NoteController extends RestController
             'content' => 'setContent',
         ]);
 
+        $note->setLastModifiedBy($this->getUser());
+
         $this->getEntityManager()->flush($note);
 
         return $note;
