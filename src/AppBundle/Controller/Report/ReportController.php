@@ -146,12 +146,12 @@ class ReportController extends AbstractController
     {
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user']);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
         $template = $report->getHas106flag()
-            ? 'AppBundle:Report/Report/Pa:overview.html.twig'
+            ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
         return $this->render($template, [

@@ -1,0 +1,67 @@
+{% set translationDomain = "client-profile" %}
+{% trans_default_domain translationDomain %}
+{% set page = "clientNotes" %}
+
+<details class="panel panel-admin hard behat-region-client-profile-notes">
+
+    <summary class="panel-heading flush--bottom">
+        <a class="summary heading-medium client-profile-notes-toggle">{{ (page ~ '.heading') | trans }}</a>
+    </summary>
+
+    <div class="panel-body soft-half">
+
+        <a href="{{ path('add_note', {'clientId': report.client.id}) }}" class="bold-small action-link right add-notes-button">
+            <span class="icon icon-plus"></span>
+            {{ (page ~ '.addNote') | trans }}
+        </a>
+
+        {% if notes is not empty %}
+
+            <table>
+                <thead>
+                    <th>{{ (page ~ '.note') | trans }}</th>
+                    <th>{{ (page ~ '.category') | trans }}</th>
+                    <th>{{ (page ~ '.addedBy') | trans }}</th>
+                    <th>{{ (page ~ '.dateAdded') | trans }}</th>
+                    <th></th>
+                </thead>
+
+                <tbody>
+                {% for note in notes %}
+                    <tr>
+                        <td class="width-half">
+                            {% if note.content %}
+                                <details>
+                                    <summary>
+                                        <a class="summary note-title-expand">{{ note.title }}</a>
+                                    </summary>
+                                    <div class="panel panel-border-narrow">
+                                        {{ note.content }}
+                                    </div>
+                                </details>
+                            {% else %}
+                                <p>{{ note.title }}</p>
+                            {% endif %}
+                        </td>
+                        <td class="width-eighth">{{ note.category }}</td>
+                        <td class="width-eighth">
+                            <span title="{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</span>
+                        </td>
+                        <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
+                        <td class="width-eighth text--right hard--right">
+                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>{{ (page ~ '.noNotes') | trans }}</p>
+
+        {% endif %}
+    </div>
+
+</details>

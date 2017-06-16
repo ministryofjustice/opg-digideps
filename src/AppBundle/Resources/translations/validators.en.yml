@@ -542,6 +542,11 @@ odr:
       notBlank: Choose yes or no
     actionMoreInfoDetails:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
+note:
+  form:
+    title:
+      notBlank: Please enter a title
+      maxLength: The title can't be longer than {{ limit }} letters
 
     #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
 

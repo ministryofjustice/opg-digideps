@@ -1,0 +1,7 @@
+{% set translationDomain = "client-profile" %}
+{% trans_default_domain translationDomain %}
+
+<h1 class="heading-large flush--bottom behat-region-report-title">
+    {{ 'pageTitle' | trans }} {{ report.client.fullname | title }}
+</h1>
+<p class="bold">{{ 'courtOrderNo' | trans() }} {{ report.client.caseNumber }}</p>

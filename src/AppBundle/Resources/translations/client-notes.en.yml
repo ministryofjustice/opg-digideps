@@ -1,0 +1,32 @@
+addNotes:
+  htmlTitle: Client profile - add note | GOV.UK
+  pageTitle: Add note
+  supportTitle: "Client profile: %clientName%"
+editPage:
+  htmlTitle: Client profile - edit note | GOV.UK
+  h1Title: Edit note
+  supportTitle: "Client profile: %clientName%"
+removePage:
+  htmlTitle: Client profile - remove note | GOV.UK
+  h1Title: Remove note
+  supportTitle: "Client profile: %clientName%"
+  question: Are you sure you want to remove the note entitled <strong class="bold">%note_title%</strong> from this report?
+
+form:
+  category:
+    label: Category (optional)
+    entries:
+      undefined: undefined
+      todo: To Do
+      dwp: DWP
+      opg: OPG
+      welfare: Welfare
+      bank: Bank
+      report: Report
+      other: Other
+  title:
+    label: Title
+  content:
+    label: Description (optional)
+  save:
+    label: Save
