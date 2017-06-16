@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
@@ -149,8 +148,6 @@ class Report
      */
     private $lastedit;
 
-
-
     /**
      * @var bool whether the report is submitted or not
      *
@@ -179,7 +176,6 @@ class Report
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
     private $reportSeen;
-
 
     /**
      * @var string only_deputy|more_deputies_behalf|more_deputies_not_behalf
@@ -403,7 +399,6 @@ class Report
 
         return $this;
     }
-
 
     /**
      * Set client.
