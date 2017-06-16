@@ -44,7 +44,9 @@
                             {% endif %}
                         </td>
                         <td class="width-eighth">{{ note.category }}</td>
-                        <td class="width-eighth">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</td>
+                        <td class="width-eighth">
+                            <span title="{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</span>
+                        </td>
                         <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
                         <td class="width-eighth text--right hard--right">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ (page ~ '.editNote') | trans }}</a>
