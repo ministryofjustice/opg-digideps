@@ -19,14 +19,19 @@ class NoteController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/note", name="add_note")
+     * @Route("/note/add", name="add_note")
      * @Template()
      */
-    public function addAction(Request $request, $reportId)
+    public function addAction(Request $request)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $clientId = $request->get('clientId');
 
-        $note = new EntityDir\Note($report->getClient());
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+
+        $report = $client->getCurrentReport();
+
+        $note = new EntityDir\Note($client);
         $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
         $form = $this->createForm(
@@ -46,11 +51,12 @@ class NoteController extends AbstractController
             $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
         }
 
         return $this->render($template, [
             'form'  => $form->createView(),
+            'client' => $client,
             'report' => $report,
         ]);
     }
