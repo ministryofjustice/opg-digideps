@@ -60,4 +60,49 @@ class NoteController extends AbstractController
             'report' => $report,
         ]);
     }
+
+    /**
+     * @Route("/note/{noteId}/edit", name="edit_note")
+     * @Template("AppBundle:Pa/ClientProfile:editNote.html.twig")
+     */
+    public function editAction(Request $request, $noteId)
+    {
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note'); /* @var $note EntityDir\Note*/
+        // hack check
+        if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
+            throw $this->createAccessDeniedException('Cannot edit notes creaed by others');
+        }
+
+        //TMP: remove when the new client profile page uses clientId
+        $report = $this->getReportIfNotSubmitted($request->get('reportId'), self::$jmsGroups);
+
+        $form = $this->createForm(
+            new FormDir\Pa\NoteType(
+                $this->get('translator'),
+                $note
+            ),
+            $note
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $note = $form->getData();
+
+            $this->getRestClient()->put('note/' . $noteId, $note, ['add_note']);
+            $request->getSession()->getFlashBag()->add('info', 'The note has been updated');
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'The note has been edited'
+            );
+
+            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+        }
+
+        return [
+            'report'  => $report,
+            'form'  => $form->createView(),
+        ];
+    }
 }

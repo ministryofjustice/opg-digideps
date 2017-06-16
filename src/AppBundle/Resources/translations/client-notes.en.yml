@@ -4,7 +4,7 @@ addNotes:
   supportTitle: "Client profile: %clientName%"
 editPage:
   htmlTitle: Client profile - edit note | GOV.UK
-  h1Title: Edit note
+  pageTitle: Edit note
   supportTitle: "Client profile: %clientName%"
 removePage:
   htmlTitle: Client profile - remove note | GOV.UK
