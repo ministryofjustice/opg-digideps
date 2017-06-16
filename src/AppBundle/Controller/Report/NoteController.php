@@ -11,10 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 class NoteController extends RestController
 {
     /**
-     * @Route("/report/{reportId}/note", requirements={"reportId":"\d+"})
+     * @Route("/report/{clientId}/note", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
-    public function add(Request $request, $reportId)
+    public function add(Request $request, $clientId)
     {
         $this->denyAccessUnlessGranted(
             [
@@ -26,10 +26,16 @@ class NoteController extends RestController
 
         $data = $this->deserializeBodyContent($request, ['title' => 'mustExist']);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
+        $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $note = new EntityDir\Note($report->getClient(), $data['category'], $data['title'], $data['content']);
+        $this->validateArray($data, [
+            'category' => 'notEmpty',
+            'title' => 'notEmpty',
+            'content' => 'notEmpty',
+        ]);
+
+        $note = new EntityDir\Note($client, $data['category'], $data['title'], $data['content']);
 
         $note->setCreatedBy($this->getUser());
 
