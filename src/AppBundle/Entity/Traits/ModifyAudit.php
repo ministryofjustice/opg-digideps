@@ -30,4 +30,42 @@ trait ModifyAudit
      * @Gedmo\Timestampable(on="update")
      */
     protected $lastModifiedOn;
+
+    /**
+     * @return \AppBundle\Entity\User
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * @param \AppBundle\Entity\User $lastModifiedBy
+     *
+     * @return $this
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastModifiedOn()
+    {
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * @param \DateTime $lastModifiedOn
+     *
+     * @return $this
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+        return $this;
+    }
 }
