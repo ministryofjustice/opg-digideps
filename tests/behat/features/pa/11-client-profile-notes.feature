@@ -43,3 +43,26 @@ Feature: PA client profile Notes
     And I click the ".note-title-expand" element
     Then each text should be present in the corresponding region:
       | test content | client-profile-notes |
+
+  Scenario: PA edit client notes
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000010" region
+    And I click the ".client-profile-notes-toggle" element
+    Then I click the ".edit-notes-button" element
+    Then the following fields should have the corresponding values:
+      | note_title          | test title  |
+      | note_content        | test content |
+      | note_category       | DWP |
+    Then I fill in the following:
+      | note_title          | test title edit |
+      | note_content        | test content edit |
+      | note_category       | OPG |
+    And I press "note_save"
+    Then the form should be valid
+    Then each text should be present in the corresponding region:
+      | OPG | client-profile-notes |
+      # Added By Initials
+      | JG | client-profile-notes |
+    And I click the ".note-title-expand" element
+    Then each text should be present in the corresponding region:
+      | test content edit | client-profile-notes |
