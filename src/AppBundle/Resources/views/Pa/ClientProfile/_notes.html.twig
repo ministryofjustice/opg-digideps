@@ -10,7 +10,7 @@
 
     <div class="panel-body soft-half">
 
-        <a href="{{ path('add_note', {'reportId': report.id}) }}" class="bold-small action-link right add-notes-button">
+        <a href="{{ path('add_note', {'clientId': report.client.id}) }}" class="bold-small action-link right add-notes-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addNote') | trans }}
         </a>
@@ -29,7 +29,7 @@
                 <tbody>
                 {% for note in notes %}
                     <tr>
-                        <td>
+                        <td class="width-half">
                             {% if note.content %}
                                 <details>
                                     <summary>
@@ -43,10 +43,12 @@
                                 <p>{{ note.title }}</p>
                             {% endif %}
                         </td>
-                        <td>{{ note.category }}</td>
-                        <td class="width-eighth">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</td>
+                        <td class="width-eighth">{{ note.category }}</td>
+                        <td class="width-eighth">
+                            <span title="{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</span>
+                        </td>
                         <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
-                        <td class="text--right hard--right">
+                        <td class="width-eighth  text--right hard--right">
                             {% if note.createdBy.id == app.user.id %}
                                 <a href="{{ path('edit_note', {'reportId': report.id, 'noteId': note.id}) }}" class="edit-notes-button">{{ (page ~ '.editNote') | trans }}</a>
                             {% endif %}
