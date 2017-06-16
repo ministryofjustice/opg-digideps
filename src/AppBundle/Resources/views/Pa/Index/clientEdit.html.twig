@@ -23,12 +23,6 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
-    <fieldset>
-        <legend class="visuallyhidden">{{ 'form.nameHeading' | trans }}</legend>
-        {{ form_input(form.firstname, 'form.firstname') }}
-        {{ form_input(form.lastname, 'form.lastname') }}
-    </fieldset>
-
     {{ form_known_date(form.dateOfBirth, 'form.dateOfBirth') }}
 
     <fieldset>
