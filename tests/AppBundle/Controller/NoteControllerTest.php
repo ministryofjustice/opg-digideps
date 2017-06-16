@@ -111,7 +111,7 @@ class NoteControllerTest extends AbstractTestController
         // assert ACL
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPaAdmin);
 
-        // assert get
+        // assert PUT
         $data = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenPa,
