@@ -8,7 +8,6 @@ Feature: PA client profile Notes
     Then each text should be present in the corresponding region:
       | No notes    | client-profile-notes |
 
-  @shaun
   Scenario: PA adds client notes
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
