@@ -82,8 +82,6 @@ class NoteController extends AbstractController
             $note = $form->getData();
 
             $this->getRestClient()->put('note/' . $noteId, $note, ['add_note']);
-            $request->getSession()->getFlashBag()->add('info', 'The note has been updated');
-
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'The note has been edited'
