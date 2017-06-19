@@ -20,7 +20,7 @@ class NoteController extends AbstractController
 
     /**
      * @Route("add", name="add_note")
-     * @Template()
+     * @Template("AppBundle:Pa/ClientProfile:addNote.html.twig")
      */
     public function addAction(Request $request)
     {
@@ -32,7 +32,6 @@ class NoteController extends AbstractController
         $report = $client->getCurrentReport();
 
         $note = new EntityDir\Note($client);
-        $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType($this->get('translator')),
@@ -50,11 +49,11 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
         }
 
-        return $this->render($template, [
+        return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-        ]);
+        ];
     }
 
     /**
