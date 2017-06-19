@@ -4,10 +4,7 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,16 +35,13 @@ class NoteController extends AbstractController
         $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType(
-                $this->get('translator')
-            ),
+            new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $note = $form->getData();
 
             $this->getRestClient()->post('report/' . $client->getId() . '/note', $note, ['add_note']);
@@ -79,9 +73,7 @@ class NoteController extends AbstractController
         $report = $this->getReportIfNotSubmitted($request->get('reportId'), self::$jmsGroups);
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType(
-                $this->get('translator')
-            ),
+            new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
 
