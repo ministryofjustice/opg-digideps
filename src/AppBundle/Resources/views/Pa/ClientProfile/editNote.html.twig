@@ -27,6 +27,8 @@
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 
+    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
     {{ form_end(form) }}
 
 {% endblock %}
