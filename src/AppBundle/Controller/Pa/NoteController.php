@@ -72,7 +72,7 @@ class NoteController extends AbstractController
         $note = $this->getRestClient()->get('note/' . $noteId, 'Note'); /* @var $note EntityDir\Note*/
         // hack check
         if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
-            throw $this->createAccessDeniedException('Cannot edit notes creaed by others');
+            throw $this->createAccessDeniedException('Cannot edit notes created by others');
         }
 
         //TMP: remove when the new client profile page uses clientId
