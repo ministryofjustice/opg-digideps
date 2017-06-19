@@ -42,7 +42,6 @@ class FormFieldsExtension extends \Twig_Extension
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_sort_code' => new \Twig_Function_Method($this, 'renderFormSortCode'),
-            'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
             'form_checkbox' => new \Twig_Function_Method($this, 'renderCheckboxInput'),
         ];
@@ -337,26 +336,6 @@ class FormFieldsExtension extends \Twig_Extension
             'formErrorMessages' => $formErrorMessages,
             'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
         ]);
-
-        echo $html;
-    }
-
-    /**
-     * @param array $vars
-     *
-     * @throws type
-     */
-    public function renderFormCancelLink(array $vars = [])
-    {
-        $linkClass = isset($vars['linkClass']) ? $vars['linkClass'] : null;
-
-        if (!isset($vars['href'])) {
-            throw new \Exception("You must specify 'href' for cancel link");
-        }
-
-        $html = $this->environment->render('AppBundle:Components/Form:_cancel.html.twig', ['linkClass' => $linkClass,
-                                                                                            'href' => $vars['href'],
-                                                                                          ]);
 
         echo $html;
     }
