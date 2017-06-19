@@ -556,6 +556,7 @@ note:
 # ====================================================================================================
 
 common:
+  summaryHeading: There are some problems on this page
   genericPhone:
     minLength: Check the phone number: it must have at least {{ limit }} numbers
     maxLength: Check the phone number: it can't be more than {{ limit }} numbers long
