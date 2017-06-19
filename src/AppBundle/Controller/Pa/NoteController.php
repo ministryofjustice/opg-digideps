@@ -34,6 +34,8 @@ class NoteController extends AbstractController
         $note = new EntityDir\Note($client);
         $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
+        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+
         $form = $this->createForm(
             new FormDir\Pa\NoteType(
                 $this->get('translator'),
@@ -41,6 +43,7 @@ class NoteController extends AbstractController
             ),
             $note
         );
+
 
         $form->handleRequest($request);
 
@@ -58,6 +61,7 @@ class NoteController extends AbstractController
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
+            'backLink' => $returnLink,
         ]);
     }
 
