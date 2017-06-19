@@ -66,14 +66,15 @@ class NoteController extends AbstractController
      */
     public function editAction(Request $request, $noteId)
     {
-        $note = $this->getRestClient()->get('note/' . $noteId, 'Note'); /* @var $note EntityDir\Note*/
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'user']); /* @var $note EntityDir\Note*/
         // hack check
         if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
             throw $this->createAccessDeniedException('Cannot edit notes created by others');
         }
 
-        //TMP: remove when the new client profile page uses clientId
-        $report = $this->getReportIfNotSubmitted($request->get('reportId'), self::$jmsGroups);
+        //TODO remove when client is used instead of report
+        $report = $this->getRestClient()->get("report/".$request->get('reportId'), 'Report\\Report', ['report-id', 'client', 'report-106-flag']);
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType($this->get('translator')),
@@ -91,10 +92,9 @@ class NoteController extends AbstractController
                 'The note has been edited'
             );
 
-            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
+            return $this->redirect($returnLink);
         }
 
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         return [
             'report'  => $report,
