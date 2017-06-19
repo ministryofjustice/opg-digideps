@@ -33,10 +33,13 @@ class NoteController extends AbstractController
 
         $note = new EntityDir\Note($client);
 
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+
         $form = $this->createForm(
             new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
+
 
         $form->handleRequest($request);
 
@@ -46,13 +49,14 @@ class NoteController extends AbstractController
             $this->getRestClient()->post('report/' . $client->getId() . '/note', $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
+            return $this->redirect($returnLink);
         }
 
         return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
+            'backLink' => $returnLink
         ];
     }
 
@@ -87,12 +91,15 @@ class NoteController extends AbstractController
                 'The note has been edited'
             );
 
-            return $this->redirectToRoute('report_overview', ['reportId'=>$report->getId()]);
+            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
         }
+
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         return [
             'report'  => $report,
             'form'  => $form->createView(),
+            'backLink' => $returnLink
         ];
     }
 }
