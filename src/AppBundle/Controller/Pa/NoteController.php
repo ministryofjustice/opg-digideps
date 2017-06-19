@@ -12,6 +12,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/note/")
+ */
 class NoteController extends AbstractController
 {
     private static $jmsGroups = [
@@ -19,7 +22,7 @@ class NoteController extends AbstractController
     ];
 
     /**
-     * @Route("/note/add", name="add_note")
+     * @Route("add", name="add_note")
      * @Template()
      */
     public function addAction(Request $request)
@@ -61,7 +64,7 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/note/{noteId}/edit", name="edit_note")
+     * @Route("{noteId}/edit", name="edit_note")
      * @Template("AppBundle:Pa/ClientProfile:editNote.html.twig")
      */
     public function editAction(Request $request, $noteId)
