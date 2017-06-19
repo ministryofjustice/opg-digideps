@@ -8,7 +8,12 @@
         <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
     </summary>
 
-    <div class="panel-body soft-half">
+    <div class="panel-body soft-half--top soft-half--sides">
+
+        <p>
+            <a href="{{ path('pa_client_edit', {'clientId': client.id}) }}" class="btn behat-link-client-edit right">{{ (page ~ '.editClient') | trans }}</a>
+        </p>
+
         <div class="grid-row behat-region-client-profile-details">
             <div class="column-one-half">
                 <dl>
@@ -70,9 +75,6 @@
                 </dl>
             </div>
         </div>
-        <p>
-            <a href="{{ path('pa_client_edit', {'clientId': client.id}) }}" class="btn behat-link-client-edit">{{ (page ~ '.editClient') | trans }}</a>
-        </p>
     </div>
 
 </details>

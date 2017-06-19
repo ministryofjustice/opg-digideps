@@ -33,7 +33,7 @@ class Note
         'Welfare' => 'welfare',
         'Bank' => 'bank',
         'Report' => 'report',
-        'other' => 'other'
+        'Other' => 'other'
     ];
 
     /**
