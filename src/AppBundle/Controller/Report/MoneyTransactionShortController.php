@@ -35,7 +35,7 @@ class MoneyTransactionShortController extends RestController
 
         $this->persistAndFlush($t);
 
-        return $t;
+        return $t->getId();
     }
 
     /**
@@ -58,7 +58,7 @@ class MoneyTransactionShortController extends RestController
 
         $this->getEntityManager()->flush();
 
-        return $t;
+        return $t->getId();
     }
 
     /**

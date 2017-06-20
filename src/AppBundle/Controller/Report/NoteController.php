@@ -104,6 +104,8 @@ class NoteController extends RestController
 
         $this->getEntityManager()->flush($note);
 
-        return $note->getId();
+        $this->setJmsSerialiserGroups(['notes']);
+
+        return $note;
     }
 }

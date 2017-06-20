@@ -68,7 +68,7 @@ class MoneyTransactionController extends RestController
 
         $this->getEntityManager()->flush();
 
-        return $t;
+        return $t->getId();
     }
 
     /**

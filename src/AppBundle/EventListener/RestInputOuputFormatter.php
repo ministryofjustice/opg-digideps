@@ -109,7 +109,7 @@ class RestInputOuputFormatter
 
         // if data is defined,
         if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->attributes->get('groups')->isEmpty()) {
-            throw new \RuntimeException($request->getUri() . " missing JMS group");
+            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . " missing JMS group");
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);

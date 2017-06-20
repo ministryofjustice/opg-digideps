@@ -124,6 +124,8 @@ class ContactController extends RestController
             return [];
         }
 
+        $this->setJmsSerialiserGroups(['report', 'contact']);
+
         return $contacts;
     }
 }

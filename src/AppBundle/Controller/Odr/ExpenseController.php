@@ -24,6 +24,8 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
         $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
 
+        $this->setJmsSerialiserGroups(['odr-expenses']);
+
         return $expense;
     }
 

@@ -27,6 +27,8 @@ class AssetController extends RestController
             return [];
         }
 
+        $this->setJmsSerialiserGroups(['odr-asset']);
+
         return $assets;
     }
 
@@ -43,6 +45,8 @@ class AssetController extends RestController
 
         $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
         $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
+
+        $this->setJmsSerialiserGroups(['odr-asset']);
 
         return $asset;
     }
