@@ -104,6 +104,6 @@ class NoteController extends RestController
 
         $this->getEntityManager()->flush($note);
 
-        return $note;
+        return $note->getId();
     }
 }
