@@ -89,7 +89,7 @@ class RestInputOuputFormatter
      * @param bool $groupsCheck
      * @return Response
      */
-    private function arrayToResponse($data, Request $request, $groupsCheck = false)
+    private function arrayToResponse(array $data, Request $request, $groupsCheck = false)
     {
         $format = $request->getContentType();
 
@@ -107,7 +107,8 @@ class RestInputOuputFormatter
             $modifier($context);
         }
 
-        if ($groupsCheck &&$context->attributes->get('groups')->isEmpty()) {
+        // if data is defined,
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->attributes->get('groups')->isEmpty()) {
             throw new \RuntimeException($request->getUri() . " missing JMS group");
         }
 
@@ -120,6 +121,20 @@ class RestInputOuputFormatter
         }
 
         return $response;
+    }
+
+    private function containsEntity($object)
+    {
+        if (is_array($object)) {
+            foreach($object as $subObject) {
+                if ($this->containsEntity($subObject)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return is_object($object) && strpos(get_class($object), 'Entity') !== false;
     }
 
     /**
