@@ -189,6 +189,7 @@ class Client
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
      * @JMS\Groups({"notes"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist"})
+     * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $notes;
 
