@@ -99,6 +99,7 @@ class BankAccount
 
     /**
      * @var Odr
+     * @JMS\Groups({"bank-acccount-odr"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="bankAccounts")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")

@@ -472,7 +472,9 @@ class UserControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => '123abc-deputy',
         ])['data'];
-        $this->assertEquals(true, $data['agree_terms_use']);
-        $this->assertEquals(date('Y-m-d'), $data['agree_terms_use_date']);
+
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->assertTrue($deputy->getAgreeTermsUse());
+        $this->assertTrue(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
     }
 }

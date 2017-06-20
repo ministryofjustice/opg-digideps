@@ -133,7 +133,7 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('cat-edited', $note->getCategory());
         $this->assertEquals('title-edited', $note->getTitle());
         $this->assertEquals('content-edited', $note->getContent());
-        $this->assertEquals(true, time() - strtotime($note->getCreatedOn()) < 3600);
+        $this->assertEquals(true, time() - $note->getCreatedOn()->getTimestamp() < 3600);
 
         //assert cannot change others' notes
         // assert PUT
