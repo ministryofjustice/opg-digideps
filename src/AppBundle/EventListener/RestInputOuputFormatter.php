@@ -76,13 +76,20 @@ class RestInputOuputFormatter
         return $this->serializer->deserialize($request->getContent(), 'array', $format);
     }
 
+
     /**
-     * @param array   $data    for custom serialise groups, use serialise_groups
-     * @param Request $request
+     * Converts objects into a serialised response
+     * Request format has to match the supported formats.
+     * Context modifiers are applied.
+     * 
      *
+     *
+     * @param $data
+     * @param Request $request
+     * @param bool $groupsCheck
      * @return Response
      */
-    private function arrayToResponse($data, Request $request)
+    private function arrayToResponse($data, Request $request, $groupsCheck = false)
     {
         $format = $request->getContentType();
 
@@ -90,7 +97,7 @@ class RestInputOuputFormatter
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
-                throw new \Exception("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
+                throw new \RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
             }
         }
 
@@ -98,6 +105,10 @@ class RestInputOuputFormatter
         // context modifier
         foreach ($this->contextModifiers as $modifier) {
             $modifier($context);
+        }
+
+        if ($groupsCheck &&$context->attributes->get('groups')->isEmpty()) {
+            throw new \RuntimeException($request->getUri() . " missing JMS group");
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
@@ -123,7 +134,7 @@ class RestInputOuputFormatter
             'message' => '',
         ];
 
-        $response = $this->arrayToResponse($data, $event->getRequest());
+        $response = $this->arrayToResponse($data, $event->getRequest(), true);
 
         $event->setResponse($response);
     }
@@ -167,7 +178,7 @@ class RestInputOuputFormatter
             'code' => $code,
         ];
 
-        $response = $this->arrayToResponse($data, $event->getRequest());
+        $response = $this->arrayToResponse($data, $event->getRequest(), false);
         $response->setStatusCode($code);
 
         $event->setResponse($response);
