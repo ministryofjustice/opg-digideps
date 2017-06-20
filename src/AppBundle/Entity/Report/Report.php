@@ -619,7 +619,7 @@ class Report
      * @JMS\VirtualProperty
      * @JMS\Type("boolean")
      * @JMS\SerializedName("has106flag")
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-106-flag"})
      *
      */
     public function has106Flag()

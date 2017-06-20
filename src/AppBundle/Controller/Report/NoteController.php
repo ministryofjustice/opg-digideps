@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 class NoteController extends RestController
 {
     /**
-     * @Route("/report/{reportId}/note", requirements={"reportId":"\d+"})
+     * @Route("/report/{clientId}/note", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
-    public function add(Request $request, $reportId)
+    public function add(Request $request, $clientId)
     {
+        // checks
         $this->denyAccessUnlessGranted(
             [
                 EntityDir\User::ROLE_PA,
@@ -23,16 +24,17 @@ class NoteController extends RestController
                 EntityDir\User::ROLE_PA_TEAM_MEMBER
             ]
         );
+        $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
+        $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $data = $this->deserializeBodyContent($request, ['title' => 'mustExist']);
-
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $note = new EntityDir\Note($report->getClient(), $data['category'], $data['title'], $data['content']);
-
+        // hydrate and persist
+        $data = $this->deserializeBodyContent($request, [
+            'title' => 'notEmpty',
+            'category' => 'mustExist',
+            'content' => 'mustExist',
+        ]);
+        $note = new EntityDir\Note($client, $data['category'], $data['title'], $data['content']);
         $note->setCreatedBy($this->getUser());
-
         $this->persistAndFlush($note);
 
         return ['id' => $note->getId()];
@@ -102,6 +104,6 @@ class NoteController extends RestController
 
         $this->getEntityManager()->flush($note);
 
-        return $note;
+        return $note->getId();
     }
 }
