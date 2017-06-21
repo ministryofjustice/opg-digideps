@@ -170,7 +170,7 @@ class RestClient
      */
     public function agreeTermsUse($token)
     {
-        return $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'User', [], false);
+        $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
     }
 
     /**
