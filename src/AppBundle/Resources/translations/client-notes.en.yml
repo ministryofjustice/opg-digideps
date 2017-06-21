@@ -14,7 +14,7 @@ removePage:
 
 form:
   category:
-    label: Category (optional)
+    label: Category
     entries:
       undefined: undefined
       todo: To Do
@@ -27,6 +27,6 @@ form:
   title:
     label: Title
   content:
-    label: Description (optional)
+    label: Description
   save:
     label: Save

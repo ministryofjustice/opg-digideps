@@ -4,7 +4,6 @@ Feature: PA client profile Notes
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000010" region
-    And I click the ".client-profile-notes-toggle" element
     Then each text should be present in the corresponding region:
       | No notes    | client-profile-notes |
 
@@ -12,8 +11,7 @@ Feature: PA client profile Notes
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000010" region
-    And I click the ".client-profile-notes-toggle" element
-    Then  I click the ".add-notes-button" element
+    And I click on "add-notes-button" in the "client-profile-notes" region
     # empty form
     When I fill in the following:
       | note_title          |  |
@@ -40,15 +38,13 @@ Feature: PA client profile Notes
       | DWP | client-profile-notes |
       # Added By Initials
       | JG | client-profile-notes |
-    And I click the ".note-title-expand" element
     Then each text should be present in the corresponding region:
       | test content | client-profile-notes |
 
   Scenario: PA edit client notes
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000010" region
-    And I click the ".client-profile-notes-toggle" element
-    Then I click the ".edit-notes-button" element
+    And I click on "edit-notes-button" in the "client-profile-notes" region
     Then the following fields should have the corresponding values:
       | note_title          | test title  |
       | note_content        | test content |
@@ -63,6 +59,5 @@ Feature: PA client profile Notes
       | OPG | client-profile-notes |
       # Added By Initials
       | JG | client-profile-notes |
-    And I click the ".note-title-expand" element
     Then each text should be present in the corresponding region:
       | test content edit | client-profile-notes |
