@@ -165,7 +165,7 @@ class RestClient
      *
      * @throws UsernameNotFoundException
      *
-     * @return \AppBundle\Entity\User $user
+     * @return id $user ID
      *
      */
     public function agreeTermsUse($token)
