@@ -49,6 +49,8 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
 
+        $this->setJmsSerialiserGroups(['odr-account', 'bank-acccount-odr', 'odr_id']);
+
         return $account;
     }
 
@@ -71,7 +73,7 @@ class AccountController extends RestController
 
         $this->getEntityManager()->flush();
 
-        return $account;
+        return $account->getId();
     }
 
     /**

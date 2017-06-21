@@ -127,11 +127,13 @@ class NoteControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-//        $this->assertEquals(self::$pa1Client1Note1->getId(), $data['id']);
-//        $this->assertEquals('cat-edited', $data['category']);
-//        $this->assertEquals('title-edited', $data['title']);
-//        $this->assertEquals('content-edited', $data['content']);
-//        $this->assertEquals(true, time() - strtotime($data['created_on']) < 3600);
+        $note = self::$pa2 = self::fixtures()->getRepo('Note')->find($data);
+
+        $this->assertEquals(self::$pa1Client1Note1->getId(), $note->getId());
+        $this->assertEquals('cat-edited', $note->getCategory());
+        $this->assertEquals('title-edited', $note->getTitle());
+        $this->assertEquals('content-edited', $note->getContent());
+        $this->assertEquals(true, time() - $note->getCreatedOn()->getTimestamp() < 3600);
 
         //assert cannot change others' notes
         // assert PUT

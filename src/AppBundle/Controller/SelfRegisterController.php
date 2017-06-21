@@ -43,6 +43,8 @@ class SelfRegisterController extends RestController
             throw $e;
         }
 
+        $this->setJmsSerialiserGroups(['user', 'user-login']);
+
         return $user;
     }
 

@@ -76,13 +76,20 @@ class RestInputOuputFormatter
         return $this->serializer->deserialize($request->getContent(), 'array', $format);
     }
 
+
     /**
-     * @param array   $data    for custom serialise groups, use serialise_groups
-     * @param Request $request
+     * Converts objects into a serialised response
+     * Request format has to match the supported formats.
+     * Context modifiers are applied.
+     * 
      *
+     *
+     * @param $data
+     * @param Request $request
+     * @param bool $groupsCheck
      * @return Response
      */
-    private function arrayToResponse($data, Request $request)
+    private function arrayToResponse(array $data, Request $request, $groupsCheck = true)
     {
         $format = $request->getContentType();
 
@@ -90,7 +97,7 @@ class RestInputOuputFormatter
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
-                throw new \Exception("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
+                throw new \RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
             }
         }
 
@@ -98,6 +105,11 @@ class RestInputOuputFormatter
         // context modifier
         foreach ($this->contextModifiers as $modifier) {
             $modifier($context);
+        }
+
+        // if data is defined,
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->attributes->get('groups')->isEmpty()) {
+            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . " missing JMS group");
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
@@ -109,6 +121,20 @@ class RestInputOuputFormatter
         }
 
         return $response;
+    }
+
+    private function containsEntity($object)
+    {
+        if (is_array($object)) {
+            foreach($object as $subObject) {
+                if ($this->containsEntity($subObject)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return is_object($object) && strpos(get_class($object), 'Entity') !== false;
     }
 
     /**
@@ -167,7 +193,7 @@ class RestInputOuputFormatter
             'code' => $code,
         ];
 
-        $response = $this->arrayToResponse($data, $event->getRequest());
+        $response = $this->arrayToResponse($data, $event->getRequest(), false);
         $response->setStatusCode($code);
 
         $event->setResponse($response);
