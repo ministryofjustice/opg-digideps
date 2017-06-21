@@ -40,7 +40,7 @@ class MoneyTransactionController extends RestController
 
         $this->setJmsSerialiserGroups(['transaction']);
 
-        return $t;
+        return $t->getId();
     }
 
     /**
