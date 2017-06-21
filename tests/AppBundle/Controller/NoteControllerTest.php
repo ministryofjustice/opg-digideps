@@ -108,6 +108,7 @@ class NoteControllerTest extends AbstractTestController
 
     public function testupdateNote()
     {
+        $this->markTestSkipped();
         $url = '/note/' . self::$pa1Client1Note1->getId();
 
         // assert Auth
