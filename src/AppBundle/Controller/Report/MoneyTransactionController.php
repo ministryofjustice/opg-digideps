@@ -38,8 +38,6 @@ class MoneyTransactionController extends RestController
 
         $this->persistAndFlush($t);
 
-        $this->setJmsSerialiserGroups(['transaction']);
-
         return $t->getId();
     }
 

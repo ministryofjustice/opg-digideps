@@ -141,7 +141,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data['id']); /* @var $t MoneyTransaction*/
+        $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data); /* @var $t MoneyTransaction*/
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
         $this->assertEquals('dividends', $t->getCategory());

@@ -475,6 +475,6 @@ class UserControllerTest extends AbstractTestController
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue($deputy->getAgreeTermsUse());
-        $this->assertTrue(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
+        $this->assertEquals(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
     }
 }
