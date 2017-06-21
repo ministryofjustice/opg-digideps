@@ -6,12 +6,15 @@ editPage:
   htmlTitle: Client profile - edit note | GOV.UK
   pageTitle: Edit note
   supportTitle: "Client profile: %clientName%"
-removePage:
+removeNotes:
   htmlTitle: Client profile - remove note | GOV.UK
   h1Title: Remove note
   supportTitle: "Client profile: %clientName%"
-  question: Are you sure you want to remove the note entitled <strong class="bold">%note_title%</strong> from this report?
-
+  question: Are you sure you want to remove this note?
+  noteTitle: Note title: %noteTitle%
+  dateAdded: Date added: %dateAdded%
+  linkButtonLabel: Yes, remove note
+  cancelButtonLabel: Cancel
 form:
   category:
     label: Category

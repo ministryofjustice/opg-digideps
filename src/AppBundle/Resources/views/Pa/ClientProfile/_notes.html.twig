@@ -51,6 +51,7 @@
                         <td class="width-eighth  text--right hard--right">
                             {% if note.createdBy.id == app.user.id %}
                                 <a href="{{ path('edit_note', {'reportId': report.id, 'noteId': note.id}) }}" class="behat-link-edit-notes-button">{{ (page ~ '.editNote') | trans }}</a>
+                                <a href="{{ path('delete_note', {'noteId': note.id}) }}" class="behat-link-delete-notes-button">{{ (page ~ '.deleteNote') | trans }}</a>
                             {% endif %}
                         </td>
 

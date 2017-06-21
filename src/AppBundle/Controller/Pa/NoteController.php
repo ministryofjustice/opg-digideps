@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -101,5 +102,58 @@ class NoteController extends AbstractController
             'form'  => $form->createView(),
             'backLink' => $returnLink
         ];
+    }
+
+    /**
+     * Confirm delete user form
+     *
+     * @Route("{noteId}/delete", name="delete_note")
+     * @Template("AppBundle:Pa/ClientProfile:deleteConfirm.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
+    {
+
+        /** @var EntityDir\Note $note */
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'client', 'report-client', 'user']);
+
+        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+
+        return ['note' => $note, 'client' => $note->getClient()];
+    }
+
+    /**
+     * Removes a note, adds a flash message and redirects to page
+     *
+     * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
+     * @Template()
+     */
+    public function deleteConfirmedAction(Request $request, $noteId)
+    {
+        try {
+            /** @var EntityDir\Note $note */
+            $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'user']);
+            $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+
+            // delete note
+            $this->getRestClient()->delete('note/' . $noteId, $note);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
+
+        } catch (\Exception $e) {
+            $this->get('logger')->debug($e->getMessage());
+
+            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                $request->getSession()->getFlashBag()->add(
+                    'error',
+                    'Note could not be removed'
+                );
+            }
+        }
+
+        // generate return link
+        $report = $note->getClient()->getCurrentReport();
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+
+        return $this->redirect($returnLink);
     }
 }

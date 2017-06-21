@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "client-notes" %}
+{% trans_default_domain translationDomain %}
+{% set page = "removeNotes" %}
+{% set transOptions = {
+'%clientName%': client.getFullname(),
+'%noteTitle%': note.getTitle(),
+'%dateAdded%': note.getCreatedOn() | date('d F Y')
+} %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.h1Title') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans({'%clientName%': client.fullname | title}) }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <p class="text">{{ (page ~ '.question') | trans }}</p>
+    <p class="text">{{ (page ~ '.noteTitle') | trans(transOptions) }}</p>
+    <p class="text">{{ (page ~ '.dateAdded') | trans(transOptions) }}</p>
+
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: (page ~ '.linkButtonLabel') | trans(),
+        linkClass: 'button push-half--right behat-link-confirm',
+        linkHref: path('delete_note_confirm', { noteId: note.id })
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: (page ~ '.cancelButtonLabel') | trans(),
+        linkClass: 'button-link behat-link-confirm-cancel',
+        linkHref: path('pa_team')
+    } %}
+
+{% endblock %}
+
