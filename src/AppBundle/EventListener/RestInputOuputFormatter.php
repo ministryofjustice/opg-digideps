@@ -89,7 +89,7 @@ class RestInputOuputFormatter
      * @param bool $groupsCheck
      * @return Response
      */
-    private function arrayToResponse(array $data, Request $request, $groupsCheck = false)
+    private function arrayToResponse(array $data, Request $request, $groupsCheck = true)
     {
         $format = $request->getContentType();
 
@@ -149,7 +149,7 @@ class RestInputOuputFormatter
             'message' => '',
         ];
 
-        $response = $this->arrayToResponse($data, $event->getRequest(), true);
+        $response = $this->arrayToResponse($data, $event->getRequest());
 
         $event->setResponse($response);
     }
