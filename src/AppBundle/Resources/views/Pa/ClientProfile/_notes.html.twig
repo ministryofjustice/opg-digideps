@@ -5,12 +5,12 @@
 <details class="panel panel-admin hard behat-region-client-profile-notes">
 
     <summary class="panel-heading flush--bottom">
-        <a class="summary heading-medium client-profile-notes-toggle">{{ (page ~ '.heading') | trans }}</a>
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
     </summary>
 
     <div class="panel-body soft-half">
 
-        <a href="{{ path('add_note', {'clientId': report.client.id}) }}" class="bold-small action-link right add-notes-button">
+        <a href="{{ path('add_note', {'clientId': report.client.id}) }}" class="bold-small action-link right behat-link-add-notes-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addNote') | trans }}
         </a>
@@ -33,7 +33,7 @@
                             {% if note.content %}
                                 <details>
                                     <summary>
-                                        <a class="summary note-title-expand">{{ note.title }}</a>
+                                        <span class="summary">{{ note.title }}</span>
                                     </summary>
                                     <div class="panel panel-border-narrow dont-break-out">
                                         {{ note.content }}
@@ -50,7 +50,7 @@
                         <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
                         <td class="width-eighth  text--right hard--right">
                             {% if note.createdBy.id == app.user.id %}
-                                <a href="{{ path('edit_note', {'reportId': report.id, 'noteId': note.id}) }}" class="edit-notes-button">{{ (page ~ '.editNote') | trans }}</a>
+                                <a href="{{ path('edit_note', {'reportId': report.id, 'noteId': note.id}) }}" class="behat-link-edit-notes-button">{{ (page ~ '.editNote') | trans }}</a>
                             {% endif %}
                         </td>
 
