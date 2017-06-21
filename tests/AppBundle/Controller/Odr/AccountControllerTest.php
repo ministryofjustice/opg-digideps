@@ -136,7 +136,7 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->getRepo('Odr\BankAccount')->find(self::$account1->getId());
+        $account = self::fixtures()->getRepo('Odr\BankAccount')->find($data);
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
         $this->assertEquals('yes', $account->getIsJointAccount());

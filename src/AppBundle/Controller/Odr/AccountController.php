@@ -73,7 +73,7 @@ class AccountController extends RestController
 
         $this->getEntityManager()->flush();
 
-        return $account;
+        return $account->getId();
     }
 
     /**
