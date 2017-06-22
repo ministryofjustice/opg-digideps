@@ -9,7 +9,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans({'%clientName%': report.client.fullname | title}) }}</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans({'%clientName%': client.fullname | title}) }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Note;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +12,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class NoteVoter extends Voter
 {
+    const ADD_NOTE = 'add-note';
+    const EDIT_NOTE = 'edit-note';
     const DELETE_NOTE = 'delete-note';
 
     /**
@@ -38,8 +41,15 @@ class NoteVoter extends Voter
     protected function supports($attribute, $subject)
     {
         switch ($attribute) {
+            case self::ADD_NOTE:
             case self::DELETE_NOTE:
                 return true;
+            case self::EDIT_NOTE:
+                // only vote on User objects inside this voter
+                if ($attribute === self::EDIT_NOTE && $subject instanceof Note) {
+                    return true;
+                }
+                break;
         }
 
         return false;
@@ -55,35 +65,37 @@ class NoteVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+        /** @var User $loggedInUser */
         $loggedInUser= $token->getUser();
-        if (!$loggedInUser instanceof User) {
-            // the loggedUSer must be logged in; if not, deny access
+
+        if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputy()) {
+            // the loggedUser must be logged in PA user; if not, deny access
             return false;
         }
 
-        if ($attribute === self::DELETE_NOTE) {
-            return $this->determineDeletePermission($loggedInUser, $subject);
+        switch ($attribute) {
+            case self::ADD_NOTE:
+                /** @var Client $subject */
+                return $this->clientBelongsToUserTeam($loggedInUser, $subject);
+            case self::EDIT_NOTE:
+            case self::DELETE_NOTE:
+                /** @var Note $subject */
+                return $this->clientBelongsToUserTeam($loggedInUser, $subject->getClient());
         }
 
         return false;
     }
 
     /**
-     * Determine whether logged in user can delete a note
+     * Does the logged in user belong to the client
      *
-     * @param  User $loggedInUser
-     * @param  Note $note
+     * @param User $loggedInUser
+     * @param Client $client
+     *
      * @return bool
      */
-    private function determineDeletePermission(User $loggedInUser, Note $note)
+    private function clientBelongsToUserTeam(User $loggedInUser, Client $client)
     {
-        if ($loggedInUser->isDeputyPa()) {
-            // ensure user is the opne who created the note
-            if ($note->getCreatedBy()->getId() === $loggedInUser->getId()) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($loggedInUser->getId(), $client->getUsers());
     }
 }
