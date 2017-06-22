@@ -108,13 +108,11 @@ class NoteControllerTest extends AbstractTestController
 
     public function testupdateNote()
     {
-        $this->markTestSkipped();
         $url = '/note/' . self::$pa1Client1Note1->getId();
 
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPa2);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenPa3);
 
         // assert PUT
