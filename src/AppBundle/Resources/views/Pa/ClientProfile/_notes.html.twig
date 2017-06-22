@@ -45,7 +45,9 @@
                         </td>
                         <td class="width-eighth">{{ note.category }}</td>
                         <td class="width-eighth">
+                            {% if note.createdBy %}
                             <span title="{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</span>
+                            {% endif %}
                         </td>
                         <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
                         <td class="width-eighth  text--right hard--right">
