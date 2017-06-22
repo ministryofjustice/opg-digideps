@@ -9,6 +9,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/note/")
@@ -112,13 +113,16 @@ class NoteController extends AbstractController
      */
     public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
     {
-
         /** @var EntityDir\Note $note */
-        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'client', 'report-client', 'user']);
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'current-report', 'report-id', 'report-client', 'client', 'user']);
 
         $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
-        return ['note' => $note, 'client' => $note->getClient()];
+        return [
+            'note' => $note,
+            'client' => $note->getClient(),
+            'backLink' => $this->generateReturnLink($note)
+        ];
     }
 
     /**
@@ -131,10 +135,13 @@ class NoteController extends AbstractController
     {
         try {
             /** @var EntityDir\Note $note */
-            $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'user']);
+            $note = $this->getRestClient()->get(
+                'note/' . $noteId,
+                'Note',
+                ['notes', 'current-report', 'report-id', 'report-client']
+            );
             $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
-            // delete note
             $this->getRestClient()->delete('note/' . $noteId, $note);
 
             $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
@@ -142,18 +149,27 @@ class NoteController extends AbstractController
         } catch (\Exception $e) {
             $this->get('logger')->debug($e->getMessage());
 
-            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                $request->getSession()->getFlashBag()->add(
-                    'error',
-                    'Note could not be removed'
-                );
-            }
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'Note could not be removed'
+            );
         }
 
+        return $this->redirect($this->generateReturnLink($note));
+    }
+
+    /**
+     * Generate back to overview page of current client report
+     *
+     * @param EntityDir\Note $note
+     * @return string
+     */
+    private function generateReturnLink(EntityDir\Note $note)
+    {
         // generate return link
         $report = $note->getClient()->getCurrentReport();
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
-        return $this->redirect($returnLink);
+        return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
     }
 }
+
