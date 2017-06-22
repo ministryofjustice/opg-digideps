@@ -24,8 +24,8 @@
     <p class="text">{{ (page ~ '.noteTitle') | trans(transOptions) }}</p>
     <p class="text">{{ (page ~ '.dateAdded') | trans(transOptions) }}</p>
 
-
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        linkId: "note-delete",
         transDomain: translationDomain,
         linkButtonLabel: (page ~ '.linkButtonLabel') | trans(),
         linkClass: 'button push-half--right behat-link-confirm',
@@ -36,7 +36,7 @@
         transDomain: translationDomain,
         linkButtonLabel: (page ~ '.cancelButtonLabel') | trans(),
         linkClass: 'button-link behat-link-confirm-cancel',
-        linkHref: path('pa_team')
+        linkHref: backLink
     } %}
 
 {% endblock %}

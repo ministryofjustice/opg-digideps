@@ -61,3 +61,20 @@ Feature: PA client profile Notes
       | JG | client-profile-notes |
     Then each text should be present in the corresponding region:
       | test content edit | client-profile-notes |
+    
+  Scenario: PA delete client notes
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000010" region
+    And I save the current URL as "report-overview"
+    And I click on "delete-notes-button" in the "client-profile-notes" region
+    Then the URL should match "/note/\d+/delete"
+    # test cancel button on confirmation page
+    When I click on "confirm-cancel"
+    Then I go to the URL previously saved as "report-overview"
+    Then I click on "delete-notes-button" in the "client-profile-notes" region
+    Then the response status code should be 200
+    And I click on "note-delete"
+    Then the form should be valid
+    Then I go to the URL previously saved as "report-overview"
+    And I should not see "test title content" in the "client-profile-notes" region
+
