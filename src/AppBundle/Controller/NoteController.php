@@ -90,11 +90,9 @@ class NoteController extends RestController
         );
 
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
-        if ($note->getCreatedBy()->getId() !== $this->getUser()->getId()) {
-            throw $this->createAccessDeniedException('Cannot edit note created by other users');
-        }
+
         // enable if the check above is removed and the note is available for editing for the whole team
-        //$this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
+        $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
         $data = $this->deserializeBodyContent($request);
         $this->hydrateEntityWithArrayData($note, $data, [
