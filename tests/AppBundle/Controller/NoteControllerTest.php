@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Note;
+use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Tests\AppBundle\Controller\AbstractTestController;
 
@@ -83,7 +84,8 @@ class NoteControllerTest extends AbstractTestController
 
     public function testgetOneById()
     {
-        $url = '/note/' . self::$pa1Client1Note1->getId();
+        $noteId = self::$pa1Client1Note1->getId();
+        $url = '/note/' . $noteId;
 
         // assert Auth and ACL
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -97,7 +99,7 @@ class NoteControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenPa,
         ])['data'];
 
-        $this->assertEquals(self::$pa1Client1Note1->getId(), $data['id']);
+        $this->assertEquals($noteId, $data['id']);
         $this->assertEquals('cat', $data['category']);
         $this->assertEquals('title', $data['title']);
         $this->assertEquals('content', $data['content']);
@@ -108,7 +110,8 @@ class NoteControllerTest extends AbstractTestController
 
     public function testupdateNote()
     {
-        $url = '/note/' . self::$pa1Client1Note1->getId();
+        $noteId = self::$pa1Client1Note1->getId();
+        $url = '/note/' . $noteId;
 
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
@@ -120,7 +123,7 @@ class NoteControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenPa,
             'data'        => [
-                'category'     => 'cat-edited',
+                'category'=> 'cat-edited',
                 'title'   => 'title-edited',
                 'content' => 'content-edited',
             ],
@@ -128,7 +131,7 @@ class NoteControllerTest extends AbstractTestController
 
         $note = self::$pa2 = self::fixtures()->getRepo('Note')->find($data);
 
-        $this->assertEquals(self::$pa1Client1Note1->getId(), $note->getId());
+        $this->assertEquals($noteId, $note->getId());
         $this->assertEquals('cat-edited', $note->getCategory());
         $this->assertEquals('title-edited', $note->getTitle());
         $this->assertEquals('content-edited', $note->getContent());
@@ -146,5 +149,33 @@ class NoteControllerTest extends AbstractTestController
             ],
         ])['data'];
     }
+
+    /**
+     * @depends testgetOneById
+     * @depends testupdateNote
+     */
+    public function testDeleteCreator()
+    {
+        $noteId = self::$pa1Client1Note1->getId();
+        $url = '/note/' . $noteId;
+
+        // create a new user and assign to note
+        $user = self::fixtures()->createUser()->setRoleName(\AppBundle\Entity\User::ROLE_PA);
+        self::$pa1Client1->addUser($user);
+        $note = self::fixtures()->getRepo('Note')->find($noteId);
+        $note->setCreatedBy($user);
+        self::fixtures()->flush($note, $user);
+
+        // delete it (soft delete)
+        self::fixtures()->remove($user)->flush();
+
+        // and assert createdBy is now null
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenPa,
+        ])['data'];
+        $this->assertNull($data['created_by']);
+    }
+
 
 }
