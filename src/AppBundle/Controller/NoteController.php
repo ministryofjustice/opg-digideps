@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Report;
+namespace AppBundle\Controller;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -8,10 +8,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/note/")
+ */
 class NoteController extends RestController
 {
     /**
-     * @Route("/report/{clientId}/note", requirements={"reportId":"\d+"})
+     * @Route("{clientId}", requirements={"clientId":"\d+"})
      * @Method({"POST"})
      */
     public function add(Request $request, $clientId)
@@ -46,7 +49,7 @@ class NoteController extends RestController
      * User that created the note is not returned as default, as not currently needed from the CLIENT.
      * Add "user" group if needed
      *
-     * @Route("/note/{id}")
+     * @Route("{id}")
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
@@ -73,7 +76,7 @@ class NoteController extends RestController
      * Update note
      * Only the creator can update the note
      *
-     * @Route("/note/{id}")
+     * @Route("{id}")
      * @Method({"PUT"})
      */
     public function updateNote(Request $request, $id)
@@ -105,5 +108,44 @@ class NoteController extends RestController
         $this->getEntityManager()->flush($note);
 
         return $note->getId();
+    }
+
+    /**
+     * Delete note.
+     *
+     * @Method({"DELETE"})
+     *
+     * @Route("{id}")
+     * @param int $id
+     *
+     * @return array
+     */
+    public function delete($id)
+    {
+        $this->get('logger')->debug('Deleting note ' . $id);
+
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
+
+        try {
+            /** @var $note EntityDir\Note $note */
+            $note = $this->findEntityBy(EntityDir\Note::class, $id);
+
+            // enable if the check above is removed and the note is available for editing for the whole team
+            $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
+
+            $this->getEntityManager()->remove($note);
+
+            $this->getEntityManager()->flush($note);
+        } catch (\Exception $e) {
+            $this->get('logger')->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
+        }
+
+        return [];
     }
 }
