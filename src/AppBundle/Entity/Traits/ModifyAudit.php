@@ -16,7 +16,7 @@ trait ModifyAudit
      *
      * @var \AppBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      */
     protected $lastModifiedBy;
