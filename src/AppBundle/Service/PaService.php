@@ -276,7 +276,8 @@ class PaService
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref']);
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
-            if ($report->getType() != $reportType) {
+            // change report type if it's not already set AND report is not yet submitted
+            if ($report->getType() != $reportType && !$report->getSubmitted()) {
                 $this->log('Changing report type');
                 $report->setType($reportType);
                 $this->em->persist($report);

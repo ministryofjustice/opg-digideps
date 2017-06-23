@@ -343,6 +343,16 @@ class Fixtures
         return $this;
     }
 
+    public function remove()
+    {
+        $args = func_get_args();
+        foreach ($args as $e) {
+            $this->em->remove($e);
+        }
+
+        return $this;
+    }
+
     public function persist()
     {
         foreach (func_get_args() as $e) {
