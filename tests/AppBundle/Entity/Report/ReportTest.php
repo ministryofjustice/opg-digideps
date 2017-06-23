@@ -43,7 +43,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         return [
             // start date, end date, submitted (true/false)
             ['2017-06-23', '2018-06-22', [['2016-06-23', '2017-06-22', false]], 'already has unsubmitted report'],
-//            [[['now', '+12 months', true]], 'cannot cover more than'],
+            ['2017-06-23', '2018-06-24', [['2016-06-23', '2017-06-22', true]], 'cannot cover more than one year'],
         ];
     }
 

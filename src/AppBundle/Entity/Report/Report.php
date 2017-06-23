@@ -220,7 +220,7 @@ class Report
         $this->setEndDate($endDate);
 
         // date interval check
-        if ((int)$startDate->diff($endDate)->format('%a') >= 365) {
+        if ((int)$startDate->diff($endDate)->format('%a') > 365) { // TODO reduce to ">=" once the db has been migrated
             throw new \RuntimeException('Report cannot cover more than one year');
         }
 
