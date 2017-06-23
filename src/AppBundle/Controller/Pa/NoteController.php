@@ -113,6 +113,7 @@ class NoteController extends AbstractController
         $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
         return [
+            'report'  => $note->getClient()->getCurrentReport(),
             'note' => $note,
             'client' => $note->getClient(),
             'backLink' => $this->generateReturnLink($note)

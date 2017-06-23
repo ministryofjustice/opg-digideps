@@ -1,20 +1,19 @@
-addNotes:
+addNote:
   htmlTitle: Client profile - add note | GOV.UK
   pageTitle: Add note
-  supportTitle: "Client profile: %clientName%"
-editPage:
+  supportTitle: "Client profile:"
+editNote:
   htmlTitle: Client profile - edit note | GOV.UK
   pageTitle: Edit note
-  supportTitle: "Client profile: %clientName%"
-removeNotes:
+  supportTitle: "Client profile:"
+removeNote:
   htmlTitle: Client profile - remove note | GOV.UK
   h1Title: Remove note
-  supportTitle: "Client profile: %clientName%"
+  supportTitle: "Client profile:"
   question: Are you sure you want to remove this note?
-  noteTitle: Note title: %noteTitle%
-  dateAdded: Date added: %dateAdded%
+  noteTitle: "Title:"
+  dateAdded: "Date added:"
   linkButtonLabel: Yes, remove note
-  cancelButtonLabel: Cancel
 form:
   category:
     label: Category

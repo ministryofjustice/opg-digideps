@@ -2,14 +2,14 @@
 
 {% set translationDomain = "client-notes" %}
 {% trans_default_domain translationDomain %}
-{% set page = "editPage" %}
+{% set page = "editNote" %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans({'%clientName%': client.fullname | title}) }}</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}
