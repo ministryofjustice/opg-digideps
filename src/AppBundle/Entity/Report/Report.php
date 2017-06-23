@@ -214,10 +214,13 @@ class Report
      */
     public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate)
     {
-        $this->setType($type);
-        $this->setClient($client);
-        $this->setStartDate($startDate);
-        $this->setEndDate($endDate);
+        if (!in_array($type, [self::TYPE_102, self::TYPE_103, self::TYPE_104])) {
+            throw new \InvalidArgumentException("$type not a valid report type");
+        }
+        $this->type = $type;
+        $this->client = $client;
+        $this->startDate = new \DateTime($startDate->format('Y-m-d'));
+        $this->endDate = new \DateTime($endDate->format('Y-m-d'));
 
         // date interval check
         if ((int)$startDate->diff($endDate)->format('%a') > 365) { // TODO reduce to ">=" once the db has been migrated
@@ -231,10 +234,23 @@ class Report
         }
 
         // check date interval overlapping other reports
-//        if ($unsubmittedReports = $client->getSubmittedReports()->toArray()) {
-//            $endDates = array_map(function($report){ return $report->getEndDate(); }, $unsubmittedReports);
-//            echo "<pre>";\Doctrine\Common\Util\Debug::dump($endDates, 4);die;
-//        }
+        if ($client->getSubmittedReports()->count()) {
+            $unsubmittedEndDates = array_map(function($report){ return $report->getEndDate(); }, $client->getSubmittedReports()->toArray());
+            rsort($unsubmittedEndDates); //order by last first
+            $endDateLastReport = $unsubmittedEndDates[0];
+            $expectedStartDate = clone $endDateLastReport;
+            $expectedStartDate->modify('+1 day');
+            $daysDiff = (int)$expectedStartDate->diff($this->startDate)->format('%a');
+            if ($daysDiff !== 0) {
+                throw new \RuntimeException(sprintf(
+                    'Incorrect start date. Last submitted report was on %s, '
+                    .'therefore the new report is expected to start on %s, not on %s',
+                    $endDateLastReport->format('d/m/Y'),
+                    $expectedStartDate->format('d/m/Y'),
+                    $this->startDate->format('d/m/Y')
+                    ));
+            }
+        }
 
         $this->contacts = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
@@ -268,9 +284,6 @@ class Report
      */
     public function setType($type)
     {
-        if (!in_array($type, [self::TYPE_102, self::TYPE_103, self::TYPE_104])) {
-            throw new \InvalidArgumentException("$type not a valid report type");
-        }
         $this->type = $type;
 
         return $this;
@@ -295,7 +308,7 @@ class Report
      */
     public function setStartDate(\DateTime $startDate)
     {
-        $this->startDate = new \DateTime($startDate->format('Y-m-d'));
+        $this->startDate = $startDate;
 
         return $this;
     }
@@ -319,7 +332,7 @@ class Report
      */
     public function setEndDate(\DateTime $endDate)
     {
-        $this->endDate = new \DateTime($endDate->format('Y-m-d'));
+        $this->endDate = $endDate;
 
         return $this;
     }
