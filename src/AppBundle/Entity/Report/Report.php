@@ -207,12 +207,19 @@ class Report
     private $metadata;
 
     /**
-     * Report constructor.
+     * Report constructor
+     * Construct reports using the report service
+     *
      * @param Client $client
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate)
     {
-        $this->client = $client;
+        $this->setType($type);
+        $this->setClient($client);
+        $this->setStartDate($startDate);
+        $this->setEndDate($endDate);
+        // TODO check date interval
+
         $this->contacts = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();
         $this->moneyTransfers = new ArrayCollection();
@@ -245,6 +252,9 @@ class Report
      */
     public function setType($type)
     {
+        if (!in_array($type, [self::TYPE_102, self::TYPE_103, self::TYPE_104])) {
+            throw new \InvalidArgumentException("$type not a valid report type");
+        }
         $this->type = $type;
 
         return $this;

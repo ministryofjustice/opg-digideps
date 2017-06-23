@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -41,59 +42,60 @@ class ReportService
 
     /**
      * Set report type based on CasRec record (if existing)
-     * If not found, sets a 102 report (to discuss if an execption works better here)
      *
-     * @param Report $report
+     * @param Client $report
+     *
+     * @return string|null type
      */
-    public function setReportTypeBasedOnCasrec(Report $report)
+    public function getReportTypeBasedOnCasrec(Client $client)
     {
-        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $report->getClient()->getCaseNumber()]);
+        $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
         if ($casRec instanceof CasRec) {
-            $report->setType(CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref()));
-            return;
+            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref());
         }
 
-        if($report instanceof Report and $report->getType() !== null)
-        {
-            $report->setType($report->getType());
-            return;
-        }
-
-        $report->setType(Report::TYPE_102);
+        return null;
     }
 
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      *
-     * @param Report $report
+     * @param Report $oldReport
      *
      * @return Report
      */
-    public function createNextYearReport(Report $report)
+    public function createNextYearReport(Report $oldReport)
     {
-        //lets clone the report
-        $client = $report->getClient();
-        $newReport = new Report($client);
-        $newReport->setType($report->getType());
-        $this->setReportTypeBasedOnCasrec($newReport);
+        if (!$oldReport->getSubmitted()) {
+            throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
+        }
 
-        $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
-        $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
-        $newReport->setReportSeen(false);
-        $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
+        $client = $oldReport->getClient();
 
-        // clone assets
-        foreach ($report->getAssets() as $asset) {
+        $startDate = clone $oldReport->getEndDate();
+        $startDate->modify('+1 day');
+
+        $endDate = clone $startDate;
+        $endDate->modify('+12 months -1 day');
+
+        $newReport = new Report(
+            $client,
+            $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType(), // report comes from casrec, or last year report, if not found
+            $startDate,
+            $endDate
+        );
+
+        // copy assets
+        $newReport->setNoAssetToAdd($oldReport->getNoAssetToAdd());
+        foreach ($oldReport->getAssets() as $asset) {
             $newAsset = clone $asset;
             $newAsset->setReport($newReport);
             $this->_em->detach($newAsset);
             $this->_em->persist($newAsset);
         }
 
-        // clone accounts
-        //  opening balance = closing balance
-        //  opening date = closing date
-        foreach ($report->getBankAccounts() as $account) {
+        // copy bank accounts (opening balance = closing balance, opening date = closing date)
+        foreach ($oldReport->getBankAccounts() as $account) {
             $newAccount = new ReportBankAccount();
             $newAccount->setBank($account->getBank());
             $newAccount->setAccountType($account->getAccountType());
@@ -105,7 +107,7 @@ class ReportService
 
             $this->_em->persist($newAccount);
         }
-        // persist
+
         $this->_em->persist($newReport);
         $this->_em->flush();
 

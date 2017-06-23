@@ -17,6 +17,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,7 +29,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->client = m::mock(Client::class);
-        $this->report = m::mock(Report::class . '[has106Flag]', [$this->client]);
+        $this->validReportCtorArgs = [$this->client, Report::TYPE_102, new \DateTime('now'), new \DateTime('next year')];
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
@@ -143,7 +145,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
         $reportWith = function ($fees) {
-            return m::mock(Report::class . '[getFees]', [$this->client])
+            return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
@@ -157,7 +159,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
 
         $reportWith = function ($expenses) {
-            return m::mock(Report::class . '[getExpenses]', [$this->client])
+            return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();
         };

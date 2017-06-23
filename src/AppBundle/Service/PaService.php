@@ -188,10 +188,6 @@ class PaService
     }
 
     /**
-     * //TODO subsquents uploads removes all the clients, and re-add them from the team.
-     * Slow and a code smell that the db structure needs a change and connect clients to the team, or
-     * a more general "deputyship" new entity, used by both Teams of PA, and Lay
-     *
      * @param array          $row
      * @param EntityDir\User $user
      *
@@ -288,14 +284,10 @@ class PaService
             }
         } else {
             $this->log('Creating report');
-            $report = new EntityDir\Report\Report($client);
-            $client->addReport($report);   //double link for testing reasons
             $reportStartDate = clone $reportEndDate;
             $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
-            $report
-                ->setStartDate($reportStartDate)
-                ->setEndDate($reportEndDate)
-                ->setType($reportType);
+            $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate);
+            $client->addReport($report);   //double link for testing reasons
 
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
             $this->em->persist($report);

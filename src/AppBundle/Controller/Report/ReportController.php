@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 class ReportController extends RestController
 {
     /**
+     * Add a report
+     * Currently only used by Lay deputy during registration steps
+     * Pa report are instead created via PaService::createReport()
+     *
      * @Route("")
      * @Method({"POST"})
      */
@@ -25,24 +29,20 @@ class ReportController extends RestController
 
         $reportData = $this->deserializeBodyContent($request);
 
-        // new report
         if (empty($reportData['client']['id'])) {
             throw new \InvalidArgumentException('Missing client.id');
         }
         $client = $this->findEntityBy(EntityDir\Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        $report = new Report($client);
-        $this->get('opg_digideps.report_service')->setReportTypeBasedOnCasrec($report);
-
         $this->validateArray($reportData, [
             'start_date' => 'notEmpty',
             'end_date' => 'notEmpty',
         ]);
 
-        // add other stuff
-        $report->setStartDate(new \DateTime($reportData['start_date']));
-        $report->setEndDate(new \DateTime($reportData['end_date']));
+        // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
+        $reportType = $this->get('opg_digideps.report_service')->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
+        $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
         $this->persistAndFlush($report);
