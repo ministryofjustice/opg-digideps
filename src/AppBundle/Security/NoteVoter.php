@@ -75,12 +75,21 @@ class NoteVoter extends Voter
 
         switch ($attribute) {
             case self::ADD_NOTE:
-                /** @var Client $subject */
-                return $this->clientBelongsToUserTeam($loggedInUser, $subject);
+                if ($subject instanceof Client) {
+                    /** @var Client $subject */
+                    return $this->clientBelongsToUserTeam($loggedInUser, $subject);
+                }
+                return false;
             case self::EDIT_NOTE:
             case self::DELETE_NOTE:
-                /** @var Note $subject */
-                return $this->clientBelongsToUserTeam($loggedInUser, $subject->getClient());
+                if ($subject instanceof Note) {
+                    $client = $subject->getClient();
+                    if ($client instanceof Client) {
+                        /** @var Note $subject */
+                        return $this->clientBelongsToUserTeam($loggedInUser, $subject->getClient());
+                    }
+                }
+                return false;
         }
 
         return false;
