@@ -4,14 +4,14 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/note/")
+ */
 class NoteController extends AbstractController
 {
     private static $jmsGroups = [
@@ -19,8 +19,8 @@ class NoteController extends AbstractController
     ];
 
     /**
-     * @Route("/note/add", name="add_note")
-     * @Template()
+     * @Route("add", name="add_note")
+     * @Template("AppBundle:Pa/ClientProfile:addNote.html.twig")
      */
     public function addAction(Request $request)
     {
@@ -32,15 +32,11 @@ class NoteController extends AbstractController
         $report = $client->getCurrentReport();
 
         $note = new EntityDir\Note($client);
-        $template = 'AppBundle:Pa/ClientProfile:addNote.html.twig';
 
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $client->getCurrentReport()->getId()]);
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType(
-                $this->get('translator'),
-                $note
-            ),
+            new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
 
@@ -48,43 +44,40 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $note = $form->getData();
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/note', $note, ['add_note']);
+            $this->getRestClient()->post('report/' . $client->getId() . '/note', $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
+            return $this->redirect($returnLink);
         }
 
-        return $this->render($template, [
+        return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-            'backLink' => $returnLink,
-        ]);
+            'backLink' => $returnLink
+        ];
     }
 
     /**
-     * @Route("/note/{noteId}/edit", name="edit_note")
+     * @Route("{noteId}/edit", name="edit_note")
      * @Template("AppBundle:Pa/ClientProfile:editNote.html.twig")
      */
     public function editAction(Request $request, $noteId)
     {
-        $note = $this->getRestClient()->get('note/' . $noteId, 'Note'); /* @var $note EntityDir\Note*/
+        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'user']); /* @var $note EntityDir\Note*/
         // hack check
         if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
-            throw $this->createAccessDeniedException('Cannot edit notes creaed by others');
+            throw $this->createAccessDeniedException('Cannot edit notes created by others');
         }
 
-        //TMP: remove when the new client profile page uses clientId
-        $report = $this->getReportIfNotSubmitted($request->get('reportId'), self::$jmsGroups);
+        //TODO remove when client is used instead of report
+        $report = $this->getRestClient()->get("report/".$request->get('reportId'), 'Report\\Report', ['report-id', 'client', 'report-106-flag']);
+        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType(
-                $this->get('translator'),
-                $note
-            ),
+            new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
 
@@ -94,17 +87,14 @@ class NoteController extends AbstractController
             $note = $form->getData();
 
             $this->getRestClient()->put('note/' . $noteId, $note, ['add_note']);
-            $request->getSession()->getFlashBag()->add('info', 'The note has been updated');
-
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'The note has been edited'
             );
 
-            return $this->redirectToRoute('report_overview', ['reportId' => $report->getId()]);
+            return $this->redirect($returnLink);
         }
 
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         return [
             'report'  => $report,

@@ -165,12 +165,12 @@ class RestClient
      *
      * @throws UsernameNotFoundException
      *
-     * @return \AppBundle\Entity\User $user
+     * @return id $user ID
      *
      */
     public function agreeTermsUse($token)
     {
-        return $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'User', [], false);
+        $this->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
     }
 
     /**
