@@ -218,7 +218,23 @@ class Report
         $this->setClient($client);
         $this->setStartDate($startDate);
         $this->setEndDate($endDate);
-        // TODO check date interval
+
+        // date interval check
+        if ((int)$startDate->diff($endDate)->format('%a') >= 365) {
+            throw new \RuntimeException('Report cannot cover more than one year');
+        }
+
+
+        // check this there only is one unsubmitted report
+        if ($client->getUnsubmittedReports()->count() > 0) {
+            throw new \RuntimeException('Client '.$client->getId().' already has unsubmitted report. Cannot create another one');
+        }
+
+        // check date interval overlapping other reports
+//        if ($unsubmittedReports = $client->getSubmittedReports()->toArray()) {
+//            $endDates = array_map(function($report){ return $report->getEndDate(); }, $unsubmittedReports);
+//            echo "<pre>";\Doctrine\Common\Util\Debug::dump($endDates, 4);die;
+//        }
 
         $this->contacts = new ArrayCollection();
         $this->bankAccounts = new ArrayCollection();

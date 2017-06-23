@@ -534,7 +534,9 @@ class Client
     }
 
     /**
-     * Get un-submitted reports.
+     * Get un-submitted reports, ordered by most recently submitted first
+     *
+     *  //TODO refactor using @ORM\OrderBy({"submitDate"="DESC"}) on client.reports
      *
      * @return ArrayCollection
      */
@@ -559,7 +561,7 @@ class Client
      */
     public function getUnsubmittedReports()
     {
-        return $this->reports->filter(function ($report) {
+        return $this->getReports()->filter(function ($report) {
             return !$report->getSubmitted();
         });
     }
