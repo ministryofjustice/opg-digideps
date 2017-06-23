@@ -4,8 +4,3 @@ component:
         You have been inactive for %inactiveFor% minutes and will be automatically
         signed out in %loggedOutIn% minutes.
   secondLine: Click 'OK' to stay signed in and continue with your report.
-  controls:
-    okButton:
-      label: "OK"
-    signOutButton:
-      label: "Sign out"

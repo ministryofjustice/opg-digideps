@@ -1,16 +1,14 @@
 {% extends 'AppBundle:Layouts:application.html.twig'%}
+
 {% trans_default_domain "signin" %}
+{% if not isAdmin %}
+    {% set page = 'signIn' %}
+{% else %}
+    {% set page = 'signInAdmin' %}
+{% endif %}
 
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-
-{% block pageTitle %}
-    {% if isAdmin %}
-        {{ 'admin.pageTitle' | trans }}
-    {% else %}
-        {{ 'pageTitle' | trans }}
-    {% endif %}
-{% endblock %}
-
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
 
@@ -20,9 +18,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom'}}) }}
 
-    {{ form_input(form.email,'email', { 'labelRaw': true }) }}
-    {{ form_input(form.password,'password') }}
-    {{ form_submit(form.login,'signin', {'buttonClass': 'behat-link-login'}) }}
+    {{ form_input(form.email,'signInForm.email', { 'labelRaw': true }) }}
+    {{ form_input(form.password,'signInForm.password') }}
+    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
 
     {{ form_end(form) }}
 

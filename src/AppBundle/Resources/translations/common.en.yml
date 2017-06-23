@@ -2,7 +2,8 @@ cancel: Cancel
 view: View
 yes: Yes
 no: No
-
+ok: OK
+signOut: Sign out
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago

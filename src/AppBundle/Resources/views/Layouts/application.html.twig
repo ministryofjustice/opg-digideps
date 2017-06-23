@@ -68,7 +68,7 @@
                         <a href="{{path('pa_settings')}}" class="behat-link-pa-settings">Settings</a>
                     </li>
                 {% endif %}
-                <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+                <li><a href="{{path('logout')}}" class="behat-link-logout">{{ 'signOut' | trans({}, 'common' ) }}</a></li>
 
 
             </ul>
@@ -154,10 +154,10 @@
 
 {% block footerSupportLinks %}
     <li>
-        <a href="{{path('terms')}}">{% trans %}Terms and Conditions{% endtrans %}</a>
+        <a href="{{path('terms')}}">Terms and Conditions</a>
     </li>
     <li>
-        <a href="https://www.gov.uk/help/cookies">{{'Cookies' | trans()}}</a>
+        <a href="https://www.gov.uk/help/cookies">Cookies</a>
     </li>
 {% endblock %}
 

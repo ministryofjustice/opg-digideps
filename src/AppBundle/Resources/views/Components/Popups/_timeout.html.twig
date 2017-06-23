@@ -17,8 +17,8 @@
         <p>{{ 'component.secondLine' | trans }}</p>
 
         <form name="session-timeout-form" action="/logout">
-            <button type="button" name="continue" class="button js-ok-button">OK</button>
-            <button type="submit" name="subsmit" class="button-secondary">Sign out</button>
+            <button type="button" name="continue" class="button js-ok-button">{{ 'ok' | trans({}, 'common' ) }}</button>
+            <button type="submit" name="subsmit" class="button-secondary">{{ 'signOut' | trans({}, 'common' ) }}</button>
         </form>
 
     </div>

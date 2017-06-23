@@ -15,9 +15,7 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
-        formTitle: "Client's details"
-    } %}
+    <h2 class="heading-medium flush--top">{{ 'addClient.formHeading' | trans }}</h2>
 
     {{ form_input(form.firstname, 'firstname') }}
     {{ form_input(form.lastname, 'lastname') }}

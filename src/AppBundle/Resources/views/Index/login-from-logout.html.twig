@@ -1,15 +1,14 @@
 {% extends 'AppBundle:Index:login.html.twig' %}
+
 {% set translationDomain = "signin" %}
 {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'manualLogout.pageTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} sign-in-page--manual-signout{% endblock %}
-
+{% block pageTitle %}{{ 'signedOut.pageTitle' | trans }}{% endblock %}
 
 {% block pageHeader %}
 
-    <p class="lede">{{ 'manualLogout.pageSectionTitle' | trans }}</p>
+    <p class="lede">{{ 'signedOut.para01' | trans }}</p>
 
-    <p class="behat-region-manual-logout-message">{{ 'manualLogout.pageSectionDescription' | trans }}</p>
+    <p class="behat-region-manual-logout-message">{{ 'signedOut.para02' | trans }}</p>
 
 {% endblock %}

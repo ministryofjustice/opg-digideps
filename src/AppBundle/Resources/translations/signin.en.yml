@@ -1,22 +1,26 @@
-page:
+signIn:
   htmlTitle: "Deputy report - sign in | GOV.UK"
-pageTitle: Sign in
-header: Sign in to the admin area
-email:
-    label: Email address
-    hint: We sent your registration link to this email address.
-password:
-    label: Password
-signin:
-    label: Sign in
-    invalidMessage: You've entered an invalid email or password. Please try again.
+  pageTitle: Sign in
+
+signedOut:
+  pageTitle: You are now signed out
+  para01: Thank you for using the Complete the deputy report service.
+  para02: Sign in to get started again.
+
+signInAdmin:
+  htmlTitle: "Admin - sign in | GOV.UK"
+  pageTitle: OPG user sign in
+
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been signed out because you've not used the service for more than %time%.
 bruteForceLocked: You've tried to sign in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
-manualLogout:
-  pageTitle: You are now signed out
-  pageSectionTitle: Thank you for using the Complete the deputy report service.
-  pageSectionDescription: Sign in to get started again.
 
-admin:
-    pageTitle: OPG user sign in
+signInForm:
+  email:
+      label: Email address
+      hint: We sent your registration link to this email address.
+  password:
+      label: Password
+  signin:
+      label: Sign in
+      invalidMessage: You've entered an invalid email or password. Please try again.
