@@ -561,7 +561,7 @@ class Client
      */
     public function getUnsubmittedReports()
     {
-        return $this->getReports()->filter(function ($report) {
+        return $this->reports->filter(function ($report) {
             return !$report->getSubmitted();
         });
     }
