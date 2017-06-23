@@ -4,10 +4,12 @@ namespace AppBundle\Controller\Pa;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/note/")
@@ -27,36 +29,35 @@ class NoteController extends AbstractController
         $clientId = $request->get('clientId');
 
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'user']);
+
+        $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
 
         $report = $client->getCurrentReport();
 
         $note = new EntityDir\Note($client);
-
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType($this->get('translator')),
             $note
         );
 
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $note = $form->getData();
 
-            $this->getRestClient()->post('report/' . $client->getId() . '/note', $note, ['add_note']);
+            $this->getRestClient()->post('note/' . $client->getId(), $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirect($returnLink);
+            return $this->redirect($this->generateReturnLink($note));
         }
 
         return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-            'backLink' => $returnLink
+            'backLink' => $this->generateReturnLink($note)
         ];
     }
 
@@ -66,15 +67,10 @@ class NoteController extends AbstractController
      */
     public function editAction(Request $request, $noteId)
     {
-        $note = $this->getRestClient()->get('note/' . $noteId, 'Note', ['notes', 'user']); /* @var $note EntityDir\Note*/
-        // hack check
-        if ($note->getCreatedBy()->getId() != $this->getUser()->getId()) {
-            throw $this->createAccessDeniedException('Cannot edit notes created by others');
-        }
+        /** @var EntityDir\Note $note */
+        $note = $this->getNote($noteId);
 
-        //TODO remove when client is used instead of report
-        $report = $this->getRestClient()->get("report/".$request->get('reportId'), 'Report\\Report', ['report-id', 'client', 'report-106-flag']);
-        $returnLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+        $this->denyAccessUnlessGranted('edit-note', $note, 'Access denied');
 
         $form = $this->createForm(
             new FormDir\Pa\NoteType($this->get('translator')),
@@ -92,14 +88,95 @@ class NoteController extends AbstractController
                 'The note has been edited'
             );
 
-            return $this->redirect($returnLink);
+            return $this->redirect($this->generateReturnLink($note));
         }
 
-
         return [
-            'report'  => $report,
+            'report'  => $note->getClient()->getCurrentReport(),
             'form'  => $form->createView(),
-            'backLink' => $returnLink
+            'client' => $note->getClient(),
+            'backLink' => $this->generateReturnLink($note)
         ];
     }
+
+    /**
+     * Confirm delete user form
+     *
+     * @Route("{noteId}/delete", name="delete_note")
+     * @Template("AppBundle:Pa/ClientProfile:deleteConfirm.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
+    {
+        /** @var EntityDir\Note $note */
+        $note = $this->getNote($noteId);
+
+        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+
+        return [
+            'report'  => $note->getClient()->getCurrentReport(),
+            'note' => $note,
+            'client' => $note->getClient(),
+            'backLink' => $this->generateReturnLink($note)
+        ];
+    }
+
+    /**
+     * Removes a note, adds a flash message and redirects to page
+     *
+     * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
+     * @Template()
+     */
+    public function deleteConfirmedAction(Request $request, $noteId)
+    {
+        try {
+            /** @var EntityDir\Note $note */
+            $note = $this->getNote($noteId);
+
+            $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+
+            $this->getRestClient()->delete('note/' . $noteId);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
+
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'Note could not be removed'
+            );
+        }
+
+        return $this->redirect($this->generateReturnLink($note));
+    }
+
+    /**
+     * Retrieves the note object with required associated entities to populate the table and back links
+     *
+     * @param $noteId
+     * @return mixed
+     */
+    private function getNote($noteId)
+    {
+        return $this->getRestClient()->get(
+            'note/' . $noteId,
+            'Note',
+            ['notes', 'client', 'current-report', 'report-id', 'note-client', 'user']
+        );
+    }
+
+    /**
+     * Generate back to overview page of current client report
+     *
+     * @param EntityDir\Note $note
+     * @return string
+     */
+    private function generateReturnLink(EntityDir\Note $note)
+    {
+        // generate return link
+        $report = $note->getClient()->getCurrentReport();
+
+        return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+    }
 }
+

@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "client-notes" %}
+{% trans_default_domain translationDomain %}
+{% set page = "removeNote" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.h1Title') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text"><strong class="bold">{{ (page ~ '.question') | trans }}</strong></p>
+    <table class="text push--bottom">
+        <tbody>
+            <tr>
+                <th scope="row">{{ (page ~ '.noteTitle') | trans }}</th>
+                <td>{{ note.getTitle() }}</td>
+            </tr>
+            <tr>
+                <th scope="row">{{ (page ~ '.dateAdded') | trans }}</th>
+                <td>{{ note.getCreatedOn() | date('d F Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('delete_note_confirm', { noteId: note.id }) }}" id="note-delete" class="button push-half--right behat-link-confirm">{{ (page ~ '.linkButtonLabel') | trans }}</a>
+
+    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+{% endblock %}
+

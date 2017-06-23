@@ -1,17 +1,19 @@
-addNotes:
+addNote:
   htmlTitle: Client profile - add note | GOV.UK
   pageTitle: Add note
-  supportTitle: "Client profile: %clientName%"
-editPage:
+  supportTitle: "Client profile:"
+editNote:
   htmlTitle: Client profile - edit note | GOV.UK
   pageTitle: Edit note
-  supportTitle: "Client profile: %clientName%"
-removePage:
+  supportTitle: "Client profile:"
+removeNote:
   htmlTitle: Client profile - remove note | GOV.UK
   h1Title: Remove note
-  supportTitle: "Client profile: %clientName%"
-  question: Are you sure you want to remove the note entitled <strong class="bold">%note_title%</strong> from this report?
-
+  supportTitle: "Client profile:"
+  question: Are you sure you want to remove this note?
+  noteTitle: "Title:"
+  dateAdded: "Date added:"
+  linkButtonLabel: Yes, remove note
 form:
   category:
     label: Category

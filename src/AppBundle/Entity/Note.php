@@ -27,7 +27,7 @@ class Note
      */
     public static $categories = [
         // categoryId | categoryTranslationKey
-        'Todo' => 'todo',
+        'To Do' => 'todo',
         'DWP' => 'dwp',
         'OPG' => 'opg',
         'Welfare' => 'welfare',
