@@ -223,9 +223,9 @@ class Report
         $this->endDate = new \DateTime($endDate->format('Y-m-d'));
 
         // date interval check
-        if ((int)$startDate->diff($endDate)->format('%a') > 365) { // TODO reduce to ">=" once the db has been migrated
-            throw new \RuntimeException('Report cannot cover more than one year');
-        }
+//        if ((int)$startDate->diff($endDate)->format('%a') > 365) {
+//            throw new \RuntimeException('Report cannot cover more than one year');
+//        }
 
 
         // check this there only is one unsubmitted report
