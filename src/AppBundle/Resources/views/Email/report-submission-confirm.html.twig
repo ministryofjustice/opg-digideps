@@ -10,10 +10,10 @@
         <strong>Thank you for submitting your annual deputy report</strong> for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
     </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’re in the process of reviewing your report, and will contact you when this has been done. </p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’re currently reviewing it, and we'll contact you when we've finished.</p>
 
     {% if app.user.isDeputyPa() %}
-        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">A pdf copy of the report is attached to this email for your records.</p>
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">You can view your submitted reports on your client profile page.</p>
     {% else %}
         <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>Download a pdf of your report</strong></p>
 

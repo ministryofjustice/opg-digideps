@@ -311,8 +311,7 @@ class MailFactory
      */
     public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport, $pdfBinaryContent)
     {
-        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport)
-            ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($submittedReport), 'application/pdf', $pdfBinaryContent)]);
+        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 
         return $email;
     }

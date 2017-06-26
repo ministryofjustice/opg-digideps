@@ -2,11 +2,10 @@ Dear {{ deputyFirstName }}
 
 Thank you for submitting your annual deputy report for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
 
-We’re in the process of reviewing your report, and will contact you when this has been done.
-
+We’re currently reviewing it, and we'll contact you when we've finished.
 
 {% if app.user.isDeputyPa() %}
-A pdf copy of the report is attached to this email for your records.
+You can view your submitted reports on your client profile page.
 {% else %}
 Download a pdf of your report
 -----------------------------
