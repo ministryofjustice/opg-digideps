@@ -80,8 +80,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->router->shouldReceive('generate')->with('homepage', [])->andReturn('homepage');
 
         $this->templating->shouldReceive('render')->with(
-            'AppBundle:Email:report-submission.html.twig',
-            ['homepageUrl' => 'http://deputy/homepage']
+            'AppBundle:Email:report-submission.html.twig'
         )->andReturn('[TEMPLATE]');
 
         $client = m::mock('AppBundle\Entity\Client', [
