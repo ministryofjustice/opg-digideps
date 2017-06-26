@@ -204,4 +204,28 @@ class AbstractController extends Controller
 
         return $this->get('router')->generate($routeName, $routeParams);
     }
+
+    /**
+     * Generates client profile link
+     *
+     * @param Client $client
+     * @return string
+     * @throws \Exception
+     */
+    protected function generateClientProfileLink(Client $client)
+    {
+        $report = $client->getCurrentReport();
+
+        if ($report instanceof Report) {
+            // generate link
+            return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+        }
+
+        $this->get('logger')->log(
+            'warning',
+            'Client entity missing current report when trying to generate client profile link'
+        );
+
+        throw new \Exception('Unable to generate client profile link.');
+    }
 }

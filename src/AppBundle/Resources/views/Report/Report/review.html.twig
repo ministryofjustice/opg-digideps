@@ -10,7 +10,7 @@
 
         {% if app.user.isDeputyPa() %}
             <nav class="back-bar">
-                <a id="back-to-dashboard" href="{{path('pa_dashboard')}}" class="link-return behat-link-return-to-pa-dashboard">{{ 'page.returnToDashboard' | trans([], 'report-submitted') }}</a>
+                <a id="back-to-client" href="{{ clientProfileLink }}" class="link-return behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
             </nav>
         {% else %}
             <nav class="back-bar">

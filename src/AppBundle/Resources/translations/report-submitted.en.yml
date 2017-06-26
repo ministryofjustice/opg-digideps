@@ -6,6 +6,7 @@ page:
   weWillSendReminder: "We'll send you a reminder when it's time for you to complete the next report. You can make a start on it at any time from now on."
   downloadLink: View %reportName% report
   returnToHomepage: Return to reports page
+  returnToClientProfile: Return to client profile
   returnToDashboard: Return to dashboard
   feedback:
     title: Give us your feedback
