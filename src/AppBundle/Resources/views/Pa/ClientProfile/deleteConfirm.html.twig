@@ -34,7 +34,7 @@
 
     <a href="{{ path('delete_note_confirm', { noteId: note.id }) }}" id="note-delete" class="button push-half--right behat-link-confirm">{{ (page ~ '.linkButtonLabel') | trans }}</a>
 
-    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ backLink }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
 
 {% endblock %}
 
