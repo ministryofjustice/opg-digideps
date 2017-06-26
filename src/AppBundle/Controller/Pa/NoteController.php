@@ -50,14 +50,14 @@ class NoteController extends AbstractController
             $this->getRestClient()->post('note/' . $client->getId(), $note, ['add_note']);
             $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
 
-            return $this->redirect($this->generateReturnLink($note));
+            return $this->redirect($this->generateClientProfileLink($note->getClient()));
         }
 
         return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-            'backLink' => $this->generateReturnLink($note)
+            'backLink' => $this->generateClientProfileLink($note->getClient())
         ];
     }
 
@@ -88,14 +88,14 @@ class NoteController extends AbstractController
                 'The note has been edited'
             );
 
-            return $this->redirect($this->generateReturnLink($note));
+            return $this->redirect($this->generateClientProfileLink($note->getClient()));
         }
 
         return [
             'report'  => $note->getClient()->getCurrentReport(),
             'form'  => $form->createView(),
             'client' => $note->getClient(),
-            'backLink' => $this->generateReturnLink($note)
+            'backLink' => $this->generateClientProfileLink($note->getClient())
         ];
     }
 
@@ -116,7 +116,7 @@ class NoteController extends AbstractController
             'report'  => $note->getClient()->getCurrentReport(),
             'note' => $note,
             'client' => $note->getClient(),
-            'backLink' => $this->generateReturnLink($note)
+            'backLink' => $this->generateClientProfileLink($note->getClient())
         ];
     }
 
@@ -147,7 +147,7 @@ class NoteController extends AbstractController
             );
         }
 
-        return $this->redirect($this->generateReturnLink($note));
+        return $this->redirect($this->generateClientProfileLink($note->getClient()));
     }
 
     /**
@@ -163,20 +163,6 @@ class NoteController extends AbstractController
             'Note',
             ['notes', 'client', 'current-report', 'report-id', 'note-client', 'user']
         );
-    }
-
-    /**
-     * Generate back to overview page of current client report
-     *
-     * @param EntityDir\Note $note
-     * @return string
-     */
-    private function generateReturnLink(EntityDir\Note $note)
-    {
-        // generate return link
-        $report = $note->getClient()->getCurrentReport();
-
-        return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
     }
 }
 

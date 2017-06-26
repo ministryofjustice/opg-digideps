@@ -125,8 +125,13 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType(), $report,
-                                  ['action' => $this->generateUrl('report_create', ['clientId' => $clientId])]);
+        $form = $this->createForm(
+            new FormDir\Report\ReportType(),
+            $report,
+            [
+                'action' => $this->generateUrl('report_create', ['clientId' => $clientId])
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -172,7 +177,7 @@ class ReportController extends AbstractController
         $translator = $this->get('translator');
 
         // check status
-        $status= $report->getStatus();
+        $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
@@ -278,14 +283,15 @@ class ReportController extends AbstractController
     public function reviewAction($reportId)
     {
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->getReport($reportId, array_merge(self::$reportGroupsAll, ['report-id', 'current-report']));
 
         // check status
-        $status= $report->getStatus();
+        $status = $report->getStatus();
 
         return [
             'report' => $report,
             'reportStatus' => $status,
+            'clientProfileLink' => $this->generateClientProfileLink($report->getClient())
         ];
     }
 
