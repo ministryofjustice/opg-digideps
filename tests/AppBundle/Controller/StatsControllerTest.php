@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Report\Report;
+
 class StatsControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -36,9 +38,9 @@ class StatsControllerTest extends AbstractTestController
         self::$report1 = self::fixtures()->createReport(self::$client1, ['setEndDate' => new \DateTime('yesterday')]);
 
         // report2 (submitted)
-        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2014'));
-        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2015'));
-        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true)->setSubmitDate(new \DateTime('01-01-2016'));
+        self::$report2 = self::fixtures()->createReport(self::$client1, ['setSubmitted'=>true, 'setSubmitDate'=>new \DateTime('01-01-2014')]);
+        self::$report2 = self::fixtures()->createReport(self::$client1, ['setSubmitted'=>true, 'setSubmitDate'=>new \DateTime('01-01-2015')]);
+        self::$report2 = self::fixtures()->createReport(self::$client1, ['setSubmitted'=>true, 'setSubmitDate'=>new \DateTime('01-01-2016')]);
 
         self::fixtures()->flush();
         self::fixtures()->clear();
