@@ -53,21 +53,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
      * */
     public function testConstrutor($startDate, $endDate, array $clientReports, $expectedTextInException)
     {
+
         $client = new Client();
         foreach($clientReports as $rep) {
             $report = (new Report($this->client, Report::TYPE_102, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted(($rep[2]));
             $client->addReport($report);
         }
 
-        $exceptionMessage = '-';
-        try {
-            new Report($client, Report::TYPE_102, new \DateTime($startDate), new \DateTime($endDate));
-        } catch(\Exception $e){
-            $exceptionMessage = $e->getMessage();
-        }
+        $this->setExpectedException(\RuntimeException::class, $expectedTextInException);
 
-        $this->assertContains($expectedTextInException, $exceptionMessage);
-
+        new Report($client, Report::TYPE_102, new \DateTime($startDate), new \DateTime($endDate));
     }
 
     public function testGetMoneyTotal()
