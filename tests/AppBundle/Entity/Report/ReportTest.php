@@ -38,7 +38,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
     }
 
-    public static function ctorProvider()
+    public static function constructorProvider()
     {
         return [
             // start date, end date, submitted (true/false)
@@ -49,9 +49,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider ctorProvider
+     * @dataProvider constructorProvider
      * */
-    public function testCtor($startDate, $endDate, array $clientReports, $expectedTextInException)
+    public function testConstrutor($startDate, $endDate, array $clientReports, $expectedTextInException)
     {
         $client = new Client();
         foreach($clientReports as $rep) {
