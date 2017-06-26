@@ -184,17 +184,13 @@ class MailFactory
     {
         $email = new ModelDir\Email();
 
-        $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
-        ];
-
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
             ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
             ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($report), 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
@@ -311,8 +307,7 @@ class MailFactory
      */
     public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport, $pdfBinaryContent)
     {
-        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport)
-            ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($submittedReport), 'application/pdf', $pdfBinaryContent)]);
+        $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 
         return $email;
     }

@@ -80,8 +80,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->router->shouldReceive('generate')->with('homepage', [])->andReturn('homepage');
 
         $this->templating->shouldReceive('render')->with(
-            'AppBundle:Email:report-submission.html.twig',
-            ['homepageUrl' => 'http://deputy/homepage']
+            'AppBundle:Email:report-submission.html.twig'
         )->andReturn('[TEMPLATE]');
 
         $client = m::mock('AppBundle\Entity\Client', [
@@ -125,8 +124,6 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('pauser@email', $email->getToEmail());
-        $this->assertEquals('DigiRep-2016_2017-01-01_1234567t.pdf', $email->getAttachments()[0]->getFilename());
-        $this->assertEquals('[REPORT-CONTENT-PDF]', $email->getAttachments()[0]->getContent());
-        $this->assertEquals('application/pdf', $email->getAttachments()[0]->getContentType());
+        $this->assertEmpty($email->getAttachments());
     }
 }
