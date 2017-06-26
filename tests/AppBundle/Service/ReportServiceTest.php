@@ -97,7 +97,8 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
             'getAssets' => [$mockAsset],
             'getBankAccounts' => [$mockBankAccount],
             'getAssetsTotalValue' => 999,
-            'getCaseNumber' => 1111
+            'getCaseNumber' => 1111,
+            'getSubmitted' => true
         ])->makePartial();
 
         $client = new EntityDir\Client();

@@ -121,20 +121,19 @@ class Fixtures
         return $odr;
     }
 
-    /**
-     * @return EntityDir\Report\Report
-     */
-    public function createReport(EntityDir\Client $client, array $settersMap = [])
-    {
-        $report = new EntityDir\Report\Report($client);
 
-        // start/end dates from today for 365 days
-        $today = new DateTime();
-        $report->setStartDate($today);
-        $today->modify('+365 days');
-        $report->setEndDate($today);
+    public function createReport(
+        EntityDir\Client $client,
+        array $settersMap = []
+    ) {
+        //should be created via ReportService, but this is a fixture, so better to keep it simple
+        $report = new EntityDir\Report\Report(
+            $client,
+            empty($settersMap['setType']) ? EntityDir\Report\Report::TYPE_102 : $settersMap['setType'],
+            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
+            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
+        );
 
-        $report->setType(EntityDir\Report\Report::TYPE_102);
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
         }

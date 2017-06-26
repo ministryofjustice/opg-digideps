@@ -16,7 +16,8 @@ use AppBundle\Entity\Report\MoneyTransactionShortOut;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mockery as m;
+use MockeryStub as m;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,13 +28,41 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->client = m::mock(Client::class);
-        $this->report = m::mock(Report::class . '[has106Flag]', [$this->client]);
+        $this->client = m::mock(Client::class, ['getUnsubmittedReports'=>new ArrayCollection(), 'getSubmittedReports'=>new ArrayCollection()]);
+        $this->validReportCtorArgs = [$this->client, Report::TYPE_102, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
         $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
+    }
+
+    public static function constructorProvider()
+    {
+        return [
+            // start date, end date, submitted (true/false)
+            ['2017-06-23', '2018-06-22', [['2016-06-23', '2017-06-22', false]], 'already has unsubmitted report'],
+            //['2017-06-23', '2018-06-24', [['2016-06-23', '2017-06-22', true]], 'cannot cover more than one year'],
+            ['2017-06-24', '2018-06-23', [['2016-06-23', '2017-06-22', true], ['2015-06-23', '2016-06-22', true]], 'new report is expected to start on'],
+        ];
+    }
+
+    /**
+     * @dataProvider constructorProvider
+     * */
+    public function testConstrutor($startDate, $endDate, array $clientReports, $expectedTextInException)
+    {
+
+        $client = new Client();
+        foreach($clientReports as $rep) {
+            $report = (new Report($this->client, Report::TYPE_102, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted(($rep[2]));
+            $client->addReport($report);
+        }
+
+        $this->setExpectedException(\RuntimeException::class, $expectedTextInException);
+
+        new Report($client, Report::TYPE_102, new \DateTime($startDate), new \DateTime($endDate));
     }
 
     public function testGetMoneyTotal()
@@ -143,7 +172,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $fee1 = m::mock(Fee::class, ['getAmount'=>2]);
         $reportWith = function ($fees) {
-            return m::mock(Report::class . '[getFees]', [$this->client])
+            return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
@@ -157,7 +186,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $exp1 = m::mock(Expense::class, ['getAmount'=>1]);
 
         $reportWith = function ($expenses) {
-            return m::mock(Report::class . '[getExpenses]', [$this->client])
+            return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();
         };

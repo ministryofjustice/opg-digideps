@@ -534,7 +534,9 @@ class Client
     }
 
     /**
-     * Get un-submitted reports.
+     * Get un-submitted reports, ordered by most recently submitted first
+     *
+     *  //TODO refactor using OrderBy({"submitDate"="DESC"}) on client.reports
      *
      * @return ArrayCollection
      */
