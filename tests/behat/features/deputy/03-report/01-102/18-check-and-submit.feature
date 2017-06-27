@@ -72,7 +72,6 @@ Feature: Report submit
 #        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
 
-
     @deputy
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -114,10 +113,15 @@ Feature: Report submit
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "reports, download-2016-report"
+        When I click on "reports"
+        And I save the current URL as "reports-type-list"
+        When I click on "download-2016-report"
         And the response should contain "12345ABC"
         And the response should contain "Peter"
         And the response should contain "White"
         # test go back link
         When I click on "back-to-reports"
-        Then I should see the "download-2016-report" link
+        Then I go to the URL previously saved as "reports-type-list"
+        And I should see the "download-2016-report" link
+
+
