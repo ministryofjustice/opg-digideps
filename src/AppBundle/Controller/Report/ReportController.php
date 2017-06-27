@@ -125,8 +125,13 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType(), $report,
-                                  ['action' => $this->generateUrl('report_create', ['clientId' => $clientId])]);
+        $form = $this->createForm(
+            new FormDir\Report\ReportType(),
+            $report,
+            [
+                'action' => $this->generateUrl('report_create', ['clientId' => $clientId])
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -172,7 +177,7 @@ class ReportController extends AbstractController
         $translator = $this->get('translator');
 
         // check status
-        $status= $report->getStatus();
+        $status = $report->getStatus();
         if (!$report->isDue() || !$status->getIsReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
@@ -281,11 +286,18 @@ class ReportController extends AbstractController
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         // check status
-        $status= $report->getStatus();
+        $status = $report->getStatus();
+
+        if ($this->getUser()->isDeputyPa()) {
+            $backLink = $this->generateClientProfileLink($report->getClient());
+        } else {
+            $backLink = $this->generateUrl('reports', ['type' => $report->getType()]);
+        }
 
         return [
             'report' => $report,
             'reportStatus' => $status,
+            'backLink' => $backLink
         ];
     }
 

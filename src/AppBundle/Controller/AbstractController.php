@@ -204,4 +204,33 @@ class AbstractController extends Controller
 
         return $this->get('router')->generate($routeName, $routeParams);
     }
+
+    /**
+     * Generates client profile link. We cannot guarantee the passed client has access to current report
+     * So we need to make another API call with the correct JMS groups
+     * thus ensuring the client is retrieved with the current report.
+     *
+     * @param Client $client
+     * @return string
+     * @throws \Exception
+     */
+    protected function generateClientProfileLink(Client $client)
+    {
+        /** @var $client Client */
+        $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+
+        $report = $client->getCurrentReport();
+
+        if ($report instanceof Report) {
+            // generate link
+            return $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
+        }
+
+        $this->get('logger')->log(
+            'warning',
+            'Client entity missing current report when trying to generate client profile link'
+        );
+
+        throw new \Exception('Unable to generate client profile link.');
+    }
 }
