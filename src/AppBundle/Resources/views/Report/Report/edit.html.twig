@@ -6,18 +6,40 @@
 {% trans_default_domain translationDomain %}
 
  {% block htmlTitle %}
-     {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
+     {{ ('editPage.htmlTitle') | trans({'%client%': client.firstname}) }}
  {% endblock %}
-{% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
+{% block pageTitle %}
+    {{ ('editPage.htmlTitle') | trans({'%client%': client.firstname}) }}
+{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
 {% block pageContent %}
 
-    {# TODO consider remove the partial, as only used from the view after last refactor #}
-    {% include 'AppBundle:Report:_edit-dates.html.twig' with {
-        'form' : form
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    <h3 class="heading-medium">{{ 'editPage.title'| trans({'%period%': report.period}, translationDomain) }}</h3>
+    <p>{{ 'editPage.pageSectionDescription' | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
+
+    {{ form_known_date(form.startDate, 'editPage.form.startDate') }}
+
+    {{ form_known_date(form.endDate, 'editPage.form.endDate') }}
+
+    {{ form_submit(form.save,'editPage.form.save') }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'editPage.form.cancel.label',
+    linkClass: 'button-link',
+    linkHref: returnLink
     } %}
+
+    {{ form_end(form) }}
+
     <hr class="item-list"/>
 {% endblock %}

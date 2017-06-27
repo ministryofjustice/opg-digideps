@@ -14,7 +14,9 @@ class ReportType extends AbstractType
     private $name;
 
     /**
-     * @param string $name formName report or report_edit
+     * ReportType constructor.
+     * @param string $name //TODO not clear why this is passed. Try to remove and update behat tests
+     *  but using different translations
      */
     public function __construct($name = 'report')
     {
@@ -42,7 +44,7 @@ class ReportType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'registration',
+            // since used to create and edit report, this has to be set from the controller
         ]);
     }
 

@@ -71,6 +71,7 @@
                         </dt>
                         <dd class="push--bottom">
                             {{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}
+                           <a href="{{ path('report_edit', {'reportId': report.id}) }}">{{ 'edit' | trans }}</a>
                         </dd>
 
                         <dt>

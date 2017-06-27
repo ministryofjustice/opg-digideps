@@ -89,20 +89,24 @@ class ReportController extends AbstractController
         $report = $this->getReport($reportId);
         $client = $report->getClient();
         $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
-            'translation_domain' => 'report-edit-dates',
+            'translation_domain' => 'report',
         ]);
+        $returnLink = $this->getUser()->isDeputyPa() ?
+            $this->generateClientProfileLink($report->getClient())
+            : $this->generateUrl('reports', ['type' => $report->getType()]);
+
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isValid()) {
             $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
 
-            return $this->redirect($this->generateUrl('reports', ['type' => $report->getType()]));
+            return $this->redirect($returnLink);
         }
 
         return [
             'client' => $client,
             'report' => $report,
-            'reportId' => $reportId,
-            'form' =>  $editReportDatesForm->createView()
+            'form' =>  $editReportDatesForm->createView(),
+            'returnLink' => $returnLink
         ];
     }
 
@@ -132,13 +136,10 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(
-            new FormDir\Report\ReportType(),
-            $report,
-            [
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId])
-            ]
-        );
+        $form = $this->createForm(new FormDir\Report\ReportType('report'),$report, [
+                'translation_domain' => 'registration',
+                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
