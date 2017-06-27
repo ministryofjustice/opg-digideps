@@ -283,15 +283,21 @@ class ReportController extends AbstractController
     public function reviewAction($reportId)
     {
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReport($reportId, array_merge(self::$reportGroupsAll, ['report-id', 'current-report']));
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
 
+        if ($this->getUser()->isDeputyPa()) {
+            $backLink = $this->generateClientProfileLink($report->getClient());
+        } else {
+            $backLink = $this->generateUrl('reports', ['type' => $report->getType()]);
+        }
+
         return [
             'report' => $report,
             'reportStatus' => $status,
-            'clientProfileLink' => $this->generateClientProfileLink($report->getClient())
+            'backLink' => $backLink
         ];
     }
 

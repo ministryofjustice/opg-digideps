@@ -7,14 +7,13 @@
 
 {% block pageContent %}
     {% if report.submitted == true %}
-
         {% if app.user.isDeputyPa() %}
             <nav class="back-bar">
-                <a id="back-to-client" href="{{ clientProfileLink }}" class="link-return behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
+                <a id="back-to-client" href="{{ backLink }}" class="link-return behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
             </nav>
         {% else %}
             <nav class="back-bar">
-                <a id="back-to-client" href="{{ path('reports', {'type': report.type}) }}" class="link-return behat-link-back-to-reports">Back</a>
+                <a id="back-to-client" href="{{ backLink }}" class="link-return behat-link-back-to-reports">Back</a>
             </nav>
         {% endif %}
     {% endif %}

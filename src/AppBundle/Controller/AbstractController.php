@@ -206,7 +206,9 @@ class AbstractController extends Controller
     }
 
     /**
-     * Generates client profile link
+     * Generates client profile link. We cannot guarantee the passed client has access to current report
+     * So we need to make another API call with the correct JMS groups
+     * thus ensuring the client is retrieved with the current report.
      *
      * @param Client $client
      * @return string
@@ -214,6 +216,9 @@ class AbstractController extends Controller
      */
     protected function generateClientProfileLink(Client $client)
     {
+        /** @var $client Client */
+        $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+
         $report = $client->getCurrentReport();
 
         if ($report instanceof Report) {
