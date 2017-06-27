@@ -286,7 +286,11 @@ class PaService
         } else {
             $this->log('Creating report');
             $reportStartDate = clone $reportEndDate;
-            $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
+            $isLeapDay = $reportStartDate->format('d-M') == '29-Feb';
+            $reportStartDate->sub(new \DateInterval('P1Y')); // One year behind end date
+            if (!$isLeapDay) {
+                $reportStartDate->add(new \DateInterval('P1D')); // + 1 day
+            }
             $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate);
             $client->addReport($report);   //double link for testing reasons
 
