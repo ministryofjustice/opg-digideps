@@ -102,9 +102,7 @@ class ReportController extends AbstractController
             'client' => $client,
             'report' => $report,
             'reportId' => $reportId,
-            'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
-            'filter' => 'propFinance', // extend with param when required
+            'form' =>  $editReportDatesForm->createView()
         ];
     }
 
