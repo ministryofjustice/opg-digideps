@@ -52,13 +52,15 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/reports/{type}/{reportId}", name="reports", defaults={"reportId" = ""})
+     * @Route("/reports/{type}", name="reports")
      * @Template()
      */
-    public function indexAction(Request $request, $type, $reportId = null)
+    public function indexAction(Request $request, $type)
     {
         $user = $this->getUserWithData(['user', 'client', 'report']);
-        if ($user->isOdrEnabled() && empty($reportId)) {
+
+        // NDR: redirect to ODR index
+        if ($user->isOdrEnabled()) {
             return $this->redirectToRoute('odr_index');
         }
 
@@ -66,32 +68,39 @@ class ReportController extends AbstractController
         $client = !empty($clients) ? $clients[0] : null;
 
         $reports = $client ? $client->getReports() : [];
-//        $reports = array_filter($reports, function ($r) use ($type) {
-//            return $r->getType() == $type;
-//        });
         arsort($reports);
 
-        $report = new EntityDir\Report\Report();
-        $report->setClient($client);
+        return [
+            'client' => $client,
+            'reports' => $reports,
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
+            'filter' => 'propFinance', // extend with param when required
+        ];
+    }
 
-        // edit report dates
-        if ($reportId) {
-            $report = $this->getReport($reportId);
-            $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
-                'translation_domain' => 'report-edit-dates',
-            ]);
-            $editReportDatesForm->handleRequest($request);
-            if ($editReportDatesForm->isValid()) {
-                $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
+    /**
+     * Edit single report
+     *
+     * @Route("/reports/edit/{reportId}", name="report_edit")
+     * @Template()
+     */
+    public function editAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId);
+        $client = $report->getClient();
+        $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
+            'translation_domain' => 'report-edit-dates',
+        ]);
+        $editReportDatesForm->handleRequest($request);
+        if ($editReportDatesForm->isValid()) {
+            $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
 
-                return $this->redirect($this->generateUrl('reports', ['type' => $report->getType()]));
-            }
+            return $this->redirect($this->generateUrl('reports', ['type' => $report->getType()]));
         }
 
         return [
             'client' => $client,
             'report' => $report,
-            'reports' => $reports,
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
