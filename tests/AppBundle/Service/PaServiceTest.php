@@ -158,7 +158,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $client1Report1 = $client1->getReports()->first();
         /* @var $client1Report1 EntityDir\Report\Report */
-        $this->assertEquals('2013-12-16', $client1Report1->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2013-12-17', $client1Report1->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
         $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client1Report1->getType());
 
@@ -217,6 +217,57 @@ class PaServiceTest extends WebTestCase
         $client1 = $user1->getClientByCaseNumber('10000001');
         $this->assertCount(1, $client1->getReports());
         $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
+    }
+
+    /**
+     * Data providor for reporting periods, end date and expected start date
+     * 
+     * @return array
+     */
+    public function reportPeriodDateProvider()
+    {
+        return [
+            ['2010-01-01', '2009-01-02'],
+            ['2010-02-28', '2009-03-01'],
+            ['2010-12-31', '2010-01-01'],
+            ['2011-01-01', '2010-01-02'],
+            ['2011-02-28', '2010-03-01'],
+            ['2011-12-31', '2011-01-01'],
+            ['2012-01-01', '2011-01-02'],
+            ['2012-02-28', '2011-03-01'],
+            ['2012-02-29', '2011-03-01'],
+            ['2012-12-31', '2012-01-01'],
+            ['2013-01-01', '2012-01-02'],
+            ['2013-02-28', '2012-02-29'],
+            ['2013-12-31', '2013-01-01'],
+            ['2014-01-01', '2013-01-02'],
+            ['2014-02-28', '2013-03-01'],
+            ['2014-12-31', '2014-01-01'],
+            ['2015-01-01', '2014-01-02'],
+            ['2015-02-28', '2014-03-01'],
+            ['2015-12-31', '2015-01-01'],
+            ['2016-01-01', '2015-01-02'],
+            ['2016-02-29', '2015-03-01'],
+            ['2016-02-28', '2015-03-01'],
+            ['2016-12-31', '2016-01-01'],
+            ['2017-01-01', '2016-01-02'],
+            ['2017-02-28', '2016-02-29'],
+            ['2017-12-31', '2017-01-01']
+        ];
+    }
+
+    /**
+     * @dataProvider reportPeriodDateProvider
+     *
+     * @param $endDate
+     * @param $expectedStartDate
+     */
+    public function testGenerateStartDateFromEndDate($endDate, $expectedStartDate)
+    {
+        $endDate = new \DateTime($endDate);
+        $startDate = $this->pa->generateReportStartDateFromEndDate($endDate);
+
+        $this->assertEquals($expectedStartDate, $startDate->format('Y-m-d'));
     }
 
     public function tearDown()
