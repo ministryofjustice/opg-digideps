@@ -4,42 +4,52 @@
 
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
+{% set isPaUser = app.user.isDeputyPa() %}
+{% if not isPaUser %}
+    {% set page = 'editReportingDates' %}
+{% else %}
+    {% set page = 'editReportingDatesPA' %}
+{% endif %}
 
  {% block htmlTitle %}
-     {{ ('editPage.htmlTitle') | trans({'%client%': client.firstname}) }}
+     {{ (page ~ '.htmlTitle') | trans({ '%client%': client.firstname | title }) }}
  {% endblock %}
 {% block pageTitle %}
-    {{ ('editPage.htmlTitle') | trans({'%client%': client.firstname}) }}
+    {{ (page ~ '.pageTitle') | trans({ '%client%': client.firstname | title, '%period%': report.period }) }}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block supportTitleTop %}
+    {% if isPaUser %}
+        <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if isPaUser %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
 
 {% block pageContent %}
 
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
-    {% endblock %}
+    {% if not isPaUser %}
+        <h3 class="heading-medium">
+            {{ 'editReportingDates.title'| trans({'%period%': report.period}, translationDomain) }}
+        </h3>
+    {% endif %}
+    <p>{{ 'editReportingDates.pageSectionDescription' | trans }}</p>
 
-    <h3 class="heading-medium">{{ 'editPage.title'| trans({'%period%': report.period}, translationDomain) }}</h3>
-    <p>{{ 'editPage.pageSectionDescription' | trans }}</p>
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
+    {{ form_known_date(form.startDate, 'editReportingDates.form.startDate') }}
 
-    {{ form_known_date(form.startDate, 'editPage.form.startDate') }}
+    {{ form_known_date(form.endDate, 'editReportingDates.form.endDate') }}
 
-    {{ form_known_date(form.endDate, 'editPage.form.endDate') }}
+    {{ form_submit(form.save,'editReportingDates.form.save') }}
 
-    {{ form_submit(form.save,'editPage.form.save') }}
-
-    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'editPage.form.cancel.label',
-    linkClass: 'button-link',
-    linkHref: returnLink
-    } %}
+    <a href="{{ returnLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
-    <hr class="item-list"/>
 {% endblock %}

@@ -23,14 +23,13 @@ reportDataList:
   open: "Open report"
   not-started: "Not started"
 
-editPage:
-  htmlTitle: "Annual deputy reports for %client%"
-  pageSectionTitle: "Annual deputy reports for %client%"
-  title: "%period% reporting period"
+# Edit reporting period page (Lay and PA)
+editReportingDates:
+  htmlTitle: Annual deputy reports for %client%
+  pageTitle: Annual deputy reports for %client%
+  title: %period% reporting period
   pageSectionDescription: Tell us when your reporting period starts and finishes.
   form:
-    #createNewReportLink:
-    #  label: "Create new report"
     startDate:
       legend: "Start date"
       hint: "For example, 31 3 2015"
@@ -39,8 +38,10 @@ editPage:
       hint: "For example, 30 3 2016"
     save:
       label: "Save"
-    cancel:
-      label: "Cancel"
+editReportingDatesPA:
+  htmlTitle: Client profile - edit reporting period | GOV.UK
+  pageTitle: Edit %period% reporting period
+  supportTitle: "Client profile:"
 
 # align the translations below, remove top "form" key
 form:
