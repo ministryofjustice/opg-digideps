@@ -145,6 +145,59 @@ class FixDataService
         return $this;
     }
 
+    /**
+     * Fixes the reporting start date ensuring a period of 365 days, not 366.
+     * Ie correct is 1 year in past + 1 day. Ensuring no overlaps
+     */
+    public function fixPaStartDate()
+    {
+        $reports = $this->reportRepo->findAll();
+        $this->totalProcessed = 0;
+        /** @var Report $report */
+        foreach ($reports as $report) {
+            try {
+                $client = $report->getClient();
+                if (!$client) {
+                    throw new \RuntimeException("no client found");
+                }
+                $user = $client->getUsers()->first();
+                if (!$user) {
+                    throw new \RuntimeException("no user found");
+                }
+
+                if ($user->isPaDeputy()) {
+//                    $this->messages[] = "Report {$report->getId()}: already executed on 14/6/2017";
+                    $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                    $reportStartDate = PaService::generateReportStartDateFromEndDate($report->getEndDate());
+                    $report->setStartDate($reportStartDate);
+
+                    $newPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
+                        $report->getEndDate()->format('d-M-Y');
+
+                    $this->messages[] = "Report {$report->getId()}: Reporting period updated FROM " .
+                        $oldPeriod . ' TO ' .
+                        $newPeriod;
+                    $this->totalProcessed++;
+                } else {
+                    $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
+                }
+
+            } catch (\Exception $e) {
+                $this->messages[] = "Report {$report->getId()}: 
+                ERROR - could not be processed with start date of " .
+                    $report->getStartDate()->format('d-M-Y') . " to " .
+                    $report->getStartDate()->format('d-M-Y') .
+                    "Exception: " . $e->getMessage();
+            }
+        }
+
+        $this->em->flush();
+
+        return $this;
+    }
+
     public function fixReportSubmittedBy()
     {
         $reports = $this->reportRepo->findAll();

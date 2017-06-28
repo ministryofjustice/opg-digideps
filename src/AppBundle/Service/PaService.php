@@ -285,8 +285,9 @@ class PaService
             }
         } else {
             $this->log('Creating report');
-            $reportStartDate = clone $reportEndDate;
-            $reportStartDate->sub(new \DateInterval('P1Y')); //One year behind end date
+
+            $reportStartDate = self::generateReportStartDateFromEndDate($reportEndDate);
+
             $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate);
             $client->addReport($report);   //double link for testing reasons
 
@@ -297,6 +298,26 @@ class PaService
 
 
         return $report;
+    }
+
+    /**
+     * Generates and returns the report start date from a given end date.
+     * -365 days + 1 if note a leap day (otherwise we get 2nd March)
+     *
+     * @param \DateTime $reportEndDate
+     * @return \DateTime $reportStartDate
+     */
+    public static function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
+    {
+        $reportStartDate = clone $reportEndDate;
+
+        $isLeapDay = $reportStartDate->format('d-M') == '29-Feb';
+        $reportStartDate->sub(new \DateInterval('P1Y')); // One year behind end date
+        if (!$isLeapDay) {
+            $reportStartDate->add(new \DateInterval('P1D')); // + 1 day
+        }
+
+        return $reportStartDate;
     }
 
     /**
