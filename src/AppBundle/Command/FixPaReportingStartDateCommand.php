@@ -20,7 +20,8 @@ class FixPaReportingStartDateCommand extends AddSingleUserCommand
     {
         $em = $this->getContainer()->get('em');
 
-        $output->write('Fixing data. Please wait ...');
+        $output->write('Fixing data. Please wait ...
+');
         $fixDataService = new FixDataService($em);
         $messages = $fixDataService->fixPaStartDate()->getMessages();
 
