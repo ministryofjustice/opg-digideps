@@ -86,7 +86,7 @@ class ReportController extends AbstractController
      */
     public function editAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId);
+        $report = $this->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
         $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
             'translation_domain' => 'report',
