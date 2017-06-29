@@ -4,6 +4,8 @@ Feature: PA user edits report sections
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
+    Then the response status code should be 200
+    And the URL should match "report/\d+/overview"
     And I click on "edit-decisions, start"
         # step  mental capacity
     Then the step with the following values CAN be submitted:

@@ -13,7 +13,11 @@ trait DbTrait
     public static function iSaveTheApplicationStatusInto($status)
     {
         $sqlFile = self::getSnapshotPath($status);
-        exec('pg_dump ' . self::$dbName . " --clean --inserts | sed '/EXTENSION/d' > {$sqlFile}");
+        @unlink($sqlFile);
+        exec('pg_dump ' . self::$dbName . " --clean --inserts | sed '/EXTENSION/d' > {$sqlFile}", $output, $return);
+        if (!file_exists($sqlFile) || filesize($sqlFile) < 100 ) {
+            throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
+        }
     }
 
     /**

@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+{% set isPaUser = app.user.isDeputyPa() %}
+{% if not isPaUser %}
+    {% set page = 'editReportingDates' %}
+{% else %}
+    {% set page = 'editReportingDatesPA' %}
+{% endif %}
+
+ {% block htmlTitle %}
+     {{ (page ~ '.htmlTitle') | trans({ '%client%': client.firstname | title }) }}
+ {% endblock %}
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle') | trans({ '%client%': client.firstname | title, '%period%': report.period }) }}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    {% if isPaUser %}
+        <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if isPaUser %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if not isPaUser %}
+        <h3 class="heading-medium">
+            {{ 'editReportingDates.title'| trans({'%period%': report.period}, translationDomain) }}
+        </h3>
+    {% endif %}
+    <p>{{ 'editReportingDates.pageSectionDescription' | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {{ form_known_date(form.startDate, 'editReportingDates.form.startDate') }}
+
+    {{ form_known_date(form.endDate, 'editReportingDates.form.endDate') }}
+
+    {{ form_submit(form.save,'editReportingDates.form.save') }}
+
+    <a href="{{ returnLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

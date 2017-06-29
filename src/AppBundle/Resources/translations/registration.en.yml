@@ -32,12 +32,6 @@ saveAndContinue:
 createReport:
     pageTitle: "Deputy report - create a report | GOV.UK"
     h1Title: Create a report
-startDate:
-    legend: Start date
-    hint: For example, 31 3 2015
-endDate:
-    legend: End date
-    hint: For example, 30 3 2016
 form:
   newReportForm:
     subSectionTitle: "Add the reporting period"

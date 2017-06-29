@@ -45,3 +45,19 @@ Feature: PA cannot access other's PA's reports and clients
     And the URL "/user-account/user-show" should be forbidden
     And the URL "/user-account/user-edit" should be forbidden
     And the URL "/user-account/password-edit" should be forbidden
+
+  Scenario: Submitted reports cannot be viewed (overview page) or edited
+    # load "pre-submission" status and save links
+    Given I load the application status from "pa-report-completed"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-1000014" region
+    And I save the current URL as "client-1000014-report-overview"
+    And I click on "edit-report-period"
+    Then the response status code should be 200
+    # load "after submission" status and re-check the same links
+    And I save the current URL as "client-1000014-report-completed"
+    When I load the application status from "pa-report-submitted"
+    When I go to the URL previously saved as "client-1000014-report-overview"
+    Then the response status code should be 500
+    When I go to the URL previously saved as "client-1000014-report-completed"
+    Then the response status code should be 500

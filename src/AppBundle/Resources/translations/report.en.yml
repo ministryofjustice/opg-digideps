@@ -1,4 +1,5 @@
 page:
+ # below deprecated ? remove
   propFinance:
       htmlTitle: "Deputy report - annual deputy reports | GOV.UK"
       pageSectionTitle: Annual deputy reports for %client%
@@ -21,6 +22,28 @@ reportDataList:
   dueDate: "Due date:"
   open: "Open report"
   not-started: "Not started"
+
+# Edit reporting period page (Lay and PA)
+editReportingDates:
+  htmlTitle: Annual deputy reports for %client%
+  pageTitle: Annual deputy reports for %client%
+  title: %period% reporting period
+  pageSectionDescription: Tell us when your reporting period starts and finishes.
+  form:
+    startDate:
+      legend: "Start date"
+      hint: "For example, 31 3 2015"
+    endDate:
+      legend: "End date"
+      hint: "For example, 30 3 2016"
+    save:
+      label: "Save"
+editReportingDatesPA:
+  htmlTitle: Client profile - edit reporting period | GOV.UK
+  pageTitle: Edit %period% reporting period
+  supportTitle: "Client profile:"
+
+# align the translations below, remove top "form" key
 form:
   editClientForm:
     subSectionTitle: "Edit %client%'s details"

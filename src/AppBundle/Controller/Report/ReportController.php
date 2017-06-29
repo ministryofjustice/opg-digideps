@@ -52,13 +52,15 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/reports/{type}/{reportId}", name="reports", defaults={"reportId" = ""})
+     * @Route("/reports/{type}", name="reports")
      * @Template()
      */
-    public function indexAction(Request $request, $type, $reportId = null)
+    public function indexAction(Request $request, $type)
     {
         $user = $this->getUserWithData(['user', 'client', 'report']);
-        if ($user->isOdrEnabled() && empty($reportId)) {
+
+        // NDR: redirect to ODR index
+        if ($user->isOdrEnabled()) {
             return $this->redirectToRoute('odr_index');
         }
 
@@ -66,36 +68,45 @@ class ReportController extends AbstractController
         $client = !empty($clients) ? $clients[0] : null;
 
         $reports = $client ? $client->getReports() : [];
-//        $reports = array_filter($reports, function ($r) use ($type) {
-//            return $r->getType() == $type;
-//        });
         arsort($reports);
 
-        $report = new EntityDir\Report\Report();
-        $report->setClient($client);
+        return [
+            'client' => $client,
+            'reports' => $reports,
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
+            'filter' => 'propFinance', // extend with param when required
+        ];
+    }
 
-        // edit report dates
-        if ($reportId) {
-            $report = $this->getReport($reportId);
-            $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
-                'translation_domain' => 'report-edit-dates',
-            ]);
-            $editReportDatesForm->handleRequest($request);
-            if ($editReportDatesForm->isValid()) {
-                $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
+    /**
+     * Edit single report
+     *
+     * @Route("/reports/edit/{reportId}", name="report_edit")
+     * @Template()
+     */
+    public function editAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId);
+        $client = $report->getClient();
+        $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
+            'translation_domain' => 'report',
+        ]);
+        $returnLink = $this->getUser()->isDeputyPa() ?
+            $this->generateClientProfileLink($report->getClient())
+            : $this->generateUrl('reports', ['type' => $report->getType()]);
 
-                return $this->redirect($this->generateUrl('reports', ['type' => $report->getType()]));
-            }
+        $editReportDatesForm->handleRequest($request);
+        if ($editReportDatesForm->isValid()) {
+            $this->getRestClient()->put('report/' . $reportId, $report, ['startEndDates']);
+
+            return $this->redirect($returnLink);
         }
 
         return [
             'client' => $client,
             'report' => $report,
-            'reports' => $reports,
-            'reportId' => $reportId,
-            'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
-            'filter' => 'propFinance', // extend with param when required
+            'form' =>  $editReportDatesForm->createView(),
+            'returnLink' => $returnLink
         ];
     }
 
@@ -125,13 +136,10 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(
-            new FormDir\Report\ReportType(),
-            $report,
-            [
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId])
-            ]
-        );
+        $form = $this->createForm(new FormDir\Report\ReportType('report'),$report, [
+                'translation_domain' => 'registration',
+                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
