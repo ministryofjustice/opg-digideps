@@ -71,7 +71,7 @@
                         </dt>
                         <dd class="push--bottom">
                             <span class="push--right">{{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}</span>
-                            <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right">{{ 'edit' | trans }}</a>
+                            <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
                         </dd>
 
                         <dt>
