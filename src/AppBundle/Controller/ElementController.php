@@ -133,6 +133,23 @@ class ElementController extends AbstractController
     }
 
     /**
+     * @Route("/collection", name="elements_collection")
+     * @Template("AppBundle:Element:collection.html.twig")
+     */
+    public function collectionAction()
+    {
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Collection'],
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb,
+        ];
+    }
+
+    /**
      * @Route("/navigation", name="elements_navigation")
      * @Template("AppBundle:Element:navigation.html.twig")
      */
