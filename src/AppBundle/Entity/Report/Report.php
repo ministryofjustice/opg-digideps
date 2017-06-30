@@ -849,4 +849,14 @@ class Report
     {
         $this->status = $status;
     }
+
+    public function getDocuments()
+    {
+        return [
+            ['fileName'=>'file1.jpg', 'createdAt'=>new \DateTime('now'), 'type'=>'jpg'],
+            ['fileName'=>'file2.jpg', 'createdAt'=>new \DateTime('last week'), 'type'=>'jpg'],
+            ['fileName'=>'file3.pdf', 'createdAt'=>new \DateTime('last month'), 'type'=>'pdf'],
+        ];
+
+    }
 }
