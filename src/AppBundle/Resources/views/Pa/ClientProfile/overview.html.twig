@@ -60,6 +60,9 @@
                                     <a class="behat-link-edit-report_submit button" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
                                 </p>
                             {% endif %}
+
+                            {# STYLE ME #}
+                                <a href="{{ path('report_documents', {'reportId': report.id}) }}">Upload documentation</a>
                         </dd>
                     </dl>
                 </div>
