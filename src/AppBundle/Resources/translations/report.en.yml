@@ -40,7 +40,7 @@ editReportingDates:
       label: "Save"
 editReportingDatesPA:
   htmlTitle: Client profile - edit reporting period | GOV.UK
-  pageTitle: Edit %period% reporting period
+  pageTitle: Edit reporting period
   supportTitle: "Client profile:"
 
 # align the translations below, remove top "form" key
