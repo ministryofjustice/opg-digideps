@@ -150,6 +150,22 @@ class ElementController extends AbstractController
     }
 
     /**
+     * @Route("/alerts", name="elements_alerts")
+     * @Template("AppBundle:Element:alerts.html.twig")
+     */
+    public function alertsAction()
+    {
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Alerts'],
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb,
+        ];
+    }
+
+    /**
      * @Route("/navigation", name="elements_navigation")
      * @Template("AppBundle:Element:navigation.html.twig")
      */
