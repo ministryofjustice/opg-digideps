@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\File;
+namespace AppBundle\Service\File\Storage;
 
 use AppBundle\Service\Client\RestClient;
 use GuzzleHttp\Client as GuzzleHttpClient;

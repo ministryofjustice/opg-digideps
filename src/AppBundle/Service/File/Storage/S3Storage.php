@@ -1,16 +1,17 @@
 <?php
 
-namespace AppBundle\Service\File;
+namespace AppBundle\Service\File\Storage;
 
 use Aws\S3\Exception\S3Exception;
 use \Aws\S3\S3Client;
 
 /**
  * Class to upload/download/delete files from S3
- * // using logic from https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
  *
+ * Original logic
+ * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
  */
-class S3Storage
+class S3Storage implements StorageInterface
 {
     /**
      * @var S3Client
@@ -26,7 +27,7 @@ class S3Storage
     private $s3Client;
 
     /**
-     * @var
+     * @var string
      */
     private $bucketName;
 
