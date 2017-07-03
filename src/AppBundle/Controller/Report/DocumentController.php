@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report;
+use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\StepRedirector;
@@ -26,6 +26,12 @@ class DocumentController extends AbstractController
     public function indexAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report->setDocuments([
+            new Document('file1.jpg', new \DateTime('now'), Document::TYPE_PDF),
+            new Document('file2.jpg', new \DateTime('now'), Document::TYPE_PDF),
+            new Document('file3.jpg', new \DateTime('now'), Document::TYPE_PDF),
+        ]);
+
 
         return [
             'report' => $report,

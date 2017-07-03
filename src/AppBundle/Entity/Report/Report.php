@@ -233,11 +233,20 @@ class Report
      */
     private $metadata;
 
+
+    /**
+     * @JMS\Type("AppBundle\Entity\Report\Document")
+     * @var Document[]
+     */
+    private $documents;
+
+
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
      * @var Status
      */
     private $status;
+
 
     /**
      * @return int $id
@@ -834,6 +843,24 @@ class Report
         return $this;
     }
 
+
+    /**
+     * @return Document[]
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Document[] $documents
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+    }
+
+
     /**
      * @return Status
      */
@@ -850,13 +877,4 @@ class Report
         $this->status = $status;
     }
 
-    public function getDocuments()
-    {
-        return [
-            ['fileName'=>'file1.jpg', 'createdAt'=>new \DateTime('now'), 'type'=>'jpg'],
-            ['fileName'=>'file2.jpg', 'createdAt'=>new \DateTime('last week'), 'type'=>'jpg'],
-            ['fileName'=>'file3.pdf', 'createdAt'=>new \DateTime('last month'), 'type'=>'pdf'],
-        ];
-
-    }
 }
