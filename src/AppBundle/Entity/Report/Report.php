@@ -207,6 +207,16 @@ class Report
     private $metadata;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Document>")
+     * @JMS\Groups({"documents"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Document", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"createdOn"="DESC"})
+     */
+    private $documents;
+
+    /**
      * Report constructor
      * Construct reports using the report service
      *
@@ -267,6 +277,7 @@ class Report
         $this->reportSeen = true;
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     /**
