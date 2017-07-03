@@ -5,18 +5,17 @@
 {% block htmlTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-{% block pageContent %}
+{% block breadcrumbs %}
     {% if report.submitted == true %}
         {% if app.user.isDeputyPa() %}
-            <nav class="back-bar">
-                <a id="back-to-client" href="{{ backLink }}" class="link-return behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
-            </nav>
+            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
         {% else %}
-            <nav class="back-bar">
-                <a id="back-to-client" href="{{ backLink }}" class="link-return behat-link-back-to-reports">Back</a>
-            </nav>
+            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-back-to-reports">Back</a>
         {% endif %}
     {% endif %}
+{% endblock %}
+
+{% block pageContent %}
 
     {% if report.submitted == false %}
         {% if reportStatus.isReadyToSubmit and report.isDue %}
