@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File;
 
+use Aws\S3\Exception\S3Exception;
 use \Aws\S3\S3Client;
 
 /**
@@ -29,10 +30,7 @@ class S3Storage
      */
     private $bucketName;
 
-    /**
-     * S3Storage constructor.
-     * @param S3Client $s3Client
-     */
+
     public function __construct(S3Client $s3Client, $bucketName)
     {
         $this->s3Client = $s3Client;
@@ -49,23 +47,25 @@ class S3Storage
      * @param $bucketName
      * @param $key
      *
+     * @throws FileNotFoundException is the file is not found
+     *
      * @return string file content
      */
     public function retrieve($key)
     {
-        $cmd = $this->s3Client->getCommand('GetObject', [
-            'Bucket' => $this->bucketName,
-            'Key'    => $key
-        ]);
-        $request = $this->s3Client->createPresignedRequest($cmd, '+20 minutes');
+        try {
+            $result = $this->s3Client->getObject(array(
+                'Bucket' => $this->bucketName,
+                'Key'    => $key
+            ));
 
-        $url = (string) $request->getUri();
-
-        if (substr(get_headers($url)[0], 9, 3) == 404) {
-            throw new FileNotFoundException();
+            return $result['Body'];
+        } catch (S3Exception $e) {
+            if ($e->getAwsErrorCode() === 'NoSuchKey') {
+                throw new FileNotFoundException();
+            }
+            throw $e;
         }
-
-        return file_get_contents($url);
     }
 
     /**

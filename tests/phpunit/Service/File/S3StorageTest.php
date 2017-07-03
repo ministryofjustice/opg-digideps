@@ -3,6 +3,7 @@
 namespace AppBundle\Service\File;
 
 use AppBundle\Service\Client\RestClient;
+use GuzzleHttp\Client as GuzzleHttpClient;
 use Mockery as m;
 use Symfony\Bridge\Monolog\Logger;
 
