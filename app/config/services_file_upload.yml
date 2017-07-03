@@ -1,0 +1,18 @@
+services:
+  s3_client:
+    class: Aws\S3\S3Client
+    arguments:
+      -
+        version: 'latest'
+        region: 'eu-west-1'
+        endpoint: 'http://fakes3:4569'
+        validate: false
+        credentials:
+          key: 'YOUR_ACCESS_KEY_ID'
+          secret: 'YOUR_SECRET_ACCESS_KEY'
+  s3_storage:
+    class:  AppBundle\Service\File\Storage\S3Storage
+    arguments: [ "@s3_client", "bucketName" ]
+  file_uploader:
+    class: AppBundle\Service\File\FileUploader
+    arguments: [ "@s3_storage", "@rest_client" ]
