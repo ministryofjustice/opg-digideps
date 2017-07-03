@@ -39,7 +39,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         $fileContent = 'FILE-CONTENT-'.microtime(1);
 
         // store
-        $ret = $this->object->store($key, $fileContent, 'test');
+        $ret = $this->object->store($key, $fileContent);
         $this->assertEquals(200, $ret->toArray()['@metadata']['statusCode']);
 
         // retrieve
@@ -53,5 +53,15 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(FileNotFoundException::class);
         $this->object->retrieve($key);
 
+    }
+
+    public function testUploadBinaryContent()
+    {
+        // create timestamped file and key to undo effects of potential previous executions
+        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+
+        $this->object->store($key, $fileContent);
+        $this->assertEquals($fileContent, $this->object->retrieve($key));
     }
 }
