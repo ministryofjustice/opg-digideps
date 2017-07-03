@@ -2,12 +2,9 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Document
 {
@@ -16,16 +13,25 @@ class Document
 
 
     /**
+     * @JMS\Groups({"document"})
+     *
+     * @Assert\NotBlank(message="Please choose a file", groups={"document"})
+     * @Assert\File(mimeTypes={ "application/pdf" }, groups={"document"})
+     *
      * @var string
      */
     private $fileName;
 
     /**
+     * @JMS\Groups({"document"})
+     *
      * @var \DateTime
      */
     private $createdAt;
 
     /**
+     * @JMS\Groups({"document"})
+     *
      * @var string
      */
     private $type;
@@ -42,6 +48,15 @@ class Document
         $this->createdAt = $createdAt;
         $this->type = $type;
     }
+
+    /**
+     * @param string $fileName
+     */
+    public function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
+    }
+
 
     /**
      * @return string

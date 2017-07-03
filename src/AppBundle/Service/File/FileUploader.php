@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
+use Psr\Log\LoggerInterface;
 
 class FileUploader
 {
@@ -27,18 +28,23 @@ class FileUploader
     private $fileCheckers;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $options;
 
     /**
      * FileUploader constructor.
-     * @param StorageInterface $s3Storage
      */
-    public function __construct(StorageInterface $s3Storage, RestClient $restClient, array $options = [])
+    public function __construct(StorageInterface $s3Storage, RestClient $restClient, LoggerInterface $logger, array $options = [])
     {
         $this->storage = $s3Storage;
         $this->restClient = $restClient;
+        $this->logger = $logger;
         $this->fileCheckers = [];
         $this->options = [];
     }
@@ -71,6 +77,7 @@ class FileUploader
 
         $key = 'dd_doc_' . microtime(1);
         $this->storage->store($key, $body);
+        $this->logger->debug("Stored file, key = $key, size ".strlen($body));
         $document = new Document($filename, new \DateTime(), substr($filename, -3));
         //$this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
 

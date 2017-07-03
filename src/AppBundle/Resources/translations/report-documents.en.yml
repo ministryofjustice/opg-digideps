@@ -1,2 +1,6 @@
 htmlTitle: Case documents | GOV.UK
 pageTitle: Case documents
+
+form:
+  fileName:
+    label: Attach a file

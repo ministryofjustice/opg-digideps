@@ -15,4 +15,4 @@ services:
     arguments: [ "@s3_client", "bucketName" ]
   file_uploader:
     class: AppBundle\Service\File\FileUploader
-    arguments: [ "@s3_storage", "@rest_client" ]
+    arguments: [ "@s3_storage", "@rest_client", "@logger" ]

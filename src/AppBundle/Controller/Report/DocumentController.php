@@ -10,8 +10,10 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class DocumentController extends AbstractController
 {
@@ -29,6 +31,7 @@ class DocumentController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         // fake documents. remove when the upload is implemented
+        $document = new Document(null, new DateTime(), null);
         $report->setDocuments([
             new Document('file1.jpg', new \DateTime('now'), Document::TYPE_PDF),
             new Document('file2.jpg', new \DateTime('now'), Document::TYPE_PDF),
@@ -36,18 +39,20 @@ class DocumentController extends AbstractController
         ]);
 
 
-        if ($request->getMethod() === 'POST') {
-            file_put_contents('/tmp/file1.txt', 'CONTENT'); //TMP
-            if ($fileUploader->uploadFile($report, 'file1.jpg', '/tmp/file1.txt')) {
-                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
-                $this->redirectToRoute('report_documents', ['reportId'=>$reportId]);
-            }
+        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $document->getFileName(); /* @var $uploadedFile UploadedFile*/
+            $fileUploader->uploadFile($report, $uploadedFile->getClientOriginalName(), $uploadedFile->getPathname());
 
-            //TODO attach virus errors
+            $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+            $this->redirectToRoute('report_documents', ['reportId'=>$reportId]);
+
         }
 
         return [
             'report' => $report,
+            'form' => $form->createView(),
         ];
     }
 
