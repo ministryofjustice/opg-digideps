@@ -13,11 +13,54 @@
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
+{% block supportTitleTop %}
+    <span class="heading-secondary">Elvis Ciotti</span>
+{% endblock %}
+
 {% block pageContent %}
 
-    {% for document in report.documents %}
-        [{{ document.fileName }} | {{ document.createdAt | date }}]<br/>
-    {% endfor %}
+    <p class="text">Use this page to attach a supporting document (or documents) for this deputy report.</p>
+
+    <h2 class="heading-medium">Attach documents</h2>
+
+    <form name="admin_upload" method="post" novalidate="novalidate" enctype="multipart/form-data">
+        <div id="form-group-admin_upload_file" class="form-group">
+            <label class="form-label  required  text" for="admin_upload_file">Attach a file
+                <span class="form-hint text">
+                    Accepted file types: .JPG, .JPEG, .PDF, .PNG and .TIFF<br>
+                    Max file size: 15MB
+                </span>
+            </label>
+
+            <input type="file" id="admin_upload_file" name="admin_upload[file]" required="required" class=" form-control no-border">
+        </div>
+
+        <button type="submit" id="admin_upload_upload" name="admin_upload[upload]" class="button ">Attach document</button>
+
+        <a href="{# {{ backLink }} #}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    </form>
+
+    <h2 class="heading-medium">Document list</h2>
+
+    <table>
+        <thead>
+            <th>File name</th>
+            <th>Date attached</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for document in report.documents %}
+                <tr>
+                    <td>{{ document.fileName }}</td>
+                    <td>{{ document.createdAt | date }}</td>
+                    <td><a href="#">Remove</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
 
 
 {% endblock %}
