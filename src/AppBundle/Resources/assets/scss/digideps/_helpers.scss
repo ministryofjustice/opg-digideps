@@ -75,12 +75,14 @@
 .text--right    { text-align: right  !important; }
 
 // Percentage widths
-.width-half     { width: $half; }
-.width-third    { width: $one-third; }
-.width-quarter  { width: $one-quarter; }
-.width-fifth    { width: $full-width / 5; }
-.width-sixth    { width: $full-width / 6; }
-.width-eighth   { width: $full-width / 8; }
+.width-three-quarters   { width: $three-quarters; } // 75%
+.width-two-thirds       { width: $two-thirds; }     // 66.67%
+.width-half             { width: $half; }           // 50%
+.width-third            { width: $one-third; }      // 33.34%
+.width-quarter          { width: $one-quarter; }    // 25%
+.width-fifth            { width: $full-width / 5; } // 20%
+.width-sixth            { width: $full-width / 6; } // 16.67%
+.width-eighth           { width: $full-width / 8; } // 12.5%
 
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
 
