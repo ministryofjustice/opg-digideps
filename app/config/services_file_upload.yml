@@ -15,8 +15,11 @@ services:
     arguments: [ "@s3_client", "bucketName" ]
   file_checker_pdf:
     class: AppBundle\Service\File\Checker\PdfChecker
+  file_checker_clam_av:
+    class: AppBundle\Service\File\Checker\ClamAVChecker
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]
     calls:
       - [ addFileChecker, [ "@file_checker_pdf"]]
+      - [ addFileChecker, [ "@file_checker_clam_av"]]
