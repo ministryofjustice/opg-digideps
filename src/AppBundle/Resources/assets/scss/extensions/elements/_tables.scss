@@ -12,3 +12,13 @@ table {
   	text-align: right;
   }
 }
+
+.table-font-xsmall {
+    th {
+        @include bold-16;
+    }
+
+    td {
+        @include core-16;
+    }
+}

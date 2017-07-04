@@ -4,6 +4,12 @@
 {% block pageTitle %}Review new deputy report{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% block breadcrumbs %}
+    {% if odr.submitted == true %}
+        <a id="overview-button" href="{{ path('homepage') }}" class="link-back">Return to homepage</a>
+    {% endif %}
+{% endblock %}
+
 {% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
     {% if odr.submitted == false %}
         {% if odrStatus.isReadyToSubmit %}
@@ -26,12 +32,6 @@
 {% endmacro %}
 
 {% block pageContent %}
-
-    {% if odr.submitted == true %}
-        <nav class="back-bar">
-            <a id="overview-button" href="{{ path('homepage') }}" class="link-return">Return to Homepage</a>
-        </nav>
-    {% endif %}
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
     <a name="pageBody"></a>
