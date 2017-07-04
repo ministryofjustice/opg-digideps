@@ -4,3 +4,7 @@ pageTitle: Case documents
 form:
   fileName:
     label: Attach a file
+  errors:
+    risky: "Cannot upload file, risky content found inside. Technical details: %exceptionMessage%"
+    virusFound:  "Cannot upload file, virus found inside. Technical details: %exceptionMessage%"
+    generic: "Cannot upload file, please try again later. Technical details: %exceptionMessage%"
