@@ -31,30 +31,15 @@
         'hintText': 'Accepted file types: .JPG, .JPEG, .PDF, .PNG and .TIFF<br>Max file size: 15MB'})
     }}
     {{ form_submit(form.save, '', {'labelText': 'Attach document'}) }}
-    {# {{ form_row(form.save) }} #}
+
+    <a href=" {{ backLink }} " class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
     {{ form_end(form) }}
 
-    {#<form name="admin_upload" method="post" novalidate="novalidate" enctype="multipart/form-data">#}
-        {#<div id="form-group-admin_upload_file" class="form-group">#}
-            {#<label class="form-label  required  text" for="admin_upload_file">Attach a file#}
-                {#<span class="form-hint text">#}
-                    {#Accepted file types: .JPG, .JPEG, .PDF, .PNG and .TIFF<br>#}
-                    {#Max file size: 15MB#}
-                {#</span>#}
-            {#</label>#}
 
-            {#<input type="file" id="admin_upload_file" name="admin_upload[file]" required="required" class=" form-control no-border">#}
-        {#</div>#}
-
-        {#<button type="submit" id="admin_upload_upload" name="admin_upload[upload]" class="button ">Attach document</button>#}
-
-        {#<a href="#}{# {{ backLink }} #}{#" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>#}
-
-        {#<h2 class="heading-medium">Uploading progress</h2>#}
-        {#<p>Please wait while your document is being uploaded.</p>#}
-        {#<progress max="100" value="24" style="width: 50%"></progress>#}
-
-    {#</form>#}
+    {#<h2 class="heading-medium">Uploading progress</h2>#}
+    {#<p>Please wait while your document is being uploaded.</p>#}
+    {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
     <h2 class="heading-medium">Document list</h2>
 

@@ -52,6 +52,7 @@ class DocumentController extends AbstractController
 
         return [
             'report' => $report,
+            'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
             'form' => $form->createView(),
         ];
     }
