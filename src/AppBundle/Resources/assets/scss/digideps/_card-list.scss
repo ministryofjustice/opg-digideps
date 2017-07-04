@@ -1,66 +1,17 @@
 // ==========================================================================
-// CARD LIST
-// Round, coloured boxes that look like cards
+// CARDS
+// This is the styling for the boxes on the NDR homepage
+// 'Card-list' is legacy, not longer used as such.
 
 .card {
-    @include border-radius(10px);
+    overflow: hidden;
     box-sizing: border-box;
     position: relative;
-    background: $light-blue;
-    padding: 30px 10px 40px 20px;
-    color: $white;
-    width: 100%;
-
-    .card-body {
-        display: inline-block;
-
-        p:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    .labelvalue {
-        @extend %contain-floats;
-
-        .label {
-            @include core-16();
-            box-sizing: border-box;
-            width: 55%;
-            padding: 0 10px 0 0;
-            float: left;
-            clear: both;
-        }
-
-        .value {
-            @include core-16();
-            box-sizing: border-box;
-            width: 45%;
-            padding: 0;
-            float: left;
-        }
-
-    }
+    min-height: 120px;
+    border: 1px solid $border-colour;
 
     &.disabled {
-        background: $grey-1;
-    }
-
-    &-plain {
-        @include border-radius(0);
-
-        min-height: 120px;
-        padding: $gutter-half;
-        border: 1px solid $border-colour;
-        background: $white;
-        color: $black;
-
-        &.last {
-            margin-bottom: $gutter * 2;
-        }
-
-        &.disabled {
-            background-color: $grey-3;
-        }
+        background-color: $grey-3;
     }
 
     .card-actions {
