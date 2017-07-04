@@ -13,6 +13,10 @@ services:
   s3_storage:
     class:  AppBundle\Service\File\Storage\S3Storage
     arguments: [ "@s3_client", "bucketName" ]
+  file_checker_pdf:
+    class: AppBundle\Service\File\Checker\PdfChecker
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+    calls:
+      - [ addFileChecker, [ "@file_checker_pdf"]]
