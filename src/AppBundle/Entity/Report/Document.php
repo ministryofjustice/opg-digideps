@@ -34,19 +34,19 @@ class Document
      *
      * @var string
      */
-    private $type;
+    private $key;
 
     /**
      * Document constructor.
      * @param $fileName
      * @param $createdAt
-     * @param $type
+     * @param $key
      */
-    public function __construct($fileName, $createdAt, $type)
+    public function __construct($key, $fileName, $createdAt)
     {
+        $this->key = $key;
         $this->fileName = $fileName;
         $this->createdAt = $createdAt;
-        $this->type = $type;
     }
 
     /**
@@ -77,9 +77,9 @@ class Document
     /**
      * @return string
      */
-    public function getType()
+    public function getKey()
     {
-        return $this->type;
+        return $this->key;
     }
 
 }

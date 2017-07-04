@@ -13,6 +13,7 @@ class DocumentUploadType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('key', 'hidden')
             ->add('fileName', FileType::class, [
                 'required' => false
             ])

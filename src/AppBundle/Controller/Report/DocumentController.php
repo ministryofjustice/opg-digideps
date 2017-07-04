@@ -34,11 +34,11 @@ class DocumentController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         // fake documents. remove when the upload is implemented
-        $document = new Document(null, new DateTime(), null);
+        $document = new Document(null, null, new DateTime());
         $report->setDocuments([
-            new Document('file1.jpg', new \DateTime('now'), Document::TYPE_PDF),
-            new Document('file2.jpg', new \DateTime('now'), Document::TYPE_PDF),
-            new Document('file3.jpg', new \DateTime('now'), Document::TYPE_PDF),
+            new Document(1, 'file1.jpg', new \DateTime('now')),
+            new Document(2, 'file2.jpg', new \DateTime('now')),
+            new Document(3, 'file3.jpg', new \DateTime('now')),
         ]);
 
 

@@ -78,7 +78,7 @@ class FileUploader
         $key = 'dd_doc_' . microtime(1);
         $this->storage->store($key, $body);
         $this->logger->debug("Stored file, key = $key, size ".strlen($body));
-        $document = new Document($filename, new \DateTime(), substr($filename, -3));
+        $document = new Document($key, $filename, new \DateTime());
         //$this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
 
         return $document;
