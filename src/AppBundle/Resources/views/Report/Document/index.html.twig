@@ -24,8 +24,14 @@
     <h2 class="heading-medium">Attach documents</h2>
 
     {{ form_start(form) }}
-    {{ form_input(form.fileName,'form.fileName') }}
-    {{ form_row(form.save) }}
+    {{ form_input(form.fileName,'form.fileName', {
+        'labelRaw': true,
+        'labelText':'Attach a file',
+        'inputClass': 'no-border',
+        'hintText': 'Accepted file types: .JPG, .JPEG, .PDF, .PNG and .TIFF<br>Max file size: 15MB'})
+    }}
+    {{ form_submit(form.save, '', {'labelText': 'Attach document'}) }}
+    {# {{ form_row(form.save) }} #}
     {{ form_end(form) }}
 
     {#<form name="admin_upload" method="post" novalidate="novalidate" enctype="multipart/form-data">#}
