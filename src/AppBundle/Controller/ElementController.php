@@ -136,61 +136,24 @@ class ElementController extends AbstractController
      * @Route("/collection", name="elements_collection")
      * @Template("AppBundle:Element:collection.html.twig")
      */
-    public function collectionAction()
-    {
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Collection'],
-
-        ];
-
-        return [
-            'breadCrumb' => $breadCrumb,
-        ];
-    }
+    public function collectionAction() { return []; }
 
     /**
      * @Route("/alerts", name="elements_alerts")
      * @Template("AppBundle:Element:alerts.html.twig")
      */
-    public function alertsAction()
-    {
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Alerts'],
-        ];
+    public function alertsAction() { return []; }
 
-        return [
-            'breadCrumb' => $breadCrumb,
-        ];
-    }
+    /**
+     * @Route("/buttons", name="elements_buttons")
+     * @Template("AppBundle:Element:buttons.html.twig")
+     */
+    public function buttonsAction() { return[]; }
 
     /**
      * @Route("/navigation", name="elements_navigation")
      * @Template("AppBundle:Element:navigation.html.twig")
      */
-    public function navigationAction()
-    {
-        $client = [
-            'fullname' => 'Zac Tolley',
-        ];
+    public function navigationAction() { return []; }
 
-        $report = [
-            'id' => 1,
-            'period' => '2014 to 2015',
-            'client' => $client,
-        ];
-
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Navigation'],
-
-        ];
-
-        return [
-            'breadCrumb' => $breadCrumb,
-            'report' => $report,
-            'client' => $client,
-        ];
-    }
 }
