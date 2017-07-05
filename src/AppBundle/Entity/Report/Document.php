@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Traits\CreationAudit;
