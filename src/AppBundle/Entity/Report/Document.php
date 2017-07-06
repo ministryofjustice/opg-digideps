@@ -40,18 +40,9 @@ class Document
      * @JMS\Type("string")
      * @JMS\Groups({"documents"})
      *
-     * @ORM\Column(name="local_filename", type="string", length=150, nullable=false)
+     * @ORM\Column(name="filename", type="string", length=150, nullable=false)
      */
-    private $localFilename;
-
-    /**
-     * @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"documents"})
-     *
-     * @ORM\Column(name="uploaded_filename", type="string", length=150, nullable=true)
-     */
-    private $uploadedFilename;
+    private $filename;
 
     /**
      * @var string
@@ -104,38 +95,19 @@ class Document
     /**
      * @return string
      */
-    public function getLocalFilename()
+    public function getFilename()
     {
-        return $this->localFilename;
+        return $this->filename;
     }
 
     /**
-     * @param string $localFilename
+     * @param string $filename
      *
      * @return $this
      */
-    public function setLocalFilename($localFilename)
+    public function setFilename($filename)
     {
-        $this->localFilename = $localFilename;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUploadedFilename()
-    {
-        return $this->uploadedFilename;
-    }
-
-    /**
-     * @param string $uploadedFilename
-     *
-     * @return $this
-     */
-    public function setUploadedFilename($uploadedFilename)
-    {
-        $this->uploadedFilename = $uploadedFilename;
+        $this->filename = $filename;
         return $this;
     }
 
@@ -175,16 +147,5 @@ class Document
     {
         $this->report = $report;
         return $this;
-    }
-
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"documents"})
-     * @JMS\Type("string")
-     * @JMS\SerializedName("file_name")
-     */
-    public function getFileName()
-    {
-        return $this->localFilename;
     }
 }
