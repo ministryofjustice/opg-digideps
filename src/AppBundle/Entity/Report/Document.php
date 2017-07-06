@@ -13,6 +13,7 @@ class Document
 
 
     /**
+     * @JMS\Type("string")
      * @JMS\Groups({"document"})
      *
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
@@ -28,6 +29,7 @@ class Document
     private $createdAt;
 
     /**
+     * @JMS\Type("string")
      * @JMS\Groups({"document"})
      *
      * @var string
