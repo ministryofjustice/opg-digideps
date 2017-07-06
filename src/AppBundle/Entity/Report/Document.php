@@ -58,9 +58,9 @@ class Document
      * @JMS\Type("string")
      * @JMS\Groups({"documents"})
      *
-     * @ORM\Column(name="upload_reference", type="string", length=150, nullable=true)
+     * @ORM\Column(name="storage_reference", type="string", length=150, nullable=true)
      */
-    private $uploadReference;
+    private $storageReference;
 
     /**
      * @var Report
@@ -142,19 +142,19 @@ class Document
     /**
      * @return string
      */
-    public function getUploadReference()
+    public function getStorageReference()
     {
-        return $this->uploadReference;
+        return $this->storageReference;
     }
 
     /**
-     * @param string $uploadReference
+     * @param string $storageReference
      *
      * @return $this
      */
-    public function setUploadReference($uploadReference)
+    public function setStorageReference($storageReference)
     {
-        $this->uploadReference = $uploadReference;
+        $this->storageReference = $storageReference;
         return $this;
     }
 
