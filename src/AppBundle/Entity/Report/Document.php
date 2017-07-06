@@ -70,7 +70,6 @@ class Document
      */
     public function __construct(Report $report)
     {
-        $this->createdOn = new \DateTime();
         $this->setReport($report);
     }
 
