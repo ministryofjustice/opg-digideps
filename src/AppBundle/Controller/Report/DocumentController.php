@@ -38,8 +38,7 @@ class DocumentController extends AbstractController
         $document = new Document(null, null, new DateTime());
         $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
+        if ($form->isValid()) {
             $uploadedFile = $document->getFileName();
             /* @var $uploadedFile UploadedFile */
             try {
@@ -57,7 +56,7 @@ class DocumentController extends AbstractController
             }
 
             $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
-            $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+            return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
 
         }
 
