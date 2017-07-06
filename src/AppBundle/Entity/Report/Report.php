@@ -209,9 +209,9 @@ class Report
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Document>")
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Document", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
@@ -707,5 +707,24 @@ class Report
     public function getStatus()
     {
         return new ReportStatusService($this);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param ArrayCollection $documents
+     *
+     * @return $this
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+        return $this;
     }
 }
