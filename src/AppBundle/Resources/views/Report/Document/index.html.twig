@@ -53,7 +53,7 @@
             {% for document in report.documents %}
                 <tr>
                     <td>{{ document.fileName }}</td>
-                    <td>{{ document.createdAt | date }}</td>
+                    <td>{{ document.createdOn | date("j F Y H:i") }}</td>
                     <td><a href="#">Remove</a></td>
                 </tr>
             {% endfor %}

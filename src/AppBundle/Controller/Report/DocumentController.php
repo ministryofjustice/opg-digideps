@@ -22,7 +22,7 @@ class DocumentController extends AbstractController
 {
     private static $jmsGroups = [
         'report-documents',
-        'documents',
+        'documents'
     ];
 
     /**
@@ -35,7 +35,7 @@ class DocumentController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         // fake documents. remove when the upload is implemented
-        $document = new Document(null, null, new DateTime());
+        $document = new Document();
         $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document);
         $form->handleRequest($request);
         if ($form->isValid()) {

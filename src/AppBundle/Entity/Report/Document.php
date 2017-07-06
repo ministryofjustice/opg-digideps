@@ -24,9 +24,11 @@ class Document
     private $fileName;
 
     /**
+     * @JMS\Type("DateTime")
+     *
      * @var \DateTime
      */
-    private $createdAt;
+    private $createdOn;
 
     /**
      * @JMS\Type("string")
@@ -36,18 +38,6 @@ class Document
      */
     private $storageReference;
 
-    /**
-     * Document constructor.
-     * @param $fileName
-     * @param $createdAt
-     * @param $storageReference
-     */
-    public function __construct($storageReference, $fileName, $createdAt)
-    {
-        $this->storageReference = $storageReference;
-        $this->fileName = $fileName;
-        $this->createdAt = $createdAt;
-    }
 
     /**
      * @param string $fileName
@@ -69,9 +59,9 @@ class Document
     /**
      * @return \DateTime
      */
-    public function getCreatedAt()
+    public function getCreatedOn()
     {
-        return $this->createdAt;
+        return $this->createdOn;
     }
 
     /**
