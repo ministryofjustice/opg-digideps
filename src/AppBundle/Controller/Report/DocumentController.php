@@ -22,10 +22,6 @@ class DocumentController extends RestController
     {
         /* @var $report Report */
         $report = $this->findEntityBy(Report::class, $reportId);
-        if (empty($report)) {
-            throw new \InvalidArgumentException('Unable to find report');
-        }
-
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
