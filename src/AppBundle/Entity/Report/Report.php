@@ -210,7 +210,7 @@ class Report
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Report\Document>")
-     * @JMS\Groups({"documents"})
+     * @JMS\Groups({"report-documents"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
