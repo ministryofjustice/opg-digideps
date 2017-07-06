@@ -176,4 +176,15 @@ class Document
         $this->report = $report;
         return $this;
     }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"documents"})
+     * @JMS\Type("string")
+     * @JMS\SerializedName("file_name")
+     */
+    public function getFileName()
+    {
+        return $this->localFilename;
+    }
 }
