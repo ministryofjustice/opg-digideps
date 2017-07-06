@@ -8,10 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Document
 {
-    const TYPE_PDF = 'pdf';
-    const TYPE_JPG = 'jpg';
-
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
