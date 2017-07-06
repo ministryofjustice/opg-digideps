@@ -79,7 +79,7 @@ class FileUploader
         $this->storage->store($key, $body);
         $this->logger->debug("Stored file, key = $key, size ".strlen($body));
         $document = new Document($key, $filename, new \DateTime());
-        //$this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
+        $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
 
         return $document;
 

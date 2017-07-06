@@ -23,8 +23,6 @@ class Document
     private $fileName;
 
     /**
-     * @JMS\Groups({"document"})
-     *
      * @var \DateTime
      */
     private $createdAt;
@@ -34,17 +32,17 @@ class Document
      *
      * @var string
      */
-    private $key;
+    private $storageReference;
 
     /**
      * Document constructor.
      * @param $fileName
      * @param $createdAt
-     * @param $key
+     * @param $storageReference
      */
-    public function __construct($key, $fileName, $createdAt)
+    public function __construct($storageReference, $fileName, $createdAt)
     {
-        $this->key = $key;
+        $this->storageReference = $storageReference;
         $this->fileName = $fileName;
         $this->createdAt = $createdAt;
     }
@@ -77,9 +75,17 @@ class Document
     /**
      * @return string
      */
-    public function getKey()
+    public function getStorageReference()
     {
-        return $this->key;
+        return $this->storageReference;
+    }
+
+    /**
+     * @param string $storageReference
+     */
+    public function setStorageReference($storageReference)
+    {
+        $this->storageReference = $storageReference;
     }
 
 }
