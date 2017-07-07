@@ -68,7 +68,7 @@
                 //check whether browser fully supports all File API
                 if (window.File && window.FileReader && window.FileList && window.Blob) {
                     var fsize = fileElement[0].files[0].size;
-                    if (fsize > {{ 15 * 1024 }} ) {
+                    if (fsize > {{ 15 * 1024 * 1024 }} ) {
                         window.location = '{{ path('report_documents', {'reportId': report.id, 'error': 'tooBig'}) }}';
                         return;
                     }
