@@ -31,7 +31,7 @@ class DocumentController extends RestController
         ]);
         $document = new Document($report);
         $document->setCreatedBy($this->getUser());
-        $document->setFilename($data['file_name']);
+        $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);
         $this->persistAndFlush($document);
 

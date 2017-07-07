@@ -40,7 +40,7 @@ class Document
      *
      * @ORM\Column(name="filename", type="string", length=150, nullable=false)
      */
-    private $filename;
+    private $fileName;
 
     /**
      * @var string
@@ -93,19 +93,19 @@ class Document
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFileName()
     {
-        return $this->filename;
+        return $this->fileName;
     }
 
     /**
-     * @param string $filename
+     * @param string $fileName
      *
      * @return $this
      */
-    public function setFilename($filename)
+    public function setFileName($fileName)
     {
-        $this->filename = $filename;
+        $this->fileName = $fileName;
         return $this;
     }
 
