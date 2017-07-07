@@ -82,45 +82,6 @@ class FileUploader
         $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
 
         return $document;
-
-//
-//        $startTime = $_POST['submit_time'] / 1000;
-//        //  Determine the filesize allowed
-//        $filesize = trim(ini_get('upload_max_filesize'));
-//        //  If the filesize includes K, M or G then append a B
-//        if (!is_null($filesize) && in_array(substr($filesize, -1), ['K', 'M', 'G'])) {
-//            $filesize .= 'B';
-//        }
-//        //  If this was a post but the upload file isn't present then that means the file was too large
-//        if (!is_array($_FILES['upload_file']) || empty($_FILES['upload_file'])) {
-//            throw new \Exception('File cannot be larger than ' . $filesize);
-//        }
-//        $uploadFileArr = $_FILES['upload_file'];
-//        //  If the file is empty show an error
-//        if ($uploadFileArr['size'] === 0) {
-//            throw new \Exception('File cannot be empty');
-//        }
-//        $uploadFileError = $uploadFileArr['error'];
-//        //  Check for errors
-//        if ($uploadFileError != UPLOAD_ERR_OK) {
-//            switch ($uploadFileError) {
-//                case UPLOAD_ERR_INI_SIZE:
-//                case UPLOAD_ERR_FORM_SIZE:
-//                    throw new \Exception('File cannot be larger than ' . $filesize);
-//                    break;
-//                case UPLOAD_ERR_NO_FILE:
-//                    throw new \Exception('No file selected');
-//                    break;
-//            }
-//            throw new \Exception('There was an error uploading the file, please try again');
-//        }
-//        //  Upload the file to quarantine folder until we check it's ok
-//        $filename = basename($uploadFileArr['name']);
-//        $filePath = FILE_UPLOAD_TARGET . $filename;
-//        $filenameTemp = $uploadFileArr['tmp_name'];
-//        if (!move_uploaded_file($filenameTemp, $filePath)) {
-//            throw new \Exception('There was an error uploading the file, please try again');
-//        }
     }
 
 
