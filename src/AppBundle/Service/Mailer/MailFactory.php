@@ -234,7 +234,7 @@ class MailFactory
             ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
             ->setToName($this->translate('odrSubmission.toName'))
             ->setSubject($this->translate('odrSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission.html.twig', $viewParams))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
             ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
@@ -335,8 +335,8 @@ class MailFactory
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
             ->setSubject($this->translate('odrSubmissionConfirmation.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission-confirm.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:odr-submission-confirm.text.twig', $viewParams));
+            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission-confirm.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:ndr-submission-confirm.text.twig', $viewParams));
 
         return $email;
     }

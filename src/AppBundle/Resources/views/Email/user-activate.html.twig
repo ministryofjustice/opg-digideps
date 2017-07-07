@@ -1,7 +1,6 @@
 {% extends 'AppBundle:Email:_template.html.twig' %}
 
 {% set translationDomain = "email-user-activate" %}
-
 {% trans_default_domain translationDomain %}
 
 {% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans  }}{% endblock %}
