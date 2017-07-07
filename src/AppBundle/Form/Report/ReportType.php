@@ -16,7 +16,7 @@ class ReportType extends AbstractType
     /**
      * ReportType constructor.
      * @param string $name //TODO not clear why this is passed. Try to remove and update behat tests
-     *  but using different translations
+     *                     but using different translations
      */
     public function __construct($name = 'report')
     {

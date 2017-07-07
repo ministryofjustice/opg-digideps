@@ -210,9 +210,9 @@ class AbstractController extends Controller
      * So we need to make another API call with the correct JMS groups
      * thus ensuring the client is retrieved with the current report.
      *
-     * @param Client $client
-     * @return string
+     * @param  Client     $client
      * @throws \Exception
+     * @return string
      */
     protected function generateClientProfileLink(Client $client)
     {

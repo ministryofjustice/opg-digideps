@@ -172,7 +172,7 @@ class AdminController extends AbstractController
 
                     $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
                 } catch (\Exception $e) {
-                    switch ((int)$e->getCode()) {
+                    switch ((int) $e->getCode()) {
                         case 422:
                             $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
                             break;
@@ -392,7 +392,6 @@ class AdminController extends AbstractController
                     $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
                 return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
-
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {

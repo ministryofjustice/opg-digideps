@@ -35,7 +35,7 @@ createReport:
 form:
   newReportForm:
     subSectionTitle: "Add the reporting period"
-    subSectionDescription: "The reporting period for your annual report starts on the date your court order was issued. Every year, your annual deputy report will fall due on the anniversary of your court order."
+    subSectionDescription: "The reporting period for your annual report starts on the date your court order was made. Every year, your annual deputy report will fall due on the anniversary of your court order."
     subSectionDescription-2: "Set your end date to 12 months from the date of your court order. The Office of the Public Guardian (OPG) will let you know if we need a report before this."
     controls:
       createNewReportLink:
