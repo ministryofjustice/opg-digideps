@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report;
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait HasReportTrait

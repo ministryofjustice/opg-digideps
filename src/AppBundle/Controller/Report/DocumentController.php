@@ -32,6 +32,7 @@ class DocumentController extends AbstractController
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
+        $document->setReport($report);
         $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document, [
             'action' => $this->generateUrl('report_documents', ['reportId'=>$reportId]) //needed to reset possible JS errors
         ]);
