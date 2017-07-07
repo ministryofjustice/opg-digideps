@@ -161,6 +161,11 @@ decision:
         notBlank: Tell us if you involved the client
         length: This description must be at least {{ limit }} letters long
 
+document:
+  fileName:
+    mimeTypesMessage: Please upload a valid PDF
+    maxSizeMessage: Files over 15M are not accepted
+
 # currently a subsection of decisions
 mentalCapacity:
     hasCapacityChanged:

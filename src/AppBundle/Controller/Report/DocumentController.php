@@ -35,7 +35,7 @@ class DocumentController extends AbstractController
         $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $uploadedFile = $document->getFileName();
+            $uploadedFile = $document->getFile();
             /* @var $uploadedFile UploadedFile */
             try {
                 $fileUploader->uploadFile($report, $uploadedFile->getClientOriginalName(), $uploadedFile->getPathname());
@@ -48,7 +48,7 @@ class DocumentController extends AbstractController
                 $errorKey = isset($errorToErrorTranslationKey[$errorClass]) ? $errorToErrorTranslationKey[$errorClass] : 'generic';
 
                 $message = $this->get('translator')->trans("form.errors.{$errorKey}", ['%exceptionMessage%' => $e->getMessage()], 'report-documents');
-                $form->get('fileName')->addError(new FormError($message));
+                $form->get('file')->addError(new FormError($message));
             }
 
             $request->getSession()->getFlashBag()->add('notice', 'File uploaded');

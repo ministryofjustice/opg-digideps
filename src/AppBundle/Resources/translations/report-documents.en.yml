@@ -2,7 +2,7 @@ htmlTitle: Case documents | GOV.UK
 pageTitle: Case documents
 
 form:
-  fileName:
+  file:
     label: Attach a file
   errors:
     risky: "Cannot upload file, risky content found inside. Technical details: %exceptionMessage%"
