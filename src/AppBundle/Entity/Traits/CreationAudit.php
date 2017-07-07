@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Traits;
 
 use AppBundle\Entity\User;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * CreationAudit Trait, usable with PHP >= 5.4

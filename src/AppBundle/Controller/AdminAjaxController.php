@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -78,6 +78,4 @@ class AdminAjaxController extends AbstractController
             return new JsonResponse($e->getMessage());
         }
     }
-
-
 }

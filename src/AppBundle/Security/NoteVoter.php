@@ -5,7 +5,6 @@ namespace AppBundle\Security;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Note;
 use AppBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -98,7 +97,7 @@ class NoteVoter extends Voter
     /**
      * Does the logged in user belong to the client
      *
-     * @param User $loggedInUser
+     * @param User   $loggedInUser
      * @param Client $client
      *
      * @return bool

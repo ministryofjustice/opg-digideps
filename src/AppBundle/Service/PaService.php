@@ -2,13 +2,8 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PaService
 {
@@ -27,8 +22,8 @@ class PaService
     }
 
     /**
-     * @param string $compressedData
-     * @param FlashBagInterface $flashBag
+     * @param  string            $compressedData
+     * @param  FlashBagInterface $flashBag
      * @return string
      */
     public function uploadAndSetFlashMessages($compressedData, FlashBagInterface $flashBag)

@@ -70,7 +70,7 @@ class IndexController extends AbstractController
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['pa-edit']);
-            $request->getSession()->getFlashBag()->add('notice', "The client details have been edited");
+            $request->getSession()->getFlashBag()->add('notice', 'The client details have been edited');
 
             return $this->redirect($returnLink);
         }

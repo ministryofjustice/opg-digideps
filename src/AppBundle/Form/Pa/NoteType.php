@@ -62,7 +62,6 @@ class NoteType extends AbstractType
         );
     }
 
-
     /**
      * Return list of translated categories from the Note entity
      *
@@ -89,5 +88,4 @@ class NoteType extends AbstractType
     {
         return $this->translator->trans($key, [], 'report-note');
     }
-
 }
