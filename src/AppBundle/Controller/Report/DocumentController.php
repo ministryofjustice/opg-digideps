@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -45,9 +46,10 @@ class DocumentController extends AbstractController
             $uploadedFile = $document->getFile();
             /* @var $uploadedFile UploadedFile */
             try {
-                $fileUploader->uploadFile($report, $uploadedFile->getClientOriginalName(), $uploadedFile->getPathname());
-                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+                $this->assignFileCheckers($fileUploader, $uploadedFile);
 
+                $fileUploader->uploadFile($report, $uploadedFile);
+                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
             } catch (\Exception $e) {
                 $errorToErrorTranslationKey = [
@@ -74,4 +76,34 @@ class DocumentController extends AbstractController
             'form'     => $form->createView(),
         ];
     }
+
+    /**
+     * Returns a list of checker services that are appropriate for the file type
+     *
+     * @param UploadedFile $uploadedFile
+     */
+    private function assignFileCheckers(FileUploader $fileUploader, UploadedFile $uploadedFile)
+    {
+        $this->assignDefaultFileCheckers($fileUploader);
+
+        switch ($uploadedFile->getMimeType())
+        {
+            case 'application/pdf':
+                $fileUploader->addFileChecker($this->get('file_checker_pdf'));
+                break;
+            // more mime types to go here
+        }
+    }
+
+    /**
+     * Assigns the default file checkers that all files must undergo
+     *
+     * @param FileUploader $fileUploader
+     */
+    private function assignDefaultFileCheckers(FileUploader $fileUploader)
+    {
+        // default to virus checker
+        $fileUploader->addFileChecker($this->get('file_checker_clam_av'));
+    }
+
 }
