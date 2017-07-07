@@ -3,20 +3,16 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
-use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class DocumentController extends AbstractController
 {
@@ -57,7 +53,6 @@ class DocumentController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
             return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
-
         }
 
         return [
@@ -66,5 +61,4 @@ class DocumentController extends AbstractController
             'form'     => $form->createView(),
         ];
     }
-
 }

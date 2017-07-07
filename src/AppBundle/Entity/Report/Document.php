@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,7 +29,6 @@ class Document
      * @var string
      */
     private $storageReference;
-
 
     /**
      * @param string $fileName
@@ -63,5 +61,4 @@ class Document
     {
         $this->storageReference = $storageReference;
     }
-
 }

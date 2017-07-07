@@ -3,7 +3,7 @@
 namespace AppBundle\Service\File\Storage;
 
 use Aws\S3\Exception\S3Exception;
-use \Aws\S3\S3Client;
+use Aws\S3\S3Client;
 
 /**
  * Class to upload/download/delete files from S3
@@ -60,10 +60,10 @@ class S3Storage implements StorageInterface
     public function retrieve($key)
     {
         try {
-            $result = $this->s3Client->getObject(array(
+            $result = $this->s3Client->getObject([
                 'Bucket' => $this->bucketName,
                 'Key'    => $key
-            ));
+            ]);
 
             return $result['Body'];
         } catch (S3Exception $e) {
@@ -75,7 +75,7 @@ class S3Storage implements StorageInterface
     }
 
     /**
-     * @param string $key
+     * @param  string      $key
      * @return \Aws\Result
      */
     public function delete($key)
@@ -85,7 +85,6 @@ class S3Storage implements StorageInterface
             'Key'    => $key
         ]);
     }
-
 
     /**
      * @param $key
@@ -102,6 +101,4 @@ class S3Storage implements StorageInterface
             ],
         ]);
     }
-
-
 }

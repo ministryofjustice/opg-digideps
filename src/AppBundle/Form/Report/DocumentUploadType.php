@@ -17,7 +17,6 @@ class DocumentUploadType extends AbstractType
                 'required' => false
             ])
             ->add('save', 'submit');
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

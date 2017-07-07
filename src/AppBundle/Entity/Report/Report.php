@@ -247,7 +247,6 @@ class Report
      */
     private $status;
 
-
     /**
      * @return int $id
      */
@@ -843,7 +842,6 @@ class Report
         return $this;
     }
 
-
     /**
      * @return Document[]
      */
@@ -860,7 +858,6 @@ class Report
         $this->documents = $documents;
     }
 
-
     /**
      * @return Status
      */
@@ -876,5 +873,4 @@ class Report
     {
         $this->status = $status;
     }
-
 }
