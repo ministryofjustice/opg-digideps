@@ -4,8 +4,6 @@ namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Note;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Tests\AppBundle\Controller\AbstractTestController;
 
 class NoteControllerTest extends AbstractTestController
 {
@@ -29,7 +27,6 @@ class NoteControllerTest extends AbstractTestController
     private static $pa2;
     private static $pa3;
     private static $pa3Client1;
-
 
     public static function setUpBeforeClass()
     {
@@ -64,7 +61,6 @@ class NoteControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-
     public function setUp()
     {
         if (null === self::$tokenAdmin) {
@@ -80,7 +76,6 @@ class NoteControllerTest extends AbstractTestController
     {
         $this->markTestIncomplete('needs endpoint to rely on client Id first');
     }
-
 
     public function testgetOneById()
     {
@@ -105,7 +100,6 @@ class NoteControllerTest extends AbstractTestController
         $this->assertEquals('content', $data['content']);
         $this->assertEquals(self::$pa1->getId(), $data['created_by']['id']);
         $this->assertEquals(true, time() - strtotime($data['created_on']) < 3600);
-
     }
 
     public function testupdateNote()
@@ -176,6 +170,4 @@ class NoteControllerTest extends AbstractTestController
         ])['data'];
         $this->assertNull($data['created_by']);
     }
-
-
 }

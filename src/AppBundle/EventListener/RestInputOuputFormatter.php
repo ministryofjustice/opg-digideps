@@ -76,17 +76,17 @@ class RestInputOuputFormatter
         return $this->serializer->deserialize($request->getContent(), 'array', $format);
     }
 
-
     /**
      * Converts objects into a serialised response
      * Request format has to match the supported formats.
      * Context modifiers are applied.
-     * 
+     *
      *
      *
      * @param $data
      * @param Request $request
-     * @param bool $groupsCheck
+     * @param bool    $groupsCheck
+     *
      * @return Response
      */
     private function arrayToResponse(array $data, Request $request, $groupsCheck = true)
@@ -109,7 +109,7 @@ class RestInputOuputFormatter
 
         // if data is defined,
         if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->attributes->get('groups')->isEmpty()) {
-            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . " missing JMS group");
+            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
@@ -126,7 +126,7 @@ class RestInputOuputFormatter
     private function containsEntity($object)
     {
         if (is_array($object)) {
-            foreach($object as $subObject) {
+            foreach ($object as $subObject) {
                 if ($this->containsEntity($subObject)) {
                     return true;
                 }

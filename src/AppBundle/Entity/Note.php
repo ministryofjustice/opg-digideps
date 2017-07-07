@@ -2,12 +2,9 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Traits\CreationAudit;
-use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use AppBundle\Entity\Traits\ModifyAudit;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**

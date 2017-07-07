@@ -2,7 +2,6 @@
 
 namespace Tests\AppBundle\Entity\Report;
 
-use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
@@ -17,7 +16,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use MockeryStub as m;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,9 +51,8 @@ class ReportTest extends \PHPUnit_Framework_TestCase
      * */
     public function testConstrutor($startDate, $endDate, array $clientReports, $expectedTextInException)
     {
-
         $client = new Client();
-        foreach($clientReports as $rep) {
+        foreach ($clientReports as $rep) {
             $report = (new Report($this->client, Report::TYPE_102, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted(($rep[2]));
             $client->addReport($report);
         }
@@ -215,8 +212,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
-
-
 
     public function testStatus()
     {

@@ -221,7 +221,7 @@ class PaServiceTest extends WebTestCase
 
     /**
      * Data providor for reporting periods, end date and expected start date
-     * 
+     *
      * @return array
      */
     public function reportPeriodDateProvider()

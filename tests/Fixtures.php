@@ -121,7 +121,6 @@ class Fixtures
         return $odr;
     }
 
-
     public function createReport(
         EntityDir\Client $client,
         array $settersMap = []
@@ -314,7 +313,6 @@ class Fixtures
 
         return $decision;
     }
-
 
     /**
      * @return EntityDir\Note

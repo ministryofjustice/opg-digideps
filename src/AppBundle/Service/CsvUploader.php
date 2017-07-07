@@ -2,14 +2,14 @@
 
 namespace AppBundle\Service;
 
-
 /**
  * keep in sync with CLIENT
  */
 class CsvUploader
 {
     /**
-     * @param  mixed  $data
+     * @param mixed $data
+     *
      * @return string
      */
     public static function compressData($data)
@@ -18,7 +18,8 @@ class CsvUploader
     }
 
     /**
-     * @param  mixed  $data
+     * @param mixed $data
+     *
      * @return string
      */
     public static function decompressData($data)

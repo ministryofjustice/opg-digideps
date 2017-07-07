@@ -112,7 +112,6 @@ class ClientControllerTest extends AbstractTestController
         ]);
     }
 
-
     public function testupsertPostLayDeputy()
     {
         $url = '/client/upsert';

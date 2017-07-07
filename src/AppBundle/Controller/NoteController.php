@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -114,6 +113,7 @@ class NoteController extends RestController
      * @Method({"DELETE"})
      *
      * @Route("{id}")
+     *
      * @param int $id
      *
      * @return array
