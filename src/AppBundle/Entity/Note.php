@@ -2,12 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\Traits\ModifyAudit;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Note.
@@ -75,7 +73,7 @@ class Note
     private $content;
 
     /**
-     * @var  Client
+     * @var Client
      *
      * @JMS\Type("AppBundle\Entity\Client")
      */

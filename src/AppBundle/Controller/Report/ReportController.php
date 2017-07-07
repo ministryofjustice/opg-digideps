@@ -136,7 +136,7 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType('report'),$report, [
+        $form = $this->createForm(new FormDir\Report\ReportType('report'), $report, [
                 'translation_domain' => 'registration',
                 'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
         ]);

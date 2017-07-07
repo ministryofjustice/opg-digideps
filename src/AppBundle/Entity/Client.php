@@ -7,7 +7,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class Client
 {
@@ -280,7 +279,6 @@ class Client
     {
         $this->currentReport = $currentReport;
     }
-
 
     /**
      * @return Odr\Odr
