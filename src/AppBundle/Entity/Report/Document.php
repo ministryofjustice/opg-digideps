@@ -2,10 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
