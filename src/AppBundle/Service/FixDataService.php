@@ -107,11 +107,11 @@ class FixDataService
             try {
                 $client = $report->getClient();
                 if (!$client) {
-                    throw new \RuntimeException("no client found");
+                    throw new \RuntimeException('no client found');
                 }
                 $user = $client->getUsers()->first();
                 if (!$user) {
-                    throw new \RuntimeException("no user found");
+                    throw new \RuntimeException('no user found');
                 }
 
                 if ($user->isPaDeputy()) {
@@ -130,13 +130,12 @@ class FixDataService
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
                 }
-
             } catch (\Exception $e) {
                 $this->messages[] = "Report {$report->getId()}: 
                 ERROR - could not be processed with start date of " .
-                    $report->getStartDate()->format('d-M-Y') . " to " .
+                    $report->getStartDate()->format('d-M-Y') . ' to ' .
                     $report->getStartDate()->format('d-M-Y') .
-                    "Exception: " . $e->getMessage();
+                    'Exception: ' . $e->getMessage();
             }
         }
 
@@ -158,15 +157,15 @@ class FixDataService
             try {
                 $client = $report->getClient();
                 if (!$client) {
-                    throw new \RuntimeException("no client found");
+                    throw new \RuntimeException('no client found');
                 }
                 $user = $client->getUsers()->first();
                 if (!$user) {
-                    throw new \RuntimeException("no user found");
+                    throw new \RuntimeException('no user found');
                 }
 
                 if ($user->isPaDeputy()) {
-//                    $this->messages[] = "Report {$report->getId()}: already executed on 14/6/2017";
+                    //                    $this->messages[] = "Report {$report->getId()}: already executed on 14/6/2017";
                     $oldPeriod = $report->getStartDate()->format('d-M-Y') . '-->' .
                         $report->getEndDate()->format('d-M-Y');
 
@@ -183,13 +182,12 @@ class FixDataService
                 } else {
                     $this->messages[] = "Report {$report->getId()}: Skipping... (not a pa client report)";
                 }
-
             } catch (\Exception $e) {
                 $this->messages[] = "Report {$report->getId()}: 
                 ERROR - could not be processed with start date of " .
-                    $report->getStartDate()->format('d-M-Y') . " to " .
+                    $report->getStartDate()->format('d-M-Y') . ' to ' .
                     $report->getStartDate()->format('d-M-Y') .
-                    "Exception: " . $e->getMessage();
+                    'Exception: ' . $e->getMessage();
             }
         }
 
@@ -210,16 +208,16 @@ class FixDataService
                 if ($report->getSubmitted()) {
                     if (!$report->getSubmittedBy()) {
                         if (!$report->getClient()) {
-                            throw new \RuntimeException("no client found");
+                            throw new \RuntimeException('no client found');
                         }
                         $users = $report->getClient()->getUsers();
                         $user = $users->first();
                         if (!$user) {
-                            throw new \RuntimeException("no user. skipped"); // should never happen, but live data not available for testing atm
+                            throw new \RuntimeException('no user. skipped'); // should never happen, but live data not available for testing atm
                         }
 
                         $report->setSubmittedBy($user);
-                        $this->messages[] = "Report $reportId : set correctly among the " . count($users) . " user(s)";
+                        $this->messages[] = "Report $reportId : set correctly among the " . count($users) . ' user(s)';
                     }
                 } else {
                     if ($report->getSubmittedBy()) {
@@ -227,7 +225,6 @@ class FixDataService
                         $this->messages[] = "Report $reportId : not submitted. setSubmittedBy set to null";
                     }
                 }
-
             } catch (\Exception $e) {
                 $this->messages[] = "Report $reportId: " . $e->getMessage();
             }
@@ -253,6 +250,4 @@ class FixDataService
     {
         return $this->totalProcessed;
     }
-
 }
-

@@ -184,7 +184,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-   public function testGetById()
+    public function testGetById()
     {
         $url = '/report/' . self::$report1->getId();
 
@@ -291,7 +291,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-
     /**
      * @depends testAdd
      */
@@ -342,7 +341,7 @@ class ReportControllerTest extends AbstractTestController
      */
     public function testUpdate($reportId)
     {
-//        $reportId = self::$report1->getId();
+        //        $reportId = self::$report1->getId();
         $url = '/report/' . $reportId;
 
         // assert get

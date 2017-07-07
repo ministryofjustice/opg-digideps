@@ -62,6 +62,7 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
     /**
      * this test could be refactor moking reportService.setReportTypeBasedOnCasrec
+     *
      * @test
      * @dataProvider createNextYearReportChangesTypeProvider
      */

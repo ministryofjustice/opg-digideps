@@ -521,7 +521,7 @@ class Client
 
     /**
      * Get report by end date
-     * 
+     *
      * @param \DateTime $endDate
      *
      * @return Report

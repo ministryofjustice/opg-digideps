@@ -230,21 +230,23 @@ class Report
 
         // check this there only is one unsubmitted report
         if ($client->getUnsubmittedReports()->count() > 0) {
-            throw new \RuntimeException('Client '.$client->getId().' already has unsubmitted report. Cannot create another one');
+            throw new \RuntimeException('Client ' . $client->getId() . ' already has unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
         if ($client->getSubmittedReports()->count()) {
-            $unsubmittedEndDates = array_map(function($report){ return $report->getEndDate(); }, $client->getSubmittedReports()->toArray());
+            $unsubmittedEndDates = array_map(function ($report) {
+                return $report->getEndDate();
+            }, $client->getSubmittedReports()->toArray());
             rsort($unsubmittedEndDates); //order by last first
             $endDateLastReport = $unsubmittedEndDates[0];
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
-            $daysDiff = (int)$expectedStartDate->diff($this->startDate)->format('%a');
+            $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
             if ($daysDiff !== 0) {
                 throw new \RuntimeException(sprintf(
                     'Incorrect start date. Last submitted report was on %s, '
-                    .'therefore the new report is expected to start on %s, not on %s',
+                    . 'therefore the new report is expected to start on %s, not on %s',
                     $endDateLastReport->format('d/m/Y'),
                     $expectedStartDate->format('d/m/Y'),
                     $this->startDate->format('d/m/Y')

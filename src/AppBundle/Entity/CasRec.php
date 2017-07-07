@@ -226,8 +226,9 @@ class CasRec
      * 103: all the other cases;
      *
      * @param string $typeOfRep e.g. opg103
-     * @param string $corref e.g. l3, l3g
-     * @return string  Report::TYPE_*
+     * @param string $corref    e.g. l3, l3g
+     *
+     * @return string Report::TYPE_*
      */
     public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref)
     {
@@ -242,5 +243,4 @@ class CasRec
 
         return Report::TYPE_102;
     }
-
 }

@@ -3,9 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 
 class PaService
@@ -38,7 +36,8 @@ class PaService
 
     /**
      * PaService constructor.
-     * @param EntityManager $em
+     *
+     * @param EntityManager   $em
      * @param LoggerInterface $logger
      */
     public function __construct(EntityManager $em, LoggerInterface $logger)
@@ -82,12 +81,11 @@ class PaService
      */
     public function addFromCasrecRows(array $data)
     {
-        $this->log('Received '.count($data).' records');
+        $this->log('Received ' . count($data) . ' records');
 
         $this->added = ['users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data as $index => $row) {
-
             $row = array_map('trim', $row);
             try {
                 if ($row['Dep Type'] != 23) {
@@ -98,7 +96,7 @@ class PaService
                 $client = $this->createClient($row, $user);
                 $this->createReport($row, $client, $user);
             } catch (\Exception $e) {
-                $message = 'Error for Deputy No: ' . $row['Deputy No'] . ', case '.$row['Case'].': ' . $e->getMessage();
+                $message = 'Error for Deputy No: ' . $row['Deputy No'] . ', case ' . $row['Case'] . ': ' . $e->getMessage();
                 $errors[] = $message;
             }
         }
@@ -133,7 +131,6 @@ class PaService
                     ' cannot be added with email ' . $user->getEmail() .
                     '. Email already taken by Deputy No: ' . $user->getDeputyNo();
             } else {
-
                 $user = new EntityDir\User();
                 $user
                     ->setRegistrationDate(new \DateTime())
@@ -305,6 +302,7 @@ class PaService
      * -365 days + 1 if note a leap day (otherwise we get 2nd March)
      *
      * @param \DateTime $reportEndDate
+     *
      * @return \DateTime $reportStartDate
      */
     public static function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
@@ -325,7 +323,7 @@ class PaService
      * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
-     * @param string $century e.g. 20/19 Prefix added to 2-digits year
+     * @param string $century    e.g. 20/19 Prefix added to 2-digits year
      *
      * @return \DateTime|false
      */
@@ -337,10 +335,10 @@ class PaService
 
         // prefix century if needed
         if (strlen($pieces[2]) === 2) {
-            $pieces[2] = ((string)$century).$pieces[2];
+            $pieces[2] = ((string) $century) . $pieces[2];
         }
         // check format is d-M-Y
-        if ((int)$pieces[0] < 1 || (int)$pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
+        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
             return false;
             //throw new \InvalidArgumentException($errorMessage);
         }
@@ -359,6 +357,6 @@ class PaService
      */
     private function log($message)
     {
-        $this->logger->debug(__CLASS__.':'.$message);
+        $this->logger->debug(__CLASS__ . ':' . $message);
     }
 }
