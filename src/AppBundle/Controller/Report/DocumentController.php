@@ -32,7 +32,13 @@ class DocumentController extends AbstractController
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
-        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document);
+        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document, [
+            'action' => $this->generateUrl('report_documents', ['reportId'=>$reportId]) //needed to reset possible JS errors
+        ]);
+        if ($request->get('error') == 'tooBig') {
+            $message = $this->get('translator')->trans('document.fileName.maxSizeMessage', [], 'validators');
+            $form->get('file')->addError(new FormError($message));
+        }
         $form->handleRequest($request);
         if ($form->isValid()) {
             $uploadedFile = $document->getFile();

@@ -5,6 +5,7 @@ form:
   file:
     label: Attach a file
   errors:
+    fileSize: "Your uploaded file exceeded the maximum size of 15M"
     risky: "Cannot upload file, risky content found inside. Technical details: %exceptionMessage%"
     virusFound:  "Cannot upload file, virus found inside. Technical details: %exceptionMessage%"
     generic: "Cannot upload file, please try again later. Technical details: %exceptionMessage%"
