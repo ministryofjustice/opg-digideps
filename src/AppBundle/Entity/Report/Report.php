@@ -237,7 +237,6 @@ class Report
     /**
      * @var Document[]
      *
-     * @JMS\Type("DateTime")
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
