@@ -3,11 +3,14 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Document
 {
+    use CreationAudit;
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
@@ -19,12 +22,6 @@ class Document
      */
     private $fileName;
 
-    /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    private $createdOn;
 
     /**
      * @JMS\Type("string")
@@ -43,21 +40,12 @@ class Document
         $this->fileName = $fileName;
     }
 
-
     /**
      * @return string
      */
     public function getFileName()
     {
         return $this->fileName;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedOn()
-    {
-        return $this->createdOn;
     }
 
     /**
