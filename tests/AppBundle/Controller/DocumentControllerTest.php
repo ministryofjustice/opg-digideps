@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Report\Document;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 use Tests\AppBundle\Controller\AbstractTestController;
 
@@ -62,5 +63,14 @@ class DocumentControllerTest extends AbstractTestController
                 'storage_reference'   => 's3StorageKey'
             ],
         ])['data'];
+
+        /** @var Document $document */
+        $document = self::fixtures()->getRepo('Report\Document')->find($data['id']);
+
+        $this->assertEquals($data['id'], $document->getId());
+        $this->assertEquals(self::$deputy1->getId() , $document->getCreatedBy()->getId());
+        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertEquals('s3StorageKey', $document->getStorageReference());
+        $this->assertEquals('testfile.pdf', $document->getFilename());
     }
 }

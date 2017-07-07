@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_report_id", columns={"report_id"}),
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DocumentRepository")
+ * @ORM\Entity()
  *
  */
 class Document
