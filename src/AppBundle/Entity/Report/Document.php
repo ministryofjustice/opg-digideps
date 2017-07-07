@@ -26,7 +26,10 @@ class Document
         foreach ($this->getReport()->getDocuments() as $document) {
             $fileNames[] = $document->getFileName();
         }
-       //$context->addViolationAt('file', 'document.file.alreadyPresent');
+        
+        if (in_array($this->getFile()->getClientOriginalName(), $fileNames)) {
+            $context->addViolationAt('file', 'document.file.alreadyPresent');
+        }
     }
 
     /**
