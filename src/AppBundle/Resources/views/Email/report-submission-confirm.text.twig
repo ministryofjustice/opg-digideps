@@ -1,41 +1,36 @@
-Dear {{ deputyFirstName }}
+{% set translationDomain = "email-report-submission-confirm" %}
+{% trans_default_domain translationDomain %}
 
-Thank you for submitting your annual deputy report for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
+{% set transOptions = {
+    '%deputyFirstName%': deputyFirstName,
+    '%startDate%': submittedReport.startDate | date("d/m/Y"),
+    '%endDate%': submittedReport.endDate | date("d/m/Y"),
+    '%homepageUrl%': homepageUrl
+} %}
 
-We’re currently reviewing it, and we'll contact you when we've finished.
+{{ ('default.dear') | trans(transOptions) }}
 
-{% if app.user.isDeputyPa() %}
-You can view your submitted reports on your client profile page.
-{% else %}
-Download a pdf of your report
+{{ (recipientRole ~ '.thanksForSubmitting') | trans(transOptions) | raw }}
+
+{{ ('default.currentlyReviewing') | trans }}
+
+{{ (recipientRole ~ '.reportAccess') | trans | raw  }}
+{% if recipientRole == 'default' %}
 -----------------------------
 
-To view and download a copy of the report for your records, sign back into the deputy report service {{ homepageUrl }}. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
+{{ ('default.downloadInstructions') | trans(transOptions) | raw }}
 {% endif %}
 
-
-What happens next
+{{ ('default.whatNext') | trans }}
 -----------------
 
-If you like, you can start working on {% if app.user.isDeputyPa() %}the{% else %}your{% endif %} next annual deputy report {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }} right away.
+{{ (recipientRole ~ '.startNextReport') | trans(transOptions) }}
 
-Sign in to complete-deputy-report.service.gov.uk {{ homepageUrl }} to keep track of your deputyship decisions and spending throughout the year.
+{{ ('default.signInToKeepTrack') | trans(transOptions) | raw  }}
 
-{% if app.user.isDeputyPa() != true %}
-We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).
+{% if recipientRole == 'default' %}
+    {{ ('default.reportReminder') | trans(transOptions) | raw }}
 {% endif %}
 
 
-Need help?
-----------
-
-This is an automated email, so please don’t reply to this address.
-
-To contact us, email the Office of the Public Guardian at deputyshipservice@publicguardian.gsi.gov.uk, or call us on 0115 934 2700.
-
-Office of the Public Guardian
-------------------------------------------------
-PO Box 16185
-Birmingham B2 2WH
-complete-deputy-report.service.gov.uk
-{{ homepageUrl }}
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

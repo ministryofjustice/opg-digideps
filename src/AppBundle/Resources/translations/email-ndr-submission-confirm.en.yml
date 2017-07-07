@@ -1,0 +1,29 @@
+default:
+    htmlHeaderTitle: Deputy report service - New deputy report submitted
+    dear: Dear %deputyFirstName%
+    thanksForSubmitting: Thank you for submitting your new deputy report
+    currentlyReviewing: |
+        We're in the process of reviewing your report, and will contact you when this
+        has been done.
+    reportAccess: Download a pdf of your report
+    downloadInstructions: |
+        To view and download a copy of the report for your records, <a style="word-wrap:
+        break-word;" href="%homepageUrl%">sign back into the deputy report service</a>. Go to
+        the 'Your reports' homepage, where you'll find a link to download a pdf of your report.
+    whatNext: What happens next
+    nowThatYoureDone: |
+        Now that you’ve completed your new deputy report, you can make use of our annual
+        deputy report service.
+    sendYouAReminder: |
+        Your annual deputy report falls due on the anniversary of your court order – we'll
+        send you a reminder nearer the time.
+    useServiceYearRound: |
+        However, you can use the service year round to keep track of your deputyship decisions
+        and spending.
+    makeAStart: |
+        Make a start at <a  style="word-wrap: break-word;" href="%homepageUrl%">
+        complete-deputy-report.service.gov.uk</a>
+
+public-authority:
+public-authority-admin:
+public-authority-team-member:
