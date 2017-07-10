@@ -9,6 +9,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -44,9 +45,10 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             $uploadedFile = $document->getFile();
+
+            /** @var UploadableFileInterface $fileToStore */
             $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
-            \Doctrine\Common\Util\Debug::dump($fileToStore,2);
-            exit;
+
             /* @var $uploadedFile UploadedFile */
             try {
                 $fileToStore->checkFile();
