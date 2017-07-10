@@ -46,20 +46,28 @@ class DocumentController extends AbstractController
             /* @var $uploadedFile UploadedFile */
             try {
                 $fileUploader->uploadFile($report, $uploadedFile->getClientOriginalName(), $uploadedFile->getPathname());
+                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+
+                return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
             } catch (\Exception $e) {
                 $errorToErrorTranslationKey = [
                     RiskyFileException::class => 'risky',
                     VirusFoundException::class => 'virusFound',
                 ];
                 $errorClass = get_class($e);
-                $errorKey = isset($errorToErrorTranslationKey[$errorClass]) ? $errorToErrorTranslationKey[$errorClass] : 'generic';
-
-                $message = $this->get('translator')->trans("form.errors.{$errorKey}", ['%exceptionMessage%' => $e->getMessage()], 'report-documents');
+                if (isset($errorToErrorTranslationKey[$errorClass])) {
+                    $errorKey = $errorToErrorTranslationKey[$errorClass];
+                } else {
+                    $errorKey = 'generic';
+                }
+                $message = $this->get('translator')->trans("form.errors.{$errorKey}", [
+                    '%techDetails%' => $this->getParameter('kernel.debug')
+                        ? $e->getMessage()
+                        : $request->headers->get('x-request-id'),
+                ], 'report-documents');
                 $form->get('file')->addError(new FormError($message));
+                $this->get('logger')->error($e->getMessage()); //fully log exceptions
             }
-
-            $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
-            return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
         }
 
         return [

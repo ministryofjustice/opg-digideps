@@ -4,9 +4,11 @@ services:
     arguments:
       -
         version: 'latest'
-        region: 'eu-west-1'
+        region: 'eu-west-2'
+        # only needed for fake S3
         endpoint: 'http://fakes3:4569'
         validate: false
+        # credentials only needed for S3
         credentials:
           key: 'YOUR_ACCESS_KEY_ID'
           secret: 'YOUR_SECRET_ACCESS_KEY'
