@@ -3,20 +3,14 @@ FROM registry.service.opg.digital/opguk/php-fpm:0.1.216
 # adds nodejs pkg repository
 RUN  curl --silent --location https://deb.nodesource.com/setup_4.x | bash -
 
-# Install rvm, ruby, bundler
-RUN curl -sSL https://get.rvm.io | grep -v __rvm_print_headline | bash -s stable
-RUN /bin/bash -l -c "rvm requirements"
-RUN /bin/bash -l -c "rvm install 2.1.0"
-RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
-RUN /bin/bash -l -c "gem install sass"
-RUN /bin/bash -l -c "gem install scss_lint"
-
-RUN  apt-get update && apt-get install -y \
-     php-pear php5-curl php5-memcached php5-redis \
-     dos2unix postgresql-client \
-     nodejs && \
-     apt-get clean && apt-get autoremove && \
-     rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
+RUN  apt-add-repository ppa:brightbox/ruby-ng && \
+        apt-get update && \
+        apt-get install -y \
+        php-pear php5-curl php5-memcached php5-redis \
+        dos2unix postgresql-client \
+        nodejs ruby2.4 ruby2.4-dev && \
+        apt-get clean && apt-get autoremove && \
+        rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
 #upgrade npm
 RUN  npm install npm@4.6.1 -g
@@ -24,8 +18,8 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 
 RUN  npm install --global gulp
 RUN  npm install --global browserify
-#RUN  gem install sass
-#RUN  gem install scss_lint
+RUN  gem install --no-ri --no-rdoc sass -v 3.4.25
+RUN  gem install --no-ri --no-rdoc scss_lint -v 0.54.0
 
 # build app dependencies
 COPY composer.json /app/
