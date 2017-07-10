@@ -44,10 +44,13 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             $uploadedFile = $document->getFile();
+            $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
+            \Doctrine\Common\Util\Debug::dump($fileToStore,2);
+            exit;
             /* @var $uploadedFile UploadedFile */
             try {
-                $this->assignFileCheckers($fileUploader, $uploadedFile);
-
+                $fileToStore->checkFile();
+                
                 $fileUploader->uploadFile($report, $uploadedFile);
                 $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
@@ -77,33 +80,6 @@ class DocumentController extends AbstractController
         ];
     }
 
-    /**
-     * Returns a list of checker services that are appropriate for the file type
-     *
-     * @param UploadedFile $uploadedFile
-     */
-    private function assignFileCheckers(FileUploader $fileUploader, UploadedFile $uploadedFile)
-    {
-        $this->assignDefaultFileCheckers($fileUploader);
 
-        switch ($uploadedFile->getMimeType())
-        {
-            case 'application/pdf':
-                $fileUploader->addFileChecker($this->get('file_checker_pdf'));
-                break;
-            // more mime types to go here
-        }
-    }
-
-    /**
-     * Assigns the default file checkers that all files must undergo
-     *
-     * @param FileUploader $fileUploader
-     */
-    private function assignDefaultFileCheckers(FileUploader $fileUploader)
-    {
-        // default to virus checker
-        $fileUploader->addFileChecker($this->get('file_checker_clam_av'));
-    }
 
 }
