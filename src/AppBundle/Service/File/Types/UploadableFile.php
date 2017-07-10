@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File\Types;
 
+use AppBundle\Service\File\Checker\ClamAVChecker;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -106,7 +107,9 @@ class UploadableFile implements UploadableFileInterface
         {
             $this->getLogger()->debug('Calling File checker: ' . get_class($fc) );
 
+            // send file
             $fc->checkFile($fileBody);
+
         }
     }
 }

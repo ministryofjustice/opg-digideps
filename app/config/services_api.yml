@@ -16,3 +16,16 @@ services:
     rest_client:
         class:  AppBundle\Service\Client\RestClient
         arguments: ["@service_container", "@guzzle_json_http_client", "@redis_token_storage", "%api_client_secret%"]
+
+    guzzle_file_scanner_client:
+        class: GuzzleHttp\Client
+        arguments:
+          config:
+            base_url: "%file_scanner_url%"
+            defaults:
+                version: "1.0"
+                headers:
+                    Content-Type: application/json
+                verify: false
+                timeout: 10
+                allow_redirects: false

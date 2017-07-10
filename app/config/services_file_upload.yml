@@ -9,6 +9,8 @@ services:
     class: AppBundle\Service\File\Checker\PdfChecker
   file_checker_clam_av:
     class: AppBundle\Service\File\Checker\ClamAVChecker
+    arguments: [ "@guzzle_file_scanner_client", "@logger" ]
+
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]
