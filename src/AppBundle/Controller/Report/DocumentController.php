@@ -61,9 +61,7 @@ class DocumentController extends AbstractController
                     $errorKey = 'generic';
                 }
                 $message = $this->get('translator')->trans("form.errors.{$errorKey}", [
-                    '%techDetails%' => $this->getParameter('kernel.debug')
-                        ? $e->getMessage()
-                        : $request->headers->get('x-request-id'),
+                    '%techDetails%' => $this->getParameter('kernel.debug') ? $e->getMessage() : $request->headers->get('x-request-id'),
                 ], 'report-documents');
                 $form->get('file')->addError(new FormError($message));
                 $this->get('logger')->error($e->getMessage()); //fully log exceptions
