@@ -1,14 +1,12 @@
 FROM registry.service.opg.digital/opguk/php-fpm:0.1.216
 
 RUN  apt-get update && apt-get install -y \
-     php-pear php5-curl php5-memcached php5-redis php5-pgsql \
-     nodejs dos2unix postgresql-client ruby && \
+     php-pear php5-curl php5-redis php5-pgsql \
+     dos2unix postgresql-client && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-
-RUN  gem install sass
 
 # build app dependencies
 RUN  composer self-update
