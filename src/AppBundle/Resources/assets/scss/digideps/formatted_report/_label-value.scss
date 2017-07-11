@@ -1,25 +1,66 @@
 .formatted-report {
 
+    // ==========================================================================
+    // LABEL VALUE
+    // Label(key) / Value pairing. Quite vague in many places and mixed
+    // in with outer classes for targeting
+
     .labelvalue {
 
         margin: 0;
         padding: 0;
 
+        .label {
+            @include core-19();
+
+            &.bold {
+                font-weight: 700;
+            }
+        }
+
         .value {
+            @include core-16();
+
+            box-sizing: border-box;
             background: $white;
             color: $east-bay;
-            padding: 2px 5px 0 5px;
+            padding: 7px 8px 5px 8px;
             margin: 2px 0 15px 0;
             border: 1px solid $black;
-            min-height: 25px;
+            min-height: 34px;
 
             &.checkbox {
-                width: 15px;
+                box-sizing: content-box;
+                min-height: 0;
+                margin: 0 5px 0 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
             }
         }
 
         &.inline {
             @extend %contain-floats;
+
+            .label,
+            .value {
+                display: inline-block;
+            }
+
+            .value {
+                margin-left: 20px;
+
+                &.checkbox {
+                    margin-left: 0;
+                }
+            }
+
+        }
+
+        &.right-inline {
+
+            text-align: right;
 
             .label,
             .value {
@@ -32,6 +73,25 @@
             }
 
         }
+
+        &.transaction {
+
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid $grey-2;
+            margin-bottom: 20px;
+            border-top: 1px solid $grey-2;
+
+        }
+
+        &.big-value .value {
+            @include bold-24();
+        }
+    }
+
+    // appplies to uknown closing balance for each account, and for the accounts total
+    .labelvalue .value.unknown {
+        color: $red-unknown;
     }
 
     .textarea {

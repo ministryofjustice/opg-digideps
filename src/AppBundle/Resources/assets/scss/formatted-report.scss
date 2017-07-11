@@ -19,12 +19,11 @@ $small: 12;
     @include _core-font-generator($font-size, $font-size-640, $font-size-print, $line-height, $line-height-640, $tabular-numbers, $font-weight);
 }
 
-
 @import "gds/fonts";
 @import "digideps/colours";
 @import "digideps/helpers";
 @import "digideps/formatted_report/safeguarding";
-@import "digideps/box";
+@import "digideps/formatted_report/box";
 @import "digideps/formatted_report/label-value";
 @import "digideps/formatted_report/grid";
 @import "digideps/formatted_report/tables";
@@ -54,9 +53,9 @@ $small: 12;
     }
 
     h1 {
-        width: 60%;
-
         @include bold-48();
+
+        width: 600px;
     }
 
     h2 {
