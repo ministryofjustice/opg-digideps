@@ -99,8 +99,16 @@ class TeamController extends AbstractController
 
             try {
                 $this->getRestClient()->put('user/' . $id, $user, ['pa_team_add'], 'User');
-                $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
-                return $this->redirectToRoute('pa_team');
+
+                if ($id == $this->getUser()->getId() && ($user->getRoles() != $this->getUser()->getRoles())) {
+                    $request->getSession()->getFlashBag()->add('notice', ' You made a change to your access levels and must log in again');
+                    $redirectRoute = 'logout';
+                } else {
+                    $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
+                    $redirectRoute = 'pa_team';
+                }
+                
+                return $this->redirectToRoute($redirectRoute);
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
