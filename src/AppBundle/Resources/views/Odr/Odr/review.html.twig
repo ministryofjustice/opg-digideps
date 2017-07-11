@@ -34,8 +34,6 @@
 {% block pageContent %}
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
-    <a name="pageBody"></a>
-
     <div id="page-body">
         <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
         {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}

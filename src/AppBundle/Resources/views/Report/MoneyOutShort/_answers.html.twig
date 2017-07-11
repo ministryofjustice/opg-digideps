@@ -116,7 +116,7 @@
                     £{{ tr.amount | money_format }}
                 </td>
                 <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}#pageBody"
+                    <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                        class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                     <a href="{{ path('money_out_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                        class="push-half--left action-link behat-link-delete">Remove</a>
