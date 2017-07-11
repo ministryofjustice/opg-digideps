@@ -20,22 +20,6 @@ services:
         arguments: ["@rest_client"]
         tags:
             - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
-    s3_client:
-        class: Aws\S3\S3Client
-        arguments:
-          -
-            version: 'latest'
-            region: 'eu-west-2'
-            endpoint: 'http://fakes3:4569'
-            validate: false
-            credentials:
-              key: 'YOUR_ACCESS_KEY_ID'
-              secret: 'YOUR_SECRET_ACCESS_KEY'
-
-
-
-#swiftmailer:
-#    delivery_address: me@example.com
 
 monolog:
    handlers:
