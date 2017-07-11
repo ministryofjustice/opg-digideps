@@ -1,12 +1,29 @@
 .formatted-report {
-    .half-width {
+    .full-width {
         float: left;
-        width: 48%;
+        width: 100%;
+    }
+
+    .half-width {
+        box-sizing: border-box;
+        float: left;
+        width: 49%;
 
         &.first {
             margin-right: 2%;
         }
-
     }
+
+    .third-width {
+        box-sizing: border-box;
+        float: left;
+        width: 32%;
+        margin-right: 2%;
+
+        &.last {
+            margin-right: 0;
+        }
+    }
+
 }
 

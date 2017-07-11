@@ -1,4 +1,14 @@
 .formatted-report {
+
+    .checkboxes {
+        width: auto;
+
+        td {
+            padding: 3px 25px 0 0;
+            border: none;
+        }
+    }
+
     table.money {
         border-collapse: collapse;
         border-spacing: 0;
