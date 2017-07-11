@@ -2,7 +2,7 @@ services:
   #Note: @s3_client is defined in config_dev  (using fakeS3) AND config_prod (using IAM credentials)
   s3_storage:
     class:  AppBundle\Service\File\Storage\S3Storage
-    arguments: [ "@s3_client", "ddpauloads-develop-master-1-test" ]
+    arguments: [ "@s3_client", "%s3_bucket_name%" ]
   file_checker_pdf:
     class: AppBundle\Service\File\Checker\PdfChecker
   file_checker_clam_av:
