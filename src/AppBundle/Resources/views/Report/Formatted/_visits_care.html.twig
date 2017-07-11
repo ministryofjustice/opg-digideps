@@ -2,50 +2,50 @@
     <h2 class="section-heading">Visits and care</h2>
 
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Contact with client</h3>
         <div class="box" id="safeguarding-contact">
-            <div id="do-you-live-with-the-client" class="checkboxes horizontal">
-                <div class="question">Do you live with the client?</div>
+            <h3>Contact with client</h3>
+            <div id="do-you-live-with-the-client" class="labelvalue">
+                <div class="label">Do you live with the client?</div>
 
-                <table class="yesno">
+                <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if visitsCare.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if visitsCare.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">No</td>
                     </tr>
                 </table>
 
             </div>
             {% if visitsCare.doYouLiveWithClient == 'no' %}
-                <div class="form-group form-group-vertical">
-                    <div class="question">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</div>
-                    <div class="value textarea">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
+                <div class="labelvalue push-half--top">
+                    <div class="label">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</div>
+                    <div class="value">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
                 </div>
             {% endif %}
         </div>
     </div>
     <div class="dont-break">
-        <h3 class="fieldset-outer-title">Care arrangements</h3>
         <div class="box" id="care-arrangements-subsection">
+            <h3>Care arrangements</h3>
 
-            <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
-                <div class="question">Does the client receive care which is paid for?</div>
+            <div class="labelvalue" id="safeguarding-paid-for-care">
+                <div class="label">Does the client receive care which is paid for?</div>
 
-                <table class="yesno">
+                <table class="checkboxes labelvalue inline">
                     <tr>
-                        <td class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>
-                        <td class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--no">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">No</td>
                     </tr>
                 </table>
             </div>
 
-            <div class="checkboxes horizontal" id="safeguarding-care-funding">
-                <div class="label intro">If yes, how is the care funded?</div>
+            <div class="labelvalue" id="safeguarding-care-funding">
+                <h4>If yes, how is the care funded?</h4>
                 <div class="form-group right-label">
-                    <table>
+                    <table class="checkboxes labelvalue">
                         <tr>
                             <td>
                                 <div class="checkbox" data-checkbox="how-is-care-funded--client-pays-for-all-their-own-care">{% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}</div>

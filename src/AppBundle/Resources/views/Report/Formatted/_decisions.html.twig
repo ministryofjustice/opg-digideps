@@ -1,6 +1,6 @@
 {% if decisions | length > 0 or report.reasonForNoDecisions != "" %}
     <div class="section" id="decisions-section">
-        <h2 class="section-heading"> Decisions made over the reporting period</h2>
+        <h2 class="section-heading">Decisions made over the reporting period</h2>
         <div class="box">
             {% if decisions | length == 0 %}
                 <div class="labelvalue">
@@ -8,29 +8,29 @@
                     <div class="value textarea">{{ report.reasonForNoDecisions | nl2br}}</div>
                 </div>
             {% else %}
-                
-                <ul class="box-list" id="decisions-list">
-                    <li class="decision-item box-list-item">
-                        <h3 class="column-one-third">Deputy decision</h3>
-                        <h3 class="column-one-third">Was {{ client.firstName }} involved?</h3>
-                        <h3 class="column-one-third">Client involvement</h3>
-                    </li>
-                    {% for decision in decisions %}
-                        <li class="decision-item box-list-item">
-                            <div class="column-one-third">
-                                <div class="value textarea">{{ decision.description }}</div>
-                            </div>
+                <div class="third-width">
+                    <h3 class="flush--bottom">Deputy decision</h3>
+                </div>
+                <div class="third-width">
+                    <h3 class="flush--bottom">Was {{ client.firstName }} involved?</h3>
+                </div>
+                <div class="third-width last">
+                    <h3 class="flush--bottom">Client involvement</h3>
+                </div>
 
-                            <div class="column-one-third">
-                                <div class="value textarea">{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}</div>
-                            </div>
-                            
-                            <div class="column-one-third">
-                                <div class="value textarea ">{{ decision.clientInvolvedDetails | nl2br }}</div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% for decision in decisions %}
+                    <div class="full-width push-half--top">
+                        <div class="third-width labelvalue">
+                            <div class="value">{{ decision.description }}</div>
+                        </div>
+                        <div class="third-width labelvalue">
+                            <div class="value">{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}</div>
+                        </div>
+                        <div class="third-width last labelvalue">
+                            <div class="value">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
             {% endif %}
         </div>
     </div>

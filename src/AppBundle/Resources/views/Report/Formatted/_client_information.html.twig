@@ -4,7 +4,7 @@
     <h2 class="section-heading">Deputy and client information</h2>
     <div class="box" id="case-number">
         <dl class="labelvalue inline">
-            <dt class="label">Case number</dt>
+            <dt class="label bold">Case number</dt>
             <dd class="value" id="caseNumber">{{ client.getCaseNumber }}</dd>
         </dl>
     </div>
@@ -82,10 +82,12 @@
                 <dd class="value">{{client.phone}}</dd>
             </dl>
         </div>
-        <dl class="labelvalue cleared">
-            <dt class="label">Email</dt>
-            <dd class="value">{{submittedBy.email}}</dd>
-        </dl>
+        <div class="full-width push-half--top">
+            <dl class="labelvalue">
+                <dt class="label">Email</dt>
+                <dd class="value">{{submittedBy.email}}</dd>
+            </dl>
+        </div>
     </div>
 
 
