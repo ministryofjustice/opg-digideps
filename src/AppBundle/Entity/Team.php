@@ -34,6 +34,7 @@ class Team
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\User>")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="teams", cascade={"persist"})
+     * @ORM\OrderBy({"lastname" = "ASC"})
      */
     private $members;
 
