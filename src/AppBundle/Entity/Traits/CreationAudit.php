@@ -30,7 +30,7 @@ trait CreationAudit
      * @var \DateTime
      *
      * @JMS\Type("DateTime")
-     * @JMS\Groups({"notes"})
+     * @JMS\Groups({"notes", "documents"})
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      * @Gedmo\Timestampable(on="create")
      */
