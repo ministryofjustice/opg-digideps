@@ -25,6 +25,8 @@ services:
             defaults:
               proxy: ""
               debug: true
+              headers:
+                Content-Type: application/multipart
               version: "1.1"
               verify: false
               timeout: 10

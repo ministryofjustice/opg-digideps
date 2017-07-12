@@ -30,10 +30,10 @@ class ClamAVChecker implements FileCheckerInterface
      *
      * @return bool
      */
-    public function checkFile(UploadableFileInterface $uploadedFile)
+    public function checkFile(UploadableFileInterface $file)
     {
         // POST body to clamAV
-        $response = $this->getScanResults($uploadedFile);
+        $response = $this->getScanResults($file);
         if (strtoupper(trim($response['av_scan_result'])) === 'FAIL') {
             throw new VirusFoundException('Found virus in file');
         }
@@ -47,8 +47,17 @@ class ClamAVChecker implements FileCheckerInterface
      * @param UploadableFileInterface $uploadedFile
      * @return array
      */
-    private function getScanResults(UploadableFileInterface $uploadedFile)
+    private function getScanResults(UploadableFileInterface $file)
     {
+
+//        $fileContent = file_get_contents($file->getUploadedFile()->getPathName());
+  //      $result = $this->client->post('upload',[ 'body' => $fileContent ]);
+
+        //$command = 'curl -X POST  -F file=@' . $file->getUploadedFile()->getPathName() . ' -D -  http://file-scanner:5000/upload';
+
+        //$result = shell_exec($command);
+
+        //var_dump($result);exit;
 
         return [
             "av_scan_result" => "SUCCESS",
