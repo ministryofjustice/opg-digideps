@@ -33,7 +33,7 @@ parameters:
     smtp_default_password: {{ getv "/frontend/smtp/default/password" }}
     smtp_secure_hostname: {{ getv "/frontend/smtp/secure/hostname" }}
     smtp_secure_port: {{ getv "/frontend/smtp/secure/port" }}
-    s3_bucket_name: {{ getv "/frontend/s3/bucketname" }}
+    s3_bucket_name: {{ if exists "/frontend/s3/bucketname" }}{{ getv "/frontend/s3/bucketname" }}{{ else }}not_set{{ end }}
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'
