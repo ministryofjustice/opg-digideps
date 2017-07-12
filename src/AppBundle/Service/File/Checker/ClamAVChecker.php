@@ -3,6 +3,7 @@
 namespace AppBundle\Service\File\Checker;
 
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,11 +24,13 @@ class ClamAVChecker implements FileCheckerInterface
 
     /**
      *
-     * @param $file
+     * Checks file for viruses using ClamAv
+     *
+     * @param UploadableFileInterface $uploadedFile
      *
      * @return bool
      */
-    public function checkFile(UploadedFile $uploadedFile)
+    public function checkFile(UploadableFileInterface $uploadedFile)
     {
         // POST body to clamAV
         $response = $this->getScanResults($uploadedFile);
@@ -41,10 +44,10 @@ class ClamAVChecker implements FileCheckerInterface
     /**
      * POSTS the file body to file scanner, and continually polls until result is returned.
      *
-     * @param $body
+     * @param UploadableFileInterface $uploadedFile
      * @return array
      */
-    private function getScanResults(UploadedFile $uploadedFile)
+    private function getScanResults(UploadableFileInterface $uploadedFile)
     {
         return [
             "av_scan_result" => "SUCCESS",

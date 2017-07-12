@@ -2,9 +2,15 @@
 
 namespace AppBundle\Service\File\Checker;
 
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface FileCheckerInterface
 {
-    public function checkFile(UploadedFile $file);
+    /**
+     * @param UploadableFileInterface $file
+     *
+     * @return mixed
+     */
+    public function checkFile(UploadableFileInterface $file);
 }

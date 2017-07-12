@@ -106,7 +106,7 @@ class UploadableFile implements UploadableFileInterface
             $this->getLogger()->debug('Calling File checker: ' . get_class($fc) );
 
             // send file
-            $fc->checkFile($this->getUploadedFile());
+            $fc->checkFile($this);
 
         }
     }
