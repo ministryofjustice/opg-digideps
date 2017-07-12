@@ -161,6 +161,12 @@ decision:
         notBlank: Tell us if you involved the client
         length: This description must be at least {{ limit }} letters long
 
+document:
+  file:
+    mimeTypesMessage: Please upload a valid PDF
+    maxSizeMessage: Files over 15M are not accepted
+    alreadyPresent: A file with the same name is already present among your uploaded document
+
 # currently a subsection of decisions
 mentalCapacity:
     hasCapacityChanged:

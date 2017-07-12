@@ -62,3 +62,12 @@ parameters:
     smtp_default_password: setme
     smtp_secure_hostname: localhost
     smtp_secure_port: 25
+    s3_bucket_name: pa-uploads.local
+    s3_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+      endpoint: 'http://fakes3:4569'
+      validate: false
+      credentials:
+        key: 'YOUR_ACCESS_KEY_ID'
+        secret: 'YOUR_SECRET_ACCESS_KEY'

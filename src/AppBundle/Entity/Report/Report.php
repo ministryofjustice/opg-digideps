@@ -232,6 +232,15 @@ class Report
      */
     private $metadata;
 
+
+    /**
+     * @var Document[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     */
+    private $documents;
+
+
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
      * @var Status
@@ -831,6 +840,22 @@ class Report
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
 
         return $this;
+    }
+
+    /**
+     * @return Document[]
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Document[] $documents
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
     }
 
     /**
