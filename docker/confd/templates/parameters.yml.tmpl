@@ -36,7 +36,7 @@ parameters:
     s3_bucket_name: {{ getv "/frontend/s3/bucketname" }}
     s3_client_params:
       version: 'latest'
-      region: 'eu-west-2'
+      region: 'eu-west-1'
   {{ if exists "/frontend/s3/fakes3" }}
       endpoint: 'http://fakes3:4569'
       validate: false
