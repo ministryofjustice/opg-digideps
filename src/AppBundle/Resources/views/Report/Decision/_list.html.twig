@@ -15,7 +15,7 @@
     <tbody>
     {# mental capacity #}
     <tr class="behat-region-mental-capacity">
-        {% if report.mentalCapacity.hasCapacityChanged %}
+        {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged %}
             <td>
                 {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
             </td>
