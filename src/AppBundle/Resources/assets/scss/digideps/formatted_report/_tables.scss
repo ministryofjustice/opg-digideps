@@ -3,9 +3,16 @@
     .checkboxes {
         width: auto;
 
-        td {
-            padding: 3px 25px 0 0;
+        .label {
+            padding: 3px 25px 0 8px;
             border: none;
+        }
+
+        &.vertical {
+            .label {
+                padding-top: 7px;
+                padding-bottom: 19px;
+            }
         }
     }
 

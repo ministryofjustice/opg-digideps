@@ -3,7 +3,7 @@
 
     <div class="dont-break" id="mental-capacity-wrapper">
         <div class="box">
-            <h3>Has {{ client.firstName }}'s mental capacity to make financial decisions</h3>
+            <div class="label question bold">Has {{ client.firstName }}'s mental capacity to make financial decisions</div>
 
             <table class="checkboxes labelvalue inline">
                 <tr>
@@ -21,7 +21,7 @@
             {% endif %}
 
             <div class="labelvalue push-half--top">
-                <div class="label">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </div>
+                <div class="label question bold">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </div>
                 <div class="value">
                     {{ mentalCapacity.mentalAssessmentDate ? mentalCapacity.mentalAssessmentDate  | date("m/Y") : 'n.a.' }}
                 </div>

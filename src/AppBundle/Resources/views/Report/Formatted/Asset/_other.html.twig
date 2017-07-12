@@ -1,24 +1,14 @@
 <h3>{{ groupId | capitalize }}</h3>
 {% for asset in assetsInGroup.items %}
-    <div class="box">
-        <ul class="asset-group-items">
-            <li class="asset-item">
-                <dl class="labelvalue asset-description">
-                    <dt class="label">Description</dt>
-                    <dd class="textarea value">{{ asset.description | nl2br }}</dd>
-                </dl>
-                <dl class="labelvalue asset-valuationDate">
-                    <div class="label">Valuation date</div>
-                    <div
-                            class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
-                </dl>
-                <dl class="labelvalue asset-value">
-                    <dt class="label">Value</dt>
-                    <dd class="value">&pound;{{ asset.value | money_format }}</dd>
-                </dl>
-            </li>
-
-        </ul>
+    <div class="box asset-item">
+        <dl class="labelvalue">
+            <dt class="label">Description</dt>
+            <dd class="value">{{ asset.description | nl2br }}</dd>
+            <dt class="label">Valuation date</dt>
+            <dd class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</dd>
+            <dt class="label">Value</dt>
+            <dd class="value">&pound;{{ asset.value | money_format }}</dd>
+        </dl>
     </div>
 
 {% endfor %}

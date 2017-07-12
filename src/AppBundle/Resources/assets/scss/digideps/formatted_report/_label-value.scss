@@ -5,18 +5,23 @@
     // Label(key) / Value pairing. Quite vague in many places and mixed
     // in with outer classes for targeting
 
+    .label {
+        @include core-16();
+
+        &.bigger {
+            @include core-19();
+        }
+
+        &.bold {
+            font-weight: 700;
+        }
+    }
+
     .labelvalue {
 
         margin: 0;
         padding: 0;
 
-        .label {
-            @include core-19();
-
-            &.bold {
-                font-weight: 700;
-            }
-        }
 
         .value {
             @include core-16();
@@ -32,7 +37,8 @@
             &.checkbox {
                 box-sizing: content-box;
                 min-height: 0;
-                margin: 0 5px 0 0;
+                margin: 0;
+                padding: 4px 8px 2px 10px;
             }
 
             &:last-child {

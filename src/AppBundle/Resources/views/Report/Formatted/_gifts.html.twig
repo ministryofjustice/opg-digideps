@@ -4,31 +4,28 @@
 
         <div class="dont-break">
             <div class="box">
-                <div class="checkboxes horizontal">
-                    <div class="question">Have you given any gifts to other people on behalf of {{ client.firstName }}' during this reporting period </div>
+                <div class="label question bold">Have you given any gifts to other people on behalf of {{ client.firstName }}' during this reporting period?</div>
 
-                    <table class="yesno small">
-                        <tr>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.giftsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.giftsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
-                        </tr>
-                    </table>
-                </div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">{% if report.giftsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="value checkbox">{% if report.giftsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
+
                 {% if report.giftsExist == 'yes' %}
-                    <div class="category">
-                        <ul class="transactions">
-                            {% for gift in report.gifts %}
-                                <li class="transaction ">
-                                    <div class="label">{{ gift.explanation }}</div>
-                                    <div class="value">&pound; {{ gift.amount | money_format }}</div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+
+                    <table class="labelvalue push--top">
+                        {% for gift in report.gifts %}
+                            <tr>
+                                <td class="label">{{ gift.explanation }}</td>
+                                <td class="value text--right width-fifth">&pound;{{ gift.amount | money_format }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
                 {% endif %}
             </div>
         </div>
