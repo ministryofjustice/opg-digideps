@@ -101,7 +101,7 @@ class TeamController extends AbstractController
                 $this->getRestClient()->put('user/' . $id, $user, ['pa_team_add'], 'User');
 
                 if ($id == $this->getUser()->getId() && ($user->getRoles() != $this->getUser()->getRoles())) {
-                    $request->getSession()->getFlashBag()->add('notice', ' You made a change to your access levels and must log in again');
+                    $request->getSession()->getFlashBag()->add('notice', ' For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
                     $redirectRoute = 'logout';
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
