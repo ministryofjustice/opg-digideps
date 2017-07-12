@@ -1,0 +1,83 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% trans_default_domain translationDomain %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Elvis Ciotti</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">Use this page to attach a supporting document (or documents) for this deputy report.</p>
+
+    <h2 class="heading-medium">Attach documents</h2>
+
+    {{ form_start(form, {'attr': {'id': 'upload_form'}}) }}
+    {{ form_input(form.file,'form.file', {
+        'labelRaw': true,
+        'labelText':'Attach a file',
+        'inputClass': 'no-border',
+        'hintText': 'Accepted file types: .JPG, .JPEG, .PDF, .PNG and .TIFF<br>Max file size: 15MB'}) }}
+    {{ form_submit(form.save, '', {'labelText': 'Attach document'}) }}
+
+    <a href=" {{ backLink }} " class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+
+    {#<h2 class="heading-medium">Uploading progress</h2>#}
+    {#<p>Please wait while your document is being uploaded.</p>#}
+    {#<progress max="100" value="24" style="width: 50%"></progress>#}
+
+    <h2 class="heading-medium">Document list</h2>
+
+    <table>
+        <thead>
+        <th>File name</th>
+        <th>Date attached</th>
+        <th></th>
+        </thead>
+        <tbody>
+        {% for document in report.documents %}
+            <tr>
+                <td>{{ document.fileName }}</td>
+                <td>{{ document.createdOn | date("j F Y H:i") }}</td>
+                <td><a href="#">Remove</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $('#upload_form').submit(function (e) {
+                e.preventDefault();
+                var fileElement = $('#report_document_upload_file');
+
+                //check whether browser fully supports all File API
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                    var fsize = fileElement[0].files[0].size;
+                    if (fsize > {{ 15 * 1024 * 1024 }} ) {
+                        window.location = '{{ path('report_documents', {'reportId': report.id, 'error': 'tooBig'}) }}';
+                        return;
+                    }
+                }
+
+                this.submit();
+            });
+        });
+    </script>
+
+
+{% endblock %}

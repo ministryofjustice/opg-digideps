@@ -21,10 +21,6 @@ services:
         tags:
             - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
 
-
-#swiftmailer:
-#    delivery_address: me@example.com
-
 monolog:
    handlers:
        main:

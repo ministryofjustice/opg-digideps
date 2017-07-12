@@ -6,6 +6,7 @@ imports:
     - { resource: services_listeners.yml }
     - { resource: services_login.yml }
     - { resource: services_pa.yml }
+    - { resource: services_file_upload.yml }
 
 services:
     redirector_service:

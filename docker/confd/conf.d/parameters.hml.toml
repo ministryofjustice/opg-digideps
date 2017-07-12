@@ -14,5 +14,7 @@ keys = [
     "/frontend/behat",
     "/frontend/email",
     "/frontend/smtp",
-    "/frontend/url"
+    "/frontend/url",
+    "/frontend/s3/bucketname",
+    "/frontend/s3/fakes3"
  ]

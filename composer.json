@@ -34,7 +34,8 @@
         "snc/redis-bundle": "1.1.*",
         "predis/predis": "1.0.*",
         "alphagov/govuk_frontend_toolkit": "dev-master",
-        "egulias/email-validator": "1.2.14"
+        "egulias/email-validator": "1.2.14",
+        "aws/aws-sdk-php": "^3.0"
     },
     "scripts": {
         "post-install-cmd": [
