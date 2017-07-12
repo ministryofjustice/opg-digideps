@@ -101,14 +101,12 @@ class UploadableFile implements UploadableFileInterface
      */
     public function checkFile()
     {
-        $fileBody = file_get_contents($this->getUploadedFile()->getPath());
-
         foreach ($this->getFileCheckers() as $fc)
         {
             $this->getLogger()->debug('Calling File checker: ' . get_class($fc) );
 
             // send file
-            $fc->checkFile($fileBody);
+            $fc->checkFile($this->getUploadedFile());
 
         }
     }

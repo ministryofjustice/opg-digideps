@@ -23,9 +23,9 @@ services:
           config:
             base_url: "%file_scanner_url%"
             defaults:
-                version: "1.0"
-                headers:
-                    Content-Type: application/json
-                verify: false
-                timeout: 10
-                allow_redirects: false
+              proxy: ""
+              debug: true
+              version: "1.1"
+              verify: false
+              timeout: 10
+              allow_redirects: false

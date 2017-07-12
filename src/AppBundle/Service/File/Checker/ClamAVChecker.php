@@ -5,6 +5,8 @@ namespace AppBundle\Service\File\Checker;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use GuzzleHttp\Post\PostFile;
 
 class ClamAVChecker implements FileCheckerInterface
 {
@@ -13,6 +15,7 @@ class ClamAVChecker implements FileCheckerInterface
      */
     public function __construct(Client $client, LoggerInterface $logger, array $options = [])
     {
+        /** @var GuzzleHttp\Client client */
         $this->client = $client;
         $this->logger = $logger;
         $this->options = [];
@@ -20,22 +23,19 @@ class ClamAVChecker implements FileCheckerInterface
 
     /**
      *
-     * @param $body
+     * @param $file
+     *
      * @return bool
      */
-    public function checkFile($body)
+    public function checkFile(UploadedFile $uploadedFile)
     {
-        return true;
         // POST body to clamAV
-        try {
-            $response = $this->getScanResults($body);
-
-            if (strtoupper(trim($response['av_scan_result'])) === 'FAIL') {
-                throw new VirusFoundException('Found virus in file');
-            }
-        } catch (\Exception $e) {
-
+        $response = $this->getScanResults($uploadedFile);
+        if (strtoupper(trim($response['av_scan_result'])) === 'FAIL') {
+            throw new VirusFoundException('Found virus in file');
         }
+
+        return true;
     }
 
     /**
@@ -44,15 +44,13 @@ class ClamAVChecker implements FileCheckerInterface
      * @param $body
      * @return array
      */
-    private function getScanResults($body)
+    private function getScanResults(UploadedFile $uploadedFile)
     {
-        //$this->client->post('upload', ['body' => $body]);
-
         return [
-            'celery_task_state' => 'SUCCESS',
-            'pdf_scan_result' => 'PASS',
-            'av_scan_result' => 'FAIL',
-            'file_scanner_result' => 'PASS'
+            "av_scan_result": "SUCCESS",
+            "celery_task_state": "SUCCESS",
+            "file_scanner_result": "SUCCESS",
+            "pdf_scan_result": "SUCCESS"
         ];
     }
 }
