@@ -49,6 +49,7 @@ class ClamAVChecker implements FileCheckerInterface
      */
     private function getScanResults(UploadableFileInterface $uploadedFile)
     {
+
         return [
             "av_scan_result" => "SUCCESS",
             "celery_task_state" => "SUCCESS",

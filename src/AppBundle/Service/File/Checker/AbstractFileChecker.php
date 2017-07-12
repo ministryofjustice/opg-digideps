@@ -39,8 +39,9 @@ class AbstractFileChecker
      */
     public static function hasValidFileExtensiobn(UploadableFileInterface $file)
     {
-        if (!in_array($file->getUploadedFile()->getClientOriginalExtension(), self::getAcceptedExtensions()) ||
-            $file->guessExtension() !== $file->getUploadedFile()->getClientOriginalExtension()
+        $uploadedFile = $file->getUploadedFile();
+        if (!in_array($uploadedFile->getClientOriginalExtension(), self::getAcceptedExtensions()) ||
+            $uploadedFile->guessExtension() !== $uploadedFile->getClientOriginalExtension()
         ) {
             return false;
         }
@@ -57,6 +58,6 @@ class AbstractFileChecker
      */
     public static function getAcceptedExtensions()
     {
-        return ['pdfs', 'jpg', 'jpeg', 'png', 'tiff'];
+        return ['pdf', 'jpg', 'jpeg', 'png', 'tiff'];
     }
 }
