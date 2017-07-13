@@ -44,12 +44,12 @@ class DocumentController extends AbstractController
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
+            /* @var $uploadedFile UploadedFile */
             $uploadedFile = $document->getFile();
 
             /** @var UploadableFileInterface $fileToStore */
             $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
 
-            /* @var $uploadedFile UploadedFile */
             try {
                 $fileToStore->checkFile();
                 if ($fileToStore->isSafe())

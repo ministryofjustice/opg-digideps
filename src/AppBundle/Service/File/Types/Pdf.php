@@ -15,7 +15,7 @@ class Pdf extends UploadableFile
      */
     public function checkFile()
     {
-        parent::checkFile();
+        parent::callFileCheckers();
 
         $scanResult = $this->getScanResult();
 

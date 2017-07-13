@@ -104,7 +104,7 @@ class UploadableFile implements UploadableFileInterface
      *
      * @throws \Exception
      */
-    public function checkFile()
+    public function callFileCheckers()
     {
         foreach ($this->getFileCheckers() as $fc)
         {
