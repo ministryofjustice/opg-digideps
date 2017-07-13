@@ -24,7 +24,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->object = new S3Storage($awsClient, 'unitTestBucket');
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
     }
 
     public function testUploadDownloadDeleteTextContent()
