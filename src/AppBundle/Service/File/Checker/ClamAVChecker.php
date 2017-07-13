@@ -64,8 +64,6 @@ class ClamAVChecker implements FileCheckerInterface
      */
     private function getScanResults(UploadableFileInterface $file)
     {
-        $fileContent = file_get_contents($file->getUploadedFile()->getPathName());
-
         try {
             $result = $this->makeScannerRequest($file);
 
