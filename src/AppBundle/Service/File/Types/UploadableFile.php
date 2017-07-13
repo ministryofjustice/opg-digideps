@@ -25,6 +25,11 @@ class UploadableFile implements UploadableFileInterface
     protected $uploadedFile;
 
     /**
+     * @var array Scan result
+     */
+    protected $scanResult;
+
+    /**
      * FileUploader constructor.
      */
     public function __construct(
@@ -109,5 +114,21 @@ class UploadableFile implements UploadableFileInterface
             $fc->checkFile($this);
 
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getScanResult()
+    {
+        return $this->scanResult;
+    }
+
+    /**
+     * @param array $scanResult
+     */
+    public function setScanResult($scanResult)
+    {
+        $this->scanResult = $scanResult;
     }
 }

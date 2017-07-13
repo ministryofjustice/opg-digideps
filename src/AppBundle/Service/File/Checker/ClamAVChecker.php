@@ -34,7 +34,19 @@ class ClamAVChecker implements FileCheckerInterface
     {
         // POST body to clamAV
         $response = $this->getScanResults($file);
-        
+
+        if (strtoupper(trim($response['file_scanner_result'])) !== 'SUCCESS') {
+            if ($response['av_scan_result'] !== 'SUCCESS') {
+                $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName());
+            }
+
+            if ($response['file_scan_result'] !== 'SUCCESS') {
+                $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName());
+            }
+        }
+
         return true;
     }
 

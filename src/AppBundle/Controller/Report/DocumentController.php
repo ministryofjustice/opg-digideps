@@ -51,10 +51,13 @@ class DocumentController extends AbstractController
 
             /* @var $uploadedFile UploadedFile */
             try {
-                $fileToStore->checkFile();
-                
-                $fileUploader->uploadFile($report, $uploadedFile);
-                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+                if ($fileToStore->checkFile()) {
+                    $fileUploader->uploadFile($report, $uploadedFile);
+                    $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+                } else {
+                    $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
+                }
+
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
             } catch (\Exception $e) {
                 $errorToErrorTranslationKey = [

@@ -24,7 +24,7 @@ services:
             base_url: "%file_scanner_url%"
             defaults:
               proxy: ""
-              debug: true
+              debug: false
               headers:
                 Content-Type: multipart-form-data
               version: "1.1"
