@@ -42,7 +42,7 @@
                     <td>&nbsp;</td>
                     <td class="numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -81,7 +81,7 @@
                 </tr>
                 <tr class="totals">
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ report.calculatedBalance | money_format}}</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
                 </tr>
             </tbody>
         </table>

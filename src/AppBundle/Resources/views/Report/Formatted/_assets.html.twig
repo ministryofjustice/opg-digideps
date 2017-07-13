@@ -23,14 +23,17 @@
                         {% endif%}
                     </li>
                 {% endfor %}
-
-                <li class="box">
-                    <div class="labelvalue inline">
-                        <div class="label">Assets Total Value</div>
-                        <div class="value" id="assetsTotal">&pound;{{ report.assetsTotalValue | money_format }}</div>
-                    </div>
-                </li>
             </ul>
+
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue">
+                    <tr>
+                        <td class="label bold">Assets Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.assetsTotalValue | money_format }}</td>
+                    </tr>
+                </table>
+            </div>
 
         {% endif %}
     </div>

@@ -18,7 +18,7 @@
         <div class="dont-break">
             <div class="box">
                 {% if report.hasDebts == 'yes' %}
-                    <table class="labelvalue ">
+                    <table class="labelvalue">
                         {% for d in debts %}
                             <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
                                 <td class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
@@ -40,13 +40,15 @@
             </div>
 
             {% if report.hasDebts == 'yes' %}
+            <div class="box">
                 {# total value #}
-                <div class="box total">
-                    <div class="labelvalue inline">
-                        <div class="label">Debts Total Value</div>
-                        <div class="value" id="assetsTotal">&pound;{{ report.debtsTotalValue | money_format }}</div>
-                    </div>
-                </div>
+                <table class="labelvalue">
+                    <tr>
+                        <td class="label bold">Debts Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.debtsTotalValue | money_format }}</td>
+                    </tr>
+                </table>
+            </div>
             {% endif %}
         </div>
     {% endif %}

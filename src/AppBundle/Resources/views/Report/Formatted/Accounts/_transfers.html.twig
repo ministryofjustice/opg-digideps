@@ -1,3 +1,4 @@
+{% if transfers | length != 0 %}
 <div id="money-transfers" class="section">
     <h3 id="working-out-title">Money transfers</h3>
     {% if transfers | length > 0 %}
@@ -38,3 +39,4 @@
         </div>
     {% endif %}
 </div>
+{% endif %}
