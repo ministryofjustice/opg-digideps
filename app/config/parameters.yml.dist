@@ -5,8 +5,11 @@ parameters:
     locale:   en
     secret:   setme
     api_base_url: http://digideps-api.local/
+    # START variables different for admin area, using the same codebase but running on a different container
     #api_client_secret: 123abc-deputy
     #env:    #leave empty to run in dual mode, 'admin' to run in admin mode or 'develop' to run in user mode
+    #redis_dsn: redis://localhost
+    # END
     non_admin_host: http://digideps-client.local
     admin_host: http://digideps-admin.local
     # for the following two settings, use a multiple of 60
@@ -26,7 +29,7 @@ parameters:
         password: Abcd1234
         roleId: 2
         activated: true
-    #redis_dsn: redis://localhost
+
     use_redis: true
     session_prefix: application_session
     ga: null
