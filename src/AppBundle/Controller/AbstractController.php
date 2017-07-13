@@ -89,6 +89,7 @@ class AbstractController extends Controller
 
     /**
      * @param int $reportId
+     * @param array $groups
      *
      * @throws \RuntimeException if report is submitted
      *

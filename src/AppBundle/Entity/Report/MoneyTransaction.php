@@ -195,6 +195,8 @@ class MoneyTransaction
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
     }
 
     /**
@@ -211,6 +213,8 @@ class MoneyTransaction
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**

@@ -258,7 +258,7 @@ class Report
     /**
      * @param int $id
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setId($id)
     {
@@ -310,7 +310,7 @@ class Report
     /**
      * @param \DateTime $startDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setStartDate(\DateTime $startDate = null)
     {
@@ -393,7 +393,7 @@ class Report
     /**
      * @param \DateTime $submitDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
     {
@@ -413,7 +413,7 @@ class Report
     /**
      * @param \DateTime $endDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setEndDate(\DateTime $endDate = null)
     {
@@ -465,7 +465,7 @@ class Report
     /**
      * @param int $client
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setClient(Client $client)
     {
@@ -534,7 +534,7 @@ class Report
     /**
      * @param type $decisions
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setDecisions($decisions)
     {
@@ -631,7 +631,7 @@ class Report
     /**
      * @param string $reasonForNoContacts
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReasonForNoContacts($reasonForNoContacts)
     {
@@ -651,7 +651,7 @@ class Report
     /**
      * @param string $reasonForNoDecisions
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
@@ -669,7 +669,7 @@ class Report
     }
 
     /**
-     * @return \AppBundle\Entity\Report\VisitsCare
+     * @return Report\VisitsCare
      */
     public function getVisitsCare()
     {
@@ -725,7 +725,7 @@ class Report
     /**
      * @param bool $noAssetToAdd
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
@@ -763,7 +763,7 @@ class Report
     /**
      * @param type $submitted
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setSubmitted($submitted)
     {
@@ -775,7 +775,7 @@ class Report
     /**
      * @param type $reportSeen
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReportSeen($reportSeen)
     {
