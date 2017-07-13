@@ -2,14 +2,14 @@ parameters:
     locale: en
     secret: {{ getv "/frontend/secret" }}
     api_base_url: {{ getv "/frontend/api/url" }}
-    api_client_secret: {{ getv "/frontend/api/client/secret" }}
+    #api_client_secret: {{ getv "/frontend/api/client/secret" }}
     non_admin_host: {{ getv "/frontend/nonadmin/host" }}
     admin_host: {{ getv "/frontend/admin/host" }}
-    env: {{ getv "/frontend/role" }}
+    #env: {{ getv "/frontend/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
     session_cookie_secure: {{ getv "/frontend/session/cookie/secure" }}
-    redis_dsn: '{{getv "/frontend/session/redis/dsn" }}'
+    #redis_dsn: '{{getv "/frontend/session/redis/dsn" }}'
     session_prefix: dd_session
     use_redis: true
     session_engine: redis
