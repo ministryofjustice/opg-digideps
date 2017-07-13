@@ -3,6 +3,7 @@
 namespace AppBundle\Service\File\Checker;
 
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
+use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -18,18 +19,6 @@ class PdfChecker extends AbstractFileChecker implements FileCheckerInterface
      */
     public function checkFile(UploadableFileInterface $fileToStore)
     {
-        parent::checkFile($fileToStore);
-
-        $scanResult = $fileToStore->getScanResult();
-
-        if ($scanResult['av_scan_result'] !== 'SUCCESS') {
-            throw new VirusFoundException('Found virus in file');
-        }
-
-        if ($scanResult['pdf_scan_result'] !== 'SUCCESS') {
-            throw new RiskyFileException('Risky content found in file');
-        }
-
-        return (bool) $scanResult['file_scanner_result'] !== 'SUCCESS';
+        return parent::checkFile($fileToStore);
     }
 }

@@ -130,5 +130,15 @@ class UploadableFile implements UploadableFileInterface
     public function setScanResult($scanResult)
     {
         $this->scanResult = $scanResult;
+        return $this;
+    }
+
+    public function isSafe()
+    {
+        $scanResult = $this->getScanResult();
+        if (isset($scanResult['file_scanner_result']) && strtoupper($scanResult['file_scanner_result'] == 'PASS')) {
+            return true;
+        }
+        return false;
     }
 }

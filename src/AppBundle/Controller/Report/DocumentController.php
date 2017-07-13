@@ -51,7 +51,9 @@ class DocumentController extends AbstractController
 
             /* @var $uploadedFile UploadedFile */
             try {
-                if ($fileToStore->checkFile()) {
+                $fileToStore->checkFile();
+                if ($fileToStore->isSafe())
+                {
                     $fileUploader->uploadFile($report, $uploadedFile);
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 } else {

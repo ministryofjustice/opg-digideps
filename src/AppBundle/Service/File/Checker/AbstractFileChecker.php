@@ -27,7 +27,7 @@ class AbstractFileChecker
             throw new RiskyFileException('Invalid file extension');
         }
 
-        return true;
+        return $file;
     }
 
     /**

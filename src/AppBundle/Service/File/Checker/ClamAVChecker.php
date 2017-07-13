@@ -35,19 +35,25 @@ class ClamAVChecker implements FileCheckerInterface
         // POST body to clamAV
         $response = $this->getScanResults($file);
 
-        if (strtoupper(trim($response['file_scanner_result'])) !== 'SUCCESS') {
-            if ($response['av_scan_result'] !== 'SUCCESS') {
+        $file->setScanResult($response);
+
+        if (strtoupper(trim($response['file_scanner_result'])) !== 'PASS') {
+            if ($response['av_scan_result'] !== 'PASS') {
                 $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName());
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
+                throw new VirusFoundException('Found virus in file');
             }
 
-            if ($response['file_scan_result'] !== 'SUCCESS') {
+            if ($response['file_scanner_result'] !== 'PASS') {
                 $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName());
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
             }
+        } else {
+            $this->logger->info('Scan results for: ' . $file->getUploadedFile()->getClientOriginalName() .
+                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
         }
 
-        return true;
+        return $file;
     }
 
     /**
