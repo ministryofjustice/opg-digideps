@@ -44,10 +44,9 @@ class ClamAVChecker implements FileCheckerInterface
                 throw new VirusFoundException('Found virus in file');
             }
 
-            if ($response['file_scanner_result'] !== 'PASS') {
-                $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-            }
+            $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
+                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
+
         } else {
             $this->logger->info('Scan results for: ' . $file->getUploadedFile()->getClientOriginalName() .
                 ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
