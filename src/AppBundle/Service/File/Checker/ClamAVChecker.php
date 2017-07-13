@@ -34,10 +34,7 @@ class ClamAVChecker implements FileCheckerInterface
     {
         // POST body to clamAV
         $response = $this->getScanResults($file);
-        if (strtoupper(trim($response['av_scan_result'])) === 'FAIL') {
-            throw new VirusFoundException('Found virus in file');
-        }
-
+        
         return true;
     }
 
@@ -49,21 +46,84 @@ class ClamAVChecker implements FileCheckerInterface
      */
     private function getScanResults(UploadableFileInterface $file)
     {
+        $fileContent = file_get_contents($file->getUploadedFile()->getPathName());
 
-//        $fileContent = file_get_contents($file->getUploadedFile()->getPathName());
-  //      $result = $this->client->post('upload',[ 'body' => $fileContent ]);
+        try {
+            $result = $this->makeScannerRequest($file);
 
-        //$command = 'curl -X POST  -F file=@' . $file->getUploadedFile()->getPathName() . ' -D -  http://file-scanner:5000/upload';
+            $maxRetries = 10;
+            $count = 0;
+            $statusResponse = [];
 
-        //$result = shell_exec($command);
+            while ((!array_key_exists('file_scanner_result', $statusResponse)) && ($count < $maxRetries))
+            {
+                $statusResponse = $this->makeStatusRequest($result['location']);
 
-        //var_dump($result);exit;
+                if ($statusResponse === false) {
+                    $this->logger->critical('Scanner response could not be decoded');
+                    throw new \RunTimeException('Unable to contact file scanner');
+                }
 
-        return [
-            "av_scan_result" => "SUCCESS",
-            "celery_task_state" => "SUCCESS",
-            "file_scanner_result" => "SUCCESS",
-            "pdf_scan_result" => "SUCCESS"
-        ];
+                sleep(1);
+
+                $count++;
+            }
+
+            if (!array_key_exists('file_scanner_result', $statusResponse)) {
+                $this->logger->warning('Unable to retrieve complete scan result ' . $statusResponse);
+            }
+
+            return $statusResponse;
+
+        } catch (\Exception $e) {
+            $this->logger->critical('Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
+
+            throw new \RunTimeException($e);
+        }
+    }
+
+    /**
+     * Send file to File Scanner
+     *
+     * @param UploadableFileInterface $file
+     *
+     * @return array
+     */
+    private function makeScannerRequest(UploadableFileInterface $file)
+    {
+        $fullFilePath = $file->getUploadedFile()->getPathName();
+
+        $this->logger->debug('Sending file: ' . $fullFilePath . '  to scanner');
+
+        $request = $this->client->createRequest('POST', 'upload');
+        $postBody = $request->getBody();
+        $postBody->addFile(
+            new PostFile('file', fopen($fullFilePath, 'r'))
+        );
+
+        $response = $this->client->send($request);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        $this->logger->debug('Scanner send result: ' . json_encode($result));
+
+        return $result;
+    }
+
+    /**
+     * Query status of file scan using location returned by AV scanner
+     * @param string $location
+     *
+     * @return array
+     */
+    private function makeStatusRequest($location)
+    {
+        $this->logger->debug('Quering scan status for location: ' . $location);
+
+        $response = $this->client->get($location);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        $this->logger->debug('Scan status result for location: ' . $location . ': ' . json_encode($result));
+
+        return $result;
     }
 }

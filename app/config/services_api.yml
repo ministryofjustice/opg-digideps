@@ -26,7 +26,7 @@ services:
               proxy: ""
               debug: true
               headers:
-                Content-Type: application/multipart
+                Content-Type: multipart-form-data
               version: "1.1"
               verify: false
               timeout: 10
