@@ -5,7 +5,6 @@ parameters:
     locale:   en
     secret:   setme
     api_base_url: http://digideps-api.local/
-    file_scanner_url: http://127.0.0.1:5000
     api_client_secret: 123abc-deputy
     env:    #leave empty to run in dual mode, 'admin' to run in admin mode or 'develop' to run in user mode
     non_admin_host: http://digideps-client.local
@@ -72,3 +71,4 @@ parameters:
       credentials:
         key: 'YOUR_ACCESS_KEY_ID'
         secret: 'YOUR_SECRET_ACCESS_KEY'
+    file_scanner_url: https://file-scanner-api:8443
