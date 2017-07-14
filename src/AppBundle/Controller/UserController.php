@@ -146,7 +146,7 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request)
     {
-        $user = $this->getUserWithData(['user']);
+        $user = $this->getUserWithData();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -176,7 +176,7 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -206,7 +206,7 @@ class UserController extends AbstractController
      */
     public function passwordEditDoneAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['client']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
 
@@ -216,21 +216,20 @@ class UserController extends AbstractController
     }
 
     /**
-     * - change user data
-     * - chang user password.
+     * - display the Your details page
      *
      * @Route("/user-account/user-show", name="user_show")
+     * @Route("/pa/settings/your-details", name="pa_profile_show")
      * @Template()
      **/
     public function showAction()
     {
-        $user = $this->getUserWithData(['user', 'client']);
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
+        $user = $this->getUserWithData(['client']);
+dbg($user);
+exit;
 
         return [
-            'client' => $client,
-            'user'   => $user,
+            'user' => $user
         ];
     }
 
@@ -243,7 +242,7 @@ class UserController extends AbstractController
      **/
     public function editAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['client']);
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);

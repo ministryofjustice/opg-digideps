@@ -29,7 +29,7 @@ class AbstractController extends Controller
      *
      * @return User
      */
-    protected function getUserWithData(array $jmsGroups)
+    protected function getUserWithData(array $jmsGroups = array())
     {
         $jmsGroups[] = 'user';
         $jmsGroups = array_unique($jmsGroups);
