@@ -3,8 +3,10 @@
 namespace AppBundle\Service\File\Checker;
 
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use GuzzleHttp\Post\PostFile;
@@ -12,9 +14,24 @@ use GuzzleHttp\Post\PostFile;
 class ClamAVChecker implements FileCheckerInterface
 {
     /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * ClamAv constructor.
      */
-    public function __construct(Client $client, LoggerInterface $logger, array $options = [])
+    public function __construct(ClientInterface $client, LoggerInterface $logger, array $options = [])
     {
         /** @var GuzzleHttp\Client client */
         $this->client = $client;
@@ -42,6 +59,12 @@ class ClamAVChecker implements FileCheckerInterface
                 $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
                     ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
                 throw new VirusFoundException('Found virus in file');
+            }
+
+            if ($response['pdf_scan_result'] !== 'PASS') {
+                $this->logger->warning('Risky content found in ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
+                throw new RiskyFileException('Found virus in file');
             }
 
             $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
@@ -85,7 +108,7 @@ class ClamAVChecker implements FileCheckerInterface
             }
 
             if (!array_key_exists('file_scanner_result', $statusResponse)) {
-                $this->logger->warning('Unable to retrieve complete scan result ' . $statusResponse);
+                $this->logger->warning('Maximum attempts at contacting clamAV for status. Unable to retrieve complete scan result ' . $statusResponse);
             }
 
             return $statusResponse;
@@ -117,6 +140,9 @@ class ClamAVChecker implements FileCheckerInterface
         );
 
         $response = $this->client->send($request);
+        if (!$response instanceof ResponseInterface ) {
+            throw new \RuntimeException('ClamAV not available');
+        }
         $result = json_decode($response->getBody()->getContents(), true);
 
         $this->logger->debug('Scanner send result: ' . json_encode($result));
