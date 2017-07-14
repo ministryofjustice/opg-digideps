@@ -13,18 +13,27 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
     {
         // connect to fakes3 (https://github.com/jubos/fake-s3)
         // see docker-composer.yml for params
-        $awsClient = new \Aws\S3\S3Client([
-            'version' => 'latest',
-            'region'  => 'eu-west-1',
-            'endpoint' =>  'http://fakes3:4569',
-            'validate' => false,
+
+        $options =[
+            'version'     => 'latest',
+            'region'      => 'eu-west-1',
+            'endpoint'    => 'http://fakes3:4569',
+            'validate'    => false,
             'credentials' => [
                 'key'    => 'YOUR_ACCESS_KEY_ID',
                 'secret' => 'YOUR_SECRET_ACCESS_KEY',
             ],
-        ]);
+        ];
 
-        $this->object = new S3Storage($awsClient, 'unitTestBucket');
+        $awsClient = new \Aws\S3\S3Client($options);
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
+
+        // check fake S3 connection. To test why failing on the infrastructure
+        if (!@fsockopen('fakes3', '4569')) {
+            echo "Can't connect to S3 ({$options['endpoint']})\n";
+            $this->markTestSkipped('fakes3 not responding');
+        }
     }
 
     public function testUploadDownloadDeleteTextContent()
