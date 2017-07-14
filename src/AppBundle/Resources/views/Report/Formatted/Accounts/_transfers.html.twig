@@ -1,42 +1,47 @@
 {% if transfers | length != 0 %}
 <div id="money-transfers" class="section">
-    <h3 id="working-out-title">Money transfers</h3>
-    {% if transfers | length > 0 %}
-        <table id="money-transfers-table">
-            <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Transferred from</th>
-                <th>Transferred to</th>
-                <th>Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for transfer in transfers %}
-                <tr>
-                    <td>Transfer {{ loop.index }}</td>
-                    <td>
-                        {% set currentBank = transfer.accountFrom %}
-                        {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
-                    </td>
-                    <td>
-                        {% set currentBank = transfer.accountTo %}
-                        {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
-                    </td>
-                    <td>&pound;{{ transfer.amount | money_format }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="box">
-            <dl class="labelvalue">
-                <dt class="label">Tick this box if you didn't move any money between {{ report.client.firstname | e }}'s
-                    accounts.
-                </dt>
-                <dd class="value checkbox">{{ report.noTransfersToAdd ? 'X' : '' }}</dd>
-            </dl>
-        </div>
-    {% endif %}
+    <h2 class="section-heading">Money transfers</h2>
+    <div class="box box-heading flush--bottom">
+        <h3 class="flush--bottom">Money transfers</h3>
+    </div>
+    <div class="category box box-white">
+        {% if transfers | length > 0 %}
+            <table class="labelvalue">
+                <thead>
+                    <tr>
+                        <th class="noborder hard--top">Transferred from</th>
+                        <th class="noborder hard--top">Transferred to</th>
+                        <th class="numeric noborder hard--right hard--top">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for transfer in transfers %}
+                    <tr>
+                        <td class="label">
+                            {% set currentBank = transfer.accountFrom %}
+                            <span class="bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
+                            <p class="flush--bottom">****{{ currentBank.accountNumber }}</p>
+                        </td>
+                        <td class="label">
+                            {% set currentBank = transfer.accountTo %}
+                            <span class="bold">{{ currentBank.bank }} {{ currentBank.accountTypeText }}</span>
+                            <p class="flush--bottom">****{{ currentBank.accountNumber }}</p>
+                        </td>
+                        <td class="value text--right width-fifth">&pound;{{ transfer.amount | money_format }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="box">
+                <dl class="labelvalue">
+                    <dt class="label">Tick this box if you didn't move any money between {{ report.client.firstname | e }}'s
+                        accounts.
+                    </dt>
+                    <dd class="value checkbox">{{ report.noTransfersToAdd ? 'X' : '' }}</dd>
+                </dl>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endif %}

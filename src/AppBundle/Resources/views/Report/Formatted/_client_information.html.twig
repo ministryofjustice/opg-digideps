@@ -37,7 +37,7 @@
                 <dd class="value">{{submittedBy.lastname}}</dd>
 
                 <dt class="label">Address</dt>
-                <dd class="value textarea address-value">
+                <dd class="value address-value">
                     {% if submittedBy.isDeputyPa %}
                         {{ team.address1 }}<br/>
                         {{ team.address2 }}<br/>
@@ -71,7 +71,7 @@
                 <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
 
                 <dt class="label">Address</dt>
-                <dd class="value textarea address-value">
+                <dd class="value address-value">
                     {{ client.address }}<br/>
                     {{ client.address2 }}<br/>
                     {{ client.county }}<br/>

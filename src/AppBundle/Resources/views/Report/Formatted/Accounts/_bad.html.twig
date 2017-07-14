@@ -1,38 +1,41 @@
-
 <div class="balance subsection">
 
     <div class="box box-heading">
         <h2 class="flush--bottom text--center">Accounts not balanced</h2>
     </div>
 
-    <div class="third-width tight">
-        <div class="box flush">
-            <div class="message">Total balance after money in and money out:</div>
-            <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
+    <div class="box-contain">
+
+        <div class="third-width tight">
+            <div class="box flush">
+                <div class="message">Total balance after money in and money out:</div>
+                <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
+            </div>
         </div>
+
+        <div class="third-width tight">
+            <div class="box flush">
+                <div class="message">Total balance of all bank accounts:</div>
+                <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
+            </div>
+        </div>
+
+        <div class="third-width tight last">
+            <div class="box flush">
+                <div class="message">Difference:</div>
+                <div class="total">&pound;{{ report.totalsOffset | abs | money_format }}</div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="third-width tight">
-        <div class="box flush">
-            <div class="message">Total balance of all bank accounts:</div>
-            <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
+    {% if report.balanceMismatchExplanation is null %}
+        <div class="box">
+            <div class="labelvalue">
+                <div class="label">Reason for accounts not balancing</div>
+                <div class="value">{{ report.balanceMismatchExplanation | nl2br }}</div>
+            </div>
         </div>
-    </div>
-
-    <div class="third-width tight last">
-        <div class="box flush">
-            <div class="message">Difference:</div>
-            <div class="total">&pound;{{ report.totalsOffset | abs | money_format }}</div>
-        </div>
-    </div>
+    {% endif %}
 
 </div>
-
-{% if report.balanceMismatchExplanation is not null %}
-    <h2 class="section-heading sub-title">
-        Reason for accounts not balancing
-    </h2>
-    <div class="bordered">
-        {{ report.balanceMismatchExplanation | nl2br }}
-    </div>
-{% endif %}
