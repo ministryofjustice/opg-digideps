@@ -21,7 +21,7 @@
 
     h2 {
         clear: both;
-        @include bold-24();
+        @include core-24();
 
         &.section-heading {
             padding-bottom: 10px;
