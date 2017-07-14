@@ -8,6 +8,8 @@ use AppBundle\Form as FormDir;
 
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\FileUploader;
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -42,11 +44,21 @@ class DocumentController extends AbstractController
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $uploadedFile = $document->getFile();
             /* @var $uploadedFile UploadedFile */
+            $uploadedFile = $document->getFile();
+
+            /** @var UploadableFileInterface $fileToStore */
+            $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
+
             try {
-                $fileUploader->uploadFile($report, $uploadedFile->getClientOriginalName(), $uploadedFile->getPathname());
-                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+                $fileToStore->checkFile();
+                if ($fileToStore->isSafe())
+                {
+                    $fileUploader->uploadFile($report, $uploadedFile);
+                    $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+                } else {
+                    $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
+                }
 
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
             } catch (\Exception $e) {
@@ -74,4 +86,7 @@ class DocumentController extends AbstractController
             'form'     => $form->createView(),
         ];
     }
+
+
+
 }

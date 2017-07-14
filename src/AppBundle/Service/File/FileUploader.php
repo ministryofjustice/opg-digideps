@@ -8,6 +8,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
 {
@@ -65,9 +66,9 @@ class FileUploader
      * code imported from
      * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
      */
-    public function uploadFile(Report $report, $filename, $filepath)
+    public function uploadFile(Report $report, UploadedFile $uploadedFile)
     {
-        $body = file_get_contents($filepath);
+        $body = file_get_contents($uploadedFile->getPath());
 
         foreach ($this->fileCheckers as $fc) {
             $fc->checkFile($body);
@@ -77,7 +78,7 @@ class FileUploader
         $this->storage->store($storageReference, $body);
         $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
         $document = new Document();
-        $document->setStorageReference($storageReference)->setFileName($filename);
+        $document->setStorageReference($storageReference)->setFileName($uploadedFile->getClientOriginalName());
         $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
 
         return $document;
