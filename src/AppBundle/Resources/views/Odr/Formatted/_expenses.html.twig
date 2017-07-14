@@ -1,39 +1,11 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 {% if odr.paidForAnything %}
     <div class="section" id="expenses-section">
-        <h2 class="section-heading">Expenses</h2>
+        <h2 class="section-heading">Deputy expenses</h2>
 
-        <div class="dont-break">
-            <div class="box">
-                <div class="checkboxes horizontal">
-                    <div class="question">Did you pay for anything for the client before you were given your court order
-                        ?
-                    </div>
+        {{ macros.deputyExpenses(true,odr) }}
 
-                    <table class="yesno small">
-                        <tr>
-                            <td class="checkbox"
-                                data-checkbox="">{% if odr.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
-                            <td class="checkbox"
-                                data-checkbox="">{% if odr.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
-                        </tr>
-                    </table>
-                </div>
-                {% if odr.paidForAnything == 'yes' %}
-                    <div class="category">
-                        <ul class="transactions">
-                            {% for expense in odr.expenses %}
-                                <li class="transaction ">
-                                    <div class="label">{{ expense.explanation }}</div>
-                                    <div class="value">&pound; {{ expense.amount | money_format }}</div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
     </div>
 {% endif %}
 

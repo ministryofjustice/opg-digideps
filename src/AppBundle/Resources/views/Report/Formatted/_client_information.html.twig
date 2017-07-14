@@ -1,13 +1,8 @@
-
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
 
 <div class="section" id="deputy-client-information-section">
     <h2 class="section-heading">Deputy and client information</h2>
-    <div class="box" id="case-number">
-        <dl class="labelvalue inline">
-            <dt class="label bold bigger">Case number</dt>
-            <dd class="value" id="caseNumber">{{ client.getCaseNumber }}</dd>
-        </dl>
-    </div>
+    {{ macros.caseNumber(client.getCaseNumber) }}
 
     <div class="box" id="report-dates">
         <h3>Reporting period</h3>
@@ -24,71 +19,6 @@
 
     </div>
 
-    <div class="box">
-        <div id="deputy-details-subsection" class="half-width first">
-            <h3>Deputy details</h3>
-
-            <dl class="labelvalue">
-
-                <dt class="label">First names</dt>
-                <dd class="value">{{submittedBy.firstname}}</dd>
-
-                <dt class="label">Last name</dt>
-                <dd class="value">{{submittedBy.lastname}}</dd>
-
-                <dt class="label">Address</dt>
-                <dd class="value address-value">
-                    {% if submittedBy.isDeputyPa %}
-                        {{ team.address1 }}<br/>
-                        {{ team.address2 }}<br/>
-                        {{ team.address3 }}<br/>
-                        {{ team.addressPostcode }}
-                    {% else %}
-                        {{ submittedBy.address1 }}<br/>
-                        {{ submittedBy.address2 }}<br/>
-                        {{ submittedBy.address3 }}<br/>
-                        {{ submittedBy.addressPostcode }}
-                    {% endif %}
-                </dd>
-
-                <dt class="label">Telephone number</dt>
-                <dd class="value">
-                    {{submittedBy.phoneMain}}
-                    {% if (submittedBy.phoneAlternative is defined) %}
-                        <br />{{submittedBy.phoneAlternative}}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
-        <div id="client-details-subsection" class="half-width">
-            <h3>Client details</h3>
-
-            <dl class="labelvalue">
-                <dt class="label">First names</dt>
-                <dd class="value">{{ client.firstname }}</dd>
-
-                <dt class="label">Last name</dt>
-                <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
-
-                <dt class="label">Address</dt>
-                <dd class="value address-value">
-                    {{ client.address }}<br/>
-                    {{ client.address2 }}<br/>
-                    {{ client.county }}<br/>
-                    {{ client.postcode }}
-                </dd>
-
-                <dt class="label">Telephone number</dt>
-                <dd class="value">{{client.phone}}</dd>
-            </dl>
-        </div>
-        <div class="full-width push-half--top">
-            <dl class="labelvalue">
-                <dt class="label">Email</dt>
-                <dd class="value">{{submittedBy.email}}</dd>
-            </dl>
-        </div>
-    </div>
-
+    {{ macros.deputyClientInfo(false,submittedBy,client,team) }}
 
 </div>
