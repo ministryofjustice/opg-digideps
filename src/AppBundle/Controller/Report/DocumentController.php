@@ -90,6 +90,54 @@ class DocumentController extends AbstractController
         ];
     }
 
+    /**
+     * Confirm delete document form
+     *
+     * @Route("/report/{reportId}/documents/{documentId}/delete", name="delete_document")
+     * @Template("AppBundle:Report/Document:deleteConfirm.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
+    {
+        echo 'here';exit;
+        /** @var EntityDir\Note $note */
+        $note = $this->getNote($noteId);
 
+        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
+        return [
+            'report'  => $note->getClient()->getCurrentReport(),
+            'note' => $note,
+            'client' => $note->getClient(),
+            'backLink' => $this->generateClientProfileLink($note->getClient())
+        ];
+    }
+
+    /**
+     * Removes a note, adds a flash message and redirects to page
+     *
+     * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
+     * @Template()
+     */
+    public function deleteConfirmedAction(Request $request, $noteId)
+    {
+        try {
+            /** @var EntityDir\Note $note */
+            $note = $this->getNote($noteId);
+
+            $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+
+            $this->getRestClient()->delete('note/' . $noteId);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'Note could not be removed'
+            );
+        }
+
+        return $this->redirect($this->generateClientProfileLink($note->getClient()));
+    }
 }
