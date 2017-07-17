@@ -51,14 +51,20 @@ class DocumentController extends AbstractController
             $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
 
             try {
+                $fileUploader->uploadFile($report, $uploadedFile);
+                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+
+                /*
+                 @todo Uncomment and replace 2 lines above to enable AV scanner
                 $fileToStore->checkFile();
+
                 if ($fileToStore->isSafe())
                 {
                     $fileUploader->uploadFile($report, $uploadedFile);
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
-                }
+                }*/
 
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
             } catch (\Exception $e) {
