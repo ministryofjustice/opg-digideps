@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
+use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Exception\RestClientException;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("/admin")
  */
-class AdminController extends AbstractController
+class IndexController extends AbstractController
 {
     /**
      * @Route("/", name="admin_homepage")
