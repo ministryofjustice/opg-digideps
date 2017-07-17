@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-documents" %}
+{% set page = 'home' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {% for report in reports %}
+        <hr />
+        {{ report.client.fullname }} | Report {{ report.period }} submitted at {{ report.getsubmitted | date }}<br/>
+        Documents: <ul>
+        {% for document in report.documents %}
+            <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
+                <a href="{{ path('admin_document_download', {'ref': document.storageReference}) }}">Download</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% endfor %}
+
+{% endblock %}
