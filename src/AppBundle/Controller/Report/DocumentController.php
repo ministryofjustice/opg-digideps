@@ -9,13 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("/report/")
- */
 class DocumentController extends RestController
 {
     /**
-     * @Route("{reportId}/document", requirements={"reportId":"\d+"})
+     * @Route("/report/{reportId}/document", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
     public function add(Request $request, $reportId)
@@ -36,5 +33,25 @@ class DocumentController extends RestController
         $this->persistAndFlush($document);
 
         return ['id' => $document->getId()];
+    }
+
+    /**
+     * GET document by id
+     *
+     * @Route("/document/{id}")
+     * @Method({"GET"})
+     */
+    public function getOneById(Request $request, $id)
+    {
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups') : ['documents'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        /* @var $document Document */
+        $document = $this->findEntityBy(Document::class, $id);
+
+        $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
+
+        return $document;
     }
 }
