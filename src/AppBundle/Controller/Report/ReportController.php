@@ -363,4 +363,29 @@ class ReportController extends RestController
             'reports'=>$reports
         ];
     }
+
+    /**
+     * Get list of reports, currently only for PA users
+     *
+     *
+     * @Route("/get-submitted")
+     * @Method({"GET"})
+     */
+    public function getSubmitted(Request $request)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN]);
+
+        $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
+        $qb
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            ->where('r.submitted = true')
+            ->orderBy('r.submittedBy', 'DESC')
+        ;
+
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['report'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        return $qb->getQuery()->getResult();
+    }
 }

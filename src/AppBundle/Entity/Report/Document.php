@@ -45,7 +45,7 @@ class Document
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"documents"})
+     * @JMS\Groups({"document-storage-reference"})
      *
      * @ORM\Column(name="storage_reference", type="string", length=150, nullable=true)
      */
