@@ -22,6 +22,10 @@ class Document
      */
     public function isFileNameUnique(ExecutionContextInterface $context)
     {
+        if (!$this->getFile()) {
+            return;
+        }
+
         $fileNames = [];
         foreach ($this->getReport()->getDocuments() as $document) {
             $fileNames[] = $document->getFileName();

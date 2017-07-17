@@ -18,6 +18,11 @@ class UploadFileFactory
         $this->container = $container;
     }
 
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @return FileCheckerInterface
+     */
     public function createFileToStore(UploadedFile $uploadedFile)
     {
         switch ($uploadedFile->getMimeType())
