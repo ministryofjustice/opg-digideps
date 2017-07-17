@@ -13,12 +13,12 @@ form:
     generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
 removeDocument:
   htmlTitle: Client profile - remove note | GOV.UK
-  h1Title: Remove note
-  supportTitle: "Client profile:"
-  question: Are you sure you want to remove this note?
-  noteTitle: "Title:"
-  dateAdded: "Date added:"
-  linkButtonLabel: Yes, remove note
+  h1Title: Remove document
+  supportTitle: "Attach documents"
+  question: Are you sure you want to remove this document?
+  documentFilename: "File name:"
+  dateAttached: "Date attached:"
+  linkButtonLabel: Yes, remove document
 reportDocuments:
   supportText: Use this page to attach a supporting document (or documents) for this deputy report.
   attachDocuments: Attach documents

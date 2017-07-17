@@ -100,19 +100,18 @@ class DocumentController extends AbstractController
     {
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
-//var_dump($document);exit;
+
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
         return [
             'report'  => $document->getReport(),
             'document' => $document,
-            'client' => $document->getReport()->getClient(),
-            'backLink' => $this->generateClientProfileLink($document->getReport()->getClient())
+            'backLink' => $this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()])
         ];
     }
 
     /**
-     * Removes a note, adds a flash message and redirects to page
+     * Removes a document, adds a flash message and redirects to page
      *
      * @Route("/document/{documentId}/delete/confirm", name="delete_document_confirm")
      * @Template()
@@ -137,7 +136,7 @@ class DocumentController extends AbstractController
             );
         }
 
-        return $this->redirect($this->generateClientProfileLink($note->getClient()));
+        return $this->redirect($this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()]));
     }
 
     /**
@@ -151,7 +150,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['document', 'report-object', 'report-id', 'client', 'user']
+            ['documents', 'document-report', 'report', 'client', 'user']
         );
     }
 }

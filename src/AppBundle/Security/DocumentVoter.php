@@ -2,6 +2,7 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\User;
@@ -68,8 +69,8 @@ class DocumentVoter extends Voter
         switch ($attribute) {
             case self::ADD_DOCUMENT:
                 if ($subject instanceof Report) {
-                    /** @var Client $subject */
-                    return $this->clientBelongsToUser($loggedInUser, $subject);
+                    /** @var Report $subject */
+                    return $this->clientBelongsToUser($loggedInUser, $subject->getClient());
                 }
                 return false;
             case self::DELETE_DOCUMENT:
@@ -77,7 +78,7 @@ class DocumentVoter extends Voter
                     $report = $subject->getReport();
                     if ($report instanceof Report) {
                         /** @var Note $subject */
-                        return $this->clientBelongsToUser($loggedInUser, $subject->getClient());
+                        return $this->clientBelongsToUser($loggedInUser, $report->getClient());
                     }
                 }
                 return false;
