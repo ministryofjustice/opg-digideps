@@ -14,9 +14,6 @@ services:
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]
-    calls:
-#      - [ addFileChecker, [ "@file_checker_pdf"]]
-#      - [ addFileChecker, [ "@file_checker_clam_av"]]
   upload_file_factory:
     class: AppBundle\Service\File\UploadFileFactory
     arguments: [ "@service_container", 'uploadedFile']

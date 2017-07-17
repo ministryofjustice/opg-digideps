@@ -23,11 +23,6 @@ class FileUploader
     private $restClient;
 
     /**
-     * @var FileCheckerInterface[]
-     */
-    private $fileCheckers;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -50,14 +45,6 @@ class FileUploader
     }
 
     /**
-     * @param FileCheckerInterface $fileCheckers
-     */
-    public function addFileChecker(FileCheckerInterface $fileChecker)
-    {
-        $this->fileCheckers[] = $fileChecker;
-    }
-
-    /**
      * Uploads a file and return the created document
      * might throw exceptions if viruses are found. File is immediately deleted in that case
      *
@@ -67,12 +54,8 @@ class FileUploader
      * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
      */
     public function uploadFile(Report $report, UploadedFile $uploadedFile)
-    {
-        $body = file_get_contents($uploadedFile->getPath());
-
-        foreach ($this->fileCheckers as $fc) {
-            $fc->checkFile($body);
-        }
+    {;
+        $body = file_get_contents($uploadedFile->getPathName());
 
         $storageReference = 'dd_doc_' . microtime(1);
         $this->storage->store($storageReference, $body);
