@@ -93,51 +93,65 @@ class DocumentController extends AbstractController
     /**
      * Confirm delete document form
      *
-     * @Route("/report/{reportId}/documents/{documentId}/delete", name="delete_document")
+     * @Route("/documents/{documentId}/delete", name="delete_document")
      * @Template("AppBundle:Report/Document:deleteConfirm.html.twig")
      */
-    public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
+    public function deleteConfirmAction(Request $request, $documentId, $confirmed = false)
     {
-        echo 'here';exit;
-        /** @var EntityDir\Note $note */
-        $note = $this->getNote($noteId);
-
-        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+        /** @var EntityDir\Document $document */
+        $document = $this->getDocument($documentId);
+//var_dump($document);exit;
+        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
         return [
-            'report'  => $note->getClient()->getCurrentReport(),
-            'note' => $note,
-            'client' => $note->getClient(),
-            'backLink' => $this->generateClientProfileLink($note->getClient())
+            'report'  => $document->getReport(),
+            'document' => $document,
+            'client' => $document->getReport()->getClient(),
+            'backLink' => $this->generateClientProfileLink($document->getReport()->getClient())
         ];
     }
 
     /**
      * Removes a note, adds a flash message and redirects to page
      *
-     * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
+     * @Route("/document/{documentId}/delete/confirm", name="delete_document_confirm")
      * @Template()
      */
-    public function deleteConfirmedAction(Request $request, $noteId)
+    public function deleteConfirmedAction(Request $request, $documentId)
     {
         try {
-            /** @var EntityDir\Note $note */
-            $note = $this->getNote($noteId);
+            /** @var EntityDir\Document $document */
+            $document = $this->getDocument($documentId);
 
-            $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+            $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
-            $this->getRestClient()->delete('note/' . $noteId);
+            $this->getRestClient()->delete('document/' . $documentId);
 
-            $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
+            $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
 
             $request->getSession()->getFlashBag()->add(
                 'error',
-                'Note could not be removed'
+                'Document could not be removed'
             );
         }
 
         return $this->redirect($this->generateClientProfileLink($note->getClient()));
+    }
+
+    /**
+     * Retrieves the document object with required associated entities to populate the table and back links
+     *
+     * @param $documentId
+     * @return mixed
+     */
+    private function getDocument($documentId)
+    {
+        return $this->getRestClient()->get(
+            'document/' . $documentId,
+            'Report\Document',
+            ['document', 'report-object', 'report-id', 'client', 'user']
+        );
     }
 }

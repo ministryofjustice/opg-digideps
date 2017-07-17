@@ -150,5 +150,4 @@ class Document
     {
         $this->file = $file;
     }
-
 }
