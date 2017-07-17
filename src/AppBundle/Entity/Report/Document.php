@@ -28,7 +28,7 @@ class Document
         }
         
         if (in_array($this->getFile()->getClientOriginalName(), $fileNames)) {
-            $context->addViolationAt('file', 'document.file.alreadyPresent');
+            $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
         }
     }
 
@@ -39,9 +39,9 @@ class Document
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
      * @Assert\File(
      *     maxSize = "15M",
-     *     maxSizeMessage = "document.file.maxSizeMessage",
+     *     maxSizeMessage = "document.file.errors.maxSizeMessage",
      *     mimeTypes = {"application/pdf", "application/x-pdf"},
-     *     mimeTypesMessage = "document.file.mimeTypesMessage",
+     *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
      *     groups={"document"}
      * )
      *

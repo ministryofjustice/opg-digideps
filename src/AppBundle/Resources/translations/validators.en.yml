@@ -163,9 +163,15 @@ decision:
 
 document:
   file:
-    mimeTypesMessage: Please upload a valid PDF
-    maxSizeMessage: Files over 15M are not accepted
-    alreadyPresent: A file with the same name is already present among your uploaded document
+    errors:
+      mimeTypesMessage: "Please upload a valid PDF"
+      maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
+      alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
+      fileSize: "Your uploaded file exceeded the maximum size of 15M"
+      risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
+      virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
+      generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
+
 
 # currently a subsection of decisions
 mentalCapacity:
