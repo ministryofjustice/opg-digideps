@@ -14,7 +14,7 @@
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">Elvis Ciotti</span>
+    <span class="heading-secondary">{{ report.client.fullname }}</span>
 {% endblock %}
 
 {% block pageContent %}
