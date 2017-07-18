@@ -39,7 +39,7 @@ class DocumentController extends AbstractController
             'action' => $this->generateUrl('report_documents', ['reportId'=>$reportId]) //needed to reset possible JS errors
         ]);
         if ($request->get('error') == 'tooBig') {
-            $message = $this->get('translator')->trans('document.file.maxSizeMessage', [], 'validators');
+            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
             $form->get('file')->addError(new FormError($message));
         }
         $form->handleRequest($request);
