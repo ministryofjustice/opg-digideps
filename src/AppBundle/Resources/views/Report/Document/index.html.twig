@@ -40,24 +40,25 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
-    <h2 class="heading-medium">Document list</h2>
-
-    <table>
-        <thead>
-        <th>File name</th>
-        <th>Date attached</th>
-        <th></th>
-        </thead>
-        <tbody>
-        {% for document in report.documents %}
-            <tr>
-                <td>{{ document.fileName }}</td>
-                <td>{{ document.createdOn | date("j F Y H:i") }}</td>
-                <td><a href="#">Remove</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% if report.documents | length > 0 %}
+        <h2 class="heading-medium">Document list</h2>
+        <table>
+            <thead>
+            <th>File name</th>
+            <th>Date attached</th>
+            <th></th>
+            </thead>
+            <tbody>
+            {% for document in report.documents %}
+                <tr>
+                    <td>{{ document.fileName }}</td>
+                    <td>{{ document.createdOn | date("j F Y H:i") }}</td>
+                    <td><a href="#">Remove</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     <script>
         $(document).ready(function () {
