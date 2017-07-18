@@ -2,6 +2,7 @@
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
+{% set isNewPage = (what == 'new') %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
@@ -14,55 +15,71 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    {% if countDocuments > 0 %}
-    <table class="push--bottom">
-        <thead>
-        <tr>
-            <th>Client</th>
-            <th>Deputy</th>
-            <th>Case number</th>
-            <th>Documents</th>
-            <th>Date</th>
-            <th>
-                <span class="visuallyhidden">Actions</span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for report in reports %}
-            {% if report.documents | length %}
-                <tr>
-                    <td>
-                        {{ report.client.fullname }}
-                    </td>
-                    <td>
-                        {{ report.submittedBy.fullname | default('[report not submitted]') }}
-                    </td>
-                    <td>
-                        {{ report.client.caseNumber }}
-                    </td>
-                    <td class="width-half">
-                        <ul class="list list-bullet">
-                            {% for document in report.documents %}
-                                <li>{{ document.fileName }} | {{ document.createdOn | date(" d F Y") }} |
-                                    <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
-                                    | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td>
-                        {{ report.submitDate | date }}
-                    </td>
-                    <td class="">
-                        Download [ZIP n.a. - use single links]
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
 
-    </table>
+    <h2>
+        {% if not isNewPage %} <a href="{{ path('admin_documents', {'what': 'new'}) }}">{% endif %}
+            New
+        {% if not isNewPage %}</a>{% endif %}
+        |
+        {% if isNewPage %}<a href="{{ path('admin_documents', {'what': 'archived'}) }}">{% endif %}
+            Download archive
+        {% if isNewPage %}</a>{% endif %}
+    </h2>
+
+    {% if countDocuments > 0 %}
+        <table class="push--bottom">
+            <thead>
+            <tr>
+                <th>Client</th>
+                <th>Deputy</th>
+                <th>Case number</th>
+                <th>Documents</th>
+                <th>Date</th>
+                <th>
+                    <span class="visuallyhidden">Actions</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in reports %}
+                {% if report.documents | length %}
+                    <tr>
+                        <td>
+                            {{ report.client.fullname }}
+                        </td>
+                        <td>
+                            {{ report.submittedBy.fullname | default('[report not submitted]') }}
+                        </td>
+                        <td>
+                            {{ report.client.caseNumber }}
+                        </td>
+                        <td class="width-half">
+                            <ul class="list list-bullet">
+                                {% for document in report.documents %}
+                                    <li>{{ document.fileName }} | {{ document.createdOn | date(" d F Y") }}
+                                        {% if isNewPage %}|
+                                        <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
+                                        | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            {{ report.submitDate | date }}
+                        </td>
+                        <td class="">
+                            {% if isNewPage %}
+                            <a href="{{ path('admin_document_archive', {'reportId': report.id}) }}">Archive</a><br/>
+                            <a href="javascript:alert('not implemented. use single links')">Download</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+
+        </table>
     {% endif %}
 
 

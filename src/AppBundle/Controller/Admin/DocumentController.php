@@ -23,18 +23,16 @@ use Symfony\Component\HttpFoundation\Response;
 class DocumentController extends AbstractController
 {
     /**
-     * @Route("/", name="admin_documents")
+     * @Route("/list/{what}", name="admin_documents", defaults={"what"="new"})
      * @Template
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $what)
     {
-        $reports = $this->getRestClient()->get("/document/get-all-with-reports", 'Report\\Report[]', [
-            'report', 'client', 'report-submitted-by',
-            'report-documents', 'documents'
-        ]);
-
+        $archivedParam = ($what == 'new') ? 0 : 1;
+        $reports = $this->getRestClient()->get("/document/get-all-with-reports?archived={$archivedParam}", 'Report\\Report[]');
 
         return [
+            'what' => $what,
             'reports' => $reports,
             'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reports))
         ];
@@ -81,6 +79,22 @@ class DocumentController extends AbstractController
         $this->getRestClient()->delete("document/{$id}");
 
         return new Response('file deleted OK');
+    }
+
+    /**
+     * @Route("/archive/{reportId}", name="admin_document_archive")
+     * @Template
+     */
+    public function archiveDocumentsAction(Request $request, $reportId)
+    {
+        $documentRefs = $this->getRestClient()->put("report/{$reportId}/archive-documents", []);
+        foreach($documentRefs as $ref) {
+            //$this->get('s3_storage')->delete($ref); // CHECK WHAT'S THE NEEDED LOGIC HERE
+        }
+
+        $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
+
+        return $this->redirectToRoute('admin_documents');
     }
 
 }
