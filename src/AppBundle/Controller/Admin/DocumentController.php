@@ -29,12 +29,14 @@ class DocumentController extends AbstractController
     public function indexAction(Request $request)
     {
         $reports = $this->getRestClient()->get("report/get-submitted", 'Report\\Report[]', [
-            'report', 'client',
+            'report', 'client', 'report-submitted-by',
             'report-documents', 'documents'
         ]);
 
+
         return [
             'reports' => $reports,
+            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reports))
         ];
     }
 

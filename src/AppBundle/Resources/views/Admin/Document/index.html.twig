@@ -1,34 +1,68 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "admin-documents" %}
-{% set page = 'home' %}
+{% set transOptions = {} %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(countDocuments) }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    {% for report in reports %}
-        {% if report.documents | length %}
-            <hr/>
-            {{ report.client.fullname }} | Report {{ report.period }} submitted at {{ report.getsubmitted | date }}<br/>
-            Documents:
-            <ul>
-                {% for document in report.documents %}
-                    <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
-                        <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
-                        | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endfor %}
+    <table class="push--bottom">
+        <thead>
+        <tr>
+            <th>Client</th>
+            <th>Deputy</th>
+            <th>Case number</th>
+            <th>Documents</th>
+            <th>Date</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            {% if report.documents | length %}
+                <tr>
+                    <td>
+                        {{ report.client.fullname }}
+                    </td>
+                    <td>
+                        {{ report.submittedBy.fullname | default('[report not submitted]') }}
+                    </td>
+                    <td>
+                        {{ report.client.caseNumber }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% for document in report.documents %}
+                                <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
+                                    <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
+                                    | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        {{ report.submitDate | date }}
+                    </td>
+                    <td class="">
+                        Download [ZIP n.a. - use single links]
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+
+    </table>
+
 
 {% endblock %}
