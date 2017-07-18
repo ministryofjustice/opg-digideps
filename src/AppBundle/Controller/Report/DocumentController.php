@@ -11,6 +11,31 @@ use Symfony\Component\HttpFoundation\Request;
 class DocumentController extends RestController
 {
     /**
+     * Get list of reports
+     * ADMIN user only, to get reports along with documents
+     *
+     * @Route("/document/get-all-with-reports")
+     * @Method({"GET"})
+     */
+    public function getSubmitted(Request $request)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN]);
+
+        $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
+        $qb
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            //->where('r.submitted = true') //ENABLE ME. disabled only for faster tsting on develop-master-2
+            ->orderBy('r.submittedBy', 'DESC')
+        ;
+
+        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['report'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @Route("/report/{reportId}/document", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
