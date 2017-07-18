@@ -16,16 +16,18 @@
 {% block pageContent %}
 
     {% for report in reports %}
-        <hr />
-        {{ report.client.fullname }} | Report {{ report.period }} submitted at {{ report.getsubmitted | date }}<br/>
-        Documents: <ul>
-        {% for document in report.documents %}
-            <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
-                <a href="{{ path('admin_document_download', {'ref': document.storageReference}) }}">Download</a>
-            </li>
-        {% endfor %}
-    </ul>
-
+        {% if report.documents | length %}
+            <hr/>
+            {{ report.client.fullname }} | Report {{ report.period }} submitted at {{ report.getsubmitted | date }}<br/>
+            Documents:
+            <ul>
+                {% for document in report.documents %}
+                    <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
+                        <a href="{{ path('admin_document_download', {'ref': document.storageReference}) }}">Download</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endfor %}
 
 {% endblock %}
