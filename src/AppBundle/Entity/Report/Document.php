@@ -77,6 +77,7 @@ class Document
     public function __construct(Report $report)
     {
         $this->setReport($report);
+        $this->archived = false;
     }
 
     /**
