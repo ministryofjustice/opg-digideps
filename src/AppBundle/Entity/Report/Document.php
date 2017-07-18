@@ -52,6 +52,14 @@ class Document
     private $storageReference;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="archived", type="boolean", options={ "default": false}, nullable=false)
+     */
+    private $archived;
+
+    /**
      * @var Report
      *
      * @JMS\Groups({"document-report"})
@@ -126,6 +134,22 @@ class Document
     {
         $this->storageReference = $storageReference;
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @param boolean $archived
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
     }
 
     /**
