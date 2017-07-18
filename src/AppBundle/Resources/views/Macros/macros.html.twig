@@ -55,10 +55,12 @@
             <li>
                 <a href="{{ path('pa_dashboard') }}">Dashboard</a>
             </li>
+            {% if 'settings' in section and section != 'settings' %}
             <li>
                 <a href="{{ path('pa_settings') }}">Settings</a>
             </li>
-            {% if section == 'profile-edit' %}
+            {% endif %}
+            {% if section == 'settings-profile-edit' %}
                 <li>
                     <a href="{{ path('pa_profile_show') }}">Your account</a>
                 </li>
