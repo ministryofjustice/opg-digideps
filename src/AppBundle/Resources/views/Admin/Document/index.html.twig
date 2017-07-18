@@ -14,7 +14,7 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
+    {% if countDocuments > 0 %}
     <table class="push--bottom">
         <thead>
         <tr>
@@ -63,6 +63,7 @@
         </tbody>
 
     </table>
+    {% endif %}
 
 
 {% endblock %}
