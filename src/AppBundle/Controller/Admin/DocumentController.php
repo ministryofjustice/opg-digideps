@@ -30,7 +30,7 @@ class DocumentController extends AbstractController
     {
         $reports = $this->getRestClient()->get("report/get-submitted", 'Report\\Report[]', [
             'report', 'client',
-            'report-documents', 'documents', 'document-storage-reference'
+            'report-documents', 'documents'
         ]);
 
         return [
@@ -39,13 +39,18 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/document-download", name="admin_document_download")
+     * @Route("/download/{id}", name="admin_document_download")
      * @Template
      */
-    public function downloadAction(Request $request)
+    public function downloadAction(Request $request, $id)
     {
-        $reference = $request->get('ref');
-        $content = $this->get('s3_storage')->retrieve($reference);
+        $document = $this->getRestClient()->get("document/{$id}", 'Report\\Document', [
+            'documents', 'document-storage-reference'
+        ]);
+        if (!$document) {
+            return $this->createNotFoundException("Cannot find file");
+        }
+        $content = $this->get('s3_storage')->retrieve($document->getStorageReference()); //might throw exception
 
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
@@ -56,6 +61,24 @@ class DocumentController extends AbstractController
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @Route("/delete/{id}", name="admin_document_delete")
+     * @Template
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $document = $this->getRestClient()->get("document/{$id}", 'Report\\Document', [
+            'documents', 'document-storage-reference'
+        ]);
+        if (!$document) {
+            return $this->createNotFoundException("Cannot find file");
+        }
+        $this->get('s3_storage')->delete($document->getStorageReference()); //might throw exception
+        $this->getRestClient()->delete("document/{$id}");
+
+        return new Response('file deleted OK');
     }
 
 }

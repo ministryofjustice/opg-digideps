@@ -23,7 +23,8 @@
             <ul>
                 {% for document in report.documents %}
                     <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
-                        <a href="{{ path('admin_document_download', {'ref': document.storageReference}) }}">Download</a>
+                        <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
+                        | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
                     </li>
                 {% endfor %}
             </ul>

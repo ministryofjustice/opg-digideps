@@ -37,6 +37,11 @@ class Document
     }
 
     /**
+     * @JMS\Type("integer")
+     */
+    private $id;
+
+    /**
      * // add more validators here if needed
      * http://symfony.com/doc/current/reference/constraints/File.html
      *
@@ -68,6 +73,15 @@ class Document
      * @var string
      */
     private $storageReference;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
 
     /**
      * @return string
