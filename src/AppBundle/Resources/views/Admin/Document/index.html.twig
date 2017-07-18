@@ -41,10 +41,10 @@
                     <td>
                         {{ report.client.caseNumber }}
                     </td>
-                    <td>
-                        <ul>
+                    <td class="width-half">
+                        <ul class="list list-bullet">
                             {% for document in report.documents %}
-                                <li>{{ document.fileName }} | created on {{ document.createdOn | date }} |
+                                <li>{{ document.fileName }} | {{ document.createdOn | date(" d F Y") }} |
                                     <a href="{{ path('admin_document_download', {'id': document.id}) }}">Download</a>
                                     | <a href="{{ path('admin_document_delete', {'id': document.id}) }}">Delete</a>
                                 </li>
