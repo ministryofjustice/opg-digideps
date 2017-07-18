@@ -51,6 +51,7 @@ yourDetails:
   mainPhoneNumber: "Phone number"
   alternativePhoneNumber: "Alternative phone number"
   emailAddress: "Email address"
+  fullName: "Full name"
 form:
   editYourDetails:
     subSectionTitle: "Edit your details"

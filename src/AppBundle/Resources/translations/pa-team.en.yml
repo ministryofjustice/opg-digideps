@@ -1,3 +1,11 @@
+yourDetails:
+  address: Address
+  editButton: Update your account
+  emailAddress: Email
+  fullName: Full name
+  jobTitle: Job title
+  mainPhoneNumber: Phone
+  supportTitle: Settings
 addPage:
   htmlTitle: Deputy report - add user account | GOV.UK
   h1Title: Add user account
@@ -31,7 +39,7 @@ form:
   phoneMain:
     label: Phone
   roleName:
-    label: Grant user administrator access
-    hint: Administrator access will allow the new user to add and remove other users of the service
+    label: Administrator access
+    hint: You are currently an administrator on the Deputy Report Service
   save:
-    label: "Save"
+    label: "Update account"

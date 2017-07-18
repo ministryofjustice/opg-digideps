@@ -49,6 +49,24 @@
     </div>
 {% endmacro %}
 
+{% macro breadcrumbsPASettings(section) %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li>
+                <a href="{{ path('pa_dashboard') }}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ path('pa_settings') }}">Settings</a>
+            </li>
+            {% if section == 'profile-edit' %}
+                <li>
+                    <a href="{{ path('pa_profile_show') }}">Your account</a>
+                </li>
+            {% endif %}
+        </ol>
+    </div>
+{% endmacro %}
+
 {% macro linkBack(report) %}
     <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back behat-link-step-back">Back</a>
 {% endmacro %}

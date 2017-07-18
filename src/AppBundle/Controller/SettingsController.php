@@ -20,14 +20,4 @@ class SettingsController extends AbstractController
             'client' => $client,
         ];
     }
-
-
-    /**
-     * @Route("/pa/settings", name="pa_settings")
-     * @Template("AppBundle:Pa:settings.html.twig")
-     */
-    public function paSettingsAction()
-    {
-        return [];
-    }
 }

@@ -219,17 +219,12 @@ class UserController extends AbstractController
      * - display the Your details page
      *
      * @Route("/user-account/user-show", name="user_show")
-     * @Route("/pa/settings/your-details", name="pa_profile_show")
      * @Template()
      **/
     public function showAction()
     {
-        $user = $this->getUserWithData(['client']);
-dbg($user);
-exit;
-
         return [
-            'user' => $user
+            'user' => $this->getUser()
         ];
     }
 

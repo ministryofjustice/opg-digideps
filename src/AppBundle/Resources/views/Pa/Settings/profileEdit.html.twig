@@ -1,27 +1,29 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "pa-team" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
+{% block htmlTitle %}Settings - update your account{% endblock %}
+{% block pageTitle %}Update your account{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
-
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'editPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'yourDetails.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsPASettings('profile-edit') }}
 {% endblock %}
 
 {% block pageContent %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {% include 'AppBundle:Pa/Team:_edit_form_fields.html.twig' %}
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'Cancel',
         linkClass: 'button-link',
-        linkHref: path('pa_team')
+        linkHref: path('pa_profile_show')
     } %}
-
     {{ form_end(form) }}
-
 {% endblock %}

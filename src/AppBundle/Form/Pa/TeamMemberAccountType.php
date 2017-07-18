@@ -31,7 +31,9 @@ class TeamMemberAccountType extends AbstractType
     private $targetUser = null;
 
     /**
-     * @param $showRoleName
+     * @param $team
+     * @param $loggedInUser
+     * @param $targetUser
      */
     public function __construct(Team $team, User $loggedInUser, User $targetUser = null)
     {
@@ -53,9 +55,11 @@ class TeamMemberAccountType extends AbstractType
 
         if (!$this->loggedInUser->isTeamMember() && $this->team->canAddAdmin($this->targetUser)) {
             $builder->add('roleName', 'choice', [
-                'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
+                'choices'  => ['remove-admin' => 'Give up administrator rights'],
                 'expanded' => true,
-                'required' => true,
+                'multiple' => true,
+                'required' => false,
+                'mapped'   => false
             ]);
         }
 
