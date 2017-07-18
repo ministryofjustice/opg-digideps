@@ -365,8 +365,8 @@ class ReportController extends RestController
     }
 
     /**
-     * Get list of reports, currently only for PA users
-     *
+     * Get list of reports
+     * ADMIN user only, to get reports along with documents
      *
      * @Route("/get-submitted")
      * @Method({"GET"})
@@ -379,7 +379,7 @@ class ReportController extends RestController
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->where('r.submitted = true')
+            //->where('r.submitted = true') //ENABLE ME. disabled only for faster tsting on develop-master-2
             ->orderBy('r.submittedBy', 'DESC')
         ;
 
