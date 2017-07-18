@@ -28,7 +28,7 @@ class DocumentController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $reports = $this->getRestClient()->get("report/get-submitted", 'Report\\Report[]', [
+        $reports = $this->getRestClient()->get("/document/get-all-with-reports", 'Report\\Report[]', [
             'report', 'client', 'report-submitted-by',
             'report-documents', 'documents'
         ]);
