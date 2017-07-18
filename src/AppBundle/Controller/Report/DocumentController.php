@@ -21,16 +21,27 @@ class DocumentController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN]);
 
+        // use archived flag if existing. default to false
+        $archived = 'false';
+        if ($request->get('archived', null)) {
+            $archived = $request->get('archived') ? 'true' : 'false';
+        }
+
         $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
         $qb
             ->leftJoin('r.client', 'c')
-            ->leftJoin('c.users', 'u')
+            //->leftJoin('c.users', 'u')
+            ->leftJoin('r.documents', 'd')
+            ->where('d.archived = '.$archived)
             //->where('r.submitted = true') //ENABLE ME. disabled only for faster tsting on develop-master-2
             ->orderBy('r.submittedBy', 'DESC')
         ;
 
-        $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['report'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        // groups not customisable, to reduce risk of API accessing too much data
+        $this->setJmsSerialiserGroups([
+            'report', 'client', 'report-submitted-by',
+            'report-documents', 'documents'
+        ]);
 
         return $qb->getQuery()->getResult();
     }
@@ -100,4 +111,29 @@ class DocumentController extends RestController
 
         return [];
     }
+
+    /**
+     * Archive documents
+     *
+     * @Route("report/{reportId}/archive-documents", requirements={"reportId":"\d+"})
+     * @Method({"PUT"})
+     */
+    public function archiveDocuments(Request $request, $reportId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+
+        /* @var $report EntityDir\Report\Report */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $ret = [];
+        foreach($report->getDocuments() as $document) {
+            $document->setArchived(true);
+            $ret[] = $document->getStorageReference();
+        }
+        $this->getEntityManager()->flush();
+
+        return $ret;
+    }
+
+
+
 }
