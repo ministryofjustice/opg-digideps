@@ -46,10 +46,10 @@ class DocumentController extends AbstractController
     {
         $report = $this->getRestClient()->get("report/{$reportId}/get-documents", 'Report\\Report');
 
-        // store files locally, for subsequent ZIP creation
+        // store files locally, for subsequent memory-less ZIP creation
         $s3Storage = $this->get('s3_storage');
         $filesToAdd = [];
-        foreach($report->getDocuments() as $document) {
+        foreach(array_slice($report->getDocuments(),0,99) as $document) {
             $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
             $dfile = '/tmp/DDDocument'.$document->getId().microtime(1);
             file_put_contents($dfile, $content);
@@ -82,9 +82,8 @@ class DocumentController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($filename).'";');
         $response->headers->set('Content-Length', filesize($filename));
         $response->sendHeaders();
-        $response->setContent(file_get_contents($filename));
+        $response->setContent(readfile($filename));
 
-        // delete ZIP file from the disk
         unlink($filename);
 
         return $response;
