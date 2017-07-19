@@ -17,6 +17,10 @@
     <span class="heading-secondary">{{ report.client.fullname }}</span>
 {% endblock %}
 
+{% block supportTitleBottom %}
+    <span class="heading-secondary">Reporting period: {{ report.period }}</span>
+{% endblock %}
+
 {% block pageContent %}
 
     <p class="text">Use this page to attach a supporting document (or documents) for this deputy report.</p>
