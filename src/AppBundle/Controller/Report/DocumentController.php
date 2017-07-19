@@ -19,7 +19,7 @@ class DocumentController extends RestController
      */
     public function getSubmitted(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_UPLOAD]);
 
         // use archived flag if existing. default to false
         $archived = 'false';
@@ -81,7 +81,7 @@ class DocumentController extends RestController
      */
     public function getOneById(Request $request, $documentId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
 
         /* @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(EntityDir\Report\Document::class, $documentId);
@@ -99,18 +99,18 @@ class DocumentController extends RestController
      * @Route("/document/{documentId}", requirements={"documentId":"\d+"})
      * @Method({"DELETE"})
      */
-    public function deleteOneById(Request $request, $documentId)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
-        /* @var $document EntityDir\Report\Document */
-        $document = $this->findEntityBy(EntityDir\Report\Document::class, $documentId);
-
-        $this->getEntityManager()->remove($document);
-        $this->getEntityManager()->flush($document);
-
-        return [];
-    }
+//    public function deleteOneById(Request $request, $documentId)
+//    {
+//        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
+//
+//        /* @var $document EntityDir\Report\Document */
+//        $document = $this->findEntityBy(EntityDir\Report\Document::class, $documentId);
+//
+//        $this->getEntityManager()->remove($document);
+//        $this->getEntityManager()->flush($document);
+//
+//        return [];
+//    }
 
     /**
      * Archive documents
@@ -120,7 +120,7 @@ class DocumentController extends RestController
      */
     public function archiveDocuments(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
 
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -142,7 +142,7 @@ class DocumentController extends RestController
      */
     public function getById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DEPUTY, EntityDir\User::ROLE_ADMIN]);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
 
         $this->setJmsSerialiserGroups(['report-documents', 'documents', 'document-storage-reference']);
 
