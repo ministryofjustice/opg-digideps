@@ -134,6 +134,23 @@ class DocumentController extends RestController
         return $ret;
     }
 
+    /**
+     * @Route("/report/{id}/get-documents", requirements={"id":"\d+"})
+     * @Method({"GET"})
+     *
+     * @param int $id
+     */
+    public function getById(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DEPUTY, EntityDir\User::ROLE_ADMIN]);
+
+        $this->setJmsSerialiserGroups(['report-documents', 'documents', 'document-storage-reference']);
+
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
+
+        return $report;
+    }
+
 
 
 }
