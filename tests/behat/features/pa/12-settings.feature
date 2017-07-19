@@ -1,6 +1,6 @@
 Feature: PA settings
 
-  Scenario: names PA logs in and views profile page
+  Scenario: named PA logs in and views profile page
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings"
@@ -8,6 +8,7 @@ Feature: PA settings
     # settings page
     Then I should see the "user-accounts" link
     And I should see the "profile-show" link
+    And I should see the "password-edit" link
     When I click on "profile-show"
 
     # profile page
@@ -91,3 +92,67 @@ Feature: PA settings
     And I should see "behat-pa3-team-member@publicguardian.gsi.gov.uk" in the "profile-email" region
     And I should see "Solicitor helper" in the "profile-job" region
     And I should see "30000000123" in the "profile-phone" region
+
+  @jack
+  Scenario: Named PA logs in and changes password
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, password-edit"
+    Then I should see "Change password"
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_current_password     |
+      | change_password_plain_password_first |
+    #incorrect password
+    When I fill in the following:
+      | change_password_current_password       | Moo       |
+      | change_password_plain_password_first   | Abcd2345  |
+      | change_password_plain_password_second  | Abcd2345  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_current_password     |
+    #correct password, unmatching new passwords
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcd1111  |
+      | change_password_plain_password_second  | Abcd2222  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    #various password inadequacies
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234 |
+      | change_password_plain_password_first   | Abcd123  |
+      | change_password_plain_password_second  | Abcd123  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | abcd1234  |
+      | change_password_plain_password_second  | abcd1234  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcdefgh  |
+      | change_password_plain_password_second  | Abcdefgh  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | ABCD1234  |
+      | change_password_plain_password_second  | ABCD1234  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    # Finally a valid one
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcd2345  |
+      | change_password_plain_password_second  | Abcd2345  |
+    When I press "change_password_save"
+    Then the form should be valid
+    And I should see "Password edited"
+    And I should be on "/pa/settings/"
