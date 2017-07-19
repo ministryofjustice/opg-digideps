@@ -8,6 +8,10 @@
 
 {% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsPASettings('settings') }}
+{% endblock %}
+
 {% block pageContent %}
 
     <a href="{{ path('pa_team') }}" class="behat-link-user-accounts">
@@ -26,6 +30,13 @@
     </a>
     <p class="text text-info">
         Update any details on your account such as job title, telephone number or email address
+    </p>
+
+    <a href="{{ path('pa_profile_password_edit') }}" class="behat-link-password-edit">
+        <h2 class="heading-small">Change password</h2>
+    </a>
+    <p class="text text-info">
+        Change your current password
     </p>
 
 {% endblock %}

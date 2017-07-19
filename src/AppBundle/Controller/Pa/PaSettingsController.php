@@ -81,4 +81,5 @@ class PaSettingsController extends AbstractController
             'form' => $form->createView()
         ];
     }
+
 }

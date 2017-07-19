@@ -9,11 +9,11 @@
 {% block pageTitle %}Your account{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'yourDetails.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'supportTitle.profile' | trans }}</span>
 {% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsPASettings('profile') }}
+    {{ macros.breadcrumbsPASettings('settings-profile') }}
 {% endblock %}
 
 {% block pageContent %}
@@ -21,25 +21,25 @@
     <table class="text">
         <tbody>
         <tr>
-            <th scope="row">{{ 'yourDetails.fullName' | trans }}</th>
+            <th scope="row">{{ 'profile.fullName' | trans }}</th>
             <td class="behat-region-profile-name">{{ user.getFullname }}</td>
         </tr>
         <tr>
-            <th scope="row">{{ 'yourDetails.emailAddress' | trans }}</th>
+            <th scope="row">{{ 'profile.emailAddress' | trans }}</th>
             <td class="behat-region-profile-email">{{ user.email }}</td>
         </tr>
         <tr>
-            <th scope="row">{{ 'yourDetails.jobTitle' | trans }}</th>
+            <th scope="row">{{ 'profile.jobTitle' | trans }}</th>
             <td class="behat-region-profile-job">{{ user.jobTitle }}</td>
         </tr>
         <tr>
-            <th scope="row">{{ 'yourDetails.mainPhoneNumber' | trans }}</th>
+            <th scope="row">{{ 'profile.mainPhoneNumber' | trans }}</th>
             <td class="behat-region-profile-phone">{{ user.phoneMain }}</td>
         </tr>
         </tbody>
     </table>
 
     <a href="{{ path('pa_profile_edit') }}"
-       class="button push--top behat-link-pa-edit">{{ 'yourDetails.editButton'| trans }}</a>
+       class="button push--top behat-link-pa-edit">{{ 'profile.editButton'| trans }}</a>
 
 {% endblock %}

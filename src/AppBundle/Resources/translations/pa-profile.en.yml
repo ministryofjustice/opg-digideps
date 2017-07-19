@@ -1,11 +1,18 @@
-yourDetails:
-  address: Address
+h1Title:
+    change-password: "Change password"
+htmlTitle:
+    change-password: "Settings - Change password"
+supportTitle:
+    password: Settings
+    profile:  Settings
+    profile-edit:  Settings
+
+profile:
   editButton: Update your account
   emailAddress: Email
   fullName: Full name
   jobTitle: Job title
   mainPhoneNumber: Phone
-  supportTitle: Settings
 
 form:
   firstname:
