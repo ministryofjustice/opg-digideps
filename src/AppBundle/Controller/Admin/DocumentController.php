@@ -46,15 +46,22 @@ class DocumentController extends AbstractController
     {
         $report = $this->getRestClient()->get("report/{$reportId}/get-documents", 'Report\\Report');
 
+
         $s3Storage = $this->get('s3_storage');
-        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky, might finish
+        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky
         $zip = new \ZipArchive();
-        $zip->open($filename, \ZipArchive::CREATE);
+        $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
+        $filesToAdd = [];
         foreach($report->getDocuments() as $document) {
             $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
-            $zip->addFromString($document->getFileName() , $content);
+            $dfile = '/tmp/DDDocument'.$document->getId().microtime(1);
+            file_put_contents($dfile, $content);
+            $zip->addFile($dfile, $document->getFileName()); // addFromString crashes
         }
         $zip->close();
+        foreach($filesToAdd as $f) {
+            unlink($f);
+        }
 
         $response = new Response();
         //https://perishablepress.com/http-headers-file-downloads/
@@ -68,6 +75,8 @@ class DocumentController extends AbstractController
 
         $response->sendHeaders();
         $response->setContent(file_get_contents($filename));
+
+        unlink($filename);
 
         return $response;
     }
