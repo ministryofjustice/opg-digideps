@@ -39,46 +39,37 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/download/{id}", name="admin_document_download")
+     * @Route("/download/{reportId}", name="admin_documents_download")
      * @Template
      */
-    public function downloadAction(Request $request, $id)
+    public function downloadAction(Request $request, $reportId)
     {
-        $document = $this->getRestClient()->get("document/{$id}", 'Report\\Document', [
-            'documents', 'document-storage-reference'
-        ]);
-        if (!$document) {
-            return $this->createNotFoundException("Cannot find file");
+        $report = $this->getRestClient()->get("report/{$reportId}/get-documents", 'Report\\Report');
+
+        $s3Storage = $this->get('s3_storage');
+        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky, might finish
+        $zip = new \ZipArchive();
+        $zip->open($filename, \ZipArchive::CREATE);
+        foreach($report->getDocuments() as $document) {
+            $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
+            $zip->addFromString($document->getFileName() , $content);
         }
-        $content = $this->get('s3_storage')->retrieve($document->getStorageReference()); //might throw exception
+        $zip->close();
 
         $response = new Response();
-        $response->headers->set('Cache-Control', 'private');
-//        $response->headers->set('Content-type', 'plain/text');
+        //https://perishablepress.com/http-headers-file-downloads/
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+        $response->headers->set('Expires' ,'0');
         $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="file.pdf";');
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($filename).'";');
+        $response->headers->set('Content-Length', filesize($filename));
+
         $response->sendHeaders();
-        $response->setContent($content);
+        $response->setContent(file_get_contents($filename));
 
         return $response;
-    }
-
-    /**
-     * @Route("/delete/{id}", name="admin_document_delete")
-     * @Template
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $document = $this->getRestClient()->get("document/{$id}", 'Report\\Document', [
-            'documents', 'document-storage-reference'
-        ]);
-        if (!$document) {
-            return $this->createNotFoundException("Cannot find file");
-        }
-        $this->get('s3_storage')->delete($document->getStorageReference()); //might throw exception
-        $this->getRestClient()->delete("document/{$id}");
-
-        return new Response('file deleted OK');
     }
 
     /**
@@ -89,7 +80,7 @@ class DocumentController extends AbstractController
     {
         $documentRefs = $this->getRestClient()->put("report/{$reportId}/archive-documents", []);
         foreach($documentRefs as $ref) {
-            //$this->get('s3_storage')->delete($ref); // CHECK WHAT'S THE NEEDED LOGIC HERE
+            //$this->get('s3_storage')->delete($ref); // CHECK WHAT'S THE NEEDED LOGIC HERE. could be enough to soft delete and the cron will clean them up
         }
 
         $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
