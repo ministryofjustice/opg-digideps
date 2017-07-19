@@ -36,7 +36,10 @@
                 <th>Documents</th>
                 <th>Date</th>
                 <th>
-                    <span class="visuallyhidden">Actions</span>
+                    {% if isNewPage %}
+                    {% else %}
+                        User
+                    {% endif %}
                 </th>
             </tr>
             </thead>
@@ -68,6 +71,9 @@
                             {% if isNewPage %}
                             <a href="{{ path('admin_document_archive', {'reportId': report.id}) }}">Archive</a><br/>
                                 <a href="{{ path('admin_documents_download', {'reportId': report.id}) }}">Download</a>
+                            {% else %}
+                                {# not correct. backend will give a different value #}
+                                {{ app.user.firstname | first }}{{ app.user.lastname | first }}
                             {% endif %}
                         </td>
                     </tr>
