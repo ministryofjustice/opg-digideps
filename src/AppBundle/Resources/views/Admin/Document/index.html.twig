@@ -57,12 +57,19 @@
                             {{ report.client.caseNumber }}
                         </td>
                         <td class="width-half">
-                            <ul class="list list-bullet">
-                                {% for document in report.documents %}
-                                    <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                            <details class="push--bottom">
+                                <summary>
+                                    <span class="summary">{{ 'page.table.rows.documents' | transchoice(report.documents | length) }}</span>
+                                </summary>
+                                <div class="panel panel-border-narrow">
+                                    <ul class="list list-group" id="docs">
+                                        {% for document in report.documents %}
+                                            <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </details>
                         </td>
                         <td>
                             {{ report.submitDate | date }}
