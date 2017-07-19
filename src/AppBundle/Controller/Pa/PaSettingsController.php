@@ -45,8 +45,7 @@ class PaSettingsController extends AbstractController
     public function profileEditAction(Request $request)
     {
         $loggedInUser = $this->getUser();
-        $team = $this->getRestClient()->get('user/' . $loggedInUser->getId() . '/team', 'Team');
-        $form = $this->createForm(new FormDir\Pa\TeamMemberAccountType($team, $loggedInUser, $loggedInUser), $loggedInUser);
+        $form = $this->createForm(new FormDir\Pa\ProfileType($loggedInUser), $loggedInUser);
 
         $form->handleRequest($request);
 
@@ -54,7 +53,7 @@ class PaSettingsController extends AbstractController
             $user = $form->getData();
 
             try {
-                if ($form->has('roleName') && !empty($form->get('roleName')->getData())) {
+                if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
                     $user->setRoleName('ROLE_PA_TEAM_MEMBER');
                     $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
                     $redirectRoute = 'logout';
