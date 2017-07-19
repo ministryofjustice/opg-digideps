@@ -57,7 +57,7 @@ class ReportController extends AbstractController
      */
     public function indexAction(Request $request, $type)
     {
-        $user = $this->getUserWithData(['user', 'client', 'report']);
+        $user = $this->getUserWithData(['client', 'report']);
 
         // NDR: redirect to ODR index
         if ($user->isOdrEnabled()) {
@@ -190,7 +190,7 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['client']);
         $clients = $user->getClients();
         $client = $clients[0];
 

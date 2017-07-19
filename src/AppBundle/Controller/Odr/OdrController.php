@@ -172,7 +172,7 @@ class OdrController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['client']);
         $clients = $user->getClients();
         $client = $clients[0];
 

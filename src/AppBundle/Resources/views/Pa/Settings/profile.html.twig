@@ -1,0 +1,45 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "pa-profile" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}Settings - your account{% endblock %}
+{% block pageTitle %}Your account{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'yourDetails.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsPASettings('profile') }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <table class="text">
+        <tbody>
+        <tr>
+            <th scope="row">{{ 'yourDetails.fullName' | trans }}</th>
+            <td class="behat-region-profile-name">{{ user.getFullname }}</td>
+        </tr>
+        <tr>
+            <th scope="row">{{ 'yourDetails.emailAddress' | trans }}</th>
+            <td class="behat-region-profile-email">{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">{{ 'yourDetails.jobTitle' | trans }}</th>
+            <td class="behat-region-profile-job">{{ user.jobTitle }}</td>
+        </tr>
+        <tr>
+            <th scope="row">{{ 'yourDetails.mainPhoneNumber' | trans }}</th>
+            <td class="behat-region-profile-phone">{{ user.phoneMain }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('pa_profile_edit') }}"
+       class="button push--top behat-link-pa-edit">{{ 'yourDetails.editButton'| trans }}</a>
+
+{% endblock %}

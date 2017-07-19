@@ -15,10 +15,17 @@
     </a>
     <p class="text text-info">
         {% if isNamedOrAdmin %}
-            Add, edit and remove user accounts for you and your team members
+            Add, edit and remove user accounts for your team members
         {% else %}
-            View team members and edit your account
+            View team members
         {% endif %}
+    </p>
+
+    <a href="{{ path('pa_profile_show') }}" class="behat-link-profile-show">
+        <h2 class="heading-small">Your account</h2>
+    </a>
+    <p class="text text-info">
+        Update any details on your account such as job title, telephone number or email address
     </p>
 
 {% endblock %}

@@ -1,19 +1,24 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "pa-team" %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "pa-profile" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans({}, 'pa-team') }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
+{% block htmlTitle %}Settings - update your account{% endblock %}
+{% block pageTitle %}Update your account{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
-
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'editPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'yourDetails.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsPASettings('profile-edit') }}
 {% endblock %}
 
 {% block pageContent %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
     {{ form_input(form.firstname,'form.firstname') }}
 
     {{ form_input(form.lastname,'form.lastname') }}
@@ -24,10 +29,10 @@
 
     {{ form_input(form.phoneMain,'form.phoneMain') }}
 
-    {% if form.roleName is defined %}
-        {{ form_checkbox_group(form.roleName, 'form.roleName', {
-            'fieldSetClass' : 'inline'
-        }) }}
+    {% if form.removeAdmin is defined %}
+    {{ form_checkbox_group(
+        form.removeAdmin, 'form.removeAdmin', {'fieldSetClass' : 'inline'}
+    ) }}
     {% endif %}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
@@ -35,9 +40,7 @@
         transDomain: translationDomain,
         linkButtonLabel: 'Cancel',
         linkClass: 'button-link',
-        linkHref: path('pa_team')
+        linkHref: path('pa_profile_show')
     } %}
-
     {{ form_end(form) }}
-
 {% endblock %}

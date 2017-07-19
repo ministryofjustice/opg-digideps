@@ -81,13 +81,4 @@ class IndexController extends AbstractController
             'client'=>$client,
         ];
     }
-
-    /**
-     * @Route("/settings", name="pa_settings")
-     * @Template
-     */
-    public function settingsAction(Request $request)
-    {
-        return [];
-    }
 }

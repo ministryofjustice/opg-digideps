@@ -189,6 +189,7 @@ class RestClient
      * @param string $expectedResponseType Entity class to deserialise response into
      *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed)
      *                                     or "Account[]" to deseialise into an array of entities
+     * @param array  $jmsGroups            deserialise_groups
      *
      * @return mixed $expectedResponseType type
      */
