@@ -93,7 +93,6 @@ Feature: PA settings
     And I should see "Solicitor helper" in the "profile-job" region
     And I should see "30000000123" in the "profile-phone" region
 
-  @jack
   Scenario: Named PA logs in and changes password
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, password-edit"
