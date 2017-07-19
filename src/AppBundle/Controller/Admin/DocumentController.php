@@ -46,25 +46,34 @@ class DocumentController extends AbstractController
     {
         $report = $this->getRestClient()->get("report/{$reportId}/get-documents", 'Report\\Report');
 
-
+        // store files locally, for subsequent ZIP creation
         $s3Storage = $this->get('s3_storage');
-        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky
-        $zip = new \ZipArchive();
-        $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
         $filesToAdd = [];
         foreach($report->getDocuments() as $document) {
             $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
             $dfile = '/tmp/DDDocument'.$document->getId().microtime(1);
             file_put_contents($dfile, $content);
-            $zip->addFile($dfile, $document->getFileName()); // addFromString crashes
+            unset($content);
+            $filesToAdd[$document->getFileName()] = $dfile;
+        }
+
+        // create ZIP files and add previously-stored uploaded documents
+        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky
+        $zip = new \ZipArchive();
+        $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
+        foreach($filesToAdd as $localname => $filePath) {
+            $zip->addFile($filePath, $localname); // addFromString crashes
         }
         $zip->close();
+        unset($zip);
+
+        // clean up
         foreach($filesToAdd as $f) {
             unlink($f);
         }
 
+        // send ZIP to user
         $response = new Response();
-        //https://perishablepress.com/http-headers-file-downloads/
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
         $response->headers->set('Expires' ,'0');
@@ -72,10 +81,10 @@ class DocumentController extends AbstractController
         $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($filename).'";');
         $response->headers->set('Content-Length', filesize($filename));
-
         $response->sendHeaders();
         $response->setContent(file_get_contents($filename));
 
+        // delete ZIP file from the disk
         unlink($filename);
 
         return $response;
