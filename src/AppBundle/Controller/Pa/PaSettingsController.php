@@ -82,32 +82,4 @@ class PaSettingsController extends AbstractController
         ];
     }
 
-    /**
-     * Display the password edit page
-     *
-     * @Route("/your-details/change-password", name="pa_profile_password_edit")
-     * @Template("AppBundle:Pa/Settings:profilePasswordEdit.html.twig")
-     **/
-    public function profilePasswordEditAction(Request $request)
-    {
-        $user = $this->getUserWithData(['client']);
-
-        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
-                'password_plain' => $plainPassword,
-            ]));
-            $request->getSession()->getFlashBag()->add('notice', 'Password edited');
-
-            return $this->redirect($this->generateUrl('pa_settings'));
-        }
-
-        return [
-            'user'   => $user,
-            'form'   => $form->createView(),
-        ];
-    }
 }

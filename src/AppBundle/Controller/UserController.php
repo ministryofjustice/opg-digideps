@@ -172,13 +172,12 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user-account/password-edit", name="user_password_edit")
+     * @Route("/pa/settings/your-details/change-password", name="pa_profile_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
     {
-        $user = $this->getUserWithData(['client']);
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
+        $user = $this->getUser();
 
         $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
         $form->handleRequest($request);
@@ -190,12 +189,11 @@ class UserController extends AbstractController
             ]));
             $request->getSession()->getFlashBag()->add('notice', 'Password edited');
 
-            return $this->redirect($this->generateUrl('user_password_edit_done'));
+            $successRoute = $this->getUser()->isDeputyPA() ? 'pa_settings' : 'user_password_edit_done';
+            return $this->redirect($this->generateUrl($successRoute));
         }
 
         return [
-            'client' => $client,
-            'user'   => $user,
             'form'   => $form->createView(),
         ];
     }
