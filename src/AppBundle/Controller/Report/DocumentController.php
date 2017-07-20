@@ -51,7 +51,7 @@ class DocumentController extends AbstractController
             $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
 
             try {
-                $fileUploader->uploadFile($report, $uploadedFile);
+//                $fileUploader->uploadFile($report, $uploadedFile);
 
 //                $fileToStore->checkFile();
 
