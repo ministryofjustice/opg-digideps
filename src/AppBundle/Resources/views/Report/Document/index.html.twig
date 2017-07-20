@@ -3,6 +3,8 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
+{% set page = "reportDocuments" %}
+
 {% trans_default_domain translationDomain %}
 
 {# Page Titles #}
@@ -23,17 +25,17 @@
 
 {% block pageContent %}
 
-    <p class="text">Use this page to attach a supporting document (or documents) for this deputy report.</p>
+    <p class="text">{{ (page ~ '.supportText') | trans }}</p>
 
-    <h2 class="heading-medium">Attach documents</h2>
+    <h2 class="heading-medium">{{ (page ~ '.attachDocuments') | trans }}</h2>
 
     {{ form_start(form, {'attr': {'id': 'upload_form'}}) }}
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
-        'labelText':'Attach a file',
+        'labelText':  'form.attachAFile' | trans ,
         'inputClass': 'no-border',
-        'hintText': 'Accepted file types: PDF. Max file size: 15 MB'}) }}
-    {{ form_submit(form.save, '', {'labelText': 'Attach document'}) }}
+        'hintText': 'form.acceptedFileTypes' | trans}) }}
+    {{ form_submit(form.save, '', {'labelText': 'form.attachDocument' | trans}) }}
 
     <a href=" {{ backLink }} " class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
@@ -44,12 +46,13 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
+    <h2 class="heading-medium">{{ (page ~ '.documentList') | trans }}</h2>
+
     {% if report.documents | length > 0 %}
-        <h2 class="heading-medium">Document list</h2>
         <table>
             <thead>
-            <th>File name</th>
-            <th>Date attached</th>
+            <th>{{ (page ~ '.filename') | trans }}</th>
+            <th>{{ (page ~ '.dateAttached') | trans }}</th>
             <th></th>
             </thead>
             <tbody>
@@ -57,11 +60,15 @@
                 <tr>
                     <td>{{ document.fileName }}</td>
                     <td>{{ document.createdOn | date("j F Y H:i") }}</td>
-                    <td><a href="#">Remove</a></td>
+                    <td>
+                        <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id}) }}" class="behat-link-delete-documents-button">{{ (page ~ '.deleteDocument') | trans }}</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+    {% else %}
+        <p>{{ (page ~ '.noDocuments') | trans }}</p>
     {% endif %}
 
     <script>

@@ -90,6 +90,67 @@ class DocumentController extends AbstractController
         ];
     }
 
+    /**
+     * Confirm delete document form
+     *
+     * @Route("/documents/{documentId}/delete", name="delete_document")
+     * @Template("AppBundle:Report/Document:deleteConfirm.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, $documentId, $confirmed = false)
+    {
+        /** @var EntityDir\Document $document */
+        $document = $this->getDocument($documentId);
 
+        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
+        return [
+            'report'  => $document->getReport(),
+            'document' => $document,
+            'backLink' => $this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()])
+        ];
+    }
+
+    /**
+     * Removes a document, adds a flash message and redirects to page
+     *
+     * @Route("/document/{documentId}/delete/confirm", name="delete_document_confirm")
+     * @Template()
+     */
+    public function deleteConfirmedAction(Request $request, $documentId)
+    {
+        try {
+            /** @var EntityDir\Document $document */
+            $document = $this->getDocument($documentId);
+
+            $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
+
+            $this->getRestClient()->delete('document/' . $documentId);
+
+            $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'Document could not be removed'
+            );
+        }
+
+        return $this->redirect($this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()]));
+    }
+
+    /**
+     * Retrieves the document object with required associated entities to populate the table and back links
+     *
+     * @param $documentId
+     * @return mixed
+     */
+    private function getDocument($documentId)
+    {
+        return $this->getRestClient()->get(
+            'document/' . $documentId,
+            'Report\Document',
+            ['documents', 'document-report', 'report', 'client', 'user']
+        );
+    }
 }

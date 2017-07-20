@@ -1,6 +1,30 @@
 htmlTitle: Case documents | GOV.UK
 pageTitle: Case documents
-
 form:
+  attachAFile: Attach a file
+  acceptedFileTypes: "Accepted file types: PDF. Max file size: 15 MB"
+  attachDocument: Attach Document
   file:
     label: Attach a file
+  errors:
+    fileSize: "Your uploaded file exceeded the maximum size of 15M"
+    risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
+    virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
+    generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
+removeDocument:
+  htmlTitle: Client profile - remove note | GOV.UK
+  h1Title: Remove document
+  supportTitle: "Attach documents"
+  question: Are you sure you want to remove this document?
+  documentFilename: "File name:"
+  dateAttached: "Date attached:"
+  linkButtonLabel: Yes, remove document
+reportDocuments:
+  supportText: Use this page to attach a supporting document (or documents) for this deputy report.
+  attachDocuments: Attach documents
+  heading: Case Documents
+  noDocuments: No documents
+  documentList: Document list
+  filename: File name
+  dateAttached: Date attached
+  deleteDocument: Remove
