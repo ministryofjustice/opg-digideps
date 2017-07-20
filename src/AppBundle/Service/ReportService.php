@@ -10,6 +10,7 @@ use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
@@ -64,7 +65,7 @@ class ReportService
      *
      * @return Report
      */
-    public function createNextYearReport(Report $oldReport)
+    private function createNextYearReport(Report $oldReport)
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
@@ -162,5 +163,30 @@ class ReportService
         }
 
         $this->_em->flush();
+    }
+
+    /**
+     * Set report submitted and create a new year report
+     *
+     * @param Report $currentReport
+     * @param User $user
+     * @param \DateTime $submitDate
+     *
+     * @return Report new year's report
+     */
+    public function submit(Report $currentReport, User $user, \DateTime $submitDate)
+    {
+        if (!$currentReport->getAgreedBehalfDeputy()) {
+            throw new \RuntimeException('Report must be agreed for submission');
+        }
+
+        $currentReport
+            ->setSubmitted(true)
+            ->setSubmittedBy($user)
+            ->setSubmitDate($submitDate);
+
+        $this->_em->flush($currentReport);
+
+        return $this->createNextYearReport($currentReport);
     }
 }

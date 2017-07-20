@@ -133,6 +133,4 @@ class ReportSubmission
         return $this;
     }
 
-    
-
 }

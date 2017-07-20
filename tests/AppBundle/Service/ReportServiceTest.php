@@ -5,31 +5,34 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Casrec as CasRecEntity;
 use AppBundle\Entity\Report\Asset as AssetEntity;
+use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report as ReportEntity;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Fixtures;
-use Mockery as m;
+use MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Client;
 
-class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
+class ReportServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Client
+     * @var Report
      */
-    protected $frameworkBundleClient;
+    private $user;
 
     /**
-     * @var EntityManager
+     * @var Report
      */
-    protected $em;
+    private $report;
 
     /**
      * @var Fixtures
      */
-    protected $fixtures;
+//    protected $fixtures;
 
     /**
      * @var ReportService
@@ -40,6 +43,17 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
     public function setUp()
     {
+        $this->user = new EntityDir\User();
+        $client = new EntityDir\Client();
+        $client->addUser($this->user);
+        $client->setCaseNumber('12345678');
+        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-31'), new \DateTime('2015-12-31'));
+        $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
+        $this->report->setNoAssetToAdd(false)->addAsset($this->asset1);
+        $this->bank1 = (new BankAccount())->setAccountNumber('1234');
+        $this->report->addAccount($this->bank1);
+
+        // mock em
         $this->repos[ReportEntity::class] = m::mock(EntityDir\Repository\ReportRepository::class);
         $this->repos[CasRecEntity::class] = m::mock(EntityDir\Repository\CasRecRepository::class);
         $this->repos[AssetEntity::class] = m::mock();
@@ -57,81 +71,53 @@ class ReportServiceTest extends m\Adapter\Phpunit\MockeryTestCase
             ->with(BankAccountEntity::class)
             ->andReturn($this->repos[BankAccountEntity::class]);
 
+        $this->repos[CasRecEntity::class]->shouldReceive('findOneBy')
+            ->with(['caseNumber' => $client->getCaseNumber()])
+            ->andReturn(null); // can be tested separately, currently partially covered by CASREC class
+
         $this->sut = new ReportService($this->repos[ReportEntity::class], $this->repos[CasRecEntity::class], $this->em);
     }
 
-    /**
-     * this test could be refactor moking reportService.setReportTypeBasedOnCasrec
-     *
-     * @test
-     * @dataProvider createNextYearReportChangesTypeProvider
-     */
-    public function testCreateNextYearReportChangesType($initialType, $corref, $casRecTypeOfReport, $newReportType)
+
+    public function testSubmitInvalid()
     {
-        if ($initialType === ReportEntity::TYPE_103 && !ReportEntity::ENABLE_103) {
-            $this->markTestSkipped('enable when 103 is enabled');
-        }
-
-        if ($initialType === ReportEntity::TYPE_104 && !ReportEntity::ENABLE_104) {
-            $this->markTestSkipped('enable when 104 is enabled');
-        }
-
-        $casRecEntity = m::mock(CasRecEntity::class)->makePartial();
-        $casRecEntity->shouldReceive('getCorref')->andReturn($corref);
-        $casRecEntity->shouldReceive('getTypeOfReport')->andReturn($casRecTypeOfReport);
-
-        $mockBankAccount = m::mock(BankAccountEntity::class);
-        $mockBankAccount->shouldReceive('getBank')->once()->andReturn('bank');
-        $mockBankAccount->shouldReceive('getAccountType')->once()->andReturn('account_type');
-        $mockBankAccount->shouldReceive('getSortCode')->once()->andReturn('010101');
-        $mockBankAccount->shouldReceive('getAccountNumber')->once()->andReturn('90909090');
-        $mockBankAccount->shouldReceive('getOpeningBalance')->andReturn(999);
-        $mockBankAccount->shouldReceive('getClosingBalance')->once()->andReturn(999);
-
-        $mockAsset = m::mock(AssetEntity::class)->makePartial();
-        $mockAsset->shouldReceive('setReport')->once()->with(m::type(ReportEntity::class));
-
-        $report = m::mock(ReportEntity::class, [
-            'getType' => $initialType,
-            'getEndDate' => new \DateTime(),
-            'getStartDate' => new \DateTime(),
-            'getAssets' => [$mockAsset],
-            'getBankAccounts' => [$mockBankAccount],
-            'getAssetsTotalValue' => 999,
-            'getCaseNumber' => 1111,
-            'getSubmitted' => true
-        ])->makePartial();
-
-        $client = new EntityDir\Client();
-        $report->setClient($client);
-
-        $this->repos[CasRecEntity::class]->shouldReceive('findOneBy')
-            ->with(['caseNumber' => $client->getCaseNumber()])
-            ->andReturn($casRecEntity);
-
-        // assert Asset saved
-        $this->em->shouldReceive('detach')->once()->with(m::type(AssetEntity::class));
-        $this->em->shouldReceive('persist')->once()->with(m::type(AssetEntity::class));
-
-        // assert BankAccount saved
-        $this->em->shouldReceive('persist')->once()->with(m::type(BankAccountEntity::class));
-
-        // Assert newReport saved
-        $this->em->shouldReceive('persist')->once()->with(m::type(ReportEntity::class));
-        $this->em->shouldReceive('flush')->once();
-
-        $newReport = $this->sut->createNextYearReport($report);
-        $this->assertEquals($newReportType, $newReport->getType());
-        $this->assertContainsOnlyInstancesOf(BankAccountEntity::class, $newReport->getBankAccounts());
-        $this->assertContainsOnlyInstancesOf(AssetEntity::class, $newReport->getAssets());
+        $this->report->setAgreedBehalfDeputy(false);
+        $this->setExpectedException(\RuntimeException::class, 'agreed');
+        $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
     }
 
-    public static function createNextYearReportChangesTypeProvider()
+    public function testSubmitValid()
     {
-        return [
-            // more cases on CasrecTest::getTypeBasedOnTypeofRepAndCorrefProvider
-            [ReportEntity::TYPE_102, 'l3', 'opg103', ReportEntity::TYPE_103],
-            [ReportEntity::TYPE_103, 'l2', 'opg102', ReportEntity::TYPE_102],
-        ];
+        // mocks
+        $this->em->shouldReceive('flush')->with($this->report)->once();
+        $this->em->shouldReceive('detach');
+        $this->em->shouldReceive('flush');
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+            return $report instanceof Report;
+        }));
+        // assert asset and bank accounts are copied. can't get from the returned report as they are added form the "Many" side
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function($asset) {
+            return $asset instanceof EntityDir\Report\AssetProperty && $asset->getAddress() === 'SW1';
+        }))->once();
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function($bankAccount) {
+            return $bankAccount instanceof EntityDir\Report\BankAccount && $bankAccount->getAccountNumber() === '1234';
+        }))->once();
+
+        $this->report->setAgreedBehalfDeputy(true);
+        $newYearReport = $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
+
+        // assert current report
+        $this->assertTrue($this->report->getSubmitted());
+
+        //assert new year report
+        $this->assertEquals($this->report->getType(), $newYearReport->getType());
+        $this->assertEquals('2016-01-01', $newYearReport->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
     }
+
+    public function tearDown()
+    {
+        m::close();
+    }
+
 }

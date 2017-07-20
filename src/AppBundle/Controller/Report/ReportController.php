@@ -96,19 +96,13 @@ class ReportController extends RestController
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
-        if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
-            $currentReport->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
-        } else {
-            $currentReport->setAgreedBehalfDeputyExplanation(null);
-        }
+        $xplanation = ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf')
+            ? $data['agreed_behalf_deputy_explanation'] : null;
+        $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
 
-        $currentReport->setSubmitted(true);
-        $currentReport->setSubmittedBy($this->getUser());
-        $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
-
-        //lets create subsequent year's report
-        $nextYearReport = $this->get('opg_digideps.report_service')->createNextYearReport($currentReport);
-        $this->getEntityManager()->flush($currentReport);
+        // submit and create new year's report
+        $nextYearReport = $this->get('opg_digideps.report_service')
+            ->submit($currentReport, $this->getUser(), new \DateTime($data['submit_date']));
 
         //response to pass back
         return ['newReportId' => $nextYearReport->getId()];
