@@ -96,7 +96,7 @@ class AccountController extends RestController
 
     private function fillAccountData(EntityDir\Odr\BankAccount $account, array $data)
     {
-        if (array_key_exists('bank', $data)) {
+        if (array_key_exists('bank', $data) && $account->requiresBankName()) {
             $account->setBank($data['bank']);
         }
 
@@ -104,13 +104,8 @@ class AccountController extends RestController
             $account->setAccountType($data['account_type']);
         }
 
-        if (array_key_exists('sort_code', $data)) {
+        if (array_key_exists('sort_code', $data) && $account->requiresSortCode()) {
             $account->setSortCode($data['sort_code']);
-        }
-
-        if (!$account->requiresBankNameAndSortCode()) {
-            $account->setBank(null);
-            $account->setSortCode(null);
         }
 
         if (array_key_exists('account_number', $data)) {
