@@ -34,7 +34,7 @@
 
     {% if step == 2 %}
 
-        {% if account.requiresBankNameAndSortCode %}
+        {% if account.requiresBankName %}
             {{ form_input(form.bank, 'form.bank') }}
         {% else %}
             {% do form.bank.setRendered %}
@@ -44,7 +44,7 @@
             'inputClass' : 'account-number'
         }) }}
 
-        {% if account.requiresBankNameAndSortCode %}
+        {% if account.requiresSortCode %}
             {{ form_sort_code(form.sortCode, 'form.sortCode') }}
         {% else %}
             {% do form.sortCode.setRendered %}
