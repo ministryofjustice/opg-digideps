@@ -8,6 +8,7 @@ use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
@@ -180,12 +181,20 @@ class ReportService
             throw new \RuntimeException('Report must be agreed for submission');
         }
 
+        // update report submit flag, who submitted and date
         $currentReport
             ->setSubmitted(true)
             ->setSubmittedBy($user)
             ->setSubmitDate($submitDate);
-
         $this->_em->flush($currentReport);
+
+        // create submission record with non-archived document in the current report
+        $documentsToSubmit = $currentReport->getDocuments()->filter(function($document){
+            return !$document->isArchived();
+        });
+        $submission = new ReportSubmission($currentReport, $documentsToSubmit);
+        $this->_em->persist($submission);
+        $this->_em->flush($submission);
 
         return $this->createNextYearReport($currentReport);
     }

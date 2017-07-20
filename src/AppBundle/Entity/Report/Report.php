@@ -217,6 +217,12 @@ class Report
     private $documents;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
+     */
+    private $submissions;
+
+    /**
      * Report constructor
      * Construct reports using the report service
      *
@@ -280,6 +286,7 @@ class Report
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->submissions = new ArrayCollection();
     }
 
     /**
@@ -720,13 +727,33 @@ class Report
     }
 
     /**
-     * @param ArrayCollection $documents
-     *
-     * @return $this
+     * @param Document $document
      */
-    public function setDocuments($documents)
+    public function addDocument(Document $document)
     {
-        $this->documents = $documents;
-        return $this;
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+        }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmissions()
+    {
+        return $this->submissions;
+    }
+
+    /**
+     * @param ReportSubmission $submissions
+     * @return Report
+     */
+    public function addSubmissions(ReportSubmission $submission)
+    {
+        if (!$this->submissions->contains($submission)) {
+            $this->submissions->add($submission);
+        }
+    }
+
+
 }

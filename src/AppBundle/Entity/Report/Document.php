@@ -169,6 +169,7 @@ class Document
     public function setReport(Report $report)
     {
         $this->report = $report;
+        $this->report->addDocument($this);
         return $this;
     }
 }

@@ -47,11 +47,17 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $client = new EntityDir\Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-31'), new \DateTime('2015-12-31'));
-        $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
-        $this->report->setNoAssetToAdd(false)->addAsset($this->asset1);
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
-        $this->report->addAccount($this->bank1);
+        $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
+        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-31'), new \DateTime('2015-12-31'));
+        $this->report
+            ->setNoAssetToAdd(false)
+            ->addAsset($this->asset1)
+            ->addAccount($this->bank1)
+            ->setSubmittedBy($this->user);
+
+        $this->document1 = (new EntityDir\Report\Document($this->report))->setFileName('file1.pdf');
+        $this->report->addDocument($this->document1);
 
         // mock em
         $this->repos[ReportEntity::class] = m::mock(EntityDir\Repository\ReportRepository::class);
@@ -90,12 +96,19 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
     {
         // mocks
         $this->em->shouldReceive('flush')->with($this->report)->once();
+        $this->em->shouldReceive('flush')->with(anInstanceOf(EntityDir\Report\ReportSubmission::class))->once();
+        $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
         $this->em->shouldReceive('detach');
-        $this->em->shouldReceive('flush');
+        // assert persists on report and submission record
         $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
             return $report instanceof Report;
         }));
+        // assert persists on report and submission record
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+            return $report instanceof EntityDir\Report\ReportSubmission;
+        }));
         // assert asset and bank accounts are copied. can't get from the returned report as they are added form the "Many" side
+        // TODO add a "Report.add<Entity>()" with $this->contains so that it can be tested from the report itself
         $this->em->shouldReceive('persist')->with(\Mockery::on(function($asset) {
             return $asset instanceof EntityDir\Report\AssetProperty && $asset->getAddress() === 'SW1';
         }))->once();
@@ -109,10 +122,16 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         // assert current report
         $this->assertTrue($this->report->getSubmitted());
 
+        // assert reportsubmissions
+        $submission = $this->report->getSubmissions()->first();
+        $this->assertEquals($this->document1, $submission->getDocuments()->first());
+        $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
+
         //assert new year report
         $this->assertEquals($this->report->getType(), $newYearReport->getType());
         $this->assertEquals('2016-01-01', $newYearReport->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
+
     }
 
     public function tearDown()

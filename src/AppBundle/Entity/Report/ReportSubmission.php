@@ -30,7 +30,7 @@ class ReportSubmission
      * @var Report
      *
      * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="submissions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -56,6 +56,19 @@ class ReportSubmission
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $archivedBy;
+
+    /**
+     * ReportSubmission constructor.
+     * @param Report $report
+     * @param ArrayCollection $documents
+     */
+    public function __construct(Report $report, ArrayCollection $documents)
+    {
+        $this->report = $report;
+        $this->report->addSubmissions($this);
+        $this->documents = $documents; // this will change when documents are added AFTER the first submission. skipping archived
+        $this->createdBy = $report->getSubmittedBy();
+    }
 
     /**
      * @return int
