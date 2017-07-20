@@ -100,20 +100,23 @@ class AccountController extends RestController
     private function fillAccountData(EntityDir\Report\BankAccount $account, array $data)
     {
         //basicdata
-        if (array_key_exists('bank', $data)) {
-            $account->setBank($data['bank']);
-        }
-
         if (array_key_exists('account_type', $data)) {
             $account->setAccountType($data['account_type']);
         }
 
-        if (array_key_exists('sort_code', $data)) {
-            $account->setSortCode($data['sort_code']);
+        if ($account->requiresBankName()) {
+            if (array_key_exists('bank', $data)) {
+                $account->setBank($data['bank']);
+            }
+        } else {
+            $account->setBank(null);
         }
 
-        if (!$account->requiresBankNameAndSortCode()) {
-            $account->setBank(null);
+        if ($account->requiresSortCode()) {
+            if (array_key_exists('sort_code', $data)) {
+                $account->setSortCode($data['sort_code']);
+            }
+        } else {
             $account->setSortCode(null);
         }
 
