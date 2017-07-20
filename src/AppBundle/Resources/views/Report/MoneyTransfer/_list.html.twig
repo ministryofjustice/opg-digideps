@@ -57,7 +57,7 @@
                 <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <td class="width-quarter">
                         {% set account = transfer.accountFrom %}
-                        {% if account.requiresBankNameAndSortCode %}
+                        {% if account.requiresBankName %}
                             {{ account.bank }}<br/>
                         {% endif %}
                         <p class="font-xsmall flush--ends">
@@ -69,7 +69,7 @@
                     </td>
                     <td class="width-quarter">
                         {% set account = transfer.accountTo %}
-                        {% if account.requiresBankNameAndSortCode %}
+                        {% if account.requiresBankName %}
                             {{ account.bank }}<br/>
                         {% endif %}
                         <p class="font-xsmall flush--ends">

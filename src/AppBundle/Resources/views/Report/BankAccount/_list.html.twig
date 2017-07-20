@@ -29,12 +29,12 @@
     {% for account in report.bankAccounts %}
         <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">
             <td>
-                {% if account.requiresBankNameAndSortCode %}
+                {% if account.requiresBankName %}
                     {{ account.bank }}<br/>
                 {% endif %}
                 <p class="font-xsmall flush--ends">
                     {{ account.accountTypeText }}<br/>
-                    {% if account.requiresBankNameAndSortCode %}
+                    {% if account.requiresSortCode %}
                         Sort code: {{ account.sortCode }}<br/>
                     {% endif %}
                     Account number: ****{{ account.accountNumber }}<br/>
