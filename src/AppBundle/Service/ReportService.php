@@ -196,7 +196,6 @@ class ReportService
         $this->_em->persist($submission);
 
         $newYearReport = $this->createNextYearReport($currentReport);
-        //$newYearReport = $currentReport; //DEBUG purposes only, to allow resubmitting documents in same report
 
         // single transaction flush: current report, submission, new year report
         $this->_em->flush();
