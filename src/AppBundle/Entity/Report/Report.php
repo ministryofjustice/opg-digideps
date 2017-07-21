@@ -76,6 +76,8 @@ class Report
     /**
      * @var int
      *
+     * //TODO change JMS group to report-client
+     *
      * @JMS\Groups({"client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")

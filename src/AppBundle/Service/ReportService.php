@@ -189,7 +189,9 @@ class ReportService
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
         foreach($currentReport->getDocuments() as $document){
-            $document->setReportSubmission($submission);
+            if (!$document->getReportSubmission()) {
+                $document->setReportSubmission($submission);
+            }
         }
         $this->_em->persist($submission);
 
