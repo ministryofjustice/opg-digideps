@@ -37,7 +37,10 @@ class Document
     }
 
     /**
+     * @var int
+     *
      * @JMS\Type("integer")
+     * @JMS\Groups({"document"})
      */
     private $id;
 
@@ -75,13 +78,23 @@ class Document
     private $storageReference;
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param int $id
+     * @return Document
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * @return string
@@ -137,5 +150,4 @@ class Document
     {
         $this->file = $file;
     }
-
 }

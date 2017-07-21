@@ -130,7 +130,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_hasDebts_1 | no |
 
-  Scenario: PA add account
+  Scenario: PA add current account
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-bank_accounts, start"
@@ -138,12 +138,59 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | account_accountType_0 | current |
     # add account n.1 (current)
+    And I should see an "input#account_bank" element
+    And I should see an "input#account_sortCode_sort_code_part_1" element
+    And I should see an "input#account_sortCode_sort_code_part_2" element
+    And I should see an "input#account_sortCode_sort_code_part_3" element
     And the step with the following values CAN be submitted:
       | account_bank                      | HSBC - main account |
       | account_accountNumber             | 01ca                |
       | account_sortCode_sort_code_part_1 | 11                  |
       | account_sortCode_sort_code_part_2 | 22                  |
       | account_sortCode_sort_code_part_3 | 33                  |
+      | account_isJointAccount_1          | no                  |
+    And the step with the following values CAN be submitted:
+      | account_openingBalance | 100.40 |
+      | account_closingBalance | 100.40 |
+    # add another: no
+    And I choose "no" when asked for adding another record
+
+  Scenario: PA add postoffice account (no sort code, no bank name)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts, add"
+    # step 1
+    And the step with the following values CAN be submitted:
+      | account_accountType_0 | postoffice |
+    # add account n.1 (current)
+    And the step with the following values CAN be submitted:
+      | account_accountNumber             | 01ca                |
+      | account_isJointAccount_1          | no                  |
+    And I should not see an "input#account_bank" element
+    And I should not see an "input#account_sortCode_sort_code_part_1" element
+    And I should not see an "input#account_sortCode_sort_code_part_2" element
+    And I should not see an "input#account_sortCode_sort_code_part_3" element
+    And the step with the following values CAN be submitted:
+      | account_openingBalance | 100.40 |
+      | account_closingBalance | 100.40 |
+    # add another: no
+    And I choose "no" when asked for adding another record
+    
+  Scenario: PA add no sortcode account (still requires bank name)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts, add"
+    # step 1
+    And the step with the following values CAN be submitted:
+      | account_accountType_0 | other_no_sortcode |
+    # add account n.1 (current)
+    And I should see an "input#account_bank" element
+    And I should not see an "input#account_sortCode_sort_code_part_1" element
+    And I should not see an "input#account_sortCode_sort_code_part_2" element
+    And I should not see an "input#account_sortCode_sort_code_part_3" element
+    And the step with the following values CAN be submitted:
+      | account_bank                      | Bank of Jack        |
+      | account_accountNumber             | 01ca                |
       | account_isJointAccount_1          | no                  |
     And the step with the following values CAN be submitted:
       | account_openingBalance | 100.40 |
