@@ -37,7 +37,7 @@ class ReportSubmission
      *
      * @JMS\Type("AppBundle\Entity\Report\Report")
      *
-     * @JMS\Groups({"report-submission-report"})
+     * @JMS\Groups({"report-submission"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="submissions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

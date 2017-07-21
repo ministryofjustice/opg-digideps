@@ -13,6 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ReportSubmissionController extends RestController
 {
+    private static $jmsGroups = [
+        'report-submission',
+        'report', 'client',
+        'documents'
+    ];
 
     /**
      * @Route("")
@@ -35,13 +40,7 @@ class ReportSubmissionController extends RestController
             ->orderBy('rs.id', 'DESC')
         ;
 
-        $this->setJmsSerialiserGroups([
-            'report-submission',
-            'report-submission-report',
-            'report', 'client', //
-            'documents', //storage ref etc..
-            'report-submission-archived-by'
-        ]);
+        $this->setJmsSerialiserGroups(self::$jmsGroups);
 
         return $qb->getQuery()->getResult();
     }
@@ -56,13 +55,7 @@ class ReportSubmissionController extends RestController
 
         $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
 
-        $this->setJmsSerialiserGroups([
-            'report-submission',
-            'report-submission-report',
-            'report', 'client', //
-            'documents',
-            'document-storage-reference'
-        ]);
+        $this->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
 
         return $ret;
     }
