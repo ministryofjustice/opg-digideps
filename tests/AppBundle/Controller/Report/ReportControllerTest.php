@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
@@ -45,7 +46,7 @@ class ReportControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(
             self::$deputy1,
-            ['setFirstname' => 'c1', 'setCaseNumber' => '101010101']
+            ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
         );
         self::fixtures()->flush();
         self::$report1 = self::fixtures()->createReport(self::$client1, [
@@ -150,6 +151,11 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2016-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $report->getEndDate()->format('Y-m-d'));
+
+        // add documents, needed for future tests
+        $document = new Document($report);
+        $document->setFileName('file1.pdf');
+        self::fixtures()->flush();
 
         return $report->getId();
     }
@@ -319,6 +325,35 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
         $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
+    }
+
+    /**
+     * @depends testSubmit
+     */
+    public function testReportSubmission()
+    {
+        $url = '/report-submission';
+
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+
+        $submission = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+        ])['data'][0];
+
+        $this->assertNotEmpty($submission['report']['client']['case_number']);
+        $this->assertNotEmpty($submission['report']['client']['firstname']);
+        $this->assertNotEmpty($submission['report']['client']['lastname']);
+
+        $this->assertEquals('file1.pdf', $submission['documents'][0]['file_name']);
+
+        $this->assertNotEmpty($submission['created_by']['firstname']);
+        $this->assertNotEmpty($submission['created_by']['lastname']);
+
+        $this->assertNotEmpty($submission['created_on']);
+
+        $this->assertArrayHasKey('archived_by', $submission);
     }
 
     public function testUpdateAuth()

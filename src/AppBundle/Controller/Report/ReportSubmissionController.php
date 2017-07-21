@@ -15,10 +15,10 @@ class ReportSubmissionController extends RestController
 {
     private static $jmsGroups = [
         'report-submission',
+        'report-client',
         'client-name',
         'client-case-number',
         'user-name',
-        'report', 'report-client',
         'documents'
     ];
 
@@ -38,7 +38,7 @@ class ReportSubmissionController extends RestController
             ->leftJoin('rs.report', 'r')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->join('rs.documents', 'd')
+            ->leftJoin('rs.documents', 'd')
             ->where('rs.archived = ' . ($archived ? 'true' : 'false') )
             ->orderBy('rs.id', 'DESC')
         ;
