@@ -6,6 +6,8 @@ firstname:
     label: First name
 lastname:
     label: Last name
+email:
+    label: Email
 address1:
     label: Address
 address2:
