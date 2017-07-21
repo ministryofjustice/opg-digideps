@@ -26,7 +26,8 @@
             {% if isNewPage %}</a>{% endif %}
     </h2>
 
-    <table class="push--bottom">
+    {% if  reportSubmissions | length %}
+      <table class="push--bottom">
         <thead>
         <tr>
             <th>Client</th>
@@ -50,7 +51,7 @@
                     {{ report.client.fullname }}
                 </td>
                 <td>
-                    {{ report.submittedBy.fullname | default('[report not submitted]') }}
+                    {{ reportSubmission.createdBy.fullname }}
                 </td>
                 <td>
                     {{ report.client.caseNumber }}
@@ -87,8 +88,8 @@
             </tr>
         {% endfor %}
         </tbody>
-
-    </table>
+      </table>
+    {% endif %}
 
 
 {% endblock %}
