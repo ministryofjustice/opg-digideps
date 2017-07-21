@@ -76,9 +76,9 @@ class Report
     /**
      * @var int
      *
-     * //TODO change JMS group to report-client
+     * //TODO JMs GROUP "client" is deprecated
      *
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "report-client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")

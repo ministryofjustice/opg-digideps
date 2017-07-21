@@ -46,7 +46,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * //TODO remove client group
+     * //TODO "client" JMS group is deprecated, use "user-clients" instead
      * @JMS\Groups({ "client", "user-clients"})
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})

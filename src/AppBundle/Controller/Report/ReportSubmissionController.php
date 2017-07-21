@@ -15,8 +15,10 @@ class ReportSubmissionController extends RestController
 {
     private static $jmsGroups = [
         'report-submission',
+        'client-name',
+        'client-case-number',
         'user-name',
-        'report', 'client',
+        'report', 'report-client',
         'documents'
     ];
 

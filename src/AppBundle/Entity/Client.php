@@ -41,7 +41,9 @@ class Client
     private $users;
 
     /**
-     * @JMS\Groups({"report"})
+     * //TODO JMS "report" group is deprecated, use "client-reports" instead
+     *
+     * @JMS\Groups({"report", "client-reports"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist"})
      */
@@ -56,7 +58,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "client-case-number"})
      *
      * @var string
      *
@@ -136,7 +138,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "client-name"})
      *
      * @var string
      *
@@ -146,7 +148,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "client-name"})
      *
      * @var string
      *
