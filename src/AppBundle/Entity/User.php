@@ -47,7 +47,7 @@ class User implements UserInterface
 
     /**
      * //TODO remove client group
-     * @JMS\Groups({"user-clients"})
+     * @JMS\Groups({ "client", "user-clients"})
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
      */
