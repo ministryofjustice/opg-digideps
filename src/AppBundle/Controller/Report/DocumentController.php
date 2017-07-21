@@ -38,41 +38,55 @@ class DocumentController extends RestController
     }
 
     /**
-     * Get document by ID
-     * Used to get the stroage reference, for downloading
+     * GET document by id
      *
-     * @Route("/document/{documentId}", requirements={"documentId":"\d+"})
+     * @Route("/document/{id}")
      * @Method({"GET"})
      */
-    public function getOneById(Request $request, $documentId)
+    public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
-
-        /* @var $document EntityDir\Report\Document */
-        $document = $this->findEntityBy(EntityDir\Report\Document::class, $documentId);
-
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['documents', 'document-storage-reference'];
+            ? (array) $request->query->get('groups') : ['documents'];
         $this->setJmsSerialiserGroups($serialisedGroups);
+
+        /* @var $document Document */
+        $document = $this->findEntityBy(Document::class, $id);
+
+        $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
         return $document;
     }
 
+
     /**
-     * @Route("/report/{id}/get-documents", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * Delete document.
+     *
+     * @Method({"DELETE"})
+     *
+     * @Route("/document/{id}")
      *
      * @param int $id
+     *
+     * @return array
      */
-    public function getById(Request $request, $id)
+    public function delete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
+        $this->get('logger')->debug('Deleting document ' . $id);
 
-        $this->setJmsSerialiserGroups(['report-documents', 'documents', 'document-storage-reference']);
+        try {
+            /** @var $document Document $note */
+            $document = $this->findEntityBy(Document::class, $id);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
+            // enable if the check above is removed and the note is available for editing for the whole team
+            $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
-        return $report;
+            $this->getEntityManager()->remove($document);
+
+            $this->getEntityManager()->flush($document);
+        } catch (\Exception $e) {
+            $this->get('logger')->error('Failed to delete document ID: ' . $id . ' - ' . $e->getMessage());
+        }
+
+        return [];
     }
-
 }
