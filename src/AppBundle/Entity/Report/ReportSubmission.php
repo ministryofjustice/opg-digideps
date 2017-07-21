@@ -3,7 +3,9 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Traits\CreationAudit;
+use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -13,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportSubmission
 {
+    // createdBy is the user who submitted the report
+    // createdOn = date where the report (or documents-only) get submitted
     use CreationAudit;
 
     /**
@@ -75,14 +79,14 @@ class ReportSubmission
     /**
      * ReportSubmission constructor.
      * @param Report $report
-     * @param ArrayCollection $documents
+     * @param User $createdBy
      */
-    public function __construct(Report $report, ArrayCollection $documents)
+    public function __construct(Report $report, User $createdBy)
     {
         $this->report = $report;
-        $this->report->addSubmissions($this);
-        $this->documents = $documents; // this will change when documents are added AFTER the first submission. skipping archived
-        $this->createdBy = $report->getSubmittedBy();
+        $this->report->addSubmissions($this);// double-link for UNIT test purposes
+        $this->documents = new ArrayCollection();
+        $this->createdBy = $createdBy;
         $this->archived = false;
     }
 
@@ -133,12 +137,14 @@ class ReportSubmission
     }
 
     /**
-     * @param ArrayCollection $documents
-     * @return ReportSubmission
+     * @param Document $document
+     * @return $this
      */
-    public function setDocuments($documents)
+    public function addDocument(Document $document)
     {
-        $this->documents = $documents;
+        if (!$this->documents->contains(($document))) {
+            $this->documents->add($document);
+        }
 
         return $this;
     }

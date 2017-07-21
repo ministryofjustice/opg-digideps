@@ -111,7 +111,6 @@ class ReportService
         }
 
         $this->_em->persist($newReport);
-        $this->_em->flush();
 
         return $newReport;
     }
@@ -186,16 +185,20 @@ class ReportService
             ->setSubmitted(true)
             ->setSubmittedBy($user)
             ->setSubmitDate($submitDate);
-        $this->_em->flush($currentReport);
 
-        // create submission record with non-archived document in the current report
-        $documentsToSubmit = $currentReport->getDocuments()->filter(function($document){
-            return !$document->isArchived();
-        });
-        $submission = new ReportSubmission($currentReport, $documentsToSubmit);
+        // create submission record with NEW documents (= documents not yet attached to a submission)
+        $submission = new ReportSubmission($currentReport, $user);
+        foreach($currentReport->getDocuments() as $document){
+            $document->setReportSubmission($submission);
+        }
         $this->_em->persist($submission);
-        $this->_em->flush($submission);
 
-        return $this->createNextYearReport($currentReport);
+        $newYearReport = $this->createNextYearReport($currentReport);
+        //$newYearReport = $currentReport; //DEBUG purposes only, to allow resubmitting documents in same report
+
+        // single transaction flush: current report, submission, new year report
+        $this->_em->flush();
+
+        return $newYearReport;
     }
 }

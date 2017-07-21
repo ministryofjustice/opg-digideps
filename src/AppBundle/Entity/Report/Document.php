@@ -70,7 +70,7 @@ class Document
      *
      * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\ReportSubmission", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $reportSubmission;
@@ -78,11 +78,15 @@ class Document
     /**
      * Document constructor.
      *
+     * Report is initially required, but will be set to null at submission time,
+     * and associated to a specific ReportSubmission instead
+     *
      * @param Report $report
      */
     public function __construct(Report $report)
     {
-        $this->setReport($report);
+        $this->report = $report;
+        $report->addDocument($this);
         $this->archived = false;
     }
 
@@ -152,14 +156,34 @@ class Document
     }
 
     /**
-     * @param Report $report
+     * @param Report|null $report
      *
      * @return $this
      */
-    public function setReport(Report $report)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
-        $this->report->addDocument($this);
         return $this;
     }
+
+    /**
+     * @return ReportSubmission
+     */
+    public function getReportSubmission()
+    {
+        return $this->reportSubmission;
+    }
+
+    /**
+     * @param ReportSubmission $reportSubmission
+     * @return Document
+     */
+    public function setReportSubmission(ReportSubmission $reportSubmission)
+    {
+        $this->reportSubmission = $reportSubmission;
+        $reportSubmission->addDocument($this);
+
+        return $this;
+    }
+
 }

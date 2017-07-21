@@ -719,7 +719,7 @@ class Report
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Document[]
      */
     public function getDocuments()
     {
