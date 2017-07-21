@@ -164,7 +164,7 @@ Feature: PA user edits report sections
       | account_accountType_0 | postoffice |
     # add account n.1 (current)
     And the step with the following values CAN be submitted:
-      | account_accountNumber             | 01ca                |
+      | account_accountNumber             | 2222                |
       | account_isJointAccount_1          | no                  |
     And I should not see an "input#account_bank" element
     And I should not see an "input#account_sortCode_sort_code_part_1" element
@@ -175,7 +175,7 @@ Feature: PA user edits report sections
       | account_closingBalance | 100.40 |
     # add another: no
     And I choose "no" when asked for adding another record
-    
+
   Scenario: PA add no sortcode account (still requires bank name)
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -190,13 +190,25 @@ Feature: PA user edits report sections
     And I should not see an "input#account_sortCode_sort_code_part_3" element
     And the step with the following values CAN be submitted:
       | account_bank                      | Bank of Jack        |
-      | account_accountNumber             | 01ca                |
+      | account_accountNumber             | 3333                |
       | account_isJointAccount_1          | no                  |
     And the step with the following values CAN be submitted:
       | account_openingBalance | 100.40 |
       | account_closingBalance | 100.40 |
     # add another: no
     And I choose "no" when asked for adding another record
+
+  Scenario: PA deletes bank account
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts"
+    And I click on "delete" in the "account-2222" region
+    Then I should see "Bank account deleted"
+    And I should be on "report/7/bank-accounts/summary"
+    When I click on "delete" in the "account-3333" region
+    Then I should see "Bank account deleted"
+    And I should be on "report/7/bank-accounts/summary"
+    #Bank accounts now removed
 
   Scenario: PA money in 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
