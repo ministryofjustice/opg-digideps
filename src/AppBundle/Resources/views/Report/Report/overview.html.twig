@@ -220,6 +220,17 @@
                 state: reportStatus.otherInfoState,
             } %}
 
+        <li id="report-submit-section" class="overview-section">
+            <h2 class="heading">{{ 'heading.caseDocuments' | trans() }}</h2>
+            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'documents',
+            report: report,
+            description: true,
+            state: reportStatus.actionsState,
+            list: true
+            } %}
+
             {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_submit',

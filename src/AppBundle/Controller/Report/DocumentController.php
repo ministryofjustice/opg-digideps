@@ -24,6 +24,19 @@ class DocumentController extends AbstractController
     ];
 
     /**
+     * @Route("/report/{reportId}/documents/start", name="documents")
+     * @Template()
+     */
+    public function startAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
      * @Template()
      */

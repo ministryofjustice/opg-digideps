@@ -28,3 +28,23 @@ reportDocuments:
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
+
+startPage:
+  htmlTitle: "Deputy report - supporting documents | GOV.UK"
+  pageSectionTitle: Supporting documents
+  pageSectionDescription1: |
+    Use this section to attach a supporting document (or documents) for this deputy report
+  startButton: Start attaching documents
+
+stepPage:
+  htmlTitle: "Deputy report - suporting documents | GOV.UK"
+  pageSectionTitle: Supporting documents
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Deputy report - supporting documents | GOV.UK"
+  pageSectionTitle: Supporting documents
+  pageContent:
+    weAskAbout: In this section, we asked you to provide any supporting documents.
+    checktheyrecorrect: Check they're correct and edit them where neccessary.
+

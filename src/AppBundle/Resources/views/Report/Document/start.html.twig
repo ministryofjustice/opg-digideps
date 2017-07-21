@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+
+	    <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ 'startPage.hiddenText01.content.listItem01' | trans(transOptions) }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
+                </ul>
+                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
+	</div>
+
+    <a href="{{ path('actions_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}
