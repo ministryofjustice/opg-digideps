@@ -19,6 +19,8 @@ class ReportSubmission
      * @var int
      *
      * @JMS\Type("integer")
+     * @JMS\Groups({"report-submission"})
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -30,6 +32,8 @@ class ReportSubmission
      * @var Report
      *
      * @JMS\Type("AppBundle\Entity\Report\Report")
+     *
+     * @JMS\Groups({"report-submission-report"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="submissions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -39,11 +43,11 @@ class ReportSubmission
      * @var ArrayCollection
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Report\Document")
-     * @ORM\JoinTable(name="report_submission_documents",
-     *         joinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="submission_id", referencedColumnName="id", onDelete="CASCADE")}
-     *     )
+     * @JMS\Groups({"report-submission"})
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="reportSubmission")
+     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
+     *
      * @ORM\OrderBy({"createdBy"="ASC"})
      */
     private $documents;
@@ -52,10 +56,21 @@ class ReportSubmission
      * @var User
      *
      * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"report-submission"})
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $archivedBy;
+
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
+     */
+    private $archived;
 
     /**
      * ReportSubmission constructor.
@@ -68,6 +83,7 @@ class ReportSubmission
         $this->report->addSubmissions($this);
         $this->documents = $documents; // this will change when documents are added AFTER the first submission. skipping archived
         $this->createdBy = $report->getSubmittedBy();
+        $this->archived = false;
     }
 
     /**
@@ -144,6 +160,23 @@ class ReportSubmission
         $this->archivedBy = $archivedBy;
 
         return $this;
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function isArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @param boolean $archived
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
     }
 
 }
