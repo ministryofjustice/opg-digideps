@@ -4,4 +4,4 @@ page:
   supportTitle: "{0} no documents found | {1} 1 document found | ]1,Inf[ %count% documents found"
   table:
     rows:
-      documents: "No documents | {1} 1 Document | ]1,Inf[ %count% Documents"
+      documents: "{0} No documents | {1} 1 Document | ]1,Inf[ %count% Documents"

@@ -29,27 +29,27 @@ class DocumentController extends AbstractController
     public function indexAction(Request $request, $what)
     {
         $archivedParam = ($what == 'new') ? 0 : 1;
-        $reports = $this->getRestClient()->get("/document/get-all-with-reports?archived={$archivedParam}", 'Report\\Report[]');
+        $reportSubmissions = $this->getRestClient()->get("/report-submission?archived={$archivedParam}", 'Report\\ReportSubmission[]');
 
         return [
             'what' => $what,
-            'reports' => $reports,
-            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reports))
+            'reportSubmissions' => $reportSubmissions,
+            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
         ];
     }
 
     /**
-     * @Route("/download/{reportId}", name="admin_documents_download")
+     * @Route("/download/{reportSubmissionId}", name="admin_documents_download")
      * @Template
      */
-    public function downloadAction(Request $request, $reportId)
+    public function downloadAction(Request $request, $reportSubmissionId)
     {
-        $report = $this->getRestClient()->get("report/{$reportId}/get-documents", 'Report\\Report');
+        $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
 
         // store files locally, for subsequent memory-less ZIP creation
         $s3Storage = $this->get('s3_storage');
         $filesToAdd = [];
-        foreach(array_slice($report->getDocuments(),0,99) as $document) {
+        foreach(array_slice($reportSubmission->getDocuments(),0,99) as $document) {
             $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
             $dfile = '/tmp/DDDocument'.$document->getId().microtime(1);
             file_put_contents($dfile, $content);
@@ -58,7 +58,7 @@ class DocumentController extends AbstractController
         }
 
         // create ZIP files and add previously-stored uploaded documents
-        $filename = '/tmp/Report'.$reportId.'_'. date('Y-m-d').'.zip'; //memory too risky
+        $filename = '/tmp/Report'.$reportSubmission->getReport()->getId().'_'. date('Y-m-d').'.zip'; //memory too risky
         $zip = new \ZipArchive();
         $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
         foreach($filesToAdd as $localname => $filePath) {
@@ -90,12 +90,12 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/archive/{reportId}", name="admin_document_archive")
+     * @Route("/archive/{reportSubmissionId}", name="admin_document_archive")
      * @Template
      */
-    public function archiveDocumentsAction(Request $request, $reportId)
+    public function archiveDocumentsAction(Request $request, $reportSubmissionId)
     {
-        $documentRefs = $this->getRestClient()->put("report/{$reportId}/archive-documents", []);
+        $documentRefs = $this->getRestClient()->put("report-submission/{$reportSubmissionId}/archive", []);
         foreach($documentRefs as $ref) {
             //$this->get('s3_storage')->delete($ref); // CHECK WHAT'S THE NEEDED LOGIC HERE. could be enough to soft delete and the cron will clean them up
         }

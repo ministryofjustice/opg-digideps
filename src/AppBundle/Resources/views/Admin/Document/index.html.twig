@@ -19,77 +19,76 @@
     <h2>
         {% if not isNewPage %} <a href="{{ path('admin_documents', {'what': 'new'}) }}">{% endif %}
             New
-        {% if not isNewPage %}</a>{% endif %}
+            {% if not isNewPage %}</a>{% endif %}
         |
         {% if isNewPage %}<a href="{{ path('admin_documents', {'what': 'archived'}) }}">{% endif %}
             Download archive
-        {% if isNewPage %}</a>{% endif %}
+            {% if isNewPage %}</a>{% endif %}
     </h2>
 
-    {% if countDocuments > 0 %}
-        <table class="push--bottom">
-            <thead>
-            <tr>
-                <th>Client</th>
-                <th>Deputy</th>
-                <th>Case number</th>
-                <th>Documents</th>
-                <th>Date</th>
-                <th>
-                    {% if isNewPage %}
-                    {% else %}
-                        User
-                    {% endif %}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for report in reports %}
-                {% if report.documents | length %}
-                    <tr>
-                        <td>
-                            {{ report.client.fullname }}
-                        </td>
-                        <td>
-                            {{ report.submittedBy.fullname | default('[report not submitted]') }}
-                        </td>
-                        <td>
-                            {{ report.client.caseNumber }}
-                        </td>
-                        <td class="width-half">
-                            <details class="push--bottom">
-                                <summary>
-                                    <span class="summary">{{ 'page.table.rows.documents' | transchoice(report.documents | length) }}</span>
-                                </summary>
-                                <div class="panel panel-border-narrow">
-                                    <ul class="list list-group" id="docs">
-                                        {% for document in report.documents %}
-                                            <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </details>
-                        </td>
-                        <td>
-                            {{ report.submitDate | date }}
-                        </td>
-                        <td class="">
-                            {% if isNewPage %}
-                            <a href="{{ path('admin_document_archive', {'reportId': report.id}) }}">Archive</a><br/>
-                                <a href="{{ path('admin_documents_download', {'reportId': report.id}) }}">Download</a>
-                            {% else %}
-                                {# not correct. backend will give a different value #}
-                                {{ app.user.firstname | first }}{{ app.user.lastname | first }}
-                            {% endif %}
-                        </td>
-                    </tr>
+    <table class="push--bottom">
+        <thead>
+        <tr>
+            <th>Client</th>
+            <th>Deputy</th>
+            <th>Case number</th>
+            <th>Documents</th>
+            <th>Date</th>
+            <th>
+                {% if isNewPage %}
+                {% else %}
+                    User
                 {% endif %}
-            {% endfor %}
-            </tbody>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reportSubmission in reportSubmissions %}
+            {% set report = reportSubmission.report %}
+            <tr>
+                <td>
+                    {{ report.client.fullname }}
+                </td>
+                <td>
+                    {{ report.submittedBy.fullname | default('[report not submitted]') }}
+                </td>
+                <td>
+                    {{ report.client.caseNumber }}
+                </td>
+                <td class="width-half">
+                    <details class="push--bottom">
+                        <summary>
+                            <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
+                        </summary>
+                        <div class="panel panel-border-narrow">
+                            <ul class="list list-group" id="docs">
+                                {% for document in reportSubmission.documents %}
+                                    <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </details>
+                </td>
+                <td>
+                    {{ reportSubmission.createdOn | date }}
+                </td>
+                <td class="">
+                    {% if isNewPage %}
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id}) }}">Archive</a>
+                        <br/>
+                        <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                    {% else %}
+                        {% if reportSubmission.archivedBy %}
+                            {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
 
-        </table>
-    {% endif %}
+    </table>
 
 
 {% endblock %}
