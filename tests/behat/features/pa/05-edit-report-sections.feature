@@ -204,11 +204,8 @@ Feature: PA user edits report sections
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
     Then I should see "Bank account deleted"
-    And I should be on "report/7/bank-accounts/summary"
     When I click on "delete" in the "account-3333" region
     Then I should see "Bank account deleted"
-    And I should be on "report/7/bank-accounts/summary"
-    #Bank accounts now removed
 
   Scenario: PA money in 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
