@@ -2,7 +2,7 @@
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
-{% set isNewPage = (what == 'new') %}
+{% set isNewPage = (status == 'new') %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
@@ -20,13 +20,13 @@
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'what': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path('admin_documents', {'status': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="bold-large">New</span>
                         <span class="data-item bold-xsmall">&nbsp;</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'what': 'archived'}) }}" role="tab" tabindex="0" >
+                    <a href="{{ path('admin_documents', {'status': 'archived'}) }}" role="tab" tabindex="0" >
                         <span class="bold-large">Archive</span>
                         <span class="data-item bold-xsmall">&nbsp;</span>
                     </a>

@@ -24,10 +24,10 @@ class DocumentController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/documents/{what}", name="report_documents", defaults={"what"="new"})
+     * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
      * @Template()
      */
-    public function indexAction(Request $request, $reportId, $what = 'new')
+    public function indexAction(Request $request, $reportId)
     {
         $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);

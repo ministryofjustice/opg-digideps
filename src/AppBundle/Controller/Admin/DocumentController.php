@@ -23,16 +23,16 @@ use Symfony\Component\HttpFoundation\Response;
 class DocumentController extends AbstractController
 {
     /**
-     * @Route("/list/{what}", name="admin_documents", defaults={"what"="new"})
+     * @Route("/list/{status}", name="admin_documents", defaults={"status"="new"})
      * @Template
      */
-    public function indexAction(Request $request, $what)
+    public function indexAction(Request $request, $status)
     {
-        $archivedParam = ($what == 'new') ? 0 : 1;
+        $archivedParam = ($status == 'new') ? 0 : 1;
         $reportSubmissions = $this->getRestClient()->get("/report-submission?archived={$archivedParam}", 'Report\\ReportSubmission[]');
 
         return [
-            'what' => $what,
+            'status' => $status,
             'reportSubmissions' => $reportSubmissions,
             'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
         ];
