@@ -121,7 +121,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->report->getSubmitted());
 
         // assert reportsubmissions
-        $submission = $this->report->getSubmissions()->first();
+        $submission = $this->report->getReportSubmissions()->first();
         $this->assertEquals($this->document1, $submission->getDocuments()->first());
         $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
 

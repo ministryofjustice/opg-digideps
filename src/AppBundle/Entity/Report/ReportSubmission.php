@@ -38,7 +38,7 @@ class ReportSubmission
      * @JMS\Type("AppBundle\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="submissions")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="reportSubmissions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -84,7 +84,7 @@ class ReportSubmission
     public function __construct(Report $report, User $createdBy)
     {
         $this->report = $report;
-        $this->report->addSubmissions($this);// double-link for UNIT test purposes
+        $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->archived = false;

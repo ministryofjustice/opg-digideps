@@ -222,7 +222,7 @@ class Report
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
      */
-    private $submissions;
+    private $reportSubmissions;
 
     /**
      * Report constructor
@@ -288,7 +288,7 @@ class Report
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->submissions = new ArrayCollection();
+        $this->reportSubmissions = new ArrayCollection();
     }
 
     /**
@@ -741,19 +741,19 @@ class Report
     /**
      * @return mixed
      */
-    public function getSubmissions()
+    public function getReportSubmissions()
     {
-        return $this->submissions;
+        return $this->reportSubmissions;
     }
 
     /**
      * @param ReportSubmission $submissions
      * @return Report
      */
-    public function addSubmissions(ReportSubmission $submission)
+    public function addReportSubmission(ReportSubmission $submission)
     {
-        if (!$this->submissions->contains($submission)) {
-            $this->submissions->add($submission);
+        if (!$this->reportSubmissions->contains($submission)) {
+            $this->reportSubmissions->add($submission);
         }
     }
 
