@@ -121,7 +121,7 @@ class ReportSubmission
      * @param Report $report
      * @return ReportSubmission
      */
-    public function setReport($report)
+    public function setReport(Report $report)
     {
         $this->report = $report;
 
@@ -158,10 +158,10 @@ class ReportSubmission
     }
 
     /**
-     * @param User $archivedBy
+     * @param User|null $archivedBy
      * @return ReportSubmission
      */
-    public function setArchivedBy($archivedBy)
+    public function setArchivedBy(User $archivedBy = null)
     {
         $this->archivedBy = $archivedBy;
 
