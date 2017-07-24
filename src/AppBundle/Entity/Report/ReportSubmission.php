@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Table(name="report_submission")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
 {
@@ -67,15 +67,6 @@ class ReportSubmission
      */
     private $archivedBy;
 
-
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
-     */
-    private $archived;
-
     /**
      * ReportSubmission constructor.
      * @param Report $report
@@ -87,7 +78,6 @@ class ReportSubmission
         $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
-        $this->archived = false;
     }
 
     /**
@@ -167,22 +157,4 @@ class ReportSubmission
 
         return $this;
     }
-
-
-    /**
-     * @return boolean
-     */
-    public function isArchived()
-    {
-        return $this->archived;
-    }
-
-    /**
-     * @param boolean $archived
-     */
-    public function setArchived($archived)
-    {
-        $this->archived = $archived;
-    }
-
 }

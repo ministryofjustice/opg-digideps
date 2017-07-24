@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 class ReportServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Report
+     * @var EntityDir\User
      */
     private $user;
 
@@ -28,11 +28,6 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
      * @var Report
      */
     private $report;
-
-    /**
-     * @var Fixtures
-     */
-//    protected $fixtures;
 
     /**
      * @var ReportService
@@ -49,7 +44,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $client->setCaseNumber('12345678');
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
         $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
-        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-31'), new \DateTime('2015-12-31'));
+        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
             ->addAsset($this->asset1)

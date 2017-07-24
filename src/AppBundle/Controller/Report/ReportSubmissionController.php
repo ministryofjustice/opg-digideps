@@ -30,22 +30,12 @@ class ReportSubmissionController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_UPLOAD]);
 
-        // use archived flag if existing. default to false
-        $archived = $request->get('archived', false);
-
-        $qb = $this->getRepository(EntityDir\Report\ReportSubmission::class)->createQueryBuilder('rs');
-        $qb
-            ->leftJoin('rs.report', 'r')
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('c.users', 'u')
-            ->leftJoin('rs.documents', 'd')
-            ->where('rs.archived = ' . ($archived ? 'true' : 'false') )
-            ->orderBy('rs.id', 'DESC')
-        ;
-
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
-        return $qb->getQuery()->getResult();
+        $archived = $request->get('archived', false);
+
+        return $this->getRepository(EntityDir\Report\ReportSubmission::class)
+            ->getReportSubmissions($archived);
     }
 
     /**
@@ -77,7 +67,6 @@ class ReportSubmissionController extends RestController
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
-        $reportSubmission->setArchived(true);
         $reportSubmission->setArchivedBy($this->getUser());
         $ret = [];
         foreach($reportSubmission->getDocuments() as $document) {

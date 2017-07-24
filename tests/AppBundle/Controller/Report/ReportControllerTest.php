@@ -154,7 +154,7 @@ class ReportControllerTest extends AbstractTestController
 
         // add documents, needed for future tests
         $document = new Document($report);
-        $document->setFileName('file1.pdf');
+        $document->setFileName('file1.pdf')->setStorageReference('storageref1');
         self::fixtures()->flush();
 
         return $report->getId();
@@ -328,32 +328,57 @@ class ReportControllerTest extends AbstractTestController
     }
 
     /**
+     * test for the whole ReportSubmission
+     * Done here as the data comes after the submissions
+     *
      * @depends testSubmit
      */
     public function testReportSubmission()
     {
-        $url = '/report-submission';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-
-        $submission = $this->assertJsonRequest('GET', $url, [
+        $urlNew = '/report-submission?archived=0';
+        $urlArchived = '/report-submission?archived=1';
+        $endpointCallOptions = [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
-        ])['data'][0];
+        ];
 
+
+        $this->assertEndpointNeedsAuth('GET', $urlNew);
+        $this->assertEndpointNotAllowedFor('GET', $urlNew, self::$tokenDeputy);
+
+        $data = $this->assertJsonRequest('GET', $urlNew, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+        ])['data'];
+
+        // assert submission (only one expected)
+        $this->assertCount(1, $data);
+        $submission = $data[0];
+        $this->assertNotEmpty($submission['id']);
         $this->assertNotEmpty($submission['report']['client']['case_number']);
         $this->assertNotEmpty($submission['report']['client']['firstname']);
         $this->assertNotEmpty($submission['report']['client']['lastname']);
-
         $this->assertEquals('file1.pdf', $submission['documents'][0]['file_name']);
-
         $this->assertNotEmpty($submission['created_by']['firstname']);
         $this->assertNotEmpty($submission['created_by']['lastname']);
-
         $this->assertNotEmpty($submission['created_on']);
-
         $this->assertArrayHasKey('archived_by', $submission);
+
+        $this->assertCount(0, $this->assertJsonRequest('GET', $urlArchived, $endpointCallOptions)['data']);
+
+        // test getOne endpoint
+        $data = $this->assertJsonRequest('GET', '/report-submission/' . $submission['id'], $endpointCallOptions)['data'];
+        $this->assertEquals($submission['id'], $data['id']);
+        $this->assertEquals('storageref1', $data['documents'][0]['storage_reference']);
+
+        // archive submission
+        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission['id'] . '/archive', $endpointCallOptions)['data'];
+        $this->assertEquals(['storageref1'], $data);
+
+        // check counts after submission
+        $this->assertCount(0, $this->assertJsonRequest('GET', $urlNew, $endpointCallOptions)['data']);
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived, $endpointCallOptions)['data']);
+
     }
 
     public function testUpdateAuth()
