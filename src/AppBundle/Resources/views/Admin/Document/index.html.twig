@@ -16,15 +16,24 @@
 
 {% block pageContent %}
 
-    <h2>
-        {% if not isNewPage %} <a href="{{ path('admin_documents', {'what': 'new'}) }}">{% endif %}
-            New
-            {% if not isNewPage %}</a>{% endif %}
-        |
-        {% if isNewPage %}<a href="{{ path('admin_documents', {'what': 'archived'}) }}">{% endif %}
-            Download archive
-            {% if isNewPage %}</a>{% endif %}
-    </h2>
+    <div class="tabs push--ends">
+        <div class="tabs-nav">
+            <ul class="tabs-list" role="tablist">
+                <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path('admin_documents', {'what': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
+                        <span class="bold-large">New</span>
+                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    </a>
+                </li>
+                <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path('admin_documents', {'what': 'archived'}) }}" role="tab" tabindex="0" >
+                        <span class="bold-large">Archive</span>
+                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
     {% if  reportSubmissions | length %}
       <table class="push--bottom">
@@ -56,7 +65,7 @@
                 <td>
                     {{ report.client.caseNumber }}
                 </td>
-                <td class="width-half">
+                <td>
                     <details class="push--bottom">
                         <summary>
                             <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
