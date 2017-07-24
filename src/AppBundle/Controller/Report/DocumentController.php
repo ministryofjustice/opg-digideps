@@ -48,7 +48,7 @@ class DocumentController extends AbstractController
             $uploadedFile = $document->getFile();
 
             /** @var UploadableFileInterface $fileToStore */
-            //$fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
+            $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
 
             try {
 //                $fileToStore->checkFile();
