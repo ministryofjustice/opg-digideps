@@ -284,7 +284,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
-            $report->setWishToProvideDocumentation((boolean) $data['wish_to_provide_documentation']);
+            $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
         }
 
         $this->getEntityManager()->flush();

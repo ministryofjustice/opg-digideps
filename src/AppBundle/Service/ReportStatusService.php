@@ -351,6 +351,36 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "documents-state"})
+     *
+     * @return array
+     */
+    public function getDocumentsState()
+    {
+        $numRecords = count($this->report->getDocuments());
+
+        if ($this->report->getWishToProvideDocumentation() === null) {
+            $status =  ['state' => self::STATE_NOT_STARTED];
+        }
+
+        if ($this->report->getWishToProvideDocumentation() === 'no') {
+            $status =  ['state' => self::STATE_DONE];
+        }
+
+        if ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords > 0) {
+            $status = ['state' => self::STATE_DONE];
+        }
+
+        if ($this->report->getWishToProvideDocumentation() === 'yes') {
+            $status = ['state' => self::STATE_INCOMPLETE];
+        }
+
+        return array_merge($status, ['nOfRecords' => $numRecords]);
+    }
+
+    /**
+     * @JMS\VirtualProperty
      * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *
@@ -427,6 +457,7 @@ class ReportStatusService
             'actions'    => $this->getActionsState()['state'],
             'otherInfo'  => $this->getOtherInfoState()['state'],
             'gifts'      => $this->getGiftsState()['state'],
+            'documents'  => $this->getDocumentsState()['state'],
         ];
 
         $type = $this->report->getType();

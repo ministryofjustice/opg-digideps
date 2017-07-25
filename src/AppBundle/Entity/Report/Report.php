@@ -225,10 +225,10 @@ class Report
     private $reportSubmissions;
 
     /**
-     * @var bool
+     * @var string
      * @JMS\Groups({"report", "wish-to-provide-documentation"})
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="wish_to_provide_documentation", type="boolean", nullable=true)
+     * @JMS\Type("string")
+     * @ORM\Column(name="wish_to_provide_documentation", type="string", nullable=true)
      */
     private $wishToProvideDocumentation;
 
@@ -720,6 +720,7 @@ class Report
      *     "money-in-short-state",
      *     "money-out-short-state",
      *     "fee-state",
+     *     "documents-state"
      * })
      *
      * @return ReportStatusService
@@ -766,6 +767,9 @@ class Report
         }
     }
 
+    /**
+     * @return null|string
+     */
     public function getWishToProvideDocumentation()
     {
         return $this->wishToProvideDocumentation;
