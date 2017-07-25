@@ -225,6 +225,14 @@ class Report
     private $reportSubmissions;
 
     /**
+     * @var bool
+     * @JMS\Groups({"report", "wish-to-provide-documentation"})
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="wish_to_provide_documentation", type="boolean", nullable=true)
+     */
+    private $wishToProvideDocumentation;
+
+    /**
      * Report constructor
      * Construct reports using the report service
      *
@@ -289,6 +297,7 @@ class Report
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->reportSubmissions = new ArrayCollection();
+        $this->wishToProvideDocumentation = null;
     }
 
     /**
@@ -757,5 +766,18 @@ class Report
         }
     }
 
+    public function getWishToProvideDocumentation()
+    {
+        return $this->wishToProvideDocumentation;
+    }
 
+    /**
+     * @param mixed $wishToProvideDocumentation
+     * @return $this
+     */
+    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    {
+        $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+        return $this;
+    }
 }

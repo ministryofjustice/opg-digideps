@@ -283,6 +283,10 @@ class ReportController extends RestController
             $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
         }
 
+        if (array_key_exists('wish_to_provide_documentation', $data)) {
+            $report->setWishToProvideDocumentation((boolean) $data['wish_to_provide_documentation']);
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
