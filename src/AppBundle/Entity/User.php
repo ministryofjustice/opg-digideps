@@ -25,7 +25,7 @@ class User implements UserInterface
     const TOKEN_EXPIRE_HOURS = 48;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_DOCUMENT_UPLOAD = 'ROLE_DOCUMENT_UPLOAD';
+    const ROLE_DOCUMENT_MANAGE = 'ROLE_DOCUMENT_MANAGE';
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';

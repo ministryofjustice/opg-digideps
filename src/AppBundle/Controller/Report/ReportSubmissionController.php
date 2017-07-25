@@ -28,7 +28,7 @@ class ReportSubmissionController extends RestController
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_UPLOAD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
 
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
@@ -44,7 +44,7 @@ class ReportSubmissionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_UPLOAD]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
 
         $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
 
@@ -63,7 +63,7 @@ class ReportSubmissionController extends RestController
      */
     public function archive(Request $request, $reportSubmissionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_UPLOAD);
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_MANAGE);
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
