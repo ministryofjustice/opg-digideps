@@ -2,7 +2,8 @@
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
-{% set isNewPage = (status == 'new') %}
+{% set isNewPage = (filters.status == 'new') %}
+{% set baseRoute = 'admin_documents' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
@@ -16,17 +17,32 @@
 
 {% block pageContent %}
 
+    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
+        <fieldset>
+            <legend class="visuallyhidden">Search</legend>
+            <label for="search" class="search-label">Search by client, deputy or case number</label>
+            <input type="text" id="search" name="q" value="{{ filters.q }}"
+                   class="js-search-focus search-input form-control">
+            <input type="hidden" name="status" value="{{ filters.status }}" />
+            <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
+            {% if filters.q %}
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear search</a>
+            {% endif %}
+        </fieldset>
+
+    </form>
+
     <div class="tabs push--ends">
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'status': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path(baseRoute, {'status': 'new', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="bold-large">New</span>
                         <span class="data-item bold-xsmall">&nbsp;</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'status': 'archived'}) }}" role="tab" tabindex="0" >
+                    <a href="{{ path(baseRoute, {'status': 'archived', 'q': filters.q}) }}" role="tab" tabindex="0" >
                         <span class="bold-large">Archive</span>
                         <span class="data-item bold-xsmall">&nbsp;</span>
                     </a>

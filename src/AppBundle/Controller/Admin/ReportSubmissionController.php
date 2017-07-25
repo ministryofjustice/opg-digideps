@@ -23,16 +23,19 @@ use Symfony\Component\HttpFoundation\Response;
 class ReportSubmissionController extends AbstractController
 {
     /**
-     * @Route("/list/{status}", name="admin_documents", defaults={"status"="new"})
+     * @Route("/list", name="admin_documents")
      * @Template
      */
-    public function indexAction(Request $request, $status)
+    public function indexAction(Request $request)
     {
-        $archivedParam = ($status == 'new') ? 0 : 1;
-        $reportSubmissions = $this->getRestClient()->get("/report-submission?archived={$archivedParam}", 'Report\\ReportSubmission[]');
+        $currentFilters = [
+            'q'      => $request->get('q'),
+            'status' => $request->get('status', 'new') // new | archived
+        ];
+        $reportSubmissions = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'Report\\ReportSubmission[]');
 
         return [
-            'status' => $status,
+            'filters' => $currentFilters,
             'reportSubmissions' => $reportSubmissions,
             'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
         ];
