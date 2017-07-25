@@ -51,7 +51,7 @@ class DocumentController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
-            ->setRoutes('documents', 'documents_step', 'report_documents', 'documents_summary')
+            ->setRoutes('documents', 'report_documents', 'documents_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
@@ -63,14 +63,7 @@ class DocumentController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
-            $reponse = $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
-
-            if ($fromPage == 'summary') {
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Answer edited'
-                );
-            }
+            $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
@@ -78,7 +71,6 @@ class DocumentController extends AbstractController
         return [
             'report'       => $report,
             'step'         => $step,
-            'reportStatus' => $report->getStatus(),
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
             'skipLink'     => $stepRedirector->getSkipLink(),
@@ -144,6 +136,7 @@ class DocumentController extends AbstractController
 
         return [
             'report'   => $report,
+            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
             'form'     => $form->createView(),
         ];

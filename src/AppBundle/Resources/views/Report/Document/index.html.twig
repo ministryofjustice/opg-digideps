@@ -71,6 +71,10 @@
         <p>{{ (page ~ '.noDocuments') | trans }}</p>
     {% endif %}
 
+    {% if step %}
+        <a href="{{ path('document_summary', {'reportId':report.id}) }}" class="button">Save and continue</a>
+    {% endif %}
+
     <script>
         $(document).ready(function () {
             $('#upload_form').submit(function (e) {

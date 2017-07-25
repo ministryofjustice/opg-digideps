@@ -48,7 +48,7 @@ class DocumentType extends AbstractType
                 /* @var $data Report */
                 $data = $form->getData();
 
-                $validationGroups = ['documents-provide-documents-choice'];
+                $validationGroups = ['wish-to-provide-documentation'];
                 if ($data->getWishToProvideDocumentation() == 'yes') {
                     $validationGroups = ['documents-provide-documents'];
                 }
