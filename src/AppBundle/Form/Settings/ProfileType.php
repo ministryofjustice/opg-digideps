@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Pa;
+namespace AppBundle\Form\Settings;
 
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -14,29 +14,38 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class ProfileType extends AbstractType
 {
-    /**
-     * @var User
-     */
-    private $loggedInUser = null;
+    protected $validationGroups;
 
     /**
-     * @param $loggedInUser
+     * ProfileType constructor.
+     * @param $validationGroups array
      */
-    public function __construct(User $loggedInUser)
+    public function __construct($validationGroups)
     {
-        $this->loggedInUser = $loggedInUser;
+        $this->validationGroups = $validationGroups;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $loggedInUser = $builder->getData();
+
         $builder
             ->add('firstname', 'text', ['required' => true])
             ->add('lastname' , 'text', ['required' => true])
-            ->add('email'    , 'text', ['required' => true])
-            ->add('jobTitle' , 'text', ['required' => !empty($this->loggedInUser)])
-            ->add('phoneMain', 'text', ['required' => !empty($this->loggedInUser)]);
+            ->add('address1' , 'text')
+            ->add('address2' , 'text')
+            ->add('address3' , 'text')
+            ->add('addressPostcode' , 'text')
+            ->add('addressCountry', 'country', ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
+            ->add('phoneMain', 'text', ['required' => true])
+            ->add('phoneAlternative', 'text')
+            ->add('email'    , 'text', ['required' => true]);
 
-            if ($this->loggedInUser->isPaAdministrator()) {
+            if ($loggedInUser->isDeputyPa()) {
+                $builder->add('jobTitle', 'text', ['required' => true]);
+            }
+
+            if ($loggedInUser->isPaAdministrator()) {
                 $builder->add('removeAdmin', 'choice', [
                     'choices' => ['remove-admin' => 'Give up administrator rights'],
                     'expanded' => true,
@@ -52,8 +61,8 @@ class ProfileType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'pa-profile',
-            'validation_groups'  => ['user_details_pa'],
+            'translation_domain' => 'settings',
+            'validation_groups'  => $this->validationGroups,
             'data_class'         => User::class,
         ]);
     }
