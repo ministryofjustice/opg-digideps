@@ -1,0 +1,27 @@
+{% set translationDomain = translationDomain %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="heading-medium">{{ (page ~ '.documentList') | trans }}</h2>
+
+{% if report.documents | length > 0 %}
+    <table>
+        <thead>
+        <th>{{ (page ~ '.filename') | trans }}</th>
+        <th>{{ (page ~ '.dateAttached') | trans }}</th>
+        <th></th>
+        </thead>
+        <tbody>
+        {% for document in report.documents %}
+            <tr>
+                <td>{{ document.fileName }}</td>
+                <td>{{ document.createdOn | date("j F Y H:i") }}</td>
+                <td>
+                    <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id}) }}" class="behat-link-delete-documents-button">{{ (page ~ '.deleteDocument') | trans }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{{ (page ~ '.noDocuments') | trans }}</p>
+{% endif %}

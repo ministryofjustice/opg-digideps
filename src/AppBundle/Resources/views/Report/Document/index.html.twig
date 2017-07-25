@@ -46,33 +46,13 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
-    <h2 class="heading-medium">{{ (page ~ '.documentList') | trans }}</h2>
-
-    {% if report.documents | length > 0 %}
-        <table>
-            <thead>
-            <th>{{ (page ~ '.filename') | trans }}</th>
-            <th>{{ (page ~ '.dateAttached') | trans }}</th>
-            <th></th>
-            </thead>
-            <tbody>
-            {% for document in report.documents %}
-                <tr>
-                    <td>{{ document.fileName }}</td>
-                    <td>{{ document.createdOn | date("j F Y H:i") }}</td>
-                    <td>
-                        <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id}) }}" class="behat-link-delete-documents-button">{{ (page ~ '.deleteDocument') | trans }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>{{ (page ~ '.noDocuments') | trans }}</p>
-    {% endif %}
+    {% include 'AppBundle:Report/Document:_documentList.html.twig'  with {
+    'translationDomain': translationDomain,
+    'page' : page
+    } %}
 
     {% if step %}
-        <a href="{{ path('document_summary', {'reportId':report.id}) }}" class="button">Save and continue</a>
+        <a href="{{ path('report_documents_summary', {'reportId':report.id, 'step':3, 'from':'report_documents'}) }}" class="button">Save and continue</a>
     {% endif %}
 
     <script>
