@@ -42,6 +42,7 @@
                     <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{% trans %}Upload PA{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{% trans %}nav.documents{% endtrans %}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_AD') %}

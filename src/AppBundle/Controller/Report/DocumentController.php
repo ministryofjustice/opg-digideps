@@ -24,7 +24,7 @@ class DocumentController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/documents", name="report_documents")
+     * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
      * @Template()
      */
     public function indexAction(Request $request, $reportId)
@@ -51,10 +51,7 @@ class DocumentController extends AbstractController
             $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
 
             try {
-//                $fileUploader->uploadFile($report, $uploadedFile);
-
 //                $fileToStore->checkFile();
-
 //                if ($fileToStore->isSafe())
 //                {
                     $fileUploader->uploadFile($report, $uploadedFile);

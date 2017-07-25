@@ -1,0 +1,104 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-documents" %}
+{% set transOptions = {} %}
+{% set isNewPage = (status == 'new') %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(countDocuments) }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="tabs push--ends">
+        <div class="tabs-nav">
+            <ul class="tabs-list" role="tablist">
+                <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path('admin_documents', {'status': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
+                        <span class="bold-large">New</span>
+                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    </a>
+                </li>
+                <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path('admin_documents', {'status': 'archived'}) }}" role="tab" tabindex="0" >
+                        <span class="bold-large">Archive</span>
+                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {% if  reportSubmissions | length %}
+      <table class="push--bottom">
+        <thead>
+        <tr>
+            <th>Client</th>
+            <th>Deputy</th>
+            <th>Case number</th>
+            <th>Documents</th>
+            <th>Date</th>
+            <th>
+                {% if isNewPage %}
+                {% else %}
+                    User
+                {% endif %}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reportSubmission in reportSubmissions %}
+            {% set report = reportSubmission.report %}
+            <tr>
+                <td>
+                    {{ report.client.fullname }}
+                </td>
+                <td>
+                    {{ reportSubmission.createdBy.fullname }}
+                </td>
+                <td>
+                    {{ report.client.caseNumber }}
+                </td>
+                <td>
+                    <details class="push--bottom">
+                        <summary>
+                            <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
+                        </summary>
+                        <div class="panel panel-border-narrow">
+                            <ul class="list list-group" id="docs">
+                                {% for document in reportSubmission.documents %}
+                                    <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </details>
+                </td>
+                <td>
+                    {{ reportSubmission.createdOn | date }}
+                </td>
+                <td class="">
+                    {% if isNewPage %}
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id}) }}">Archive</a>
+                        <br/>
+                        <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                    {% else %}
+                        {% if reportSubmission.archivedBy %}
+                            {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+
+{% endblock %}
