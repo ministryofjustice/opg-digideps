@@ -237,15 +237,23 @@ class Report
      * @var Document[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @Assert\NotBlank(message="documents.wishToUploadDocumentsDetails.notBlank", groups={"documents-provide-documents"})
      */
     private $documents;
-
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
      * @var Status
      */
     private $status;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
+     *
+     * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
+     */
+    private $wishToProvideDocumentation;
 
     /**
      * @return int $id
@@ -872,5 +880,24 @@ class Report
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWishToProvideDocumentation()
+    {
+        return $this->wishToProvideDocumentation;
+    }
+
+    /**
+     * @param $wishToProvideDocumentation
+     * @return $this
+     */
+    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    {
+        $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+
+        return $this;
     }
 }

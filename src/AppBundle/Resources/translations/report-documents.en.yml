@@ -40,11 +40,13 @@ stepPage:
   htmlTitle: "Deputy report - suporting documents | GOV.UK"
   pageSectionTitle: Supporting documents
   backLink: Back
-
+  form:
+    wishToUploadDocumentation:
+        label: Would you like to provide documentation?
+        notBlank:
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageSectionTitle: Supporting documents
   pageContent:
     weAskAbout: In this section, we asked you to provide any supporting documents.
     checktheyrecorrect: Check they're correct and edit them where neccessary.
-

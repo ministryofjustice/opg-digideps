@@ -37,6 +37,55 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/documents/step/{step}", name="documents_step")
+     * @Template()
+     */
+    public function stepAction(Request $request, $reportId, $step)
+    {
+        $totalSteps = 3;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('document_summary', ['reportId' => $reportId]);
+        }
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector()
+            ->setRoutes('documents', 'documents_step', 'report_documents', 'documents_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId' => $reportId]);
+
+        $form = $this->createForm(new FormDir\Report\DocumentType($this->get('translator')), $report);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            /* @var $data EntityDir\Report\Report */
+            $data = $form->getData();
+
+            $reponse = $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
+
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Answer edited'
+                );
+            }
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+        }
+
+        return [
+            'report'       => $report,
+            'step'         => $step,
+            'reportStatus' => $report->getStatus(),
+            'form'         => $form->createView(),
+            'backLink'     => $stepRedirector->getBackLink(),
+            'skipLink'     => $stepRedirector->getSkipLink(),
+        ];
+    }
+
+    /**
      * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
      * @Template()
      */
