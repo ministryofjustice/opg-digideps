@@ -335,8 +335,8 @@ class ReportControllerTest extends AbstractTestController
      */
     public function testReportSubmission()
     {
-        $urlNew = '/report-submission?archived=0';
-        $urlArchived = '/report-submission?archived=1';
+        $urlNew = '/report-submission?status=new';
+        $urlArchived = '/report-submission?status=archived';
         $endpointCallOptions = [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
@@ -378,6 +378,17 @@ class ReportControllerTest extends AbstractTestController
         // check counts after submission
         $this->assertCount(0, $this->assertJsonRequest('GET', $urlNew, $endpointCallOptions)['data']);
         $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived, $endpointCallOptions)['data']);
+
+        //check search
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived.'&q=101010101', $endpointCallOptions)['data']);
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived.'&q=c1', $endpointCallOptions)['data']);
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived.'&q=l1', $endpointCallOptions)['data']);
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived.'&q=test', $endpointCallOptions)['data']);
+        $this->assertCount(1, $this->assertJsonRequest('GET', $urlArchived.'&q=deputy', $endpointCallOptions)['data']);
+        // check no results with data not there
+        $this->assertCount(0, $this->assertJsonRequest('GET', $urlArchived.'&q=c3', $endpointCallOptions)['data']);
+        $this->assertCount(0, $this->assertJsonRequest('GET', $urlArchived.'&q=10101010', $endpointCallOptions)['data']);
+        $this->assertCount(0, $this->assertJsonRequest('GET', $urlArchived.'&q=101010102', $endpointCallOptions)['data']);
 
     }
 

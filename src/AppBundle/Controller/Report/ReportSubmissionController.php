@@ -30,12 +30,14 @@ class ReportSubmissionController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
 
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
-        $archived = $request->get('archived', false);
-
-        return $this->getRepository(EntityDir\Report\ReportSubmission::class)
-            ->getReportSubmissions($archived);
+        return $repo->getReportSubmissions(
+            $request->get('status') == 'archived', //archived
+            $request->get('q', false) // query search
+        );
     }
 
     /**
