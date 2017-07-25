@@ -231,13 +231,11 @@ class Report
      * @var string
      */
     private $metadata;
-
-
+    
     /**
      * @var Document[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
-     * @Assert\NotBlank(message="documents.wishToUploadDocumentsDetails.notBlank", groups={"documents-provide-documents"})
      */
     private $documents;
 
