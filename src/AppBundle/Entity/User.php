@@ -25,6 +25,7 @@ class User implements UserInterface
     const TOKEN_EXPIRE_HOURS = 48;
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_DOCUMENT_MANAGE = 'ROLE_DOCUMENT_MANAGE';
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
@@ -45,7 +46,8 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @JMS\Groups({ "client"})
+     * //TODO "client" JMS group is deprecated, use "user-clients" instead
+     * @JMS\Groups({ "client", "user-clients"})
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
      */
@@ -63,7 +65,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by"})
+     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -74,7 +76,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by"})
+     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
      */
     private $lastname;
 

@@ -86,6 +86,7 @@ security:
             stateless:   true
 
     role_hierarchy:
+        ROLE_ADMIN:           ROLE_DOCUMENT_MANAGE
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY
         ROLE_PA:              ROLE_DEPUTY
         ROLE_PA_ADMIN:        ROLE_DEPUTY

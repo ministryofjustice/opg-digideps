@@ -48,11 +48,12 @@ class Document
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"documents"})
+     * @JMS\Groups({"document-storage-reference"})
      *
      * @ORM\Column(name="storage_reference", type="string", length=150, nullable=true)
      */
     private $storageReference;
+
 
     /**
      * @var Report
@@ -65,13 +66,28 @@ class Document
     private $report;
 
     /**
+     * @var ReportSubmission
+     *
+     * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
+     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $reportSubmission;
+
+    /**
      * Document constructor.
+     *
+     * Report is initially required, but will be set to null at submission time,
+     * and associated to a specific ReportSubmission instead
      *
      * @param Report $report
      */
     public function __construct(Report $report)
     {
-        $this->setReport($report);
+        $this->report = $report;
+        $report->addDocument($this);
+        $this->archived = false;
     }
 
     /**
@@ -140,13 +156,34 @@ class Document
     }
 
     /**
-     * @param Report $report
+     * @param Report|null $report
      *
      * @return $this
      */
-    public function setReport(Report $report)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
         return $this;
     }
+
+    /**
+     * @return ReportSubmission
+     */
+    public function getReportSubmission()
+    {
+        return $this->reportSubmission;
+    }
+
+    /**
+     * @param ReportSubmission $reportSubmission
+     * @return Document
+     */
+    public function setReportSubmission(ReportSubmission $reportSubmission)
+    {
+        $this->reportSubmission = $reportSubmission;
+        $reportSubmission->addDocument($this);
+
+        return $this;
+    }
+
 }

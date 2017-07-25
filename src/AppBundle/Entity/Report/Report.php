@@ -76,7 +76,9 @@ class Report
     /**
      * @var int
      *
-     * @JMS\Groups({"client"})
+     * //TODO JMs GROUP "client" is deprecated
+     *
+     * @JMS\Groups({"client", "report-client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
@@ -217,6 +219,12 @@ class Report
     private $documents;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
+     */
+    private $reportSubmissions;
+
+    /**
      * Report constructor
      * Construct reports using the report service
      *
@@ -280,6 +288,7 @@ class Report
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->reportSubmissions = new ArrayCollection();
     }
 
     /**
@@ -712,7 +721,7 @@ class Report
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Document[]
      */
     public function getDocuments()
     {
@@ -720,13 +729,33 @@ class Report
     }
 
     /**
-     * @param ArrayCollection $documents
-     *
-     * @return $this
+     * @param Document $document
      */
-    public function setDocuments($documents)
+    public function addDocument(Document $document)
     {
-        $this->documents = $documents;
-        return $this;
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+        }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReportSubmissions()
+    {
+        return $this->reportSubmissions;
+    }
+
+    /**
+     * @param ReportSubmission $submissions
+     * @return Report
+     */
+    public function addReportSubmission(ReportSubmission $submission)
+    {
+        if (!$this->reportSubmissions->contains($submission)) {
+            $this->reportSubmissions->add($submission);
+        }
+    }
+
+
 }

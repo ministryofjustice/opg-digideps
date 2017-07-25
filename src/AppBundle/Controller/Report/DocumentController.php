@@ -3,22 +3,24 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
+use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
 {
+
     /**
      * @Route("/report/{reportId}/document", requirements={"reportId":"\d+"})
      * @Method({"POST"})
      */
     public function add(Request $request, $reportId)
     {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
+
         /* @var $report Report */
-        $report = $this->findEntityBy(Report::class, $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
@@ -26,7 +28,7 @@ class DocumentController extends RestController
             'file_name' => 'notEmpty',
             'storage_reference' => 'notEmpty'
         ]);
-        $document = new Document($report);
+        $document = new EntityDir\Report\Document($report);
         $document->setCreatedBy($this->getUser());
         $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);

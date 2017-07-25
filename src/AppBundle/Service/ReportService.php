@@ -8,8 +8,10 @@ use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
@@ -64,7 +66,7 @@ class ReportService
      *
      * @return Report
      */
-    public function createNextYearReport(Report $oldReport)
+    private function createNextYearReport(Report $oldReport)
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
@@ -109,7 +111,6 @@ class ReportService
         }
 
         $this->_em->persist($newReport);
-        $this->_em->flush();
 
         return $newReport;
     }
@@ -162,5 +163,43 @@ class ReportService
         }
 
         $this->_em->flush();
+    }
+
+    /**
+     * Set report submitted and create a new year report
+     *
+     * @param Report $currentReport
+     * @param User $user
+     * @param \DateTime $submitDate
+     *
+     * @return Report new year's report
+     */
+    public function submit(Report $currentReport, User $user, \DateTime $submitDate)
+    {
+        if (!$currentReport->getAgreedBehalfDeputy()) {
+            throw new \RuntimeException('Report must be agreed for submission');
+        }
+
+        // update report submit flag, who submitted and date
+        $currentReport
+            ->setSubmitted(true)
+            ->setSubmittedBy($user)
+            ->setSubmitDate($submitDate);
+
+        // create submission record with NEW documents (= documents not yet attached to a submission)
+        $submission = new ReportSubmission($currentReport, $user);
+        foreach($currentReport->getDocuments() as $document){
+            if (!$document->getReportSubmission()) {
+                $document->setReportSubmission($submission);
+            }
+        }
+        $this->_em->persist($submission);
+
+        $newYearReport = $this->createNextYearReport($currentReport);
+
+        // single transaction flush: current report, submission, new year report
+        $this->_em->flush();
+
+        return $newYearReport;
     }
 }
