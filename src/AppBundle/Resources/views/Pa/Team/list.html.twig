@@ -6,6 +6,10 @@
 {% block pageTitle %}User accounts{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings-team') }}
+{% endblock %}
+
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">

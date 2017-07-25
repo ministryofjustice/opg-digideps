@@ -36,36 +36,37 @@
 
 {% macro breadcrumbsSettings(section) %}
     <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li>
-                <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
-            </li>
-            {% if section != 'home' %}
-                <li>
-                    <a href="{{ path('account_settings') }}">Deputyship details</a>
-                </li>
-            {% endif %}
-        </ol>
-    </div>
-{% endmacro %}
-
-{% macro breadcrumbsPASettings(section) %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
+    <ol class="group">
+        {% if app.user.isDeputyPa() %}
             <li>
                 <a href="{{ path('pa_dashboard') }}">Dashboard</a>
             </li>
             {% if 'settings' in section and section != 'settings' %}
-            <li>
-                <a href="{{ path('pa_settings') }}">Settings</a>
-            </li>
+                <li>
+                    <a href="{{ path('pa_settings') }}">Settings</a>
+                </li>
             {% endif %}
             {% if section == 'settings-profile-edit' %}
                 <li>
-                    <a href="{{ path('pa_profile_show') }}">Your account</a>
+                    <a href="{{ path('pa_profile_show') }}">Your details</a>
                 </li>
             {% endif %}
-        </ol>
+        {% else %}
+            <li>
+                <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
+            </li>
+            {% if 'settings' in section and section != 'settings' %}
+                <li>
+                    <a href="{{ path('account_settings') }}">Deputyship details</a>
+                </li>
+            {% endif %}
+            {% if section == 'settings-profile-edit' %}
+                <li>
+                    <a href="{{ path('user_show') }}">Your details</a>
+                </li>
+            {% endif %}
+        {% endif %}
+    </ol>
     </div>
 {% endmacro %}
 
