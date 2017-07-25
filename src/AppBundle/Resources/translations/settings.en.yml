@@ -1,17 +1,96 @@
+h1Title:
+  settings-page: Your deputyship details
+  pa-settings-page: Settings
+  change-password: Change password
+  profile: Your details
+  profile-edit: Edit your details
+htmlTitle:
+  settings-page: Deputy report - Your deputyship details | GOV.UK
+  pa-settings-page: Settings
+  change-password: Settings - Change password
+  profile: Settings - your details
+  profile-edit: Settings - edit your details
+supportTitle:
+  password: Settings
+  profile:  Settings
+  profile-edit:  Settings
+
+settings-page:
+  links:
+    client:
+      title: %client%'s details
+      description: Edit %client%'s name, address, phone number, case number and your court order date.
+    profile:
+      title: Your details
+      description:    Edit your name, address and phone number.
+      pa-description: Update any details on your account such as job title, telephone number or email address
+    password:
+      title: Your password
+      description: Change the password you use to sign in
+    team:
+      title: User accounts
+      description: View team members
+      admin-description: Add, edit and remove user accounts for your team members
+
+profile-page:
+  fullName: Full name
+  address: Address
+  mainPhoneNumber: Phone number
+  alternativePhoneNumber: Alternative phone number
+  emailAddress: Email address
+  jobTitle: Job title
+  editButton: Edit your details
+
 page:
-  htmlTitle: "Deputy report - Your deputyship details | GOV.UK"
-  pageSectionTitle: "Your deputyship details"
+  passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
 
-links:
-  clientDetails:
-    title: %client%'s details
-    description: Edit %client%'s name, address, phone number, case number and your court order date.
-  userDetails:
-    title: Your details
-    description: Edit your name, address and phone number.
-    description2: To edit your email address, please call the Helpline and ask to speak to your case worker.
 
-  password:
-    title: Password
-    description: Change the password you use to sign in.
+form:
+  editYourDetails:
+    subSectionTitle: "Edit your details"
+    controls:
+      cancel:
+        label: Cancel
+      save:
+        label: Save
+      firstname:
+        label: First name
+      lastname:
+        label: Last name
+      address1:
+        label: Address
+      address2:
+        label: " "
+      address3:
+        label: " "
+      addressPostcode:
+        label: Postcode
+      addressCountry:
+        label: Country
+      phoneMain:
+        label: Phone number
+      phoneAlternative:
+        label: Alternative phone number
+      email:
+        label: Email
+      jobTitle:
+        label: Job title
 
+  changeYourPassword:
+    controls:
+      cancel:
+        label: Cancel
+      save:
+        label: Save
+      currentPassword:
+          label: Current password
+      newPassword:
+          label: New password
+          hint: "Your password must have:"
+          hintList: |
+            at least 8 characters
+            at least 1 uppercase letter
+            at least 1 lowercase letter
+            at least 1 number
+      confirmNewPassword:
+          label: Confirm new password
