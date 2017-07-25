@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class SettingsController extends AbstractController
 {
     /**
-     * @Route("/settings", name="account_settings")
+     * @Route("/deputyship-details", name="account_settings")
      * @Template()
      **/
     public function indexAction()
