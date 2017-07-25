@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("/admin/documents")
  */
-class DocumentController extends AbstractController
+class ReportSubmissionController extends AbstractController
 {
     /**
      * @Route("/list/{status}", name="admin_documents", defaults={"status"="new"})
