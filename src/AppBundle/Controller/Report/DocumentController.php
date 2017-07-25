@@ -20,7 +20,8 @@ class DocumentController extends AbstractController
 {
     private static $jmsGroups = [
         'report-documents',
-        'documents'
+        'documents',
+        'documents-state',
     ];
 
     /**
@@ -44,14 +45,14 @@ class DocumentController extends AbstractController
     {
         $totalSteps = 3;
         if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('document_summary', ['reportId' => $reportId]);
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
-            ->setRoutes('documents', 'report_documents', 'documents_summary')
+            ->setRoutes('documents', 'report_documents', 'report_documents_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
@@ -139,6 +140,22 @@ class DocumentController extends AbstractController
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
             'form'     => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
+     * @Template()
+     */
+    public function summaryAction(Request $request, $reportId)
+    {
+        $fromPage = $request->get('from');
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'report'             => $report,
+            'status'             => $report->getStatus()
         ];
     }
 
