@@ -169,6 +169,13 @@ class Status
     private $giftsState;
 
     /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
+    private $documentsState;
+
+    /**
      * @JMS\Type("boolean")
      *
      * @var array
@@ -565,6 +572,22 @@ class Status
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getDocumentsState()
+    {
+        return $this->documentsState;
+    }
+
+    /**
+     * @param array $documentsState
+     */
+    public function setDocumentsState($documentsState)
+    {
+        $this->documentsState = $documentsState;
+    }
+
     public function getState()
     {
         switch ($this->status) {
@@ -573,4 +596,5 @@ class Status
             case 'readyToSubmit': return Status::STATE_DONE;
         }
     }
+
 }
