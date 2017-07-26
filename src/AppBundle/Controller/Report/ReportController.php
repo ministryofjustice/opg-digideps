@@ -327,26 +327,26 @@ class ReportController extends RestController
             $qb->setParameter('q', $q);
         }
 
-        $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+        $records = $qb->getQuery()->getResult(); /* @var $records Report[] */
 
         // calculate counts, and apply limit/offset
         $counts = ['total' => 0,
                    'notStarted' => 0,
                    'notFinished' => 0,
                    'readyToSubmit' => 0];
-        foreach ($reports as $report) {
+        foreach ($records as $report) {
             $counts[$report->getStatus()->getStatus()]++;
             $counts['total']++;
         }
 
         // status filters
         if ($status) {
-            $reports = array_filter($reports, function ($report) use ($status) {
+            $records = array_filter($records, function ($report) use ($status) {
                 return $report->getStatus()->getStatus() == $status;
             });
         }
         // apply offset and limit filters (has to be last)
-        $reports = array_slice($reports, $offset, $limit);
+        $records = array_slice($records, $offset, $limit);
 
 
         $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['client', 'report'];
@@ -354,7 +354,7 @@ class ReportController extends RestController
 
         return [
             'counts'=>$counts,
-            'reports'=>$reports
+            'reports'=>$records
         ];
     }
 
