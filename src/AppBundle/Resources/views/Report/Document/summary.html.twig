@@ -30,7 +30,7 @@
     <p class="text">{{ macros.returnToOverview(report) }}</p>
 
     {# Attached documents table #}
-    {% include 'AppBundle:Report/Document:_documentList.html.twig'  with {
+    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
     'translationDomain': translationDomain,
     'page' : page
     } %}
