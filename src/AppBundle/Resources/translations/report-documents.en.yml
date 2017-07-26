@@ -21,8 +21,9 @@ removeDocument:
   linkButtonLabel: Yes, remove document
 reportDocuments:
   supportText: Use this page to attach a supporting document (or documents) for this deputy report.
+  supportingDocuments: Supporting documents
   attachDocuments: Attach documents
-  heading: Case Documents
+  heading: Attach Documents
   noDocuments: No documents
   documentList: Document list
   filename: File name
@@ -38,15 +39,15 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - suporting documents | GOV.UK"
-  pageSectionTitle: Supporting documents
+  pageSectionTitle: Attach documents
   backLink: Back
   form:
     wishToUploadDocumentation:
         label: Would you like to provide documentation?
-        notBlank:
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageSectionTitle: Supporting documents
+  addButton: Attach more documents
   pageContent:
     weAskAbout: In this section, we asked you to provide any supporting documents.
     checktheyrecorrect: Check they're correct and edit them where neccessary.

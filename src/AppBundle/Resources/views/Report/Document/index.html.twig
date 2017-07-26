@@ -51,9 +51,9 @@
     'page' : page
     } %}
 
-    {% if step %}
-        <a href="{{ path('report_documents_summary', {'reportId':report.id, 'step':3, 'from':'report_documents'}) }}" class="button">Save and continue</a>
-    {% endif %}
+    <p class="text">
+        <a href="{{ nextLink }}" class="button">Save and continue</a>
+    </p>
 
     <script>
         $(document).ready(function () {

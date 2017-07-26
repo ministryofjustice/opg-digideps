@@ -26,9 +26,8 @@
     <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
-
     {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
+    <p class="text">{{ macros.returnToOverview(report) }}</p>
 
     {# Attached documents table #}
     {% include 'AppBundle:Report/Document:_documentList.html.twig'  with {

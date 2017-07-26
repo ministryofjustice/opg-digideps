@@ -76,7 +76,7 @@ class DocumentController extends AbstractController
             'step'         => $step,
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => $stepRedirector->getSkipLink(),
+            'skipLink'     => '',
         ];
     }
 
@@ -141,6 +141,7 @@ class DocumentController extends AbstractController
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
+            'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
             'form'     => $form->createView(),
         ];
     }
@@ -157,6 +158,7 @@ class DocumentController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report'             => $report,
+            'backLink'           => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
             'status'             => $report->getStatus()
         ];
     }
