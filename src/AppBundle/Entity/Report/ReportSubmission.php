@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Table(name="report_submission")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
+ * @ORM\Entity()
  */
 class ReportSubmission
 {
