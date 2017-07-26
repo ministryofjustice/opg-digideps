@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
-
+use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\FileUploader;
@@ -31,7 +31,9 @@ class DocumentController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
+        if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirectToRoute('documents_step', ['reportId' => $reportId, 'step' => 1]);
+        }
         return [
             'report' => $report,
         ];
