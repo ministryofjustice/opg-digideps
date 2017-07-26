@@ -37,14 +37,14 @@
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
                     <a href="{{ path(baseRoute, {'status': 'new', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
-                        <span class="bold-large">New</span>
-                        <span class="data-item bold-xsmall">&nbsp;</span>
+                        <span class="data-item bold-large">{{ counts.new }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
                     <a href="{{ path(baseRoute, {'status': 'archived', 'q': filters.q}) }}" role="tab" tabindex="0" >
-                        <span class="bold-large">Archive</span>
-                        <span class="data-item bold-xsmall">&nbsp;</span>
+                        <span class="data-item bold-large">{{ counts.archived }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
                     </a>
                 </li>
             </ul>
@@ -71,7 +71,7 @@
         <tbody>
         {% for reportSubmission in reportSubmissions %}
             {% set report = reportSubmission.report %}
-            <tr>
+            <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
                     {{ report.client.fullname }}
                 </td>

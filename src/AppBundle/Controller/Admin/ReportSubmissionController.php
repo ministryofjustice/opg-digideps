@@ -30,13 +30,20 @@ class ReportSubmissionController extends AbstractController
     {
         $currentFilters = [
             'q'      => $request->get('q'),
-            'status' => $request->get('status', 'new') // new | archived
+            'status' => $request->get('status', 'new'), // new | archived
+            'limit'             => $request->query->get('limit') ?: 15,
+            'offset'            => $request->query->get('offset') ?: 0,
         ];
-        $reportSubmissions = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'Report\\ReportSubmission[]');
+        $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $reportSubmissions = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         return [
             'filters' => $currentFilters,
             'reportSubmissions' => $reportSubmissions,
+            'counts'  => [
+                'new'      => $ret['counts']['new'],
+                'archived' => $ret['counts']['archived'],
+            ],
             'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
         ];
     }
