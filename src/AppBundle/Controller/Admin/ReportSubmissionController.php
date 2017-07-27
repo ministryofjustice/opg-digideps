@@ -44,8 +44,6 @@ class ReportSubmissionController extends AbstractController
                 'new'      => $ret['counts']['new'],
                 'archived' => $ret['counts']['archived'],
             ],
-//            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
-//            'countDocuments' => count($reportSubmissions)
         ];
     }
 

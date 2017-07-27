@@ -17,6 +17,7 @@
 
 {% block pageContent %}
 
+    {# search form #}
     <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
         <fieldset>
             <legend class="visuallyhidden">Search</legend>
@@ -29,9 +30,9 @@
                 <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear search</a>
             {% endif %}
         </fieldset>
-
     </form>
 
+    {# tabs #}
     <div class="tabs push--ends">
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
@@ -51,13 +52,13 @@
         </div>
     </div>
 
+    {# table with records #}
     {% if  records | length %}
       <table class="push--bottom">
         <thead>
         <tr>
-            <th>Client</th>
             <th>Deputy</th>
-            <th>Case number</th>
+            <th>Case</th>
             <th>Documents</th>
             <th>Date</th>
             <th>
@@ -73,13 +74,13 @@
             {% set report = reportSubmission.report %}
             <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
-                    {{ report.client.fullname }}
+                    {{ reportSubmission.createdBy.fullname }}<br/>
+                    Type: {{ reportSubmission.createdBy.roleFullName }}
                 </td>
                 <td>
-                    {{ reportSubmission.createdBy.fullname }}
-                </td>
-                <td>
-                    {{ report.client.caseNumber }}
+                    {{ report.client.fullname }}<br/>
+                    Number: {{ report.client.caseNumber }}<br/>
+                    Type: {{ report.type }}
                 </td>
                 <td>
                     <details class="push--bottom">
