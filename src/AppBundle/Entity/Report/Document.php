@@ -14,7 +14,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Document
 {
-    const FILE_NAME_MAX_LENGTH = 500;
+    const FILE_NAME_MAX_LENGTH = 255;
 
     use CreationAudit;
     use HasReportTrait;

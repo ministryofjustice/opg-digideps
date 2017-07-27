@@ -167,7 +167,7 @@ document:
       mimeTypesMessage: "Please upload a valid PDF"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
-      maxMessage: "The file name can't be longer than 500 letters"
+      maxMessage: "The file name can't be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
       risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
       virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
