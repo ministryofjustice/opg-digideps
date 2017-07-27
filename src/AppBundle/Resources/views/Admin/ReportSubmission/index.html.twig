@@ -10,7 +10,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(countDocuments) }}</span>
+    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(records | length) }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    {% if  reportSubmissions | length %}
+    {% if  records | length %}
       <table class="push--bottom">
         <thead>
         <tr>
@@ -69,7 +69,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for reportSubmission in reportSubmissions %}
+        {% for reportSubmission in records %}
             {% set report = reportSubmission.report %}
             <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
@@ -121,6 +121,23 @@
         {% endfor %}
         </tbody>
       </table>
+
+        {% include 'AppBundle:Components:paginator.html.twig' with {
+            currentOffset: filters.offset,
+            recordsPerPage: filters.limit,
+            totalRecords: counts[filters.status ?: 'total'],
+            routeName: 'admin_documents',
+            routeParams: {
+            'status': filters.status,
+            'q': filters.q
+            },
+            messages: {
+                singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
+                multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'
+            }
+        } %}
+
+
     {% else %}
         No documents found
     {% endif %}

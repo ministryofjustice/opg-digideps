@@ -39,12 +39,13 @@ class ReportSubmissionController extends AbstractController
 
         return [
             'filters' => $currentFilters,
-            'reportSubmissions' => $reportSubmissions,
+            'records' => $reportSubmissions,
             'counts'  => [
                 'new'      => $ret['counts']['new'],
                 'archived' => $ret['counts']['archived'],
             ],
-            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
+//            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
+//            'countDocuments' => count($reportSubmissions)
         ];
     }
 
