@@ -14,6 +14,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Document
 {
+    const FILE_NAME_MAX_LENGTH = 500;
+
     use CreationAudit;
     use HasReportTrait;
 
@@ -30,10 +32,20 @@ class Document
         foreach ($this->getReport()->getDocuments() as $document) {
             $fileNames[] = $document->getFileName();
         }
-        
-        if (in_array($this->getFile()->getClientOriginalName(), $fileNames)) {
-            $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
+
+        $fileOriginalName = $this->getFile()->getClientOriginalName();
+
+        if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
+            $context->addViolationAt('file', 'document.file.errors.maxMessage');
+            return;
         }
+
+        if (in_array($fileOriginalName, $fileNames)) {
+            $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
+            return;
+        }
+
+
     }
 
     /**
