@@ -18,7 +18,7 @@ class Version141 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report ADD wish_to_provide_documentation BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD wish_to_provide_documentation VARCHAR(3) DEFAULT NULL');
     }
 
     /**
