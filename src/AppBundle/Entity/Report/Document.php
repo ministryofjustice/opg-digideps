@@ -41,7 +41,7 @@ class Document
      * @JMS\Type("string")
      * @JMS\Groups({"documents"})
      *
-     * @ORM\Column(name="filename", type="string", length=150, nullable=false)
+     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
      */
     private $fileName;
 
@@ -50,7 +50,7 @@ class Document
      * @JMS\Type("string")
      * @JMS\Groups({"document-storage-reference"})
      *
-     * @ORM\Column(name="storage_reference", type="string", length=150, nullable=true)
+     * @ORM\Column(name="storage_reference", type="string", length=512, nullable=true)
      */
     private $storageReference;
 
