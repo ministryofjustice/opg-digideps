@@ -34,9 +34,3 @@ class Version142 extends AbstractMigration
     }
 }
 
-=======
-        $this->addSql('ALTER TABLE document ALTER filename TYPE VARCHAR(150)');
-        $this->addSql('ALTER TABLE document ALTER storage_reference TYPE VARCHAR(150)');
-    }
-}
->>>>>>> 0c0afaa429d062d12c7be417dc80f8d141ac1583
