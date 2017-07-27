@@ -19,7 +19,7 @@ Feature: PA settings
 
   Scenario: named PA logs in and updates profile and does not see removeAdmin field
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, pa-edit"
+    When I click on "pa-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | John Named Chap                       |
@@ -36,7 +36,7 @@ Feature: PA settings
 
   Scenario: PA Admin logs in and updates profile and sees removeAdmin field but does not
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, pa-edit"
+    When I click on "pa-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | Mark Admin Chap                           |
@@ -53,7 +53,7 @@ Feature: PA settings
 
   Scenario: PA Admin logs in and updates profile and removes admin
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, pa-edit"
+    When I click on "pa-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     When I check "profile_removeAdmin_0"
     And I press "profile_save"
@@ -69,7 +69,7 @@ Feature: PA settings
 
   Scenario: PA Team member logs in and edits info
     Given I am logged in as "behat-pa3-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, pa-edit"
+    When I click on "pa-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     When I fill in the following:
       | profile_firstname  | Mark Team Member                                |
@@ -154,4 +154,4 @@ Feature: PA settings
     When I press "change_password_save"
     Then the form should be valid
     And I should see "Password edited"
-    And I should be on "/pa/settings/"
+    And I should be on "/pa/settings"

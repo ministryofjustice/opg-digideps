@@ -4,12 +4,15 @@ h1Title:
   change-password: Change password
   profile: Your details
   profile-edit: Edit your details
+  registration-password:
+  registration-details: Enter your details
 htmlTitle:
   settings-page: Deputy report - Your deputyship details | GOV.UK
   pa-settings-page: Settings
   change-password: Settings - Change password
-  profile: Settings - your details
-  profile-edit: Settings - edit your details
+  profile: Settings - Your details
+  profile-edit: Settings - Edit your details
+  registration-details: Registration - Enter your details
 supportTitle:
   password: Settings
   profile:  Settings

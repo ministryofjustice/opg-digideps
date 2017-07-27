@@ -1,9 +1,9 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% trans_default_domain "user-details" %}
+{% trans_default_domain "settings" %}
 
-{% block htmlTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.registration-details' | trans }}{% endblock %}
 
 {% block progressBar %}
     {{ progress_bar_registration(app.user, 'user_details') }}
