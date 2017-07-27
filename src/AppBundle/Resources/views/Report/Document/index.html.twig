@@ -33,11 +33,11 @@
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
         'labelText':  'form.attachAFile' | trans ,
-        'inputClass': 'no-border',
+        'inputClass': 'no-border behat-link-choose-file',
         'hintText': 'form.acceptedFileTypes' | trans}) }}
-    {{ form_submit(form.save, '', {'labelText': 'form.attachDocument' | trans}) }}
+    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
 
-    <a href=" {{ backLink }} " class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href=" {{ backLink }} " class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 

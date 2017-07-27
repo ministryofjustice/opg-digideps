@@ -50,6 +50,9 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getWishToProvideDocumentation() === 'no' && $step > 1) {
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        }
 
         $fromPage = $request->get('from');
 
@@ -88,6 +91,9 @@ class DocumentController extends AbstractController
     {
         $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getWishToProvideDocumentation() === 'no') {
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        }
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
@@ -223,7 +229,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'document-report', 'report', 'client', 'user']
+            ['documents', 'status', 'document-report', 'report', 'client', 'user']
         );
     }
 }
