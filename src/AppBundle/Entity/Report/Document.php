@@ -41,7 +41,7 @@ class Document
      * @JMS\Type("string")
      * @JMS\Groups({"documents"})
      *
-     * @ORM\Column(name="filename", type="string", length=512, nullable=false)
+     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
      */
     private $fileName;
 
