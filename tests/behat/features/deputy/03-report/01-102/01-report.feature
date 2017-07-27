@@ -78,3 +78,4 @@ Feature: Report edit and test tabs
         Then I should see the "edit-debts" link
         Then I should see the "edit-actions" link
         Then I should see the "edit-other_info" link
+        Then I should see the "edit-documents" link
