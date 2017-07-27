@@ -7,5 +7,5 @@ page:
     archived.label: "Archived report submissions"
   table:
     rows:
-      documents: "{0} No report submissions | {1} 1 report submission | ]1,Inf[ %count% report submissions"
+      documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
 

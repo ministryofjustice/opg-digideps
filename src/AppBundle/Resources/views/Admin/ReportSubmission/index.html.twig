@@ -10,7 +10,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(records | length) }}</span>
+    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(counts[filters.status]) }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
