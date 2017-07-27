@@ -329,7 +329,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
-        $this->assertCount(1, $data);
+        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
     }
 
 
