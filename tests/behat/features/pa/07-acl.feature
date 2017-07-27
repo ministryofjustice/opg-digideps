@@ -37,14 +37,15 @@ Feature: PA cannot access other's PA's reports and clients
     When I go to the URL previously saved as "report-for-client-1000010.url"
     Then the response status code should be 500
 
+  @jack
   Scenario: PA user cannot edit client
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then the URL "/settings" should be forbidden
-    And the URL "/user-account/client-show" should be forbidden
-    And the URL "/user-account/client-edit" should be forbidden
-    And the URL "/user-account/user-show" should be forbidden
-    And the URL "/user-account/user-edit" should be forbidden
-    And the URL "/user-account/password-edit" should be forbidden
+    Then the URL "/deputyship-details" should be forbidden
+    And the URL "/deputyship-details/your-client" should be forbidden
+    And the URL "/deputyship-details/your-client/edit" should be forbidden
+    And the URL "/deputyship-details/your-details" should be forbidden
+    And the URL "/deputyship-details/your-details/edit" should be forbidden
+    And the URL "/deputyship-details/your-details/change-password" should be forbidden
 
   Scenario: Submitted reports cannot be viewed (overview page) or edited
     # load "pre-submission" status and save links
