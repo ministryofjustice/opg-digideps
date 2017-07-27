@@ -20,8 +20,6 @@ class ReportSubmissionRepository extends EntityRepository
      */
     public function getReportSubmissions($archived)
     {
-        $this->_em->getFilters()->disable('softdeleteable');
-
         $qb = $this->_em->getRepository(ReportSubmission::class)
             ->createQueryBuilder('rs')
             ->leftJoin('rs.report', 'r')
@@ -37,17 +35,8 @@ class ReportSubmissionRepository extends EntityRepository
             $qb->andWhere('rs.archivedBy is null' );
         }
 
+        $this->_em->getFilters()->disable('softdeleteable');
         $results = $qb->getQuery()->getResult(); /* @var $results ReportSubmission[] */
-
-        // manually remove soft-deleted documents
-        foreach($results as $result) {
-            foreach($result->getDocuments() as $document) {
-                if ($document->isDeleted()) {
-                    $result->getDocuments()->removeElement($document);
-                }
-            }
-        }
-
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $results;
