@@ -51,7 +51,6 @@ Feature: Report documents
     Then the following fields should have an error:
       | report_document_upload_file   |
 
-
   @deputy
   Scenario: Delete document
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -74,3 +73,11 @@ Feature: Report documents
     Then I go to the URL previously saved as "document-list"
     # Check document removed
     And I should not see "good.pdf" in the "document-list" region
+    And I click on "cancel"
+    Then the URL should match "report/\d+/overview"
+    And the report should not be submittable
+    Then I click on "reports, report-2016, edit-documents"
+    # chose "no documents" to make report submittable
+    Then the URL should match "report/\d+/documents"
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_0 | no |
