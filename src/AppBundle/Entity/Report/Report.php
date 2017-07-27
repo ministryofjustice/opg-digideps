@@ -67,7 +67,7 @@ class Report
      * @var string
      *             see TYPE_ class constants
      *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-type"})
      * @JMS\Type("string")
      * @ORM\Column(name="type", type="string", length=3, nullable=false)
      */

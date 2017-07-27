@@ -70,12 +70,14 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals(['new'=>5, 'archived'=>0], $data['counts']);
         $submission = $data['records'][0];
         $this->assertNotEmpty($submission['id']);
+        $this->assertNotEmpty($submission['report']['type']);
         $this->assertNotEmpty($submission['report']['client']['case_number']);
         $this->assertNotEmpty($submission['report']['client']['firstname']);
         $this->assertNotEmpty($submission['report']['client']['lastname']);
         $this->assertEquals('file1.pdf', $submission['documents'][0]['file_name']);
         $this->assertNotEmpty($submission['created_by']['firstname']);
         $this->assertNotEmpty($submission['created_by']['lastname']);
+        $this->assertNotEmpty($submission['created_by']['role_name']);
         $this->assertNotEmpty($submission['created_on']);
         $this->assertArrayHasKey('archived_by', $submission);
 
