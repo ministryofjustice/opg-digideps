@@ -4,7 +4,6 @@
 
 {% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
-{% set isNamedOrAdmin = (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
 
 {% block htmlTitle %}{{ (app.user.isDeputyPa() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
 {% block pageTitle %}{{ (app.user.isDeputyPa() ? 'h1Title.pa-settings-page'   : 'h1Title.settings-page')   | trans }}{% endblock %}
@@ -15,19 +14,19 @@
 
 {% block pageContent %}
 
-    {% if is_granted('ROLE_LAY_DEPUTY') %}
+    {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
         {% set transOptions = {'%client%': client.firstname} %}
         <a href="{{ path('client_show') }}" class="behat-link-client-show">
             <h2 class="heading-small">{{ 'settings-page.links.client.title' | trans(transOptions) }}</h2>
         </a>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
-    {% else %}
+    {% elseif app.user.isDeputyPa() %}
         {% set transOptions = {} %}
         <a href="{{ path('pa_team') }}" class="behat-link-user-accounts">
             <h2 class="heading-small">{{ 'settings-page.links.team.title' | trans }}</h2>
         </a>
         <p class="text text-info">
-            {% if isNamedOrAdmin %}
+            {% if app.user.isNamedDeputy() or app.user.isPaAdministrator() %}
                 {{ 'settings-page.links.team.admin-description' | trans }}
             {% else %}
                 {{ 'settings-page.links.team.description' | trans }}
