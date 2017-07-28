@@ -7,6 +7,10 @@
 {% block pageTitle %}{{ 'editPage.h1Title' | trans({}, 'pa-team') }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings-team-user') }}
+{% endblock %}
+
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'editPage.supportTitle' | trans }}</span>
 {% endblock %}

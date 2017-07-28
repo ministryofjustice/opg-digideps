@@ -2,28 +2,34 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "user-details" %}
+{% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 {% block pageTitle %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsSettings('user-show') }}
+    {{ macros.breadcrumbsSettings("settings-profile") }}
 {% endblock %}
 
 {% block pageContent %}
-    <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
+    <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-profile">
 
         <table class="text">
             <tbody>
                 <tr>
-                    <th scope="row">{{ 'yourDetails.fullName' | trans }}</th>
-                    <td class="behat-region-my-details-name">{{ user.getFullname }}</td>
+                    <th scope="row">{{ 'profile-page.fullName' | trans }}</th>
+                    <td class="behat-region-profile-name">{{ user.getFullname }}</td>
                 </tr>
+                {% if app.user.isDeputyPa() %}
+                <tr>
+                    <th scope="row">{{ 'profile-page.jobTitle' | trans }}</th>
+                    <td class="behat-region-profile-job">{{ user.getJobTitle}}</td>
+                </tr>
+                {% endif %}
                 <tr valign="top">
-                    <th scope="row">{{ 'yourDetails.address' | trans }}</th>
-                    <td class="behat-region-my-details-address">
+                    <th scope="row">{{ 'profile-page.address' | trans }}</th>
+                    <td class="behat-region-profile-address">
                         {% if user.address1 is not empty %}
                             <div itemprop="streetAddress">{{ user.address1 }}</div>
                         {% endif %}
@@ -42,23 +48,22 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'yourDetails.mainPhoneNumber' | trans }}</th>
-                    <td>{{ user.phoneMain }}</td>
+                    <th scope="row">{{ 'profile-page.mainPhoneNumber' | trans }}</th>
+                    <td class="behat-region-profile-phone">{{ user.phoneMain }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'yourDetails.alternativePhoneNumber' | trans }}</th>
+                    <th scope="row">{{ 'profile-page.alternativePhoneNumber' | trans }}</th>
                     <td>{{ user.phoneAlternative }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'yourDetails.emailAddress' | trans }}</th>
-                    <td>{{ user.email }}</td>
+                    <th scope="row">{{ 'profile-page.emailAddress' | trans }}</th>
+                    <td class="behat-region-profile-email">{{ user.email }}</td>
                 </tr>
             </tbody>
         </table>
 
     </div>
 
-    <a href="{{ path('user_edit') }}"
-       class="button push--top behat-link-deputy-edit">{{ 'yourDetails.edit'| trans }}</a>
+    <a href="{{ path(app.user.isDeputyPa() ? 'pa_profile_edit' : 'user_edit') }}" class="button push--top behat-link-profile-edit">{{ 'profile-page.editButton'| trans }}</a>
 
 {% endblock %}

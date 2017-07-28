@@ -20,13 +20,14 @@ class UserDetailsFullType extends UserDetailsBasicType
             'empty_value' => 'Please select ...',
         ])
         ->add('phoneMain', 'text')
-        ->add('phoneAlternative', 'text');
+        ->add('phoneAlternative', 'text')
+        ->add('email', 'text');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'user-details',
+            'translation_domain' => 'settings',
             'validation_groups' => 'user_details_full',
         ]);
     }

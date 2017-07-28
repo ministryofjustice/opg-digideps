@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/user-account/client-show", name="client_show")
+     * @Route("/deputyship-details/your-client", name="client_show")
      * @Template()
      */
     public function showAction(Request $request)
@@ -20,12 +20,12 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 
     /**
-     * @Route("/user-account/client-edit", name="client_edit")
+     * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template()
      */
     public function editAction(Request $request)
@@ -48,7 +48,7 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 

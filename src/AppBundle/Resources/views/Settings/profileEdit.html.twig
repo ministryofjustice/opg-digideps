@@ -1,0 +1,30 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "settings" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle.profile-edit' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.profile-edit' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings("settings-profile-edit") }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% include 'AppBundle:User:_form_fields.html.twig' %}
+
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+    linkClass: 'button-link',
+    linkHref: path(app.user.isDeputyPa() ? 'pa_profile_show' : 'user_show')
+    } %}
+
+    {{ form_end(form) }}
+{% endblock %}

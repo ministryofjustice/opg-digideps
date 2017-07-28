@@ -55,7 +55,10 @@ class ReportSubmissionController extends AbstractController
         // store files locally, for subsequent memory-less ZIP creation
         $s3Storage = $this->get('s3_storage');
         $filesToAdd = [];
-        foreach(array_slice($reportSubmission->getDocuments(),0,99) as $document) {
+        if (empty($reportSubmission->getDocuments())) {
+            throw new \RuntimeException('No documents found for downloading');
+        }
+        foreach($reportSubmission->getDocuments() as $document) {
             $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
             $dfile = '/tmp/DDDocument'.$document->getId().microtime(1);
             file_put_contents($dfile, $content);

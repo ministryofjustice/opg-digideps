@@ -27,6 +27,12 @@ user:
       noLowerCaseChars: The password must have at least one lowercase letter
       noUpperCaseChars: The password must have at least one capital letter
       noNumber: The password must have at least one number
+      existing:
+        notBlank: Please enter your correct current password
+        notCorrect: Please enter your correct current password
+      new:
+        notBlank: Please enter your new password
+        doesntMatch: Passwords do not match
   role:
       notBlank: You must specify a role for the user
       notBlankPa: Please choose if user has admin rights or not
@@ -167,6 +173,7 @@ document:
       mimeTypesMessage: "Please upload a valid PDF"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
+      maxMessage: "The file name can't be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
       risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
       virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
