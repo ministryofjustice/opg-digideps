@@ -1,9 +1,9 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% trans_default_domain "user-details" %}
+{% trans_default_domain "settings" %}
 
-{% block htmlTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'h1Title.registration-details' | trans }}{% endblock %}
 
 {% block progressBar %}
     {{ progress_bar_registration(app.user, 'user_details') }}
@@ -19,7 +19,7 @@
 
     {% include 'AppBundle:User:_form_fields.html.twig' %}
 
-    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
 

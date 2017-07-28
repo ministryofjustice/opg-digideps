@@ -27,6 +27,12 @@ user:
       noLowerCaseChars: The password must have at least one lowercase letter
       noUpperCaseChars: The password must have at least one capital letter
       noNumber: The password must have at least one number
+      existing:
+        notBlank: Please enter your correct current password
+        notCorrect: Please enter your correct current password
+      new:
+        notBlank: Please enter your new password
+        doesntMatch: Passwords do not match
   role:
       notBlank: You must specify a role for the user
       notBlankPa: Please choose if user has admin rights or not

@@ -18,7 +18,7 @@ class UserDetailsBasicType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'user-details',
+            'translation_domain' => 'settings',
             'validation_groups' => 'user_details_basic',
         ]);
     }

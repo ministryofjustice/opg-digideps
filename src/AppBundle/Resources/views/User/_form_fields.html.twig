@@ -1,27 +1,34 @@
-{{ form_input(form.firstname,'firstname') }}
+{{ form_input(form.firstname, 'form.editYourDetails.controls.firstname') }}
+{{ form_input(form.lastname, 'form.editYourDetails.controls.lastname') }}
 
-{{ form_input(form.lastname,'lastname') }}
-
-{% if form.address1 is defined %}
-    {{ form_input(form.address1,'address1') }}
-
-    {{ form_input(form.address2,'address2') }}
-
-    {{ form_input(form.address3,'address3') }}
-
-    {{ form_input(form.addressPostcode,'addressPostcode', { 'inputClass': 'form-control__postcode' }) }}
-
-    {{ form_select(form.addressCountry,'addressCountry') }}
+{% if form.jobTitle is defined %}
+    {{ form_input( form.jobTitle, 'form.editYourDetails.controls.jobTitle') }}
 {% endif %}
 
- {% if form.jobTitle is defined %}
-     {{ form_input(form.jobTitle, 'jobTitle') }}
- {% endif %}
+{% if form.address1 is defined %}
+    {{ form_input( form.address1, 'form.editYourDetails.controls.address1') }}
+
+    {{ form_input( form.address2, 'form.editYourDetails.controls.address2') }}
+
+    {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}
+
+    {{ form_input( form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', { 'inputClass': 'form-control__postcode' }) }}
+
+    {{ form_select( form.addressCountry, 'form.editYourDetails.controls.addressCountry') }}
+{% endif %}
 
 {% if form.phoneMain is defined %}
-    {{ form_input(form.phoneMain,'phoneMain') }}
+    {{ form_input( form.phoneMain,'form.editYourDetails.controls.phoneMain') }}
 {% endif %}
 
 {% if form.phoneAlternative is defined %}
-    {{ form_input(form.phoneAlternative,'phoneAlternative') }}
+    {{ form_input( form.phoneAlternative, 'form.editYourDetails.controls.phoneAlternative') }}
+{% endif %}
+
+{% if form.email is defined %}
+    {{ form_input( form.email, 'form.editYourDetails.controls.email') }}
+{% endif %}
+
+{% if form.removeAdmin is defined %}
+    {{ form_checkbox_group( form.removeAdmin, 'form.removeAdmin', {'fieldSetClass' : 'inline'}) }}
 {% endif %}
