@@ -131,7 +131,7 @@ class SettingsController extends AbstractController
             case EntityDir\User::ROLE_PA:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                $formAndGroup = [new FormDir\Settings\ProfileType(['user_details_pa']), ['user_details_pa']];
+                $formAndGroup = [new FormDir\Settings\ProfileType(['user_details_pa','profile_pa']), ['user_details_pa','profile_pa']];
                 break;
         }
         return $formAndGroup;
