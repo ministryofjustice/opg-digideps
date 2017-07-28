@@ -75,6 +75,7 @@ class UserController extends RestController
         // If Editing PA user
         if ($loggedInUser->isPaAdministrator()) {
             $userService->editPaUser($originalUser, $user);
+            $this->updateTeamAddresses($user, $data);
         } else {
             $userService->editUser($originalUser, $user);
         };
@@ -355,7 +356,7 @@ class UserController extends RestController
     /**
      * call setters on User when $data contains values.
      *
-     * @param User  $user
+     * @param EntityDir\User  $user
      * @param array $data
      */
     private function populateUser(EntityDir\User $user, array $data)
@@ -400,6 +401,40 @@ class UserController extends RestController
         }
 
         return $user;
+    }
+
+    /**
+     * Update both the team and other teammembers to have same address
+     *
+     * @param EntityDir\User $user
+     * @param array $data
+     */
+    private function updateTeamAddresses(EntityDir\User $user, array $data)
+    {
+        //set the team address to the same
+        $team = $user->getTeams()->first();
+        $this->hydrateEntityWithArrayData($team, $data, [
+            'address1' => 'setAddress1',
+            'address2' => 'setAddress2',
+            'address3' => 'setAddress3',
+            'address_postcode' => 'setAddressPostcode',
+            'address_country' => 'setAddressCountry'
+        ]);
+        $this->getEntityManager()->persist($team);
+
+        //and the other team PAs addresses
+        foreach($team->getMembers() as $teamMember) {
+            $this->hydrateEntityWithArrayData($teamMember, $data, [
+                'address1' => 'setAddress1',
+                'address2' => 'setAddress2',
+                'address3' => 'setAddress3',
+                'address_postcode' => 'setAddressPostcode',
+                'address_country' => 'setAddressCountry'
+            ]);
+            $this->getEntityManager()->persist($teamMember);
+        }
+
+        return $this->getEntityManager()->flush();
     }
 
     /**
