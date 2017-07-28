@@ -27,6 +27,7 @@
         'q': filters.q,
         'created_by_role': filters.created_by_role,
     } %}
+    {% set filtersToPreserveAfterArchiving = filtersToPreserveInPagination %}
 
     {# search form #}
     <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
@@ -127,9 +128,9 @@
                 </td>
                 <td class="">
                     {% if isNewPage %}
-                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id}) }}">Archive</a>
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
                         <br/>
-                        <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                        <a target="_blank" href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
                     {% else %}
                         {% if reportSubmission.archivedBy %}
                             {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}

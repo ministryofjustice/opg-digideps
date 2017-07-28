@@ -22,19 +22,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportSubmissionController extends AbstractController
 {
+
+
     /**
      * @Route("/list", name="admin_documents")
      * @Template
      */
     public function indexAction(Request $request)
     {
-        $currentFilters = [
-            'q'      => $request->get('q'),
-            'status' => $request->get('status', 'new'), // new | archived
-            'limit'             => $request->query->get('limit') ?: 15,
-            'offset'            => $request->query->get('offset') ?: 0,
-            'created_by_role'   => $request->get('created_by_role'),
-        ];
+        $currentFilters = self::getFiltersFromRequest($request);
         $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
         $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
@@ -112,7 +108,24 @@ class ReportSubmissionController extends AbstractController
 
         $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
 
-        return $this->redirectToRoute('admin_documents');
+        $filtersToPass = array_filter(self::getFiltersFromRequest($request));
+
+        return $this->redirectToRoute('admin_documents', $filtersToPass);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private static function getFiltersFromRequest(Request $request)
+    {
+        return [
+            'q'      => $request->get('q'),
+            'status' => $request->get('status', 'new'), // new | archived
+            'limit'             => $request->query->get('limit') ?: 15,
+            'offset'            => $request->query->get('offset') ?: 0,
+            'created_by_role'   => $request->get('created_by_role'),
+        ];
     }
 
 }
