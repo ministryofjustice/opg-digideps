@@ -22,19 +22,25 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportSubmissionController extends AbstractController
 {
+
+
     /**
-     * @Route("/list/{status}", name="admin_documents", defaults={"status"="new"})
+     * @Route("/list", name="admin_documents")
      * @Template
      */
-    public function indexAction(Request $request, $status)
+    public function indexAction(Request $request)
     {
-        $archivedParam = ($status == 'new') ? 0 : 1;
-        $reportSubmissions = $this->getRestClient()->get("/report-submission?archived={$archivedParam}", 'Report\\ReportSubmission[]');
+        $currentFilters = self::getFiltersFromRequest($request);
+        $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         return [
-            'status' => $status,
-            'reportSubmissions' => $reportSubmissions,
-            'countDocuments' => array_sum(array_map(function($report){ return count($report->getDocuments());}, $reportSubmissions))
+            'filters' => $currentFilters,
+            'records' => $records,
+            'counts'  => [
+                'new'      => $ret['counts']['new'],
+                'archived' => $ret['counts']['archived'],
+            ],
         ];
     }
 
@@ -105,7 +111,24 @@ class ReportSubmissionController extends AbstractController
 
         $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
 
-        return $this->redirectToRoute('admin_documents');
+        $filtersToPass = array_filter(self::getFiltersFromRequest($request));
+
+        return $this->redirectToRoute('admin_documents', $filtersToPass);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private static function getFiltersFromRequest(Request $request)
+    {
+        return [
+            'q'      => $request->get('q'),
+            'status' => $request->get('status', 'new'), // new | archived
+            'limit'             => $request->query->get('limit') ?: 15,
+            'offset'            => $request->query->get('offset') ?: 0,
+            'created_by_role'   => $request->get('created_by_role'),
+        ];
     }
 
 }

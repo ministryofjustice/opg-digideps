@@ -2,46 +2,82 @@
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
-{% set isNewPage = (status == 'new') %}
+{% set isNewPage = (filters.status == 'new') %}
+{% set baseRoute = 'admin_documents' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(countDocuments) }}</span>
+    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(counts[filters.status]) }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
+    {# params #}
+    {% set filtersToPreserveInTabs = {
+        'q': filters.q,
+        'created_by_role': filters.created_by_role
+    } %}
+    {% set filtersToPreserveInPagination = {
+        'status': filters.status,
+        'q': filters.q,
+        'created_by_role': filters.created_by_role,
+    } %}
+    {% set filtersToPreserveAfterArchiving = filtersToPreserveInPagination %}
+
+    {# search form #}
+    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
+        <fieldset>
+            <legend class="visuallyhidden">Search</legend>
+            <label for="search" class="search-label">Search by client, deputy or case number</label>
+            <input type="text" id="search" name="q" value="{{ filters.q }}"
+                   class="js-search-focus search-input form-control">
+            <input type="hidden" name="status" value="{{ filters.status }}" />
+            <select name="created_by_role" class="search-dropdown form-control">
+                <option value="">All</option>
+                {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
+                    <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
+            {% if filters.q or filters.created_by_role %}
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear filters</a>
+            {% endif %}
+        </fieldset>
+    </form>
+
+    {# tabs #}
+
     <div class="tabs push--ends">
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'status': 'new'}) }}" role="tab" tabindex="0" aria-selected="true">
-                        <span class="bold-large">New</span>
-                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true">
+                        <span class="data-item bold-large">{{ counts.new }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path('admin_documents', {'status': 'archived'}) }}" role="tab" tabindex="0" >
-                        <span class="bold-large">Archive</span>
-                        <span class="data-item bold-xsmall">&nbsp;</span>
+                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" >
+                        <span class="data-item bold-large">{{ counts.archived }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
 
-    {% if  reportSubmissions | length %}
+    {# table with records #}
+    {% if  records | length %}
       <table class="push--bottom">
         <thead>
         <tr>
-            <th>Client</th>
             <th>Deputy</th>
-            <th>Case number</th>
+            <th>Case</th>
             <th>Documents</th>
             <th>Date</th>
             <th>
@@ -53,17 +89,17 @@
         </tr>
         </thead>
         <tbody>
-        {% for reportSubmission in reportSubmissions %}
+        {% for reportSubmission in records %}
             {% set report = reportSubmission.report %}
-            <tr>
+            <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
-                    {{ report.client.fullname }}
+                    {{ reportSubmission.createdBy.fullname }}<br/>
+                    Type: {{ reportSubmission.createdBy.roleFullName }}
                 </td>
                 <td>
-                    {{ reportSubmission.createdBy.fullname }}
-                </td>
-                <td>
-                    {{ report.client.caseNumber }}
+                    {{ report.client.fullname }}<br/>
+                    Number: {{ report.client.caseNumber }}<br/>
+                    Type: {{ report.type }}
                 </td>
                 <td>
                     <details class="push--bottom">
@@ -92,9 +128,9 @@
                 </td>
                 <td class="">
                     {% if isNewPage %}
-                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id}) }}">Archive</a>
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
                         <br/>
-                        <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                        <a target="_blank" href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
                     {% else %}
                         {% if reportSubmission.archivedBy %}
                             {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
@@ -105,6 +141,20 @@
         {% endfor %}
         </tbody>
       </table>
+
+        {% include 'AppBundle:Components:paginator.html.twig' with {
+            currentOffset: filters.offset,
+            recordsPerPage: filters.limit,
+            totalRecords: counts[filters.status ?: 'total'],
+            routeName: 'admin_documents',
+            routeParams: filtersToPreserveInPagination,
+            messages: {
+                singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
+                multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'
+            }
+        } %}
+
+
     {% else %}
         No documents found
     {% endif %}
