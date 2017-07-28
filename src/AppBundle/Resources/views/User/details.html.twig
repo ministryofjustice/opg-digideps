@@ -13,13 +13,11 @@
 
 {% block pageContent %}
 
-    <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig' %}
 
-    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
 
