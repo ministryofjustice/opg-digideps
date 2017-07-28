@@ -123,7 +123,7 @@ class SettingsController extends AbstractController
         switch ($this->getUser()->getRoleName()) {
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
-                $formAndGroup = [new FormDir\Settings\UserDetailsBasicType(), ['user_details_basic']];
+                $formAndGroup = [new FormDir\User\UserDetailsBasicType(), ['user_details_basic']];
                 break;
             case EntityDir\User::ROLE_LAY_DEPUTY:
                 $formAndGroup = [new FormDir\Settings\ProfileType(['user_details_full']), ['user_details_full']];
