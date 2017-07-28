@@ -13,6 +13,8 @@
 
 {% block pageContent %}
 
+    <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig' %}

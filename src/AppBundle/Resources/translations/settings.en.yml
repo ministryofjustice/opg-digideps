@@ -97,3 +97,5 @@ form:
             at least 1 number
       confirmNewPassword:
           label: Confirm new password
+
+headerInstructions: ""
