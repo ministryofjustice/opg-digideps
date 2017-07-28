@@ -28,11 +28,23 @@ Feature: PA settings
       | profile_jobTitle   | Solicitor General                     |
       | profile_phoneMain  | 10000000011                           |
     And I press "profile_save"
+    Then the following fields should have an error:
+      | profile_address1         |
+      | profile_addressPostcode  |
+      | profile_addressCountry   |
+    When I fill in the following:
+      | profile_address1         | 123 Streetname |
+      | profile_addressPostcode  | AB1 2CD        |
+      | profile_addressCountry   | GB             |
+    And I press "profile_save"
     Then the form should be valid
     Then I should see "John Named Chap Greenish" in the "profile-name" region
     And I should see "behat-pa1@publicguardian.gsi.gov.uk" in the "profile-email" region
     And I should see "Solicitor General" in the "profile-job" region
     And I should see "10000000011" in the "profile-phone" region
+    And I should see "123 Streetname" in the "profile-address" region
+    And I should see "AB1 2CD" in the "profile-address" region
+    And I should see "United Kingdom" in the "profile-address" region
 
   Scenario: PA Admin logs in and updates profile and sees removeAdmin field but does not
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -72,26 +84,39 @@ Feature: PA settings
     When I click on "pa-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     When I fill in the following:
-      | profile_firstname  | Mark Team Member                                |
+      | profile_firstname  |                                                 |
       | profile_lastname   |                                                 |
-      | profile_email      | behat-pa3-team-member@publicguardian.gsi.gov.uk |
-      | profile_jobTitle   | Solicitor helper                                |
-      | profile_phoneMain  | 30000000003                                     |
+      | profile_email      |                                                 |
+      | profile_jobTitle   |                                                 |
+      | profile_phoneMain  |                                                 |
     And I press "profile_save"
     Then the following fields should have an error:
-      | profile_lastname   |
+      | profile_firstname        |
+      | profile_lastname         |
+      | profile_email            |
+      | profile_jobTitle         |
+      | profile_phoneMain        |
+      | profile_address1         |
+      | profile_addressPostcode  |
+      | profile_addressCountry   |
     When I fill in the following:
-      | profile_firstname  | Tim Team Member                                |
-      | profile_lastname   | Chap                                            |
-      | profile_email      | behat-pa3-team-member@publicguardian.gsi.gov.uk |
-      | profile_jobTitle   | Solicitor helper                                |
-      | profile_phoneMain  | 30000000123                                     |
+      | profile_firstname        | Tim Team Member                                 |
+      | profile_lastname         | Chap                                            |
+      | profile_email            | behat-pa3-team-member@publicguardian.gsi.gov.uk |
+      | profile_jobTitle         | Solicitor helper                                |
+      | profile_phoneMain        | 30000000123                                     |
+      | profile_address1         | 123 SomeRoad                                    |
+      | profile_addressPostcode  | AA1 2BB                                         |
+      | profile_addressCountry   | GB                                              |
     And I press "profile_save"
     Then the form should be valid
     Then I should see "Tim Team Member Chap" in the "profile-name" region
     And I should see "behat-pa3-team-member@publicguardian.gsi.gov.uk" in the "profile-email" region
     And I should see "Solicitor helper" in the "profile-job" region
     And I should see "30000000123" in the "profile-phone" region
+    And I should see "123 SomeRoad" in the "profile-address" region
+    And I should see "AA1 2BB" in the "profile-address" region
+    And I should see "United Kingdom" in the "profile-address" region
 
   Scenario: Named PA logs in and changes password
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

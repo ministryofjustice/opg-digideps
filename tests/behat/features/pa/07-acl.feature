@@ -37,7 +37,6 @@ Feature: PA cannot access other's PA's reports and clients
     When I go to the URL previously saved as "report-for-client-1000010.url"
     Then the response status code should be 500
 
-  @jack
   Scenario: PA user cannot edit client
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then the URL "/deputyship-details" should be forbidden
