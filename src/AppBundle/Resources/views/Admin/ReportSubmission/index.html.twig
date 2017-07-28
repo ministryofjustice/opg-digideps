@@ -17,6 +17,17 @@
 
 {% block pageContent %}
 
+    {# params #}
+    {% set filtersToPreserveInTabs = {
+        'q': filters.q,
+        'created_by_role': filters.created_by_role
+    } %}
+    {% set filtersToPreserveInPagination = {
+        'status': filters.status,
+        'q': filters.q,
+        'created_by_role': filters.created_by_role,
+    } %}
+
     {# search form #}
     <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
         <fieldset>
@@ -25,25 +36,32 @@
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
             <input type="hidden" name="status" value="{{ filters.status }}" />
+            <select name="created_by_role" class="search-dropdown form-control">
+                <option value="">All</option>
+                {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
+                    <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
             <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
-            {% if filters.q %}
-                <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear search</a>
+            {% if filters.q or filters.created_by_role %}
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear filters</a>
             {% endif %}
         </fieldset>
     </form>
 
     {# tabs #}
+
     <div class="tabs push--ends">
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'new', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="data-item bold-large">{{ counts.new }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'archived', 'q': filters.q}) }}" role="tab" tabindex="0" >
+                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" >
                         <span class="data-item bold-large">{{ counts.archived }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
                     </a>
@@ -128,10 +146,7 @@
             recordsPerPage: filters.limit,
             totalRecords: counts[filters.status ?: 'total'],
             routeName: 'admin_documents',
-            routeParams: {
-            'status': filters.status,
-            'q': filters.q
-            },
+            routeParams: filtersToPreserveInPagination,
             messages: {
                 singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
                 multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'

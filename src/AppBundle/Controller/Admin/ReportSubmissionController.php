@@ -33,13 +33,14 @@ class ReportSubmissionController extends AbstractController
             'status' => $request->get('status', 'new'), // new | archived
             'limit'             => $request->query->get('limit') ?: 15,
             'offset'            => $request->query->get('offset') ?: 0,
+            'created_by_role'   => $request->get('created_by_role'),
         ];
         $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
-        $reportSubmissions = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
+        $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         return [
             'filters' => $currentFilters,
-            'records' => $reportSubmissions,
+            'records' => $records,
             'counts'  => [
                 'new'      => $ret['counts']['new'],
                 'archived' => $ret['counts']['archived'],
