@@ -46,6 +46,11 @@
                     <a href="{{ path('pa_settings') }}">Settings</a>
                 </li>
             {% endif %}
+            {% if 'team' in section and section != 'settings-team' %}
+                <li>
+                    <a href="{{ path('pa_team') }}">User accounts</a>
+                </li>
+            {% endif %}
             {% if section == 'settings-profile-edit' %}
                 <li>
                     <a href="{{ path('pa_profile_show') }}">Your details</a>

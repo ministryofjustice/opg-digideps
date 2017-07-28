@@ -8,6 +8,10 @@
 {% block pageTitle %}{{ 'removePage.h1Title' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings-team-user') }}
+{% endblock %}
+
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'removePage.supportTitle' | trans }}</span>
 {% endblock %}
