@@ -62,6 +62,12 @@ class ReportSubmissionController extends RestController
             $qb->setParameter('q', $q);
         }
 
+        $createdByRole = $request->get('created_by_role');
+        if ($createdByRole) {
+            $qb->andWhere('cb.roleName = :roleName');
+            $qb->setParameter('roleName', $createdByRole);
+        }
+
         $this->get('em')->getFilters()->disable('softdeleteable');
         $records = $qb->getQuery()->getResult(); /* @var $records EntityDir\Report\ReportSubmission[] */
         $this->get('em')->getFilters()->enable('softdeleteable');

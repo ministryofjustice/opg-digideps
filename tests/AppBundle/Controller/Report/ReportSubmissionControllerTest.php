@@ -6,11 +6,13 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use Doctrine\Tests\ORM\Mapping\User;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {
     private static $pa1;
+    private static $deputy1;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -18,7 +20,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
         // create 5 submitted reports
         for($i=0; $i<5; $i++) {
@@ -33,7 +36,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'setSubmittedBy' => self::$pa1,
             ]);
             // create submission
-            $submission = new ReportSubmission($report, self::$pa1);
+            $submission = new ReportSubmission($report, $i<3 ? self::$pa1 : self::$deputy1);
             // add documents, needed for future tests
             $document = new Document($report);
             $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
@@ -100,12 +103,13 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $data = $reportsGetAllRequest(['status'=>'new']);
         $this->assertEquals(['new'=>4, 'archived'=>1], $data['counts']);
 
-        //check search
+        //check search filters (status, q, orole)
         $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'1000000'])['records']);
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['records']);
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['records']);
-        $this->assertCount(4, $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records']);
-        $this->assertCount(4, $reportsGetAllRequest(['status'=>'new', 'q'=>'deputy'])['records']);
+        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['records']); // client name
+        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['records']); //client surname
+        $this->assertCount(4, $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records']); // deputy name
+        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'created_by_role'=>'ROLE_LAY_DEPUTY'])['records']);
+        $this->assertCount(3, $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'created_by_role'=>'ROLE_PA'])['records']);
         // check no results with data not there
         $this->assertCount(0, $reportsGetAllRequest(['status'=>'new', 'q'=>'NOTEXISTING'])['records']);
         
