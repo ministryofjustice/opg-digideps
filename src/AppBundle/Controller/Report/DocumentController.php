@@ -49,8 +49,8 @@ class DocumentController extends RestController
             ? (array) $request->query->get('groups') : ['documents'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
-        /* @var $document Document */
-        $document = $this->findEntityBy(Document::class, $id);
+        /* @var $document EntityDir\Report\Document */
+        $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
 
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
@@ -74,8 +74,8 @@ class DocumentController extends RestController
         $this->get('logger')->debug('Deleting document ' . $id);
 
         try {
-            /** @var $document Document $note */
-            $document = $this->findEntityBy(Document::class, $id);
+            /** @var $document EntityDir\Report\Document $note */
+            $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
 
             // enable if the check above is removed and the note is available for editing for the whole team
             $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());

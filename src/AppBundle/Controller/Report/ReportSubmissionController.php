@@ -62,7 +62,9 @@ class ReportSubmissionController extends RestController
             $qb->setParameter('q', $q);
         }
 
+        $this->get('em')->getFilters()->disable('softdeleteable');
         $records = $qb->getQuery()->getResult(); /* @var $records EntityDir\Report\ReportSubmission[] */
+        $this->get('em')->getFilters()->enable('softdeleteable');
 
         // calculate total counts, filter based on status, then and apply last limit/offset
         $counts = [
