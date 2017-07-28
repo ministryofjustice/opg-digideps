@@ -15,10 +15,12 @@ class ReportSubmissionController extends RestController
 {
     private static $jmsGroups = [
         'report-submission',
+        'report-type',
         'report-client',
         'client-name',
         'client-case-number',
         'user-name',
+        'user-rolename',
         'documents'
     ];
 
@@ -30,12 +32,18 @@ class ReportSubmissionController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
 
+        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)
+            ->findByFiltersWithCounts(
+                $request->get('status'),
+                $request->get('q'),
+                $request->get('created_by_role'),
+                $request->get('offset', 0),
+                $request->get('limit', 15)
+            );
+
         $this->setJmsSerialiserGroups(self::$jmsGroups);
 
-        $archived = $request->get('archived', false);
-
-        return $this->getRepository(EntityDir\Report\ReportSubmission::class)
-            ->getReportSubmissions($archived);
+        return $ret;
     }
 
     /**
