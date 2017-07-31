@@ -47,3 +47,4 @@ parameters:
       validate: true
   {{ end }}
     file_scanner_url: {{ getv "/frontend/filescanner/url" }}
+    file_scanner_sslverify: {{ if exists "/frontend/filescanner/sslverify" }}{{ getv "/frontend/filescanner/sslverify" }}{{ else }}true{{ end }}

@@ -75,3 +75,4 @@ parameters:
         key: 'YOUR_ACCESS_KEY_ID'
         secret: 'YOUR_SECRET_ACCESS_KEY'
     file_scanner_url: https://file-scanner-api:8443
+    file_scanner_sslverify: false
