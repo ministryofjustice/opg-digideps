@@ -237,24 +237,12 @@ Feature: PA user edits report sections
       # add another: no
     And I choose "no" when asked for adding another record
 
-  Scenario: PA has no documents to attach
+  Scenario: PA adds documents to 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
+    # Check report is not submittable until documents section complete
+    And the report should not be submittable
     And I click on "edit-documents, start"
-  # chose "no documents"
-    Then the URL should match "report/\d+/documents/step/1"
-    Given the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | document_wishToProvideDocumentation_1 | no |
-  # check no documents in summary page
-    Then the URL should match "report/\d+/documents/summary"
-    And each text should be present in the corresponding region:
-      | No documents        | document-list |
-
-  Scenario: PA edits documents attached
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
-    And I click on "edit-documents"
     # chose "yes documents"
     Then the URL should match "report/\d+/documents"
     And the step with the following values CAN be submitted:
@@ -287,7 +275,7 @@ Feature: PA user edits report sections
     Then the following fields should have an error:
       | report_document_upload_file   |
 
-  Scenario: PA deletes document
+  Scenario: PA deletes document from 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-documents"
@@ -318,12 +306,29 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
 
-  Scenario: PA Report should be submittable
+  Scenario: PA 102 Report should be submittable
     Given I save the application status into "pa-report-balance-before"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     Then the report should be submittable
     And I save the application status into "pa-report-completed"
+
+  # 103 Report
+
+  Scenario: PA attaches no documents to 103 (to enable submission)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000011" region
+    Then the report should not be submittable
+    And I click on "edit-documents, start"
+  # chose "no documents"
+    Then the URL should match "report/\d+/documents/step/1"
+    Given the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_1 | no |
+  # check no documents in summary page
+    Then the URL should match "report/\d+/documents/summary"
+    And each text should be present in the corresponding region:
+      | No documents        | document-list |
 
   Scenario: PA money in 103
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
