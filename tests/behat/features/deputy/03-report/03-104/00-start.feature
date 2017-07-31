@@ -15,6 +15,7 @@ Feature: Report 104 start
     Then I should see the "edit-visits_care" link
     Then I should see the "edit-actions" link
     Then I should see the "edit-other_info" link
+    Then I should see the "edit-documents" link
     #Then I should see the "edit-hw" link
     # Assert finance sections are NOT displayed
     Then I should not see the "edit-debts" link
@@ -24,6 +25,8 @@ Feature: Report 104 start
     Then I should not see the "edit-money_transfers" link
     Then I should not see the "edit-money_in_short" link
     Then I should not see the "edit-money_out_short" link
+
+
 
 
 

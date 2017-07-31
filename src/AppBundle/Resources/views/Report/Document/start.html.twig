@@ -1,0 +1,23 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+	</div>
+
+    <a href="{{ path('documents_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+{% endblock %}

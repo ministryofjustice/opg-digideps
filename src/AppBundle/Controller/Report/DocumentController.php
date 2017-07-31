@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
-
+use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\FileUploader;
@@ -20,8 +20,68 @@ class DocumentController extends AbstractController
 {
     private static $jmsGroups = [
         'report-documents',
-        'documents'
+        'documents',
+        'documents-state',
     ];
+
+    /**
+     * @Route("/report/{reportId}/documents/start", name="documents")
+     * @Template()
+     */
+    public function startAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirectToRoute('documents_step', ['reportId' => $reportId, 'step' => 1]);
+        }
+        return [
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/documents/step/{step}", name="documents_step")
+     * @Template()
+     */
+    public function stepAction(Request $request, $reportId, $step)
+    {
+        $totalSteps = 3;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        }
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getWishToProvideDocumentation() === 'no' && $step > 1) {
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        }
+
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector()
+            ->setRoutes('documents', 'report_documents', 'report_documents_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId' => $reportId]);
+
+        $form = $this->createForm(new FormDir\Report\DocumentType($this->get('translator')), $report);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            /* @var $data EntityDir\Report\Report */
+            $data = $form->getData();
+
+            $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+        }
+
+        return [
+            'report'       => $report,
+            'step'         => $step,
+            'form'         => $form->createView(),
+            'backLink'     => $stepRedirector->getBackLink(),
+            'skipLink'     => '',
+        ];
+    }
 
     /**
      * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
@@ -31,6 +91,9 @@ class DocumentController extends AbstractController
     {
         $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getWishToProvideDocumentation() === 'no') {
+            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        }
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
@@ -82,8 +145,27 @@ class DocumentController extends AbstractController
 
         return [
             'report'   => $report,
+            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
+            'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
             'form'     => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
+     * @Template()
+     */
+    public function summaryAction(Request $request, $reportId)
+    {
+        $fromPage = $request->get('from');
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
+            'report'             => $report,
+            'backLink'           => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
+            'status'             => $report->getStatus()
         ];
     }
 
@@ -147,7 +229,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'document-report', 'report', 'client', 'user']
+            ['documents', 'status', 'document-report', 'report', 'client', 'user']
         );
     }
 }

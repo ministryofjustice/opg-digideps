@@ -33,11 +33,11 @@
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
         'labelText':  'form.attachAFile' | trans ,
-        'inputClass': 'no-border',
+        'inputClass': 'no-border behat-link-choose-file',
         'hintText': 'form.acceptedFileTypes' | trans}) }}
-    {{ form_submit(form.save, '', {'labelText': 'form.attachDocument' | trans}) }}
+    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
 
-    <a href=" {{ backLink }} " class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href=" {{ backLink }} " class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
@@ -46,30 +46,14 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
-    <h2 class="heading-medium">{{ (page ~ '.documentList') | trans }}</h2>
+    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+    'translationDomain': translationDomain,
+    'page' : page
+    } %}
 
-    {% if report.documents | length > 0 %}
-        <table>
-            <thead>
-            <th>{{ (page ~ '.filename') | trans }}</th>
-            <th>{{ (page ~ '.dateAttached') | trans }}</th>
-            <th></th>
-            </thead>
-            <tbody>
-            {% for document in report.documents %}
-                <tr>
-                    <td>{{ document.fileName }}</td>
-                    <td>{{ document.createdOn | date("j F Y H:i") }}</td>
-                    <td>
-                        <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id}) }}" class="behat-link-delete-documents-button">{{ (page ~ '.deleteDocument') | trans }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>{{ (page ~ '.noDocuments') | trans }}</p>
-    {% endif %}
+    <p class="text">
+        <a href="{{ nextLink }}" class="button">Save and continue</a>
+    </p>
 
     <script>
         $(document).ready(function () {

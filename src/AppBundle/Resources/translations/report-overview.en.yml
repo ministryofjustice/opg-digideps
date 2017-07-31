@@ -173,6 +173,15 @@ other_info:
     label:
       done: "Finished"
 
+heading.caseDocuments: "Case documents"
+documents:
+    subSectionTitle: "Attached documents"
+    subSectionDescription: "Supporting documents to go with the report"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
+
 report_submit:
     subSectionTitle: "Submit report"
     edit: "Submit report"
