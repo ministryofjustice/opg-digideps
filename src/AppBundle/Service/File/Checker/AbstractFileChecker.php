@@ -40,8 +40,10 @@ class AbstractFileChecker
     public static function hasValidFileExtensiobn(UploadableFileInterface $file)
     {
         $uploadedFile = $file->getUploadedFile();
-        if (!in_array($uploadedFile->getClientOriginalExtension(), self::getAcceptedExtensions()) ||
-            $uploadedFile->guessExtension() !== $uploadedFile->getClientOriginalExtension()
+        $extension = strtolower($uploadedFile->getClientOriginalExtension());
+
+        if (!in_array($extension, self::getAcceptedExtensions()) ||
+            $uploadedFile->guessExtension() !== $extension
         ) {
             return false;
         }
