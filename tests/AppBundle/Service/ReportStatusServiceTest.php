@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Action;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyShortCategory;
@@ -57,6 +58,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getDebtsWithValidAmount'           => [],
                 'getTotalsMatch'                    => null,
                 'getBalanceMismatchExplanation'     => null,
+                'getDocuments'                      => [],
+                'getWishToProvideDocumentation'     => null,
                 // 103
                 'getMoneyShortCategoriesIn'         => [],
                 'getMoneyShortCategoriesInPresent'  => [],
@@ -379,6 +382,27 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getGiftsState()['state']);
     }
 
+    public function documentsProvider()
+    {
+        $document = m::mock(Document::class);
+
+        return [
+            [['getWishToProvideDocumentation' => 'no'], StatusService::STATE_DONE],
+            [['getDocuments' => []], StatusService::STATE_NOT_STARTED],
+            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => []], StatusService::STATE_INCOMPLETE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => [$document]], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @dataProvider documentsProvider
+     */
+    public function testGetDocumentState($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getDocumentsState()['state']);
+    }
+
     public function assetsProvider()
     {
         $asset = m::mock(\AppBundle\Entity\Asset::class);
@@ -501,6 +525,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $ret += array_pop($this->actionsProvider())[0];
         $ret += array_pop($this->otherInfoProvider())[0];
         $ret += array_pop($this->giftsProvider())[0];
+        $ret += array_pop($this->documentsProvider())[0];
 
         if ($type == Report::TYPE_102) {
             $ret += array_pop($this->bankAccountProvider())[0];
@@ -528,10 +553,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return $ret;
     }
 
-    /**
-     * @test
-     */
-    public function getRemainingSections()
+    public function testGetRemainingSections()
     {
         // all empty
         $object = $this->getStatusServiceWithReportMocked([]);

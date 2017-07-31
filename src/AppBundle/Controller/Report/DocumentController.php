@@ -45,6 +45,7 @@ class DocumentController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
+
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['documents'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -74,7 +75,8 @@ class DocumentController extends RestController
         $this->get('logger')->debug('Deleting document ' . $id);
 
         try {
-            /** @var $document EntityDir\Report\Document $note */
+
+            /** @var $document EntityDir\Report\Document */
             $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
 
             // enable if the check above is removed and the note is available for editing for the whole team

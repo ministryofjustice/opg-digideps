@@ -225,6 +225,14 @@ class Report
     private $reportSubmissions;
 
     /**
+     * @var string
+     * @JMS\Groups({"report", "wish-to-provide-documentation"})
+     * @JMS\Type("string")
+     * @ORM\Column(name="wish_to_provide_documentation", type="string", nullable=true)
+     */
+    private $wishToProvideDocumentation;
+
+    /**
      * Report constructor
      * Construct reports using the report service
      *
@@ -289,6 +297,7 @@ class Report
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->reportSubmissions = new ArrayCollection();
+        $this->wishToProvideDocumentation = null;
     }
 
     /**
@@ -711,6 +720,7 @@ class Report
      *     "money-in-short-state",
      *     "money-out-short-state",
      *     "fee-state",
+     *     "documents-state"
      * })
      *
      * @return ReportStatusService
@@ -757,5 +767,21 @@ class Report
         }
     }
 
+    /**
+     * @return null|string
+     */
+    public function getWishToProvideDocumentation()
+    {
+        return $this->wishToProvideDocumentation;
+    }
 
+    /**
+     * @param mixed $wishToProvideDocumentation
+     * @return $this
+     */
+    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    {
+        $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+        return $this;
+    }
 }

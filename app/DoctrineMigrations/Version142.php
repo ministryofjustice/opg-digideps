@@ -7,9 +7,9 @@ use Doctrine\DBAL\Schema\Schema;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
- * extend field size
+ * Add wish_to_provide_documentation field
  */
-class Version141 extends AbstractMigration
+class Version142 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -19,9 +19,7 @@ class Version141 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE document ALTER filename TYPE VARCHAR(255)');
-        $this->addSql('ALTER TABLE document ALTER storage_reference TYPE VARCHAR(512)');
-
+        $this->addSql('ALTER TABLE report ADD wish_to_provide_documentation VARCHAR(3) DEFAULT NULL');
     }
 
     /**
@@ -32,7 +30,7 @@ class Version141 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE document ALTER filename TYPE VARCHAR(150)');
-        $this->addSql('ALTER TABLE document ALTER storage_reference TYPE VARCHAR(150)');
+        $this->addSql('ALTER TABLE report DROP wish_to_provide_documentation');
     }
 }
+
