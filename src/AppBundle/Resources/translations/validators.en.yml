@@ -175,9 +175,9 @@ document:
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
       maxMessage: "The file name can't be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
-      risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
-      virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it"
-      generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
+      risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
+      virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
+      generic: "Cannot upload file, please try again later"
   wishToProvideDocumentation:
       notBlank: Choose yes or no
 
