@@ -17,6 +17,7 @@ class ReportSubmissionController extends RestController
         'report-submission',
         'report-type',
         'report-client',
+        'report-period',
         'client-name',
         'client-case-number',
         'user-name',

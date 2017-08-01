@@ -74,6 +74,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $submission = $data['records'][0];
         $this->assertNotEmpty($submission['id']);
         $this->assertNotEmpty($submission['report']['type']);
+        $this->assertNotEmpty($submission['report']['start_date']);
+        $this->assertNotEmpty($submission['report']['end_date']);
         $this->assertNotEmpty($submission['report']['client']['case_number']);
         $this->assertNotEmpty($submission['report']['client']['firstname']);
         $this->assertNotEmpty($submission['report']['client']['lastname']);
