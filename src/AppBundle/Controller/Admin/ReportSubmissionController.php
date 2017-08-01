@@ -104,9 +104,20 @@ class ReportSubmissionController extends AbstractController
      */
     public function archiveDocumentsAction(Request $request, $reportSubmissionId)
     {
-        $documentRefs = $this->getRestClient()->put("report-submission/{$reportSubmissionId}/archive", []);
-        foreach($documentRefs as $ref) {
-            //$this->get('s3_storage')->delete($ref); // CHECK WHAT'S THE NEEDED LOGIC HERE. could be enough to soft delete and the cron will clean them up
+        //get document storage
+        $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+        $documentsRefs = [];
+        foreach($reportSubmission->getDocuments() as $document) {
+            $documentsRefs[] = $document->getStorageReference();
+        }
+
+        // archive
+        $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archived'=>true]);
+
+        // delete documents  from S3 after archiving
+        $s3Storage = $this->get('s3_storage');
+        foreach($documentsRefs as $ref) {
+            $s3Storage->delete($ref);
         }
 
         $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
