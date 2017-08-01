@@ -900,12 +900,13 @@ class Report
     }
 
     /**
+     * @param $format where %s are endDate (Y), submitDate Y-m-d, case number
      * @return string
      */
-    public function getAttachmentNamePdf()
+    public function createAttachmentName($format)
     {
         $client = $this->getClient();
-        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+        $attachmentName = sprintf($format,
             $this->getEndDate()->format('Y'),
             $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
             $client->getCaseNumber()

@@ -191,7 +191,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment($report->getAttachmentNamePdf(), 'application/pdf', $pdfBinaryContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment($report->createAttachmentName('DigiRep-%s_%s_%s.pdf'), 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
     }
