@@ -131,7 +131,7 @@
                         <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
                         <br/>
                     {% endif %}
-                    <a target="_blank" href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
                 </td>
                 {% if isArchivedPage %}
                     <td>
