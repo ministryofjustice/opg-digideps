@@ -3,6 +3,7 @@
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
 {% set isNewPage = (filters.status == 'new') %}
+{% set isArchivedPage = (filters.status == 'archived') %}
 {% set baseRoute = 'admin_documents' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -76,16 +77,13 @@
       <table class="push--bottom">
         <thead>
         <tr>
-            <th>Deputy</th>
-            <th>Case</th>
+            <th></th>
             <th>Documents</th>
             <th>Date</th>
-            <th>
-                {% if isNewPage %}
-                {% else %}
-                    User
-                {% endif %}
-            </th>
+            <th></th>
+            {% if isArchivedPage %}
+             <th>User</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -93,13 +91,13 @@
             {% set report = reportSubmission.report %}
             <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
-                    {{ reportSubmission.createdBy.fullname }}<br/>
-                    Type: {{ reportSubmission.createdBy.roleFullName }}
-                </td>
-                <td>
-                    {{ report.client.fullname }}<br/>
-                    Number: {{ report.client.caseNumber }}<br/>
-                    Type: {{ report.type }}
+                    <div class="bold">Deputy</div>
+                    {{ reportSubmission.createdBy.fullname }}
+                    ({{ reportSubmission.createdBy.roleFullName }})
+                    <div class="bold">Case</div>
+                    {{ report.client.fullname }}, case number: {{ report.client.caseNumber }}<br/>
+                    <div class="bold">Report</div>
+                    Period: {{ report.period }}, type: {{ report.type }}
                 </td>
                 <td>
                     <details class="push--bottom">
@@ -118,25 +116,30 @@
                 </td>
                 <td>
                     {% set submissionDate = reportSubmission.createdOn %}
+                    {# shows "Today" or "d/m/Y"e #}
                     {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
                         Today
                     {% else %}
                         {{ submissionDate | date('d/m/Y') }}
                     {% endif %}
                     <br/>
-                    {{ submissionDate | date('g:ma') }}
+                    {# show hour and time #}
+                    {{ submissionDate | date('g:ia') }}
                 </td>
                 <td class="">
                     {% if isNewPage %}
                         <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
                         <br/>
-                        <a target="_blank" href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
-                    {% else %}
-                        {% if reportSubmission.archivedBy %}
-                            {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
-                        {% endif %}
                     {% endif %}
+                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
                 </td>
+                {% if isArchivedPage %}
+                    <td>
+                        {#{% if reportSubmission.archivedBy %}#}
+                            {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
+                        {#{% endif %}#}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

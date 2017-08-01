@@ -54,10 +54,10 @@ class FileUploader
      * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
      */
     public function uploadFile(Report $report, UploadedFile $uploadedFile)
-    {;
+    {
         $body = file_get_contents($uploadedFile->getPathName());
 
-        $storageReference = 'dd_doc_' . microtime(1);
+        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', ''. microtime(1));
         $this->storage->store($storageReference, $body);
         $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
         $document = new Document();

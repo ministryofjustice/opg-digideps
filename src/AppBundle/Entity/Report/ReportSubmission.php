@@ -114,4 +114,17 @@ class ReportSubmission
         return $this;
     }
 
+
+    /**
+     * @return string
+     */
+    public function getZipName()
+    {
+        $report = $this->getReport();
+        $client = $this->getReport()->getClient();
+
+        return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '.zip';
+
+    }
+
 }

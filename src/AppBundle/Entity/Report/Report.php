@@ -339,7 +339,7 @@ class Report
     /**
      * Return the date 8 weeks after the end date.
      *
-     * @return string $dueDate
+     * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
@@ -897,5 +897,20 @@ class Report
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttachmentNamePdf()
+    {
+        $client = $this->getClient();
+        $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
+            $this->getEndDate()->format('Y'),
+            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $client->getCaseNumber()
+        );
+
+        return $attachmentName;
     }
 }
