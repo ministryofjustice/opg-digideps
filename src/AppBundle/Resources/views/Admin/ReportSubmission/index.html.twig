@@ -76,8 +76,7 @@
       <table class="push--bottom">
         <thead>
         <tr>
-            <th>Deputy</th>
-            <th>Case</th>
+            <th></th>
             <th>Documents</th>
             <th>Date</th>
             <th>
@@ -93,13 +92,13 @@
             {% set report = reportSubmission.report %}
             <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
                 <td>
-                    {{ reportSubmission.createdBy.fullname }}<br/>
-                    Type: {{ reportSubmission.createdBy.roleFullName }}
-                </td>
-                <td>
-                    {{ report.client.fullname }}<br/>
-                    Number: {{ report.client.caseNumber }}<br/>
-                    Type: {{ report.type }}
+                    <div class="bold">Deputy</div>
+                    {{ reportSubmission.createdBy.fullname }}
+                    ({{ reportSubmission.createdBy.roleFullName }})
+                    <div class="bold">Case</div>
+                    {{ report.client.fullname }}, case number: {{ report.client.caseNumber }}<br/>
+                    <div class="bold">Report</div>
+                    Period: {{ report.period }}, type: {{ report.type }}
                 </td>
                 <td>
                     <details class="push--bottom">
