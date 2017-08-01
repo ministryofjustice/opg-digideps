@@ -95,11 +95,12 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals('storageref1', $data['documents'][0]['storage_reference']);
 
         // archive 1st submission
-        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission['id'] . '/archive', [
+        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission['id'], [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
+            'data' => ['archive'=>true]
         ])['data'];
-        $this->assertEquals(['storageref1'], $data);
+        $this->assertEquals($submission['id'], $data);
 
         // check counts after submission
         $data = $reportsGetAllRequest(['status'=>'new']);

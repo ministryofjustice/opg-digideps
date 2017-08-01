@@ -67,7 +67,7 @@ class ReportSubmissionController extends RestController
      * Archive documents
      * return array of storage references, for admin area to delete if needed
      *
-     * @Route("/{reportSubmissionId}/archive", requirements={"reportSubmissionId":"\d+"})
+     * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"})
      * @Method({"PUT"})
      */
     public function archive(Request $request, $reportSubmissionId)
@@ -76,13 +76,14 @@ class ReportSubmissionController extends RestController
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
-        $reportSubmission->setArchivedBy($this->getUser());
-        $ret = [];
-        foreach($reportSubmission->getDocuments() as $document) {
-            $ret[] = $document->getStorageReference();
+
+        $data = $this->deserializeBodyContent($request);
+        if (!empty($data['archive'])) {
+            $reportSubmission->setArchivedBy($this->getUser());
         }
+
         $this->getEntityManager()->flush();
 
-        return $ret;
+        return $reportSubmission->getId();
     }
 }
