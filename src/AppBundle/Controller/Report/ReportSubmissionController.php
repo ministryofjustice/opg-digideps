@@ -32,9 +32,9 @@ class ReportSubmissionController extends RestController
     public function getAll(Request $request)
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
-        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)
-            ->findByFiltersWithCounts(
+        $ret = $repo->findByFiltersWithCounts(
                 $request->get('status'),
                 $request->get('q'),
                 $request->get('created_by_role'),
