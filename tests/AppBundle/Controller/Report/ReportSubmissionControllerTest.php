@@ -12,6 +12,7 @@ use Tests\AppBundle\Controller\AbstractTestController;
 class ReportSubmissionControllerTest extends AbstractTestController
 {
     private static $pa1;
+    private static $pa2;
     private static $deputy1;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
@@ -21,6 +22,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
 
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
         // create 5 submitted reports
@@ -33,10 +35,10 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'setStartDate'   => new \DateTime('2014-01-01'),
                 'setEndDate'     => new \DateTime('2014-12-31'),
                 'setSubmitted'   => true,
-                'setSubmittedBy' => self::$pa1,
+                'setSubmittedBy' => ($i<3) ? self::$pa1 : self::$pa2,
             ]);
             // create submission
-            $submission = new ReportSubmission($report, $i<3 ? self::$pa1 : self::$deputy1);
+            $submission = new ReportSubmission($report, ($i<3) ? self::$pa1 : self::$deputy1);
             // add documents, needed for future tests
             $document = new Document($report);
             $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
@@ -56,7 +58,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function testGetAllWithFiltersGetOneArchive()
     {
-        $reportsGetAllRequest = function (array $params) {
+        $reportsGetAllRequest = function (array $params = []) {
             $url = '/report-submission?' . http_build_query($params);
 
             return $this->assertJsonRequest('GET', $url, [
@@ -103,19 +105,25 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals($submission['id'], $data);
 
         // check counts after submission
-        $data = $reportsGetAllRequest(['status'=>'new']);
+        $data = $reportsGetAllRequest([]);
         $this->assertEquals(['new'=>4, 'archived'=>1], $data['counts']);
 
-        //check search filters (status, q, orole)
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'1000000'])['records']);
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['records']); // client name
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['records']); //client surname
-        $this->assertCount(4, $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records']); // deputy name
-        $this->assertCount(1, $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'created_by_role'=>'ROLE_LAY_DEPUTY'])['records']);
-        $this->assertCount(3, $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'created_by_role'=>'ROLE_PA'])['records']);
-        // check no results with data not there
-        $this->assertCount(0, $reportsGetAllRequest(['status'=>'new', 'q'=>'NOTEXISTING'])['records']);
-        
+
+        // check filters and counts
+        $data = $reportsGetAllRequest(['q'=>'1000000']);
+        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertCount(1, $data['records']);
+
+        $data = $reportsGetAllRequest(['q'=>'1000000', 'status'=>'new']);
+        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertCount(1, $data['records']);
+
+        $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'c0'])['counts']); // client name
+        $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['counts']); //client surname
+        $this->assertEquals(['new'=>4, 'archived'=>1], $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['counts']); // deputy name
+        $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_LAY_DEPUTY'])['counts']);
+//        $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
+
         // check pagination and limit
         $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
         $this->assertEquals('1000003', $data[0]['report']['client']['case_number']);
