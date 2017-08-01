@@ -67,7 +67,7 @@ class ReportSubmissionController extends AbstractController
         }
 
         // create ZIP files and add previously-stored uploaded documents
-        $filename = '/tmp/Report'.$reportSubmission->getReport()->getId().'_'. date('Y-m-d').'.zip'; //memory too risky
+        $filename = '/tmp/'.$reportSubmission->getZipName();
         $zip = new \ZipArchive();
         $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
         foreach($filesToAdd as $localname => $filePath) {
