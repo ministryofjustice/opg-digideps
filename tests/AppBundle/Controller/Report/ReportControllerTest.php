@@ -301,7 +301,12 @@ class ReportControllerTest extends AbstractTestController
     public function testSubmit($reportId)
     {
         $report = self::fixtures()->clear()->getReportById($reportId);
-        $this->assertNotEquals(true, $report->getSubmitted());
+
+        // add one document
+        $document = new Document($report);
+        $document->setFileName('file2.pdf')->setStorageReference('storageref1');
+        self::fixtures()->persist($document)->flush();
+        $this->assertEquals(false, $report->getSubmitted());
 
         $url = '/report/' . $reportId . '/submit';
 
@@ -330,6 +335,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
         $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
     }
 
 

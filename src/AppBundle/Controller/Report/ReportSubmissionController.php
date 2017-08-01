@@ -17,6 +17,7 @@ class ReportSubmissionController extends RestController
         'report-submission',
         'report-type',
         'report-client',
+        'report-period',
         'client-name',
         'client-case-number',
         'user-name',
@@ -31,9 +32,9 @@ class ReportSubmissionController extends RestController
     public function getAll(Request $request)
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
-        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)
-            ->findByFiltersWithCounts(
+        $ret = $repo->findByFiltersWithCounts(
                 $request->get('status'),
                 $request->get('q'),
                 $request->get('created_by_role'),
@@ -63,25 +64,26 @@ class ReportSubmissionController extends RestController
 
 
     /**
-     * Archive documents
+     * Update documents
      * return array of storage references, for admin area to delete if needed
      *
-     * @Route("/{reportSubmissionId}/archive", requirements={"reportSubmissionId":"\d+"})
+     * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"})
      * @Method({"PUT"})
      */
-    public function archive(Request $request, $reportSubmissionId)
+    public function update(Request $request, $reportSubmissionId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_MANAGE);
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
-        $reportSubmission->setArchivedBy($this->getUser());
-        $ret = [];
-        foreach($reportSubmission->getDocuments() as $document) {
-            $ret[] = $document->getStorageReference();
+
+        $data = $this->deserializeBodyContent($request);
+        if (!empty($data['archive'])) {
+            $reportSubmission->setArchivedBy($this->getUser());
         }
+
         $this->getEntityManager()->flush();
 
-        return $ret;
+        return $reportSubmission->getId();
     }
 }

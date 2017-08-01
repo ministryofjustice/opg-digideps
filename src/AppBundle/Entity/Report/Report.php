@@ -115,7 +115,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-period"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -125,7 +125,7 @@ class Report
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"report"})
+     * @JMS\Groups({"report", "report-period"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)

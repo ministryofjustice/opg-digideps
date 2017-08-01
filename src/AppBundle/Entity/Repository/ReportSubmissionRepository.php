@@ -18,13 +18,24 @@ class ReportSubmissionRepository extends EntityRepository
      */
     public function findByFiltersWithCounts($status, $q, $createdByRole, $offset, $limit)
     {
-        $qb = $this->createQueryBuilder('rs')
+        $qb = $this->createQueryBuilder('rs');
+        $qb
             ->leftJoin('rs.report', 'r')
             ->leftJoin('rs.archivedBy', 'ab')
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.documents', 'd')
             ->orderBy('rs.id', 'DESC');
+
+        // only return submission with at least one document
+        // it can be removed when https://opgtransform.atlassian.net/browse/DDPB-1473 gets implemented
+        $qb
+            ->groupBy('rs')
+            ->having(
+                $qb->expr()->gt(
+                    $qb->expr()->count('d'), 0
+                )
+            );
 
         // search filter
         if ($q) {
@@ -42,16 +53,19 @@ class ReportSubmissionRepository extends EntityRepository
             $qb->setParameter('q', $q);
         }
 
+        // role filter
         if ($createdByRole) {
-            $qb->andWhere('cb.roleName = :roleName');
-            $qb->setParameter('roleName', $createdByRole);
+            $qb->andWhere('cb.roleName LIKE :roleNameLikePrefix');
+            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
         }
 
+        // disable soft delete filter, as deleted user stil need to appear as creator of the submission
         $this->_em->getFilters()->disable('softdeleteable');
         $records = $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
-        // calculate total counts, filter based on status, then and apply last limit/offset
+        // calculate total counts for each filter
+        // note: this has to be done before the status filter is applied, to get the counts for each status
         $counts = [
             'new' => 0,
             'archived' => 0,
@@ -63,13 +77,21 @@ class ReportSubmissionRepository extends EntityRepository
                 $counts['new']++;
             }
         }
+
+        // apply filters (status, offset, limit)
         $records = array_filter($records, function ($report) use ($status) {
-            return ($status === 'new')
-                ? ($report->getArchivedBy() === null)
-                : ($report->getArchivedBy() !== null);
+            switch ($status) {
+                case 'new':
+                    return $report->getArchivedBy() === null;
+                case 'archived':
+                    return $report->getArchivedBy() !== null;
+                default:
+                    return true;
+            }
         });
         $records = array_slice($records, $offset, $limit);
 
+        // return counts and records
         return [
             'counts'=>$counts,
             'records'=>$records
