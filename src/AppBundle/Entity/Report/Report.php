@@ -234,7 +234,7 @@ class Report
     
     /**
      * @var Document[]
-     *
+     * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
