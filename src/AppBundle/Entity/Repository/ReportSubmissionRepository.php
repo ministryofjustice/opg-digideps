@@ -55,8 +55,8 @@ class ReportSubmissionRepository extends EntityRepository
 
         // role filter
         if ($createdByRole) {
-            $qb->andWhere('cb.roleName = :roleName');
-            $qb->setParameter('roleName', $createdByRole);
+            $qb->andWhere('cb.roleName LIKE :roleNameLikePrefix');
+            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
         }
 
         // disable soft delete filter, as deleted user stil need to appear as creator of the submission
@@ -80,9 +80,14 @@ class ReportSubmissionRepository extends EntityRepository
 
         // apply filters (status, offset, limit)
         $records = array_filter($records, function ($report) use ($status) {
-            return ($status === 'new')
-                ? ($report->getArchivedBy() === null)
-                : ($report->getArchivedBy() !== null);
+            switch ($status) {
+                case 'new':
+                    return $report->getArchivedBy() === null;
+                case 'archived':
+                    return $report->getArchivedBy() !== null;
+                default:
+                    return true;
+            }
         });
         $records = array_slice($records, $offset, $limit);
 

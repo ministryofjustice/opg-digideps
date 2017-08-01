@@ -35,10 +35,10 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'setStartDate'   => new \DateTime('2014-01-01'),
                 'setEndDate'     => new \DateTime('2014-12-31'),
                 'setSubmitted'   => true,
-                'setSubmittedBy' => ($i<3) ? self::$pa1 : self::$pa2,
+                'setSubmittedBy' => self::$pa1, //irrelevant for assertions
             ]);
             // create submission
-            $submission = new ReportSubmission($report, ($i<3) ? self::$pa1 : self::$deputy1);
+            $submission = new ReportSubmission($report, ($i<3) ? self::$pa2 : self::$deputy1);
             // add documents, needed for future tests
             $document = new Document($report);
             $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
@@ -107,6 +107,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         // check counts after submission
         $data = $reportsGetAllRequest([]);
         $this->assertEquals(['new'=>4, 'archived'=>1], $data['counts']);
+        $this->assertCount(5, $data['records']);
 
 
         // check filters and counts
@@ -122,7 +123,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['counts']); //client surname
         $this->assertEquals(['new'=>4, 'archived'=>1], $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['counts']); // deputy name
         $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_LAY_DEPUTY'])['counts']);
-//        $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
+        $this->assertEquals(['new'=>3, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
 
         // check pagination and limit
         $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
