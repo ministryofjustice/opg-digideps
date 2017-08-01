@@ -99,26 +99,14 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
+     * Note: archive won't delete documents, a cron [https://opgtransform.atlassian.net/browse/DDPB-1474] will do that
+     *
      * @Route("/archive/{reportSubmissionId}", name="admin_document_archive")
      * @Template
      */
     public function archiveDocumentsAction(Request $request, $reportSubmissionId)
     {
-        //get document storage
-        $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
-        $documentsRefs = [];
-        foreach($reportSubmission->getDocuments() as $document) {
-            $documentsRefs[] = $document->getStorageReference();
-        }
-
-        // archive
-        $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archived'=>true]);
-
-        // delete documents  from S3 after archiving
-        $s3Storage = $this->get('s3_storage');
-        foreach($documentsRefs as $ref) {
-            $s3Storage->delete($ref);
-        }
+        $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
 
         $request->getSession()->getFlashBag()->add('notice', 'Documents archived');
 
