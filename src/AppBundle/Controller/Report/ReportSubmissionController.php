@@ -64,13 +64,13 @@ class ReportSubmissionController extends RestController
 
 
     /**
-     * Archive documents
+     * Update documents
      * return array of storage references, for admin area to delete if needed
      *
      * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"})
      * @Method({"PUT"})
      */
-    public function archive(Request $request, $reportSubmissionId)
+    public function update(Request $request, $reportSubmissionId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_MANAGE);
 
