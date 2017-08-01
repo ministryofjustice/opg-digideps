@@ -176,9 +176,10 @@ class ReportStatusService
     public function getMoneyInShortState()
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
-        $exist = in_array($this->report->getMoneyTransactionsShortInExist(), ['yes', 'no']);
+        $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
+        $isCompleted = ( 'no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortIn()) > 0));
 
-        if ($exist) {
+        if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
         }
 
@@ -199,9 +200,10 @@ class ReportStatusService
     public function getMoneyOutShortState()
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
-        $exist = in_array($this->report->getMoneyTransactionsShortOutExist(), ['yes', 'no']);
+        $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
+        $isCompleted = ( 'no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortOut()) > 0));
 
-        if ($exist) {
+        if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
         }
 
@@ -269,8 +271,7 @@ class ReportStatusService
     public function getDebtsState()
     {
         $hasDebts = $this->report->getHasDebts();
-
-        if (in_array($hasDebts, ['yes', 'no'])) {
+        if ('no' == $hasDebts || ('yes' == $hasDebts AND count($this->report->getDebtsWithValidAmount()) > 0)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
         } else {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
