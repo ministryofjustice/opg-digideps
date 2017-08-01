@@ -68,7 +68,7 @@ class S3Storage implements StorageInterface
             return $result['Body'];
         } catch (S3Exception $e) {
             if ($e->getAwsErrorCode() === 'NoSuchKey') {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Cannot find file with reference $key");
             }
             throw $e;
         }
