@@ -118,13 +118,15 @@
                 </td>
                 <td>
                     {% set submissionDate = reportSubmission.createdOn %}
+                    {# shows "Today" or "d/m/Y"e #}
                     {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
                         Today
                     {% else %}
                         {{ submissionDate | date('d/m/Y') }}
                     {% endif %}
                     <br/>
-                    {{ submissionDate | date('g:ma') }}
+                    {# show hour and time #}
+                    {{ submissionDate | date('g:ia') }}
                 </td>
                 <td class="">
                     {% if isNewPage %}
