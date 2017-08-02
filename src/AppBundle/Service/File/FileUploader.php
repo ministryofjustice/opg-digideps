@@ -57,7 +57,7 @@ class FileUploader
     {
         $body = file_get_contents($uploadedFile->getPathName());
 
-        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', ''. microtime(1));
+        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(1));
         $this->storage->store($storageReference, $body);
         $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
         $document = new Document();
