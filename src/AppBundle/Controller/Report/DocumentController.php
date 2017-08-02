@@ -31,9 +31,15 @@ class DocumentController extends AbstractController
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
-            return $this->redirectToRoute('documents_step', ['reportId' => $reportId, 'step' => 1]);
+            $referer = $request->headers->get('referer');
+            $redirectResponse = false !== strpos($referer, '/step/1')
+                ? $this->redirectToRoute('report_overview', ['reportId' => $reportId])
+                : $this->redirectToRoute('documents_step' , ['reportId' => $reportId, 'step' => 1]);
+            return $redirectResponse;
         }
+
         return [
             'report' => $report,
         ];
