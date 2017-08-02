@@ -179,7 +179,7 @@ document:
       virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
       generic: "Cannot upload file, please try again later"
   wishToProvideDocumentation:
-      notBlank: Choose yes or no
+      notBlank: Choose Yes or No
 
 # currently a subsection of decisions
 mentalCapacity:

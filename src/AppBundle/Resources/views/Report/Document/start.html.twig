@@ -15,8 +15,8 @@
 {% block pageContent %}
 
     <div class="text">
-	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
-	</div>
+        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+    </div>
 
     <a href="{{ path('documents_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
