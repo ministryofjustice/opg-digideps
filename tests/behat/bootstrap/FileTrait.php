@@ -17,6 +17,7 @@ trait FileTrait
         file_put_contents($tmpFile, $pageContent);
 
         foreach ($table->getRowsHash() as $file => $expectedChecksum) {
+            $lines = [];
             exec("unzip -c $tmpFile $file | md5sum", $lines);
             if (empty($lines)) {
                 throw new \RuntimeException("$file not found in ZIP file");

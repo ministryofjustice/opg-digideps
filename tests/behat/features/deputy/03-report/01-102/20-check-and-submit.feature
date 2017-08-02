@@ -84,7 +84,7 @@ Feature: Report submit
         When I click on "download" in the "report-submission-1" region
         Then the page content should be a zip file containing files with the following MD5 checksums:
             | file1.pdf | d3f3c05deb6a46cd9e32ea2a1829cf28 |
-            | file2.pdf | d3f3c05deb6a46cd9e32ea2a1829cf28DONTMATCH |
+            | file2.pdf | 6b871eed6b34b560895f221de1420a5a |
 
     @deputy
     Scenario: assert 2nd year report has been created
