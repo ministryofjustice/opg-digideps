@@ -29,7 +29,7 @@
 
     <h2 class="heading-medium">{{ (page ~ '.attachDocuments') | trans }}</h2>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form'}}) }}
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
         'labelText':  'form.attachAFile' | trans ,
@@ -37,7 +37,7 @@
         'hintText': 'form.acceptedFileTypes' | trans}) }}
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
 
-    <a href=" {{ backLink }} " class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ backLink }}" class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
@@ -51,9 +51,7 @@
     'page' : page
     } %}
 
-    <p class="text">
-        <a href="{{ nextLink }}" class="button">Save and continue</a>
-    </p>
+    <a href="{{ nextLink }}" class="button push--top">Save and continue</a>
 
     <script>
         $(document).ready(function () {

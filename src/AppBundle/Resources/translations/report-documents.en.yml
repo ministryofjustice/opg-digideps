@@ -51,3 +51,8 @@ summaryPage:
   pageContent:
     weAskAbout: In this section, we asked you to provide any supporting documents.
     checktheyrecorrect: Check they're correct and edit them where neccessary.
+  noDocuments: No documents
+  documentList: Document list
+  filename: File name
+  dateAttached: Date attached
+  deleteDocument: Remove
