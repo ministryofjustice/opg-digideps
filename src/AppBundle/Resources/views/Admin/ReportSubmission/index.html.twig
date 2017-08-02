@@ -89,7 +89,7 @@
         <tbody>
         {% for reportSubmission in records %}
             {% set report = reportSubmission.report %}
-            <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
+            <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }}">
                 <td>
                     <div class="bold">Deputy</div>
                     {{ reportSubmission.createdBy.fullname }}
@@ -131,7 +131,7 @@
                         <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
                         <br/>
                     {% endif %}
-                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a>
                 </td>
                 {% if isArchivedPage %}
                     <td>
