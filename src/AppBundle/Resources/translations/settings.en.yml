@@ -78,6 +78,9 @@ form:
         label: Email
       jobTitle:
         label: Job title
+      removeAdmin:
+        label: Administrator access
+        hint: You are currently an administrator on the Deputy Report Service.
 
   changeYourPassword:
     controls:
