@@ -73,6 +73,49 @@ Feature: Report submit
         And I save the application status into "report-submit-reports"
 
     @deputy
+    Scenario: admin area check filters, submission and ZIP file
+        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
+        Then I should be on "/admin/documents/list"
+        And I save the current URL as "admin-documents-list-new"
+        # test filters
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-new"
+        Then I should see the "report-submission" region exactly 1 times
+        # test search
+        When I fill in the following:
+            | search | 12345abc |
+            | created_by_role | ROLE_PA |
+        And I press "search_submit"
+        Then I should see the "report-submission" region exactly 0 times
+        When I fill in the following:
+            | search | 12345abc |
+            | created_by_role | ROLE_LAY_DEPUTY |
+        And I press "search_submit"
+        Then I should see the "report-submission" region exactly 1 times
+        # assert submission and download
+        Given each text should be present in the corresponding region:
+            | Peter White | report-submission-1 |
+            | 12345abc | report-submission-1 |
+            | 2 documents | report-submission-1 |
+        When I click on "download" in the "report-submission-1" region
+        Then the page content should be a zip file containing files with the following MD5 checksums:
+            | file1.pdf | d3f3c05deb6a46cd9e32ea2a1829cf28 |
+            | file2.pdf | 6b871eed6b34b560895f221de1420a5a |
+        # test archive
+        When I go to the URL previously saved as "admin-documents-list-new"
+        When I click on "archive" in the "report-submission-1" region
+        Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 1 times
+        And each text should be present in the corresponding region:
+            | Peter White | report-submission-1 |
+            | 12345abc | report-submission-1 |
+            | 2 documents | report-submission-1 |
+            | AU | report-submission-1 |
+
+    @deputy
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-open"

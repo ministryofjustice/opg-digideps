@@ -38,7 +38,7 @@
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
             <input type="hidden" name="status" value="{{ filters.status }}" />
-            <select name="created_by_role" class="search-dropdown form-control">
+            <select name="created_by_role" id="created_by_role" class="search-dropdown form-control">
                 <option value="">All</option>
                 {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
                     <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
@@ -57,13 +57,13 @@
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true" class="behat-link-tab-new">
                         <span class="data-item bold-large">{{ counts.new }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" >
+                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" class="behat-link-tab-archived">
                         <span class="data-item bold-large">{{ counts.archived }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
                     </a>
@@ -89,7 +89,7 @@
         <tbody>
         {% for reportSubmission in records %}
             {% set report = reportSubmission.report %}
-            <tr class="behat-region-report-submission-{{ reportSubmission.id }}">
+            <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }}">
                 <td>
                     <div class="bold">Deputy</div>
                     {{ reportSubmission.createdBy.fullname }}
@@ -128,10 +128,10 @@
                 </td>
                 <td class="">
                     {% if isNewPage %}
-                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
                         <br/>
                     {% endif %}
-                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}">Download</a>
+                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a>
                 </td>
                 {% if isArchivedPage %}
                     <td>
