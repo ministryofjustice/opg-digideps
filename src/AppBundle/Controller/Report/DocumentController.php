@@ -188,10 +188,17 @@ class DocumentController extends AbstractController
 
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
+        $report = $document->getReport();
+        $fromPage = $request->get('from');
+
+        $backLink = 'summaryPage' == $fromPage
+            ? $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
+            : $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
+
         return [
-            'report'  => $document->getReport(),
+            'report'   => $report,
             'document' => $document,
-            'backLink' => $this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()])
+            'backLink' => $backLink
         ];
     }
 
