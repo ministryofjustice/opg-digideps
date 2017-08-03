@@ -5,6 +5,7 @@ namespace AppBundle\Service\File\Checker;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
+use AppBundle\Service\File\Types\Pdf;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -61,13 +62,13 @@ class ClamAVChecker implements FileCheckerInterface
                 throw new VirusFoundException('Found virus in file');
             }
 
-            if ($response['pdf_scan_result'] !== 'PASS') {
-                $this->logger->warning('Risky content found in ' . $file->getUploadedFile()->getClientOriginalName() .
+            if ($file instanceof Pdf && $response['pdf_scan_result'] !== 'PASS') {
+                $this->logger->warning('PDF file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
                     ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-                throw new RiskyFileException('Found virus in file');
+                throw new RiskyFileException('PDF file scan failed');
             }
 
-            $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
+            $this->logger->info('File scan passed for ' . $file->getUploadedFile()->getClientOriginalName() .
                 ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
 
         } else {

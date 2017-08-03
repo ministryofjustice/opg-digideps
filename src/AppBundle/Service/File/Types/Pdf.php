@@ -8,37 +8,21 @@ use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 class Pdf extends UploadableFile
 {
 
-    /**
-     * Checks a file by calling configured file checkers for that file type
-     *
-     * @throws \Exception
-     */
-    public function checkFile()
+    public function isSafe()
     {
-        parent::callFileCheckers();
-
         $scanResult = $this->getScanResult();
 
-        if (strtoupper(trim($scanResult['file_scanner_result'])) !== 'PASS') {
-            if ($scanResult['av_scan_result'] !== 'PASS') {
-                $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
-                throw new VirusFoundException('Found virus in file');
-            }
+        $this->logger->warning('Confirming file is safe... ' . $this->getUploadedFile()->getClientOriginalName() .
+            ' - ' . $this->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
 
-            if ($scanResult['pdf_scan_result'] !== 'PASS') {
-                $this->logger->warning('Risky content found in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
-                throw new RiskyFileException('Found virus in file');
-            }
-
-            $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
-                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
-
-        } else {
-            $this->logger->info('Scan results for: ' . $file->getUploadedFile()->getClientOriginalName() .
-                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+        if (isset($scanResult['av_scan_result']) &&
+            strtoupper($scanResult['av_scan_result'] == 'PASS')
+            && strtoupper($scanResult['pdf_scan_result'] == 'PASS')
+        ) {
+            return true;
         }
+
+        return false;
     }
 }
 

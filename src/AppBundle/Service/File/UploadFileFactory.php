@@ -37,7 +37,7 @@ class UploadFileFactory
                 return $this->container->get('file_pdf')->setUploadedFile($uploadedFile);
             // more mime types to go here
             default:
-                $this->logger->wrning('Unsupported File type -> ' . $thiw->getUploadeedFile()->getClientOriginalExtension());
+                $this->logger->warning('Unsupported File type -> ' . $thiw->getUploadeedFile()->getClientOriginalExtension());
         }
     }
 }
