@@ -32,7 +32,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('delete_document_confirm', { documentId: document.id }) }}" id="document-delete" class="button push-half--right behat-link-confirm">{{ (page ~ '.linkButtonLabel') | trans }}</a>
+    <a href="{{ path('delete_document_confirm', { documentId: document.id, 'from': fromPage }) }}" id="document-delete" class="button push-half--right behat-link-confirm">{{ (page ~ '.linkButtonLabel') | trans }}</a>
 
     <a href="{{ backLink }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
 
