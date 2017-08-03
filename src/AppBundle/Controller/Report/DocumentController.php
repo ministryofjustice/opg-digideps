@@ -198,7 +198,8 @@ class DocumentController extends AbstractController
         return [
             'report'   => $report,
             'document' => $document,
-            'backLink' => $backLink
+            'backLink' => $backLink,
+            'fromPage' => $fromPage
         ];
     }
 
@@ -210,14 +211,12 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {
+        /** @var EntityDir\Document $document */
+        $document = $this->getDocument($documentId);
+        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
+
         try {
-            /** @var EntityDir\Document $document */
-            $document = $this->getDocument($documentId);
-
-            $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
-
             $this->getRestClient()->delete('document/' . $documentId);
-
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
@@ -228,7 +227,11 @@ class DocumentController extends AbstractController
             );
         }
 
-        return $this->redirect($this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()]));
+        $returnUrl = 'summaryPage' == $request->get('from')
+            ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
+            : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+
+        return $this->redirect($returnUrl);
     }
 
     /**
