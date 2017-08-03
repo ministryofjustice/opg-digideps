@@ -12,8 +12,9 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{# Breadcrumbs #}
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+{% endblock %}
 
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ report.client.fullname }}</span>
