@@ -19,12 +19,25 @@ class Pdf extends UploadableFile
 
         $scanResult = $this->getScanResult();
 
-        if ($scanResult['av_scan_result'] !== 'PASS') {
-            throw new VirusFoundException('Found virus in file');
-        }
+        if (strtoupper(trim($scanResult['file_scanner_result'])) !== 'PASS') {
+            if ($scanResult['av_scan_result'] !== 'PASS') {
+                $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+                throw new VirusFoundException('Found virus in file');
+            }
 
-        if ($scanResult['pdf_scan_result'] !== 'PASS') {
-            throw new RiskyFileException('Risky content found in file');
+            if ($scanResult['pdf_scan_result'] !== 'PASS') {
+                $this->logger->warning('Risky content found in ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+                throw new RiskyFileException('Found virus in file');
+            }
+
+            $this->logger->warning('File scan failure for ' . $file->getUploadedFile()->getClientOriginalName() .
+                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+
+        } else {
+            $this->logger->info('Scan results for: ' . $file->getUploadedFile()->getClientOriginalName() .
+                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
         }
     }
 }

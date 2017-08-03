@@ -27,10 +27,17 @@ class UploadFileFactory
     {
         switch ($uploadedFile->getMimeType())
         {
+            case 'image/jpeg':
+            case 'image/jpg':
+                return $this->container->get('file_jpg')->setUploadedFile($uploadedFile);
+            case 'image/png':
+                return $this->container->get('file_png')->setUploadedFile($uploadedFile);
             case 'application/pdf':
+            case 'application/x-pdf':
                 return $this->container->get('file_pdf')->setUploadedFile($uploadedFile);
-                break;
             // more mime types to go here
+            default:
+                $this->logger->wrning('Unsupported File type -> ' . $thiw->getUploadeedFile()->getClientOriginalExtension());
         }
     }
 }

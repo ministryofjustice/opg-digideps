@@ -7,6 +7,10 @@ services:
     arguments: [ "@s3_client", "%s3_bucket_name%" ]
   file_checker_pdf:
     class: AppBundle\Service\File\Checker\PdfChecker
+  file_checker_jpg:
+    class: AppBundle\Service\File\Checker\JpgChecker
+  file_checker_png:
+    class: AppBundle\Service\File\Checker\PngChecker
   file_checker_clam_av:
     class: AppBundle\Service\File\Checker\ClamAVChecker
     arguments: [ "@guzzle_file_scanner_client", "@logger" ]
@@ -20,3 +24,9 @@ services:
   file_pdf:
     class: AppBundle\Service\File\Types\Pdf
     arguments: [ "@file_checker_clam_av", "@file_checker_pdf", "@logger" ]
+  file_jpg:
+    class: AppBundle\Service\File\Types\Jpg
+    arguments: [ "@file_checker_clam_av", "@file_checker_jpg", "@logger" ]
+  file_png:
+    class: AppBundle\Service\File\Types\Png
+    arguments: [ "@file_checker_clam_av", "@file_checker_png", "@logger" ]
