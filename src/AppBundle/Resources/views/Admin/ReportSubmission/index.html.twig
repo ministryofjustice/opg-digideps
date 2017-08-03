@@ -57,13 +57,13 @@
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true" class="behat-link-tab-new">
                         <span class="data-item bold-large">{{ counts.new }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
-                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" >
+                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" class="behat-link-tab-archived">
                         <span class="data-item bold-large">{{ counts.archived }}</span>
                         <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
                     </a>
@@ -128,7 +128,7 @@
                 </td>
                 <td class="">
                     {% if isNewPage %}
-                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}">Archive</a>
+                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
                         <br/>
                     {% endif %}
                     <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a>
