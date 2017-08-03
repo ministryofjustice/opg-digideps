@@ -55,10 +55,12 @@
     </table>
 
     {# Attached documents table #}
-    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
-    'translationDomain': translationDomain,
-    'page' : page
-    } %}
+    {% if report.wishToProvideDocumentation == 'yes' %}
+        {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+    {% endif %}
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'documents') }}
