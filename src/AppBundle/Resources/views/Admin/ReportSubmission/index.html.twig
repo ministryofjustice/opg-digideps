@@ -38,7 +38,7 @@
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
             <input type="hidden" name="status" value="{{ filters.status }}" />
-            <select name="created_by_role" class="search-dropdown form-control">
+            <select name="created_by_role" id="created_by_role" class="search-dropdown form-control">
                 <option value="">All</option>
                 {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
                     <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
