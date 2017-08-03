@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use AppBundle\Service\File\Type\UploadableFileInterface;
+use AppBundle\Service\File\Types\UploadableFile;
 /**
  * @Assert\Callback(methods={"isFileNameUnique"}, groups={"document"})
  */
@@ -24,8 +24,8 @@ class Document
      */
     public function isFileNameUnique(ExecutionContextInterface $context)
     {
-        if (!$this->getFile() instanceof UploadableFileInterface) {
-            return;
+        if (!($this->getFile() instanceof UploadableFile)) {
+            return false;
         }
 
         $fileNames = [];
@@ -34,17 +34,17 @@ class Document
         }
 
         $fileOriginalName = $this->getFile()->getClientOriginalName();
-
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->addViolationAt('file', 'document.file.errors.maxMessage');
-            return;
+            return false;
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
-            return;
+            return false;
         }
 
+        return true;
 
     }
 

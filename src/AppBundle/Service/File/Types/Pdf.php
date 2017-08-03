@@ -18,6 +18,7 @@ class Pdf extends UploadableFile
         if (isset($scanResult['av_scan_result']) &&
             strtoupper($scanResult['av_scan_result'] == 'PASS')
             && strtoupper($scanResult['pdf_scan_result'] == 'PASS')
+            || !parent::isSafe($this)
         ) {
             return true;
         }

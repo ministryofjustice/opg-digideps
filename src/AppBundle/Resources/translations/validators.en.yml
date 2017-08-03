@@ -170,7 +170,7 @@ decision:
 document:
   file:
     errors:
-      mimeTypesMessage: "Please upload a valid PDF"
+      mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
       maxMessage: "The file name can't be longer than 255 letters"
