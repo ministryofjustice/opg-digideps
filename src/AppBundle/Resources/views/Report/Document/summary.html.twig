@@ -48,7 +48,7 @@
                 {{ report.wishToProvideDocumentation | capitalize }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('documents_step', { 'reportId': report.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
+                <a href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
             </td>
         </tr>
         </tbody>
