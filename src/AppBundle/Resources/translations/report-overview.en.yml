@@ -180,7 +180,7 @@ documents:
     edit: "Edit"
     start: "Start"
     label:
-      done: "Finished"
+      done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
 
 report_submit:
     subSectionTitle: "Submit report"

@@ -66,7 +66,8 @@ class DocumentController extends AbstractController
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('documents', 'report_documents', 'report_documents_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setCurrentStep($step)
+            ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(new FormDir\Report\DocumentType($this->get('translator')), $report);
