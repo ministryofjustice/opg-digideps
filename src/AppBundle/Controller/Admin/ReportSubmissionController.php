@@ -66,7 +66,6 @@ class ReportSubmissionController extends AbstractController
             return $response;
         } catch (\Exception $e) {
             $zipFileCreator->cleanUp();
-
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
 
             return $this->redirectToRoute('admin_documents');
