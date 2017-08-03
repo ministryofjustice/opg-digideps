@@ -49,7 +49,7 @@ class YesNoType extends AbstractType
             ->add($this->field, 'choice', [
                 'choices' => $this->choices,
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'Please choose Yes or No'])],
+                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
