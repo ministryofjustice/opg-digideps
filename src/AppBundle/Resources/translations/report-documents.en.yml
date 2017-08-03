@@ -2,7 +2,7 @@ htmlTitle: Case documents | GOV.UK
 pageTitle: Case documents
 form:
   attachAFile: Attach a file
-  acceptedFileTypes: "Accepted file types: PDF. Max file size: 15 MB"
+  acceptedFileTypes: "Accepted file types: PDF, JPG, JPEG and PNG. Max file size: 15 MB"
   attachDocument: Attach Document
   file:
     label: Attach a file
