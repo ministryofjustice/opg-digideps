@@ -3,10 +3,12 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Action;
+use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyShortCategory;
+use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Service\ReportStatusService as StatusService;
@@ -27,14 +29,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getExpenses'                       => [],
                 'getPaidForAnything'                => null,
                 'getGifts'                          => [],
-                'getGiftsExist'                     => [],
+                'getGiftsExist'                     => null,
                 'getMoneyTransfers'                 => [],
                 'getNoTransfersToAdd'               => null,
                 'getAssets'                         => [],
                 'getDecisions'                      => [],
-                'getHasCapacityChanged'             => [],
+                'getHasCapacityChanged'             => null,
                 'getNoAssetToAdd'                   => null,
-                'getContacts'                       => null,
+                'getContacts'                       => [],
                 'getReasonForNoContacts'            => null,
                 'getReasonForNoDecisions'           => null,
                 'getVisitsCare'                     => m::mock(VisitsCare::class, [
@@ -266,11 +268,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function moneyInShortProvider()
     {
         $cat = m::mock(MoneyShortCategory::class);
+        $t = m::mock(MoneyTransactionShort::class);
 
         return [
             [['getMoneyTransactionsShortInExist' => null], StatusService::STATE_NOT_STARTED],
             [['getMoneyTransactionsShortInExist' => null, 'getMoneyShortCategoriesInPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
-            [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_NOT_STARTED],
+            [['getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn'=>[$t]], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_DONE],
         ];
     }
@@ -288,11 +292,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function moneyOutShortProvider()
     {
         $cat = m::mock(MoneyShortCategory::class);
+        $t = m::mock(MoneyTransactionShort::class);
 
         return [
             [['getMoneyTransactionsShortOutExist' => null], StatusService::STATE_NOT_STARTED],
             [['getMoneyTransactionsShortOutExist' => null, 'getMoneyShortCategoriesOutPresent' => [$cat]], StatusService::STATE_INCOMPLETE],
-            [['getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_DONE],
+            [['getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut'=>[$t]], StatusService::STATE_DONE],
             [['getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_DONE],
         ];
     }
@@ -427,9 +432,12 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function debtsProvider()
     {
+        $debt = m::mock(Debt::class);
+
         return [
             [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes'], StatusService::STATE_DONE],
+            [['getHasDebts' => 'yes'], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_DONE],
             [['getHasDebts' => 'no'], StatusService::STATE_DONE],
         ];
     }
