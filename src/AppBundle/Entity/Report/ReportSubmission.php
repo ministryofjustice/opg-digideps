@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Traits\CreationAudit;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -77,7 +76,7 @@ class ReportSubmission
     }
 
     /**
-     * @return ArrayCollection
+     * @return Document[]
      */
     public function getDocuments()
     {

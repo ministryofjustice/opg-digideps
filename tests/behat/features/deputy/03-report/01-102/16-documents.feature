@@ -35,10 +35,10 @@ Feature: Report documents
       | report_document_upload_file   |
 
     # check vba-eicar file error TO ENABLE ONCE FILE SCANNER ENABLED
-    #When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
-    #And I click on "attach-file"
-    #Then the following fields should have an error:
-    #  | report_document_upload_file   |
+    When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
 
     When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
@@ -81,3 +81,17 @@ Feature: Report documents
     Then the URL should match "report/\d+/documents"
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
+
+    @deputy
+    Scenario: Upload file1.pdf and file2.pdf
+      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      And I click on "reports, report-2016, edit-documents"
+      And the step with the following values CAN be submitted:
+        | document_wishToProvideDocumentation_0 | yes |
+      When I attach the file "file1.pdf" to "report_document_upload_file"
+      And I click on "attach-file"
+      And I attach the file "file2.pdf" to "report_document_upload_file"
+      And I click on "attach-file"
+      Then each text should be present in the corresponding region:
+        | file1.pdf        | document-list |
+        | file2.pdf        | document-list |
