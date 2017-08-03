@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class ReportSubmissionRepository extends EntityRepository
@@ -59,8 +60,8 @@ class ReportSubmissionRepository extends EntityRepository
             $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
         }
 
-        // disable soft delete filter, as deleted user stil need to appear as creator of the submission
-        $this->_em->getFilters()->disable('softdeleteable');
+        $filter = $this->_em->getFilters()->enable('softdeleteable');
+        $filter->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $records = $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
