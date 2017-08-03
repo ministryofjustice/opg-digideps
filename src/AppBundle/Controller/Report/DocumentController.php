@@ -37,7 +37,7 @@ class DocumentController extends AbstractController
             $referer = $request->headers->get('referer');
             $redirectResponse = false !== strpos($referer, '/step/1')
                 ? $this->redirectToRoute('report_overview', ['reportId' => $reportId])
-                : $this->redirectToRoute('documents_step' , ['reportId' => $reportId, 'step' => 1]);
+                : $this->redirectToRoute('report_documents_summary' , ['reportId' => $reportId, 'step' => 1]);
             return $redirectResponse;
         }
 
@@ -47,19 +47,14 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/documents/step/{step}", name="documents_step")
+     * @Route("/report/{reportId}/documents/step/1", name="documents_step")
      * @Template()
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function step1Action(Request $request, $reportId)
     {
+        $step = 1;
         $totalSteps = 3;
-        if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
-        }
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getWishToProvideDocumentation() === 'no' && $step > 1) {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
-        }
 
         $fromPage = $request->get('from');
 
