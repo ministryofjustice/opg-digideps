@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\File\DocumentsZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,38 +41,12 @@ class ReportSubmissionController extends AbstractController
      */
     public function downloadAction(Request $request, $reportSubmissionId)
     {
+        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
+        $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+        $zipFileCreator = new DocumentsZipFileCreator($reportSubmission, $this->get('s3_storage'));
+
         try {
-            /* @var $reportSubmission EntityDir\Report\ReportSubmission */
-            $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
-
-            // store files locally, for subsequent memory-less ZIP creation
-            $s3Storage = $this->get('s3_storage');
-            $filesToAdd = [];
-            if (empty($reportSubmission->getDocuments())) {
-                throw new \RuntimeException('No documents found for downloading');
-            }
-            foreach ($reportSubmission->getDocuments() as $document) {
-                $content = $s3Storage->retrieve($document->getStorageReference()); //might throw exception
-                $dfile = '/tmp/DDDocument' . $document->getId() . microtime(1);
-                file_put_contents($dfile, $content);
-                unset($content);
-                $filesToAdd[$document->getFileName()] = $dfile;
-            }
-
-            // create ZIP files and add previously-stored uploaded documents
-            $filename = '/tmp/' . $reportSubmission->getZipName();
-            $zip = new \ZipArchive();
-            $zip->open($filename, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
-            foreach ($filesToAdd as $localname => $filePath) {
-                $zip->addFile($filePath, $localname); // addFromString crashes
-            }
-            $zip->close();
-            unset($zip);
-
-            // clean up
-            foreach ($filesToAdd as $f) {
-                unlink($f);
-            }
+            $filename = $zipFileCreator->createZipFile();
 
             // send ZIP to user
             $response = new Response();
@@ -86,10 +61,12 @@ class ReportSubmissionController extends AbstractController
             $response->sendHeaders();
             $response->setContent(readfile($filename));
 
-            unlink($filename);
+            $zipFileCreator->cleanUp();
 
             return $response;
         } catch (\Exception $e) {
+            $zipFileCreator->cleanUp();
+
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
 
             return $this->redirectToRoute('admin_documents');
