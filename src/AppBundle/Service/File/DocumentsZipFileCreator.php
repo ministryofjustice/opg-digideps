@@ -2,14 +2,27 @@
 
 namespace AppBundle\Service\File;
 
+use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Service\File\Storage\StorageInterface;
 use ZipArchive;
 
 class DocumentsZipFileCreator
 {
     const TMP_ROOT_PATH = '/tmp/';
 
+    /**
+     * @var ReportSubmission
+     */
     private $reportSubmission;
+
+    /**
+     * @var StorageInterface
+     */
     private $s3Storage;
+
+    /**
+     * @var string
+     */
     private $zipFile;
 
     /**
@@ -17,7 +30,7 @@ class DocumentsZipFileCreator
      * @param $reportSubmission
      * @param $s3Storage
      */
-    public function __construct($reportSubmission, $s3Storage)
+    public function __construct(ReportSubmission $reportSubmission, StorageInterface $s3Storage)
     {
         $this->reportSubmission = $reportSubmission;
         $this->s3Storage = $s3Storage;
@@ -63,7 +76,7 @@ class DocumentsZipFileCreator
      */
     public function cleanUp()
     {
-        if (file_exists($this->zipFile)) {
+        if ($this->zipFile && file_exists($this->zipFile)) {
             unlink($this->zipFile);
         }
     }
