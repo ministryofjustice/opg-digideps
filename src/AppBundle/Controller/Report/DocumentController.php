@@ -26,7 +26,7 @@ class DocumentController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/documents/start", name="documents")
+     * @Route("/report/{reportId}/documents", name="documents")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
