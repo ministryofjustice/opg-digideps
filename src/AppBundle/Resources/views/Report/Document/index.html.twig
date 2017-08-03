@@ -16,14 +16,6 @@
     {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
 {% endblock %}
 
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ report.client.fullname }}</span>
-{% endblock %}
-
-{% block supportTitleBottom %}
-    <span class="heading-secondary">Reporting period: {{ report.period }}</span>
-{% endblock %}
-
 {% block pageContent %}
 
     <p class="text">{{ (page ~ '.supportText') | trans }}</p>
