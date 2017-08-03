@@ -38,6 +38,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
 
     public function testcreateZipFile()
     {
+        $zipFileName = 'Report_12345678_2017_2018.zip';
         $doc1 = m::mock(Document::class, [
             'getId' => 1,
             'getFileName' => 'file1.pdf',
@@ -52,12 +53,13 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
         $this->storage->shouldReceive('retrieve')->with('r2')->andReturn('doc2-content');
 
         $this->reportSubmission
-            ->shouldReceive('getZipName')->andReturn('Report_12345678_2017_2018.zip')
+            ->shouldReceive('getZipName')->andReturn($zipFileName)
             ->shouldReceive('getDocuments')->andReturn([$doc1, $doc2])
         ;
 
         $fileName = $this->object->createZipFile();
 
+        $this->assertContains($zipFileName, $fileName);
         $this->assertEquals('doc1-content', exec("unzip -c $fileName file1.pdf"));
         $this->assertEquals('doc2-content', exec("unzip -c $fileName file2.pdf"));
 

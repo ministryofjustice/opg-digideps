@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File;
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\File\Storage\StorageInterface;
 use ZipArchive;
@@ -45,18 +46,18 @@ class DocumentsZipFileCreator
         }
         foreach ($this->reportSubmission->getDocuments() as $document) {
             $content = $this->s3Storage->retrieve($document->getStorageReference()); //might throw exception
-            $dfile = self::TMP_ROOT_PATH . 'DDDocument' . $document->getId() . microtime(1);
+            $dfile = self::createDocumentTmpFilePath($document);
             file_put_contents($dfile, $content);
             unset($content);
             $filesToAdd[$document->getFileName()] = $dfile;
         }
 
         // create ZIP files and add previously-stored uploaded documents
-        $filename = self::TMP_ROOT_PATH . $this->reportSubmission->getZipName();
+        $filename = self::createZipFilePath($this->reportSubmission);
         $zip = new ZipArchive();
         $zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
         foreach ($filesToAdd as $localname => $filePath) {
-            $zip->addFile($filePath, $localname); // addFromString crashes
+            $zip->addFile($filePath, $localname);
         }
         $zip->close();
         unset($zip);
@@ -80,6 +81,25 @@ class DocumentsZipFileCreator
             unlink($this->zipFile);
         }
     }
+
+    /**
+     * @param Document $document
+     * @return string
+     */
+    private static function createDocumentTmpFilePath(Document $document)
+    {
+        return self::TMP_ROOT_PATH . 'dd_temp_zip_' . $document->getId() . microtime(1);
+    }
+
+    /**
+     * @param ReportSubmission $reportSubmission
+     * @return string
+     */
+    private static function createZipFilePath(ReportSubmission $reportSubmission)
+    {
+        return self::TMP_ROOT_PATH . $reportSubmission->getZipName();
+    }
+
 
     public function __destruct()
     {
