@@ -1,31 +1,6 @@
 {% set translationDomain = translationDomain %}
 {% trans_default_domain translationDomain %}
 
-<table class="check-your-answers columns-2 push-double--bottom">
-    <thead>
-        <tr>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>
-                <span class="visuallyhidden">Actions</span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="behat-region-paid-for-anything">
-            <td>
-                {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.wishToProvideDocumentation | capitalize }}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('documents_step', { 'reportId': report.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
 <div class="grid-row">
     {% if report.documents | length > 0 %}
     <div class="column-half">
