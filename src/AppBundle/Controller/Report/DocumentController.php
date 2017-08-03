@@ -46,6 +46,7 @@ class DocumentController extends AbstractController
     }
 
     /**
+     * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
      * @Template()
      */
@@ -73,7 +74,10 @@ class DocumentController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+            $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
+                ? $this->generateUrl('report_documents'        , ['reportId' => $report->getId()])
+                : $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
+            return $this->redirect($redirectUrl);
         }
 
         return [
@@ -86,10 +90,10 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
+     * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template()
      */
-    public function indexAction(Request $request, $reportId)
+    public function step2Action(Request $request, $reportId)
     {
         $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -148,7 +152,7 @@ class DocumentController extends AbstractController
         return [
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
+            'backLink' => $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]),
             'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
             'form'     => $form->createView(),
         ];
