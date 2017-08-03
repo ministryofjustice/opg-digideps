@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
-
+use AppBundle\Service\File\Type\UploadableFileInterface;
 /**
  * @Assert\Callback(methods={"isFileNameUnique"}, groups={"document"})
  */
@@ -24,7 +24,7 @@ class Document
      */
     public function isFileNameUnique(ExecutionContextInterface $context)
     {
-        if (!$this->getFile()) {
+        if (!$this->getFile() instanceof UploadableFileInterface) {
             return;
         }
 
