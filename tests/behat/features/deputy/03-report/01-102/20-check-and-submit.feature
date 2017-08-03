@@ -109,6 +109,11 @@ Feature: Report submit
         Then I should see the "report-submission" region exactly 0 times
         When I click on "tab-archived"
         Then I should see the "report-submission" region exactly 1 times
+        And each text should be present in the corresponding region:
+            | Peter White | report-submission-1 |
+            | 12345abc | report-submission-1 |
+            | 2 documents | report-submission-1 |
+            | AU | report-submission-1 |
 
     @deputy
     Scenario: assert 2nd year report has been created
