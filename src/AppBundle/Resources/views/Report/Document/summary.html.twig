@@ -48,7 +48,9 @@
                 {{ report.wishToProvideDocumentation | capitalize }}
             </td>
             <td class="change-answer">
+                {% if report.wishToProvideDocumentation == 'no' %}
                 <a href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
+                {% endif %}
             </td>
         </tr>
         </tbody>
