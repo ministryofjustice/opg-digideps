@@ -4,7 +4,7 @@ page:
   supportTitle: "{0} no report submissions found | {1} 1 report submission found | ]1,Inf[ %count% report submissions found"
   tabs:
     new.label: "New"
-    archived.label: "Archived report submissions"
+    archived.label: "Archived"
   table:
     rows:
       documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"

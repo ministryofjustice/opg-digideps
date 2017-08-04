@@ -74,82 +74,79 @@
 
     {# table with records #}
     {% if  records | length %}
-      <table class="check-your-answers push--bottom">
-        <thead>
-        <tr>
-            <th>Client</th>
-            <th>Deputy</th>
-            <th>Case number</th>
-            <th>Documents</th>
-            <th>Date</th>
-            <th>
-                <span class="visually-hidden">Actions</span>
-            </th>
-            {% if isArchivedPage %}
-             <th>User</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for reportSubmission in records %}
-            {% set report = reportSubmission.report %}
-            <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
-                <td class="width-fifth">
-                    {{ report.client.fullname }}
-                </td>
-                <td class="width-fifth">
-                    {{ reportSubmission.createdBy.fullname }}
-                    {# ({{ reportSubmission.createdBy.roleFullName }}) #}
-                </td>
-                <td class="width-sixth">
-                    {{ report.client.caseNumber }}
-                </td>
-                    {# <div class="bold">Report</div>
-                    Period: {{ report.period }}, type: {{ report.type }} #}
-                <td>
-                    <details class="push--bottom">
-                        <summary>
-                            <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
-                        </summary>
-                        <div class="panel panel-border-narrow">
-                            <ul class="list list-group" id="docs">
-                                {% for document in reportSubmission.documents %}
-                                    <li>{{ document.fileName }}{# | {{ document.createdOn | date(" d F Y") }}#}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </details>
-                </td>
-                <td class="width-tenth">
-                    {% set submissionDate = reportSubmission.createdOn %}
-                    {# shows "Today" or "d/m/Y"e #}
-                    {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
-                        Today
-                    {% else %}
-                        {{ submissionDate | date('d/m/Y') }}
+        <table class="check-your-answers push--bottom">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Deputy</th>
+                    <th>Case number</th>
+                    <th>Documents</th>
+                    <th>Date</th>
+                    {% if isArchivedPage %}
+                        <th>User</th>
                     {% endif %}
-                    <br/>
-                    {# show hour and time #}
-                    {{ submissionDate | date('g:ia') }}
-                </td>
-                <td class="width-tenth change-answer">
-                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
-                    {% if isNewPage %}
-                        <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
-                    {% endif %}
-                </td>
-                {% if isArchivedPage %}
-                    <td>
-                        {#{% if reportSubmission.archivedBy %}#}
-                            {{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}
-                        {#{% endif %}#}
-                    </td>
-                {% endif %}
-            </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+                    <th>
+                        <span class="visually-hidden">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reportSubmission in records %}
+                    {% set report = reportSubmission.report %}
+                    {# Role: reportSubmission.createdBy.roleFullName #}
+                    {# Period: report.period #}
+                    {# Type: report.type #}
+                    <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
+                        <td class="width-fifth">
+                            {{ report.client.fullname }}
+                        </td>
+                        <td class="width-fifth">
+                            {{ reportSubmission.createdBy.fullname }}
+                        </td>
+                        <td class="width-sixth">
+                            {{ report.client.caseNumber }}
+                        </td>
+                        <td>
+                            <details class="push--bottom">
+                                <summary>
+                                    <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
+                                </summary>
+                                <div class="panel panel-border-narrow">
+                                    <ul class="list list-group" id="docs">
+                                        {% for document in reportSubmission.documents %}
+                                            <li>{{ document.fileName }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </details>
+                        </td>
+                        <td class="width-tenth">
+                            {% set submissionDate = reportSubmission.createdOn %}
+                            {# shows "Today" or "d/m/Y"e #}
+                            {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
+                                Today
+                            {% else %}
+                                {{ submissionDate | date('d/m/Y') }}
+                            {% endif %}
+                            <br/>
+                            {# show hour and time #}
+                            {{ submissionDate | date('g:ia') }}
+                        </td>
+                        {% if isArchivedPage %}
+                            <td>
+                                <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                            </td>
+                        {% endif %}
+                        <td class="width-tenth change-answer">
+                            <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
+                            {% if isNewPage %}
+                                <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
         {% include 'AppBundle:Components:paginator.html.twig' with {
             currentOffset: filters.offset,
@@ -163,10 +160,8 @@
             }
         } %}
 
-
     {% else %}
-        No documents found
+        <p>No documents found</p>
     {% endif %}
-
 
 {% endblock %}
