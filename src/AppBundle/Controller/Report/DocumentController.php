@@ -231,9 +231,14 @@ class DocumentController extends AbstractController
             );
         }
 
-        $returnUrl = 'summaryPage' == $request->get('from')
-            ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
-            : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+        $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
+        if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
+            $returnUrl = 'summaryPage' == $request->get('from')
+                ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
+                : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+        } else {
+            $returnUrl = $this->generateUrl('report_overview', ['reportId' => $document->getReportId()]);
+        }
 
         return $this->redirect($returnUrl);
     }
