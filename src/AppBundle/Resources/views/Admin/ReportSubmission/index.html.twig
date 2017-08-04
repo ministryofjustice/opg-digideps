@@ -74,13 +74,17 @@
 
     {# table with records #}
     {% if  records | length %}
-      <table class="push--bottom">
+      <table class="check-your-answers push--bottom">
         <thead>
         <tr>
-            <th></th>
+            <th>Client</th>
+            <th>Deputy</th>
+            <th>Case number</th>
             <th>Documents</th>
             <th>Date</th>
-            <th></th>
+            <th>
+                <span class="visually-hidden">Actions</span>
+            </th>
             {% if isArchivedPage %}
              <th>User</th>
             {% endif %}
@@ -89,16 +93,19 @@
         <tbody>
         {% for reportSubmission in records %}
             {% set report = reportSubmission.report %}
-            <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }}">
-                <td>
-                    <div class="bold">Deputy</div>
-                    {{ reportSubmission.createdBy.fullname }}
-                    ({{ reportSubmission.createdBy.roleFullName }})
-                    <div class="bold">Case</div>
-                    {{ report.client.fullname }}, case number: {{ report.client.caseNumber }}<br/>
-                    <div class="bold">Report</div>
-                    Period: {{ report.period }}, type: {{ report.type }}
+            <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
+                <td class="width-fifth">
+                    {{ report.client.fullname }}
                 </td>
+                <td class="width-fifth">
+                    {{ reportSubmission.createdBy.fullname }}
+                    {# ({{ reportSubmission.createdBy.roleFullName }}) #}
+                </td>
+                <td class="width-sixth">
+                    {{ report.client.caseNumber }}
+                </td>
+                    {# <div class="bold">Report</div>
+                    Period: {{ report.period }}, type: {{ report.type }} #}
                 <td>
                     <details class="push--bottom">
                         <summary>
@@ -114,7 +121,7 @@
                         </div>
                     </details>
                 </td>
-                <td>
+                <td class="width-tenth">
                     {% set submissionDate = reportSubmission.createdOn %}
                     {# shows "Today" or "d/m/Y"e #}
                     {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
@@ -126,12 +133,11 @@
                     {# show hour and time #}
                     {{ submissionDate | date('g:ia') }}
                 </td>
-                <td class="">
+                <td class="width-tenth change-answer">
+                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
                     {% if isNewPage %}
                         <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
-                        <br/>
                     {% endif %}
-                    <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a>
                 </td>
                 {% if isArchivedPage %}
                     <td>
