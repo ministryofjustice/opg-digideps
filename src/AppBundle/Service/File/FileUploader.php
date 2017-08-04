@@ -48,21 +48,47 @@ class FileUploader
      * Uploads a file and return the created document
      * might throw exceptions if viruses are found. File is immediately deleted in that case
      *
-     * @return Document
      *
-     * code imported from
-     * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
+     * @param Report $report
+     * @param UploadedFile $uploadedFile
+     * @return Document
      */
     public function uploadFile(Report $report, UploadedFile $uploadedFile)
     {
         $body = file_get_contents($uploadedFile->getPathName());
 
-        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(1));
+        return $this->saveFileIntoStorageAndDb($report->getId(), $body, $uploadedFile->getClientOriginalName());
+    }
+
+    /**
+     * @param Report $report
+     * @param string $body
+     * @return Document
+     */
+    public function uploadReport(Report $report, $body)
+    {
+        $fileName = $report->createAttachmentName('DigiRep-%s_%s_%s.pdf');
+
+        return $this->saveFileIntoStorageAndDb($report->getId(), $body, $fileName);
+    }
+
+    /**
+     *
+     * @param integer $reportId
+     * @param string $body
+     * @param $fileName
+     * @return Document
+     */
+    private function saveFileIntoStorageAndDb($reportId, $body, $fileName)
+    {
+        $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
+
         $this->storage->store($storageReference, $body);
-        $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
+        $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body)." bytes");
+
         $document = new Document();
-        $document->setStorageReference($storageReference)->setFileName($uploadedFile->getClientOriginalName());
-        $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
+        $document->setStorageReference($storageReference)->setFileName($fileName);
+        $this->restClient->post('/report/' . $reportId . '/document', $document, ['document']);
 
         return $document;
     }

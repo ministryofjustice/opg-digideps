@@ -200,14 +200,15 @@ class ReportController extends AbstractController
         $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
 
+            // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
-            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
-            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+            $fileUploader = $this->get('file_uploader');
+            $fileUploader->uploadReport($report, $pdfBinaryContent);
 
+            // store report and get new YEAR report
+            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
             $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
 
             //send confirmation email
