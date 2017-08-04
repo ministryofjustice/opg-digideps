@@ -174,29 +174,6 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
-     * @param EntityDir\Report\Report $report
-     * @param $pdfBinaryContent
-     *
-     * @return ModelDir\Email
-     */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Report\Report $report, $pdfBinaryContent)
-    {
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
-            ->setFromName($this->translate('reportSubmission.fromName'))
-            ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
-            ->setToName($this->translate('reportSubmission.toName'))
-            ->setSubject($this->translate('reportSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment($report->createAttachmentName('DigiRep-%s_%s_%s.pdf'), 'application/pdf', $pdfBinaryContent)]);
-
-        return $email;
-    }
-
-    /**
      * Get user area depending on the role
      *
      * @param  EntityDir\User $user

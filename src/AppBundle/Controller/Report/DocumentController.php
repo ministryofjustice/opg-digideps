@@ -115,9 +115,12 @@ class DocumentController extends AbstractController
 
             try {
                 $fileToStore->checkFile();
-                if ($fileToStore->isSafe())
-                {
-                    $fileUploader->uploadFile($report, $uploadedFile);
+                if ($fileToStore->isSafe()) {
+                    $fileUploader->uploadFile(
+                        $report->getId(),
+                        file_get_contents($uploadedFile->getPathName()),
+                        $uploadedFile->getClientOriginalName()
+                    );
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');

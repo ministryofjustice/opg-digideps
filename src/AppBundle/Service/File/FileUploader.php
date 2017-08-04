@@ -45,24 +45,24 @@ class FileUploader
     }
 
     /**
-     * Uploads a file and return the created document
-     * might throw exceptions if viruses are found. File is immediately deleted in that case
+     * Uploads a file into S3 + create and persist a Document entity using that reference
+     *
+     * @param integer $reportId
+     * @param string $body
+     * @param $fileName
      *
      * @return Document
-     *
-     * code imported from
-     * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
      */
-    public function uploadFile(Report $report, UploadedFile $uploadedFile)
+    public function uploadFile($reportId, $body, $fileName)
     {
-        $body = file_get_contents($uploadedFile->getPathName());
+        $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 
-        $storageReference = 'dd_doc_' . $report->getId() . '_' . str_replace('.', '', microtime(1));
         $this->storage->store($storageReference, $body);
-        $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
+        $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body)." bytes");
+
         $document = new Document();
-        $document->setStorageReference($storageReference)->setFileName($uploadedFile->getClientOriginalName());
-        $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
+        $document->setStorageReference($storageReference)->setFileName($fileName);
+        $this->restClient->post('/report/' . $reportId . '/document', $document, ['document']);
 
         return $document;
     }
