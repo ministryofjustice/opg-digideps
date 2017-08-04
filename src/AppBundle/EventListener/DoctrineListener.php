@@ -71,6 +71,13 @@ class DoctrineListener
             }
         }
 
+        if ($entity instanceof EntityDir\Report\Document) {
+            $report = $entity->getReport();
+            if (count($report->getDocuments()) === 1) {
+                $report->setWishToProvideDocumentation(null);
+            }
+        }
+
         if ($entity instanceof EntityDir\Report\Decision) {
             $report = $entity->getReport();
             if (count($report->getDecisions()) === 1) {
