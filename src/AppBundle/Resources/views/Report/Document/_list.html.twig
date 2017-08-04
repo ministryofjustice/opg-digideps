@@ -26,8 +26,10 @@
         </thead>
         <tbody class="behat-region-document-list">
         {% if report.documents | length > 0 %}
+            {% set documentCount = 0 %}
             {% for document in report.documents %}
-                <tr>
+
+                <tr class="behat-region-document-list-upload-{{ loop.index }}">
                     <td>{{ document.fileName }}</td>
                     <td>{{ document.createdOn | date("j F Y H:i") }}</td>
                     <td>
