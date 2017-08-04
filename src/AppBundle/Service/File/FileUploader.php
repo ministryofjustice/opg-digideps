@@ -45,41 +45,15 @@ class FileUploader
     }
 
     /**
-     * Uploads a file and return the created document
-     * might throw exceptions if viruses are found. File is immediately deleted in that case
-     *
-     *
-     * @param Report $report
-     * @param UploadedFile $uploadedFile
-     * @return Document
-     */
-    public function uploadFile(Report $report, UploadedFile $uploadedFile)
-    {
-        $body = file_get_contents($uploadedFile->getPathName());
-
-        return $this->saveFileIntoStorageAndDb($report->getId(), $body, $uploadedFile->getClientOriginalName());
-    }
-
-    /**
-     * @param Report $report
-     * @param string $body
-     * @return Document
-     */
-    public function uploadReport(Report $report, $body)
-    {
-        $fileName = $report->createAttachmentName('DigiRep-%s_%s_%s.pdf');
-
-        return $this->saveFileIntoStorageAndDb($report->getId(), $body, $fileName);
-    }
-
-    /**
+     * Uploads a file into S3 + create and persist a Document entity using that reference
      *
      * @param integer $reportId
      * @param string $body
      * @param $fileName
+     *
      * @return Document
      */
-    private function saveFileIntoStorageAndDb($reportId, $body, $fileName)
+    public function uploadFile($reportId, $body, $fileName)
     {
         $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 

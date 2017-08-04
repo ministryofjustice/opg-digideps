@@ -205,7 +205,11 @@ class ReportController extends AbstractController
             // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
             $fileUploader = $this->get('file_uploader');
-            $fileUploader->uploadReport($report, $pdfBinaryContent);
+            $fileUploader->uploadFile(
+                $report->getId(),
+                $pdfBinaryContent,
+                $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')
+            );
 
             // store report and get new YEAR report
             $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
