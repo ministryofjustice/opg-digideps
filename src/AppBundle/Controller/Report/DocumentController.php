@@ -53,9 +53,9 @@ class DocumentController extends AbstractController
      */
     public function step1Action(Request $request, $reportId)
     {
-        $step = 1;
-        $totalSteps = 3;
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $step = 1; $totalSteps = 3;
 
         $fromPage = $request->get('from');
 
@@ -96,11 +96,14 @@ class DocumentController extends AbstractController
      */
     public function step2Action(Request $request, $reportId)
     {
-        $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getWishToProvideDocumentation() === 'no') {
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
+            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
+        } elseif ($report->getWishToProvideDocumentation() === 'no') {
             return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
         }
+
+        $fileUploader = $this->get('file_uploader');
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
@@ -168,8 +171,12 @@ class DocumentController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
+            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
+        }
+
+        $fromPage = $request->get('from');
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
@@ -237,7 +244,7 @@ class DocumentController extends AbstractController
                 ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
                 : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
         } else {
-            $returnUrl = $this->generateUrl('report_overview', ['reportId' => $document->getReportId()]);
+            $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
         }
 
         return $this->redirect($returnUrl);
