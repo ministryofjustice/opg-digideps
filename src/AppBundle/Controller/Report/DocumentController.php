@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Checker\FileCheckerInterface;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\File\Types\UploadableFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -110,12 +111,12 @@ class DocumentController extends AbstractController
             /* @var $uploadedFile UploadedFile */
             $uploadedFile = $document->getFile();
 
-            /** @var UploadableFileInterface $fileToStore */
-            $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
+            /** @var FileCheckerInterface $fileChecker */
+            $fileChecker = $this->get('file_checker_factory')->factory($uploadedFile);
 
             try {
-                $fileToStore->checkFile();
-                if ($fileToStore->isSafe()) {
+                $fileChecker->checkFile();
+                if ($fileChecker->isSafe()) {
                     $fileUploader->uploadFile(
                         $report->getId(),
                         file_get_contents($uploadedFile->getPathName()),

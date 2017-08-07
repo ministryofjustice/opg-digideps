@@ -1,11 +1,12 @@
 <?php
 
-namespace AppBundle\Service\File;
+namespace AppBundle\Service\File\Checker;
 
+use AppBundle\Service\File\Checker\FileCheckerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploadFileFactory
+class FileCheckerFactory
 {
 
     /**
@@ -23,14 +24,17 @@ class UploadFileFactory
      *
      * @return FileCheckerInterface
      */
-    public function createFileToStore(UploadedFile $uploadedFile)
+    public function factory(UploadedFile $uploadedFile)
     {
         switch ($uploadedFile->getMimeType())
         {
             case 'application/pdf':
                 return $this->container->get('file_pdf')->setUploadedFile($uploadedFile);
                 break;
-            // more mime types to go here
+
+            default:
+                throw new \RuntimeException("File type not supported");
+
         }
     }
 }

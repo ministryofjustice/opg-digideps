@@ -156,14 +156,6 @@ class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Service\File\UploadFileFactory
-     */
-    protected function getUploadFileFactory()
-    {
-        return $this->get('upload_file_factory');
-    }
-
-    /**
      * @return \AppBundle\Service\Mailer\MailSender
      */
     protected function getMailSender()
