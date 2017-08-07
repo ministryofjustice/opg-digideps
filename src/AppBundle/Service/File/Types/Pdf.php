@@ -17,15 +17,20 @@ class Pdf extends UploadableFile
     {
         parent::callFileCheckers();
 
-        $scanResult = $this->getScanResult();
+        // not clear why the below is called. fileCheckers already do the job
 
-        if ($scanResult['av_scan_result'] !== 'PASS') {
-            throw new VirusFoundException('Found virus in file');
-        }
+        
+//        $scanResult = $this->getScanResult();
 
-        if ($scanResult['pdf_scan_result'] !== 'PASS') {
-            throw new RiskyFileException('Risky content found in file');
-        }
+        // not clear why this is done again here.
+
+//        if ($scanResult['file_scanner_code'] !== 'PASS') {
+//            throw new VirusFoundException('Found virus in file');
+//        }
+//
+//        if ($scanResult['pdf_scan_result'] !== 'PASS') {
+//            throw new RiskyFileException('Risky content found in file');
+//        }
     }
 }
 
