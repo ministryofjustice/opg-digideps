@@ -394,7 +394,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [['getWishToProvideDocumentation' => 'no'], StatusService::STATE_DONE],
             [['getDocuments' => []], StatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => []], StatusService::STATE_INCOMPLETE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => []], StatusService::STATE_NOT_STARTED],
             [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => [$document]], StatusService::STATE_DONE],
         ];
     }
