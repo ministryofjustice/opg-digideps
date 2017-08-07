@@ -93,7 +93,6 @@
             <tbody>
                 {% for reportSubmission in records %}
                     {% set report = reportSubmission.report %}
-                    {# Role: reportSubmission.createdBy.roleFullName #}
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
@@ -101,7 +100,8 @@
                             {{ report.client.fullname }}
                         </td>
                         <td class="width-fifth">
-                            {{ reportSubmission.createdBy.fullname }}
+                            {{ reportSubmission.createdBy.fullname }}<br>
+                            ({{ reportSubmission.createdBy.roleFullName }})
                         </td>
                         <td class="width-sixth">
                             {{ report.client.caseNumber }}
