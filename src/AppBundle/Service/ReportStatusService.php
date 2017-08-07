@@ -361,19 +361,10 @@ class ReportStatusService
     {
         $numRecords = count($this->report->getDocuments());
 
-        if ($this->report->getWishToProvideDocumentation() === null) {
+        if ( $this->report->getWishToProvideDocumentation() === null || ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0)) {
             $status =  ['state' => self::STATE_NOT_STARTED];
-        }
-
-        if ($this->report->getWishToProvideDocumentation() === 'no') {
+        } else {
             $status =  ['state' => self::STATE_DONE];
-        }
-
-        if ($this->report->getWishToProvideDocumentation() === 'yes') {
-            $status = ['state' => self::STATE_NOT_STARTED];
-            if ($numRecords > 0) {
-                $status = ['state' => self::STATE_DONE];
-            }
         }
 
         return array_merge($status, ['nOfRecords' => $numRecords]);
