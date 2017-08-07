@@ -370,7 +370,7 @@ class ReportStatusService
         }
 
         if ($this->report->getWishToProvideDocumentation() === 'yes') {
-            $status = ['state' => self::STATE_INCOMPLETE];
+            $status = ['state' => self::STATE_NOT_STARTED];
             if ($numRecords > 0) {
                 $status = ['state' => self::STATE_DONE];
             }
