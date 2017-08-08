@@ -103,7 +103,7 @@ class ClamAVChecker implements FileCheckerInterface
         try {
             $result = $this->makeScannerRequest($file);
 
-            $maxRetries = 10;
+            $maxRetries = 60;
             $count = 0;
             $statusResponse = [];
 
