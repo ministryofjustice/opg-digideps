@@ -17,6 +17,7 @@ class OdrController extends AbstractController
     private static $odrGroupsForValidation = [
         'user',
         'user-clients',
+        'client',
         'odr',
         'report',
         'visits-care',
