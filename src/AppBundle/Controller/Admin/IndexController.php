@@ -118,7 +118,7 @@ class IndexController extends AbstractController
 
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'odr']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'user-clients', 'report', 'odr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',

@@ -41,7 +41,7 @@ class AbstractController extends Controller
     /**
      * @return Client|null
      */
-    protected function getFirstClient($groups = ['user', 'client'])
+    protected function getFirstClient($groups = ['user', 'user-clients'])
     {
         $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
         /* @var $user User */
