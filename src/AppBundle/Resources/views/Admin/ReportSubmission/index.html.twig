@@ -11,7 +11,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleBottom %}
-    <span class="heading-secondary">{{ 'page.supportTitle' | transchoice(counts[filters.status]) }}</span>
+    <span class="heading-secondary">{{ 'page.supportTitle' | trans({'%count%': counts[filters.status ?: 'total']}) }}</span>
 {% endblock %}
 
 {% block helpline %}{% endblock %}
@@ -31,22 +31,28 @@
     {% set filtersToPreserveAfterArchiving = filtersToPreserveInPagination %}
 
     {# search form #}
-    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search-form push--ends">
+    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search push--ends">
         <fieldset>
             <legend class="visuallyhidden">Search</legend>
-            <label for="search" class="search-label">Search by client, deputy or case number</label>
-            <input type="text" id="search" name="q" value="{{ filters.q }}"
-                   class="js-search-focus search-input form-control">
-            <input type="hidden" name="status" value="{{ filters.status }}" />
-            <select name="created_by_role" id="created_by_role" class="search-dropdown form-control">
-                <option value="">All</option>
-                {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
-                    <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
+            <div class="grid-row push-half--bottom">
+                <div class="column-one-third">
+                    <label for="search" class="form-label text">Client, deputy or case number</label>
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus form-control form-control--full">
+                    <input type="hidden" name="status" value="{{ filters.status }}" />
+                </div>
+                <div class="column-one-third">
+                    <label for="created_by_role" class="form-label">Role</label>
+                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control">
+                        <option value="">All</option>
+                        {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
+                            <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <input id="search_submit" class="button flush--bottom behat-link-search" type="submit" value="Search">
             {% if filters.q or filters.created_by_role %}
-                <a href="{{ path(baseRoute, {'status': filters.status}) }}">Clear filters</a>
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="button-link">Clear filters</a>
             {% endif %}
         </fieldset>
     </form>

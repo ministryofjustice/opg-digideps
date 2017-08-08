@@ -1,7 +1,7 @@
 page:
-  htmlTitle: Report submissions available for download
-  pageTitle: Report submissions available for download
-  supportTitle: "{0} no report submissions found | {1} 1 report submission found | ]1,Inf[ %count% report submissions found"
+  htmlTitle: Administration - Documents
+  pageTitle: Admin
+  supportTitle: Submitted reports and supporting documents
   tabs:
     new.label: "New"
     archived.label: "Archived"
