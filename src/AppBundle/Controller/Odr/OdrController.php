@@ -18,6 +18,7 @@ class OdrController extends AbstractController
         'user',
         'user-clients',
         'client',
+        'client-reports',
         'odr',
         'report',
         'visits-care',
