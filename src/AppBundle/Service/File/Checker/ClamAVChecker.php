@@ -83,9 +83,7 @@ class ClamAVChecker implements FileCheckerInterface
                 throw new VirusFoundException('Found virus in file');
 
             case 'PDF_INVALID_FILE':
-                throw new RiskyFileException('Invalid PDF');
-
-            case 'PDF_INVALID_FILE':
+            case 'PDF_BAD_KEYWORD':
                 throw new RiskyFileException('Invalid PDF');
         }
 
