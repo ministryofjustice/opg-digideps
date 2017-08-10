@@ -21,6 +21,8 @@ class ReportController extends AbstractController
      * @var array
      */
     private static $reportGroupsAll = [
+        'report',
+        'client',
         'account',
         'expenses',
         'fee',
@@ -60,7 +62,7 @@ class ReportController extends AbstractController
      */
     public function indexAction(Request $request, $type)
     {
-        $user = $this->getUserWithData(['client', 'report']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports']);
 
         // NDR: redirect to ODR index
         if ($user->isOdrEnabled()) {
@@ -127,7 +129,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'client-reports']);
 
         $existingReports = $this->getReportsIndexedById($client);
 
@@ -162,7 +164,7 @@ class ReportController extends AbstractController
     {
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports']);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
@@ -193,7 +195,7 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $user = $this->getUserWithData(['client']);
+        $user = $this->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
         $client = $clients[0];
 
