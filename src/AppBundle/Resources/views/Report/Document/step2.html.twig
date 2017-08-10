@@ -12,15 +12,8 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{# Breadcrumbs #}
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
-
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ report.client.fullname }}</span>
-{% endblock %}
-
-{% block supportTitleBottom %}
-    <span class="heading-secondary">Reporting period: {{ report.period }}</span>
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
 {% endblock %}
 
 {% block pageContent %}
@@ -29,15 +22,13 @@
 
     <h2 class="heading-medium">{{ (page ~ '.attachDocuments') | trans }}</h2>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form'}}) }}
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
         'labelText':  'form.attachAFile' | trans ,
         'inputClass': 'no-border behat-link-choose-file',
         'hintText': 'form.acceptedFileTypes' | trans}) }}
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
-
-    <a href=" {{ backLink }} " class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
@@ -46,14 +37,13 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
-    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
-    'translationDomain': translationDomain,
-    'page' : page
-    } %}
-
-    <p class="text">
-        <a href="{{ nextLink }}" class="button">Save and continue</a>
-    </p>
+    {% if report.documents | length > 0 %}
+        {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+        <a href="{{ nextLink }}" class="button push--top">Continue</a>
+    {% endif %}
 
     <script>
         $(document).ready(function () {
