@@ -84,7 +84,7 @@ class DocumentController extends RestController
 
             $this->getEntityManager()->remove($document);
 
-            $this->getEntityManager()->flush($document);
+            $this->getEntityManager()->flush();
         } catch (\Exception $e) {
             $this->get('logger')->error('Failed to delete document ID: ' . $id . ' - ' . $e->getMessage());
         }
