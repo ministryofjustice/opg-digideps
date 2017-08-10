@@ -42,7 +42,7 @@
                 </div>
                 <div class="column-one-third">
                     <label for="created_by_role" class="form-label">Role</label>
-                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control">
+                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control width-two-thirds">
                         <option value="">All</option>
                         {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
                             <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
