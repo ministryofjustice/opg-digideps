@@ -50,7 +50,7 @@
     </thead>
     <tbody>
     <tr class="behat-region-records-exist">
-        {% if report.moneyTransactionsShortInExist is null %}
+        {% if report.moneyTransactionsShortInExist is null or (report.moneyTransactionsShortInExist == "yes" and report.moneyTransactionsShortIn | length == 0) %}
             <td>
                 <span class="error">
                     {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
