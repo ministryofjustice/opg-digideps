@@ -49,11 +49,12 @@ class FileUploader
      *
      * @param integer $reportId
      * @param string $body
-     * @param $fileName
+     * @param string $fileName
+     * @param boolean $isReportPdf
      *
      * @return Document
      */
-    public function uploadFile($reportId, $body, $fileName)
+    public function uploadFile($reportId, $body, $fileName, $isReportPdf)
     {
         $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 
@@ -61,7 +62,10 @@ class FileUploader
         $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body)." bytes");
 
         $document = new Document();
-        $document->setStorageReference($storageReference)->setFileName($fileName);
+        $document
+            ->setStorageReference($storageReference)
+            ->setFileName($fileName)
+            ->setIsReportPdf($isReportPdf);
         $this->restClient->post('/report/' . $reportId . '/document', $document, ['document']);
 
         return $document;
