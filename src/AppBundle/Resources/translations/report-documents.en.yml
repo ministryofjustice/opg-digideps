@@ -1,9 +1,8 @@
-htmlTitle: Case documents | GOV.UK
-pageTitle: Case documents
+htmlTitle: Supporting documents | GOV.UK
+pageTitle: Supporting documents
+
 form:
-  attachAFile: Attach a file
-  acceptedFileTypes: "Accepted file types: PDF. Max file size: 15 MB"
-  attachDocument: Attach Document
+  submitButton: Upload file and attach document
   file:
     label: Attach a file
   errors:
@@ -11,21 +10,21 @@ form:
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
     virusFound:  "Cannot upload file, virus found inside. Technical details: %techDetails%"
     generic: "Cannot upload file, please try again later. Technical details: %techDetails%"
+
 removeDocument:
-  htmlTitle: Client profile - remove note | GOV.UK
+  htmlTitle: Deputy report - supporting documents | GOV.UK
   h1Title: Remove document
-  supportTitle: "Attach documents"
+  supportTitle: "Supporting documents"
   question: Are you sure you want to remove this document?
-  documentFilename: "File name:"
-  dateAttached: "Date attached:"
+  documentFilename: File name
+  dateAttached: Date attached
   linkButtonLabel: Yes, remove document
-reportDocuments:
-  supportText: Use this page to attach a supporting document (or documents) for this deputy report.
+
+attachPage:
+  pageTitle: Attach documents
   supportingDocuments: Supporting documents
-  attachDocuments: Attach documents
-  heading: Attach Documents
   noDocuments: No documents
-  documentList: Document list
+  documentList: Attached documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
@@ -34,16 +33,17 @@ startPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageSectionTitle: Supporting documents
   pageSectionDescription1: |
-    Use this section to attach a supporting document (or documents) for this deputy report
-  startButton: Start attaching documents
+    Use this section to attach supporting documents to this deputy report.
+  startButton: Start
 
 stepPage:
   htmlTitle: "Deputy report - suporting documents | GOV.UK"
-  pageSectionTitle: Attach documents
+  pageSectionTitle: Supporting documents
   backLink: Back
   form:
     wishToUploadDocumentation:
         label: Would you like to provide documentation?
+
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageSectionTitle: Supporting documents
@@ -52,7 +52,7 @@ summaryPage:
     weAskAbout: In this section, we asked you to provide any supporting documents.
     checktheyrecorrect: Check they're correct and edit them where neccessary.
   noDocuments: No documents
-  documentList: Document list
+  documentList: Attached documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
