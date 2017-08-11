@@ -22,11 +22,11 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium">1. Select the file</h2>
+    <h2 class="heading-medium">{{ (page ~ '.selectHeading') | trans }}</h2>
 
     <div class="text">
-        <p>Please select 'Choose file' below to find your file.</p>
-        <p>Currently we only accept PDF files and they can't be larger than 15mb.</p>
+        <p>{{ (page ~ '.selectHelp') | trans }}</p>
+        <p>{{ (page ~ '.selectHint') | trans }}</p>
     </div>
 
     {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
@@ -36,7 +36,7 @@
         'inputClass': 'no-border behat-link-choose-file' })
     }}
 
-    <h2 class="heading-medium flush--top">2. Upload the file</h2>
+    <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.submitButton' | trans}) }}
 
@@ -52,7 +52,7 @@
         'translationDomain': translationDomain,
         'page' : page
         } %}
-        <a href="{{ nextLink }}" class="button push--top">Continue</a>
+        <a href="{{ nextLink }}" class="button push--top">{{ 'continue' | trans({}, 'common' ) }}</a>
     {% endif %}
 
     <script>
