@@ -28,6 +28,14 @@
         'labelText':  'form.attachAFile' | trans ,
         'inputClass': 'no-border behat-link-choose-file',
         'hintText': 'form.acceptedFileTypes' | trans}) }}
+
+    <div class="alert-info panel panel-border-narrow">
+        <span class="icon icon-information"></span>
+        <div class="alert-message">
+            <p>Please be aware that uploading may take time depending on your internet connection. If more than 5 minutes have passed, please refresh this page and try again.</p>
+        </div>
+    </div>
+
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
 
     {{ form_end(form) }}
