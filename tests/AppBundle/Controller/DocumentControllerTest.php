@@ -60,7 +60,8 @@ class DocumentControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenDeputy,
             'data'        => [
                 'file_name'=> 'testfile.pdf',
-                'storage_reference'   => 's3StorageKey'
+                'storage_reference'   => 's3StorageKey',
+                'is_report_pdf'   => true
             ],
         ])['data'];
 
@@ -72,5 +73,6 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
+        $this->assertEquals(true, $document->isIsReportPdf());
     }
 }

@@ -56,6 +56,15 @@ class Document
 
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"documents"})
+     * @ORM\Column(name="is_report_pdf", type="boolean", options={ "default": false}, nullable=false)
+     */
+    private $isReportPdf;
+
+    /**
      * @var Report
      *
      * @JMS\Groups({"document-report"})
@@ -88,6 +97,7 @@ class Document
         $this->report = $report;
         $report->addDocument($this);
         $this->archived = false;
+        $this->isReportPdf = true;
     }
 
     /**
@@ -182,6 +192,25 @@ class Document
     {
         $this->reportSubmission = $reportSubmission;
         $reportSubmission->addDocument($this);
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsReportPdf()
+    {
+        return $this->isReportPdf;
+    }
+
+    /**
+     * @param boolean $isReportPdf
+     * @return Document
+     */
+    public function setIsReportPdf($isReportPdf)
+    {
+        $this->isReportPdf = $isReportPdf;
 
         return $this;
     }
