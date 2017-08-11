@@ -24,7 +24,10 @@
 
     <h2 class="heading-medium">1. Select the file</h2>
 
-
+    <div class="text">
+        <p>Please select 'Choose file' below to find your file.</p>
+        <p>Currently we only accept PDF files and they can't be larger than 15mb.</p>
+    </div>
 
     {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
@@ -34,13 +37,6 @@
     }}
 
     <h2 class="heading-medium flush--top">2. Upload the file</h2>
-
-    <div class="alert-info panel panel-border-narrow">
-        <span class="icon icon-information"></span>
-        <div class="alert-message">
-            <p>Please be aware that uploading may take time depending on your internet connection. If more than 5 minutes have passed, please refresh this page and try again.</p>
-        </div>
-    </div>
 
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.submitButton' | trans}) }}
 
