@@ -3,14 +3,18 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
-{% set page = "reportDocuments" %}
+{% set page = "attachPage" %}
 
 {% trans_default_domain translationDomain %}
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'pageTitle' | trans }}</span>
+{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
@@ -18,16 +22,21 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ (page ~ '.supportText') | trans }}</p>
+    <h2 class="heading-medium">{{ (page ~ '.selectHeading') | trans }}</h2>
 
-    <h2 class="heading-medium">{{ (page ~ '.attachDocuments') | trans }}</h2>
+    <div class="text">
+        <p>{{ (page ~ '.selectHelp') | trans }}</p>
+        <p>{{ (page ~ '.selectHint') | trans }}</p>
+    </div>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push--bottom'}}) }}
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
-        'labelRaw': true,
-        'labelText':  'form.attachAFile' | trans ,
-        'inputClass': 'no-border behat-link-choose-file',
-        'hintText': 'form.acceptedFileTypes' | trans}) }}
+        'labelText':  '' | trans ,
+        'labelClass': 'visually-hidden',
+        'inputClass': 'no-border behat-link-choose-file' })
+    }}
+
+    <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
     <div class="alert-info panel panel-border-narrow js-hidden">
         <span class="icon icon-information"></span>
@@ -36,7 +45,7 @@
         </div>
     </div>
 
-    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.attachDocument' | trans}) }}
+    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
 
     <div class="alert-info panel panel-border-narrow push--top js-hidden" id="upload-progress">
         <span class="icon icon-loader"></span>
@@ -58,7 +67,7 @@
         'translationDomain': translationDomain,
         'page' : page
         } %}
-        <a href="{{ nextLink }}" class="button push--top">Continue</a>
+        <a href="{{ nextLink }}" class="button push--top">{{ 'continue' | trans({}, 'common' ) }}</a>
     {% endif %}
 
     <script>
