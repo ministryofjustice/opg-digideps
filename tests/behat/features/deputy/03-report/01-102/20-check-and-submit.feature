@@ -163,6 +163,10 @@ Feature: Report submit
         And the response should contain "12345ABC"
         And the response should contain "Peter"
         And the response should contain "White"
+        # assert documents
+        And I should see "file1.pdf" in the "document-list" region
+        And I should see "file2.pdf" in the "document-list" region
+        And I should not see "DigiRep" in the "document-list" region
         # test go back link
         When I click on "back-to-reports"
         Then I go to the URL previously saved as "reports-type-list"
