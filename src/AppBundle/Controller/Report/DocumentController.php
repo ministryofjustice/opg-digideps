@@ -61,7 +61,8 @@ class DocumentController extends RestController
 
 
     /**
-     * Delete document.
+     * Soft Delete document.
+     * Accessible only from deputy area
      *
      * @Method({"DELETE"})
      *
@@ -71,30 +72,45 @@ class DocumentController extends RestController
      *
      * @return array
      */
-    public function delete($id)
+    public function softDelete($id)
     {
-        $this->get('logger')->debug('Deleting document ' . $id);
+        /** @var $document EntityDir\Report\Document */
+        $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
 
-        try {
+        // enable if the check above is removed and the note is available for editing for the whole team
+        $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
-            /** @var $document EntityDir\Report\Document */
-            $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
+        $this->getEntityManager()->remove($document);
 
-            // enable if the check above is removed and the note is available for editing for the whole team
-            $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
+        $this->getEntityManager()->flush();
 
-            $this->getEntityManager()->remove($document);
+        return [];
+    }
 
-            $this->getEntityManager()->flush();
-        } catch (\Exception $e) {
-            $this->get('logger')->error('Failed to delete document ID: ' . $id . ' - ' . $e->getMessage());
+    /**
+     * Hard Delete
+     * Currently only accessed by admin area cron (no user login needed)
+     *
+     * @Method({"DELETE"})
+     * @Route("/document/hard-delete/{id}")
+     *
+     * @param int $id
+     */
+    public function hardDelete(Request $request, $id)
+    {
+        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+            throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
         }
+
+        $this->getRepository(EntityDir\Report\Document::class)
+             ->hardDeleteDocument($id);
 
         return [];
     }
 
     /**
      * GET soft-documents
+     * Currently only accessed by admin area cron (no user login needed)
      *
      * @Route("/document/soft-deleted")
      * @Method({"GET"})
@@ -108,7 +124,7 @@ class DocumentController extends RestController
         $this->setJmsSerialiserGroups(['document-id', 'document-storage-reference']);
 
         return $this->getRepository(EntityDir\Report\Document::class)
-            ->retrieveSoftDeleted();
+                    ->retrieveSoftDeleted();
     }
 
 }

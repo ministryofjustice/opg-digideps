@@ -23,4 +23,21 @@ class DocumentRepository extends EntityRepository
 
         return $records;
     }
+
+    /**
+     * @param $id document ID
+     */
+    public function hardDeleteDocument($id)
+    {
+        $filter = $this->_em->getFilters()->enable('softdeleteable');
+        $filter->disableForEntity(Document::class);
+
+        /** @var $document EntityDir\Report\Document */
+        $document = $this->_em->getRepository(Document::class)->find($id);
+        $this->_em->remove($document);
+        $this->_em->flush();
+
+        $this->_em->getFilters()->enable('softdeleteable');
+    }
+
 }

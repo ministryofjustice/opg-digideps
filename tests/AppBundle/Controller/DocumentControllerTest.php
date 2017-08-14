@@ -95,14 +95,12 @@ class DocumentControllerTest extends AbstractTestController
         self::fixtures()->remove($d1)->flush()->clear();
         $this->assertCount(2, $repo->findAll());
 
-        $url = '/document/soft-deleted';
-
-        $this->assertJsonRequest('GET', $url, [
+        $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustFail' => true,
             'ClientSecret' => '123abc-deputy',
         ]);
 
-        $records = $this->assertJsonRequest('GET', $url, [
+        $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustSucceed' => true,
             'ClientSecret' => '123abc-admin',
         ])['data'];
@@ -115,5 +113,31 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertNotEmpty($records[2]['id']);
         $this->assertNotEmpty($records[2]['storage_reference']);
 
+        return $d1->getId();
     }
+
+    /**
+     * @depends testgetSoftDeletedDocuments
+     */
+    public function testHardDelete($documentId)
+    {
+        // hard delete document1
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/'.$documentId, [
+            'mustFail' => true,
+            'ClientSecret' => '123abc-deputy',
+        ]);
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/'.$documentId, [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-admin',
+        ]);
+
+        // assert one got deleted
+        $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-admin',
+        ])['data'];
+        $this->assertCount(2, $records);
+
+    }
+
 }
