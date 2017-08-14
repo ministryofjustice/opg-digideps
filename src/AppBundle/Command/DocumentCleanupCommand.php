@@ -15,14 +15,16 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     {
         $this
             ->setName('digideps:documents-cleanup')
+            ->addOption('ignore-s3-failures', null, InputOption::VALUE_NONE, 'Hard-delete db entry even if the S3 deletion fails')
         ;
     }
 
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $s3Storage = $this->getContainer()->get('s3_storage');
+
         $restClient = $this->getContainer()->get('rest_client');
+        $ignoreS3Failure = $input->getOption('ignore-s3-failures');
 
         // TODO open endpoint, with key ? careful about security. extra key maybe ?
         $documents = $restClient->apiCall('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false); /* @var $documents Document[] */
@@ -31,11 +33,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             $documentId = $document->getId();
             $storageRef = $document->getStorageReference();
             try {
-                if (!$storageRef) { // to delete test documents without reference
-                    $s3Storage->delete($document->getStorageReference());
-                }
-
-                // database delete. Won't be done if the S3 delete fails
+                $this->deleteFromS3($document->getStorageReference(), $ignoreS3Failure);
                 $restClient->apiCall('DELETE', 'document/hard-delete/'.$document->getId(), null, 'raw', [], false);
                 $output->write('.');
             } catch (\RuntimeException $e) {
@@ -50,6 +48,26 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         }
         $output->writeln('Done');
+    }
 
+    /**
+     * @param string $ref
+     * @param boolean $ignoreS3Failure
+     *
+     * @throws \Exception
+     */
+    private function deleteFromS3($ref, $ignoreS3Failure)
+    {
+        $s3Storage = $this->getContainer()->get('s3_storage');
+
+        try {
+            $s3Storage->delete($ref);
+        } catch (\Exception $e) {
+            if ($ignoreS3Failure) {
+                $this->getContainer()->get('logger')->error($e->getMessage());
+            } else {
+                throw $e;
+            }
+        }
     }
 }
