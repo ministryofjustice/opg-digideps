@@ -14,7 +14,8 @@ class DocumentRepository extends EntityRepository
      */
     public function retrieveSoftDeleted()
     {
-        $qb = $this->createQueryBuilder('d');
+        $qb = $this->createQueryBuilder('d')
+                ->where('d.deletedAt IS NOT NULL');
 
         $filter = $this->_em->getFilters()->enable('softdeleteable');
         $filter->disableForEntity(Document::class);
@@ -29,15 +30,20 @@ class DocumentRepository extends EntityRepository
      */
     public function hardDeleteDocument($id)
     {
+        $this->_em->clear();
         $filter = $this->_em->getFilters()->enable('softdeleteable');
         $filter->disableForEntity(Document::class);
 
         /** @var $document EntityDir\Report\Document */
         $document = $this->_em->getRepository(Document::class)->find($id);
+        if (!$document->getDeletedAt()) {
+            throw new \RuntimeException("Can't hard delete document $id, as it's not soft-deleted");
+        }
         $this->_em->remove($document);
-        $this->_em->flush();
 
         $this->_em->getFilters()->enable('softdeleteable');
+
+        $this->_em->flush($document);
     }
 
 }

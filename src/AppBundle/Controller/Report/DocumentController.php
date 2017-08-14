@@ -90,6 +90,7 @@ class DocumentController extends RestController
     /**
      * Hard Delete
      * Currently only accessed by admin area cron (no user login needed)
+     * Throw exception if a non-soft deleted document is asked for deletiong
      *
      * @Method({"DELETE"})
      * @Route("/document/hard-delete/{id}")
@@ -105,7 +106,7 @@ class DocumentController extends RestController
         $this->getRepository(EntityDir\Report\Document::class)
              ->hardDeleteDocument($id);
 
-        return [];
+        return $id;
     }
 
     /**
