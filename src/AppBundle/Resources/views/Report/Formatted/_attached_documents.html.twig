@@ -20,7 +20,7 @@
 
                 </div>
 
-                {% if report.documents | length > 0 %}
+                {% if report.documentsExcludingReportPdf | length > 0 %}
                     <h3 class="push-half--bottom push-half--top">Attached documents</h3>
 
                     <table class="table-within-box push-half--bottom">
@@ -29,7 +29,7 @@
                             <th class="text--right">Date attached</th>
                         </thead>
                         <tbody class="behat-region-document-list">
-                            {% for document in report.documents %}
+                            {% for document in report.documentsExcludingReportPdf %}
                                 <tr>
                                     <td class="text--left">{{ document.fileName }}</td>
                                     <td class="text--right">{{ document.createdOn | date("j F Y H:i") }}</td>
