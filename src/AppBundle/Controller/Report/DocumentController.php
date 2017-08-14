@@ -132,7 +132,8 @@ class DocumentController extends AbstractController
                     $fileUploader->uploadFile(
                         $report->getId(),
                         file_get_contents($uploadedFile->getPathName()),
-                        $uploadedFile->getClientOriginalName()
+                        $uploadedFile->getClientOriginalName(),
+                        false
                     );
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 } else {

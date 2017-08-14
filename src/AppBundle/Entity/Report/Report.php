@@ -857,6 +857,16 @@ class Report
     }
 
     /**
+     * @return Document[]
+     */
+    public function getDocumentsExcludingReportPdf()
+    {
+        return array_filter($this->documents, function ($document) { /* @var $document Document */
+            return !$document->isReportPdf();
+        });
+    }
+
+    /**
      * @param Document[] $documents
      */
     public function setDocuments($documents)

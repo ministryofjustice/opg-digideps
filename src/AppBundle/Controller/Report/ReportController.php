@@ -210,7 +210,8 @@ class ReportController extends AbstractController
             $fileUploader->uploadFile(
                 $report->getId(),
                 $pdfBinaryContent,
-                $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')
+                $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
+                true
             );
 
             // store report and get new YEAR report
