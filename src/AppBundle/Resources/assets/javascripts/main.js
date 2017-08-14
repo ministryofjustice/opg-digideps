@@ -21,7 +21,7 @@ $(document).ready(function() {
     $('.js-uploading').on('click', function(){
         var fileName = $('#report_document_upload_file').val();
         if (fileName) {
-            $('#upload-progress').removeClass('js-hidden');
+            $('#upload-progress').removeClass('hidden');
         }
     });
 
