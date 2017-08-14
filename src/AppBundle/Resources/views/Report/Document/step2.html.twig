@@ -41,7 +41,7 @@
     <div class="alert-info panel panel-border-narrow js-hidden">
         <span class="icon icon-information"></span>
         <div class="alert-message">
-            <p>Please be aware that uploading may take time depending on your internet connection. If more than 5 minutes have passed, please refresh this page and try again.</p>
+            <p>{{ (page ~ '.uploadHint') | trans }}</p>
         </div>
     </div>
 
@@ -50,8 +50,8 @@
     <div class="alert-info panel panel-border-narrow push--top hidden" id="upload-progress">
         <span class="icon icon-loader"></span>
         <div class="alert-message">
-            <p>Please wait while your document is being uploaded.</p>
-            <p>Please be aware that uploading may take time depending on your internet connection. If more than 5 minutes have passed, please refresh this page and try again.</p>
+            <p>{{ (page ~ '.pleaseWait') | trans }}</p>
+            <p>{{ (page ~ '.uploadHint') | trans }}</p>
         </div>
     </div>
 
