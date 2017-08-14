@@ -26,18 +26,18 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         // TODO open endpoint, with key ? careful about security. extra key maybe ?
         $documents = $restClient->apiCall('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false); /* @var $documents Document[] */
+        $output->write(count($documents).' documents to delete:');
         foreach($documents as $document) {
             $documentId = $document->getId();
             $storageRef = $document->getStorageReference();
             try {
-                if (!$storageRef) {
-                    throw new RuntimeException('Storage reference is empty');
+                if (!$storageRef) { // to delete test documents without reference
+                    $s3Storage->delete($document->getStorageReference());
                 }
-                $s3Storage->delete($document->getStorageReference());
 
                 // database delete. Won't be done if the S3 delete fails
-                $restClient->delete('document/hard-delete/'.$document->getId());
-
+                $restClient->apiCall('DELETE', 'document/hard-delete/'.$document->getId(), null, 'raw', [], false);
+                $output->write('.');
             } catch (\RuntimeException $e) {
                 $message = "Error deleting document $documentId, ref $storageRef. Error: ".$e->getMessage();
                 if ($e instanceof RestClientException) {
@@ -49,6 +49,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             }
 
         }
+        $output->writeln('Done');
 
     }
 }
