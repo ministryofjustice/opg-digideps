@@ -73,7 +73,7 @@ class DoctrineListener
 
         if ($entity instanceof EntityDir\Report\Document) {
             $report = $entity->getReport();
-            if (count($report->getDocuments()) === 1) {
+            if ($report instanceof Report && count($report->getDocuments()) === 1) {
                 $report->setWishToProvideDocumentation(null);
             }
         }

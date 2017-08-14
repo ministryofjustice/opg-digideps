@@ -28,7 +28,7 @@ class DocumentControllerTest extends AbstractTestController
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1);
 
-        self::fixtures()->flush()->clear();
+        self::fixtures()->flush();
     }
 
     /**
@@ -74,5 +74,46 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isIsReportPdf());
+    }
+
+    /**
+     * @depends testAddDocumentForDeputy
+     */
+    public function testgetSoftDeletedDocuments()
+    {
+        $repo = self::fixtures()->getRepo('Report\Document');
+        // add other two documents
+        $d1 = (new Document(self::$report1))
+            ->setFileName('file1.pdf')->setStorageReference('sr1')
+            ->setReport(null); // failing at flush time, not clear why
+        $d2 = (new Document(self::$report1))
+            ->setFileName('file2.pdf')->setStorageReference('sr2')
+            ->setReport(null); // failing at flush time, not clear why
+        self::fixtures()->persist($d1, $d2)->flush();
+        $this->assertCount(3, $repo->findAll());
+        //delete one
+        self::fixtures()->remove($d1)->flush()->clear();
+        $this->assertCount(2, $repo->findAll());
+
+        $url = '/document/soft-deleted';
+
+        $this->assertJsonRequest('GET', $url, [
+            'mustFail' => true,
+            'ClientSecret' => '123abc-deputy',
+        ]);
+
+        $records = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-admin',
+        ])['data'];
+
+        $this->assertCount(3, $records);
+        $this->assertNotEmpty($records[0]['id']);
+        $this->assertNotEmpty($records[0]['storage_reference']);
+        $this->assertNotEmpty($records[1]['id']);
+        $this->assertNotEmpty($records[1]['storage_reference']);
+        $this->assertNotEmpty($records[2]['id']);
+        $this->assertNotEmpty($records[2]['storage_reference']);
+
     }
 }

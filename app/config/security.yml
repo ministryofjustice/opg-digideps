@@ -76,6 +76,10 @@ security:
             pattern: ^/selfregister
             security: false
             methods: [POST]
+        documentsDelete:
+           pattern: ^/document/soft-deleted
+           security: false
+           methods: [GET]
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*

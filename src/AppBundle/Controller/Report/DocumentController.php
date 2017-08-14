@@ -41,7 +41,7 @@ class DocumentController extends RestController
     /**
      * GET document by id
      *
-     * @Route("/document/{id}")
+     * @Route("/document/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
@@ -92,4 +92,23 @@ class DocumentController extends RestController
 
         return [];
     }
+
+    /**
+     * GET soft-documents
+     *
+     * @Route("/document/soft-deleted")
+     * @Method({"GET"})
+     */
+    public function getSoftDeletedDocuments(Request $request)
+    {
+        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+            throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
+        }
+
+        $this->setJmsSerialiserGroups(['document-id', 'document-storage-reference']);
+
+        return $this->getRepository(EntityDir\Report\Document::class)
+            ->retrieveSoftDeleted();
+    }
+
 }

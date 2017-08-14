@@ -88,6 +88,27 @@ class AuthService
     }
 
     /**
+     * @param string  $roleName
+     * @param Request $request
+     *
+     * @return bool
+     */
+    public function isSecretValidForRole($roleName, Request $request)
+    {
+        $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
+        if (empty($this->clientSecrets[$clientSecretFromRequest]['permissions'])) {
+            return false;
+        }
+        $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
+
+        return in_array($roleName, $permissions);
+    }
+
+    /**
+     * @deprecated
+     *
+     * Use method above instead
+     *
      * @param User    $user
      * @param Request $request
      *
@@ -95,13 +116,6 @@ class AuthService
      */
     public function isSecretValidForUser(User $user, Request $request)
     {
-        $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
-        if (empty($this->clientSecrets[$clientSecretFromRequest]['permissions'])) {
-            return false;
-        }
-        $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
-        $userRole = $user->getRoleName();
-
-        return in_array($userRole, $permissions);
+        return $this->isSecretValidForRole($user->getRoleName(), $request);
     }
 }
