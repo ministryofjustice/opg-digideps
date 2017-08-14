@@ -32,6 +32,10 @@ attachPage:
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
+  pleaseWait: The file is being uploaded.
+  uploadHint: |
+    If the file takes more than 5 minutes to upload, please refresh the page and try again.
+    To stop uploading the file, just refresh the page.
 
 startPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"

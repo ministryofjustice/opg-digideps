@@ -31,14 +31,29 @@
 
     {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
-        'labelRaw': true,
         'labelText':  '' | trans ,
+        'labelClass': 'visually-hidden',
         'inputClass': 'no-border behat-link-choose-file' })
     }}
 
     <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
-    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.submitButton' | trans}) }}
+    <div class="alert-info panel panel-border-narrow js-hidden">
+        <span class="icon icon-information"></span>
+        <div class="alert-message">
+            <p>{{ (page ~ '.uploadHint') | trans }}</p>
+        </div>
+    </div>
+
+    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
+
+    <div class="alert-info panel panel-border-narrow push--top hidden" id="upload-progress">
+        <span class="icon icon-loader"></span>
+        <div class="alert-message">
+            <p>{{ (page ~ '.pleaseWait') | trans }}</p>
+            <p>{{ (page ~ '.uploadHint') | trans }}</p>
+        </div>
+    </div>
 
     {{ form_end(form) }}
 

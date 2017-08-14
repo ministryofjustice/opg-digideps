@@ -59,6 +59,24 @@
     }
 }
 
+.icon-loader {
+    width: 22px;
+    height: 22px;
+    background-image: file-url("icons/icon-loader.gif");
+    background-size: contain;
+
+    @include device-pixel-ratio() {
+      background-image: file-url("icons/icon-loader.gif");
+      background-size: 100%;
+    }
+
+    @include media(mobile) {
+        width: 16px;
+        height: 16px;
+        background-image: file-url("icons/icon-loader.gif");
+    }
+}
+
 //adjusting icon within a link
 .icon {
     a & {
