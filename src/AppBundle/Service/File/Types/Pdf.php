@@ -8,22 +8,29 @@ use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 class Pdf extends UploadableFile
 {
 
-    public function isSafe()
+    /**
+     * Checks a file by calling configured file checkers for that file type
+     *
+     * @throws \Exception
+     */
+    public function checkFile()
     {
-        $scanResult = $this->getScanResult();
+        parent::callFileCheckers();
 
-        $this->logger->warning('Confirming file is safe... ' . $this->getUploadedFile()->getClientOriginalName() .
-            ' - ' . $this->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+        // not clear why the below is called. fileCheckers already do the job
 
-        if (isset($scanResult['av_scan_result']) &&
-            strtoupper($scanResult['av_scan_result'] == 'PASS')
-            && strtoupper($scanResult['pdf_scan_result'] == 'PASS')
-            || !parent::isSafe($this)
-        ) {
-            return true;
-        }
+        
+//        $scanResult = $this->getScanResult();
 
-        return false;
+        // not clear why this is done again here.
+
+//        if ($scanResult['file_scanner_code'] !== 'PASS') {
+//            throw new VirusFoundException('Found virus in file');
+//        }
+//
+//        if ($scanResult['pdf_scan_result'] !== 'PASS') {
+//            throw new RiskyFileException('Risky content found in file');
+//        }
     }
 }
 

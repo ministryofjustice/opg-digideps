@@ -8,6 +8,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Checker\FileCheckerInterface;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\File\Types\UploadableFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,41 +26,44 @@ class DocumentController extends AbstractController
     ];
 
     /**
-     * @Route("/report/{reportId}/documents/start", name="documents")
+     * @Route("/report/{reportId}/documents", name="documents")
      * @Template()
      */
     public function startAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         if ($report->getStatus()->getDocumentsState()['state'] !== EntityDir\Report\Status::STATE_NOT_STARTED) {
-            return $this->redirectToRoute('documents_step', ['reportId' => $reportId, 'step' => 1]);
+            $referer = $request->headers->get('referer');
+            $redirectResponse = false !== strpos($referer, '/step/1')
+                ? $this->redirectToRoute('report_overview', ['reportId' => $reportId])
+                : $this->redirectToRoute('report_documents_summary' , ['reportId' => $reportId, 'step' => 1]);
+            return $redirectResponse;
         }
+
         return [
             'report' => $report,
         ];
     }
 
     /**
-     * @Route("/report/{reportId}/documents/step/{step}", name="documents_step")
+     * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
+     * @Route("/report/{reportId}/documents/step/1", name="documents_step")
      * @Template()
      */
-    public function stepAction(Request $request, $reportId, $step)
+    public function step1Action(Request $request, $reportId)
     {
-        $totalSteps = 3;
-        if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
-        }
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getWishToProvideDocumentation() === 'no' && $step > 1) {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
-        }
+
+        $step = 1; $totalSteps = 3;
 
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('documents', 'report_documents', 'report_documents_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setCurrentStep($step)
+            ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(new FormDir\Report\DocumentType($this->get('translator')), $report);
@@ -71,7 +75,10 @@ class DocumentController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+            $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
+                ? $this->generateUrl('report_documents'        , ['reportId' => $report->getId()])
+                : $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
+            return $this->redirect($redirectUrl);
         }
 
         return [
@@ -84,16 +91,22 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/documents", name="report_documents", defaults={"what"="new"})
+     * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
      * @Template()
      */
-    public function indexAction(Request $request, $reportId)
+    public function step2Action(Request $request, $reportId)
     {
-        $fileUploader = $this->get('file_uploader');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getWishToProvideDocumentation() === 'no') {
+
+        if ( EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
+           && 'yes' !== $report->getWishToProvideDocumentation()
+           ) {
+            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
+        } elseif ($report->getWishToProvideDocumentation() === 'no') {
             return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
         }
+
+        $fileUploader = $this->get('file_uploader');
 
         // fake documents. remove when the upload is implemented
         $document = new Document();
@@ -110,14 +123,18 @@ class DocumentController extends AbstractController
             /* @var $uploadedFile UploadedFile */
             $uploadedFile = $document->getFile();
 
-            /** @var UploadableFileInterface $fileToStore */
-            $fileToStore = $this->getUploadFileFactory()->createFileToStore($uploadedFile);
+            /** @var FileCheckerInterface $fileChecker */
+            $fileChecker = $this->get('file_checker_factory')->factory($uploadedFile);
 
             try {
-                $fileToStore->checkFile();
-                if ($fileToStore->isSafe())
-                {
-                    $fileUploader->uploadFile($report, $uploadedFile);
+                $fileChecker->checkFile();
+                if ($fileChecker->isSafe()) {
+                    $fileUploader->uploadFile(
+                        $report->getId(),
+                        file_get_contents($uploadedFile->getPathName()),
+                        $uploadedFile->getClientOriginalName(),
+                        false
+                    );
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
@@ -146,7 +163,7 @@ class DocumentController extends AbstractController
         return [
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $this->generateUrl('report_overview', ['reportId' => $report->getId()]),
+            'backLink' => $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]),
             'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
             'form'     => $form->createView(),
         ];
@@ -158,8 +175,12 @@ class DocumentController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
-        $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
+            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
+        }
+
+        $fromPage = $request->get('from');
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
@@ -182,10 +203,18 @@ class DocumentController extends AbstractController
 
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
+        $report = $document->getReport();
+        $fromPage = $request->get('from');
+
+        $backLink = 'summaryPage' == $fromPage
+            ? $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()])
+            : $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
+
         return [
-            'report'  => $document->getReport(),
+            'report'   => $report,
             'document' => $document,
-            'backLink' => $this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()])
+            'backLink' => $backLink,
+            'fromPage' => $fromPage
         ];
     }
 
@@ -197,14 +226,12 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {
+        /** @var EntityDir\Document $document */
+        $document = $this->getDocument($documentId);
+        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
+
         try {
-            /** @var EntityDir\Document $document */
-            $document = $this->getDocument($documentId);
-
-            $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
-
             $this->getRestClient()->delete('document/' . $documentId);
-
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
@@ -215,7 +242,16 @@ class DocumentController extends AbstractController
             );
         }
 
-        return $this->redirect($this->generateUrl('report_documents', ['reportId' => $document->getReport()->getId()]));
+        $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
+        if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
+            $returnUrl = 'summaryPage' == $request->get('from')
+                ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
+                : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+        } else {
+            $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
+        }
+
+        return $this->redirect($returnUrl);
     }
 
     /**

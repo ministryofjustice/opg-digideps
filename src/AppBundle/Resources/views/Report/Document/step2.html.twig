@@ -3,41 +3,42 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
-{% set page = "reportDocuments" %}
+{% set page = "attachPage" %}
 
 {% trans_default_domain translationDomain %}
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{# Breadcrumbs #}
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
-
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ report.client.fullname }}</span>
+    <span class="heading-secondary">{{ 'pageTitle' | trans }}</span>
 {% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">Reporting period: {{ report.period }}</span>
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
 {% endblock %}
 
 {% block pageContent %}
 
-    <p class="text">{{ (page ~ '.supportText') | trans }}</p>
+    <h2 class="heading-medium">{{ (page ~ '.selectHeading') | trans }}</h2>
 
-    <h2 class="heading-medium">{{ (page ~ '.attachDocuments') | trans }}</h2>
+    <div class="text">
+        <p>{{ (page ~ '.selectHelp') | trans }}</p>
+        <p>{{ (page ~ '.selectHint') | trans }}</p>
+    </div>
 
-    {{ form_start(form, {'attr': {'id': 'upload_form'}}) }}
+    {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
     {{ form_input(form.file,'form.file', {
         'labelRaw': true,
-        'labelText':  'form.attachAFile' | trans ,
-        'inputClass': 'no-border behat-link-choose-file',
-        'hintText': 'form.acceptedFileTypes' | trans}) }}
-    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.attachDocument' | trans}) }}
+        'labelText':  '' | trans ,
+        'inputClass': 'no-border behat-link-choose-file' })
+    }}
 
-    <a href=" {{ backLink }} " class="behat-link-cancel button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
+
+    {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file', 'labelText': 'form.submitButton' | trans}) }}
 
     {{ form_end(form) }}
 
@@ -46,14 +47,13 @@
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
 
-    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
-    'translationDomain': translationDomain,
-    'page' : page
-    } %}
-
-    <p class="text">
-        <a href="{{ nextLink }}" class="button">Save and continue</a>
-    </p>
+    {% if report.documents | length > 0 %}
+        {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+        <a href="{{ nextLink }}" class="button push--top">{{ 'continue' | trans({}, 'common' ) }}</a>
+    {% endif %}
 
     <script>
         $(document).ready(function () {

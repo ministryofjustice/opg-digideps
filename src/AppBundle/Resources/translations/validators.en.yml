@@ -148,21 +148,21 @@ contact:
         notBlank: Enter a reason why you contacted this person
         length: Please explain in a sentence why you chose this person
     noContactsChoice:
-        notBlank: Please specify if anyone helped you make any significant decisions during this reporting period
+        notBlank: Please select either 'Yes' or 'No'
     reasonForNoContacts:
         notBlank: Enter a reason why you don't have any contacts
     phone:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
     addAnother.notBlank: Please specify if you want to add another person
 decision:
-    noDecisionChoice.notBlank: Please specify if you have you made any significant decisions
+    noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
     reasonForNoDecisions.notBlank: Enter a reason why you don't have any decisions
     addAnother.notBlank: Please specify if you want to add another decision
     description:
         notBlank: You have to enter some details about this decision
         length: This description must be at least {{ limit }} letters long
     clientInvolvedBoolean:
-        notBlank: Choose Yes or No
+        notBlank: Please select either 'Yes' or 'No'
     clientInvolvedDetails:
         notBlank: Tell us if you involved the client
         length: This description must be at least {{ limit }} letters long
@@ -179,7 +179,7 @@ document:
       virusFound:  "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
       generic: "Cannot upload file, please try again later"
   wishToProvideDocumentation:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
 
 # currently a subsection of decisions
 mentalCapacity:
@@ -216,9 +216,9 @@ account:
         type: Enter a valid closing balance
         outOfRange: You need to enter a valid closing balance
     isJointAccount:
-        notBlank: Please choose yes or no
+        notBlank: Please select either 'Yes' or 'No'
     isClosed:
-        notBlank: Please choose yes or no
+        notBlank: Please select either 'Yes' or 'No'
 
 moneyTransaction:
   addAnother.notBlank: Please choose one option
@@ -246,7 +246,7 @@ moneyTransactionShort:
       notBlank: Please enter a description
 
 expenses:
-    paidForAnything.notBlank: Choose yes or no
+    paidForAnything.notBlank: Please select either 'Yes' or 'No'
     addAnother.notBlank: Please specify if you want to add another expense
     singleExpense:
        notNumeric: Enter the amount of the expense in numbers
@@ -259,7 +259,7 @@ expenses:
       maxMessage: The amount must be less than £10,000,000,000
 
 gifts:
-    giftsExist.notBlank: Choose yes or no
+    giftsExist.notBlank: Please select either 'Yes' or 'No'
     addAnother.notBlank: Please specify if you want to add another gift
     explanation:
       notBlank: Please enter a description
@@ -344,7 +344,7 @@ asset:
             type: Enter the value of this property in numbers
             outOfRange: The value of the property must be less than £100,000,000,000
 debt:
-    noDebtsChoice.notBlank: Choose Yes or No
+    noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
     amount:
       notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive
@@ -355,7 +355,7 @@ debt:
 fee:
     reasonForNoFees:
        notBlank: Enter a reason why you don't have charged the client any fees for your services
-    noFeesChoice.notBlank: Choose Yes or No
+    noFeesChoice.notBlank: Please select either 'Yes' or 'No'
     mustHaveAtLeastOneFee: You must enter at least one fee
     amount:
       notNumeric: Please use numbers only to enter the amount
@@ -366,11 +366,11 @@ fee:
 
 visitsCare:
     doYouLiveWithClient:
-        notBlank: Choose Yes or No
+        notBlank: Please select either 'Yes' or 'No'
     howOftenDoYouContactClient:
         notBlank: Give us more details about how often you contact the client and make sure others are looking after the client's needs
     doesClientReceivePaidCare:
-        notBlank: Choose Yes or No
+        notBlank: Please select either 'Yes' or 'No'
     howIsCareFunded:
         notBlank: Select one option
     whoIsDoingTheCaring:
@@ -379,20 +379,20 @@ visitsCare:
         notBlank: Please enter last review date
         invalidMessage: Enter the date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
-        notBlank: Choose Yes or No
+        notBlank: Please select either 'Yes' or 'No'
 
 action:
     doYouExpectFinancialDecisions:
-        notBlank: Choose yes or no
+        notBlank: Please select either 'Yes' or 'No'
     doYouExpectFinancialDecisionsDetails:
         notBlank: Please tell us more about any decisions or actions you may have to take
     doYouHaveConcerns:
-        notBlank: Choose yes or no
+        notBlank: Please select either 'Yes' or 'No'
     doYouHaveConcernsDetails:
         notBlank: Please tell us more about any concerns you may have
     # the following are now in a different section
     actionMoreInfo:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     actionMoreInfoDetails:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
@@ -419,15 +419,15 @@ odr:
       readyForSubmission: New deputy report not ready for submission
   visitsCare:
       planMoveNewResidence:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       planMoveNewResidenceDetails:
           notBlank: Give us more information about any plans to move the client to a new residence
       doYouLiveWithClient:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       howOftenDoYouContactClient:
           notBlank: Give us more information about how often you are in touch with the client and how you make sure their needs are met
       doesClientReceivePaidCare:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       howIsCareFunded:
           notBlank: Select one of the options below
       whoIsDoingTheCaring:
@@ -436,7 +436,7 @@ odr:
           notBlank: Enter the last review date of the client's care plan
           invalidMessage: Enter a valid date in this format: MM/YYYY
       doesClientHaveACarePlan:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
   account:
       addAnother.notBlank: Please specify if you want to add another person
       bank:
@@ -459,10 +459,9 @@ odr:
           type: The account balance must be in numbers
           outOfRange: The balance must be less than £10,000,000,000
       isJointAccount:
-          notBlank: Please choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
   debt:
-      #notBlank: Choose yes or no
-      noDebtsChoice.notBlank: Choose Yes or No
+      noDebtsChoice.notBlank: Please select either 'Yes' or 'No'
       mustHaveAtLeastOneDebt: Please tell us the amount and type of at least one debt
       amount:
         notNumeric: Use numbers only to enter the amount
@@ -509,17 +508,17 @@ odr:
               notBlank: You must tell us what the client's share of the property is
               type: Enter a number between 1 and 99 for the property share
           isSubjectToEquityRelease:
-              notBlank: Choose yes or no
+              notBlank: Please select either 'Yes' or 'No'
           hasMortgage:
-              notBlank: Choose yes or no
+              notBlank: Please select either 'Yes' or 'No'
           mortgageOutstandingAmount:
               notBlank: Tell us how much is left to pay on the mortgage
               type: Enter the outstanding mortgage amount in numbers
               outOfRange: The amount must be less than £100,000,000,000
           hasCharges:
-              notBlank: Choose yes or no
+              notBlank: Please select either 'Yes' or 'No'
           isRentedOut:
-              notBlank: Choose yes or no
+              notBlank: Please select either 'Yes' or 'No'
           rentIncomeMonth:
               type: Please use numbers only to enter the amount
               notBlank: Enter monthly income from renting this property
@@ -532,13 +531,13 @@ odr:
               outOfRange: The value of the property must be less than £100,000,000,000
   incomeBenefit:
       receiveStatePension:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       receiveOtherIncome:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       receiveOtherIncomeDetails:
           notBlank: Give us more information about any other income received
       expectCompensationDamages:
-          notBlank: Choose yes or no
+          notBlank: Please select either 'Yes' or 'No'
       expectCompensationDamagesDetails:
           notBlank: Give us more information about damages or compensation you're expecting
       present:
@@ -548,18 +547,18 @@ odr:
 
   action:
     actionGiveGiftsToClient:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     actionGiveGiftsToClientDetails:
       notBlank: Give us more information about any gifts you plan to make on behalf of the client
     actionPropertyMaintenance:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     actionPropertySellingRent:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     actionPropertyBuy:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     # the following are now in a new section
     actionMoreInfo:
-      notBlank: Choose yes or no
+      notBlank: Please select either 'Yes' or 'No'
     actionMoreInfoDetails:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 note:

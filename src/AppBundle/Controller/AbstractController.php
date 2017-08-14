@@ -41,7 +41,7 @@ class AbstractController extends Controller
     /**
      * @return Client|null
      */
-    protected function getFirstClient($groups = ['user', 'client'])
+    protected function getFirstClient($groups = ['user', 'user-clients', 'client'])
     {
         $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
         /* @var $user User */
@@ -153,14 +153,6 @@ class AbstractController extends Controller
     protected function getMailFactory()
     {
         return $this->get('mail_factory');
-    }
-
-    /**
-     * @return \AppBundle\Service\File\UploadFileFactory
-     */
-    protected function getUploadFileFactory()
-    {
-        return $this->get('upload_file_factory');
     }
 
     /**

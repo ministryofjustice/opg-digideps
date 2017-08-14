@@ -97,6 +97,7 @@ class S3Storage implements StorageInterface
             'Bucket'   => $this->bucketName,
             'Key'      => $key,
             'Body'     => $body,
+            'ServerSideEncryption' => 'AES256',
             'Metadata' => [
             ],
         ]);

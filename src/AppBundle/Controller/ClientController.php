@@ -58,14 +58,14 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $user = $this->getUserWithData(['client']);
+        $user = $this->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
 
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
             // update existing client
             $method = 'put';
             $client = $clients[0]; //existing client
-            $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client');
+            $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
         } else {
             // new client
             $method = 'post';

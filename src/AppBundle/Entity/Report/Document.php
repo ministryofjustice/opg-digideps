@@ -89,6 +89,14 @@ class Document
     private $storageReference;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"document"})
+     */
+    private $isReportPdf;
+
+    /**
      * @return int
      */
     public function getId()
@@ -161,4 +169,21 @@ class Document
     {
         $this->file = $file;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isReportPdf()
+    {
+        return $this->isReportPdf;
+    }
+
+    /**
+     * @param boolean $isReportPdf
+     */
+    public function setIsReportPdf($isReportPdf)
+    {
+        $this->isReportPdf = $isReportPdf;
+    }
+
 }

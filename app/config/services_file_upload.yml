@@ -18,8 +18,8 @@ services:
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]
-  upload_file_factory:
-    class: AppBundle\Service\File\UploadFileFactory
+  file_checker_factory:
+    class: AppBundle\Service\File\Checker\FileCheckerFactory
     arguments: [ "@service_container", 'uploadedFile']
   file_pdf:
     class: AppBundle\Service\File\Types\Pdf

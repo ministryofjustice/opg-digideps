@@ -16,7 +16,9 @@ class OdrController extends AbstractController
 {
     private static $odrGroupsForValidation = [
         'user',
+        'user-clients',
         'client',
+        'client-reports',
         'odr',
         'report',
         'visits-care',
@@ -172,7 +174,7 @@ class OdrController extends AbstractController
             throw new \RuntimeException('Report already submitted and not editable.');
         }
 
-        $user = $this->getUserWithData(['client']);
+        $user = $this->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
         $client = $clients[0];
 

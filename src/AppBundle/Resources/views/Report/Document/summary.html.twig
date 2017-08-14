@@ -3,7 +3,7 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-documents" %}
-{% set page = "reportDocuments" %}
+{% set page = "summaryPage" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
@@ -22,18 +22,43 @@
          {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
     </p>
 
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
-
     {# Return to overview/client profile link #}
     <p class="text">{{ macros.returnToOverview(report) }}</p>
 
+    <table class="check-your-answers columns-2 push-double--bottom">
+        <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visuallyhidden">Actions</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="behat-region-provided-documentation">
+            <td>
+                {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.wishToProvideDocumentation | capitalize }}
+            </td>
+            <td class="change-answer">
+                {% if report.wishToProvideDocumentation == 'no' %}
+                <a href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
     {# Attached documents table #}
-    {% include 'AppBundle:Report/Document:_list.html.twig'  with {
-    'translationDomain': translationDomain,
-    'page' : page
-    } %}
+    {% if report.wishToProvideDocumentation == 'yes' %}
+        {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+    {% endif %}
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'documents') }}

@@ -11,19 +11,20 @@ Feature: Report documents
       | document_wishToProvideDocumentation_1 | no |
     # check no documents in summary page
     Then the URL should match "report/\d+/documents/summary"
-    And each text should be present in the corresponding region:
-      | No documents        | document-list |
+    And I should not see the region "document-list"
+    And I should see "Edit" in the "provided-documentation" region
 
   @deputy
   Scenario: Edit documents to attach
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-documents"
-
+    Then the URL should match "report/\d+/documents/summary"
+    And I should see "Edit" in the "provided-documentation" region
+    When I click on "edit"
     # chose "yes documents"
-    Then the URL should match "report/\d+/documents"
+    Then the URL should match "report/\d+/documents/step/1"
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | yes |
-
     # check empty file error
     When I attach the file "empty-file.pdf" to "report_document_upload_file"
     And I click on "attach-file"
@@ -42,20 +43,6 @@ Feature: Report documents
     Then the following fields should have an error:
       | report_document_upload_file   |
 
-    # upload jpg image
-    When I attach the file "test-image.jpg" to "report_document_upload_file"
-    And I click on "attach-file"
-    Then the form should be valid
-    And each text should be present in the corresponding region:
-      | test-image.jpg        | document-list |
-
-    # upload png image
-    When I attach the file "test-image.png" to "report_document_upload_file"
-    And I click on "attach-file"
-    Then the form should be valid
-    And each text should be present in the corresponding region:
-      | test-image.png        | document-list |
-
     When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the form should be valid
@@ -72,29 +59,19 @@ Feature: Report documents
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "reports, report-2016, edit-documents"
     # chose "yes documents"
-    Then the URL should match "report/\d+/documents"
-    And the step with the following values CAN be submitted:
-      | document_wishToProvideDocumentation_0 | yes |
-    And I save the current URL as "document-list"
-    And I click on "delete-documents-button" in the "document-list-upload-1" region
+    Then the URL should match "report/\d+/documents/summary"
+    And I save the current URL as "summary-page"
+    When I click on "delete-documents-button" in the "document-list" region
     Then the URL should match "/documents/\d+/delete"
     # test cancel button on confirmation page
     When I click on "confirm-cancel"
-    Then I go to the URL previously saved as "document-list"
-    And I click on "delete-documents-button" in the "document-list-upload-1" region
+    Then I go to the URL previously saved as "summary-page"
+    And I click on "delete-documents-button" in the "document-list" region
     Then the response status code should be 200
     # delete this time
     And I click on "document-delete"
-    Then the form should be valid
-    Then I go to the URL previously saved as "document-list"
-    # Check document removed
-    And I should not see "good.pdf" in the "document-list" region
-    And I click on "cancel"
-    Then the URL should match "report/\d+/overview"
-    And the report should not be submittable
-    Then I click on "reports, report-2016, edit-documents"
+    Then the URL should match "/report/\d+/documents/step/1"
     # chose "no documents" to make report submittable
-    Then the URL should match "report/\d+/documents"
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
 
@@ -102,8 +79,13 @@ Feature: Report documents
     Scenario: Upload file1.pdf and file2.pdf
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I click on "reports, report-2016, edit-documents"
+      Then the URL should match "report/\d+/documents/summary"
+      When I click on "edit" in the "provided-documentation" region
+    # chose "yes documents"
+      Then the URL should match "report/\d+/documents/step/1"
       And the step with the following values CAN be submitted:
         | document_wishToProvideDocumentation_0 | yes |
+    # check empty file error
       When I attach the file "file1.pdf" to "report_document_upload_file"
       And I click on "attach-file"
       And I attach the file "file2.pdf" to "report_document_upload_file"

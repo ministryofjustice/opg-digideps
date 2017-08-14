@@ -18,7 +18,7 @@ class SettingsController extends AbstractController
      **/
     public function indexAction()
     {
-        $user = $this->getUserWithData(['client', 'report']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'report']);
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
         return [

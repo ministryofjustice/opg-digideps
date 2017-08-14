@@ -1,46 +1,46 @@
 {% set translationDomain = translationDomain %}
 {% trans_default_domain translationDomain %}
 
-    <div class="grid-row">
-        {% if report.documents | length > 0 %}
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
-        </div>
-        <div class="column-half text--right">
+<div class="grid-row">
+    {% if report.documents | length > 0 %}
+    <div class="column-half">
+        <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+    </div>
+    <div class="column-half text--right">
+        {% if page == 'summaryPage' %}
             <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
-        </div>
-        {% else %}
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
-        </div>
         {% endif %}
     </div>
-    <table>
-        <thead>
-        <th>{{ (page ~ '.filename') | trans }}</th>
-        <th>{{ (page ~ '.dateAttached') | trans }}</th>
-        <th></th>
-        </thead>
-        <tbody class="behat-region-document-list">
-        {% if report.documents | length > 0 %}
-            {% set documentCount = 0 %}
-            {% for document in report.documents %}
-
-                <tr class="behat-region-document-list-upload-{{ loop.index }}">
-                    <td>{{ document.fileName }}</td>
-                    <td>{{ document.createdOn | date("j F Y H:i") }}</td>
-                    <td>
-                        <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id}) }}" class="behat-link-delete-documents-button">{{ (page ~ '.deleteDocument') | trans }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        {% else %}
+    {% else %}
+    <div class="column-half">
+        <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+    </div>
+    {% endif %}
+</div>
+<table class="check-your-answers">
+    <thead>
+    <th>{{ (page ~ '.filename') | trans }}</th>
+    <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
+    <th></th>
+    </thead>
+    <tbody class="behat-region-document-list">
+    {% if report.documents | length > 0 %}
+        {% for document in report.documents %}
             <tr>
-                <td colspan="4">{{ (page ~ '.noDocuments') | trans }}</td>
+                <td>{{ document.fileName }}</td>
+                <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
+                <td class="change-answer width-sixth soft-half--left">
+                    <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}" class="behat-link-delete-documents-button action-link">{{ (page ~ '.deleteDocument') | trans }}</a>
+                </td>
             </tr>
-        {% endif %}
-        </tbody>
-    </table>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="4">{{ (page ~ '.noDocuments') | trans }}</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>

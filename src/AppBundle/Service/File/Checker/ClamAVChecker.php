@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File\Checker;
 
+use AppBundle\Service\File\Checker\Exception\InvalidFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
@@ -9,6 +10,7 @@ use AppBundle\Service\File\Types\Pdf;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use GuzzleHttp\Post\PostFile;
 
@@ -46,6 +48,8 @@ class ClamAVChecker implements FileCheckerInterface
      *
      * @param UploadableFileInterface $uploadedFile
      *
+     * @throws RuntimeException in case the result is not PASS
+     *
      * @return bool
      */
     public function checkFile(UploadableFileInterface $file)
@@ -54,13 +58,11 @@ class ClamAVChecker implements FileCheckerInterface
         $response = $this->getScanResults($file);
 
         $file->setScanResult($response);
+        $fileName = $file->getUploadedFile()->getClientOriginalName();
 
-        if (strtoupper(trim($response['file_scanner_result'])) !== 'PASS') {
-            if ($response['av_scan_result'] !== 'PASS') {
-                $this->logger->warning('Virus found in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-                throw new VirusFoundException('Found virus in file');
-            }
+        $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
+        $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
+        $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
 
             if ($file instanceof Pdf && $response['pdf_scan_result'] !== 'PASS') {
                 $this->logger->warning('PDF file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
@@ -70,13 +72,22 @@ class ClamAVChecker implements FileCheckerInterface
 
             $this->logger->info('File scan passed for ' . $file->getUploadedFile()->getClientOriginalName() .
                 ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-
-        } else {
-            $this->logger->info('Scan results for: ' . $file->getUploadedFile()->getClientOriginalName() .
-                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
+        if ($fileScannerResult === 'PASS') {
+            $this->logger->warning("Scan result of $fileName: PASS");
+            return true;
         }
 
-        return $file;
+        $this->logger->warning("Scan result of $fileName: $fileScannerResult, $fileScannerMessage (code $fileScannerCode)");
+
+        switch($fileScannerCode) {
+            case 'AV_FAIL':
+                throw new VirusFoundException('Found virus in file');
+            case 'PDF_INVALID_FILE':
+            case 'PDF_BAD_KEYWORD':
+                throw new RiskyFileException('Invalid PDF');
+        }
+
+        throw new RuntimeException($fileScannerMessage);
     }
 
     /**
@@ -90,10 +101,11 @@ class ClamAVChecker implements FileCheckerInterface
         try {
             $result = $this->makeScannerRequest($file);
 
-            $maxRetries = 10;
+            $maxRetries = 90;
             $count = 0;
             $statusResponse = [];
 
+            //TODO use $statusResponse['celery_task_state'] == 'SUCCESS' to verify
             while ((!array_key_exists('file_scanner_result', $statusResponse)) && ($count < $maxRetries))
             {
                 $statusResponse = $this->makeStatusRequest($result['location']);
