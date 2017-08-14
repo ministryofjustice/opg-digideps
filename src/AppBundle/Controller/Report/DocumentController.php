@@ -32,6 +32,7 @@ class DocumentController extends RestController
         $document->setCreatedBy($this->getUser());
         $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);
+        $document->setIsReportPdf($data['is_report_pdf']);
         $this->persistAndFlush($document);
 
         return ['id' => $document->getId()];
