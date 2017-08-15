@@ -134,22 +134,28 @@
 
         <div id="safeguarding-care-funding" class="labelvalue push-half--top">
             <div class="label question bold">If yes, how is the care funded?</div>
-            <table class="checkboxes vertical labelvalue">
+            <table class="checkboxes labelvalue">
                 <tr>
-                    <td class="value checkbox">
-                        {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}
+                        </span>
                     </td>
-                    <td class="label">Client pays for all their own care</td>
+                    <td class="label soft-half--bottom">Client pays for all their own care</td>
                 </tr>
                 <tr>
-                    <td class="value checkbox">
-                        {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}
+                        </span>
                     </td>
-                    <td class="label">Client gets some financial help (for example, from the local authority or council, or NHS)</td>
+                    <td class="label soft-half--bottom">Client gets some financial help (for example, from the local authority or council, or NHS)</td>
                 </tr>
                 <tr>
-                    <td class="value checkbox">
-                        {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}
+                        </span>
                     </td>
                     <td class="label hard--ends">All care is paid for by someone else (for example, by the local authority or council, or NHS)</td>
                 </tr>
