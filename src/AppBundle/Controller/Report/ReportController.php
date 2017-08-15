@@ -284,6 +284,11 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
+            if ('no' === $data['wish_to_provide_documentation']) { //remove existing
+                foreach ($report->getDocuments() as $document) {
+                    $this->getEntityManager()->remove($document);
+                }
+            }
             $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
         }
 
