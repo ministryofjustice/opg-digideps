@@ -1,9 +1,11 @@
+edit: Edit
 cancel: Cancel
 view: View
 yes: Yes
 no: No
 ok: OK
 signOut: Sign out
+continue: Continue
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago

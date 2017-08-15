@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/user-account/client-show", name="client_show")
+     * @Route("/deputyship-details/your-client", name="client_show")
      * @Template()
      */
     public function showAction(Request $request)
@@ -20,12 +20,12 @@ class ClientController extends AbstractController
 
         return [
             'client' => $client,
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 
     /**
-     * @Route("/user-account/client-edit", name="client_edit")
+     * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template()
      */
     public function editAction(Request $request)
@@ -48,7 +48,7 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
 
@@ -58,14 +58,14 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
 
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
             // update existing client
             $method = 'put';
             $client = $clients[0]; //existing client
-            $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client');
+            $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
         } else {
             // new client
             $method = 'post';

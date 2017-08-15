@@ -217,10 +217,10 @@ class MoneyInShortController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         if ($report->getStatus()->getMoneyInShortState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
-
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',

@@ -96,15 +96,20 @@ class BankAccountType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
             'validation_groups'  => function (FormInterface $form) {
-                $requiresBankNameAndSortCode = $form->getData()->requiresBankNameAndSortCode();
+
+                $step2Options = ['bank-account-number', 'bank-account-is-joint'];
+                if ($form->getData()->requiresSortCode()) {
+                    $step2Options[] = 'bank-account-sortcode';
+                }
+                if ($form->getData()->requiresBankName()) {
+                    $step2Options[] = 'bank-account-name';
+                }
 
                 return [
                     1 => ['bank-account-type'],
-                    2 => $requiresBankNameAndSortCode ?
-                        ['bank-account-name', 'bank-account-sortcode', 'bank-account-number', 'bank-account-is-joint']
-                        : ['bank-account-number', 'bank-account-is-joint'],
+                    2 => $step2Options,
                     3 => ['bank-account-opening-balance'],
-                    4 => 'bank-account-is-closed',
+                    4 => 'bank-account-is-closed'
                 ][$this->step];
             },
         ]);

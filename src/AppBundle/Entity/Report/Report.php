@@ -231,21 +231,27 @@ class Report
      * @var string
      */
     private $metadata;
-
-
+    
     /**
      * @var Document[]
-     *
+     * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
-
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
      * @var Status
      */
     private $status;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
+     *
+     * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
+     */
+    private $wishToProvideDocumentation;
 
     /**
      * @return int $id
@@ -258,7 +264,7 @@ class Report
     /**
      * @param int $id
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setId($id)
     {
@@ -310,7 +316,7 @@ class Report
     /**
      * @param \DateTime $startDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setStartDate(\DateTime $startDate = null)
     {
@@ -333,7 +339,7 @@ class Report
     /**
      * Return the date 8 weeks after the end date.
      *
-     * @return string $dueDate
+     * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
@@ -393,7 +399,7 @@ class Report
     /**
      * @param \DateTime $submitDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
     {
@@ -413,7 +419,7 @@ class Report
     /**
      * @param \DateTime $endDate
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setEndDate(\DateTime $endDate = null)
     {
@@ -465,7 +471,7 @@ class Report
     /**
      * @param int $client
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setClient(Client $client)
     {
@@ -534,7 +540,7 @@ class Report
     /**
      * @param type $decisions
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setDecisions($decisions)
     {
@@ -631,7 +637,7 @@ class Report
     /**
      * @param string $reasonForNoContacts
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReasonForNoContacts($reasonForNoContacts)
     {
@@ -651,7 +657,7 @@ class Report
     /**
      * @param string $reasonForNoDecisions
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
@@ -669,7 +675,7 @@ class Report
     }
 
     /**
-     * @return \AppBundle\Entity\Report\VisitsCare
+     * @return Report\VisitsCare
      */
     public function getVisitsCare()
     {
@@ -725,7 +731,7 @@ class Report
     /**
      * @param bool $noAssetToAdd
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
@@ -763,7 +769,7 @@ class Report
     /**
      * @param type $submitted
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setSubmitted($submitted)
     {
@@ -775,7 +781,7 @@ class Report
     /**
      * @param type $reportSeen
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setReportSeen($reportSeen)
     {
@@ -851,6 +857,16 @@ class Report
     }
 
     /**
+     * @return Document[]
+     */
+    public function getDocumentsExcludingReportPdf()
+    {
+        return array_filter($this->documents, function ($document) { /* @var $document Document */
+            return !$document->isReportPdf();
+        });
+    }
+
+    /**
      * @param Document[] $documents
      */
     public function setDocuments($documents)
@@ -872,5 +888,40 @@ class Report
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWishToProvideDocumentation()
+    {
+        return $this->wishToProvideDocumentation;
+    }
+
+    /**
+     * @param $wishToProvideDocumentation
+     * @return $this
+     */
+    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    {
+        $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+
+        return $this;
+    }
+
+    /**
+     * @param $format where %s are endDate (Y), submitDate Y-m-d, case number
+     * @return string
+     */
+    public function createAttachmentName($format)
+    {
+        $client = $this->getClient();
+        $attachmentName = sprintf($format,
+            $this->getEndDate()->format('Y'),
+            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $client->getCaseNumber()
+        );
+
+        return $attachmentName;
     }
 }

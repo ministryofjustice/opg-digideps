@@ -8,6 +8,7 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
 {
@@ -20,11 +21,6 @@ class FileUploader
      * @var RestClient
      */
     private $restClient;
-
-    /**
-     * @var FileCheckerInterface[]
-     */
-    private $fileCheckers;
 
     /**
      * @var LoggerInterface
@@ -49,36 +45,28 @@ class FileUploader
     }
 
     /**
-     * @param FileCheckerInterface $fileCheckers
-     */
-    public function addFileChecker(FileCheckerInterface $fileChecker)
-    {
-        $this->fileCheckers[] = $fileChecker;
-    }
-
-    /**
-     * Uploads a file and return the created document
-     * might throw exceptions if viruses are found. File is immediately deleted in that case
+     * Uploads a file into S3 + create and persist a Document entity using that reference
+     *
+     * @param integer $reportId
+     * @param string $body
+     * @param string $fileName
+     * @param boolean $isReportPdf
      *
      * @return Document
-     *
-     * code imported from
-     * https://github.com/ministryofjustice/opg-av-test/blob/master/public/index.php
      */
-    public function uploadFile(Report $report, $filename, $filepath)
+    public function uploadFile($reportId, $body, $fileName, $isReportPdf)
     {
-        $body = file_get_contents($filepath);
+        $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 
-        foreach ($this->fileCheckers as $fc) {
-            $fc->checkFile($body);
-        }
-
-        $storageReference = 'dd_doc_' . microtime(1);
         $this->storage->store($storageReference, $body);
-        $this->logger->debug("Stored file, reference = $storageReference, size " . strlen($body));
+        $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body)." bytes");
+
         $document = new Document();
-        $document->setStorageReference($storageReference)->setFileName($filename);
-        $this->restClient->post('/report/' . $report->getId() . '/document', $document, ['document']);
+        $document
+            ->setStorageReference($storageReference)
+            ->setFileName($fileName)
+            ->setIsReportPdf($isReportPdf);
+        $this->restClient->post('/report/' . $reportId . '/document', $document, ['document']);
 
         return $document;
     }

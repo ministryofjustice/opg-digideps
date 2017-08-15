@@ -23,10 +23,15 @@ class BankAccount
         'other_no_sortcode' => 'Other type of account without sort code',
     ];
 
-    private static $typesRequiringSortCode = [
+    private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
         'other_no_sortcode'
+    ];
+
+    private static $typesNotRequiringBankName = [
+        'postoffice',
+        'cfo'
     ];
 
     /**
@@ -258,9 +263,19 @@ class BankAccount
      *
      * @return string
      */
-    public function requiresBankNameAndSortCode()
+    public function requiresSortCode()
     {
-        return !in_array($this->getAccountType(), self::$typesRequiringSortCode);
+        return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
+    }
+
+    /**
+     * Bank name required.
+     *
+     * @return string
+     */
+    public function requiresBankName()
+    {
+        return !in_array($this->getAccountType(), self::$typesNotRequiringBankName);
     }
 
     public function getIsJointAccount()

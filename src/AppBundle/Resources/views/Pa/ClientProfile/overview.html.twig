@@ -53,7 +53,6 @@
                         </dt>
                         <dd class="push--bottom">
                             <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a><br>
-                            <a href="{{ path('report_documents', {'reportId': report.id}) }}">{{ 'options.uploadDocumentation' | trans() }}</a>
                             {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                                 <p class="push--top">
                                     <a class="behat-link-edit-report_submit button" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
@@ -261,6 +260,14 @@
                                 description: true
                             } %}
 
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'documents',
+                            report: report,
+                            state: reportStatus.documentsState,
+                            list: true,
+                            description: true
+                            } %}
                         </ul>
                     </div>
                 </div>

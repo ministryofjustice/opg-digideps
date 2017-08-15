@@ -36,16 +36,42 @@
 
 {% macro breadcrumbsSettings(section) %}
     <div class="breadcrumbs hard--bottom">
-        <ol class="group">
+    <ol class="group">
+        {% if app.user.isDeputyPa() %}
+            <li>
+                <a href="{{ path('pa_dashboard') }}">Dashboard</a>
+            </li>
+            {% if 'settings' in section and section != 'settings' %}
+                <li>
+                    <a href="{{ path('pa_settings') }}">Settings</a>
+                </li>
+            {% endif %}
+            {% if 'team' in section and section != 'settings-team' %}
+                <li>
+                    <a href="{{ path('pa_team') }}">User accounts</a>
+                </li>
+            {% endif %}
+            {% if section == 'settings-profile-edit' %}
+                <li>
+                    <a href="{{ path('pa_profile_show') }}">Your details</a>
+                </li>
+            {% endif %}
+        {% else %}
             <li>
                 <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
             </li>
-            {% if section != 'home' %}
+            {% if 'settings' in section and section != 'settings' %}
                 <li>
                     <a href="{{ path('account_settings') }}">Deputyship details</a>
                 </li>
             {% endif %}
-        </ol>
+            {% if section == 'settings-profile-edit' %}
+                <li>
+                    <a href="{{ path('user_show') }}">Your details</a>
+                </li>
+            {% endif %}
+        {% endif %}
+    </ol>
     </div>
 {% endmacro %}
 
@@ -81,6 +107,7 @@
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
         {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
+        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == '103' %}
@@ -98,6 +125,7 @@
         {'section':'debts', 'link': path('debts', {'reportId': report.id})},
         {'section':'actions', 'link': path('actions', {'reportId': report.id})},
         {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
+        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
     {% elseif report.type == 'ndr' %}
@@ -111,6 +139,7 @@
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
         {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
+        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
         ] %}
     {% endif %}

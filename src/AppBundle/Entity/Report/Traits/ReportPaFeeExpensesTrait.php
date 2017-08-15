@@ -43,7 +43,7 @@ trait ReportPaFeeExpensesTrait
     private $feesTotal;
 
     /**
-     * @return ArrayCollection
+     * @return Fee[]
      */
     public function getFees()
     {

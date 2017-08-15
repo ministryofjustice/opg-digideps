@@ -67,10 +67,54 @@ Feature: Report submit
         Then the URL should match "/reports/\d+"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
-        And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        #And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
+
+    @deputy
+    Scenario: admin area check filters, submission and ZIP file content
+        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
+        Then I should be on "/admin/documents/list"
+        And I save the current URL as "admin-documents-list-new"
+        # test filters
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-new"
+        Then I should see the "report-submission" region exactly 1 times
+        # test search
+        When I fill in the following:
+            | search | 12345abc |
+            | created_by_role | ROLE_PA |
+        And I press "search_submit"
+        Then I should see the "report-submission" region exactly 0 times
+        When I fill in the following:
+            | search | 12345abc |
+            | created_by_role | ROLE_LAY_DEPUTY |
+        And I press "search_submit"
+        Then I should see the "report-submission" region exactly 1 times
+        # assert submission and download
+        Given each text should be present in the corresponding region:
+            | Peter White | report-submission-1 |
+            | 12345abc | report-submission-1 |
+            | 3 documents | report-submission-1 |
+        When I click on "download" in the "report-submission-1" region
+        Then the page content should be a zip file containing files with the following files:
+            | file1.pdf | exactFileName+md5sum | d3f3c05deb6a46cd9e32ea2a1829cf28 |
+            | file2.pdf | exactFileName+md5sum | 6b871eed6b34b560895f221de1420a5a |
+            | DigiRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
+        # test archive
+        When I go to the URL previously saved as "admin-documents-list-new"
+        When I click on "archive" in the "report-submission-1" region
+        Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 1 times
+        And each text should be present in the corresponding region:
+            | Peter White | report-submission-1 |
+            | 12345abc | report-submission-1 |
+            | 3 documents | report-submission-1 |
+            | AU | report-submission-1 |
 
     @deputy
     Scenario: assert 2nd year report has been created
@@ -111,7 +155,7 @@ Feature: Report submit
         And the URL "/report/1/declaration" should not be accessible
 
     @deputy
-    Scenario: report download
+    Scenario: deputy report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I click on "reports"
         And I save the current URL as "reports-type-list"
@@ -119,6 +163,10 @@ Feature: Report submit
         And the response should contain "12345ABC"
         And the response should contain "Peter"
         And the response should contain "White"
+        # assert documents
+        And I should see "file1.pdf" in the "document-list" region
+        And I should see "file2.pdf" in the "document-list" region
+        And I should not see "DigiRep" in the "document-list" region
         # test go back link
         When I click on "back-to-reports"
         Then I go to the URL previously saved as "reports-type-list"

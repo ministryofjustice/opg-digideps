@@ -6,13 +6,17 @@
 {% block pageTitle %}User accounts{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings-team') }}
+{% endblock %}
+
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
         {% if (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
-            Add, edit and remove user accounts for you and your team members
+            Add, edit and remove user accounts for your team members
         {% else %}
-            View team members and edit your account
+            View team members
         {% endif %}
     </p>
 
@@ -69,7 +73,7 @@
                     {% endif %}
                 </td>
                 <td class="change-answer">
-                    {% if is_granted('edit-user', user) %}
+                    {% if user.id != app.user.id and is_granted('edit-user', user) %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a><br>
                     {% endif %}
                     {% if is_granted('delete-user', user) %}

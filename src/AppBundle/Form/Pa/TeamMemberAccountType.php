@@ -31,7 +31,9 @@ class TeamMemberAccountType extends AbstractType
     private $targetUser = null;
 
     /**
-     * @param $showRoleName
+     * @param $team
+     * @param $loggedInUser
+     * @param $targetUser
      */
     public function __construct(Team $team, User $loggedInUser, User $targetUser = null)
     {
@@ -55,7 +57,7 @@ class TeamMemberAccountType extends AbstractType
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,
-                'required' => true,
+                'required' => true
             ]);
         }
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Admin;
 
+use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/admin/ajax")
  */
-class AdminAjaxController extends AbstractController
+class AjaxController extends AbstractController
 {
     /**
      * @Route("/casrec-truncate", name="casrec_truncate_ajax")

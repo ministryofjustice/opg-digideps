@@ -28,7 +28,7 @@ class AddAnotherRecordType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'Please choose yes or no'])],
+                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }

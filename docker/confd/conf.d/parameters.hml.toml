@@ -16,5 +16,7 @@ keys = [
     "/frontend/smtp",
     "/frontend/url",
     "/frontend/s3/bucketname",
-    "/frontend/s3/fakes3"
+    "/frontend/s3/fakes3",
+    "/frontend/filescanner/url",
+    "/frontend/filescanner/sslverify"
  ]

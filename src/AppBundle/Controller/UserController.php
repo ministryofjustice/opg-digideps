@@ -146,7 +146,7 @@ class UserController extends AbstractController
      */
     public function detailsAction(Request $request)
     {
-        $user = $this->getUserWithData(['user']);
+        $user = $this->getUserWithData();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -167,112 +167,6 @@ class UserController extends AbstractController
 
         return [
             'form' => $form->createView(),
-        ];
-    }
-
-    /**
-     * @Route("/user-account/password-edit", name="user_password_edit")
-     * @Template()
-     */
-    public function passwordEditAction(Request $request)
-    {
-        $user = $this->getUserWithData(['user', 'client']);
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $this->getRestClient()->put('user/' . $user->getId() . '/set-password', json_encode([
-                'password_plain' => $plainPassword,
-            ]));
-            $request->getSession()->getFlashBag()->add('notice', 'Password edited');
-
-            return $this->redirect($this->generateUrl('user_password_edit_done'));
-        }
-
-        return [
-            'client' => $client,
-            'user'   => $user,
-            'form'   => $form->createView(),
-        ];
-    }
-
-    /**
-     * @Route("/user-account/password-edit-done", name="user_password_edit_done")
-     * @Template()
-     */
-    public function passwordEditDoneAction(Request $request)
-    {
-        $user = $this->getUserWithData(['user', 'client']);
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        return [
-            'client' => $client,
-        ];
-    }
-
-    /**
-     * - change user data
-     * - chang user password.
-     *
-     * @Route("/user-account/user-show", name="user_show")
-     * @Template()
-     **/
-    public function showAction()
-    {
-        $user = $this->getUserWithData(['user', 'client']);
-        $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-
-        return [
-            'client' => $client,
-            'user'   => $user,
-        ];
-    }
-
-    /**
-     * - change user data
-     * - chang user password.
-     *
-     * @Route("/user-account/user-edit", name="user_edit")
-     * @Template()
-     **/
-    public function editAction(Request $request)
-    {
-        $user = $this->getUserWithData(['user', 'client']);
-
-        list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
-        $form = $this->createForm($formType, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $formData = $form->getData();
-            /*
-             * if new password has been set then we need to encode this using the encoder and pass it to
-             * the api
-             */
-            $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
-            $request->getSession()->getFlashBag()->add('notice', 'Your details edited');
-
-            $redirectRoute = 'user_show';
-            if ($user->getRoleName() == EntityDir\User::ROLE_PA) {
-                $redirectRoute = 'pa_team';
-            }
-
-            return $this->redirect($this->generateUrl($redirectRoute));
-        }
-
-        $client = !empty($user->getClients()) ? $user->getClients()[0] : null;
-
-        return [
-            'client' => $client,
-            'user'   => $user,
-            'form'   => $form->createView(),
         ];
     }
 

@@ -22,7 +22,7 @@
                             {{ account.bank }} {{ account.accountTypeText }}
                         </div>
                         <div class="review-account-number">****{{ account.accountNumber }}
-                            {% if account.requiresBankNameAndSortCode and account.sortCode %}
+                            {% if account.requiresSortCode and account.sortCode %}
                                , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
                             {% if account.isJointAccount =='yes' %}

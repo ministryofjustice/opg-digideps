@@ -29,7 +29,7 @@ class AbstractController extends Controller
      *
      * @return User
      */
-    protected function getUserWithData(array $jmsGroups)
+    protected function getUserWithData(array $jmsGroups = array())
     {
         $jmsGroups[] = 'user';
         $jmsGroups = array_unique($jmsGroups);
@@ -41,7 +41,7 @@ class AbstractController extends Controller
     /**
      * @return Client|null
      */
-    protected function getFirstClient($groups = ['user', 'client'])
+    protected function getFirstClient($groups = ['user', 'user-clients', 'client'])
     {
         $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
         /* @var $user User */

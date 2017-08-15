@@ -1,0 +1,45 @@
+{% if report.wishToProvideDocumentation %}
+    <div class="section" id="action-section">
+        <h2 class="section-heading">Documents</h2>
+
+        <div class="dont-break">
+            <div class="box">
+                <div class="checkboxes horizontal">
+                    <div class="question">{{ title }}</div>
+
+                    <table class="yesno">
+                        <tr>
+                            <td class="checkbox"
+                                data-checkbox="">{% if report.wishToProvideDocumentation == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">Yes</td>
+                            <td class="checkbox"
+                                data-checkbox="">{% if report.wishToProvideDocumentation == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">No</td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                {% if report.documentsExcludingReportPdf | length > 0 %}
+                    <h3 class="push-half--bottom push-half--top">Attached documents</h3>
+
+                    <table class="table-within-box push-half--bottom">
+                        <thead>
+                            <th class="text--left">Filename</th>
+                            <th class="text--right">Date attached</th>
+                        </thead>
+                        <tbody class="behat-region-document-list">
+                            {% for document in report.documentsExcludingReportPdf %}
+                                <tr>
+                                    <td class="text--left">{{ document.fileName }}</td>
+                                    <td class="text--right">{{ document.createdOn | date("j F Y H:i") }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+{% endif %}
