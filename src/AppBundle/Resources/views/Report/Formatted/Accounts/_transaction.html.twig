@@ -4,7 +4,7 @@
 
 <tr>
     <td class="label">
-        <span class="bold">{{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, translationDomain) | raw }}</span>
+        <span><strong class="bold">{{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, translationDomain) | raw }}</strong></span>
         {% if transaction.description %}
             <p class="flush--bottom">{{ transaction.description | nl2br }}</p>
         {% endif %}

@@ -310,13 +310,33 @@
         }
     }
 
+    .category {
+        .label {
+            width: 75%;
+        }
+
+        .value {
+            width: 25%;
+        }
+
+        table.money {
+            .value {
+                color: $east-bay;
+                border: 1px solid $black;
+                &.total {
+                    border-width: 2px;
+                }
+            }
+        }
+    }
+
     table.money {
         border-collapse: collapse;
         border-spacing: 0;
         width: 100%;
 
         td {
-            @include core-14();
+            @include core-16();
             padding: em(6, 12) em(20, 12) em(6, 12) 0;
 
             text-align: left;
@@ -325,7 +345,7 @@
         }
 
         th {
-            @include core-14();
+            @include core-16();
             font-weight: 700;
             text-align: center;
             padding: em(12, 12) 0 em(9, 12) 0;
@@ -339,12 +359,12 @@
 
         // Use tabular numbers for numeric table cells
         td.numeric {
-            @include core-14();
+            @include core-16();
             text-align: right;
         }
 
         tr.totals td {
-            @include core-14();
+            @include core-16();
             padding: em(6, 18) 20px em(9, 18) 0;
             border-bottom: 0;
         }
@@ -373,10 +393,10 @@
         }
     }
 
-    .table-within-box {
-        width: 100% !important;
-        border-collapse: inherit;
+    table.table-within-box {
+        border-collapse: collapse;
         border-spacing: 0;
+        width: 100% !important;
         border: 1px solid $black;
 
         th,
@@ -386,12 +406,13 @@
         }
 
         th {
-            @include bold-14();
+            @include bold-16();
             border-bottom: 1px solid $black !important;
         }
 
         td {
-            @include core-14();
+            @include core-16();
+            color: $east-bay;
         }
     }
 }

@@ -6,7 +6,7 @@
     <h3 class="flush--bottom">{{ ('form.group.entries.' ~ categoryId) | trans(transOptions, translationDomain) }}</h3>
 </div>
 <div class="category box box-white">
-    <table class="labelvalue">
+    <table class="labelvalue money">
         {% for transaction in transactions %}
             {% include 'AppBundle:Report/Formatted:Accounts/_transaction.html.twig' with {
                 transaction: transaction
