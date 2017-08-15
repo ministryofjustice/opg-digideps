@@ -66,28 +66,35 @@ class ClamAVChecker implements FileCheckerInterface
 
         $file->setScanResult($response);
         $fileName = $file->getUploadedFile()->getClientOriginalName();
-
-        $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
-        $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
-        $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
+        $fileScannerResult = array_key_exists('file_scanner_result', $response) ?
+             strtoupper(trim($response['file_scanner_result'])) : null;
+        $fileScannerCode = array_key_exists('file_scanner_code', $response) ?
+            strtoupper(trim($response['file_scanner_code'])) : null;
+        $fileScannerMessage = array_key_exists('file_scanner_message', $response) ?
+            strtoupper(trim($response['file_scanner_message']))  : null;
 
         if ($fileScannerResult === 'PASS') {
-            $this->logger->warning("Scan result of $fileName: PASS");
+            $this->logger->info("Scan result of $fileName: PASS");
             return true;
+        } else {
+            throw new RiskyFileException('SCAN FAILED');
         }
 
         $this->logger->warning("Scan result of $fileName: $fileScannerResult, $fileScannerMessage (code $fileScannerCode)");
 
-        switch($fileScannerCode) {
-            case 'AV_FAIL':
-                throw new VirusFoundException('Found virus in file');
+        if (!is_null($fileScannerCode)) {
 
-            case 'PDF_INVALID_FILE':
-            case 'PDF_BAD_KEYWORD':
-                throw new RiskyFileException('Invalid PDF');
+            switch ($fileScannerCode) {
+                case 'AV_FAIL':
+                    throw new VirusFoundException('Found virus in file');
+
+                case 'PDF_INVALID_FILE':
+                case 'PDF_BAD_KEYWORD':
+                    throw new RiskyFileException('Invalid PDF');
+            }
+
+            throw new RiskyFileException($fileScannerMessage);
         }
-
-        throw new RuntimeException($fileScannerMessage);
     }
 
     /**
