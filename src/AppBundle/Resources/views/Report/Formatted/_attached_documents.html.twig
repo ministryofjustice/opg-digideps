@@ -4,26 +4,21 @@
 
         <div class="dont-break">
             <div class="box">
-                <div class="checkboxes horizontal">
-                    <div class="question">{{ title }}</div>
+                <h3 class="label question bold">{{ title }}</h3>
 
-                    <table class="yesno">
-                        <tr>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.wishToProvideDocumentation == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.wishToProvideDocumentation == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
-                        </tr>
-                    </table>
-
-                </div>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">{% if report.wishToProvideDocumentation == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="value checkbox">{% if report.wishToProvideDocumentation == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
 
                 {% if report.documentsExcludingReportPdf | length > 0 %}
-                    <h3 class="push-half--bottom push-half--top">Attached documents</h3>
+                    <h3 class="label question bold push--top">Attached documents</h3>
 
-                    <table class="table-within-box push-half--bottom">
+                    <table class="table-within-box">
                         <thead>
                             <th class="text--left">Filename</th>
                             <th class="text--right">Date attached</th>

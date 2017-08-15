@@ -366,4 +366,26 @@
             }
         }
     }
+
+    .table-within-box {
+        width: 100% !important;
+        border-collapse: inherit;
+        border-spacing: 0;
+        border: 1px solid $black;
+
+        th,
+        td {
+            background-color: $white;
+            padding: 4px 8px;
+        }
+
+        th {
+            @include bold-14();
+            border-bottom: 1px solid $black !important;
+        }
+
+        td {
+            @include core-14();
+        }
+    }
 }

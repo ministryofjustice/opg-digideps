@@ -4,16 +4,16 @@
 
         <div class="dont-break">
             <div class="box">
-                    <div class="label question bold">{{ title }}</div>
+                <h3 class="label question bold">{{ title }}</h3>
 
-                    <table class="checkboxes labelvalue inline">
-                        <tr>
-                            <td class="value checkbox">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
-                            <td class="value checkbox">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
-                        </tr>
-                    </table>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="value checkbox">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
 
                 {% if report.actionMoreInfo == 'yes' %}
                     <div class="labelvalue">

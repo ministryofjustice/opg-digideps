@@ -2,43 +2,40 @@
     <div class="section" id="contacts-section">
         <h2 class="section-heading">People you consulted</h2>
 
-        {% if contacts | length == 0 %}
-            <div class="box contact-item no-contact" id="no-contact">
-                <dl class="labelvalue">
-                    <dt class="label">Check this box if you did not consult anyone and use the box below to tell us why.</dt>
-                    <dd class="value checkbox">X</dd>
-                    <dd class="value">{{ report.reasonForNoContacts }}</dd>
-                </dl>
-            </div>
-        {% else %}
-            {% for contact in contacts %}
-            <div class="box">
-                <dl class="labelvalue half-width first">
-                    <dt class="label">Full name</dt>
-                    <dd class="value">{{ contact.contactName }}</dd>
+        <div class="box">
+            {% if contacts | length == 0 %}
+                <div class="labelvalue" id="no-contact">
+                    <div class="label">No people were consulted:</div>
+                    <div class="value">{{ report.reasonForNoContacts | nl2br}}</div>
+                </div>
+            {% else %}
+                {% for contact in contacts %}
+                    <dl class="labelvalue half-width first">
+                        <dt class="label">Full name</dt>
+                        <dd class="value">{{ contact.contactName }}</dd>
 
-                    <dt class="label">Address</dt>
-                    <dd class="value">
-                        {% if contact.address or contact.postcode %}
-                        {{ contact.address }}<br/>
-                        {{ contact.address2 }}<br/>
-                        {{ contact.county }}<br/>
-                        {{ contact.postcode }}<br/>
-                        {{ contact.country | country_name }}
-                        {% else %}
-                          -
-                        {% endif %}
-                    </dd>
-                </dl>
-                <dl class="labelvalue half-width">
-                    <dt class="label">Relationship to client</dt>
-                    <dd class="value">{{ contact.relationship }}</dd>
+                        <dt class="label">Address</dt>
+                        <dd class="value">
+                            {% if contact.address or contact.postcode %}
+                            {{ contact.address }}<br/>
+                            {{ contact.address2 }}<br/>
+                            {{ contact.county }}<br/>
+                            {{ contact.postcode }}<br/>
+                            {{ contact.country | country_name }}
+                            {% else %}
+                              -
+                            {% endif %}
+                        </dd>
+                    </dl>
+                    <dl class="labelvalue half-width">
+                        <dt class="label">Relationship to client</dt>
+                        <dd class="value">{{ contact.relationship }}</dd>
 
-                    <dt class="label">Why did you consult them?</dt>
-                    <dd class="value">{{ contact.explanation }}</dd>
-                </dl>
-            </div>
-            {% endfor %}
-        {% endif %}
+                        <dt class="label">Why did you consult them?</dt>
+                        <dd class="value">{{ contact.explanation }}</dd>
+                    </dl>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 {% endif %}

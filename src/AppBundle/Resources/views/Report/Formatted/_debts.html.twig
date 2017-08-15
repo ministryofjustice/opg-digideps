@@ -4,9 +4,9 @@
 <div class="section" id="debts-section">
     <h2 class="section-heading">Client's debts</h2>
 
-    {% if report.hasDebts is null %}
+    {% if report.hasDebts == 'no' %}
         <div class="box">
-            <div class="label question bold">Does the client have any debts?</div>
+            <h3 class="label question bold">Does the client have any debts?</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">X</td>
@@ -17,29 +17,26 @@
     {% else %}
         <div class="dont-break">
             <div class="box">
-                {% if report.hasDebts == 'yes' %}
-                    <table class="labelvalue">
-                        {% for d in debts %}
-                            <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
-                                <td class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
-                                <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
+                <table class="labelvalue">
+                    {% for d in debts %}
+                        <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
+                            <td class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
+                            <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
+                        </tr>
+                        {% if d.hasMoreDetails %}
+                            <tr>
+                                <td colspan="2" class="hard noborder">
+                                    <div class="labelvalue soft-half--top">
+                                        <div class="label">More details about the other debts</div>
+                                        <div class="value">{{ d.moreDetails | nl2br }}</div>
+                                    </div>
+                                </td>
                             </tr>
-                            {% if d.hasMoreDetails %}
-                                <tr>
-                                    <td colspan="2" class="hard noborder">
-                                        <div class="labelvalue soft-half--top">
-                                            <div class="label">More details about the other debts</div>
-                                            <div class="value">{{ d.moreDetails | nl2br }}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </table>
-                {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </table>
             </div>
 
-            {% if report.hasDebts == 'yes' %}
             <div class="box">
                 {# total value #}
                 <table class="labelvalue">
@@ -49,7 +46,6 @@
                     </tr>
                 </table>
             </div>
-            {% endif %}
         </div>
     {% endif %}
 </div>
