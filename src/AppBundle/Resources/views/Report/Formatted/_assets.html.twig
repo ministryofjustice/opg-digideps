@@ -12,7 +12,7 @@
                     </tr>
                 </table>
             </div>
-            {% else %}
+        {% else %}
             <ul id="assets">
                 {% for groupId, assetsInGroup in report.getAssetsGroupedByTitle %}
                     <li data-group="{{ groupId }}">
