@@ -10,6 +10,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
+/**
+ * Class DocumentCleanupCommand
+ * @package AppBundle\Command
+ */
 class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
     protected function configure()
@@ -22,44 +26,52 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // skip if launched from FRONTEND container
+        if ($this->getContainer()->getParameter('env') !== 'admin') {
+            $output->writeln('This command can only be executed from admin container');
+            exit(1);
+        }
 
         $restClient = $this->getContainer()->get('rest_client');
         $ignoreS3Failure = $input->getOption('ignore-s3-failures');
 
         $documents = $restClient->apiCall('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false);
+        $toDelete = count($documents);
+        $count = 0;
         /* @var $documents Document[] */
-        if (count($documents) === 0) {
-            $output->write('No documents to delete');
-        } else {
-            $output->write(count($documents) . ' documents to delete:');
-            foreach ($documents as $document) {
-                $documentId = $document->getId();
-                $storageRef = $document->getStorageReference();
-                try {
-                    $output->writeln("Document $documentId:");
-
-                    $output->write('  Deleting from S3...');
-                    $ret = $this->deleteFromS3($storageRef, $ignoreS3Failure);
-                    $message = $ret ? 'OK' : ($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL');
-                    $output->writeln($message);
-
-                    $output->write('  DELETE document/hard-delete/' . $document->getId() . '...');
-                    $ret = $restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
-                    $output->writeln($ret ? 'Deleted' : 'FAIL');
-
-                } catch (\RuntimeException $e) {
-                    $message = "Error deleting document $documentId, ref $storageRef. Error: " . $e->getMessage();
-                    if ($e instanceof RestClientException) {
-                        $message .= print_r($e->getData(), true);
-                    }
-
-                    $this->getContainer()->get('logger')->error($message);
-                    $output->writeln($message);
+        $this->log('info', count($documents) . ' documents to delete:');
+        foreach ($documents as $document) {
+            $documentId = $document->getId();
+            $storageRef = $document->getStorageReference();
+            try {
+                $s3Result = $this->deleteFromS3($storageRef, $ignoreS3Failure);
+                if ($s3Result) {
+                    $this->log('info', "deleting $storageRef from S3: success");
+                } else {
+                    $this->log('warning', "deleting $storageRef from S3: " . (($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL')));
                 }
 
+                $endpointResult = $restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
+                if ($endpointResult) {
+                    $this->log('info', "Document $documentId deleted successfully from db");
+                } else {
+                    $this->log('error', "Document $documentId delete API failure");
+                }
+
+                $count += ($s3Result && $endpointResult) ? 1 : 0;
+
+            } catch (\RuntimeException $e) {
+                $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
+                if ($e instanceof RestClientException) {
+                    $message .= print_r($e->getData(), true);
+                }
+
+                $this->log('error', $message);
             }
-            $output->writeln('Done');
+
         }
+
+        $this->log('info', "Done. $toDelete to hard-delete, $count deleted");
     }
 
     /**
@@ -76,7 +88,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             $s3Storage->delete($ref);
         } catch (\Exception $e) {
             if ($ignoreS3Failure) {
-                $this->logError($e->getMessage());
+                $this->log('error', $e->getMessage());
             } else {
                 throw $e;
             }
@@ -84,10 +96,17 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
     /**
-     * @return LoggerInterface
+     * @param $level
+     * @param $message
+     * @return object
      */
-    private function logError($message)
+    private function log($level, $message)
     {
-        $this->getContainer()->get('logger')->error($message);
+        $this->getContainer()->get('logger')->log($level, $message, ['extra' => [
+            'cron' => 'digideps:documents-cleanup',
+        ]]);
+
+
+        return $this->getContainer()->get('logger');
     }
 }

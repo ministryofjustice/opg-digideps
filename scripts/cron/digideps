@@ -1,0 +1,7 @@
+#
+# digideps:documents-cleanup ignoring S3 failures every 5 minutes
+#
+*/5 * * * * app php /app/app/console digideps:documents-cleanup --env=prod > /dev/null 2>&1
+
+# "--ignore-s3-failures" version (only if fake documents are added, or S3 document is manually deleted)
+# */5 * * * * app php /app/app/console digideps:documents-cleanup --ignore-s3-failures --env=prod > /dev/null 2>&1
