@@ -5,7 +5,7 @@ namespace AppBundle\Entity\Repository;
 use AppBundle\Entity\Report\Document;
 use Doctrine\ORM\EntityRepository;
 
-class DocumentRepository extends EntityRepository
+class DocumentRepository extends AbstractEntityRepository
 {
     /**
      * Get soft-deleted documents
@@ -22,25 +22,6 @@ class DocumentRepository extends EntityRepository
         $this->_em->getFilters()->enable('softdeleteable');
 
         return $records;
-    }
-
-    /**
-     * @param $id document ID
-     */
-    public function hardDeleteDocument($id)
-    {
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Document::class);
-
-        /** @var $document EntityDir\Report\Document */
-        $document = $this->_em->getRepository(Document::class)->find($id);
-        if (!$document->getDeletedAt()) {
-            throw new \RuntimeException("Can't hard delete document $id, as it's not soft-deleted");
-        }
-        $this->_em->remove($document);
-
-        $this->_em->getFilters()->enable('softdeleteable');
-
-        $this->_em->flush($document);
     }
 
 }

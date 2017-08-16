@@ -103,8 +103,16 @@ class DocumentController extends RestController
             throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
         }
 
-        $this->getRepository(EntityDir\Report\Document::class)
-             ->hardDeleteDocument($id);
+        /* @var $repo EntityDir\Repository\DocumentRepository */
+        $repo = $this->getRepository(EntityDir\Report\Document::class);
+        /* @var $document EntityDir\Report\Document */
+        $document = $repo->findUnfilteredOneBy(['id'=>$id]);
+        if (!$document->getDeletedAt()) {
+            throw new \RuntimeException("Can't hard delete document $id, as it's not soft-deleted");
+        }
+
+        $this->getEntityManager()->remove($document);
+        $this->getEntityManager()->flush($document);
 
         return $id;
     }
