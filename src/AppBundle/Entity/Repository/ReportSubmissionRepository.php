@@ -60,8 +60,7 @@ class ReportSubmissionRepository extends EntityRepository
             $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
         }
 
-        $filter = $this->_em->getFilters()->enable('softdeleteable');
-        $filter->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $records = $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
