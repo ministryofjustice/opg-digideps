@@ -96,7 +96,7 @@
 <div class="dont-break">
     <h3>Contact with client</h3>
     <div class="box" id="safeguarding-contact">
-        <div class="label question bold">Do you live with the client?</div>
+        <h3 class="label question bold">Do you live with the client?</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -109,7 +109,7 @@
 
         {% if visitsCare.doYouLiveWithClient == 'no' %}
             <div class="labelvalue push-half--top">
-                <div class="label question bold">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</div>
+                <h3 class="label question bold">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</h3>
                 <div class="value">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
             </div>
         {% endif %}
@@ -121,7 +121,7 @@
 <div class="dont-break">
     <h3>Care arrangements</h3>
     <div class="box" id="care-arrangements-subsection">
-        <div class="label question bold">Does the client receive care which is paid for?</div>
+        <h3 class="label question bold">Does the client receive care which is paid for?</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -133,7 +133,7 @@
         </table>
 
         <div id="safeguarding-care-funding" class="labelvalue push-half--top">
-            <div class="label question bold">If yes, how is the care funded?</div>
+            <h3 class="label question bold">If yes, how is the care funded?</h3>
             <table class="checkboxes labelvalue">
                 <tr>
                     <td class="clean-cell">
@@ -163,7 +163,7 @@
         </div>
 
         <div class="labelvalue push-half--top">
-            <div class="label question bold">Who is doing the caring?</div>
+            <h3 class="label question bold">Who is doing the caring?</h3>
             <div class="value">{{ visitsCare.whoIsDoingTheCaring }}</div>
         </div>
 
@@ -176,7 +176,7 @@
     <div class="dont-break">
         <h3>Care plan</h3>
         <div class="box" id="care-plan-subsection">
-            <div class="label question bold">If there is a care plan, when was it last reviewed?</div>
+            <h3 class="label question bold">If there is a care plan, when was it last reviewed?</h3>
             {% if visitsCare.doesClientHaveACarePlan == 'no' %}
                 <table class="checkboxes labelvalue inline">
                     <tr>
@@ -199,7 +199,7 @@
 {% macro newResidence(visitsCare) %}
 <div class="dont-break">
     <div class="box">
-        <div class="label question bold">Are there any plans for the client to move to a new residence</div>
+        <h3 class="label question bold">Are there any plans for the client to move to a new residence</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -227,13 +227,13 @@
 {% macro deputyExpenses(ndr,report) %}
 <div class="dont-break">
     <div class="box">
-        <div class="label question bold">
+        <h3 class="label question bold">
             {% if ndr %}
                 Did you pay for anything for the client before you were given your court order?
             {% else %}
                 Have you claimed any deputy expenses during this reporting period?
             {% endif %}
-        </div>
+        </h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
