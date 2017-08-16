@@ -132,8 +132,10 @@ class DocumentController extends RestController
 
         $this->setJmsSerialiserGroups(['document-id', 'document-storage-reference']);
 
-        return $this->getRepository(EntityDir\Report\Document::class)
-                    ->retrieveSoftDeleted();
+        /* @var $repo EntityDir\Repository\DocumentRepository */
+        $repo = $this->getRepository(EntityDir\Report\Document::class);
+
+        return $repo->retrieveSoftDeleted();
     }
 
 }
