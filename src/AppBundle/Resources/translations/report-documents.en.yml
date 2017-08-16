@@ -60,3 +60,4 @@ summaryPage:
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
+  setNoAttemptWithDocuments: "Your answer could not be updated to 'No' because you have attached documents. Please remove all attached documents before changing your answer."

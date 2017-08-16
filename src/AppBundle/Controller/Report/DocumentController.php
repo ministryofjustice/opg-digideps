@@ -73,6 +73,12 @@ class DocumentController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
+            if ('no' === $data->getWishToProvideDocumentation() && count($data->getDocuments()) > 0) {
+                $translator = $this->get('translator');
+                $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
+                $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+            }
+
             $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
             $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
