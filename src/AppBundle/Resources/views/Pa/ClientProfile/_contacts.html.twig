@@ -31,17 +31,17 @@
                     <tr class="align--top dont-break-out">
                         <td class="width-quarter">
                             <dl>
-                                <dt class="visually-hidden">Name</dt>
+                                <dt class="visually-hidden">{{ 'name' | trans({}, 'common') }}</dt>
                                 <dd>
                                     <strong class="bold">Clare Shorter</strong>
                                 </dd>
-                                <dt class="visually-hidden">Role</dt>
+                                <dt class="visually-hidden">{{ 'role' | trans({}, 'common') }}</dt>
                                 <dd>Case manager</dd>
                             </dl>
                         </td>
                         <td class="width-third">
                             <dl>
-                                <dt class="visually-hidden">Address</dt>
+                                <dt class="visually-hidden">{{ 'address' | trans({}, 'common') }}</dt>
                                 <dd>
                                     Office of the Public Guardian<br>
                                     Embankment House<br>
@@ -54,18 +54,18 @@
                         <td class="width-third">
                             <dl>
                                 <dt>
-                                    <strong class="bold">Phone</strong>
+                                    <strong class="bold">{{ 'phone' | trans({}, 'common') }}</strong>
                                 </dt>
                                 <dd class="push--bottom">0115 123 4567</dd>
                                 <dt>
-                                    <strong class="bold">Email</strong>
+                                    <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong>
                                 </dt>
                                 <dd>clare.shorter@opg.gov.uk</dd>
                             </dl>
                         </td>
                         <td class="width-eighth text--right hard--right">
-                            <a href="" class="behat-link-edit-contact-button">{{ (page ~ '.editContact') | trans }}</a>
-                            <a href="" class="behat-link-delete-contact-button">{{ (page ~ '.deleteContact') | trans }}</a>
+                            <a href="" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="" class="behat-link-delete-contact-button">{{ 'remove' | trans({}, 'common') }}</a>
                         </td>
 
                     </tr>

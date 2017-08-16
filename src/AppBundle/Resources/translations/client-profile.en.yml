@@ -34,5 +34,3 @@ clientContacts:
   organisation: Organisation
   contactInfo: Contact information
   addContact: Add contact
-  editContact: Edit
-  deleteContact: Remove
