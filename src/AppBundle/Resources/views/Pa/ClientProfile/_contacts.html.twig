@@ -1,0 +1,83 @@
+{% set translationDomain = "client-profile" %}
+{% trans_default_domain translationDomain %}
+{% set page = "clientContacts" %}
+{% set contacts = true %}
+
+<details class="panel panel-admin hard behat-region-client-profile-contacts">
+
+    <summary class="panel-heading flush--bottom">
+        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
+    </summary>
+
+    <div class="panel-body soft-half">
+
+        <a href="" class="bold-small action-link right behat-link-add-contact-button">
+            <span class="icon icon-plus"></span>
+            {{ (page ~ '.addContact') | trans }}
+        </a>
+
+        {% if contacts %}
+
+            <table>
+                <thead>
+                    <th>{{ (page ~ '.contactName') | trans }}</th>
+                    <th>{{ (page ~ '.organisation') | trans }}</th>
+                    <th>{{ (page ~ '.contactInfo') | trans }}</th>
+                    <th><span class="visually-hidden">Actions</span></th>
+                </thead>
+
+                <tbody>
+                {# {% for note in notes %} #}
+                    <tr class="align--top dont-break-out">
+                        <td class="width-quarter">
+                            <dl>
+                                <dt class="visually-hidden">Name</dt>
+                                <dd>
+                                    <strong class="bold">Clare Shorter</strong>
+                                </dd>
+                                <dt class="visually-hidden">Role</dt>
+                                <dd>Case manager</dd>
+                            </dl>
+                        </td>
+                        <td class="width-third">
+                            <dl>
+                                <dt class="visually-hidden">Address</dt>
+                                <dd>
+                                    Office of the Public Guardian<br>
+                                    Embankment House<br>
+                                    Electric Avenue<br>
+                                    Nottingham<br>
+                                    NG80 1EH
+                                </dd>
+                            </dl>
+                        </td>
+                        <td class="width-third">
+                            <dl>
+                                <dt>
+                                    <strong class="bold">Phone</strong>
+                                </dt>
+                                <dd class="push--bottom">0115 123 4567</dd>
+                                <dt>
+                                    <strong class="bold">Email</strong>
+                                </dt>
+                                <dd>clare.shorter@opg.gov.uk</dd>
+                            </dl>
+                        </td>
+                        <td class="width-eighth text--right hard--right">
+                            <a href="" class="behat-link-edit-contact-button">{{ (page ~ '.editContact') | trans }}</a>
+                            <a href="" class="behat-link-delete-contact-button">{{ (page ~ '.deleteContact') | trans }}</a>
+                        </td>
+
+                    </tr>
+                {# {% endfor %} #}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>{{ (page ~ '.noContacts') | trans }}</p>
+
+        {% endif %}
+    </div>
+
+</details>

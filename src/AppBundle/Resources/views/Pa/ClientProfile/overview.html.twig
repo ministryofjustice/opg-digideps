@@ -275,6 +275,10 @@
         </div>
     </div>
 
+    {% include 'AppBundle:Pa/ClientProfile:_contacts.html.twig' with {
+    notes: report.client.notes,
+    } %}
+
     {% include 'AppBundle:Pa/ClientProfile:_notes.html.twig' with {
     notes: report.client.notes,
     } %}
