@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "client-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set page = "addContact" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.title,'form.title') }}
+
+    {{ form_input(form.content,'form.content') }}
+
+    {{ form_input(form.category,'form.category') }}
+
+    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}
