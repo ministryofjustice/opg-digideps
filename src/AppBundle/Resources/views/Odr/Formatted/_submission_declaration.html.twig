@@ -1,19 +1,16 @@
 {% set translationDomain = "odr-declaration" %}
 {% trans_default_domain translationDomain %}
 {% if odr.submitted %}
-<div class="section" id="declaration">
-<div class="box">
 
-    <h2 class="heading-medium flush--top">
-        {{ 'page.pageSectionTitle' | trans }}
-    </h2>
+<div class="section">
+    <h2 class="section-heading">{{ 'page.pageSectionTitle' | trans }}</h2>
+    <div class="box behat-region-deputy-declaration">
 
-    <p>{{ 'page.descriptionPara01' | trans }}</p>
-    <p>{{ 'page.descriptionPara02' | trans }}</p>
-    <p>{{ 'page.descriptionPara03' | trans }}</p>
-    <p>{{ 'page.descriptionPara04' | trans }}</p>
+        <p class="label">{{ 'page.descriptionPara01' | trans }}</p>
+        <p class="label">{{ 'page.descriptionPara02' | trans }}</p>
+        <p class="label">{{ 'page.descriptionPara03' | trans }}</p>
+        <p class="label">{{ 'page.descriptionPara04' | trans }}</p>
 
-    <div class="item">
         <dl class="labelvalue">
             <dt class="label">Declaration</dt>
             <dd class="value" id="declarationString">
@@ -29,6 +26,5 @@
             <dd class="value" id="statusDeputyName">{{ app.user.fullname }}</dd>
         </dl>
     </div>
-</div>
 </div>
 {% endif %}
