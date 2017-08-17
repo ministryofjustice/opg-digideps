@@ -16,13 +16,16 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  */
 class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
-    const LOCK_KEY = 'dd_docs_cleanup';
+    /**
+     * Redis key to use for locking
+     */
+    const REDIS_LOCK_KEY = 'dd_docs_cleanup';
 
     /**
      * Expire locks after this number of seconds.
      * this value should be bigger than the time taken to delete the documents at execution time
      */
-    const LOCK_EXPIRE_SECONDS = 1200;
+    const REDIS_LOCK_EXPIRE_SECONDS = 1200;
 
     protected function configure()
     {
@@ -48,14 +51,13 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             return 0;
         }
 
-        // execute using redis/setnx lock
-        if ($this->acquireLock($output)) {
-            $this->cleanUpAllDocuments($input, $output);
-            $this->releaseLock($output);
-        } else if ($this->lockExpired()) {
-            $this->releaseLock($output);
-            $this->log('info', 'Lock expired. Released for next execution');
+        // exit if locked
+        if (!$this->acquireLock($output)) {
+            return 1;
         }
+
+        $this->cleanUpAllDocuments($input, $output);
+        $this->releaseLock($output);
     }
 
     /**
@@ -145,19 +147,13 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
      */
     private function acquireLock()
     {
-        $ret = $this->getRedis()->setnx(self::LOCK_KEY, time()) == 1;
+        $ret = $this->getRedis()->setnx(self::REDIS_LOCK_KEY, true) == 1;
+        $this->getRedis()->expire(self::REDIS_LOCK_KEY, self::REDIS_LOCK_EXPIRE_SECONDS);
         $this->log('info', $ret ? 'Lock acquired' : 'Cannot acquire lock, already acquired');
 
         return $ret;
     }
 
-    /**
-     * @return bool true if lock if acquired, false if not (already acquired)
-     */
-    private function lockExpired()
-    {
-        return (time() - $this->getRedis()->get(self::LOCK_KEY)) > self::LOCK_EXPIRE_SECONDS;
-    }
 
     /**
      * release lock.
@@ -168,7 +164,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     {
         $this->log('info', 'Lock released');
 
-        return $this->getRedis()->del(self::LOCK_KEY);
+        return $this->getRedis()->del(self::REDIS_LOCK_KEY);
     }
 
     /**
