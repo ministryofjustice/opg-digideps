@@ -120,7 +120,9 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
      * @param string $ref
      * @param bool   $ignoreS3Failure
      *
-     * @throws \Exception
+     * @return boolean true if delete is successful
+     *
+     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
      */
     private function deleteFromS3($ref, $ignoreS3Failure)
     {
