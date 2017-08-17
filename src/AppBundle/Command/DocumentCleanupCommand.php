@@ -164,9 +164,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
     /**
-     * Delete redis key
-     *
-     * @param type $output
+     * Delete redis key used for locking
      */
     private function releaseLock()
     {
@@ -192,9 +190,10 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
     /**
+     * Log message using the internal logger
+     *
      * @param $level
      * @param $message
-     * @return object
      */
     private function log($level, $message)
     {
@@ -203,7 +202,5 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         $this->getContainer()->get('logger')->log($level, $message, ['extra' => [
             'cron' => 'digideps:documents-cleanup',
         ]]);
-
-        return $this->getContainer()->get('logger');
     }
 }
