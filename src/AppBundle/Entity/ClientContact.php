@@ -15,7 +15,6 @@ class ClientContact
      * @var int
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
      */
     private $id;
 
@@ -23,7 +22,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $address1;
 
@@ -31,7 +30,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $address2;
 
@@ -39,7 +38,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $address3;
 
@@ -47,7 +46,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $addressPostcode;
 
@@ -55,7 +54,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $addressCountry;
 
@@ -70,7 +69,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $email;
 
@@ -78,7 +77,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $firstName;
 
@@ -86,7 +85,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $jobTitle;
 
@@ -94,7 +93,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $lastName;
 
@@ -102,7 +101,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $orgName;
 
@@ -110,9 +109,19 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({""})
+     * @JMS\Groups({"add_clientcontact"})
      */
     private $phone;
+
+
+    /**
+     * Constructor.
+     */
+    public function __construct(Client $client)
+    {
+        $this->setClient($client);
+    }
+
 
     /**
      * @return int

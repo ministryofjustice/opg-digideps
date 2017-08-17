@@ -19,11 +19,19 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.title,'form.title') }}
+    {{ form_input(form.firstName, 'form.firstName') }}
+    {{ form_input(form.lastName, 'form.lastName') }}
+    {{ form_input(form.jobTitle, 'form.jobTitle') }}
+    {{ form_input(form.phone, 'form.phone') }}
+    {{ form_input(form.email, 'form.email') }}
+    {{ form_input(form.orgName, 'form.orgName') }}
+    {{ form_input(form.address1, 'form.address1') }}
+    {{ form_input(form.address2, 'form.address2') }}
+    {{ form_input(form.address3, 'form.address3') }}
+    {{ form_input(form.addressPostcode, 'form.addressPostcode') }}
+    {{ form_input(form.addressCountry, 'form.addressCountry') }}
 
-    {{ form_input(form.content,'form.content') }}
 
-    {{ form_input(form.category,'form.category') }}
 
     {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
 
