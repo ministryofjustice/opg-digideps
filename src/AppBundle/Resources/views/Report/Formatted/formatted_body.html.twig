@@ -15,13 +15,13 @@
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
 <style type="text/css" media="screen, print">
-    {% include 'AppBundle:Css:formatted-report.html.twig' %}
+    {% include 'AppBundle:Css:formatted-report.css.twig' %}
 </style>
 
 <div id="wrapper">
-    <div id="content" class="formatted-report content">
+    <div id="content" class="formatted-report">
         <div id="report-header">Office of the Public Guardian</div>
-        <h1>Deputy report for property and financial decisions</h1>
+        <h1 class="push--bottom">Deputy report for property and financial decisions</h1>
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
@@ -40,10 +40,10 @@
         {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
 
-        <div class="section" id="accounts-section">
-            <h2 class="section-heading">Accounts</h2>
-            {% if is102 %}
+        {% if is102 %}
+            <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
                     {% if report.totalsMatch %}
                         {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
                     {% else %}
@@ -54,10 +54,13 @@
                     {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if is103 %}
+        {% if is103 %}
+            <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
                     {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
@@ -77,9 +80,8 @@
                 'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
 
                 } %}
-            {% endif %}
-
-        </div>
+            </div>
+        {% endif %}
 
         {% if report.has106Flag %}
             {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}

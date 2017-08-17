@@ -200,10 +200,10 @@ class FormattedTest extends WebTestCase
 
     public function testDecisions()
     {
-        $this->assertContains('sold the flat in SW2', $this->html($this->crawler, '#decisions-list'));
-        $this->assertContains('he wanted to leave this area', $this->html($this->crawler, '#decisions-list'));
-        $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-list'));
-        $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-list'));
+        $this->assertContains('sold the flat in SW2', $this->html($this->crawler, '#decisions-section'));
+        $this->assertContains('he wanted to leave this area', $this->html($this->crawler, '#decisions-section'));
+        $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-section'));
+        $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-section'));
     }
 
     public function testMoneyTransfers()

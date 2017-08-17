@@ -1,34 +1,31 @@
-<div class="section" id="">
+<div class="section">
     <h2 class="section-heading">Mental capacity</h2>
 
     <div class="dont-break" id="mental-capacity-wrapper">
         <div class="box">
-            <div class="checkboxes horizontal">
-                <div class="question">Has {{ client.firstName }}'s mental capacity to make financial decisions</div>
+            <h3 class="label question bold">Has {{ client.firstName }}'s mental capacity to make financial decisions</h3>
 
-                <table class="yesno">
-                    <tr>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if mentalCapacity.hasCapacityChanged == 'changed' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="noborder">Changed</td>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if mentalCapacity.hasCapacityChanged == 'stayedSame' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="noborder">Stayed the same</td>
-                    </tr>
-                </table>
-            </div>
-                        
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="checkbox value">{% if mentalCapacity.hasCapacityChanged == 'changed' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Changed</td>
+                    <td class="checkbox value">{% if mentalCapacity.hasCapacityChanged == 'stayedSame' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Stayed the same</td>
+                </tr>
+            </table>
+
             {% if mentalCapacity.hasCapacityChanged == 'changed' %}
-                <div class="form-group form-group-vertical">
-                    <div class="value textarea">{{ mentalCapacity.hasCapacityChangedDetails | nl2br }}</div>
+                <div class="labelvalue push-half--top">
+                    <div class="value">{{ mentalCapacity.hasCapacityChangedDetails | nl2br }}</div>
                 </div>
             {% endif %}
 
-            <div class="form-group form-group-vertical ">
-                <div class="question">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </div>
-                <div class="value textarea ">
+            <div class="labelvalue push-half--top">
+                <h3 class="label question bold">When was {{ client.firstName }}'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)? </h3>
+                <div class="value">
                     {{ mentalCapacity.mentalAssessmentDate ? mentalCapacity.mentalAssessmentDate  | date("m/Y") : 'n.a.' }}
                 </div>
             </div>
         </div>
     </div>
-
 </div>

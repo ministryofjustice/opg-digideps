@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\AssetOther;
 use AppBundle\Entity\Odr\AssetProperty;
 use AppBundle\Entity\Odr\BankAccount;
+use AppBundle\Entity\Odr\Debt;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Odr\VisitsCare;
 use AppBundle\Entity\User;
@@ -68,12 +69,15 @@ class OdrFormattedTest extends WebTestCase
         $this->assetProp2 = new AssetProperty();
         $this->assetProp2->setAddress('victoria rd')->setPostcode('sw1')->setid(4)->setValue(100000)->setOwned(AssetProperty::OWNED_PARTLY)->setOwnedPercentage(60);
 
+        $this->debt1 = new Debt('debt-type-id', 1.1, false, null);
+
         $this->odr = new Odr();
         $this->odr
             ->setClient($this->client)
             ->setVisitsCare($this->visitsCare)
             ->setBankAccounts([$this->account1, $this->account2])
             ->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2])
+            ->setDebts([$this->debt1])
         ;
 
         $this->html = $this->twig->render('AppBundle:Odr/Formatted:formatted.html.twig', [

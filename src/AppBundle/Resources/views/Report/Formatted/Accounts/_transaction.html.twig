@@ -2,12 +2,12 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-<li class="transaction">
-    <div class="label">{{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, translationDomain) | raw }}</div>
-    <div class="value">&pound;{{ transaction.amount | money_format }}</div>
-    {% if transaction.description %}
-        <div class="description">
-            {{ transaction.description | nl2br }}
-        </div>
-    {% endif %}
-</li>
+<tr>
+    <td class="label">
+        <span><strong class="bold">{{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, translationDomain) | raw }}</strong></span>
+        {% if transaction.description %}
+            <p class="flush--bottom">{{ transaction.description | nl2br }}</p>
+        {% endif %}
+    </td>
+    <td class="value text--right width-fifth">&pound;{{ transaction.amount | money_format }}</td>
+</tr>
