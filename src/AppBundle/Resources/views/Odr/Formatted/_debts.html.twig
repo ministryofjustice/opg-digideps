@@ -1,3 +1,4 @@
+{% if odr.hasDebts %}
 {% set translationDomain = "odr-debts" %}
 {% trans_default_domain translationDomain %}
 
@@ -50,3 +51,4 @@
         </div>
     {% endif %}
 </div>
+{% endif %}
