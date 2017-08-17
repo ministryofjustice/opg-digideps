@@ -196,6 +196,16 @@ class Client
     private $notes;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
+     * @JMS\Groups({"clientcontacts"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist"})
+     * @ORM\OrderBy({"firstName"="ASC"})
+     */
+    private $clientContacts;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -203,6 +213,7 @@ class Client
         $this->users = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->clientContacts = new ArrayCollection();
     }
 
     /**
@@ -738,6 +749,25 @@ class Client
     {
         $this->notes = $notes;
 
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClientContacts()
+    {
+        return $this->clientContacts;
+    }
+
+    /**
+     * @param $clientContacts
+     *
+     * @return $this
+     */
+    public function setClientContacts($clientContacts)
+    {
+        $this->clientContacts = $clientContacts;
         return $this;
     }
 }
