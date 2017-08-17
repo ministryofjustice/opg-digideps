@@ -34,7 +34,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         ;
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // skip if launched from FRONTEND container
@@ -46,7 +45,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         // manual lock release
         if ($input->getOption('release-lock')) {
             $this->releaseLock($output);
-
             return 0;
         }
 
@@ -61,7 +59,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function cleanUpAllDocuments(InputInterface $input, OutputInterface $output)
@@ -108,7 +106,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             }
 
             return $s3Result && $endpointResult;
-
         } catch (\RuntimeException $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             if ($e instanceof RestClientException) {
@@ -121,7 +118,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
     /**
      * @param string $ref
-     * @param boolean $ignoreS3Failure
+     * @param bool   $ignoreS3Failure
      *
      * @throws \Exception
      */
@@ -142,12 +139,10 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         }
     }
 
-
     private function refreshLock()
     {
         $this->getRedis()->expire(self::REDIS_LOCK_KEY, self::REDIS_LOCK_EXPIRE_SECONDS);
     }
-
 
     /**
      * @return bool true if lock if acquired, false if not (already acquired)
@@ -165,7 +160,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         return $ret;
     }
-
 
     /**
      * release lock.
