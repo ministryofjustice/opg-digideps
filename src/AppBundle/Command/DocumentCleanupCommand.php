@@ -86,6 +86,8 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         try {
             $s3Storage->delete($ref);
+
+            return true;
         } catch (\Exception $e) {
             if ($ignoreS3Failure) {
                 $this->log('error', $e->getMessage());
