@@ -1,7 +1,6 @@
 {% set translationDomain = "client-profile" %}
 {% trans_default_domain translationDomain %}
 {% set page = "clientContacts" %}
-{% set contacts = true %}
 
 <details class="panel panel-admin hard behat-region-client-profile-contacts">
 
@@ -27,27 +26,27 @@
                 </thead>
 
                 <tbody>
-                {# {% for note in notes %} #}
+                 {% for contact in contacts %}
                     <tr class="align--top dont-break-out">
                         <td class="width-quarter">
                             <dl>
                                 <dt class="visually-hidden">{{ 'name' | trans({}, 'common') }}</dt>
                                 <dd>
-                                    <strong class="bold">Clare Shorter</strong>
+                                    <strong class="bold">{{ contact.firstName }} {{ contact.lastName }}</strong>
                                 </dd>
                                 <dt class="visually-hidden">{{ 'role' | trans({}, 'common') }}</dt>
-                                <dd>Case manager</dd>
+                                <dd>{{ contact.jobTitle }}</dd>
                             </dl>
                         </td>
                         <td class="width-third">
                             <dl>
                                 <dt class="visually-hidden">{{ 'address' | trans({}, 'common') }}</dt>
                                 <dd>
-                                    Office of the Public Guardian<br>
-                                    Embankment House<br>
-                                    Electric Avenue<br>
-                                    Nottingham<br>
-                                    NG80 1EH
+                                    {{ contact.orgName }}<br>
+                                    {{ contact.address1 }}<br>
+                                    {{ contact.address2 }}<br>
+                                    {{ contact.address3 }}<br>
+                                    {{ contact.addressPostcode }}
                                 </dd>
                             </dl>
                         </td>
@@ -56,11 +55,11 @@
                                 <dt>
                                     <strong class="bold">{{ 'phone' | trans({}, 'common') }}</strong>
                                 </dt>
-                                <dd class="push--bottom">0115 123 4567</dd>
+                                <dd class="push--bottom">{{ contact.phone }}</dd>
                                 <dt>
                                     <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong>
                                 </dt>
-                                <dd>clare.shorter@opg.gov.uk</dd>
+                                <dd>{{ contact.email }}</dd>
                             </dl>
                         </td>
                         <td class="width-eighth text--right hard--right">
@@ -69,7 +68,7 @@
                         </td>
 
                     </tr>
-                {# {% endfor %} #}
+                 {% endfor %}
                 </tbody>
             </table>
 
