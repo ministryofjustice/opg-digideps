@@ -10,7 +10,7 @@
 
     <div class="panel-body soft-half">
 
-        <a href="" class="bold-small action-link right behat-link-add-contact-button">
+        <a href="{{ path('add_contact', {'clientId': report.client.id}) }}" class="bold-small action-link right behat-link-add-contact-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addContact') | trans }}
         </a>

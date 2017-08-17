@@ -1,0 +1,34 @@
+addContact:
+  htmlTitle: Client profile - add contact | GOV.UK
+  pageTitle: Add contact
+  supportTitle: "Client profile:"
+editContact:
+  htmlTitle: Client profile - edit contact | GOV.UK
+  pageTitle: Edit contact
+  supportTitle: "Client profile:"
+removeContact:
+  htmlTitle: Client profile - remove contact | GOV.UK
+  h1Title: Remove contact
+  supportTitle: "Client profile:"
+  question: Are you sure you want to remove this contact?
+  contactTitle: "Title:"
+  dateAdded: "Date added:"
+  linkButtonLabel: Yes, remove contact
+form:
+  category:
+    label: Category
+    entries:
+      undefined: undefined
+      todo: To Do
+      dwp: DWP
+      opg: OPG
+      welfare: Welfare
+      bank: Bank
+      report: Report
+      other: Other
+  title:
+    label: Title
+  content:
+    label: Description
+  save:
+    label: Save
