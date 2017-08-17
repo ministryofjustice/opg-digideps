@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 /**
  * @Route("")
@@ -16,32 +17,41 @@ class ClientContactController extends RestController
      * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add")
      * @Method({"POST"})
      */
-    public function add(Request $request)
+    public function add(Request $request, $clientId)
     {
-        echo 'Hello I am the clientContact ADD endpoint (POST)';
-        exit;
-//        // checks
-//        $this->denyAccessUnlessGranted(
-//            [
-//                EntityDir\User::ROLE_PA,
-//                EntityDir\User::ROLE_PA_ADMIN,
-//                EntityDir\User::ROLE_PA_TEAM_MEMBER
-//            ]
-//        );
-//        $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
-//        $this->denyAccessIfClientDoesNotBelongToUser($client);
-//
-//        // hydrate and persist
-//        $data = $this->deserializeBodyContent($request, [
-//            'title' => 'notEmpty',
-//            'category' => 'mustExist',
-//            'content' => 'mustExist',
-//        ]);
-//        $note = new EntityDir\Note($client, $data['category'], $data['title'], $data['content']);
-//        $note->setCreatedBy($this->getUser());
-//        $this->persistAndFlush($note);
-//
-//        return ['id' => $note->getId()];
+        // checks
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
+
+        $client = $this->findEntityBy(EntityDir\Client::class, $clientId);
+        $this->denyAccessIfClientDoesNotBelongToUser($client);
+
+        $data = $this->deserializeBodyContent($request);
+        $clientContact = new EntityDir\ClientContact();
+        $this->hydrateEntityWithArrayData($clientContact, $data, [
+            'firstname'   => 'setFirstName',
+            'lastname'    => 'setLastName',
+            'job_title'   => 'setJobTitle',
+            'phone'       => 'setPhone',
+            'address1'    => 'setAddress1',
+            'address2'    => 'setAddress2',
+            'address3'    => 'setAddress3',
+            'address_postcode' => 'setAddressPostcode',
+            'address_country'  => 'setAddressCountry',
+            'email'       => 'setEmail',
+            'org_name'    => 'setOrgName',
+        ]);
+
+        $clientContact->setClient($client);
+        $clientContact->setCreatedBy($this->getUser());
+        $this->persistAndFlush($clientContact);
+
+        return ['id' => $clientContact->getId()];
     }
 
     /**
