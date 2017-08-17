@@ -245,10 +245,10 @@
         </table>
 
         {% if report.paidForAnything == 'yes' %}
-            <table class="labelvalue push--top">
+            <table class="labelvalue money push--top">
                 {% for expense in report.expenses %}
                     <tr>
-                        <td class="label">{{ expense.explanation }}</td>
+                        <td class="label noborder">{{ expense.explanation }}</td>
                         <td class="value text--right width-fifth">&pound;{{ expense.amount | money_format }}</td>
                     </tr>
                 {% endfor %}

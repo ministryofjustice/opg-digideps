@@ -1,3 +1,4 @@
+{% if report.hasDebts %}
 {% set translationDomain = "report-debts" %}
 {% trans_default_domain translationDomain %}
 
@@ -17,10 +18,10 @@
     {% else %}
         <div class="dont-break">
             <div class="box">
-                <table class="labelvalue">
+                <table class="labelvalue money">
                     {% for d in debts %}
                         <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
-                            <td class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
+                            <td class="label noborder">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
                             <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
                         </tr>
                         {% if d.hasMoreDetails %}
@@ -39,7 +40,7 @@
 
             <div class="box">
                 {# total value #}
-                <table class="labelvalue">
+                <table class="labelvalue money">
                     <tr>
                         <td class="label bold">Debts Total Value</td>
                         <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.debtsTotalValue | money_format }}</td>
@@ -49,5 +50,6 @@
         </div>
     {% endif %}
 </div>
+{% endif %}
 
 

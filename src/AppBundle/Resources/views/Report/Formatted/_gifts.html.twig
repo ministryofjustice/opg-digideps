@@ -17,10 +17,10 @@
 
                 {% if report.giftsExist == 'yes' %}
 
-                    <table class="labelvalue push--top">
+                    <table class="labelvalue money push--top">
                         {% for gift in report.gifts %}
                             <tr>
-                                <td class="label">{{ gift.explanation }}</td>
+                                <td class="label noborder">{{ gift.explanation }}</td>
                                 <td class="value text--right width-fifth">&pound;{{ gift.amount | money_format }}</td>
                             </tr>
                         {% endfor %}

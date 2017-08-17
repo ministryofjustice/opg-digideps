@@ -74,7 +74,7 @@
     }
 
     .noborder {
-        border-bottom: none;
+        border-bottom: none !important;
     }
 
     // =======================================================
@@ -154,6 +154,17 @@
 
                 &.checkbox {
                     margin-left: 0;
+                }
+            }
+        }
+
+        &.money {
+            .value {
+                color: $east-bay;
+                border: 1px solid $black;
+
+                &.total {
+                    border-width: 2px;
                 }
             }
         }
@@ -286,6 +297,10 @@
                 border-bottom: 0;
             }
         }
+
+        tr, td {
+            padding: 0.63158em 1.05263em 0.47368em 0;
+        }
     }
 
     .clean-cell {
@@ -318,17 +333,6 @@
         .value {
             width: 25%;
         }
-
-        table.money {
-            .value {
-                color: $east-bay;
-                border: 1px solid $black;
-
-                &.total {
-                    border-width: 2px;
-                }
-            }
-        }
     }
 
     table.money {
@@ -348,9 +352,9 @@
         th {
             @include core-16();
             font-weight: 700;
-            text-align: center;
             padding: em(12, 12) 0 em(9, 12) 0;
             color: $black;
+            text-align: left;
             border-bottom: 1px solid $border-colour;
             // Right align headings for numeric content
             &.numeric {

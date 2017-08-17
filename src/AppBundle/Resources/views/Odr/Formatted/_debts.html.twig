@@ -22,7 +22,7 @@
                 <table class="labelvalue">
                     {% for d in debts %}
                         <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
-                            <td class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
+                            <td class="label noborder">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
                             <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
                         </tr>
                         {% if d.hasMoreDetails %}

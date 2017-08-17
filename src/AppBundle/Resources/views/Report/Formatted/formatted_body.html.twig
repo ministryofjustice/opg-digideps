@@ -40,10 +40,10 @@
         {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
 
-        <div class="section" id="accounts-section">
-            <h2 class="section-heading">Accounts</h2>
-            {% if is102 %}
+        {% if is102 %}
+            <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
                     {% if report.totalsMatch %}
                         {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
                     {% else %}
@@ -54,10 +54,13 @@
                     {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if is103 %}
+        {% if is103 %}
+            <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
                     {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
                 {% endif %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
@@ -77,9 +80,8 @@
                 'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
 
                 } %}
-            {% endif %}
-
-        </div>
+            </div>
+        {% endif %}
 
         {% if report.has106Flag %}
             {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
