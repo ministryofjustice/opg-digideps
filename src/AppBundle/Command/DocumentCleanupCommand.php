@@ -4,11 +4,9 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\RestClientException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
 /**
  * Class DocumentCleanupCommand
@@ -23,16 +21,17 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
     /**
      * Expire locks after this number of seconds.
-     * this value should be bigger than the time taken to delete the documents at execution time
+     * this value should be bigger than the time taken to delete a single document
      */
-    const REDIS_LOCK_EXPIRE_SECONDS = 1200;
+    const REDIS_LOCK_EXPIRE_SECONDS = 60;
 
     protected function configure()
     {
         $this
             ->setName('digideps:documents-cleanup')
             ->addOption('ignore-s3-failures', null, InputOption::VALUE_NONE, 'Hard-delete db entry even if the S3 deletion fails')
-            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.');
+            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
+        ;
     }
 
 
@@ -44,7 +43,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             exit(1);
         }
 
-        // manual lock releaserelease lock and exit
+        // manual lock release
         if ($input->getOption('release-lock')) {
             $this->releaseLock($output);
 
@@ -57,6 +56,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         }
 
         $this->cleanUpAllDocuments($input, $output);
+
         $this->releaseLock($output);
     }
 
@@ -92,6 +92,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         $storageRef = $document->getStorageReference();
 
         try {
+            $this->refreshLock();
             $s3Result = $this->deleteFromS3($storageRef, $ignoreS3Failure);
             if ($s3Result) {
                 $this->log('info', "deleting $storageRef from S3: success");
@@ -142,14 +143,25 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
 
+    private function refreshLock()
+    {
+        $this->getRedis()->expire(self::REDIS_LOCK_KEY, self::REDIS_LOCK_EXPIRE_SECONDS);
+    }
+
+
     /**
      * @return bool true if lock if acquired, false if not (already acquired)
      */
     private function acquireLock()
     {
         $ret = $this->getRedis()->setnx(self::REDIS_LOCK_KEY, true) == 1;
-        $this->getRedis()->expire(self::REDIS_LOCK_KEY, self::REDIS_LOCK_EXPIRE_SECONDS);
-        $this->log('info', $ret ? 'Lock acquired' : 'Cannot acquire lock, already acquired');
+        if ($ret) {
+            $this->refreshLock();
+            $this->log('info', 'Lock acquired');
+        } else {
+            $ttl = $this->getRedis()->ttl(self::REDIS_LOCK_KEY);
+            $this->log('info', "Cannot acquire lock, already acquired. Expiring in $ttl seconds");
+        }
 
         return $ret;
     }
@@ -190,6 +202,8 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
      */
     private function log($level, $message)
     {
+        //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
+
         $this->getContainer()->get('logger')->log($level, $message, ['extra' => [
             'cron' => 'digideps:documents-cleanup',
         ]]);
