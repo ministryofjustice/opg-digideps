@@ -164,7 +164,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     }
 
     /**
-     * release lock.
+     * Delete redis key
      *
      * @param type $output
      */
@@ -172,7 +172,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     {
         $this->log('info', 'Lock released');
 
-        return $this->getRedis()->del(self::REDIS_LOCK_KEY);
+        $this->getRedis()->del(self::REDIS_LOCK_KEY);
     }
 
     /**
