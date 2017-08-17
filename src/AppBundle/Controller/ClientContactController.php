@@ -34,17 +34,17 @@ class ClientContactController extends RestController
         $data = $this->deserializeBodyContent($request);
         $clientContact = new EntityDir\ClientContact();
         $this->hydrateEntityWithArrayData($clientContact, $data, [
-            'firstname'   => 'setFirstName',
-            'lastname'    => 'setLastName',
-            'job_title'   => 'setJobTitle',
-            'phone'       => 'setPhone',
-            'address1'    => 'setAddress1',
-            'address2'    => 'setAddress2',
-            'address3'    => 'setAddress3',
+            'first_name'   => 'setFirstName',
+            'last_name'    => 'setLastName',
+            'job_title'    => 'setJobTitle',
+            'phone'        => 'setPhone',
+            'address1'     => 'setAddress1',
+            'address2'     => 'setAddress2',
+            'address3'     => 'setAddress3',
             'address_postcode' => 'setAddressPostcode',
             'address_country'  => 'setAddressCountry',
-            'email'       => 'setEmail',
-            'org_name'    => 'setOrgName',
+            'email'        => 'setEmail',
+            'org_name'     => 'setOrgName',
         ]);
 
         $clientContact->setClient($client);
