@@ -12,14 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/contact/")
  */
-class ContactController extends AbstractController
+class ClientContactController extends AbstractController
 {
     private static $jmsGroups = [
         'contacts'
     ];
 
     /**
-     * @Route("add", name="add_contact")
+     * @Route("add", name="clientcontact_add")
      * @Template("AppBundle:Pa/ClientProfile:addContact.html.twig")
      */
     public function addAction(Request $request)
@@ -32,30 +32,26 @@ class ContactController extends AbstractController
         $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
 
         $report = $client->getCurrentReport();
+        $clientContact = new EntityDir\ClientContact($client);
 
-        $note = new EntityDir\Note($client);
-
-        $form = $this->createForm(
-            new FormDir\Pa\NoteType($this->get('translator')),
-            $note
-        );
-
+        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $note = $form->getData();
+            $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts'
+                                        , $form->getData()
+                                        , ['add_clientcontact']
+                                        );
+            $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
 
-            $this->getRestClient()->post('note/' . $client->getId(), $note, ['add_note']);
-            $request->getSession()->getFlashBag()->add('notice', 'The note has been added');
-
-            return $this->redirect($this->generateClientProfileLink($note->getClient()));
+            return $this->redirect($this->generateClientProfileLink($client));
         }
 
         return [
             'form'  => $form->createView(),
             'client' => $client,
             'report' => $report,
-            'backLink' => $this->generateClientProfileLink($note->getClient())
+            'backLink' => $this->generateClientProfileLink($client)
         ];
     }
 }
