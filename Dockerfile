@@ -36,9 +36,12 @@ RUN  npm install
 ADD  . /app
 USER root
 RUN find . -not -user app -exec chown app:app {} \;
+# crontab
+COPY scripts/cron/digideps /etc/cron.d/digideps
+RUN chmod 0744 /etc/cron.d/digideps
+# post-install scripts
 USER app
 ENV  HOME /app
-#do we still need the post-install-cmd
 RUN  composer run-script post-install-cmd --no-interaction
 RUN  NODE_ENV=production gulp
 
