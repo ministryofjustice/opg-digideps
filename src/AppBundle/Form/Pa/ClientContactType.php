@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Pa;
 
-use AppBundle\Entity\Note as NoteEntity;
+use AppBundle\Entity as EntityDir;
 use Common\Form\Elements\InputFilters\Text;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,21 +49,21 @@ class ClientContactType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-//    /**
-//     * Set default form options
-//     *
-//     * @param OptionsResolverInterface $resolver
-//     */
-//    public function setDefaultOptions(OptionsResolverInterface $resolver)
-//    {
-//        $resolver->setDefaults(
-//            [
-//                'validation_groups' => ['add_note'],
-//                'translation_domain' => 'client-notes',
-//                'data-class' => NoteEntity::class
-//            ]
-//        );
-//    }
+    /**
+     * Set default form options
+     *
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'validation_groups' => ['add_note'],
+                'translation_domain' => 'client-contacts',
+                'data-class' => EntityDir\ClientContact::class
+            ]
+        );
+    }
 
 //    /**
 //     * Return list of translated categories from the Note entity
@@ -89,6 +89,6 @@ class ClientContactType extends AbstractType
 //     */
 //    private function translate($key)
 //    {
-//        return $this->translator->trans($key, [], 'report-note');
+//        return $this->translator->trans($key, [], 'client-notes');
 //    }
 }

@@ -15,20 +15,7 @@ removeContact:
   dateAdded: "Date added:"
   linkButtonLabel: Yes, remove contact
 form:
-  category:
-    label: Category
-    entries:
-      undefined: undefined
-      todo: To Do
-      dwp: DWP
-      opg: OPG
-      welfare: Welfare
-      bank: Bank
-      report: Report
-      other: Other
-  title:
-    label: Title
-  content:
-    label: Description
+  firstName:
+    label: First name
   save:
     label: Save
