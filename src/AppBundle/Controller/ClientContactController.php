@@ -54,31 +54,6 @@ class ClientContactController extends RestController
         return ['id' => $clientContact->getId()];
     }
 
-    /**
-     * @Route("/clients/{clientId}/clientcontacts/{id}")
-     * @Method({"GET"})
-     */
-    public function getOneById(Request $request, $id)
-    {
-        echo 'Hello I am the clientContact by id endpoint (GET)';
-        exit;
-//        $this->denyAccessUnlessGranted(
-//            [
-//                EntityDir\User::ROLE_PA,
-//                EntityDir\User::ROLE_PA_ADMIN,
-//                EntityDir\User::ROLE_PA_TEAM_MEMBER
-//            ]
-//        );
-//
-//        $serialisedGroups = $request->query->has('groups')
-//            ? (array) $request->query->get('groups') : ['notes', 'user'];
-//        $this->setJmsSerialiserGroups($serialisedGroups);
-//
-//        $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
-//        $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
-//
-//        return $note;
-    }
 
     /**
      * Update contact
@@ -89,34 +64,62 @@ class ClientContactController extends RestController
      */
     public function update(Request $request, $id)
     {
-        echo 'Hello I am the clientContact update endpoint (PUT)';
-        exit;
-//        $this->denyAccessUnlessGranted(
-//            [
-//                EntityDir\User::ROLE_PA,
-//                EntityDir\User::ROLE_PA_ADMIN,
-//                EntityDir\User::ROLE_PA_TEAM_MEMBER
-//            ]
-//        );
-//
-//        $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
-//
-//        // enable if the check above is removed and the note is available for editing for the whole team
-//        $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
-//
-//        $data = $this->deserializeBodyContent($request);
-//        $this->hydrateEntityWithArrayData($note, $data, [
-//            'category' => 'setCategory',
-//            'title' => 'setTitle',
-//            'content' => 'setContent',
-//        ]);
-//
-//        $note->setLastModifiedBy($this->getUser());
-//
-//        $this->getEntityManager()->flush($note);
-//
-//        return $note->getId();
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
+
+        $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
+        $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
+
+        $data = $this->deserializeBodyContent($request);
+        $this->hydrateEntityWithArrayData($clientContact, $data, [
+            'first_name'   => 'setFirstName',
+            'last_name'    => 'setLastName',
+            'job_title'    => 'setJobTitle',
+            'phone'        => 'setPhone',
+            'address1'     => 'setAddress1',
+            'address2'     => 'setAddress2',
+            'address3'     => 'setAddress3',
+            'address_postcode' => 'setAddressPostcode',
+            'address_country'  => 'setAddressCountry',
+            'email'        => 'setEmail',
+            'org_name'     => 'setOrgName',
+        ]);
+        $this->getEntityManager()->flush($clientContact);
+        return $clientContact->getId();
     }
+
+
+    /**
+     * @Route("/clients/{clientId}/clientcontacts/{id}")
+     * @Method({"GET"})
+     */
+    public function getOneById(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
+
+        $serialisedGroups = $request->query->has('groups')
+            ? (array) $request->query->get('groups')
+            : ['clientcontacts', 'user'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
+
+        $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
+        $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
+
+        return $clientContact;
+    }
+
+
 
     /**
      * Delete contact
