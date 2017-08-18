@@ -1,21 +1,25 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}Collection - Digideps Style Guide{% endblock %}
-{% block pageTitle %}Collection{% endblock %}
+{% block htmlTitle %}Form elements - Digideps style guide{% endblock %}
+{% block pageTitle %}Form elements{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block breadcrumbs %}
-    {# {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-        breadCrumb: breadCrumb
-    } %} #}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Form elements</li>
+        </ol>
+    </div>
 {% endblock %}
 
 {% block pageContent %}
 <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
-
-
-<h2 class="heading-large">Form elements</h2>
 
 <!-- Account number -->
 <div class="grid-row">

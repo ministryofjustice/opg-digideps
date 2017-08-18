@@ -71,7 +71,7 @@ class ElementController extends AbstractController
 
     /**
      * @Route("/formcomponents", name="elements_form")
-     * @Template("AppBundle:Element/form:form.html.twig")
+     * @Template("AppBundle:Element:forms.html.twig")
      */
     public function formComponentsAction()
     {
@@ -85,14 +85,7 @@ class ElementController extends AbstractController
             'client' => $client,
         ];
 
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Form elements'],
-
-        ];
-
         return [
-            'breadCrumb' => $breadCrumb,
             'report' => $report,
             'client' => $client,
         ];
