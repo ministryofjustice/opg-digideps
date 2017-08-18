@@ -30,7 +30,7 @@ clientNotes:
 clientContacts:
   heading: Useful contacts
   noContacts: No contacts
-  contactName: Name and role
+  contactName: Contact name
   organisation: Organisation
   contactInfo: Contact information
   addContact: Add contact
