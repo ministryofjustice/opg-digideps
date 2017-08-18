@@ -57,9 +57,10 @@
 
 // Sass list for colour palette
 $palette: (
-        ("grey-status", $grey-status),
-        ("grey-review", $grey-review),
-        ("light-orange", $light-orange)
+        ("east-bay", $east-bay),
+        ("grey-60-percent-white", $grey-60-percent-white),
+        ("grey-75-percent-white", $grey-75-percent-white),
+        ("orange-80-percent-white", $orange-80-percent-white)
 );
 
 @mixin color-swatches {
