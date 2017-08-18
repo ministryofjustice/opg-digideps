@@ -95,8 +95,8 @@
                             {% endif %}
                         </td>
                         <td class="width-eighth text--right hard--right">
-                            <a href="{{ path('clientcontact_edit', {'id': contact.id, 'clientId': report.client.id}) }}" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
-                            <a href="" class="behat-link-delete-contact-button">{{ 'remove' | trans({}, 'common') }}</a>
+                            <a href="{{ path('clientcontact_edit'  , {'id': contact.id}) }}" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('clientcontact_delete', {'id': contact.id}) }}" class="behat-link-delete-contact-button">{{ 'remove' | trans({}, 'common') }}</a>
                         </td>
 
                     </tr>

@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "client-notes" %}
+{% trans_default_domain translationDomain %}
+{% set page = "removeContact" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.h1Title') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text"><strong class="bold">Are you sure you want to remove this contact?</strong></p>
+    <table class="text push--bottom">
+        <tbody>
+            <tr>
+                <th scope="row">Name:</th>
+                <td>Firstname Lastname</td>
+            </tr>
+            <tr>
+                <th scope="row">Job title</th>
+                <td>ABCDEFG</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('clientcontact_delete_confirm', { id: contact.id }) }}" id="contact-delete" class="button push-half--right behat-link-confirm">{{ (page ~ '.linkButtonLabel') | trans }}</a>
+
+    <a href="{{ backLink }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
+
+{% endblock %}
+

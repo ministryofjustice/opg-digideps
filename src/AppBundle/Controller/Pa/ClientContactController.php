@@ -61,15 +61,11 @@ class ClientContactController extends AbstractController
      */
     public function editAction(Request $request, $id)
     {
-        $client = $this->getRestClient()->get('client/' . $request->get('clientId'),
-            'Client',
-            ['client', 'report-id', 'current-report', 'user']
-        );
-//        $this->denyAccessUnlessGranted('edit-note', $client, 'Access denied');
+        $clientContact = $this->getContactById($id);
+        $client = $clientContact->getClient();
         $currentReport = $client->getCurrentReport();
         $backLink = $this->generateClientProfileLink($client);
 
-        $clientContact = $this->getContactById($id);
 
 //        $this->denyAccessUnlessGranted('edit-note', $clientContact, 'Access denied');
 
