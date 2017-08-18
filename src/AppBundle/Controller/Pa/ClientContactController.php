@@ -118,12 +118,9 @@ class ClientContactController extends AbstractController
     public function deleteConfirmedAction(Request $request, $id)
     {
         $clientContact = $this->getContactById($id);
-dbg($clientContact);
-exit;
 //        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
         try {
-
-            $this->getRestClient()->delete('clientcontact/' . $id);
+            $this->getRestClient()->delete('clientcontacts/' . $id);
             $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
