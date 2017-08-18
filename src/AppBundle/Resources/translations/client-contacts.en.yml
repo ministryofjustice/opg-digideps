@@ -15,7 +15,29 @@ removeContact:
   dateAdded: "Date added:"
   linkButtonLabel: Yes, remove contact
 form:
+  contactHeading: Contact details
   firstName:
     label: First name
+  lastName:
+    label: Last name
+  jobTitle:
+    label: Job title
+  phone:
+    label: Phone
+  email:
+    label: Email
+  organisationHeading: Organisation
+  orgName:
+    label: Organisation name
+  address1:
+    label: Organisation address
+  address2:
+    label: ' '
+  address3:
+    label: ' '
+  addressPostcode:
+    label: Organisation postcode
+  addressCountry:
+    label: Organisation country
   save:
-    label: Save
+    label: Save contact
