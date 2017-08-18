@@ -59,7 +59,7 @@ class ClientContactController extends RestController
      * Update contact
      * Only the creator can update the note
      *
-     * @Route("/clients/{clientId}/clientcontacts/{id}")
+     * @Route("/clientcontacts/{id}")
      * @Method({"PUT"})
      */
     public function update(Request $request, $id)
