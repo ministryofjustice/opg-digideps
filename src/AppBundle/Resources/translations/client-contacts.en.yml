@@ -11,8 +11,7 @@ removeContact:
   h1Title: Remove contact
   supportTitle: "Client profile:"
   question: Are you sure you want to remove this contact?
-  contactTitle: "Title:"
-  dateAdded: "Date added:"
+  organisation: "Organisation:"
   linkButtonLabel: Yes, remove contact
 form:
   contactHeading: Contact details

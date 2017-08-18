@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "client-notes" %}
+{% set translationDomain = "client-contacts" %}
 {% trans_default_domain translationDomain %}
 {% set page = "removeContact" %}
 
@@ -18,16 +18,22 @@
 
 {% block pageContent %}
 
-    <p class="text"><strong class="bold">Are you sure you want to remove this contact?</strong></p>
+    <p class="text"><strong class="bold">{{ (page ~ '.question') | trans }}</strong></p>
     <table class="text push--bottom">
         <tbody>
             <tr>
-                <th scope="row">Name:</th>
-                <td>Firstname Lastname</td>
+                <th scope="row">{{ 'name' | trans({}, 'common') }}:</th>
+                <td>{{ contact.getFirstName() }} {{ contact.getLastName() }}</td>
             </tr>
             <tr>
-                <th scope="row">Job title</th>
-                <td>ABCDEFG</td>
+                <th scope="row">{{ (page ~ '.organisation') | trans }}</th>
+                <td>
+                    {% if contact.getOrgName() == "" %}
+                        -
+                    {% else %}
+                        {{ contact.getOrgName() }}
+                    {% endif %}
+                </td>
             </tr>
         </tbody>
     </table>
