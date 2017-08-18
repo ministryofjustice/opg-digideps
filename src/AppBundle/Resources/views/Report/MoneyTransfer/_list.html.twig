@@ -57,7 +57,7 @@
                 <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <td class="width-quarter">
                         {% set account = transfer.accountFrom %}
-                        {% if account.requiresBankNameAndSortCode %}
+                        {% if account.requiresBankName %}
                             {{ account.bank }}<br/>
                         {% endif %}
                         <p class="font-xsmall flush--ends">
@@ -69,7 +69,7 @@
                     </td>
                     <td class="width-quarter">
                         {% set account = transfer.accountTo %}
-                        {% if account.requiresBankNameAndSortCode %}
+                        {% if account.requiresBankName %}
                             {{ account.bank }}<br/>
                         {% endif %}
                         <p class="font-xsmall flush--ends">
@@ -83,7 +83,7 @@
                         £{{ transfer.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                         <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>

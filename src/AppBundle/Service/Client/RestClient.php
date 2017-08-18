@@ -189,6 +189,7 @@ class RestClient
      * @param string $expectedResponseType Entity class to deserialise response into
      *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed)
      *                                     or "Account[]" to deseialise into an array of entities
+     * @param array  $jmsGroups            deserialise_groups
      *
      * @return mixed $expectedResponseType type
      */
@@ -333,7 +334,7 @@ class RestClient
         }
 
         // forward X-Request-Id to the API calls
-        if (($request = $this->container->get('request')) && $request->headers->has('x-request-id')) {
+        if ($this->container->isScopeActive('request') && ($request = $this->container->get('request')) && $request->headers->has('x-request-id')) {
             $options['headers']['X-Request-ID'] = $request->headers->get('x-request-id');
         }
 

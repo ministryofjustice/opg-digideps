@@ -15,6 +15,13 @@ services:
         - { name: security.voter }
     # small performance boost
     public: false
+  app.document_voter:
+    class: AppBundle\Security\DocumentVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
 
 security:
     role_hierarchy:
@@ -79,7 +86,7 @@ security:
         # /admin accessible only from ADMIN, super users and AD users
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
         # client settings not available to PA users
-        - { path: ^/settings, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
+        - { path: ^/deputyship-details, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
         - { path: ^/user-account/, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
         - { path: ^/pa/team/add, roles: [ROLE_PA, ROLE_PA_ADMIN] }

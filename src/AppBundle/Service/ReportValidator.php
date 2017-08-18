@@ -11,6 +11,7 @@ use AppBundle\Controller\Report\ContactController;
 use AppBundle\Controller\Report\DebtController;
 use AppBundle\Controller\Report\DecisionController;
 use AppBundle\Controller\Report\DeputyExpenseController;
+use AppBundle\Controller\Report\DocumentController;
 use AppBundle\Controller\Report\GiftController;
 use AppBundle\Controller\Report\MoneyInController;
 use AppBundle\Controller\Report\MoneyInShortController;
@@ -46,6 +47,7 @@ class ReportValidator
         VisitsCareController::class     => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         PaFeeExpenseController::class   => [Report::TYPE_102, Report::TYPE_103],
         NoteController::class           => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
+        DocumentController::class           => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
     ];
 
     /**

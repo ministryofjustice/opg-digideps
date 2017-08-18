@@ -1,16 +1,15 @@
-# This file is auto-generated during the composer install
 parameters:
     locale: en
     secret: {{ getv "/frontend/secret" }}
     api_base_url: {{ getv "/frontend/api/url" }}
-    api_client_secret: {{ getv "/frontend/api/client/secret" }}
+    #api_client_secret: moved to env_parameters.php. Value taken from FRONTEND_API_CLIENT_SECRET
     non_admin_host: {{ getv "/frontend/nonadmin/host" }}
     admin_host: {{ getv "/frontend/admin/host" }}
-    env: {{ getv "/frontend/role" }}
+    #env:  moved to env_parameters.php. Value taken from FRONTEND_ROLE
     session_expire_seconds: 3900
     session_popup_show_after: 3600
     session_cookie_secure: {{ getv "/frontend/session/cookie/secure" }}
-    redis_dsn: '{{getv "/frontend/session/redis/dsn" }}'
+    #redis_dsn:  moved to env_parameters.php. Value taken from FRONTEND_SESSION_REDIS_DSN
     session_prefix: dd_session
     use_redis: true
     session_engine: redis
@@ -28,10 +27,24 @@ parameters:
     email_feedback_send:
         from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
         to_email: {{ getv "/frontend/email/feedback/to" }}
-    # check if used after the refactor
     smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" }}
     smtp_default_port: {{ getv "/frontend/smtp/default/port" }}
     smtp_default_user: {{ getv "/frontend/smtp/default/user" }}
     smtp_default_password: {{ getv "/frontend/smtp/default/password" }}
     smtp_secure_hostname: {{ getv "/frontend/smtp/secure/hostname" }}
     smtp_secure_port: {{ getv "/frontend/smtp/secure/port" }}
+    s3_bucket_name: {{ if exists "/frontend/s3/bucketname" }}{{ getv "/frontend/s3/bucketname" }}{{ else }}not_set{{ end }}
+    s3_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+  {{ if exists "/frontend/s3/fakes3" }}
+      endpoint: 'http://fakes3:4569'
+      validate: false
+      credentials:
+        key: 'YOUR_ACCESS_KEY_ID'
+        secret: 'YOUR_SECRET_ACCESS_KEY'
+  {{ else }}
+      validate: true
+  {{ end }}
+    file_scanner_url: {{ if exists "/frontend/filescanner/url" }}{{ getv "/frontend/filescanner/url" }}{{ else }}https://file-scanner-api:8443{{ end }}
+    file_scanner_sslverify: {{ if exists "/frontend/filescanner/sslverify" }}{{ getv "/frontend/filescanner/sslverify" }}{{ else }}true{{ end }}

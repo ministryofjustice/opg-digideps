@@ -1,0 +1,175 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-documents" %}
+{% set transOptions = {} %}
+{% set isNewPage = (filters.status == 'new') %}
+{% set isArchivedPage = (filters.status == 'archived') %}
+{% set baseRoute = 'admin_documents' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ 'page.supportTitle' | trans({'%count%': counts[filters.status ?: 'total']}) }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {# params #}
+    {% set filtersToPreserveInTabs = {
+        'q': filters.q,
+        'created_by_role': filters.created_by_role
+    } %}
+    {% set filtersToPreserveInPagination = {
+        'status': filters.status,
+        'q': filters.q,
+        'created_by_role': filters.created_by_role,
+    } %}
+    {% set filtersToPreserveAfterArchiving = filtersToPreserveInPagination %}
+
+    {# search form #}
+    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search push--ends">
+        <fieldset>
+            <legend class="visuallyhidden">Search</legend>
+            <div class="grid-row push-half--bottom">
+                <div class="column-one-third">
+                    <label for="search" class="form-label text">Client, deputy or case number</label>
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus form-control form-control--full">
+                    <input type="hidden" name="status" value="{{ filters.status }}" />
+                </div>
+                <div class="column-one-third">
+                    <label for="created_by_role" class="form-label">Role</label>
+                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control width-two-thirds">
+                        <option value="">All</option>
+                        {% for value, label in {'ROLE_PA': 'Public authority', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
+                            <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <input id="search_submit" class="button flush--bottom behat-link-search" type="submit" value="Search">
+            {% if filters.q or filters.created_by_role %}
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="button-link">Clear filters</a>
+            {% endif %}
+        </fieldset>
+    </form>
+
+    {# tabs #}
+
+    <div class="tabs push--ends">
+        <div class="tabs-nav">
+            <ul class="tabs-list" role="tablist">
+                <li class="tab-item clients {% if isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0" aria-selected="true" class="behat-link-tab-new">
+                        <span class="data-item bold-large">{{ counts.new }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.new.label' | trans }}</span>
+                    </a>
+                </li>
+                <li class="tab-item unstarted {% if not isNewPage %}active{% endif %}" role="presentation">
+                    <a href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0" class="behat-link-tab-archived">
+                        <span class="data-item bold-large">{{ counts.archived }}</span>
+                        <span class="data-item bold-xsmall">{{ 'page.tabs.archived.label' | trans }}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {# table with records #}
+    {% if  records | length %}
+        <table class="check-your-answers push--bottom">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Deputy</th>
+                    <th>Case number</th>
+                    <th>Documents</th>
+                    <th>Date</th>
+                    {% if isArchivedPage %}
+                        <th>User</th>
+                    {% endif %}
+                    <th>
+                        <span class="visually-hidden">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reportSubmission in records %}
+                    {% set report = reportSubmission.report %}
+                    {# Period: report.period #}
+                    {# Type: report.type #}
+                    <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
+                        <td class="width-fifth">
+                            {{ report.client.fullname }}
+                        </td>
+                        <td class="width-fifth">
+                            {% if reportSubmission.createdBy %}
+                                {{ reportSubmission.createdBy.fullname }}<br>
+                                ({{ reportSubmission.createdBy.roleFullName }})
+                            {% endif %}
+                        </td>
+                        <td class="width-sixth">
+                            {{ report.client.caseNumber }}
+                        </td>
+                        <td>
+                            <details class="push--bottom">
+                                <summary>
+                                    <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
+                                </summary>
+                                <div class="panel panel-border-narrow">
+                                    <ul class="list list-group" id="docs">
+                                        {% for document in reportSubmission.documents %}
+                                            <li>{{ document.fileName }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </details>
+                        </td>
+                        <td class="width-tenth">
+                            {% set submissionDate = reportSubmission.createdOn %}
+                            {# shows "Today" or "d/m/Y"e #}
+                            {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
+                                Today
+                            {% else %}
+                                {{ submissionDate | date('d/m/Y') }}
+                            {% endif %}
+                            <br/>
+                            {# show hour and time #}
+                            {{ submissionDate | date('g:ia') }}
+                        </td>
+                        {% if isArchivedPage %}
+                            <td>
+                                <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                            </td>
+                        {% endif %}
+                        <td class="width-tenth change-answer">
+                            <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
+                            {% if isNewPage %}
+                                <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% include 'AppBundle:Components:paginator.html.twig' with {
+            currentOffset: filters.offset,
+            recordsPerPage: filters.limit,
+            totalRecords: counts[filters.status ?: 'total'],
+            routeName: 'admin_documents',
+            routeParams: filtersToPreserveInPagination,
+            messages: {
+                singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
+                multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'
+            }
+        } %}
+
+    {% else %}
+        <p>No documents found</p>
+    {% endif %}
+
+{% endblock %}

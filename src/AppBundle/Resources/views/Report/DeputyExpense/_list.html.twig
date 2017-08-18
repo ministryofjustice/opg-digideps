@@ -61,7 +61,7 @@
                         £{{ expense.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('deputy_expenses_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('deputy_expenses_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                         <a href="{{ path('deputy_expenses_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>

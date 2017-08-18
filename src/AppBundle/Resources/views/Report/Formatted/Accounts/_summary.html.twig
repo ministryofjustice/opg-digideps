@@ -1,14 +1,16 @@
-<div id="account-summary" class="summary-container">
-    <h3 class="heading">Summary</h3>
-    <div>
-        <h4 class="heading">Accounts summary</h4>
+<h3>Summary</h3>
+<div id="account-summary" class="subsection">
+    <div class="box box-heading flush--bottom">
+        <h3 class="flush--bottom">Accounts summary</h3>
+    </div>
+    <div class="box box-white push-half--bottom">
         <table class="money">
             <thead>
                 <tr>
                     <th scope="col">&nbsp;</th>
-                    <th class="grey" scope="col">Opening balance</th>
-                    <th class="" scope="col">Change</th>
-                    <th class="grey " scope="col">Closing balance</th>
+                    <th class="grey numeric" scope="col">Opening balance</th>
+                    <th class="numeric" scope="col">Change</th>
+                    <th class="grey numeric" scope="col">Closing balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,18 +18,18 @@
             {% for account in report.bankAccounts %}
                 <tr>
                     <td>
-                        <div class="account-name">
+                        <div class="review-account-name">
                             {{ account.bank }} {{ account.accountTypeText }}
                         </div>
-                        <div class="account-number">****{{ account.accountNumber }}
-                            {% if account.requiresBankNameAndSortCode and account.sortCode %}
+                        <div class="review-account-number">****{{ account.accountNumber }}
+                            {% if account.requiresSortCode and account.sortCode %}
                                , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
                             {% if account.isJointAccount =='yes' %}
-                                <span class="account-closed">JOINT ACCOUNT</span>
+                                <br><span class="review-account-closed">JOINT ACCOUNT</span>
                             {% endif %}
                             {% if account.isClosed %}
-                                <span class="account-closed">ACCOUNT CLOSED</span>
+                                <br><span class="review-account-closed">ACCOUNT CLOSED</span>
                             {% endif %}
                         </div>
                     </td>
@@ -40,14 +42,16 @@
                     <td>&nbsp;</td>
                     <td class="numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</span></td>
                 </tr>
             </tbody>
         </table>
     </div>
     {% if report.type == '102'  %}
-    <div>
-        <h4 class="heading">Balance after income and expenditure</h4>
+    <div class="box box-heading flush-half--bottom">
+        <h3 class="flush--bottom">Balance after income and expenditure</h3>
+    </div>
+    <div class="box box-white">
         <table class="money">
             <tbody>
                 <tr>
@@ -77,7 +81,7 @@
                 </tr>
                 <tr class="totals">
                     <td>&nbsp;</td>
-                    <td class="numeric reverse">&pound;{{ report.calculatedBalance | money_format}}</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
                 </tr>
             </tbody>
         </table>

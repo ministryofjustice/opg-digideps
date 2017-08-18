@@ -1,34 +1,57 @@
 {% extends 'AppBundle:Email:_template.html.twig' %}
 
-{% block emailHTMLHeaderTitle %}Deputy report service - Annual deputy report submitted{% endblock %}
+{% set translationDomain = "email-report-submission-confirm" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%deputyFirstName%': deputyFirstName,
+    '%startDate%': submittedReport.startDate | date("d/m/Y"),
+    '%endDate%': submittedReport.endDate | date("d/m/Y"),
+    '%homepageUrl%': homepageUrl
+} %}
+
+{% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans }}{% endblock %}
 
 {% block content %}
 
-    <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Dear {{ deputyFirstName }}</p>
-
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-        <strong>Thank you for submitting your annual deputy report</strong> for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.
+    <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.dear') | trans(transOptions) }}
     </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’re currently reviewing it, and we'll contact you when we've finished.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.thanksForSubmitting') | trans(transOptions) | raw }}
+    </p>
 
-    {% if app.user.isDeputyPa() %}
-        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">You can view your submitted reports on your client profile page.</p>
-    {% else %}
-        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>Download a pdf of your report</strong></p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.currentlyReviewing') | trans }}
+    </p>
 
-        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">To view and download a copy of the report for your records, <a style="word-wrap: break-word;" href="{{ homepageUrl }}">sign back into the deputy report service</a>. Go to the ‘Your reports' homepage, where you’ll find a link to download a pdf of your report.
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.reportAccess') | trans | raw  }}
+    </p>
+
+    {% if recipientRole == 'default' %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('default.downloadInstructions') | trans(transOptions) | raw }}
         </p>
     {% endif %}
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;"><strong>What happens next</strong></p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.whatNext') | trans }}</strong>
+    </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">If you like, you can start working on {% if app.user.isDeputyPa() %}the{% else %}your{% endif %} next annual deputy report (for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}) right away. </p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.startNextReport') | trans(transOptions) }}
+    </p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">Sign in to <a style="word-wrap: break-word;" href="{{ homepageUrl }}">complete-deputy-report.service.gov.uk</a> to keep track of your deputyship decisions and spending throughout the year.</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.signInToKeepTrack') | trans(transOptions) | raw  }}
+    </p>
 
-    {% if app.user.isDeputyPa() != true %}
-        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">We’ll send you a reminder about your next report nearer the due date (your due date is the anniversary of your court order).</p>
+    {% if recipientRole == 'default' %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('default.reportReminder') | trans(transOptions) | raw }}
+        </p>
     {% endif %}
 
 {% endblock %}

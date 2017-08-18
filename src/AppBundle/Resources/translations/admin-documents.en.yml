@@ -1,0 +1,11 @@
+page:
+  htmlTitle: Administration - Documents
+  pageTitle: Admin
+  supportTitle: Submitted reports and supporting documents
+  tabs:
+    new.label: "New"
+    archived.label: "Archived"
+  table:
+    rows:
+      documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
+

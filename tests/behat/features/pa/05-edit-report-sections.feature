@@ -130,7 +130,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_hasDebts_1 | no |
 
-  Scenario: PA add account
+  Scenario: PA add current account
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-bank_accounts, start"
@@ -138,6 +138,10 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | account_accountType_0 | current |
     # add account n.1 (current)
+    And I should see an "input#account_bank" element
+    And I should see an "input#account_sortCode_sort_code_part_1" element
+    And I should see an "input#account_sortCode_sort_code_part_2" element
+    And I should see an "input#account_sortCode_sort_code_part_3" element
     And the step with the following values CAN be submitted:
       | account_bank                      | HSBC - main account |
       | account_accountNumber             | 01ca                |
@@ -150,6 +154,58 @@ Feature: PA user edits report sections
       | account_closingBalance | 100.40 |
     # add another: no
     And I choose "no" when asked for adding another record
+
+  Scenario: PA add postoffice account (no sort code, no bank name)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts, add"
+    # step 1
+    And the step with the following values CAN be submitted:
+      | account_accountType_0 | postoffice |
+    # add account n.1 (current)
+    And the step with the following values CAN be submitted:
+      | account_accountNumber             | 2222                |
+      | account_isJointAccount_1          | no                  |
+    And I should not see an "input#account_bank" element
+    And I should not see an "input#account_sortCode_sort_code_part_1" element
+    And I should not see an "input#account_sortCode_sort_code_part_2" element
+    And I should not see an "input#account_sortCode_sort_code_part_3" element
+    And the step with the following values CAN be submitted:
+      | account_openingBalance | 100.40 |
+      | account_closingBalance | 100.40 |
+    # add another: no
+    And I choose "no" when asked for adding another record
+
+  Scenario: PA add no sortcode account (still requires bank name)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts, add"
+    # step 1
+    And the step with the following values CAN be submitted:
+      | account_accountType_0 | other_no_sortcode |
+    # add account n.1 (current)
+    And I should see an "input#account_bank" element
+    And I should not see an "input#account_sortCode_sort_code_part_1" element
+    And I should not see an "input#account_sortCode_sort_code_part_2" element
+    And I should not see an "input#account_sortCode_sort_code_part_3" element
+    And the step with the following values CAN be submitted:
+      | account_bank                      | Bank of Jack        |
+      | account_accountNumber             | 3333                |
+      | account_isJointAccount_1          | no                  |
+    And the step with the following values CAN be submitted:
+      | account_openingBalance | 100.40 |
+      | account_closingBalance | 100.40 |
+    # add another: no
+    And I choose "no" when asked for adding another record
+
+  Scenario: PA deletes bank account
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-bank_accounts"
+    And I click on "delete" in the "account-2222" region
+    Then I should see "Bank account deleted"
+    When I click on "delete" in the "account-3333" region
+    Then I should see "Bank account deleted"
 
   Scenario: PA money in 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -181,12 +237,88 @@ Feature: PA user edits report sections
       # add another: no
     And I choose "no" when asked for adding another record
 
-  Scenario: PA Report should be submittable
+  Scenario: PA adds documents to 102
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    # Check report is not submittable until documents section complete
+    And the report should not be submittable
+    And I click on "edit-documents, start"
+    # chose "yes documents"
+    Then the URL should match "report/\d+/documents"
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_0 | yes |
+    # check empty file error
+    When I attach the file "empty-file.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
+    # check not a pdf file error
+    When I attach the file "not-a-pdf.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
+
+    # check vba-eicar file error TO ENABLE ONCE FILE SCANNER ENABLED
+    #When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
+    #And I click on "attach-file"
+    #Then the following fields should have an error:
+    #  | report_document_upload_file   |
+
+    When I attach the file "good.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the form should be valid
+    And each text should be present in the corresponding region:
+      | good.pdf        | document-list |
+    # check duplicate file error
+    When I attach the file "good.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
+
+
+  Scenario: PA deletes document from 102
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "edit-documents"
+    # chose "yes documents"
+    Then the URL should match "report/\d+/documents/summary"
+    And I save the current URL as "document-summary"
+    And I click on "delete-documents-button" in the "document-list" region
+    Then the URL should match "/documents/\d+/delete"
+    # test cancel button on confirmation page
+    When I click on "confirm-cancel"
+    Then I go to the URL previously saved as "document-summary"
+    And I click on "delete-documents-button" in the "document-list" region
+    Then the response status code should be 200
+    # delete this time
+    And I click on "document-delete"
+    Then the form should be valid
+    And the URL should match "/report/\d+/documents/step/1"
+    # Check document removed
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_0 | no |
+
+  Scenario: PA 102 Report should be submittable
     Given I save the application status into "pa-report-balance-before"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     Then the report should be submittable
     And I save the application status into "pa-report-completed"
+
+  # 103 Report
+  Scenario: PA attaches no documents to 103 (to enable submission)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000011" region
+    Then the report should not be submittable
+    And I click on "edit-documents, start"
+  # chose "no documents"
+    Then the URL should match "report/\d+/documents/step/1"
+    Given the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_1 | no |
+  # check no documents in summary page
+    Then the URL should match "report/\d+/documents/summary"
+    And I should not see the region "document-list"
 
   Scenario: PA money in 103
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

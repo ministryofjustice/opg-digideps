@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Email:_template.html.twig' %}
+
+{% set translationDomain = "email-ndr-submission-confirm" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%deputyFirstName%': deputyFirstName,
+    '%homepageUrl%': homepageUrl
+} %}
+
+{% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans }}{% endblock %}
+
+{% block content %}
+
+    <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.dear') | trans(transOptions) }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.thanksForSubmitting') | trans }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.currentlyReviewing') | trans }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.reportAccess') | trans }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.downloadInstructions') | trans(transOptions) | raw }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.whatNext') | trans }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.nowThatYoureDone') | trans }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.sendYouAReminder') | trans }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.useServiceYearRound') | trans }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.makeAStart') | trans(transOptions) | raw }}
+    </p>
+
+{% endblock %}

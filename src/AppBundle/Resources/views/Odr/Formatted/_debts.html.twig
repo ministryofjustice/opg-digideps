@@ -1,42 +1,54 @@
+{% if odr.hasDebts %}
 {% set translationDomain = "odr-debts" %}
 {% trans_default_domain translationDomain %}
 
-{% if odr.hasDebts  %}
-{% set debts = odr.debts %}
 <div class="section" id="debts-section">
     <h2 class="section-heading">Client's debts</h2>
-    <div class="dont-break">
+
+    {% if odr.hasDebts == 'no' %}
         <div class="box">
-            <div class="checkboxes horizontal">
-                <div class="question">Does the client have any debts ?</div>
-                <table class="yesno" style="width: auto">
+            <h3 class="label question bold">Does the client have any debts?</h3>
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">X</td>
+                    <td class="label">My client has no debts</td>
+                </tr>
+            </table>
+        </div>
+    {% else %}
+        {% set debts = odr.debts %}
+        <div class="dont-break">
+            <div class="box">
+                <table class="labelvalue">
+                    {% for d in debts %}
+                        <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
+                            <td class="label noborder">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
+                            <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
+                        </tr>
+                        {% if d.hasMoreDetails %}
+                            <tr>
+                                <td colspan="2" class="hard noborder">
+                                    <div class="labelvalue soft-half--top">
+                                        <div class="label">More details about the other debts</div>
+                                        <div class="value">{{ d.moreDetails | nl2br }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue">
                     <tr>
-                        <td class="checkbox"
-                            data-checkbox="report-has-debts--yes">{% if odr.hasDebts == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox"
-                            data-checkbox="report-has-debts--no">{% if odr.hasDebts == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label bold">Debts Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ odr.debtsTotalValue | money_format }}</td>
                     </tr>
                 </table>
-                {% if odr.hasDebts == 'yes' %}
-                    <ul class="transactions">
-                        {% for d in debts %}
-                            <li class="transaction {% if d.amount == 0 %}{{ d.amount }} disable{% endif %}">
-                                <div class="label">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</div>
-                                <div class="value">&pound;{{ d.amount | money_format }}</div>
-                                {% if d.hasMoreDetails %}
-                                    <div class="description">
-                                        {{ d.moreDetails | nl2br }}
-                                    </div>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
             </div>
         </div>
-    </div>
+    {% endif %}
 </div>
 {% endif %}
-

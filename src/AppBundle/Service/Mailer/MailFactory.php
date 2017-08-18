@@ -174,29 +174,6 @@ class MailFactory
     }
 
     /**
-     * @param EntityDir\User          $user
-     * @param EntityDir\Report\Report $report
-     * @param $pdfBinaryContent
-     *
-     * @return ModelDir\Email
-     */
-    public function createReportEmail(EntityDir\User $user, EntityDir\Report\Report $report, $pdfBinaryContent)
-    {
-        $email = new ModelDir\Email();
-
-        $email
-            ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
-            ->setFromName($this->translate('reportSubmission.fromName'))
-            ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
-            ->setToName($this->translate('reportSubmission.toName'))
-            ->setSubject($this->translate('reportSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment($this->getReportAttachmentName($report), 'application/pdf', $pdfBinaryContent)]);
-
-        return $email;
-    }
-
-    /**
      * Get user area depending on the role
      *
      * @param  EntityDir\User $user
@@ -234,7 +211,7 @@ class MailFactory
             ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
             ->setToName($this->translate('odrSubmission.toName'))
             ->setSubject($this->translate('odrSubmission.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission.html.twig', $viewParams))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
             ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
 
         return $email;
@@ -335,8 +312,8 @@ class MailFactory
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
             ->setSubject($this->translate('odrSubmissionConfirmation.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:odr-submission-confirm.html.twig', $viewParams))
-            ->setBodyText($this->templating->render('AppBundle:Email:odr-submission-confirm.text.twig', $viewParams));
+            ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission-confirm.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:ndr-submission-confirm.text.twig', $viewParams));
 
         return $email;
     }

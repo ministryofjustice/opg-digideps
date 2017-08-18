@@ -28,7 +28,6 @@ reportSectionsToComplete: "Report sections to complete"
 options:
   submitReport: "Submit report"
   viewReport: "View report"
-  uploadDocumentation: "Upload documentation"
 
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
@@ -172,6 +171,15 @@ other_info:
     start: "Start"
     label:
       done: "Finished"
+
+heading.caseDocuments: "Case documents"
+documents:
+    subSectionTitle: "Supporting documents"
+    subSectionDescription: "Provide documents to support your report, for example bank statements"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
 
 report_submit:
     subSectionTitle: "Submit report"

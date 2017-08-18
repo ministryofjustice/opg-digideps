@@ -133,28 +133,29 @@ Feature: PA team
   Scenario: PA (named) logs in and edit users
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts"
+    Then I should not see "edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
     # edit PA named
-    When I click on "edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     Then the following fields should have the corresponding values:
-      | team_member_account_firstname | John Named                          |
-      | team_member_account_lastname  | Green                               |
-      | team_member_account_email     | behat-pa1@publicguardian.gsi.gov.uk |
-      | team_member_account_jobTitle  | Solicitor                           |
-      | team_member_account_phoneMain | 10000000001                         |
+      | team_member_account_firstname | Robert Team member                              |
+      | team_member_account_lastname  | Black                                           |
+      | team_member_account_email     | behat-pa1-team-member@publicguardian.gsi.gov.uk |
+      | team_member_account_jobTitle  | Solicitor helper                                |
+      | team_member_account_phoneMain | 10000000003                                     |
     And I should not see a "team_member_account_roleName_0" element
     And I should not see a "team_member_account_roleName_1" element
     When I fill in the following:
-      | team_member_account_firstname | Johnny Named                        |
-      | team_member_account_lastname  | Greens                              |
-      | team_member_account_email     | behat-pa1@publicguardian.gsi.gov.uk |
-      | team_member_account_jobTitle  | Senior Solicitor                    |
-      | team_member_account_phoneMain | +4410000000001                      |
+      | team_member_account_firstname | Bobby Team member                               |
+      | team_member_account_lastname  | BlackAndBlue                                    |
+      | team_member_account_email     | behat-pa1-team-member@publicguardian.gsi.gov.uk |
+      | team_member_account_jobTitle  | Helper solicitor                                |
+      | team_member_account_phoneMain | +4410000000003                                  |
     And I press "team_member_account_save"
     Then the form should be valid
-    And I should see "Johnny Named" in the "team-user-behat-pa1publicguardiangsigovuk" region
-    And I should see "Greens" in the "team-user-behat-pa1publicguardiangsigovuk" region
-    And I should see "Senior Solicitor" in the "team-user-behat-pa1publicguardiangsigovuk" region
-    And I should see "+4410000000001" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    And I should see "Bobby Team member" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    And I should see "BlackAndBlue" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    And I should see "Helper solicitor" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    And I should see "+4410000000003" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     # PA named edits Admin, downgrade role into team member
     Given I save the application status into "pa-team-before-downgrading-admin"
     And I should see "Administrator" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
@@ -173,8 +174,8 @@ Feature: PA team
   Scenario: PA admin logs in and edit users
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, user-accounts"
-    Then I should see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
-    Then I should see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
+    Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    And I should see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
 
   Scenario: PA (named) deputy adds, then removes a PA_ADMIN user

@@ -1,0 +1,51 @@
+default:
+    htmlHeaderTitle: Deputy report service - Annual deputy report submitted
+    dear: Dear %deputyFirstName%
+    thanksForSubmitting: |
+        <strong>Thank you for submitting your annual deputy report</strong> for
+        %startDate% to %endDate%.
+    currentlyReviewing: We're currently reviewing it, and we'll contact you when we've finished.
+    reportAccess: <strong>Download a pdf of your report</strong>
+    downloadInstructions: |
+        To view and download a copy of the report for your records, <a style="word-wrap:
+        break-word;" href="%homepageUrl%">sign back into the deputy report service</a>. Go to
+        the 'Your reports' homepage, where you'll find a link to download a pdf of your report.
+    whatNext: What happens next
+    startNextReport: |
+        If you like, you can start working on your next annual deputy report (for %startDate%
+        to %endDate%) right away.
+    signInToKeepTrack: |
+        Sign in to <a style="word-wrap: break-word;"
+        href="%homepageUrl%">complete-deputy-report.service.gov.uk</a> to keep track
+        of your deputyship decisions and spending throughout the year.
+    reportReminder: |
+        We'll send you a reminder about your next report nearer the due date (your due date
+        is the anniversary of your court order).
+
+public-authority:
+    thanksForSubmitting: |
+        <strong>Thank you for submitting the annual deputy report</strong> for
+        %startDate% to %endDate%.
+    reportAccess: You can view your submitted reports on your client profile page.
+    startNextReport: |
+        If you like, you can start working on the next annual deputy report (for %startDate%
+        to %endDate%) right away.
+
+public-authority-admin:
+    thanksForSubmitting: |
+        <strong>Thank you for submitting the annual deputy report</strong> for
+        %startDate% to %endDate%.
+    reportAccess: You can view your submitted reports on your client profile page.
+    startNextReport: |
+        If you like, you can start working on the next annual deputy report (for %startDate%
+        to %endDate%) right away.
+
+public-authority-team-member:
+    thanksForSubmitting: |
+        <strong>Thank you for submitting the annual deputy report</strong> for
+        %startDate% to %endDate%.
+    reportAccess: You can view your submitted reports on your client profile page.
+    startNextReport: |
+        If you like, you can start working on the next annual deputy report (for %startDate%
+        to %endDate%) right away.
+

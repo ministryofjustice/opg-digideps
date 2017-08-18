@@ -39,12 +39,12 @@ Feature: PA cannot access other's PA's reports and clients
 
   Scenario: PA user cannot edit client
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then the URL "/settings" should be forbidden
-    And the URL "/user-account/client-show" should be forbidden
-    And the URL "/user-account/client-edit" should be forbidden
-    And the URL "/user-account/user-show" should be forbidden
-    And the URL "/user-account/user-edit" should be forbidden
-    And the URL "/user-account/password-edit" should be forbidden
+    Then the URL "/deputyship-details" should be forbidden
+    And the URL "/deputyship-details/your-client" should be forbidden
+    And the URL "/deputyship-details/your-client/edit" should be forbidden
+    And the URL "/deputyship-details/your-details" should be forbidden
+    And the URL "/deputyship-details/your-details/edit" should be forbidden
+    And the URL "/deputyship-details/your-details/change-password" should be forbidden
 
   Scenario: Submitted reports cannot be viewed (overview page) or edited
     # load "pre-submission" status and save links
@@ -61,3 +61,28 @@ Feature: PA cannot access other's PA's reports and clients
     Then the response status code should be 500
     When I go to the URL previously saved as "client-1000014-report-completed"
     Then the response status code should be 500
+
+  Scenario: PA_ADMIN logs in, edits own account and removes admin privilege should be logged out
+    Given I load the application status from "team-users-complete"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    And I fill in the following:
+      | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    And the response status code should be 200
+    And I go to "/logout"
+
+  Scenario: PA_ADMIN logs in, edits own account keeps admin privilege should remain logged in
+    Given I load the application status from "team-users-complete"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, user-accounts"
+    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    And I fill in the following:
+      | team_member_account_firstname  | edit                                             |
+    And I press "team_member_account_save"
+    Then the form should be valid
+    And the response status code should be 200
+    And I go to "/pa/team"
+

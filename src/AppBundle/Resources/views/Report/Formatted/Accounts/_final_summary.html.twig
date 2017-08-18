@@ -1,38 +1,42 @@
+<h2 class="section-heading">Financial summary</h2>
 <div id="closing-summary" class="section">
-    <h3>Totals summarised</h3>
-    <div class="transaction">
-        <div class="label">Opening balance</div>
-        <div class="value">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</div>
-    </div>
-    <div class="transaction">
-        <div class="label">Total for all money in:</div>
-        <div class="value">&pound;{{ report.moneyInTotal | money_format}}</div>
-    </div>
-    <div class="transaction">
-        <div class="label">Money out:</div>
-        <div class="value">&pound;{{ report.moneyOutTotal | money_format}}</div>
-    </div>
-    <div class="transaction">
-        {% if report.has106flag %}
-            <div class="label">Deputy fees and expenses:</div>
-            <div class="value">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</div>
-        {% else %}
-            <div class="label">Deputy expenses:</div>
-            <div class="value">&pound;{{ report.getExpensesTotal | money_format}}</div>
-        {% endif %}
-    </div>
-    <div class="transaction">
-        <div class="label">Gifts:</div>
-        <div class="value">&pound;{{ report.getGiftsTotalValue | money_format}}</div>
+    <div class="box box-heading flush-half--bottom">
+        <h3 class="flush--bottom">Totals summarised</h3>
     </div>
 
-    {% if report.type == '103'  %}
-        <div class="transaction"></div>
-    {% else %}
-        <div class="transaction total">
-            <div class="label">Balance after income and expenditure:</div>
-            <div class="value">&pound;{{ report.calculatedBalance | money_format}}</div>
-        </div>
-    {% endif %}
-
+    <div class="box box-white">
+        <table class="money">
+            <tr>
+                <td>Opening balance</td>
+                <td class="grey numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
+            </tr>
+            <tr>
+                <td>Total for all money in:</td>
+                <td class="grey numeric">&pound;{{ report.moneyInTotal | money_format}}</td>
+            </tr>
+            <tr>
+                <td>Money out:</td>
+                <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
+            </tr>
+            <tr>
+                {% if report.has106flag %}
+                    <td>Deputy fees and expenses:</td>
+                    <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
+                {% else %}
+                    <td>Deputy expenses:</td>
+                    <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Gifts:</td>
+                <td class="grey numeric">&pound;{{ report.getGiftsTotalValue | money_format}}</td>
+            </tr>
+            {% if report.type != '103'  %}
+                <tr class="totals">
+                    <td><span class="bold">Balance after income and expenditure:</span></td>
+                    <td class="reverse numeric"><span class="bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
 </div>

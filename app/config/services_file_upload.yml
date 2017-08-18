@@ -1,0 +1,22 @@
+services:
+  s3_client:
+    class: Aws\S3\S3Client
+    arguments: ["%s3_client_params%"]
+  s3_storage:
+    class:  AppBundle\Service\File\Storage\S3Storage
+    arguments: [ "@s3_client", "%s3_bucket_name%" ]
+  file_checker_pdf:
+    class: AppBundle\Service\File\Checker\PdfChecker
+  file_checker_clam_av:
+    class: AppBundle\Service\File\Checker\ClamAVChecker
+    arguments: [ "@guzzle_file_scanner_client", "@logger" ]
+
+  file_uploader:
+    class: AppBundle\Service\File\FileUploader
+    arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+  file_checker_factory:
+    class: AppBundle\Service\File\Checker\FileCheckerFactory
+    arguments: [ "@service_container", 'uploadedFile']
+  file_pdf:
+    class: AppBundle\Service\File\Types\Pdf
+    arguments: [ "@file_checker_clam_av", "@file_checker_pdf", "@logger" ]

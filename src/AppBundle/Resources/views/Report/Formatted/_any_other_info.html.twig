@@ -3,27 +3,22 @@
         <h2 class="section-heading">Any other information</h2>
 
         <div class="dont-break">
-            <h3 class="fieldset-outer-title">Further information</h3>
             <div class="box">
-                <div class="checkboxes horizontal">
-                    <div class="question">{{ title }}</div>
+                <h3 class="label question bold">{{ title }}</h3>
 
-                    <table class="yesno">
-                        <tr>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
-                            <td class="checkbox"
-                                data-checkbox="">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
-                        </tr>
-                    </table>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">Yes</td>
+                        <td class="value checkbox">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">No</td>
+                    </tr>
+                </table>
 
-                </div>
                 {% if report.actionMoreInfo == 'yes' %}
-                    <div class="form-group form-group-vertical">
-                        <div class="question">More details</div>
-                        <div class="value textarea">{{ report.actionMoreInfoDetails | nl2br }}</div>
+                    <div class="labelvalue">
+                        <div class="label question flush--bottom">More details</div>
+                        <div class="value">{{ report.actionMoreInfoDetails | nl2br }}</div>
                     </div>
                 {% endif %}
             </div>

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/pa/team")
+ * @Route("/pa/settings/user-accounts")
  */
 class TeamController extends AbstractController
 {
@@ -88,6 +88,10 @@ class TeamController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit-user', $user, 'Access denied');
 
+        if ($this->getUser()->getId() == $user->getId()) {
+            throw $this->createNotFoundException('User cannot edit their own account at this URL');
+        }
+
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
 
         $form = $this->createForm(new FormDir\Pa\TeamMemberAccountType($team, $this->getUser(), $user), $user);
@@ -99,8 +103,16 @@ class TeamController extends AbstractController
 
             try {
                 $this->getRestClient()->put('user/' . $id, $user, ['pa_team_add'], 'User');
-                $request->getSession()->getFlashBag()->add('notice', ' The user has been edited');
-                return $this->redirectToRoute('pa_team');
+
+                if ($id == $this->getUser()->getId() && ($user->getRoles() != $this->getUser()->getRoles())) {
+                    $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
+                    $redirectRoute = 'logout';
+                } else {
+                    $request->getSession()->getFlashBag()->add('notice', 'The user has been edited');
+                    $redirectRoute = 'pa_team';
+                }
+
+                return $this->redirectToRoute($redirectRoute);
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:

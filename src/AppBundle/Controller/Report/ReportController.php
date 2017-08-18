@@ -21,6 +21,8 @@ class ReportController extends AbstractController
      * @var array
      */
     private static $reportGroupsAll = [
+        'report',
+        'client',
         'account',
         'expenses',
         'fee',
@@ -47,6 +49,9 @@ class ReportController extends AbstractController
         'moneyTransactionsShortOut',
         'status',
         'report-submitted-by',
+        'wish-to-provide-documentation',
+        'report-documents',
+        'documents'
     ];
 
     /**
@@ -57,7 +62,7 @@ class ReportController extends AbstractController
      */
     public function indexAction(Request $request, $type)
     {
-        $user = $this->getUserWithData(['user', 'client', 'report']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports']);
 
         // NDR: redirect to ODR index
         if ($user->isOdrEnabled()) {
@@ -124,7 +129,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'client-reports']);
 
         $existingReports = $this->getReportsIndexedById($client);
 
@@ -136,7 +141,7 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType('report'),$report, [
+        $form = $this->createForm(new FormDir\Report\ReportType('report'), $report, [
                 'translation_domain' => 'registration',
                 'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
         ]);
@@ -159,7 +164,7 @@ class ReportController extends AbstractController
     {
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports']);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
@@ -190,21 +195,27 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission', [], 'validators'));
         }
 
-        $user = $this->getUserWithData(['user', 'client']);
+        $user = $this->getUserWithData(['user-clients', 'client']);
         $clients = $user->getClients();
         $client = $clients[0];
 
         $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
 
+            // store PDF as a document
             $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
-            $reportEmail = $this->getMailFactory()->createReportEmail($this->getUser(), $report, $pdfBinaryContent);
-            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+            $fileUploader = $this->get('file_uploader');
+            $fileUploader->uploadFile(
+                $report->getId(),
+                $pdfBinaryContent,
+                $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
+                true
+            );
 
+            // store report and get new YEAR report
+            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
             $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
 
             //send confirmation email

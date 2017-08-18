@@ -1,16 +1,13 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 <div class="section" id="deputy-client-information-section">
     <h2 class="section-heading">Deputy and client information</h2>
-    <div class="box" id="case-number">
-        <dl class="labelvalue inline">
-            <dt class="label">Case number</dt>
-            <dd class="value" id="caseNumber">{{ client.getCaseNumber }}</dd>
-        </dl>
-    </div>
+    {{ macros.caseNumber(client.getCaseNumber) }}
 
     {% if adLoggedAsDeputy %}
         <div class="box">
-            <dl class="labelvalue cleared">
-                <dt class="label">Assisted Digital</dt>
+            <dl class="labelvalue">
+                <dt class="label">Assisted digital</dt>
                 <dd class="value">
                     {{ app.session.get('_adFirstname') }}
                     {{ app.session.get('_adLastname') }}
@@ -19,73 +16,8 @@
         </div>
     {% endif %}
 
-    <div class="box">
-        <div id="deputy-details-subsection" class="half-width first">
-            <h3>Deputy details</h3>
+    <p>{{ adLoggedAsDeputy}}</p>
 
-            <dl class="labelvalue">
-
-                <dt class="label">First names</dt>
-                <dd class="value">{{ app.user.firstname }}</dd>
-
-                <dt class="label">Last name</dt>
-                <dd class="value">{{ app.user.lastname }}</dd>
-
-                <dt class="label">Address</dt>
-                <dd class="value textarea address-value">
-                    {% if app.user.isDeputyPa %}
-                        {{ team.address1 }}<br/>
-                        {{ team.address2 }}<br/>
-                        {{ team.address3 }}<br/>
-                        {{ team.addressPostcode }}
-                    {% else %}
-                        {{ app.user.address1 }}<br/>
-                        {{ app.user.address2 }}<br/>
-                        {{ app.user.address3 }}<br/>
-                        {{ app.user.addressPostcode }}
-                    {% endif %}
-                </dd>
-
-                <dt class="label">Telephone number</dt>
-                <dd class="value">
-                    {{ app.user.phoneMain }}
-                    {% if (app.user.phoneAlternative is defined) %}
-                        <br/>{{ app.user.phoneAlternative }}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
-        <div id="client-details-subsection" class="half-width">
-            <h3>Client details</h3>
-
-            <dl class="labelvalue">
-                <dt class="label">First names</dt>
-                <dd class="value">{{ client.firstname }}</dd>
-
-                <dt class="label">Last name</dt>
-                <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
-
-                <dt class="label">Address</dt>
-                <dd class="value textarea address-value">
-                    {{ client.address }}<br/>
-                    {{ client.address2 }}<br/>
-                    {{ client.county }}<br/>
-                    {{ client.postcode }}
-                </dd>
-
-                <dt class="label">Telephone number</dt>
-                <dd class="value">{{ client.phone }}</dd>
-            </dl>
-        </div>
-
-        {% if not adLoggedAsDeputy %}
-        <dl class="labelvalue cleared">
-            <dt class="label">Email (optional)</dt>
-            <dd class="value">{{ app.user.email }}</dd>
-        </dl>
-        {% endif %}
-
-    </div>
-
+    {{ macros.deputyClientInfo(true,app.user,client,team,adLoggedAsDeputy) }}
 
 </div>

@@ -450,6 +450,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $request->headers->set('x-request-id', 'XRI');
 
         $this->container->shouldReceive('get')->with('request')->andReturn($request);
+        $this->container->shouldReceive('isScopeActive')->andReturn(true);
 
         $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
             echo $e;
@@ -479,6 +480,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->with('logger')->andReturn($this->logger)
             ->shouldReceive('get')->with('request')->andReturn(null)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
+            ->shouldReceive('isScopeActive')->andReturn(true)
             ->getMock();
 
         $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');

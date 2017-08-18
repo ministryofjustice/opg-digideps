@@ -15,7 +15,7 @@ trait DbTrait
         $sqlFile = self::getSnapshotPath($status);
         @unlink($sqlFile);
         exec('pg_dump ' . self::$dbName . " --clean --inserts | sed '/EXTENSION/d' > {$sqlFile}", $output, $return);
-        if (!file_exists($sqlFile) || filesize($sqlFile) < 100 ) {
+        if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
         }
     }

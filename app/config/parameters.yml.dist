@@ -5,8 +5,11 @@ parameters:
     locale:   en
     secret:   setme
     api_base_url: http://digideps-api.local/
-    api_client_secret: 123abc-deputy
-    env:    #leave empty to run in dual mode, 'admin' to run in admin mode or 'develop' to run in user mode
+    # START variables different for admin area, using the same codebase but running on a different container
+    api_client_secret: setme
+    env:    setme
+    redis_dsn: redis://setme
+    # END
     non_admin_host: http://digideps-client.local
     admin_host: http://digideps-admin.local
     # for the following two settings, use a multiple of 60
@@ -26,7 +29,7 @@ parameters:
         password: Abcd1234
         roleId: 2
         activated: true
-    redis_dsn: redis://localhost
+
     use_redis: true
     session_prefix: application_session
     ga: null
@@ -62,3 +65,14 @@ parameters:
     smtp_default_password: setme
     smtp_secure_hostname: localhost
     smtp_secure_port: 25
+    s3_bucket_name: pa-uploads.local
+    s3_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+      endpoint: 'http://fakes3:4569'
+      validate: false
+      credentials:
+        key: 'YOUR_ACCESS_KEY_ID'
+        secret: 'YOUR_SECRET_ACCESS_KEY'
+    file_scanner_url: https://file-scanner-api:8443
+    file_scanner_sslverify: false

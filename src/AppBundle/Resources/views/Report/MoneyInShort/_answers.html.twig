@@ -50,7 +50,7 @@
     </thead>
     <tbody>
     <tr class="behat-region-records-exist">
-        {% if report.moneyTransactionsShortInExist is null %}
+        {% if report.moneyTransactionsShortInExist is null or (report.moneyTransactionsShortInExist == "yes" and report.moneyTransactionsShortIn | length == 0) %}
             <td>
                 <span class="error">
                     {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
@@ -116,7 +116,7 @@
                     £{{ tr.amount | money_format }}
                 </td>
                 <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}#pageBody"
+                    <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                        class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                     <a href="{{ path('money_in_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                        class="push-half--left action-link behat-link-delete">Remove</a>

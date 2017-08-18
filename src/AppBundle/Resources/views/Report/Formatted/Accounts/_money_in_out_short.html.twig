@@ -1,62 +1,59 @@
-<div id="money in">
-    <h3 class="fieldset-outer-title">{{ title }}</h3>
+<div class="section">
+    <h2 class="section-heading">{{ title }}</h2>
 
     <div class="box">
-        <h4>Categories: </h4>
-        {% if categories | length == 0 %}
-            None
-        {% else %}
-            {# display categories comma separated #}
-            {% for c in categories %}
-                {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions, "report-money-short") }}
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
+        <div class="labelvalue">
+            <div class="label">Categories:</div>
+            <div class="value">
+                {% if categories | length == 0 %}
+                    None
+                {% else %}
+                    {# display categories comma separated #}
+                    {% for c in categories %}
+                        {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions, "report-money-short") }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <h3 class="label question bold">{{ existQuestion }}</h3>
+        <table class="checkboxes labelvalue inline">
+            <tr>
+                <td class="value checkbox">{% if transactionsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">Yes</td>
+                <td class="value checkbox">{% if transactionsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">No</td>
+            </tr>
+        </table>
+
+        {% if transactions | length %}
+            <table class="labelvalue push--top">
+                {% for t in transactions %}
+                    <tr>
+                        <td class="label">
+                            {{ t.description }}
+                            {% if t.date %}
+                                (dated {{ t.date | date("d / m / Y") }})
+                            {% endif %}
+                        </td>
+                        <td class="value text--right width-fifth">&pound;{{ t.amount | money_format }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         {% endif %}
     </div>
 
-    <div class="dont-break">
-        <div class="box" id="safeguarding-contact">
-            <div id="do-you-live-with-the-client" class="checkboxes horizontal">
-                <div class="question">{{ existQuestion }}</div>
-                <table class="yesno small">
-                    <tr>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if transactionsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if transactionsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
-                    </tr>
-                </table>
-
-            </div>
-        </div>
-    </div>
-
     {% if transactions | length %}
-        <div class="financial-categories">
-            <div class="category">
-                <h3>{{ transactionsTitle }}</h3>
-                <ul class="transactions">
-                    {% for t in transactions %}
-                        <li class="transaction">
-                            <div class="label">
-                                {{ t.description }}
-                                {% if t.date %}
-                                    (dated {{ t.date | date("d / m / Y") }})
-                                {% endif %}
-                            </div>
-                            <div class="value">&pound;{{ t.amount | money_format }}</div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="transaction total">
-                <div class="label">Total</div>
-                <div class="value">£{{ report.totalValue(transactions) | money_format }}</div>
-            </div>
+        <div class="box">
+            {# total value #}
+            <table class="labelvalue">
+                <tr>
+                    <td class="label bold">Income Total Value</td>
+                    <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.totalValue(transactions) | money_format }}</td>
+                </tr>
+            </table>
         </div>
-
     {% endif %}
-
-
 </div>
