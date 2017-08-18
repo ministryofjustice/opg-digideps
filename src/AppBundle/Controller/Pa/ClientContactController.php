@@ -95,27 +95,5 @@ class ClientContactController extends AbstractController
             'report'   => $currentReport,
             'backLink' => $backLink
         ];
-
-
-
-        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts'
-                , $form->getData()
-                , ['add_clientcontact']
-            );
-            $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
-
-            return $this->redirect($this->generateClientProfileLink($client));
-        }
-
-        return [
-            'form'  => $form->createView(),
-            'client' => $client,
-            'report' => $report,
-            'backLink' => $this->generateClientProfileLink($client)
-        ];
     }
 }
