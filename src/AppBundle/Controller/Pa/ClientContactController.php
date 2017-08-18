@@ -61,15 +61,42 @@ class ClientContactController extends AbstractController
      */
     public function editAction(Request $request, $id)
     {
-        $clientId = $request->get('clientId');
+        $client = $this->getRestClient()->get('client/' . $request->get('clientId'),
+            'Client',
+            ['client', 'report-id', 'current-report', 'user']
+        );
+//        $this->denyAccessUnlessGranted('edit-note', $client, 'Access denied');
+        $currentReport = $client->getCurrentReport();
+        $backLink = $this->generateClientProfileLink($client);
 
-        /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'user']);
+        $clientContact = $this->getRestClient()->get(
+            'clients/'.$client->getId().'/clientcontacts/'.$id,
+            'ClientContact',
+            ['clientcontacts', 'client', 'current-report', 'report-id', 'note-client', 'user']
+        );
 
-        $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
+//        $this->denyAccessUnlessGranted('edit-note', $clientContact, 'Access denied');
 
-        $report = $client->getCurrentReport();
-        $clientContact = new EntityDir\ClientContact($client);
+        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->getRestClient()->put('/clientcontacts/' . $id
+                , $form->getData()
+                , ['edit_clientcontact']
+            );
+            $request->getSession()->getFlashBag()->add('notice', 'The contact has been updated');
+            return $this->redirect($backLink);
+        }
+
+        return [
+            'form'     => $form->createView(),
+            'client'   => $client,
+            'report'   => $currentReport,
+            'backLink' => $backLink
+        ];
+
+
 
         $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
         $form->handleRequest($request);
