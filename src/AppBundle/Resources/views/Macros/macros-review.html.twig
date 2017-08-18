@@ -1,0 +1,260 @@
+{# =================================================================== #}
+{# Deputy and client information #}
+
+{% macro caseNumber(caseNumber) %}
+<div class="box" id="case-number">
+    <dl class="labelvalue inline">
+        <dt class="label bold bigger">Case number</dt>
+        <dd class="value" id="caseNumber">{{ caseNumber }}</dd>
+    </dl>
+</div>
+{% endmacro %}
+
+{% macro deputyClientInfo(ndr,deputy,client,paTeam,adLoggedAsDeputy) %}
+<div class="box">
+    <div id="deputy-details-subsection" class="half-width first">
+        <h3>Deputy details</h3>
+
+        <dl class="labelvalue">
+
+            <dt class="label">First names</dt>
+            <dd class="value">{{deputy.firstname}}</dd>
+
+            <dt class="label">Last name</dt>
+            <dd class="value">{{deputy.lastname}}</dd>
+
+            <dt class="label">Address</dt>
+            <dd class="value address-value">
+                {% if deputy.isDeputyPa %}
+                    {{ paTeam.address1 }}<br/>
+                    {{ paTeam.address2 }}<br/>
+                    {{ paTeam.address3 }}<br/>
+                    {{ paTeam.addressPostcode }}
+                {% else %}
+                    {{ deputy.address1 }}<br/>
+                    {{ deputy.address2 }}<br/>
+                    {{ deputy.address3 }}<br/>
+                    {{ deputy.addressPostcode }}
+                {% endif %}
+            </dd>
+
+            <dt class="label">Telephone number</dt>
+            <dd class="value">
+                {{deputy.phoneMain}}
+                {% if (deputy.phoneAlternative is defined) %}
+                    <br />{{deputy.phoneAlternative}}
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+    <div id="client-details-subsection" class="half-width">
+        <h3>Client details</h3>
+
+        <dl class="labelvalue">
+            <dt class="label">First names</dt>
+            <dd class="value">{{ client.firstname }}</dd>
+
+            <dt class="label">Last name</dt>
+            <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
+
+            <dt class="label">Address</dt>
+            <dd class="value address-value">
+                {{ client.address }}<br/>
+                {{ client.address2 }}<br/>
+                {{ client.county }}<br/>
+                {{ client.postcode }}
+            </dd>
+
+            <dt class="label">Telephone number</dt>
+            <dd class="value">{{client.phone}}</dd>
+        </dl>
+    </div>
+    {% if ndr %}
+        {% if not adLoggedAsDeputy %}
+            <div class="full-width push-half--top">
+                <dl class="labelvalue">
+                    <dt class="label">Email (optional)</dt>
+                    <dd class="value">{{deputy.email}}</dd>
+                </dl>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="full-width push-half--top">
+            <dl class="labelvalue">
+                <dt class="label">Email</dt>
+                <dd class="value">{{deputy.email}}</dd>
+            </dl>
+        </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# =================================================================== #}
+{# Visits and care #}
+
+{% macro contactWithClient(visitsCare) %}
+<div class="dont-break">
+    <h3>Contact with client</h3>
+    <div class="box" id="safeguarding-contact">
+        <h3 class="label question bold">Do you live with the client?</h3>
+
+        <table class="checkboxes labelvalue inline">
+            <tr>
+                <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">Yes</td>
+                <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">No</td>
+            </tr>
+        </table>
+
+        {% if visitsCare.doYouLiveWithClient == 'no' %}
+            <div class="labelvalue push-half--top">
+                <h3 class="label question bold">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</h3>
+                <div class="value">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro careArrangements(visitsCare) %}
+<div class="dont-break">
+    <h3>Care arrangements</h3>
+    <div class="box" id="care-arrangements-subsection">
+        <h3 class="label question bold">Does the client receive care which is paid for?</h3>
+
+        <table class="checkboxes labelvalue inline">
+            <tr>
+                <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">Yes</td>
+                <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">No</td>
+            </tr>
+        </table>
+
+        <div id="safeguarding-care-funding" class="labelvalue push-half--top">
+            <h3 class="label question bold">If yes, how is the care funded?</h3>
+            <table class="checkboxes labelvalue">
+                <tr>
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}
+                        </span>
+                    </td>
+                    <td class="label soft-half--bottom">Client pays for all their own care</td>
+                </tr>
+                <tr>
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}
+                        </span>
+                    </td>
+                    <td class="label soft-half--bottom">Client gets some financial help (for example, from the local authority or council, or NHS)</td>
+                </tr>
+                <tr>
+                    <td class="clean-cell">
+                        <span class="checkbox value">
+                            {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}
+                        </span>
+                    </td>
+                    <td class="label hard--ends">All care is paid for by someone else (for example, by the local authority or council, or NHS)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="labelvalue push-half--top">
+            <h3 class="label question bold">Who is doing the caring?</h3>
+            <div class="value">{{ visitsCare.whoIsDoingTheCaring }}</div>
+        </div>
+
+    </div>
+</div>
+{% endmacro %}
+
+{% macro carePlan(visitsCare) %}
+{% if visitsCare.doesClientHaveACarePlan %}
+    <div class="dont-break">
+        <h3>Care plan</h3>
+        <div class="box" id="care-plan-subsection">
+            <h3 class="label question bold">If there is a care plan, when was it last reviewed?</h3>
+            {% if visitsCare.doesClientHaveACarePlan == 'no' %}
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">X</td>
+                        <td class="label">There is no care plan</td>
+                    </tr>
+                </table>
+            {% endif %}
+            {% if visitsCare.doesClientHaveACarePlan == 'yes' %}
+                <dl class="labelvalue">
+                    <dt class="label">Review date</dt>
+                    <dd class="value">{{ visitsCare.whenWasCarePlanLastReviewed | date("m / Y") }}</dd>
+                </dl>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% endmacro %}
+
+{% macro newResidence(visitsCare) %}
+<div class="dont-break">
+    <div class="box">
+        <h3 class="label question bold">Are there any plans for the client to move to a new residence</h3>
+
+        <table class="checkboxes labelvalue inline">
+            <tr>
+                <td class="value checkbox">{% if visitsCare.planMoveNewResidence == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">Yes</td>
+                <td class="value checkbox">{% if visitsCare.planMoveNewResidence == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">No</td>
+            </tr>
+        </table>
+
+        {% if visitsCare.planMoveNewResidence == 'yes' %}
+            <dl class="labelvalue push-half--top">
+                <dt class="label">More details</dt>
+                <dd class="value">{{ visitsCare.planMoveNewResidenceDetails | nl2br }}</dd>
+            </dl>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+
+{# =================================================================== #}
+{# Deputy expenses #}
+
+{% macro deputyExpenses(ndr,report) %}
+<div class="dont-break">
+    <div class="box">
+        <h3 class="label question bold">
+            {% if ndr %}
+                Did you pay for anything for the client before you were given your court order?
+            {% else %}
+                Have you claimed any deputy expenses during this reporting period?
+            {% endif %}
+        </h3>
+
+        <table class="checkboxes labelvalue inline">
+            <tr>
+                <td class="value checkbox">{% if report.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">Yes</td>
+                <td class="value checkbox">{% if report.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                <td class="label">No</td>
+            </tr>
+        </table>
+
+        {% if report.paidForAnything == 'yes' %}
+            <table class="labelvalue money push--top">
+                {% for expense in report.expenses %}
+                    <tr>
+                        <td class="label noborder">{{ expense.explanation }}</td>
+                        <td class="value text--right width-fifth">&pound;{{ expense.amount | money_format }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+

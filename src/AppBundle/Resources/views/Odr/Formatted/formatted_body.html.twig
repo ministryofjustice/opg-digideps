@@ -3,7 +3,7 @@
 {% set isEmailAttachment = true %}
 
 <style type="text/css" media="screen, print">
-    {% include 'AppBundle:Css:formatted-report.html.twig' %}
+    {% include 'AppBundle:Css:formatted-report.css.twig' %}
 </style>
 
 <div id="wrapper">
@@ -15,16 +15,16 @@
         {% endif %}
         {% include 'AppBundle:Odr/Formatted:_client_information.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_visits-care.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_expenses.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_income_benefits.html.twig' %}
+        {% include 'AppBundle:Odr/Formatted:_accounts.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_debts.html.twig' %}
-        {% include 'AppBundle:Odr/Formatted:_income_benefits.html.twig' %}
-        {% include 'AppBundle:Odr/Formatted:_expenses.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_actions.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
             'report': odr,
-            'title': "Is there anything else you'd like to tell us ?",
+            'title': "Is there anything else you'd like to tell us?",
         } %}
-        {% include 'AppBundle:Odr/Formatted:_accounts.html.twig' %}
         {% include 'AppBundle:Odr/Formatted:_submission_declaration.html.twig' %}
     </div>
 </div>

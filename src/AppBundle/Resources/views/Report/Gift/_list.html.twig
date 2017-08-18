@@ -61,7 +61,7 @@
                         £{{ gift.amount | money_format }}
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('gifts_edit', { 'reportId': report.id, 'giftId': gift.id }) }}#pageBody" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
+                        <a href="{{ path('gifts_edit', { 'reportId': report.id, 'giftId': gift.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                         <a href="{{ path('gifts_delete', { 'reportId': report.id, 'giftId': gift.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
                     </td>
                 </tr>
