@@ -34,33 +34,65 @@
                                 <dd>
                                     <strong class="bold">{{ contact.firstName }} {{ contact.lastName }}</strong>
                                 </dd>
-                                <dt class="visually-hidden">{{ 'role' | trans({}, 'common') }}</dt>
-                                <dd>{{ contact.jobTitle }}</dd>
+                                {% if contact.jobTitle != "" %}
+                                    <dt class="visually-hidden">{{ 'role' | trans({}, 'common') }}</dt>
+                                    <dd>{{ contact.jobTitle }}</dd>
+                                {% endif %}
                             </dl>
                         </td>
                         <td class="width-third">
-                            <dl>
-                                <dt class="visually-hidden">{{ 'address' | trans({}, 'common') }}</dt>
-                                <dd>
-                                    {{ contact.orgName }}<br>
-                                    {{ contact.address1 }}<br>
-                                    {{ contact.address2 }}<br>
-                                    {{ contact.address3 }}<br>
-                                    {{ contact.addressPostcode }}
-                                </dd>
-                            </dl>
+                            {% if
+                                contact.orgName == "" and
+                                contact.address1 == "" and
+                                contact.address2 == "" and
+                                contact.address3 == "" and
+                                contact.addressPostcode == "" and
+                                contact.addressCountry == ""
+                            %}
+                                -
+                            {% else %}
+                                <dl>
+                                    <dt class="visually-hidden">{{ 'address' | trans({}, 'common') }}</dt>
+                                    <dd>
+                                        {% if contact.orgName %}
+                                            {{ contact.orgName }}<br/>
+                                        {% endif %}
+                                        {% if contact.address1 %}
+                                            {{ contact.address1 }}<br/>
+                                        {% endif %}
+                                        {% if contact.address2 %}
+                                            {{ contact.address2 }}<br/>
+                                        {% endif %}
+                                        {% if contact.address3 %}
+                                            {{ contact.address3 }}<br/>
+                                        {% endif %}
+                                        {% if contact.addressPostcode %}
+                                            {{ contact.addressPostcode }}<br/>
+                                        {% endif %}
+                                        {% if contact.addressCountry %}
+                                            {{ contact.addressCountry }}
+                                        {% endif %}
+                                    </dd>
+                                </dl>
+                            {% endif %}
                         </td>
                         <td class="width-third">
-                            <dl>
-                                <dt>
-                                    <strong class="bold">{{ 'phone' | trans({}, 'common') }}</strong>
-                                </dt>
-                                <dd class="push--bottom">{{ contact.phone }}</dd>
-                                <dt>
-                                    <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong>
-                                </dt>
-                                <dd>{{ contact.email }}</dd>
-                            </dl>
+                            {% if contact.phone == "" and contact.email == "" %}
+                                -
+                            {% else %}
+                                <dl>
+                                    <dt>
+                                        <strong class="bold">{{ 'phone' | trans({}, 'common') }}</strong>
+                                    </dt>
+                                    <dd class="push--bottom">
+                                        {% if contact.phone == "" %}-{% else %}{{ contact.phone }}{% endif %}
+                                    </dd>
+                                    <dt>
+                                        <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong>
+                                    </dt>
+                                    <dd>{% if contact.email == "" %}-{% else %}{{ contact.email }}{% endif %}</dd>
+                                </dl>
+                            {% endif %}
                         </td>
                         <td class="width-eighth text--right hard--right">
                             <a href="" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
