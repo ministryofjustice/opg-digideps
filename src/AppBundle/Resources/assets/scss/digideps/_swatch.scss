@@ -57,14 +57,9 @@
 
 // Sass list for colour palette
 $palette: (
-        ("green-status", $green-status),
-        ("orange-status", $orange-status),
         ("grey-status", $grey-status),
-        ("fieldsetbg", $fieldsetbg),
-        ("newsbg", $newsbg),
-        ("red-unknown", $red-unknown),
-        ("light-orange", $light-orange),
-        ("absBlack", $absBlack)
+        ("grey-review", $grey-review),
+        ("light-orange", $light-orange)
 );
 
 @mixin color-swatches {
