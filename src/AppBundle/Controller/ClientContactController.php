@@ -125,37 +125,31 @@ class ClientContactController extends RestController
      * Delete contact
      * Only the creator can delete the note
      *
-     * @Route("/clients/{clientId}/clientcontacts/{id}")
+     * @Route("/clientcontacts/{id}")
      * @Method({"DELETE"})
      */
     public function delete($id)
     {
-        echo 'Hello I am the clientContact delete endpoint (DELETE)';
-        exit;
-//        $this->get('logger')->debug('Deleting note ' . $id);
-//
-//        $this->denyAccessUnlessGranted(
-//            [
-//                EntityDir\User::ROLE_PA,
-//                EntityDir\User::ROLE_PA_ADMIN,
-//                EntityDir\User::ROLE_PA_TEAM_MEMBER
-//            ]
-//        );
-//
-//        try {
-//            /** @var $note EntityDir\Note $note */
-//            $note = $this->findEntityBy(EntityDir\Note::class, $id);
-//
-//            // enable if the check above is removed and the note is available for editing for the whole team
-//            $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
-//
-//            $this->getEntityManager()->remove($note);
-//
-//            $this->getEntityManager()->flush($note);
-//        } catch (\Exception $e) {
-//            $this->get('logger')->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
-//        }
-//
-//        return [];
+        $this->get('logger')->debug('Deleting client contact ' . $id);
+
+        $this->denyAccessUnlessGranted(
+            [
+                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER
+            ]
+        );
+
+        try {
+            $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
+            $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
+
+            $this->getEntityManager()->remove($clientContact);
+            $this->getEntityManager()->flush($clientContact);
+        } catch (\Exception $e) {
+            $this->get('logger')->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
+        }
+
+        return [];
     }
 }
