@@ -69,11 +69,7 @@ class ClientContactController extends AbstractController
         $currentReport = $client->getCurrentReport();
         $backLink = $this->generateClientProfileLink($client);
 
-        $clientContact = $this->getRestClient()->get(
-            'clients/'.$client->getId().'/clientcontacts/'.$id,
-            'ClientContact',
-            ['clientcontacts', 'client', 'current-report', 'report-id', 'note-client', 'user']
-        );
+        $clientContact = $this->getContactById($id);
 
 //        $this->denyAccessUnlessGranted('edit-note', $clientContact, 'Access denied');
 
@@ -95,5 +91,65 @@ class ClientContactController extends AbstractController
             'report'   => $currentReport,
             'backLink' => $backLink
         ];
+    }
+
+
+    /**
+     * @Route("{id}/delete", name="clientcontact_delete")
+     * @Template("AppBundle:Pa/ClientProfile:deleteContactConfirm.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, $id, $confirmed = false)
+    {
+        $clientContact = $this->getContactById($id);
+
+//        $this->denyAccessUnlessGranted('delete-note', $clientContact, 'Access denied');
+
+        $client = $clientContact->getClient();
+
+        return [
+            'report'   => $client->getCurrentReport(),
+            'contact'  => $clientContact,
+            'client'   => $client,
+            'backLink' => $this->generateClientProfileLink($client)
+        ];
+    }
+
+
+    /**
+     * @Route("{id}/delete/confirm", name="clientcontact_delete_confirm")
+     * @Template("AppBundle:Pa/ClientProfile:deleteContactConfirm.html.twig")
+     */
+    public function deleteConfirmedAction(Request $request, $id)
+    {
+        $clientContact = $this->getContactById($id);
+dbg($clientContact);
+exit;
+//        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+        try {
+
+            $this->getRestClient()->delete('clientcontact/' . $id);
+            $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'Client contact could not be removed'
+            );
+        }
+
+        return $this->redirect($this->generateClientProfileLink($clientContact->getClient()));
+    }
+
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    private function getContactById($id)
+    {
+        return $this->getRestClient()->get('clientcontacts/'.$id
+            , 'ClientContact'
+            , ['clientcontacts', 'client', 'current-report', 'report-id', 'user']
+        );
     }
 }
