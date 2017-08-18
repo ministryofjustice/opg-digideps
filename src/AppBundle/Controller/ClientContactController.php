@@ -95,7 +95,7 @@ class ClientContactController extends RestController
 
 
     /**
-     * @Route("/clients/{clientId}/clientcontacts/{id}")
+     * @Route("/clientcontacts/{id}")
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
