@@ -54,4 +54,41 @@ class ClientContactController extends AbstractController
             'backLink' => $this->generateClientProfileLink($client)
         ];
     }
+
+    /**
+     * @Route("{id}/edit", name="clientcontact_edit")
+     * @Template("AppBundle:Pa/ClientProfile:editContact.html.twig")
+     */
+    public function editAction(Request $request, $id)
+    {
+        $clientId = $request->get('clientId');
+
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'user']);
+
+        $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
+
+        $report = $client->getCurrentReport();
+        $clientContact = new EntityDir\ClientContact($client);
+
+        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts'
+                , $form->getData()
+                , ['add_clientcontact']
+            );
+            $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
+
+            return $this->redirect($this->generateClientProfileLink($client));
+        }
+
+        return [
+            'form'  => $form->createView(),
+            'client' => $client,
+            'report' => $report,
+            'backLink' => $this->generateClientProfileLink($client)
+        ];
+    }
 }
