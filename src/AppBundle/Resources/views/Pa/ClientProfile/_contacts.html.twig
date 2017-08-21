@@ -1,6 +1,7 @@
 {% set translationDomain = "client-profile" %}
 {% trans_default_domain translationDomain %}
 {% set page = "clientContacts" %}
+{% set client = report.client %}
 
 <details class="panel panel-admin hard behat-region-client-profile-contacts">
 
@@ -10,10 +11,12 @@
 
     <div class="panel-body soft-half">
 
+        {% if is_granted('add-client-contact', client) %}
         <a href="{{ path('clientcontact_add', {'clientId': report.client.id}) }}" class="bold-small action-link right behat-link-add-contact-button">
             <span class="icon icon-plus"></span>
             {{ (page ~ '.addContact') | trans }}
         </a>
+        {% endif %}
 
         {% if contacts %}
 
@@ -27,7 +30,7 @@
 
                 <tbody>
                  {% for contact in contacts %}
-                    <tr class="align--top dont-break-out">
+                     <tr class="align--top dont-break-out">
                         <td class="width-quarter">
                             <dl>
                                 <dt class="visually-hidden">{{ 'name' | trans({}, 'common') }}</dt>
@@ -95,8 +98,12 @@
                             {% endif %}
                         </td>
                         <td class="width-eighth text--right hard--right">
+                            {% if is_granted('edit-client-contact', client) %}
                             <a href="{{ path('clientcontact_edit'  , {'id': contact.id}) }}" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
+                            {% endif %}
+                            {% if is_granted('delete-client-contact', client) %}
                             <a href="{{ path('clientcontact_delete', {'id': contact.id}) }}" class="behat-link-delete-contact-button">{{ 'remove' | trans({}, 'common') }}</a>
+                            {% endif %}
                         </td>
 
                     </tr>

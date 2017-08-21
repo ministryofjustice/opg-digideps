@@ -28,20 +28,23 @@ class ClientContactController extends AbstractController
 
         /** @var $client EntityDir\Client */
         $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'user']);
+        if (!isset($clientId) || !($client instanceof EntityDir\Client)) {
+            throw $this->createNotFoundException('Client not found');
+        }
 
-        $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
+        $this->denyAccessUnlessGranted('add-client-contact', $client, 'Access denied');
 
-        $report = $client->getCurrentReport();
         $clientContact = new EntityDir\ClientContact($client);
 
         $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts'
-                                        , $form->getData()
-                                        , ['add_clientcontact']
-                                        );
+                , $form->getData()
+                , ['add_clientcontact']
+            );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
 
             return $this->redirect($this->generateClientProfileLink($client));
@@ -50,7 +53,7 @@ class ClientContactController extends AbstractController
         return [
             'form'  => $form->createView(),
             'client' => $client,
-            'report' => $report,
+            'report' => $client->getCurrentReport(),
             'backLink' => $this->generateClientProfileLink($client)
         ];
     }
@@ -63,11 +66,9 @@ class ClientContactController extends AbstractController
     {
         $clientContact = $this->getContactById($id);
         $client = $clientContact->getClient();
-        $currentReport = $client->getCurrentReport();
         $backLink = $this->generateClientProfileLink($client);
 
-
-//        $this->denyAccessUnlessGranted('edit-note', $clientContact, 'Access denied');
+        $this->denyAccessUnlessGranted('edit-client-contact', $client, 'Access denied');
 
         $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
         $form->handleRequest($request);
@@ -84,7 +85,7 @@ class ClientContactController extends AbstractController
         return [
             'form'     => $form->createView(),
             'client'   => $client,
-            'report'   => $currentReport,
+            'report'   => $client->getCurrentReport(),
             'backLink' => $backLink
         ];
     }
@@ -97,8 +98,8 @@ class ClientContactController extends AbstractController
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {
         $clientContact = $this->getContactById($id);
-
-//        $this->denyAccessUnlessGranted('delete-note', $clientContact, 'Access denied');
+        $client = $clientContact->getClient();
+        $this->denyAccessUnlessGranted('delete-client-contact', $client, 'Access denied');
 
         $client = $clientContact->getClient();
 
@@ -118,7 +119,9 @@ class ClientContactController extends AbstractController
     public function deleteConfirmedAction(Request $request, $id)
     {
         $clientContact = $this->getContactById($id);
-//        $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+        $client = $clientContact->getClient();
+
+        $this->denyAccessUnlessGranted('delete-client-contact', $client, 'Access denied');
         try {
             $this->getRestClient()->delete('clientcontacts/' . $id);
             $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');

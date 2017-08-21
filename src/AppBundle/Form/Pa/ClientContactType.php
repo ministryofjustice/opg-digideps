@@ -58,7 +58,7 @@ class ClientContactType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => ['add_note'],
+                'validation_groups' => ['add_clientcontact'],
                 'translation_domain' => 'client-contacts',
                 'data-class' => EntityDir\ClientContact::class
             ]

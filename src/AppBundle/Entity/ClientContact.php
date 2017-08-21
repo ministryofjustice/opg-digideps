@@ -77,6 +77,10 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="clientContact.form.firstname.notBlank", groups={"edit_clientcontact", "add_clientcontact"})
+     * @Assert\Length(min=2, max=10, minMessage="clientContact.form.firstname.minMessage", maxMessage="clientContact.form.firstname.maxMessage",
+     *     groups={"edit_clientcontact", "add_clientcontact"})
+     *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
     private $firstName;
@@ -85,6 +89,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
+     * @Assert\Length(min=2, max=100, minMessage="clientContact.form.firstname.minMessage", maxMessage="clientContact.form.firstname.maxMessage" )
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
     private $jobTitle;
@@ -93,6 +98,10 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="clientContact.form.lastname.notBlank", groups={"edit_clientcontact", "add_clientcontact"})
+     * @Assert\Length(min=2, max=100, minMessage="clientContact.form.lastname.minMessage", maxMessage="clientContact.form.lastname.maxMessage",
+     *     groups={"edit_clientcontact", "add_clientcontact"})
+     *
      * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
     private $lastName;
