@@ -1,21 +1,30 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}Navigation - Digideps Style Guide{% endblock %}
+{% block htmlTitle %}Navigation - Digideps style guide{% endblock %}
 {% block pageTitle %}Navigation{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block breadcrumbs %}
-    {# {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-    } %} #}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Navigation</li>
+        </ol>
+    </div>
 {% endblock %}
 
 {% block pageContent %}
-    <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-    <!-- Top Next Prev -->
-    <div class="grid-row" id="nextprev">
+
+<!-- Top Next Prev -->
+<div class="grid-row" id="nextprev">
+    <div class="column-full">
         <h3 class="heading-large">Header Next/Previous Navigation</h3>
 
         <div class="example">
@@ -34,11 +43,12 @@
                 </ul>
             </nav>
         </div>
-
     </div>
+</div>
 
-    <!-- Footer Next Prev -->
-    <div class="grid-row" id="nextprev">
+<!-- Footer Next Prev -->
+<div class="grid-row" id="nextprev">
+    <div class="column-full">
         <h3 class="heading-large">Footer Next/Previous Navigation</h3>
 
         <div class="example">
@@ -59,9 +69,8 @@
                 </ul>
             </nav>
         </div>
-
     </div>
+</div>
 
-
-    <script src="/prism/prism.js"></script>
+<script src="/prism/prism.js"></script>
 {% endblock %}

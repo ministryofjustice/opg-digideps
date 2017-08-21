@@ -108,7 +108,7 @@
         padding: 15px;
         margin: 20px 0;
         border: 0;
-        background: $fieldsetbg;
+        background: $grey-review;
         clear: both;
         page-break-inside: avoid;
 
@@ -123,7 +123,7 @@
 
     .box-white {
         margin: 0;
-        border: 1px solid $fieldsetbg;
+        border: 1px solid $grey-review;
         border-top: 0;
         background: $white;
     }
@@ -160,7 +160,7 @@
 
         &.money {
             .value {
-                color: $east-bay;
+                color: $print-text;
                 border: 1px solid $black;
 
                 &.total {
@@ -187,7 +187,7 @@
 
         box-sizing: border-box;
         background: $white;
-        color: $east-bay;
+        color: $print-text;
         padding: 7px 8px 5px 8px;
         margin: 2px 0 15px 0;
         border: 1px solid $black;
@@ -298,7 +298,8 @@
             }
         }
 
-        tr, td {
+        tr,
+        td {
             padding: 0.63158em 1.05263em 0.47368em 0;
         }
     }
@@ -392,7 +393,7 @@
                 padding: 2px 6px 0 6px;
                 margin-top: 2px;
                 border-radius: 5px;
-                border: 2px solid $tundora;
+                border: 2px solid $grey-1;
                 font-size: 1em;
             }
         }
@@ -417,7 +418,7 @@
 
         td {
             @include core-16();
-            color: $east-bay;
+            color: $print-text;
         }
     }
 }

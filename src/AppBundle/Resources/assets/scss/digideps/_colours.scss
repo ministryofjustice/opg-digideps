@@ -2,13 +2,14 @@
 // COLOURS
 // Colour variables
 
-$green-status:  #35735b;
-$orange-status: #f08e53;
-$grey-status: #8c9295;
-$fieldsetbg: #cdcfcd;
-$newsbg: #e8f4fd;
-$red-unknown: #da232b;
-$light-orange: #fae3d8;
-$absBlack: #000;
+// Colours
 $east-bay: #454572;
-$tundora: #4a4a4a;
+$grey-60-percent-white: mix($white, $black, 60%);
+$grey-75-percent-white: mix($white, $black, 75%);
+$orange-80-percent-white: mix($white, $orange, 75%);
+
+// Colour variables
+$grey-status: $grey-60-percent-white;
+$grey-review: $grey-75-percent-white;
+$light-orange: $orange-80-percent-white;
+$print-text: $east-bay;

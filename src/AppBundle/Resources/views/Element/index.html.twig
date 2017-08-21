@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}Digideps Style Guide{% endblock %}
-{% block pageTitle %}Digideps Style Guide{% endblock %}
+{% block htmlTitle %}Digideps style guide{% endblock %}
+{% block pageTitle %}Digideps style guide{% endblock %}
 
 {% block helpline %}{% endblock %}
 
@@ -11,28 +11,29 @@
 
     <div class="grid-row">
         <div class="column-third">
-            <h2 class="heading-medium"><a href="{{ path('elements_headings') }}">Headings</a></h2>
-
+            <h2 class="heading-medium"><a href="{{ path('elements_form') }}">Form elements</a></h2>
+            <p>Account number.</p>
+        </div>
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="{{ path('elements_alerts') }}">Alerts</a></h2>
+            <p>Notice, success, error, information, loader, important and default alerts.</p>
         </div>
         <div class="column-third">
             <h2 class="heading-medium"><a href="{{ path('elements_navigation') }}">Navigation</a></h2>
-        </div>
-        <div class="column-third">
-            <h2 class="heading-medium"><a href="{{ path('elements_layout') }}">layout</a></h2>
+            <p>Header and footer next/previous navigation.</p>
         </div>
     </div>
 
     <div class="grid-row">
         <div class="column-third">
-            <h2 class="heading-medium"><a href="{{ path('elements_hero') }}">Hero elements</a></h2>
-        </div>
-        <div class="column-third">
-            <h2 class="heading-medium"><a href="{{ path('elements_form') }}">Form elements</a></h2>
-            <p>Extra field types and form elements</p>
+            <h2 class="heading-medium"><a href="{{ path('elements_buttons') }}">Buttons</a></h2>
+            <p>Primary, secondary and warning buttons.</p>
         </div>
         <div class="column-third">
             <h2 class="heading-medium"><a href="{{ path('elements_colour') }}">Colour</a></h2>
-            <p>Additional Digideps colours</p>
+        </div>
+        <div class="column-third">
+   {#          <h2 class="heading-medium"><a href="{{ path('elements_navigation') }}">Navigation</a></h2> #}
         </div>
     </div>
 
