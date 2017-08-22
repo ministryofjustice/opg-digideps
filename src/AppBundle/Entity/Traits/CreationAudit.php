@@ -20,7 +20,7 @@ trait CreationAudit
      * @JMS\Type("AppBundle\Entity\User")
      * @JMS\Groups({"notes", "documents", "report-submission"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $createdBy;
 

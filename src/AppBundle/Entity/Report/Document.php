@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_report_id", columns={"report_id"}),
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DocumentRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Document
@@ -27,7 +27,7 @@ class Document
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","documents"})
+     * @JMS\Groups({"audit_log","documents", "document-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -95,7 +95,7 @@ class Document
     public function __construct(Report $report)
     {
         $this->report = $report;
-        $report->addDocument($this);
+//        $report->addDocument($this);
         $this->archived = false;
         $this->isReportPdf = true;
     }
