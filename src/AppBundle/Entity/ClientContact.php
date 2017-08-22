@@ -80,7 +80,7 @@ class ClientContact
      * @JMS\Type("string")
      * @JMS\Groups({"client", "clientcontacts"})
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false)
+     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
      */
     private $email;
 
