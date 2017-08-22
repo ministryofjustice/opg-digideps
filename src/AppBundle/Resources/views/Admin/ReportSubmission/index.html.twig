@@ -106,8 +106,10 @@
                             {{ report.client.fullname }}
                         </td>
                         <td class="width-fifth">
-                            {{ reportSubmission.createdBy.fullname }}<br>
-                            ({{ reportSubmission.createdBy.roleFullName }})
+                            {% if reportSubmission.createdBy %}
+                                {{ reportSubmission.createdBy.fullname }}<br>
+                                ({{ reportSubmission.createdBy.roleFullName }})
+                            {% endif %}
                         </td>
                         <td class="width-sixth">
                             {{ report.client.caseNumber }}

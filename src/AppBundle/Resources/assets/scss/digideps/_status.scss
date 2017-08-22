@@ -47,18 +47,13 @@
     }
 
     &.done {
-        color: $green-status;
-        border-color: $green-status;
+        color: $green;
+        border-color: $green;
     }
 
     &.incomplete {
-        color: $orange-status;
-        border-color: $orange-status;
-    }
-
-    &.account-closed {
-        color: $red-unknown;
-        border: 2px solid $red-unknown;
+        color: $orange;
+        border-color: $orange;
     }
 
     &.not-available {

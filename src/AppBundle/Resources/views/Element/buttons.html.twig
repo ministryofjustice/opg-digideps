@@ -1,0 +1,47 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block htmlTitle %}Buttons - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Buttons{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Buttons</li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block pageContent %}
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="example">
+
+            <input type="button" class="button push--bottom" value="Primary CTA button"><br>
+            <input type="button" class="button-secondary push--bottom" value="Grey secondary button"><br>
+            <input type="button" class="button-warning" value="Delete something">
+            <a href="#" class="button-link">Cancel</a>
+
+        </div>
+
+        <pre><code class="language-markup">&lt;input type=&quot;button&quot; class=&quot;button&quot; value=&quot;Primary CTA button&quot;&gt;
+
+&lt;input type=&quot;button&quot; class=&quot;button-secondary&quot; value=&quot;Grey secondary button&quot;&gt;
+
+&lt;input type=&quot;button&quot; class=&quot;button-warning&quot; value=&quot;Delete something&quot;&gt;
+
+&lt;a href=&quot;#&quot; class=&quot;button-link&quot;&gt;Cancel&lt;/a&gt;</code></pre>
+
+    </div>
+</div>
+
+<script src="/prism/prism.js"></script>
+{% endblock %}

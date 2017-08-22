@@ -1,0 +1,49 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block htmlTitle %}Form elements - Digideps style guide{% endblock %}
+{% block pageTitle %}Form elements{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Form elements</li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block pageContent %}
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+
+<!-- Account number -->
+<div class="grid-row">
+    <div class="column-full">
+        <h2 class="heading-medium">Account number / pre input text</h2>
+        <div class="example">
+
+            <div class="form-group flush--bottom">
+                <label class="form-label text" for="account">Last 4 digits of the account number</label>
+                <span class="pre-input-text">* * * *</span>
+                <input type="text" id="account" maxlength="4" class="form-control account-number">
+            </div>
+
+        </div>
+
+        <pre><code class="language-markup">&lt;div class=&quot;form-group&quot;&gt;
+    &lt;label class=&quot;form-label text&quot; for=&quot;account&quot;&gt;Last 4 digits of the account number&lt;/label&gt;
+    &lt;span class=&quot;pre-input-text&quot;&gt;* * * *&lt;/span&gt;
+    &lt;input type=&quot;text&quot; id=&quot;account&quot; maxlength=&quot;4&quot; class=&quot;form-control account-number&quot;&gt;
+&lt;/div&gt;</code></pre>
+
+    </div>
+</div>
+
+
+<script src="/prism/prism.js"></script>
+{% endblock %}
