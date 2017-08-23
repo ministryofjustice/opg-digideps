@@ -85,7 +85,7 @@ actions:
       done: "Finished"
 other_info:
     subSectionTitle: "Any other information"
-    subSectionDescription: "Is there anything else you want to tell us about?"
+    subSectionDescription: "Is there anything else you want to tell us about the deputyship?"
     edit: "Edit"
     start: "Start"
     label:

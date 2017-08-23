@@ -178,7 +178,7 @@ form:
       water:
         label: Water
       insurance-eg-life-home-contents:
-        label: Insurance eg life, home and contents
+        label: Insurance (for example, life, home and contents)
       other-insurance:
         label: Other insurance
       gas:
@@ -224,7 +224,7 @@ form:
         label: Other
         moreInformations: Please give us more information
       client-transport-bus-train-taxi-fares:
-        label: Transport eg bus, train, taxi fares
+        label: Transport (for example, bus, train, taxi fares)
       food:
         label: Food
       toiletries:
@@ -257,13 +257,13 @@ form:
       opg-fees:
         label: OPG's fees
       stocks-and-shares-purchased:
-        label: Stocks and shares purchased
+        label: Stocks and shares
         moreInformations: For stocks and shares, please enter the date, a description and the value
       investment-bonds-purchased:
-        label: Investment bond purchased
+        label: Investment bond
         moreInformations: For each bond, please enter the date and the value
       investment-account-purchased:
-        label: Investment account purchased
+        label: Investment account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
         label: Purchases over £1,000
