@@ -31,11 +31,11 @@
                 <tbody>
                  {% for contact in contacts %}
                      <tr class="align--top dont-break-out">
-                        <td class="width-quarter">
+                        <td class="width-quarter behat-region-client-profile-contacts-display-contact">
                             <dl>
                                 <dt class="visually-hidden">{{ 'name' | trans({}, 'common') }}</dt>
                                 <dd>
-                                    <strong class="bold">{{ contact.firstName }} {{ contact.lastName }}</strong>
+                                    <strong>{{ contact.firstName }} {{ contact.lastName }}</strong>
                                 </dd>
                                 {% if contact.jobTitle != "" %}
                                     <dt class="visually-hidden">{{ 'role' | trans({}, 'common') }}</dt>
@@ -43,7 +43,7 @@
                                 {% endif %}
                             </dl>
                         </td>
-                        <td class="width-third">
+                        <td class="width-third behat-region-client-profile-contacts-display-organisation">
                             {% if
                                 contact.orgName == "" and
                                 contact.address1 == "" and
@@ -79,25 +79,25 @@
                                 </dl>
                             {% endif %}
                         </td>
-                        <td class="width-third">
+                        <td class="width-third behat-region-client-profile-contacts-display-contact-info">
                             {% if contact.phone == "" and contact.email == "" %}
                                 -
                             {% else %}
                                 <dl>
                                     <dt>
-                                        <strong class="bold">{{ 'phone' | trans({}, 'common') }}</strong>
+                                        <strong class="bold behat-region-client-profile-contacts-display-phone">{{ 'phone' | trans({}, 'common') }}</strong>
                                     </dt>
                                     <dd class="push--bottom">
                                         {% if contact.phone == "" %}-{% else %}{{ contact.phone }}{% endif %}
                                     </dd>
                                     <dt>
-                                        <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong>
+                                        <strong class="bold behat-region-client-profile-contacts-display-email">{{ 'email' | trans({}, 'common') }}</strong>
                                     </dt>
                                     <dd>{% if contact.email == "" %}-{% else %}{{ contact.email }}{% endif %}</dd>
                                 </dl>
                             {% endif %}
                         </td>
-                        <td class="width-eighth text--right hard--right">
+                        <td class="width-eighth text--right hard--right  behat-region-client-profile-contacts-display-actions">
                             {% if is_granted('edit-client-contact', client) %}
                             <a href="{{ path('clientcontact_edit'  , {'id': contact.id}) }}" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
                             {% endif %}
