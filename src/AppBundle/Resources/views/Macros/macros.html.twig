@@ -139,7 +139,6 @@
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
         {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
         ] %}
     {% endif %}
