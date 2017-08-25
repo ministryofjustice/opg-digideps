@@ -48,6 +48,14 @@ When I fill in the following:
   Then the following fields should have an error:
     | client_contact_firstName |
     | client_contact_lastName |
+    # invalid email and postcode
+  When I fill in the following:
+    | client_contact_email          | aasdfasdfgasdfasdfasdf |
+    | client_contact_addressPostcode          | aasdfasdfgasdfasdfasdf |
+  And I press "client_contact_save"
+  Then the following fields should have an error:
+    | client_contact_email |
+    | client_contact_postcode |
 Then I fill in the following:
     | client_contact_firstName       | Doc |
     | client_contact_lastName        | Brown |
