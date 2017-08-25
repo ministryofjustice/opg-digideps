@@ -62,31 +62,4 @@ class ClientContactType extends AbstractType
             ]
         );
     }
-
-//    /**
-//     * Return list of translated categories from the Note entity
-//     *
-//     * @return array
-//     */
-//    private function getCategories()
-//    {
-//        $ret = [];
-//
-//        foreach (NoteEntity::$categories as $categoryId => $cagtegoryTrqnslationKey) {
-//            $ret[$categoryId] = $this->translate('form.category.entries.' . $cagtegoryTrqnslationKey);
-//        }
-//
-//        return $ret;
-//    }
-
-//    /**
-//     * Wrapper call to translator
-//     *
-//     * @param $key
-//     * @return string
-//     */
-//    private function translate($key)
-//    {
-//        return $this->translator->trans($key, [], 'client-notes');
-//    }
 }
