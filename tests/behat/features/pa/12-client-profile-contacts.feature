@@ -6,7 +6,7 @@ Feature: PA client profile contacts
     And I click on "pa-report-open" in the "client-1000010" region
     Then each text should be present in the corresponding region:
       | No contacts    | client-profile-contacts |
-    
+
   Scenario: PA adds client contact
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

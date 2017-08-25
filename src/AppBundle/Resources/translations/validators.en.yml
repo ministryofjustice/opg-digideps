@@ -42,7 +42,7 @@ user:
   address2:
     notBlank: Enter your address
   address3:
-    notBlank: Enter your addressfirsN
+    notBlank: Enter your address
   addressCountry:
     notBlank: Enter your country
   jobTitle:
@@ -186,14 +186,9 @@ clientContact:
         notBlank: Enter the contact's last name
         minMessage: The last name must be at least {{ limit }} letters long
         maxMessage: The last name can't be longer than {{ limit }} letters
-    phone:
-        notBlank: Enter the contact's phone number
-        minMessage: The last name must be at least {{ limit }} letters long
-        maxMessage: The last name can't be longer than {{ limit }} letters
     email:
         invalid: This email is not valid
         maxLength: The email can't be longer than {{ limit }} characters
-        notBlank: Enter the contact's email address
         minMessage: The email must be at least {{ limit }} letters long
     postcode:
       maxMessage: The postcode can't be longer than {{ limit }} letters

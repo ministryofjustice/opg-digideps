@@ -29,8 +29,6 @@ class ClientContactType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $contact = $builder->getData();
-
         $builder
             ->add('id', 'hidden')
             ->add('firstName', 'text', ['required' => true])
