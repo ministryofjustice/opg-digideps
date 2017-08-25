@@ -6,7 +6,7 @@ Feature: PA client profile contacts
     And I click on "pa-report-open" in the "client-1000010" region
     Then each text should be present in the corresponding region:
       | No contacts    | client-profile-contacts |
-
+    
   Scenario: PA adds client contact
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -30,7 +30,6 @@ Feature: PA client profile contacts
     Then the following fields should have an error:
       | client_contact_firstName |
       | client_contact_lastName |
-      | client_contact_email    |
 # title > 150 chars form
 When I fill in the following:
       | client_contact_firstName          | 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 1 |
@@ -39,7 +38,6 @@ When I fill in the following:
   Then the following fields should have an error:
     | client_contact_firstName |
     | client_contact_lastName |
-    | client_contact_email    |
   # title < 2 chars form
   When I fill in the following:
     | client_contact_firstName          | 1 |
@@ -48,7 +46,6 @@ When I fill in the following:
   Then the following fields should have an error:
     | client_contact_firstName |
     | client_contact_lastName |
-    | client_contact_email    |
     # invalid email and postcode
   When I fill in the following:
     | client_contact_email          | aasdfasdfgasdfasdfasdf |
