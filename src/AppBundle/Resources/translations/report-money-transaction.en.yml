@@ -147,7 +147,7 @@ form:
       personal-pension:
         label: Private pension
       state-pension:
-        label: State Pension
+        label: State pension
       compensation-or-damages-award:
         label: Compensation or damages award
         moreInformations: For each amount, please give the date and a description of the award

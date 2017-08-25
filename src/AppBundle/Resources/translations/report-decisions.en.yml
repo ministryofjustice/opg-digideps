@@ -85,7 +85,7 @@ form:
     hint: Add a title to help you identify the decision.
   description:
     heading: Description
-    label: Please give us some details about the significant decision here.
+    label: What was the significant decision? Why did you make it at the time?
   clientInvolvedBoolean:
     heading: %client%'s involvement
     label: Did you involve %client% in this decision?

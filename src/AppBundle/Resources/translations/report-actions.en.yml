@@ -62,5 +62,9 @@ form:
           For example, paying care home fees if %client%'s money runs low,
           managing %client%'s property, other family members' involvement
           with %client%'s funds
+      hintPA: |
+          For example, paying care home fees if %client%'s money runs low,
+          managing %client%'s property, family members' involvement
+          with %client%'s funds
   doYouHaveConcernsDetails:
       label: Please give us details about your concerns
