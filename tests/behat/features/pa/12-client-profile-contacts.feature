@@ -1,6 +1,5 @@
 Feature: PA client profile Notes
 
-  @shaun
   Scenario: PA view client contacts
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -8,7 +7,6 @@ Feature: PA client profile Notes
     Then each text should be present in the corresponding region:
       | No contacts    | client-profile-contacts |
 
-    @shaun
   Scenario: PA adds client contact
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -80,7 +78,6 @@ Then I fill in the following:
       | 1234512345 | client-profile-contacts-display-contact-info |
       | doc@brown.com | client-profile-contacts-display-contact-info |
 
-  @shaun
   Scenario: PA edits client contact
   Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
   And I click on "pa-report-open" in the "client-1000010" region
@@ -109,7 +106,6 @@ Then I fill in the following:
     | 555-1234512345 | client-profile-contacts-display-contact-info |
     | doce@brown.com | client-profile-contacts-display-contact-info |
 
-  @shaun
 Scenario: PA delete client contacts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000010" region
