@@ -1,4 +1,4 @@
-Feature: PA client profile Notes
+Feature: PA client profile contacts
 
   Scenario: PA view client contacts
     Given I load the application status from "pa-report-completed"
@@ -30,6 +30,7 @@ Feature: PA client profile Notes
     Then the following fields should have an error:
       | client_contact_firstName |
       | client_contact_lastName |
+      | client_contact_email    |
 # title > 150 chars form
 When I fill in the following:
       | client_contact_firstName          | 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 1 |
@@ -38,6 +39,7 @@ When I fill in the following:
   Then the following fields should have an error:
     | client_contact_firstName |
     | client_contact_lastName |
+    | client_contact_email    |
   # title < 2 chars form
   When I fill in the following:
     | client_contact_firstName          | 1 |
@@ -46,14 +48,17 @@ When I fill in the following:
   Then the following fields should have an error:
     | client_contact_firstName |
     | client_contact_lastName |
+    | client_contact_email    |
     # invalid email and postcode
   When I fill in the following:
     | client_contact_email          | aasdfasdfgasdfasdfasdf |
     | client_contact_addressPostcode          | aasdfasdfgasdfasdfasdf |
   And I press "client_contact_save"
   Then the following fields should have an error:
+    | client_contact_firstName |
+    | client_contact_lastName |
     | client_contact_email |
-    | client_contact_postcode |
+    | client_contact_addressPostcode |
 Then I fill in the following:
     | client_contact_firstName       | Doc |
     | client_contact_lastName        | Brown |
