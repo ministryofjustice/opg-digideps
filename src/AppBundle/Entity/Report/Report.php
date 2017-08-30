@@ -41,7 +41,7 @@ class Report
 
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
-    const ENABLE_104 = false;
+    const ENABLE_104 = true;
 
     /**
      * Reports with total amount of assets
