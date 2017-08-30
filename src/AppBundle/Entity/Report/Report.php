@@ -165,7 +165,7 @@ class Report
      * @JMS\Groups({"report-submitted-by"})
      * @JMS\Type("AppBundle\Entity\User")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
-     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
 
