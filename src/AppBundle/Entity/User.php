@@ -161,7 +161,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "profile_pa"} )
+     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full"} )
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
      *
      * @var string
@@ -189,7 +189,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "profile_pa"} )
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full"} )
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa"} )
      *
      * @var string
@@ -199,7 +199,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "profile_pa"} )
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full"} )
      *
      * @var string
      */
