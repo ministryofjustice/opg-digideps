@@ -191,6 +191,14 @@ class Client
      */
     private $notes;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
+     * @JMS\Groups({"clientcontacts"})
+     */
+    private $clientContacts;
+
     public function __construct()
     {
         $this->users = [];
@@ -644,5 +652,21 @@ class Client
     public function setNotes($notes)
     {
         $this->notes = $notes;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getClientContacts()
+    {
+        return $this->clientContacts;
+    }
+
+    /**
+     * @param ArrayCollection $clientContacts
+     */
+    public function setClientContacts($clientContacts)
+    {
+        $this->clientContacts = $clientContacts;
     }
 }
