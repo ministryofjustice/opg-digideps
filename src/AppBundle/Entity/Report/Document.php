@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isFileNameUnique"}, groups={"document"})
- * @Assert\Callback(methods={"notTooManyFiles"}, groups={"document"})
+ * @Assert\Callback(methods={"isValidForReport"}, groups={"document"})
  */
 class Document
 {
@@ -24,7 +23,7 @@ class Document
     /**
      * @param ExecutionContextInterface $context
      */
-    public function isFileNameUnique(ExecutionContextInterface $context)
+    public function isValidForReport(ExecutionContextInterface $context)
     {
         if (!$this->getFile()) {
             return;
@@ -44,24 +43,15 @@ class Document
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
-        }
-
-
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-    public function notTooManyFiles(ExecutionContextInterface $context)
-    {
-        if (!$this->getFile()) {
             return;
         }
 
         if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
             $context->addViolationAt('file', 'document.file.errors.maxDocumentsPerReport');
+            return;
         }
     }
+
 
     /**
      * @var int
