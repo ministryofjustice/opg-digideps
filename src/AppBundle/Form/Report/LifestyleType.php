@@ -72,16 +72,9 @@ class LifestyleType extends AbstractType
                 $data = $form->getData();
                 /* @var $data Lifestyle */
                 $validationGroups = [
-/*                    1 => ($data->get() == 'no')
-                        ? ['lifestyle-live-client', 'lifestyle-how-often-contact']
-                        : ['lifestyle-live-client'],
-                    2=> ($data->getDoesClientReceivePaidCare() == 'yes')
-                        ? ['lifestyle-receive-paid-care', 'lifestyle-how-care-funded']
-                        : ['lifestyle-receive-paid-care'],
-                    3=> ['lifestyle-who-does-caring'],
-                    4=> ($data->getDoesClientHaveACarePlan() == 'yes')
-                        ?['lifestyle-have-care-plan', 'lifestyle-care-plan-last-review']
-                        :['lifestyle-have-care-plan'],*/
+                    1 => [],
+                    2 => [],
+                    3 => []
                 ][$this->step];
 
                 return $validationGroups;

@@ -107,4 +107,12 @@ class Lifestyle
     {
         $this->activityDetails = $activityDetails;
     }
+
+    /**
+     * @return bool
+     */
+    public function keepOnlyRelevantLifestyleData()
+    {
+        return true;
+    }
 }
