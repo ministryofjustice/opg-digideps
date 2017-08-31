@@ -58,6 +58,7 @@ class YesNoType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => $this->translationDomain,
+            'validation_groups'  => [''],
         ]);
     }
 
