@@ -494,6 +494,31 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "lifestyle-state"})
+     *
+     * @return array
+     */
+    public function getLifestyleState()
+    {
+        $lifestyle = $this->report->getLifestyle();
+        $answers = $lifestyle ? [
+            $lifestyle->getCareAppointments(),
+            $lifestyle->getDoesClientUndertakeSocialActivities()
+        ] : [];
+
+        switch (count(array_filter($answers))) {
+            case 0:
+                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            case 2:
+                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            default:
+                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
+    }
+
+    /**
+     * @JMS\VirtualProperty
      * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *

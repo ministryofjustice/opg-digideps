@@ -95,6 +95,15 @@ class Report
     private $visitsCare;
 
     /**
+     * @var Lifestyle
+     *
+     * @JMS\Groups({"lifestyle"})
+     * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist"})
+     **/
+    private $lifestyle;
+
+    /**
      * @var Action
      *
      * @JMS\Groups({"action"})
@@ -517,6 +526,22 @@ class Report
         $this->visitsCare = $visitsCare;
 
         return $this;
+    }
+
+    /**
+     * @return Lifestyle
+     */
+    public function getLifestyle()
+    {
+        return $this->lifestyle;
+    }
+
+    /**
+     * @param Lifestyle $lifestyle
+     */
+    public function setLifestyle($lifestyle)
+    {
+        $this->lifestyle = $lifestyle;
     }
 
     /**
