@@ -40,12 +40,12 @@ class LifestyleController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
-        $totalSteps = 4;
+        $totalSteps = 3;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('lifestyle_summary', ['reportId' => $reportId]);
         }
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
+        $lifestyle = $report->getLifestyle() ?: new EntityDir\Report\Lifestyle();
         $fromPage = $request->get('from');
 
 
@@ -55,20 +55,20 @@ class LifestyleController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
+        $form = $this->createForm(new FormDir\Report\LifestyleType($step, $this->get('translator'), $report->getClient()->getFirstname()), $lifestyle);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
-            /* @var $data EntityDir\Report\VisitsCare */
+            /* @var $data EntityDir\Report\Lifestyle */
             $data
                 ->setReport($report)
-                ->keepOnlyRelevantVisitsCareData();
+                ->keepOnlyRelevantLifestyleData();
 
-            if ($visitsCare->getId() == null) {
+            if ($lifestyle->getId() == null) {
                 $this->getRestClient()->post('report/lifestyle', $data, ['lifestyle', 'report-id']);
             } else {
-                $this->getRestClient()->put('report/lifestyle/' . $visitsCare->getId(), $data, self::$jmsGroups);
+                $this->getRestClient()->put('report/lifestyle/' . $lifestyle->getId(), $data, self::$jmsGroups);
             }
 
             if ($fromPage == 'summary') {

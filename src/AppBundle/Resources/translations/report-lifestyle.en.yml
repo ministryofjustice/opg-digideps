@@ -1,0 +1,30 @@
+startPage:
+  htmlTitle: "Deputy report - Lifestyle | GOV.UK"
+  pageSectionTitle: Health and lifestyle
+  pageSectionDescription: |
+    Tell us about %client%'s care arrangements, health and leisure or social activities. We want to understand %client%'s current circumstances.
+  startButton: Start health and lifestyle
+
+stepPage:
+  htmlTitle: "Deputy report - lifestyle | GOV.UK"
+  pageSectionTitle: Health and lifestyle
+  pageSectionDescription: |
+      todo
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Deputy report - lifestyle | GOV.UK"
+  pageSectionTitle: Lifestyle
+  supportTitle: ""
+  pageContent:
+    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+
+form:
+  careAppointments:
+    label: Describe %client%'s health and provide details of any care appointments you or %client% attended.
+    hint: Tell us about any health issues or incidents during the reporting period. Give details of any significant meetings with health or care professionals. We don’t need details about routine weekly appointments.
+  doesClientUndertakeSocialActivities:
+    label: Does %client% take part in any leisure or social activities?
+  activityDetails:
+    label: Tell us about the different types of activities %client% takes part in and how often?
+    hint: For example, activity programmes provided by a care home or a regular visit to a park.

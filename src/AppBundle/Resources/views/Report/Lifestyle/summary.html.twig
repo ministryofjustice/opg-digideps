@@ -1,0 +1,49 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageSectionTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Introduction text #}
+    <p class="text">
+         {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
+    </p>
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+
+    {# Missing questions alerts #}
+    {% if status.visitsCareState.state != 'done' and comingFromLastStep%}
+        {{ macros.notification('notice', 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')) }}
+    {% endif %}
+
+    {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
+        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
+    {% endif %}
+
+    {# Return to overview/client profile link #}
+    {{ macros.returnToOverview(report) }}
+
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
+
+    {# Pagination #}
+    {{ macros.reportSectionPrevNext(report, 'visitsCare') }}
+
+{% endblock %}
+
+
+
