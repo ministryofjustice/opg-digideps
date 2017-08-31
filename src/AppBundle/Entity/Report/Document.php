@@ -44,7 +44,6 @@ class Document
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
-            return;
         }
 
 
