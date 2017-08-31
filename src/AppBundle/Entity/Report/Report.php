@@ -745,7 +745,8 @@ class Report
      *     "money-in-short-state",
      *     "money-out-short-state",
      *     "fee-state",
-     *     "documents-state"
+     *     "documents-state",
+     *     "lifestyle-state",
      * })
      *
      * @return ReportStatusService
