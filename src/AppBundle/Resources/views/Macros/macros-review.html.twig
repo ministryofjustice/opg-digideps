@@ -258,3 +258,38 @@
 </div>
 {% endmacro %}
 
+{# generic macro for answers #}
+
+{% macro answerSimple(param) %}
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ param.question }}</h3>
+            <div class="value">{{ param.answer }}</div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro answerYesNo(param) %}
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ param.question }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+
+            {% if param.answer == 'yes' %}
+                <div class="labelvalue push-half--top">
+                    <div class="value">{{ param.moreDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+

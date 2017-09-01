@@ -1,0 +1,16 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+<div class="section" id="lifestyle-section">
+    <h2 class="section-heading">Lifestyle</h2>
+
+    {{ macros.answerSimple({
+        question: 'form.careAppointments.label' | trans(transOptions, 'report-lifestyle'),
+        answer: report.lifestyle.careAppointments
+    }) }}
+
+    {{ macros.answerYesNo({
+        question: 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, 'report-lifestyle'),
+        answer: report.lifestyle.doesClientUndertakeSocialActivities,
+        moreDetails: report.lifestyle.activityDetails
+    }) }}
+</div>

@@ -36,6 +36,11 @@
             'visitsCare': report.visitsCare
             } %}
         {% endif %}
+        {% if report.lifestyle is not null %}
+            {% include 'AppBundle:Report/Formatted:_lifestyle.html.twig' with {
+                'lifestyle': report.lifestyle
+            } %}
+        {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
