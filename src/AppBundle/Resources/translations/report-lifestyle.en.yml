@@ -25,6 +25,8 @@ form:
     hint: Tell us about any health issues or incidents during the reporting period. Give details of any significant meetings with health or care professionals. We don’t need details about routine weekly appointments.
   doesClientUndertakeSocialActivities:
     label: Does %client% take part in any leisure or social activities?
-  activityDetails:
+  activityDetailsYes:
     label: Tell us about the different types of activities %client% takes part in and how often?
     hint: For example, activity programmes provided by a care home or a regular visit to a park.
+  activityDetailsNo:
+    label: Tell us about why %client% does not take part in any leisure or social activities

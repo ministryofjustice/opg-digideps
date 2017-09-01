@@ -38,9 +38,17 @@ class Lifestyle
      * @JMS\Type("string")
      * @JMS\Groups({"lifestyle"})
      *
-     * @Assert\NotBlank(message="lifestyle.activityDetails.notBlank", groups={"lifestyle-activity-details"})
+     * @Assert\NotBlank(message="lifestyle.activityDetailsYes.notBlank", groups={"lifestyle-activity-details-yes"})
      */
-    private $activityDetails;
+    private $activityDetailsYes;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"lifestyle"})
+     *
+     * @Assert\NotBlank(message="lifestyle.activityDetailsNo.notBlank", groups={"lifestyle-activity-details-no"})
+     */
+    private $activityDetailsNo;
 
     /**
      * @return int $id
@@ -92,21 +100,6 @@ class Lifestyle
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getActivityDetails()
-    {
-        return $this->activityDetails;
-    }
-
-    /**
-     * @param mixed $activityDetailss
-     */
-    public function setActivityDetails($activityDetails)
-    {
-        $this->activityDetails = $activityDetails;
-    }
 
     /**
      * @return bool
@@ -115,4 +108,38 @@ class Lifestyle
     {
         return true;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getActivityDetailsYes()
+    {
+        return $this->activityDetailsYes;
+    }
+
+    /**
+     * @param mixed $activityDetailsYes
+     */
+    public function setActivityDetailsYes($activityDetailsYes)
+    {
+        $this->activityDetailsYes = $activityDetailsYes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActivityDetailsNo()
+    {
+        return $this->activityDetailsNo;
+    }
+
+    /**
+     * @param mixed $activityDetailsNo
+     */
+    public function setActivityDetailsNo($activityDetailsNo)
+    {
+        $this->activityDetailsNo = $activityDetailsNo;
+    }
+
+
 }

@@ -60,14 +60,24 @@
                 <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
             </td>
         </tr>
-        {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
+        {% if report.lifestyle.doesClientUndertakeSocialActivities and (report.lifestyle.activityDetailsYes or report.lifestyle.activityDetailsNo) %}
             <tr class="behat-region-how-is-care-funded">
-                <td>
-                    {{ 'form.activityDetails.label' | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ report.lifestyle.activityDetails | nl2br }}
-                </td>
+
+                {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
+                    <td>
+                        {{ 'form.activityDetailsYes.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ report.lifestyle.activityDetailsYes | nl2br }}
+                    </td>
+                {% else %}
+                    <td>
+                        {{ 'form.activityDetailsNo.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ report.lifestyle.activityDetailsNo | nl2br }}
+                    </td>
+                {% endif %}
                 <td class="change-answer">
                     <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
                 </td>

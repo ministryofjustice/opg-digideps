@@ -39,7 +39,9 @@ class LifestyleType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                  'expanded' => true,
             ]);
-            $builder->add('activityDetails', 'textarea', []);
+
+            $builder->add('activityDetailsYes', 'textarea', []);
+            $builder->add('activityDetailsNo', 'textarea', []);
         }
 
         $builder->add('save', 'submit');
@@ -55,8 +57,8 @@ class LifestyleType extends AbstractType
                 $validationGroups = [
                     1 => ['lifestyle-care-appointments'],
                     2=> ($data->getDoesClientUndertakeSocialActivities() == 'yes')
-                        ?['lifestyle-undertake-social-activities', 'lifestyle-activity-details']
-                        :['lifestyle-undertake-social-activities'],
+                        ?['lifestyle-undertake-social-activities', 'lifestyle-activity-details-yes']
+                        :['lifestyle-undertake-social-activities', 'lifestyle-activity-details-no'],
                 ][$this->step];
 
                 return $validationGroups;
