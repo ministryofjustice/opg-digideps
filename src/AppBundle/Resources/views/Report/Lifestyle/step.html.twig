@@ -37,44 +37,20 @@
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, translationDomain),
-                }) }}
-
-            </div>
-        </div>
-    {% endif %}
-
-    {% if step == 3 %}
-        <div class="form-section push--bottom">
-            {{ form_input(form.activityDetails,'form.activityDetails', {
-                'labelClass': 'form-label-bold',
-                'formGroupClass': 'flush--bottom',
-                'labelRaw': true
-            }) }}
-        </div>
-    {% endif %}
-
-    {% if step == 4 %}
-        <div class="form-section push--bottom">
-
-            <div class="form-group flush--bottom {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}">
-                {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
-                    'useFormGroup': false,
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doesClientHaveACarePlan.label' | trans(transOptions, translationDomain),
                     'items': [
-                    {'dataTarget': 'when-care-plan-last-reviewed-wrapper'},
-                    {}
+                    {'dataTarget': 'client-undertake-social-activities-wrapper' }
                     ]
                 }) }}
 
-                <div id="when-care-plan-last-reviewed-wrapper" class="panel panel-border-narrow  js-hidden">
-                    {# legendClass is-not-working #}
-                    {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
-                        'legendClass' : 'form-label-bold',
-                        'showDay': 'false'
+                <div id="client-undertake-social-activities-wrapper" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.activityDetails,'form.activityDetails', {
+                        'labelClass': 'form-label-bold',
+                        'formGroupClass': 'flush--bottom',
+                        'labelRaw': true,
+                        'labelText': ('form.activityDetails.label') | trans(transOptions)
                     }) }}
                 </div>
+
             </div>
         </div>
     {% endif %}

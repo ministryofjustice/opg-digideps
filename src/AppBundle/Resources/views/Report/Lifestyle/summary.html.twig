@@ -2,7 +2,7 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "report-visits-care" %}
+{% set translationDomain = "report-lifestyle" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
@@ -26,11 +26,11 @@
     <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Missing questions alerts #}
-    {% if status.visitsCareState.state != 'done' and comingFromLastStep%}
+    {% if status.lifestyleState.state != 'done' and comingFromLastStep%}
         {{ macros.notification('notice', 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')) }}
     {% endif %}
 
-    {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
+    {% if status.lifestyleState.state != 'done' and not comingFromLastStep%}
         {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
     {% endif %}
 
@@ -38,10 +38,10 @@
     {{ macros.returnToOverview(report) }}
 
     {# Questions and answers table #}
-    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
+    {% include 'AppBundle:Report/Lifestyle:_answers.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'visitsCare') }}
+    {{ macros.reportSectionPrevNext(report, 'lifestyle') }}
 
 {% endblock %}
 

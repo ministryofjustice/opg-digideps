@@ -397,6 +397,14 @@ action:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
 
+lifestyle:
+  careAppointments:
+    notBlank: Please describe health and provide details of any care appointments attended
+  doesClientUndertakeSocialActivities:
+    notBlank: Please select either 'Yes' or 'No'
+  activityDetails:
+    notBlank: Tell us about the different types of activities and how often?
+
 feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option

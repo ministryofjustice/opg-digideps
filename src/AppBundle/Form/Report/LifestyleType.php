@@ -30,7 +30,7 @@ class LifestyleType extends AbstractType
 
     /**
      * LifestyleType constructor.
-     * 
+     *
      * @param $step
      * @param TranslatorInterface $translator
      * @param $clientFirstName
@@ -53,10 +53,6 @@ class LifestyleType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                  'expanded' => true,
             ]);
-        }
-
-
-        if ($this->step === 3) {
             $builder->add('activityDetails', 'textarea', []);
         }
 
@@ -76,9 +72,10 @@ class LifestyleType extends AbstractType
                 $data = $form->getData();
                 /* @var $data Lifestyle */
                 $validationGroups = [
-                    1 => [],
-                    2 => [],
-                    3 => []
+                    1 => ['lifestyle-care-appointments'],
+                    2=> ($data->getDoesClientUndertakeSocialActivities() == 'yes')
+                        ?['lifestyle-undertake-social-activities', 'lifestyle-activity-details']
+                        :['lifestyle-undertake-social-activities'],
                 ][$this->step];
 
                 return $validationGroups;
