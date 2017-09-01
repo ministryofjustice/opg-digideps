@@ -31,4 +31,4 @@ form:
   content:
     label: Description
   save:
-    label: Save
+    label: Save note

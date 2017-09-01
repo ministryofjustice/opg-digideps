@@ -110,17 +110,6 @@
 .right { float: right !important; }
 .left { float: left !important; }
 
-// Use .js-hidden to hide elements when js is enabled
-// Proactively override as this needs to trump
-
-.js-hidden {
-    display: inherit !important;
-
-    .js-enabled & {
-        display: none !important;
-    }
-}
-
 // Negating borders
 .no-border {
     border: none;
