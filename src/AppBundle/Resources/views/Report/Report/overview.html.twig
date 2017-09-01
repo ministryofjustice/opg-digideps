@@ -76,21 +76,19 @@
                 description: true,
                 state: reportStatus.visitsCareState
             } %}
+            {% if is104 %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'lifestyle',
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.lifestyleState
+                } %}
+            {% endif %}
         </li>
 
-        {% if is104 %}
-        <li id="lifestyle-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'lifestyle',
-            report: report,
-            info: true,
-            description: true,
-            state: reportStatus.lifestyleState
-            } %}
-        </li>
-        {% endif %}
+
         {% if is102 or is103 %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
