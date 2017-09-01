@@ -19,27 +19,13 @@ class LifestyleType extends AbstractType
     private $step;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $clientFirstName;
-
-    /**
      * LifestyleType constructor.
      *
      * @param $step
-     * @param TranslatorInterface $translator
-     * @param $clientFirstName
      */
-    public function __construct($step, TranslatorInterface $translator, $clientFirstName)
+    public function __construct($step)
     {
         $this->step = (int) $step;
-        $this->translator = $translator;
-        $this->clientFirstName = $clientFirstName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -57,11 +43,6 @@ class LifestyleType extends AbstractType
         }
 
         $builder->add('save', 'submit');
-    }
-
-    private function translate($key)
-    {
-        return $this->translator->trans($key, ['%client%' => $this->clientFirstName], 'report-lifestyle');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

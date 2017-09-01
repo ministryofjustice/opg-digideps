@@ -6,7 +6,6 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 
-use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +39,7 @@ class LifestyleController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step)
     {
-        $totalSteps = 3;
+        $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('lifestyle_summary', ['reportId' => $reportId]);
         }
@@ -55,7 +54,7 @@ class LifestyleController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\LifestyleType($step, $this->get('translator'), $report->getClient()->getFirstname()), $lifestyle);
+        $form = $this->createForm(new FormDir\Report\LifestyleType($step), $lifestyle);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -100,12 +99,12 @@ class LifestyleController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getVisitsCareState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
+        if ($report->getStatus()->getLifestyleState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('lifestyle', ['reportId' => $reportId]);
         }
 
-        if (!$report->getVisitsCare()) { //allow validation with answers all skipped
-            $report->setVisitsCare(new EntityDir\Report\VisitsCare());
+        if (!$report->getLifestyle()) { //allow validation with answers all skipped
+            $report->setLifestyle(new EntityDir\Report\Lifestyle());
         }
 
         return [
