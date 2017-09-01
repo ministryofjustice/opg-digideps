@@ -73,7 +73,7 @@
                                             {{ contact.addressPostcode }}<br/>
                                         {% endif %}
                                         {% if contact.addressCountry %}
-                                            {{ contact.addressCountry }}
+                                            {{ contact.addressCountry | country_name }}
                                         {% endif %}
                                     </dd>
                                 </dl>
