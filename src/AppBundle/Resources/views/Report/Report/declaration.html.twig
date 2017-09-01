@@ -25,7 +25,7 @@
 
     {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
-    <div class="form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}error{% endif %}">
+    <div class="form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}form-group-error{% endif %}">
         {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
             'useFormGroup': false,
             'fieldSetClass' : 'radio-agreed-behalf-deputy',

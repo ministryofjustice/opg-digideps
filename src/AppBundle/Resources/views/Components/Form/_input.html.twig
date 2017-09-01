@@ -1,4 +1,4 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group{% if not element.vars.valid %} error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group{% if not element.vars.valid %} form-group-error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
     {% if labelRaw is defined and labelRaw %}
       <label class="form-label {% if element.vars.required %} required {% endif %} text" for="{{ element.vars.id }}">
@@ -35,7 +35,7 @@
     {% if element.vars.valid %}
         {{ form_widget(element, { 'attr': {'class': class } }) }}
     {% else %}
-        {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
+        {{ form_widget(element, { 'attr': {'class': class ~ ' form-control-error', 'aria-invalid':'true' } }) }}
     {% endif %}
 
 </div>

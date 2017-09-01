@@ -4,7 +4,7 @@
 
 <div class="form-section push--bottom">
 {% for sbSingleForm in elements %}
-    <div class="form-group flush--bottom {% if false %}error{% endif %}">
+    <div class="form-group flush--bottom {% if false %}form-group-error{% endif %}">
         {% set labelText = ('form.categoriesEntries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
         {{ form_checkbox(sbSingleForm.present, '', {
             'useFormGroup': false,

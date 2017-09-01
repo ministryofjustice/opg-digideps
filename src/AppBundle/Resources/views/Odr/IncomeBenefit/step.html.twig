@@ -54,7 +54,7 @@
     {% if step == 3 %}
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.receiveOtherIncome.vars.valid %}form-group-error{% endif %}">
 
                 {{ form_checkbox_group(form.receiveOtherIncome, '', {
                     'useFormGroup': false,
@@ -81,7 +81,7 @@
 
     {% if step == 4 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.expectCompensationDamages.vars.valid %}form-group-error{% endif %}">
 
                 {{ form_checkbox_group(form.expectCompensationDamages, '', {
                     'useFormGroup': false,

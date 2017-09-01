@@ -23,7 +23,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.actionMoreInfo.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.actionMoreInfo.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

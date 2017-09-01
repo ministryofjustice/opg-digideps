@@ -1,10 +1,10 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox{% if not element.vars.valid %} error{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox{% if not element.vars.valid %} form-group-error{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
 
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">{{ hintText }}</p>
     {% endif %}
     {{ form_errors(element) }}
-    
+
     {% set class = element.vars.attr.class | default('') ~ '' ~ inputClass | default('') %}
 
     {% set labelClass = 'block-label ' ~ (labelClass is defined ?  labelClass : '') %}
