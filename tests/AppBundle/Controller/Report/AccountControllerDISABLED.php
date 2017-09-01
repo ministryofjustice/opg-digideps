@@ -19,7 +19,7 @@ class AccountControllerTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->createUser();
 
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
