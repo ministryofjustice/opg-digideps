@@ -17,11 +17,11 @@
     <table class="text">
         <tbody>
             <tr>
-                <th scope="row">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
+                <th scope="row" class="bold">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
                 <td class="behat-region-case-number">{{ client.getCaseNumber }}</td>
             </tr>
             <tr valign="top">
-                <th scope="row">{{ (page ~ '.clientTable.header.address') | trans({'%client%': client.firstname}) }}</th>
+                <th scope="row" class="bold">{{ (page ~ '.clientTable.header.address') | trans({'%client%': client.firstname}) }}</th>
                 <td>
                     {% if client.address is not empty %}
                         <div itemprop="streetAddress">{{ client.address }}</div>
@@ -41,7 +41,7 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">{{ (page ~ '.clientTable.header.courtDate') | trans }}</th>
+                <th scope="row" class="bold">{{ (page ~ '.clientTable.header.courtDate') | trans }}</th>
                 <td>{{ client.courtDate | date("d/m/Y") }}</td>
             </tr>
         </tbody>
