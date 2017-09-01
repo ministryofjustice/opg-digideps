@@ -30,22 +30,22 @@ class Lifestyle
     private $report;
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"lifestyle"})
-     * @ORM\Column( name="does_client_undertake_social_activities", type="text", nullable=true)
-     */
-    private $doesClientUndertakeSocialActivities;
-
-    /**
      * @var string
      *
      * @JMS\Type("string")
      * @JMS\Groups({"lifestyle"})
-     * @ORM\Column(name="care_appointments", length=255, type="string", nullable=true)
+     * @ORM\Column(name="care_appointments", type="text", nullable=true)
      */
     private $careAppointments;
+
+    /**
+     * @var string yes|no|null
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"lifestyle"})
+     * @ORM\Column( name="does_client_undertake_social_activities", type="string", length=4, nullable=true)
+     */
+    private $doesClientUndertakeSocialActivities;
 
     /**
      * @var string
