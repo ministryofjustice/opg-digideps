@@ -5,6 +5,7 @@
         backupGlobals="false"
         colors="true"
         bootstrap="bootstrap.php"
+        cacheTokens="false"
 >
     <testsuites>
         <testsuite name="src">
