@@ -29,7 +29,11 @@ class LifestyleType extends AbstractType
     private $clientFirstName;
 
     /**
+     * LifestyleType constructor.
+     * 
      * @param $step
+     * @param TranslatorInterface $translator
+     * @param $clientFirstName
      */
     public function __construct($step, TranslatorInterface $translator, $clientFirstName)
     {
