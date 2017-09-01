@@ -20,10 +20,11 @@
 
     {% if step == 1 %}
         <div class="form-section push--bottom">
-            {{ form_input(form.careAppointments,'form.careAppointments', {
+            {{ form_input(form.careAppointments, 'form.careAppointments', {
                 'labelClass': 'form-label-bold',
                 'formGroupClass': 'flush--bottom',
-                'labelRaw': true
+                'labelRaw': true,
+                'labelText': ('form.careAppointments.label') | trans(transOptions)
             }) }}
         </div>
     {% endif %}
