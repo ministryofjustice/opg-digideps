@@ -12,7 +12,7 @@ trait FormTrait
     public function theFormShouldBeInvalid()
     {
         //$this->assertResponseStatus(200);
-        if (!$this->getSession()->getPage()->has('css', '.form-group.error')
+        if (!$this->getSession()->getPage()->has('css', '.form-group.form-group-error')
             && !$this->getSession()->getPage()->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('No errors found');
         }
@@ -26,7 +26,7 @@ trait FormTrait
         $page = $this->getSession()->getPage();
         $this->assertResponseStatus(200);
 
-        if ($page->has('css', '.form-group.error') ||
+        if ($page->has('css', '.form-group.form-group-error') ||
             $page->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('Errors found in elements: '
                 . implode(',', $this->getElementsIdsWithValidationErrors()));
@@ -34,13 +34,13 @@ trait FormTrait
     }
 
     /**
-     * @return array of IDs of input/select/textarea elements inside a  .form-group.error CSS class
+     * @return array of IDs of input/select/textarea elements inside a  .form-group.form-group-error CSS class
      */
     private function getElementsIdsWithValidationErrors()
     {
         $ret = [];
 
-        $errorRegions = $this->getSession()->getPage()->findAll('css', '.form-group.error');
+        $errorRegions = $this->getSession()->getPage()->findAll('css', '.form-group.form-group-error');
         foreach ($errorRegions as $errorRegion) {
             $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
             foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
@@ -111,41 +111,41 @@ trait FormTrait
             $javascript = <<<EOT
             var field = $('$field');
             var value = '$value';
-            
+
             $(':focus').trigger('blur').trigger('change');
             var tag = field.prop('tagName');
-      
-            if (field.prop('type') === 'checkbox' || 
+
+            if (field.prop('type') === 'checkbox' ||
                 field.prop('type') === 'radio')
             {
-            
+
                 field.prop('checked', true);
-            
+
             } else if (tag === 'SELECT') {
-                
+
                 field.focus().val(value).trigger('change');
-            
+
             } else {
                 var pos = 0,
                     length = value.length,
                     character, charCode;
-                    
+
                 for (;pos < length; pos += 1) {
-                    
+
                     character = value[pos];
                     charCode = character.charCodeAt(0);
-                    
+
                     var keyPressEvent = $.Event('keypress', {which: charCode}),
                         keyDownEvent = $.Event('keydown', {which: charCode}),
                         keyUpEvent = $.Event('keyup', {which: charCode});
-                    
+
                     field
                         .focus()
                         .trigger(keyDownEvent)
                         .trigger(keyPressEvent)
                         .val(value.substr(0,pos+1))
                         .trigger(keyUpEvent);
-    
+
                 }
             }
 
