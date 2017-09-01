@@ -10,15 +10,15 @@
     {% set labelClass = 'block-label ' ~ (labelClass is defined ?  labelClass : '') %}
     {% set elementClass = elementClass is defined ?  elementClass : '' %}
 
-    <label class="{{ labelClass }}" for="{{ element.vars.id }}"
-            {% if labelDataTarget  %} data-target="{{ labelDataTarget }}" {% endif %}
-    >
+    <div class="multiple-choice" {% if labelDataTarget  %} data-target="{{ labelDataTarget }}" {% endif %}>
         {% if element.vars.valid %}
             {{ form_widget(element, {'attr': {'class': class }}) }}
         {% else %}
             {{ form_widget(element, {'attr': {'class': class, 'aria-invalid':'true' }}) }}
         {% endif %}
-        {{ labelText }}
-    </label>
+        <label class="{{ labelClass }}" for="{{ element.vars.id }}">
+            {{ labelText }}
+        </label>
+    </div>
 
 </div>
