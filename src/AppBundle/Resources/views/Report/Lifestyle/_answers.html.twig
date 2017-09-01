@@ -14,7 +14,7 @@
     </thead>
     <tbody>
         {# step 1 #}
-        <tr class="behat-region-live-with-client">
+        <tr class="behat-region-care-appointments">
             {% if report.lifestyle.careAppointments is null %}
                 <td>
                     <span class="error">
@@ -33,12 +33,12 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">Edit</a>
+                <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-care-appointments-edit action-link">Edit</a>
             </td>
         </tr>
 
         {#step 2#}
-        <tr class="behat-region-does-client-receive-paid-care">
+        <tr class="behat-region-does-client-undertake-social-activities">
             {% if report.lifestyle.doesClientUndertakeSocialActivities is null %}
                 <td>
                     <span class="error">
@@ -61,7 +61,7 @@
             </td>
         </tr>
         {% if report.lifestyle.doesClientUndertakeSocialActivities and (report.lifestyle.activityDetailsYes or report.lifestyle.activityDetailsNo) %}
-            <tr class="behat-region-how-is-care-funded">
+            <tr class="behat-region-activity-details">
 
                 {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
                     <td>
