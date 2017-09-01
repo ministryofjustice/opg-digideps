@@ -11,6 +11,7 @@
     {{ macros.answerYesNo({
         question: 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, 'report-lifestyle'),
         answer: report.lifestyle.doesClientUndertakeSocialActivities,
-        moreDetails: report.lifestyle.activityDetails
+        moreDetails: report.lifestyle.activityDetails,
+        showMoreDetailsWith: 'yes'
     }) }}
 </div>
