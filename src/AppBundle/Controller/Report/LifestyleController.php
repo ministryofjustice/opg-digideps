@@ -43,7 +43,7 @@ class LifestyleController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
-        $lifestyle = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
+        $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $data = $this->deserializeBodyContent($request);
