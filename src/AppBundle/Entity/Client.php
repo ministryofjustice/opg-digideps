@@ -201,7 +201,7 @@ class Client
      * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
      * @JMS\Groups({"clientcontacts"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist"})
-     * @ORM\OrderBy({"firstName"="ASC"})
+     * @ORM\OrderBy({"lastName"="ASC"})
      */
     private $clientContacts;
 
