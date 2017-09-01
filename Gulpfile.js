@@ -114,7 +114,6 @@ gulp.task('images', ['clean'], function () {
 gulp.task('js.application', ['lint.js', 'clean'], function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
-            './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
             config.jsSrc + '/govuk/polyfill/*.js',
             config.jsSrc + '/modules/*.js',
