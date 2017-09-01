@@ -25,7 +25,7 @@
         {{ form_input(form.address, 'form.property.address') }}
         {{ form_input(form.address2, 'form.property.address2', {}) }}
         {{ form_input(form.county, 'form.property.county') }}
-        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control__postcode' }) }}
+        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control-1-4' }) }}
     {% endif %}
 
     {% if step == 2 %}
@@ -48,7 +48,7 @@
                 <div id="owned-percentage-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
                         'inputPrefix' : '%',
-                        'inputClass' : 'form-control__number',
+                        'inputClass' : 'form-control-1-4',
                         'labelParameters': transOptions,
                     }) }}
                 </div>
@@ -71,7 +71,7 @@
                 <div id="mortgage-outstanding-amount-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number js-format-currency'
+                        'inputClass' : 'form-control-1-4 js-format-currency'
                     }) }}
                 </div>
             </div>
@@ -81,7 +81,7 @@
     {% if step == 5 %}
         {{ form_input(form.value, 'form.property.value', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number js-format-currency',
+            'inputClass' : 'form-control-1-4 js-format-currency',
             'labelRaw': true
         } ) }}
     {% endif %}
@@ -121,7 +121,7 @@
 
                     {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number js-format-currency'
+                        'inputClass' : 'form-control-1-4 js-format-currency'
                     }) }}
                 </div>
             </div>

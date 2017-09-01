@@ -58,15 +58,6 @@ input[type=text]::-ms-clear {
 
 }
 
-.form-control.form-control__postcode {
-    width: 25%;
-}
-
-.form-control.form-control__number {
-    width: 75%;
-    max-width: 230px;
-}
-
 .form-label {
     @include media(mobile) {
         width: auto;

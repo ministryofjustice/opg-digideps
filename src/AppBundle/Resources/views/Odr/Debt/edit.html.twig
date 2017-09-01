@@ -29,7 +29,7 @@
                 {{ form_row(debt.debtTypeId) }}
                 {{ form_input(debt.amount, 'amount', {
                     'inputPrefix' : '£',
-                    'inputClass' : 'form-control__number js-format-currency',
+                    'inputClass' : 'form-control-1-4 js-format-currency',
                     'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                     'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
                     'labelRaw': true
