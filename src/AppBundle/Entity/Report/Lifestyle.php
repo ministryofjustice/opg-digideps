@@ -52,9 +52,18 @@ class Lifestyle
      *
      * @JMS\Type("string")
      * @JMS\Groups({"lifestyle"})
-     * @ORM\Column( name="activity_details", type="text", nullable=true)
+     * @ORM\Column( name="activity_details_yes", type="text", nullable=true)
      */
-    private $activityDetails;
+    private $activityDetailsYes;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"lifestyle"})
+     * @ORM\Column( name="activity_details_no", type="text", nullable=true)
+     */
+    private $activityDetailsNo;
 
     /**
      * Get id.
@@ -125,18 +134,41 @@ class Lifestyle
     /**
      * @return string
      */
-    public function getActivityDetails()
+    public function getActivityDetailsYes()
     {
-        return $this->activityDetails;
+        return $this->activityDetailsYes;
     }
 
     /**
-     * @param string $activityDetails
+     * @param string $activityDetailsYes
+     * @return Lifestyle
      */
-    public function setActivityDetails($activityDetails)
+    public function setActivityDetailsYes($activityDetailsYes)
     {
-        $this->activityDetails = $activityDetails;
+        $this->activityDetailsYes = $activityDetailsYes;
+
+        return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getActivityDetailsNo()
+    {
+        return $this->activityDetailsNo;
+    }
+
+    /**
+     * @param string $activityDetailsNo
+     * @return Lifestyle
+     */
+    public function setActivityDetailsNo($activityDetailsNo)
+    {
+        $this->activityDetailsNo = $activityDetailsNo;
+
+        return $this;
+    }
+
 
     /**
      * checks if report is missing lifestyle
