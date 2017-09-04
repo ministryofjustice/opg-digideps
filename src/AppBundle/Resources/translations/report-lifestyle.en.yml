@@ -1,20 +1,20 @@
 startPage:
-  htmlTitle: "Deputy report - Lifestyle | GOV.UK"
+  htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
   pageSectionTitle: Health and lifestyle
   pageSectionDescription: |
     Tell us about %client%'s care arrangements, health and leisure or social activities. We want to understand %client%'s current circumstances.
   startButton: Start health and lifestyle
 
 stepPage:
-  htmlTitle: "Deputy report - lifestyle | GOV.UK"
+  htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
   pageSectionTitle: Health and lifestyle
   pageSectionDescription: |
       todo
   backLink: Back
 
 summaryPage:
-  htmlTitle: "Deputy report - lifestyle | GOV.UK"
-  pageSectionTitle: Lifestyle
+  htmlTitle: "Deputy report - Health and lifestyle | GOV.UK"
+  pageSectionTitle: Health and lifestyle
   supportTitle: ""
   pageContent:
     weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
