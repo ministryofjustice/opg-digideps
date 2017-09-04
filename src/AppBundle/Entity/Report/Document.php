@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isFileNameUnique"}, groups={"document"})
+ * @Assert\Callback(methods={"isValidForReport"}, groups={"document"})
  */
 class Document
 {
     const FILE_NAME_MAX_LENGTH = 255;
+    const MAX_UPLOAD_PER_REPORT = 100;
 
     use CreationAudit;
     use HasReportTrait;
@@ -22,7 +23,7 @@ class Document
     /**
      * @param ExecutionContextInterface $context
      */
-    public function isFileNameUnique(ExecutionContextInterface $context)
+    public function isValidForReport(ExecutionContextInterface $context)
     {
         if (!$this->getFile()) {
             return;
@@ -45,8 +46,12 @@ class Document
             return;
         }
 
-
+        if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
+            $context->addViolationAt('file', 'document.file.errors.maxDocumentsPerReport');
+            return;
+        }
     }
+
 
     /**
      * @var int
