@@ -1,0 +1,42 @@
+addContact:
+  htmlTitle: Client profile - add contact | GOV.UK
+  pageTitle: Add contact
+  supportTitle: "Client profile:"
+editContact:
+  htmlTitle: Client profile - edit contact | GOV.UK
+  pageTitle: Edit contact
+  supportTitle: "Client profile:"
+removeContact:
+  htmlTitle: Client profile - remove contact | GOV.UK
+  h1Title: Remove contact
+  supportTitle: "Client profile:"
+  question: Are you sure you want to remove this contact?
+  organisation: "Organisation:"
+  linkButtonLabel: Yes, remove contact
+form:
+  contactHeading: Contact details
+  firstName:
+    label: First name
+  lastName:
+    label: Last name
+  jobTitle:
+    label: Job title
+  phone:
+    label: Phone
+  email:
+    label: Email
+  organisationHeading: Organisation
+  orgName:
+    label: Organisation name
+  address1:
+    label: Organisation address
+  address2:
+    label: ' '
+  address3:
+    label: ' '
+  addressPostcode:
+    label: Organisation postcode
+  addressCountry:
+    label: Organisation country
+  save:
+    label: Save contact

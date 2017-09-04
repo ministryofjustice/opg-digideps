@@ -43,10 +43,6 @@ user:
     notBlank: Enter your address
   address3:
     notBlank: Enter your address
-  addressPostcode:
-    notBlank: Enter your postcode
-    minLength: The postcode must be at least {{ limit }} letters long
-    maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   jobTitle:
@@ -180,6 +176,22 @@ document:
       generic: "Cannot upload file, please try again later"
   wishToProvideDocumentation:
       notBlank: Please select either 'Yes' or 'No'
+clientContact:
+  form:
+    firstname:
+        notBlank: Enter the contact's first name
+        minMessage: The first name must be at least {{ limit }} letters long
+        maxMessage: The first name can't be longer than {{ limit }} letters
+    lastname:
+        notBlank: Enter the contact's last name
+        minMessage: The last name must be at least {{ limit }} letters long
+        maxMessage: The last name can't be longer than {{ limit }} letters
+    email:
+        invalid: This email is not valid
+        maxLength: The email can't be longer than {{ limit }} characters
+        minMessage: The email must be at least {{ limit }} letters long
+    postcode:
+      maxMessage: The postcode can't be longer than {{ limit }} letters
 
 # currently a subsection of decisions
 mentalCapacity:
