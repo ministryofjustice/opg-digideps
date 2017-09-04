@@ -60,12 +60,17 @@
         <div class="form-section push--bottom">
 
             <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}form-group-error{% endif %}">
+                {% if app.user.isDeputyPa() %}
+                    {% set hintTextTrans = 'form.doYouHaveConcerns.hintPA' %}
+                {% else %}
+                    {% set hintTextTrans = 'form.doYouHaveConcerns.hint' %}
+                {% endif %}
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
-                    'hintText' : 'form.doYouHaveConcerns.hint' | trans(transOptions, translationDomain),
+                    'hintText' : hintTextTrans | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'actions-details-textarea' },
                         {},
