@@ -169,7 +169,7 @@ document:
       mimeTypesMessage: "Please upload a valid PDF"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
-      maxDocumentsPerReport: "You are allowed to upload a maximum of 100 document per report"
+      maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
       maxMessage: "The file name can't be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
       risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
