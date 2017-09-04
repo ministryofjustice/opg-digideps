@@ -1,0 +1,47 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "client-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set page = "editContact" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(report) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <fieldset>
+        <legend class="heading-medium">{{ 'form.contactHeading' | trans }}</legend>
+        {{ form_input(form.firstName, 'form.firstName') }}
+        {{ form_input(form.lastName, 'form.lastName') }}
+        {{ form_input(form.jobTitle, 'form.jobTitle') }}
+        {{ form_input(form.phone, 'form.phone') }}
+        {{ form_input(form.email, 'form.email') }}
+    </fieldset>
+
+    <fieldset>
+        <legend class="heading-medium">{{ 'form.organisationHeading' | trans }}</legend>
+        {{ form_input(form.orgName, 'form.orgName') }}
+        {{ form_input(form.address1, 'form.address1') }}
+        {{ form_input(form.address2, 'form.address2') }}
+        {{ form_input(form.address3, 'form.address3') }}
+        {{ form_input(form.addressPostcode, 'form.addressPostcode') }}
+        {{ form_input(form.addressCountry, 'form.addressCountry') }}
+    </fieldset>
+
+    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -279,6 +279,10 @@
     notes: report.client.notes,
     } %}
 
+    {% include 'AppBundle:Pa/ClientProfile:_contacts.html.twig' with {
+    contacts: report.client.clientContacts,
+    } %}
+
     {% include 'AppBundle:Pa/ClientProfile:_reports.html.twig' with {
     reports: report.client.reports,
     } %}

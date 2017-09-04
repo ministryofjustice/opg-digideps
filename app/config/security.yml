@@ -15,6 +15,13 @@ services:
         - { name: security.voter }
     # small performance boost
     public: false
+  app.client_contact_voter:
+    class: AppBundle\Security\ClientContactVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
   app.document_voter:
     class: AppBundle\Security\DocumentVoter
     arguments: ['@security.access.decision_manager']
