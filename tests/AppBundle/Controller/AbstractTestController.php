@@ -29,13 +29,15 @@ abstract class AbstractTestController extends WebTestCase
         Fixtures::deleteReportsData();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
-                                               'debug' => true, ]);
+                                               'debug' => false, ]);
         $em = self::$frameworkBundleClient->getContainer()->get('em');
 
         $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
 
         self::$fixtures = new Fixtures($em);
         $em->clear();
+
+        unset($em);
     }
 
     /**
@@ -45,7 +47,7 @@ abstract class AbstractTestController extends WebTestCase
     {
         parent::tearDownAfterClass();
 
-        self::fixtures()->clear();
+        //self::fixtures()->clear();
     }
 
     /**
@@ -216,5 +218,19 @@ abstract class AbstractTestController extends WebTestCase
     protected function loginAsAdmin()
     {
         return $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        // clean up vars
+        $refl = new \ReflectionObject($this);
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
     }
 }
