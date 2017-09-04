@@ -15,8 +15,9 @@ startPage:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
-      Use this section to tell us about money you have spent on %client%'s day-to-day living
-      and welfare costs between %startDate% and %endDate%.
+      Use this section to tell us about money you have spent between %startDate% and %endDate%
+      on %client% that you have not told us about in the money transfers, deputy expenses or
+      gift sections of this report.
     pageSectionDescription2: |
       You can enter a total for each type of payment, or you can enter
       individual amounts and we'll add them up for you.
@@ -75,8 +76,9 @@ summaryPage:
     pageSectionTitle: Money out
     supportTitle: ""
     weAskAbout: |
-      In this section, we ask you about money you've spent on %client%'s day-to-day living
-      and welfare costs between %startDate% and %endDate%.
+      In this section, we ask you about money you have spent between %startDate% and %endDate%
+      on %client% that you have not told us about in the money transfers, deputy expenses or
+      gift sections of this report.
     # similar to start page, but expecting to evolve differently
 form:
   group:

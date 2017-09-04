@@ -6,8 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {
     '%client%': report.client.firstname | e,
-    '%startDate%': report.startDate | date("j M Y"),
-    '%endDate%': report.endDate | date("j M Y")
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y")
 } %}
 
 {% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
