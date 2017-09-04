@@ -33,7 +33,6 @@ class Version132 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE dd_team DROP address1');
         $this->addSql('ALTER TABLE dd_team DROP address2');
         $this->addSql('ALTER TABLE dd_team DROP address3');
