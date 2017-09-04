@@ -56,9 +56,15 @@ class LifestyleType extends AbstractType
                 /* @var $data Lifestyle */
                 $validationGroups = [
                     1 => ['lifestyle-care-appointments'],
-                    2=> ($data->getDoesClientUndertakeSocialActivities() == 'yes')
-                        ?['lifestyle-undertake-social-activities', 'lifestyle-activity-details-yes']
-                        :['lifestyle-undertake-social-activities', 'lifestyle-activity-details-no'],
+                    2 => array_merge(
+                        ['lifestyle-undertake-social-activities'],
+                        $data->getDoesClientUndertakeSocialActivities() == 'yes'
+                        ? ['lifestyle-activity-details-yes']
+                        : [],
+                        $data->getDoesClientUndertakeSocialActivities() == 'no'
+                        ? ['lifestyle-activity-details-no']
+                        : []
+                    )
                 ][$this->step];
 
                 return $validationGroups;
