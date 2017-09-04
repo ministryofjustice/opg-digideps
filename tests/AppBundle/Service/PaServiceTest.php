@@ -97,7 +97,7 @@ class PaServiceTest extends WebTestCase
     public static function setUpBeforeClass()
     {
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
-                                                             'debug'       => true,]);
+                                                             'debug'       => false,]);
 
         self::$em = self::$frameworkBundleClient->getContainer()->get('em');
         self::$fixtures = new Fixtures(self::$em);

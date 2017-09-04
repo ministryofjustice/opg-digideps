@@ -16,7 +16,7 @@ class ReportRepositoryTest extends WebTestCase
     public static function setUpBeforeClass()
     {
         $client = static::createClient(['environment' => 'test',
-                                               'debug' => true, ]);
+                                               'debug' => false, ]);
 
         $em = $client->getContainer()->get('em');
         self::$fixtures = new \Fixtures($em);
