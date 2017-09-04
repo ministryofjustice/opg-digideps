@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version132 extends AbstractMigration
+class Version146 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,11 +18,8 @@ class Version132 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE dd_team ADD address1 VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_team ADD address2 VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_team ADD address3 VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_team ADD address_postcode VARCHAR(10) DEFAULT NULL');
-        $this->addSql('ALTER TABLE dd_team ADD address_country VARCHAR(10) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report DROP CONSTRAINT FK_C42F7784641EE842');
+        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784641EE842 FOREIGN KEY (submitted_by) REFERENCES dd_user (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     /**
@@ -33,10 +30,7 @@ class Version132 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE dd_team DROP address1');
-        $this->addSql('ALTER TABLE dd_team DROP address2');
-        $this->addSql('ALTER TABLE dd_team DROP address3');
-        $this->addSql('ALTER TABLE dd_team DROP address_postcode');
-        $this->addSql('ALTER TABLE dd_team DROP address_country');
+        $this->addSql('ALTER TABLE report DROP CONSTRAINT fk_c42f7784641ee842');
+        $this->addSql('ALTER TABLE report ADD CONSTRAINT fk_c42f7784641ee842 FOREIGN KEY (submitted_by) REFERENCES dd_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 }
