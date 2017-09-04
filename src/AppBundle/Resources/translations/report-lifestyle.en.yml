@@ -26,7 +26,7 @@ form:
   doesClientUndertakeSocialActivities:
     label: Does %client% take part in any leisure or social activities?
   activityDetailsYes:
-    label: Tell us about the different types of activities %client% takes part in and how often?
+    label: Tell us about the different types of activities %client% takes part in and how often.
     hint: For example, activity programmes provided by a care home or a regular visit to a park.
   activityDetailsNo:
-    label: Tell us about why %client% does not take part in any leisure or social activities
+    label: Tell us about why %client% does not take part in any leisure or social activities.

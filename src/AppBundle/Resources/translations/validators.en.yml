@@ -411,13 +411,13 @@ action:
 
 lifestyle:
   careAppointments:
-    notBlank: Please describe health and provide details of any care appointments attended
+    notBlank: Please describe client's health and provide details of any care appointments attended
   doesClientUndertakeSocialActivities:
     notBlank: Please select either 'Yes' or 'No'
   activityDetailsYes:
-    notBlank: Tell us about the different types of activities and how often?
+    notBlank: Give us more details about the different types of activities client takes part in and how often
   activityDetailsNo:
-      notBlank: Give us more information about why the client does takes part in any activity
+      notBlank: Give us more information about why the client does not take part in any activity
 
 feedbackAfterReport:
     satisfactionLevel:
