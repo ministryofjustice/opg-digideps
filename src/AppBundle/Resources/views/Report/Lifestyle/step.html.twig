@@ -45,7 +45,6 @@
 
                 <div id="undertake-social-activities-yes-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.activityDetailsYes,'form.activityDetailsYes', {
-                        'labelClass': 'form-label-bold',
                         'formGroupClass': 'flush--bottom',
                         'labelRaw': true,
                         'labelText': ('form.activityDetailsYes.label') | trans(transOptions)
@@ -54,9 +53,7 @@
 
                 <div id="undertake-social-activities-no-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.activityDetailsNo,'form.activityDetailsNo', {
-                        'labelClass': 'form-label-bold',
                         'formGroupClass': 'flush--bottom',
-                        'labelRaw': true,
                         'labelText': ('form.activityDetailsNo.label') | trans(transOptions)
                     }) }}
                 </div>

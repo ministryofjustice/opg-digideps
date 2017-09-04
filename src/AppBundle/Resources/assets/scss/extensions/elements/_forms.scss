@@ -8,3 +8,9 @@
 .form-control--full {
 	width: 100%;
 }
+
+.inline {
+    + .panel-border-narrow  {
+        margin: 10px 0 0;
+    }
+}
