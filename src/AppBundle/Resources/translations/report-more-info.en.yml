@@ -27,4 +27,4 @@ form:
   actionMoreInfo:
     label: Is there anything you'd like to tell us that hasn't been covered elsewhere in your report?
   actionMoreInfoDetails:
-    label: Please give us details of any further information, concerns or questions you may have about your deputyship or %client%
+    label: Please give us details of any further information, concerns or questions you may have about your deputyship

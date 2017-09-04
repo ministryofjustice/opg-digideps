@@ -78,7 +78,7 @@ pa_fee_expense:
       done: "Finished"
 gifts:
     subSectionTitle: "Gifts"
-    subSectionDescription: "Gifts you have given to other people on behalf of %client%"
+    subSectionDescription: "Gifts you've given to other people on %client%'s behalf"
     edit: "Edit"
     start: "Start"
     label:
@@ -166,7 +166,7 @@ actions:
       done: "Finished"
 other_info:
     subSectionTitle: "Any other information"
-    subSectionDescription: "Is there anything else you want to tell us about?"
+    subSectionDescription: "Is there anything else you want to tell us about the deputyship?"
     edit: "Edit"
     start: "Start"
     label:
