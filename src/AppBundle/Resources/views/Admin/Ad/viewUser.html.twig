@@ -9,7 +9,7 @@
 {% block title %}Admin{% endblock %}
 
 {% block pageContent %}
-    <a href="{{ path('ad_homepage') }}">Back</a>
+    <a href="{{ path('ad_homepage') }}">{{ 'back' | trans({}, 'common' ) }}</a>
     <h2 class="heading-small">{{ user.adManaged ? 'Assisted':'' }} {{ user.roleFullName }}</h2>
     <ul>
         <li>Name: {{ user.firstname }}</li>

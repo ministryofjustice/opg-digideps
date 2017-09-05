@@ -9,9 +9,9 @@
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="value checkbox">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
 

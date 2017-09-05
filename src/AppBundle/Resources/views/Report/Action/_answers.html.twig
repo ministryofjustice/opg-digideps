@@ -33,7 +33,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
@@ -41,7 +41,7 @@
                 <td>{{ 'form.doYouExpectFinancialDecisionsDetails.label' | trans(transOptions) }}</td>
                 <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -66,7 +66,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+                <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if report.action.doYouHaveConcerns == 'yes' %}
@@ -74,7 +74,7 @@
                 <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>
                 <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}

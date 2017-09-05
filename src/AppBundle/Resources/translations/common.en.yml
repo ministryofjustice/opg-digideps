@@ -8,6 +8,8 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
+saveAndContinue: Save and continue
+back: Back
 
 # Headings / Labels
 name: Name
@@ -34,22 +36,8 @@ registrationProgressBar:
     create_report:
         label: Create a report
 
-existsPage:
-  backLink: Back
-
-addPage:
-  backLink: Back
-
-editPage:
-  backLink: Back
-
 stepPage:
-   backLink: Back
    skipLink: Skip this question for now
-   saveAndContinue: Save and continue
-
-addAnotherPage:
-  save: Continue
 
 summaryPage:
   pageContent:

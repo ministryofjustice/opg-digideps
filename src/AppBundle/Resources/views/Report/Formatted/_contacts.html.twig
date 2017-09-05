@@ -14,7 +14,7 @@
                         <dt class="label">Full name</dt>
                         <dd class="value">{{ contact.contactName }}</dd>
 
-                        <dt class="label">Address</dt>
+                        <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
                         <dd class="value">
                             {% if contact.address or contact.postcode %}
                             {{ contact.address }}<br/>

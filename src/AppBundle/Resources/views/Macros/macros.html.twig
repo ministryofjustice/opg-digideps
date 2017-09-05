@@ -76,7 +76,7 @@
 {% endmacro %}
 
 {% macro linkBack(report) %}
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back behat-link-step-back">Back</a>
+    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
 {% endmacro %}
 
 {% macro linkBackStep(backLink,stepPage) %}
@@ -151,14 +151,14 @@
 
 {% macro saveAndContinueButton(button) %}
     {{ form_submit(button, '', {
-        'labelText': 'stepPage.saveAndContinue' | trans({}, 'common'),
+        'labelText': 'saveAndContinue' | trans({}, 'common'),
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}
 
 {% macro addAnotherSaveButton(button) %}
     {{ form_submit(button, '', {
-        'labelText': 'addAnotherPage.save' | trans({}, 'common'),
+        'labelText': 'continue' | trans({}, 'common'),
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}
