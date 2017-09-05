@@ -41,7 +41,7 @@ class Report
 
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
-    const ENABLE_104 = false;
+    const ENABLE_104 = true;
 
     /**
      * Reports with total amount of assets
@@ -93,6 +93,15 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist"})
      **/
     private $visitsCare;
+
+    /**
+     * @var Lifestyle
+     *
+     * @JMS\Groups({"lifestyle"})
+     * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist"})
+     **/
+    private $lifestyle;
 
     /**
      * @var Action
@@ -520,6 +529,22 @@ class Report
     }
 
     /**
+     * @return Lifestyle
+     */
+    public function getLifestyle()
+    {
+        return $this->lifestyle;
+    }
+
+    /**
+     * @param Lifestyle $lifestyle
+     */
+    public function setLifestyle($lifestyle)
+    {
+        $this->lifestyle = $lifestyle;
+    }
+
+    /**
      * @return Action
      */
     public function getAction()
@@ -720,7 +745,8 @@ class Report
      *     "money-in-short-state",
      *     "money-out-short-state",
      *     "fee-state",
-     *     "documents-state"
+     *     "documents-state",
+     *     "lifestyle-state",
      * })
      *
      * @return ReportStatusService
