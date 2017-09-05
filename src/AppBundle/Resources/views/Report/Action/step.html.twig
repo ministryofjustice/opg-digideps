@@ -20,7 +20,7 @@
 
     {% if step == 1 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -59,7 +59,7 @@
     {% if step == 2 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}form-group-error{% endif %}">
                 {% if app.user.isDeputyPa() %}
                     {% set hintTextTrans = 'form.doYouHaveConcerns.hintPA' %}
                 {% else %}

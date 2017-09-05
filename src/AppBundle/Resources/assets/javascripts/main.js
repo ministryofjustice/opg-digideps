@@ -3,10 +3,6 @@
 
 $(document).ready(function() {
 
-	// SelectionButtons GOVUK module
-	var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
-	new GOVUK.SelectionButtons($blockLabels);
-
 	// Format currency module
 	$('.js-format-currency').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
