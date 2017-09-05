@@ -98,11 +98,11 @@ Feature: Report submit
         Given each text should be present in the corresponding region:
             | Peter White | report-submission-1 |
             | 12345abc | report-submission-1 |
-            | 3 documents | report-submission-1 |
+            | 2 documents | report-submission-1 |
         When I click on "download" in the "report-submission-1" region
         Then the page content should be a zip file containing files with the following files:
             | file1.pdf | exactFileName+md5sum | d3f3c05deb6a46cd9e32ea2a1829cf28 |
-            | file2.pdf | exactFileName+md5sum | 6b871eed6b34b560895f221de1420a5a |
+        #    | file2.pdf | exactFileName+md5sum | 6b871eed6b34b560895f221de1420a5a |
             | DigiRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
@@ -113,7 +113,7 @@ Feature: Report submit
         And each text should be present in the corresponding region:
             | Peter White | report-submission-1 |
             | 12345abc | report-submission-1 |
-            | 3 documents | report-submission-1 |
+            | 2 documents | report-submission-1 |
             | AU | report-submission-1 |
 
     @deputy
@@ -165,7 +165,7 @@ Feature: Report submit
         And the response should contain "White"
         # assert documents
         And I should see "file1.pdf" in the "document-list" region
-        And I should see "file2.pdf" in the "document-list" region
+        #And I should see "file2.pdf" in the "document-list" region
         And I should not see "DigiRep" in the "document-list" region
         # test go back link
         When I click on "back-to-reports"

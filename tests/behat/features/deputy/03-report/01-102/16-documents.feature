@@ -76,7 +76,7 @@ Feature: Report documents
       | document_wishToProvideDocumentation_0 | no |
 
     @deputy
-    Scenario: Upload file1.pdf and file2.pdf
+    Scenario: Upload file1.pdf
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I click on "reports, report-2016, edit-documents"
       Then the URL should match "report/\d+/documents/summary"
@@ -89,9 +89,9 @@ Feature: Report documents
       When I attach the file "file1.pdf" to "report_document_upload_file"
       And I click on "attach-file"
       Then the form should be valid
-      And I attach the file "file2.pdf" to "report_document_upload_file"
-      And I click on "attach-file"
-      Then the form should be valid
+      #And I attach the file "file2.pdf" to "report_document_upload_file"
+      #And I click on "attach-file"
+      #Then the form should be valid
       Then each text should be present in the corresponding region:
         | file1.pdf        | document-list |
-        | file2.pdf        | document-list |
+      #  | file2.pdf        | document-list |
