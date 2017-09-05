@@ -8,10 +8,7 @@
             {{ form_errors(element) }}
         </legend>
         {# day: show element or disable field depending on "showDay" setting #}
-        {% set errorClass = '' %}
-        {% if not element.vars.valid %}
-            {% set errorClass = ' form-control-error ' %}
-        {% endif %}
+        {% set errorClass = element.vars.valid ? '' : ' form-control-error ' %}
         <div class="form-date">
             {% if showDay == 'true' %}
                 <div class="form-group form-group-day">
