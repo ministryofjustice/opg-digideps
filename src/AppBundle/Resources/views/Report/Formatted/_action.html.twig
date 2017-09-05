@@ -1,46 +1,20 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 <div class="section" id="action-section">
     <h2 class="section-heading">Next reporting period</h2>
 
-    <div class="dont-break" id="action-section-decisions">
-        <div class="box">
-            <h3 class="label question bold">Do you expect to make any significant financial decisions on behalf of the client in the next 12 months?</h3>
+    {{ macros.answerYesNo({
+        question: 'Do you expect to make any significant financial decisions on behalf of the client in the next 12 months?',
+        answer: action.doYouExpectFinancialDecisions,
+        moreDetails: action.doYouExpectFinancialDecisionsDetails,
+        showMoreDetailsWith: 'yes'
+    }) }}
 
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox">{% if action.doYouExpectFinancialDecisions == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">Yes</td>
-                    <td class="value checkbox">{% if action.doYouExpectFinancialDecisions == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">No</td>
-                </tr>
-            </table>
-
-            {% if action.doYouExpectFinancialDecisions == 'yes' %}
-                <div class="labelvalue push-half--top">
-                    <div class="value">{{ action.doYouExpectFinancialDecisionsDetails | nl2br }}</div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-   <div class="dont-break" id="action-section-concerns">
-        <div class="box" >
-            <h3 class="label question bold">Do you have any concerns about your deputyship?</h3>
-
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox">{% if action.doYouHaveConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">Yes</td>
-                    <td class="value checkbox">{% if action.doYouHaveConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">No</td>
-                </tr>
-            </table>
-
-            {% if action.doYouHaveConcerns == 'yes' %}
-                <div class="labelvalue push-half--top">
-                    <div class="value">{{ action.doYouHaveConcernsDetails | nl2br }}</div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
+    {{ macros.answerYesNo({
+        question: 'Do you have any concerns about your deputyship?',
+        answer: action.doYouHaveConcerns,
+        moreDetails: action.doYouHaveConcernsDetails,
+        showMoreDetailsWith: 'yes'
+    }) }}
 
 </div>

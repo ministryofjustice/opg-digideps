@@ -1,28 +1,15 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 {% if report.actionMoreInfo %}
     <div class="section" id="action-section">
         <h2 class="section-heading">Any other information</h2>
 
-        <div class="dont-break">
-            <div class="box">
-                <h3 class="label question bold">{{ title }}</h3>
-
-                <table class="checkboxes labelvalue inline">
-                    <tr>
-                        <td class="value checkbox">{% if report.actionMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="value checkbox">{% if report.actionMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
-                    </tr>
-                </table>
-
-                {% if report.actionMoreInfo == 'yes' %}
-                    <div class="labelvalue">
-                        <div class="label question flush--bottom">More details</div>
-                        <div class="value">{{ report.actionMoreInfoDetails | nl2br }}</div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+        {{ macros.answerYesNo({
+            question: title,
+            answer: report.actionMoreInfo,
+            moreDetails: report.actionMoreInfoDetails,
+            showMoreDetailsWith: 'yes'
+        }) }}
 
     </div>
 {% endif %}

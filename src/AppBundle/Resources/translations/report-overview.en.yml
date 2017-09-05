@@ -61,6 +61,13 @@ visits_care:
     start: "Start"
     label:
       done: "Finished"
+lifestyle:
+    subSectionTitle: "Health and lifestyle"
+    subSectionDescription: "Describe %client%'s health and any activities %client% is involved in"
+    edit: "Edit"
+    start: "Start"
+    label:
+      done: "Finished"
 heading.propFinance: "%client%'s property and finances"
 deputy_expenses:
     subSectionTitle: "Deputy expenses"
