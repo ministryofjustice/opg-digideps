@@ -87,11 +87,11 @@ Feature: Report documents
         | document_wishToProvideDocumentation_0 | yes |
     # check empty file error
       When I attach the file "file1.pdf" to "report_document_upload_file"
-      Then the form should be valid
       And I click on "attach-file"
+      Then the form should be valid
       And I attach the file "file2.pdf" to "report_document_upload_file"
-      Then the form should be valid
       And I click on "attach-file"
+      Then the form should be valid
       Then each text should be present in the corresponding region:
         | file1.pdf        | document-list |
         | file2.pdf        | document-list |
