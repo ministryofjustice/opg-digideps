@@ -38,6 +38,7 @@ class ReportController extends AbstractController
         'debts',
         'decision',
         'visits-care',
+        'lifestyle',
         'mental-capacity',
         'money-transfer',
         'transaction',
@@ -164,7 +165,7 @@ class ReportController extends AbstractController
     {
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports', 'clientcontacts']);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side

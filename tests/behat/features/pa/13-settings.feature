@@ -27,12 +27,6 @@ Feature: PA settings
       | profile_email      | behat-pa1@publicguardian.gsi.gov.uk   |
       | profile_jobTitle   | Solicitor General                     |
       | profile_phoneMain  | 10000000011                           |
-    And I press "profile_save"
-    Then the following fields should have an error:
-      | profile_address1         |
-      | profile_addressPostcode  |
-      | profile_addressCountry   |
-    When I fill in the following:
       | profile_address1         | 123 Streetname |
       | profile_addressPostcode  | AB1 2CD        |
       | profile_addressCountry   | GB             |
@@ -96,9 +90,6 @@ Feature: PA settings
       | profile_email            |
       | profile_jobTitle         |
       | profile_phoneMain        |
-      | profile_address1         |
-      | profile_addressPostcode  |
-      | profile_addressCountry   |
     When I fill in the following:
       | profile_firstname        | Tim Team Member                                 |
       | profile_lastname         | Chap                                            |

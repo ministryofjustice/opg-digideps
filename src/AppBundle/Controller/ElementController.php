@@ -71,7 +71,7 @@ class ElementController extends AbstractController
 
     /**
      * @Route("/formcomponents", name="elements_form")
-     * @Template("AppBundle:Element/form:form.html.twig")
+     * @Template("AppBundle:Element:forms.html.twig")
      */
     public function formComponentsAction()
     {
@@ -85,14 +85,7 @@ class ElementController extends AbstractController
             'client' => $client,
         ];
 
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Form elements'],
-
-        ];
-
         return [
-            'breadCrumb' => $breadCrumb,
             'report' => $report,
             'client' => $client,
         ];
@@ -133,31 +126,27 @@ class ElementController extends AbstractController
     }
 
     /**
+     * @Route("/collection", name="elements_collection")
+     * @Template("AppBundle:Element:collection.html.twig")
+     */
+    public function collectionAction() { return []; }
+
+    /**
+     * @Route("/alerts", name="elements_alerts")
+     * @Template("AppBundle:Element:alerts.html.twig")
+     */
+    public function alertsAction() { return []; }
+
+    /**
+     * @Route("/buttons", name="elements_buttons")
+     * @Template("AppBundle:Element:buttons.html.twig")
+     */
+    public function buttonsAction() { return[]; }
+
+    /**
      * @Route("/navigation", name="elements_navigation")
      * @Template("AppBundle:Element:navigation.html.twig")
      */
-    public function navigationAction()
-    {
-        $client = [
-            'fullname' => 'Zac Tolley',
-        ];
+    public function navigationAction() { return []; }
 
-        $report = [
-            'id' => 1,
-            'period' => '2014 to 2015',
-            'client' => $client,
-        ];
-
-        $breadCrumb = [
-            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Navigation'],
-
-        ];
-
-        return [
-            'breadCrumb' => $breadCrumb,
-            'report' => $report,
-            'client' => $client,
-        ];
-    }
 }

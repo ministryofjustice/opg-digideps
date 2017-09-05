@@ -22,6 +22,7 @@ use AppBundle\Controller\Report\OtherInfoController;
 use AppBundle\Controller\Report\PaFeeExpenseController;
 use AppBundle\Controller\Report\ReportController;
 use AppBundle\Controller\Report\VisitsCareController;
+use AppBundle\Controller\Report\LifestyleController;
 use AppBundle\Entity\Report\Report;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -45,6 +46,7 @@ class ReportValidator
         OtherInfoController::class      => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         ReportController::class         => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         VisitsCareController::class     => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
+        LifestyleController::class      => [Report::TYPE_104],
         PaFeeExpenseController::class   => [Report::TYPE_102, Report::TYPE_103],
         NoteController::class           => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],
         DocumentController::class           => [Report::TYPE_102, Report::TYPE_103, Report::TYPE_104],

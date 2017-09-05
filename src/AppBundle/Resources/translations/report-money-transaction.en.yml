@@ -15,8 +15,9 @@ startPage:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
     pageSectionDescription1: |
-      Use this section to tell us about money you have spent on %client%'s day-to-day living
-      and welfare costs between %startDate% and %endDate%.
+      Use this section to tell us about money you have spent between %startDate% and %endDate%
+      on %client% that you have not told us about in the money transfers, deputy expenses or
+      gift sections of this report.
     pageSectionDescription2: |
       You can enter a total for each type of payment, or you can enter
       individual amounts and we'll add them up for you.
@@ -75,8 +76,9 @@ summaryPage:
     pageSectionTitle: Money out
     supportTitle: ""
     weAskAbout: |
-      In this section, we ask you about money you've spent on %client%'s day-to-day living
-      and welfare costs between %startDate% and %endDate%.
+      In this section, we ask you about money you have spent between %startDate% and %endDate%
+      on %client% that you have not told us about in the money transfers, deputy expenses or
+      gift sections of this report.
     # similar to start page, but expecting to evolve differently
 form:
   group:
@@ -147,7 +149,7 @@ form:
       personal-pension:
         label: Private pension
       state-pension:
-        label: State Pension
+        label: State pension
       compensation-or-damages-award:
         label: Compensation or damages award
         moreInformations: For each amount, please give the date and a description of the award
@@ -178,7 +180,7 @@ form:
       water:
         label: Water
       insurance-eg-life-home-contents:
-        label: Insurance eg life, home and contents
+        label: Insurance (for example, life, home and contents)
       other-insurance:
         label: Other insurance
       gas:
@@ -224,7 +226,7 @@ form:
         label: Other
         moreInformations: Please give us more information
       client-transport-bus-train-taxi-fares:
-        label: Transport eg bus, train, taxi fares
+        label: Transport (for example, bus, train, taxi fares)
       food:
         label: Food
       toiletries:
@@ -257,13 +259,13 @@ form:
       opg-fees:
         label: OPG's fees
       stocks-and-shares-purchased:
-        label: Stocks and shares purchased
+        label: Stocks and shares
         moreInformations: For stocks and shares, please enter the date, a description and the value
       investment-bonds-purchased:
-        label: Investment bond purchased
+        label: Investment bond
         moreInformations: For each bond, please enter the date and the value
       investment-account-purchased:
-        label: Investment account purchased
+        label: Investment account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
         label: Purchases over £1,000

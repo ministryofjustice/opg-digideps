@@ -1,4 +1,4 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}error{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}form-group-error{% endif %}">
 
     {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
 

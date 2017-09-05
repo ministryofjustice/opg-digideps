@@ -2,88 +2,111 @@
 {% trans_default_domain translationDomain %}
 
 <div class="section" id="pa-fees-expenses-section">
-    <h2 class="section-heading">{{ 'startPage.pageSectionTitle'|trans }}</h2>
 
     <div class="dont-break">
+        <h2 class="section-heading">{{ 'startPage.pageSectionTitle'|trans }}</h2>
         <div class="box">
-            <div class="checkboxes horizontal">
-                <div class="question">{{ 'feeExistPage.form.hasFees.label'|trans }}</div>
+            <h3 class="label question bold">{{ 'feeExistPage.form.hasFees.label'|trans }}</h3>
 
-                <table class="yesno small">
-                    <tr>
-                        {% for answer in ['yes', 'no'] %}
-                            <td class="checkbox"
-                                data-checkbox="report-has-pa-fees--{{ answer }}">{% if report.hasFees == answer %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">{{ answer | capitalize }}</td>
-                        {% endfor %}
-                    </tr>
-                </table>
-                {% if report.hasFees =='yes' %}
-                    <ul class="transactions">
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if report.hasFees == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="value checkbox">{% if report.hasFees == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+
+            {% if report.hasFees =='yes' %}
+
+                <div class="labelvalue push-half--top">
+                    <h3 class="label question bold">Fees and expenses</h3>
+
+                    <table class="labelvalue money">
                         {% for fee in report.fees %}
-                            <li class="transaction {% if fee.amount == 0 %}{{ fee.amount }} disable{% endif %}">
-                                <div class="label">{{ ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans }}</div>
-                                <div class="value">&pound;{{ fee.amount | money_format }}</div>
-                                {% if fee.moreDetails %}
-                                    <div class="description">
-                                        {{ fee.moreDetails | nl2br }}
-                                    </div>
-                                {% endif %}
-                            </li>
+                            <tr class="{% if fee.amount == 0 %}{{ fee.amount }}disable{% endif %}">
+                                <td class="label noborder">{{ ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans }}</td>
+                                <td class="value text--right width-fifth">&pound;{{ fee.amount | money_format }}</td>
+                            </tr>
+                            {% if fee.moreDetails %}
+                                <tr>
+                                    <td colspan="2" class="hard noborder">
+                                        <div class="labelvalue soft-half--top">
+                                            <div class="label">{{ ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans }} details</div>
+                                            <div class="value {% if fee.feeTypeId == 'travel-costs' %}push-half--bottom{% endif %}">{{ fee.moreDetails | nl2br }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="value textarea">{{ report.reasonForNoFees | nl2br }}</div>
-                {% endif %}
-            </div>
+                    </table>
+                </div>
+
+            {% else %}
+
+                <div class="labelvalue">
+                    <h3 class="label question bold">Reason for not having charged the client any fees</h3>
+                </div>
+                <div class="value">{{ report.reasonForNoFees | nl2br }}</div>
+
+            {% endif %}
         </div>
 
         {% if report.hasFees == 'yes' %}
             {# total value #}
-            <div class="box total">
-                <div class="labelvalue inline">
-                    <div class="label">Total amount</div>
-                    <div class="value" id="assetsTotal">&pound;{{ report.feesTotal | money_format }}</div>
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="box">
-            <div class="checkboxes horizontal">
-
-                <div class="question">{{ 'otherExistPage.form.paidForAnything.label'|trans }}</div>
-
-                <table class="yesno small">
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue money">
                     <tr>
-                        {% for answer in ['yes', 'no'] %}
-                            <td class="checkbox"
-                                data-checkbox="report-pa-paid-for-anything--{{ answer }}">{% if report.paidForAnything == answer %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">{{ answer | capitalize }}</td>
-                        {% endfor %}
+                        <td class="label bold">Total amount</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.feesTotal | money_format }}</td>
                     </tr>
                 </table>
             </div>
+        {% endif %}
+    </div>
+
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ 'otherExistPage.form.paidForAnything.label'|trans }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if report.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="value checkbox">{% if report.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+
+
             {% if report.paidForAnything == 'yes' %}
-                <div class="category">
-                    <ul class="transactions">
+                <div class="labelvalue push-half--top">
+                    <h3 class="label question bold">Expenses outside the practice direction</h3>
+
+                    <table class="labelvalue money">
                         {% for expense in report.expenses %}
-                            <li class="transaction ">
-                                <div class="label">{{ expense.explanation }}</div>
-                                <div class="value">&pound; {{ expense.amount | money_format }}</div>
-                            </li>
+                            <tr class="{% if expense.amount == 0 %}{{ expense.amount }}disable{% endif %}">
+                                <td class="label noborder">{{ expense.explanation }}</td>
+                                <td class="value text--right width-fifth">&pound;{{ expense.amount | money_format }}</td>
+                            </tr>
                         {% endfor %}
-                    </ul>
+                    </table>
                 </div>
+
             {% endif %}
         </div>
 
         {% if report.paidForAnything == 'yes' %}
             {# total value #}
-            <div class="box total">
-                <div class="labelvalue inline">
-                    <div class="label">Total amount</div>
-                    <div class="value" id="assetsTotal">&pound;{{ report.expensesTotal | money_format }}</div>
-                </div>
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue money">
+                    <tr>
+                        <td class="label bold">Total amount</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.expensesTotal | money_format }}</td>
+                    </tr>
+                </table>
             </div>
         {% endif %}
     </div>

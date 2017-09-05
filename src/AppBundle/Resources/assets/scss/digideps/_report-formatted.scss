@@ -35,22 +35,6 @@
 
     }
 
-    .hero {
-        margin: 0;
-
-        h2,
-        .message,
-        .total {
-            color: $absBlack;
-        }
-
-        .message {
-            font-size: 22px;
-            margin: 10px 0 10px 0;
-        }
-
-    }
-
     #decisions-list {
         .value.textarea {
             font-size: 19px;

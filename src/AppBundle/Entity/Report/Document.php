@@ -8,13 +8,14 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use AppBundle\Service\File\Types\UploadableFile;
+
 /**
- * @Assert\Callback(methods={"isFileNameUnique"}, groups={"document"})
+ * @Assert\Callback(methods={"isValidForReport"}, groups={"document"})
  */
 class Document
 {
     const FILE_NAME_MAX_LENGTH = 255;
+    const MAX_UPLOAD_PER_REPORT = 100;
 
     use CreationAudit;
     use HasReportTrait;
@@ -22,30 +23,35 @@ class Document
     /**
      * @param ExecutionContextInterface $context
      */
-    public function isFileNameUnique(ExecutionContextInterface $context)
+    public function isValidForReport(ExecutionContextInterface $context)
     {
-        if (!($this->getFile() instanceof UploadedFile)) {
-            return false;
+        if (!$this->getFile()) {
+            return;
         }
+
         $fileNames = [];
         foreach ($this->getReport()->getDocuments() as $document) {
             $fileNames[] = $document->getFileName();
         }
 
         $fileOriginalName = $this->getFile()->getClientOriginalName();
+
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->addViolationAt('file', 'document.file.errors.maxMessage');
-            return false;
+            return;
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
-            return false;
+            return;
         }
 
-        return true;
-
+        if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
+            $context->addViolationAt('file', 'document.file.errors.maxDocumentsPerReport');
+            return;
+        }
     }
+
 
     /**
      * @var int
@@ -63,7 +69,7 @@ class Document
      * @Assert\File(
      *     maxSize = "15M",
      *     maxSizeMessage = "document.file.errors.maxSizeMessage",
-     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/jpg", "image/jpeg", "image/png"},
+     *     mimeTypes = {"application/pdf", "application/x-pdf"},
      *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
      *     groups={"document"}
      * )

@@ -43,10 +43,6 @@ user:
     notBlank: Enter your address
   address3:
     notBlank: Enter your address
-  addressPostcode:
-    notBlank: Enter your postcode
-    minLength: The postcode must be at least {{ limit }} letters long
-    maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   jobTitle:
@@ -173,6 +169,7 @@ document:
       mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
+      maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
       maxMessage: "The file name can't be longer than 255 letters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"
       risky: "Unfortunately, our antivirus check found a problem with this file and we are unable to upload it. Please choose another file"
@@ -180,6 +177,22 @@ document:
       generic: "Cannot upload file, please try again later"
   wishToProvideDocumentation:
       notBlank: Please select either 'Yes' or 'No'
+clientContact:
+  form:
+    firstname:
+        notBlank: Enter the contact's first name
+        minMessage: The first name must be at least {{ limit }} letters long
+        maxMessage: The first name can't be longer than {{ limit }} letters
+    lastname:
+        notBlank: Enter the contact's last name
+        minMessage: The last name must be at least {{ limit }} letters long
+        maxMessage: The last name can't be longer than {{ limit }} letters
+    email:
+        invalid: This email is not valid
+        maxLength: The email can't be longer than {{ limit }} characters
+        minMessage: The email must be at least {{ limit }} letters long
+    postcode:
+      maxMessage: The postcode can't be longer than {{ limit }} letters
 
 # currently a subsection of decisions
 mentalCapacity:
@@ -396,6 +409,16 @@ action:
     actionMoreInfoDetails:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
+
+lifestyle:
+  careAppointments:
+    notBlank: Please describe client's health and provide details of any care appointments attended
+  doesClientUndertakeSocialActivities:
+    notBlank: Please select either 'Yes' or 'No'
+  activityDetailsYes:
+    notBlank: Give us more details about the different types of activities client takes part in and how often
+  activityDetailsNo:
+      notBlank: Give us more information about why the client does not take part in any activity
 
 feedbackAfterReport:
     satisfactionLevel:

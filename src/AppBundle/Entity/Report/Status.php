@@ -176,6 +176,13 @@ class Status
     private $documentsState;
 
     /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
+    private $lifestyleState;
+
+    /**
      * @JMS\Type("boolean")
      *
      * @var array
@@ -586,6 +593,22 @@ class Status
     public function setDocumentsState($documentsState)
     {
         $this->documentsState = $documentsState;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLifestyleState()
+    {
+        return $this->lifestyleState;
+    }
+
+    /**
+     * @param array $lifestyleState
+     */
+    public function setLifestyleState($lifestyleState)
+    {
+        $this->lifestyleState = $lifestyleState;
     }
 
     public function getState()

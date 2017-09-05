@@ -3,86 +3,67 @@
 {% block htmlTitle %}Colours - Digideps Style Guide{% endblock %}
 {% block pageTitle %}Colours{% endblock %}
 
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
+
 {% block helpline %}{% endblock %}
 
 {% block breadcrumbs %}
-    {# {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
-    breadCrumb: breadCrumb
-    } %} #}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Colours</li>
+        </ol>
+    </div>
 {% endblock %}
 
 {% block pageContent %}
-    <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
 
-    <!-- Top Nav -->
-    <div class="grid-row">
-
+<!-- Top Nav -->
+<div class="grid-row">
+    <div class="column-full">
         <div class="example">
 
             <div class="swatch-wrapper">
-                <div class="swatch swatch-green-status"></div>
+                <div class="swatch swatch-east-bay"></div>
                 <ul>
-                    <li><b>#35735b</b></li>
-                    <li>$green-status</li>
+                    <li><b>#454572</b></li>
+                    <li>$east-bay</li>
+                    <li>Only used for the 'ink' text on the pdf review</li>
                 </ul>
             </div>
 
             <div class="swatch-wrapper">
-                <div class="swatch swatch-orange-status"></div>
+                <div class="swatch swatch-grey-60-percent-white"></div>
                 <ul>
-                    <li><b>#f08e53</b></li>
-                    <li>$orange-status</li>
+                    <li><b>#9d9e9e</b></li>
+                    <li>$grey-60-percent-white</li>
+                    <li>This is the grey for the status of 'Not started'</li>
+                </ul>
+            </div>
+            <div class="swatch-wrapper">
+                <div class="swatch swatch-grey-75-percent-white"></div>
+                <ul>
+                    <li><b>#c2c2c2</b></li>
+                    <li>$grey-75-percent-white</li>
+                    <li>This is the box grey on the pdf review</li>
                 </ul>
             </div>
 
             <div class="swatch-wrapper">
-                <div class="swatch swatch-grey-status"></div>
+                <div class="swatch swatch-orange-80-percent-white"></div>
                 <ul>
-                    <li><b>#8c9295</b></li>
-                    <li>$grey-status</li>
-                </ul>
-            </div>
-
-            <div class="swatch-wrapper">
-                <div class="swatch swatch-fieldsetbg"></div>
-                <ul>
-                    <li><b>#cdcfcd</b></li>
-                    <li>$fieldsetbg</li>
-                </ul>
-            </div>
-            <div class="swatch-wrapper">
-                <div class="swatch swatch-newsbg"></div>
-                <ul>
-                    <li><b>#e8f4fd</b></li>
-                    <li>$newsbg</li>
-                </ul>
-            </div>
-
-            <div class="swatch-wrapper">
-                <div class="swatch swatch-red-unknown"></div>
-                <ul>
-                    <li><b>#da232b</b></li>
-                    <li>$red-unknown</li>
-                </ul>
-            </div>
-            <div class="swatch-wrapper">
-                <div class="swatch swatch-light-orange"></div>
-                <ul>
-                    <li><b>#fae3d8</b></li>
-                    <li>$light-orange</li>
-                </ul>
-            </div>
-            <div class="swatch-wrapper">
-                <div class="swatch swatch-absBlack"></div>
-                <ul>
-                    <li><b>#000000</b></li>
-                    <li>$absBlack</li>
+                    <li><b>#fcddcd</b></li>
+                    <li>$orange-80-percent-white</li>
+                    <li>This is used alongside the 'Not balance' hero orange</li>
                 </ul>
             </div>
 
         </div>
-
     </div>
+</div>
 
 
     <script src="/prism/prism.js"></script>

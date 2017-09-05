@@ -26,3 +26,11 @@ clientNotes:
   addNote: Add note
   editNote: Edit
   deleteNote: Remove
+
+clientContacts:
+  heading: Useful contacts
+  noContacts: No contacts
+  contactName: Contact name
+  organisation: Organisation
+  contactInfo: Contact information
+  addContact: Add contact

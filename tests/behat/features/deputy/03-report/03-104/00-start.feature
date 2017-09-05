@@ -13,6 +13,7 @@ Feature: Report 104 start
     Then I should see the "edit-decisions" link
     Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link
+    Then I should see the "edit-lifestyle" link
     Then I should see the "edit-actions" link
     Then I should see the "edit-other_info" link
     Then I should see the "edit-documents" link

@@ -128,6 +128,18 @@
         {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
+    {% elseif report.type == '104' %}
+        {% set config = [
+        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
+        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
+        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
+        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
+        {'section':'lifestyle','link': path('lifestyle', {'reportId': report.id})},
+        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
+        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
+        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
+        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
+        ] %}
     {% elseif report.type == 'ndr' %}
         {% set config = [
         {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
@@ -139,7 +151,6 @@
         {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
         {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
         {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
         ] %}
     {% endif %}

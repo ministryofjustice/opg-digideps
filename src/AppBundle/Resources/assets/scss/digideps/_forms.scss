@@ -8,10 +8,6 @@ input[type=text]::-ms-clear {
 }
 
 .form-group {
-    float: none;// Only float left if within a form container.
-    form & {
-        float: left;
-    }
 
     textarea.form-control {
         height: 7em;
@@ -58,15 +54,6 @@ input[type=text]::-ms-clear {
 
 }
 
-.form-control.form-control__postcode {
-    width: 25%;
-}
-
-.form-control.form-control__number {
-    width: 75%;
-    max-width: 230px;
-}
-
 .form-label {
     @include media(mobile) {
         width: auto;
@@ -101,18 +88,8 @@ ul.form-hint {
         background: transparent;
     }
 
-    .error > & {
+    .form-group-error > & {
         margin: 4px 0 0 4px;
-    }
-}
-
-.errors {
-    width: auto;
-    margin-bottom: 5px;
-
-    .error-message {
-        color: $error-colour;
-        width: auto;
     }
 }
 
@@ -126,13 +103,6 @@ ul.form-hint {
         float: left;
         width: 50%;
         padding-right: 20px;
-    }
-
-    .error {
-        .form-label,
-        .error-message {
-            width: 49%;
-        }
     }
 
     .panel {

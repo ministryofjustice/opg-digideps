@@ -19,7 +19,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}error{% endif %}">
+        <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}form-group-error{% endif %}">
             {{ form_checkbox_group(form.hasCapacityChanged, 'mentalCapacity.form.hasCapacityChanged', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
