@@ -128,7 +128,17 @@
                                 state: reportStatus.visitsCareState
                             } %}
 
-                            <!-- TODO - MISSING HEALTH AND LIFESTYLE?? -->
+                            {% if is104 %}
+
+                            {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'lifestyle',
+                            report: report,
+                            info: true,
+                            description: true,
+                            state: reportStatus.lifestyleState
+                            } %}
+                            {%  endif %}
 
                             {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
