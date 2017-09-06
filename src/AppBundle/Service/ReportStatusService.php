@@ -379,7 +379,7 @@ class ReportStatusService
      */
     public function balanceMatches()
     {
-        if ($this->report->getType() == Report::TYPE_103) {
+        if (in_array($this->report->getType(), [Report::TYPE_103, Report::TYPE_104])) {
             return true;
         }
 
@@ -447,7 +447,6 @@ class ReportStatusService
             'visitsCare' => $this->getVisitsCareState()['state'],
             'actions'    => $this->getActionsState()['state'],
             'otherInfo'  => $this->getOtherInfoState()['state'],
-            'gifts'      => $this->getGiftsState()['state'],
             'documents'  => $this->getDocumentsState()['state'],
         ];
 
@@ -461,6 +460,7 @@ class ReportStatusService
                 'moneyOut'     => $this->getMoneyOutState()['state'],
                 'assets'       => $this->getAssetsState()['state'],
                 'debts'        => $this->getDebtsState()['state'],
+                'gifts'      => $this->getGiftsState()['state'],
             ];
 
             if (count($this->report->getBankAccounts())) {
@@ -478,6 +478,8 @@ class ReportStatusService
                 'moneyOutShort' => $this->getMoneyOutShortState()['state'],
                 'assets'        => $this->getAssetsState()['state'],
                 'debts'         => $this->getDebtsState()['state'],
+                'gifts'      => $this->getGiftsState()['state'],
+
             ];
         }
 
@@ -487,6 +489,12 @@ class ReportStatusService
             } else {
                 $states['deputyExpense'] = $this->getExpensesState()['state'];
             }
+        }
+
+        if ($type == Report::TYPE_104) {
+            $states += [
+                'lifestyle' => $this->getLifestyleState()['state']
+            ];
         }
 
         return $states;
