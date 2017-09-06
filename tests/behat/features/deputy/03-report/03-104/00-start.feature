@@ -26,6 +26,8 @@ Feature: Report 104 start
     Then I should not see the "edit-money_transfers" link
     Then I should not see the "edit-money_in_short" link
     Then I should not see the "edit-money_out_short" link
+    Then I should not see the "edit-gifts" link
+
 
 
 
