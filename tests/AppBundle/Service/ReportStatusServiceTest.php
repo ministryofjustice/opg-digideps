@@ -591,6 +591,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             $ret += array_pop($this->MoneyOutShortProvider())[0];
         }
 
+        if ($type == Report::TYPE_104) {
+            $ret += array_pop($this->lifestyleProvider())[0];
+        }
+
         if ($has106Flag && in_array($type, [Report::TYPE_102, Report::TYPE_103])) {
             $ret += array_pop($this->paFeesExpensesProvider())[0];
         }
@@ -610,6 +614,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         // all complete 103
         $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
+        $this->assertEquals([], $object->getRemainingSections());
+
+        // all complete 104
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_104));
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 106
