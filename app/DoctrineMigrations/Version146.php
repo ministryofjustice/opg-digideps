@@ -17,7 +17,6 @@ class Version146 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
         $this->addSql('ALTER TABLE report DROP CONSTRAINT FK_C42F7784641EE842');
         $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784641EE842 FOREIGN KEY (submitted_by) REFERENCES dd_user (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
     }

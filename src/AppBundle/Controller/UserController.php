@@ -411,30 +411,34 @@ class UserController extends RestController
      */
     private function updateTeamAddresses(EntityDir\User $user, array $data)
     {
-        //set the team address to the same
-        $team = $user->getTeams()->first();
-        $this->hydrateEntityWithArrayData($team, $data, [
-            'address1' => 'setAddress1',
-            'address2' => 'setAddress2',
-            'address3' => 'setAddress3',
-            'address_postcode' => 'setAddressPostcode',
-            'address_country' => 'setAddressCountry'
-        ]);
-        $this->getEntityManager()->persist($team);
-
-        //and the other team PAs addresses
-        foreach($team->getMembers() as $teamMember) {
-            $this->hydrateEntityWithArrayData($teamMember, $data, [
+        if ( !empty($data['address1'])
+            && !empty($data['address_postcode'])
+            && !empty($data['address_country'])
+        ) {
+            //set the team address to the same
+            $team = $user->getTeams()->first();
+            $this->hydrateEntityWithArrayData($team, $data, [
                 'address1' => 'setAddress1',
                 'address2' => 'setAddress2',
                 'address3' => 'setAddress3',
                 'address_postcode' => 'setAddressPostcode',
                 'address_country' => 'setAddressCountry'
             ]);
-            $this->getEntityManager()->persist($teamMember);
-        }
+            $this->getEntityManager()->persist($team);
 
-        return $this->getEntityManager()->flush();
+            //and the other team PAs addresses
+            foreach ($team->getMembers() as $teamMember) {
+                $this->hydrateEntityWithArrayData($teamMember, $data, [
+                    'address1' => 'setAddress1',
+                    'address2' => 'setAddress2',
+                    'address3' => 'setAddress3',
+                    'address_postcode' => 'setAddressPostcode',
+                    'address_country' => 'setAddressCountry'
+                ]);
+                $this->getEntityManager()->persist($teamMember);
+                $this->getEntityManager()->flush();
+            }
+        }
     }
 
     /**

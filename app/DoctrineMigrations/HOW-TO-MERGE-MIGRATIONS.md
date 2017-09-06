@@ -1,12 +1,23 @@
-* Assert production is released to the latest version (e.g 116)
-* delete all the migrations
-* app/console doctrine:schema:drop --force
-* app/console doctrine:migrations:diff
-* rename generate migrations into Version<lastest>, e.g. Version116
-* run resetdb script and check it goes OK
-* run unit tests on the API and check results
-* push into a branch, merge if tests pass
-* note: changes won't affect staging nor production, as they are already migrated
-* Optional: remove old migrations table entry (excluding latest) on prod and staging
-* 
+* Check out last production tag (https://complete-deputy-report.service.gov.uk/)
+* Check what is the latest migration. E.g. 144
+
+* bash into API container 
+if using docker-sync, delete Entity directory 
+
+        rm -rf src/AppBundle/Entity/
+    
+  and wait for re-sync (or launch `docker-sync sync`)
+  
+        sh scripts/initialize_schema.sh`
+        rm -f app/DoctrineMigrations/Version*
+        app/console doctrine:migrations:diff
+        
+* `git checkout .` to un-delete the migrations
+
+    git checkout master
+    git checkout -b merge-migrations
+    
+* delete migrations up to 144 included
+* rename (class and file) the previously created migration into Version144
+* Build the branch, merge if green
 
