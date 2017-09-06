@@ -134,6 +134,13 @@ class Report
     private $visitsCare;
 
     /**
+     * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
+     *
+     * @var Lifestyle
+     */
+    private $lifestyle;
+
+    /**
      * @JMS\Type("AppBundle\Entity\Report\Action")
      *
      * @var Action
@@ -688,6 +695,22 @@ class Report
     public function setVisitsCare($visitsCare)
     {
         $this->visitsCare = $visitsCare;
+    }
+
+    /**
+     * @return Report\Lifestyle
+     */
+    public function getLifestyle()
+    {
+        return $this->lifestyle ?: new Lifestyle();
+    }
+
+    /**
+     * @param \AppBundle\Entity\Report\Lifestyle $lifestyle
+     */
+    public function setLifestyle($lifestyle)
+    {
+        $this->lifestyle = $lifestyle;
     }
 
     public function getAction()

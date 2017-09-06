@@ -1,5 +1,5 @@
 {% if useFormGroup %}
-    <div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox-group {% if not element.vars.valid %}form-group-error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 {% endif %}
 
     <fieldset class="{{ fieldSetClass }}">
@@ -22,16 +22,17 @@
                 <p class="form-hint description">{{ description | raw }}</p>
             {% endif %}
 
-            <label class="block-label {{ labelClass }}" for="{{ choiceElement.vars.id }}"
-              {% if labelDataTarget %} data-target="{{ labelDataTarget }}" {% endif %}
-            >
+            <div class="multiple-choice" {% if labelDataTarget %} data-target="{{ labelDataTarget }}"{% endif %}>
                 {% set attr = {'class': elementClass } %}
                 {% if disabled %}
                     {% set attr = attr | merge({'disabled': 'disabled'}) %}
                 {% endif %}
                 {{ form_widget(choiceElement, {'attr': attr}) }}
-                {{ choiceElement.vars.label | trans({}, translationDomain)}}
-            </label>
+                <label class="{{ labelClass }}" for="{{ choiceElement.vars.id }}">
+                    {{ choiceElement.vars.label | trans({}, translationDomain)}}
+                </label>
+            </div>
+
         {% endfor %}
     </fieldset>
 

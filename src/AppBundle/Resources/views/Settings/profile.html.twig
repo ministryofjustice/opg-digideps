@@ -18,17 +18,17 @@
         <table class="text">
             <tbody>
                 <tr>
-                    <th scope="row">{{ 'profile-page.fullName' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.fullName' | trans }}</th>
                     <td class="behat-region-profile-name">{{ user.getFullname }}</td>
                 </tr>
                 {% if app.user.isDeputyPa() %}
                 <tr>
-                    <th scope="row">{{ 'profile-page.jobTitle' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.jobTitle' | trans }}</th>
                     <td class="behat-region-profile-job">{{ user.getJobTitle}}</td>
                 </tr>
                 {% endif %}
                 <tr valign="top">
-                    <th scope="row">{{ 'profile-page.address' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.address' | trans }}</th>
                     <td class="behat-region-profile-address">
                         {% if user.address1 is not empty %}
                             <div itemprop="streetAddress">{{ user.address1 }}</div>
@@ -48,15 +48,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'profile-page.mainPhoneNumber' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.mainPhoneNumber' | trans }}</th>
                     <td class="behat-region-profile-phone">{{ user.phoneMain }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'profile-page.alternativePhoneNumber' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.alternativePhoneNumber' | trans }}</th>
                     <td>{{ user.phoneAlternative }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">{{ 'profile-page.emailAddress' | trans }}</th>
+                    <th scope="row" class="bold">{{ 'profile-page.emailAddress' | trans }}</th>
                     <td class="behat-region-profile-email">{{ user.email }}</td>
                 </tr>
             </tbody>

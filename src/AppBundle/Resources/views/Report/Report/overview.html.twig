@@ -9,7 +9,6 @@
 {% set is102 = report.type == '102' %}
 {% set is103 = report.type == '103' %}
 {% set is104 = report.type == '104' %}
-
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
@@ -77,7 +76,18 @@
                 description: true,
                 state: reportStatus.visitsCareState
             } %}
+            {% if is104 %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'lifestyle',
+                report: report,
+                info: true,
+                description: true,
+                state: reportStatus.lifestyleState
+                } %}
+            {% endif %}
         </li>
+
 
         {% if is102 or is103 %}
             <li id="finances-section" class="overview-section">

@@ -1,4 +1,4 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}error{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}form-group-error{% endif %}">
     <fieldset>
         <legend class="{% if legendClass is defined %} {{legendClass}}{% endif %}">
             <span class="form-label-bold text">
@@ -8,11 +8,12 @@
             {{ form_errors(element) }}
         </legend>
         {# day: show element or disable field depending on "showDay" setting #}
+        {% set errorClass = element.vars.valid ? '' : ' form-control-error ' %}
         <div class="form-date">
             {% if showDay == 'true' %}
                 <div class="form-group form-group-day">
                     {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day'} }) }}
-                    {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month, 'attr': {'class': 'form-control js-limit-chars-2', 'min': 0, 'max': 31, 'pattern': '[0-9]*'}}) }}
+                    {{ form_widget(element.day, { 'type':'number', 'value': element.day.vars.value | pad_day_month, 'attr': {'class': 'form-control js-limit-chars-2' ~ errorClass, 'min': 0, 'max': 31, 'pattern': '[0-9]*'}}) }}
                 </div>
             {% else %}
                 {% do element.day.setRendered %}
@@ -20,12 +21,12 @@
 
             <div class="form-group form-group-month">
                 {{ form_label(element.month,'Month', {'label_attr': {'for': 'dob-month'} }) }}
-                {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'form-control js-limit-chars-2', 'min': 0, 'max': 12, 'pattern': '[0-9]*'}}) }}
+                {{ form_widget(element.month, { 'type':'number', 'value': element.month.vars.value | pad_day_month, 'attr': {'class': 'form-control js-limit-chars-2' ~ errorClass, 'min': 0, 'max': 12, 'pattern': '[0-9]*'}}) }}
             </div>
 
             <div class="form-group form-group-year">
                 {{ form_label(element.year,'Year', {'label_attr': {'for': 'dob-year'} }) }}
-                {{ form_widget(element.year, { 'type':'number', 'attr': {'class': 'form-control js-limit-chars-4', 'min': 0, 'max': 2500, 'pattern': '[0-9]*'}}) }}
+                {{ form_widget(element.year, { 'type':'number', 'attr': {'class': 'form-control js-limit-chars-4' ~ errorClass, 'min': 0, 'max': 2500, 'pattern': '[0-9]*'}}) }}
             </div>
         </div>
     </fieldset>
