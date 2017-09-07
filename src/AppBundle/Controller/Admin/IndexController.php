@@ -430,7 +430,7 @@ class IndexController extends AbstractController
     public function statsCsvAction(Request $request, $timestamp)
     {
         try {
-            $rawCsv = $this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
+            $rawCsv = (string)$this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
         } catch (\RuntimeException $e) {
             return $this->render('AppBundle:Admin:stats-wait.html.twig', [
                 'timestamp' => $timestamp,
