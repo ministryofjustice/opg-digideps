@@ -45,6 +45,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                     'getWhoIsDoingTheCaring'       => null,
                     'getDoesClientHaveACarePlan'   => null,
                 ]),
+                'getLifestyle'                     => m::mock(VisitsCare::class, [
+                    'getCareAppointments'       => null,
+                    'getDoesClientUndertakeSocialActivities' => null,
+                ]),
                 'getAction'                         => m::mock(Action::class, [
                     'getDoYouExpectFinancialDecisions' => null,
                     'getDoYouHaveConcerns'             => null,
@@ -180,6 +184,39 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->getStatusServiceWithReportMocked($mocks);
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
+    }
+
+
+    public function lifestyleProvider()
+    {
+        $empty = m::mock(VisitsCare::class, [
+            'getCareAppointments'       => null,
+            'getDoesClientUndertakeSocialActivities' => null,
+        ]);
+        $incomplete = m::mock(VisitsCare::class, [
+            'getCareAppointments'       => 'yes',
+            'getDoesClientUndertakeSocialActivities' => null,
+        ]);
+        $done = m::mock(VisitsCare::class, [
+            'getCareAppointments'       => 'yes',
+            'getDoesClientUndertakeSocialActivities' => 'yes',
+        ]);
+
+        return [
+            [['getLifestyle' => $empty], StatusService::STATE_NOT_STARTED],
+            [['getLifestyle' => $incomplete], StatusService::STATE_INCOMPLETE],
+            [['getLifestyle' => $done], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider lifestyleProvider
+     */
+    public function lifestyle($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getLifestyleState()['state']);
     }
 
     public function bankAccountProvider()
@@ -554,6 +591,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             $ret += array_pop($this->MoneyOutShortProvider())[0];
         }
 
+        if ($type == Report::TYPE_104) {
+            $ret += array_pop($this->lifestyleProvider())[0];
+        }
+
         if ($has106Flag && in_array($type, [Report::TYPE_102, Report::TYPE_103])) {
             $ret += array_pop($this->paFeesExpensesProvider())[0];
         }
@@ -573,6 +614,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         // all complete 103
         $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
+        $this->assertEquals([], $object->getRemainingSections());
+
+        // all complete 104
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_104));
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 106
