@@ -1,7 +1,6 @@
 page:
-  title: Your reports
-  htmlTitle: New deputy report - Your reports | GOV.UK
-
+  htmlTitle: Deputy report - Your reports | GOV.UK
+  pageTitle: Your reports
 
 odr:
   notStarted:
