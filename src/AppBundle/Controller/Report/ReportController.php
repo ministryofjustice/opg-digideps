@@ -79,8 +79,7 @@ class ReportController extends AbstractController
         return [
             'client' => $client,
             'reports' => $reports,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
-            'filter' => 'propFinance', // extend with param when required
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
 

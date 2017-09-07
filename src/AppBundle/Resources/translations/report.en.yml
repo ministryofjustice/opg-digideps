@@ -1,9 +1,9 @@
+homepage:
+  htmlTitle: Deputy report - Your reports | GOV.UK
+  pageTitle: Your reports
+
 page:
- # below deprecated ? remove
-  propFinance:
-      htmlTitle: "Deputy report - annual deputy reports | GOV.UK"
-      pageSectionTitle: Annual deputy reports for %client%
-      title: Annual deputy reports for %client%
+
   lastLoggedIn: "Last signed in:"
 reportDataList:
   editReportingPeriod: "Edit report dates"

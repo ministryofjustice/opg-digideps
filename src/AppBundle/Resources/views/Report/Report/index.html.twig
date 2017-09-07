@@ -1,15 +1,15 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% import 'AppBundle:Macros:macros.html.twig' as macros %}
-
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'homepage' %}
 
- {% block htmlTitle %}
-     {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
- {% endblock %}
-{% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
+{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
