@@ -34,17 +34,15 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @Route("/stats/csv-download/{timestamp}", name="admin_stats_csv")
+     * @Route("/stats/csv-download", name="admin_stats_csv")
      * @Template
      */
-    public function statsCsvAction(Request $request, $timestamp)
+    public function statsCsvAction(Request $request)
     {
         try {
-            $rawCsv = (string)$this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
+            $rawCsv = (string)$this->getRestClient()->get("stats/users.csv", 'raw');
         } catch (\RuntimeException $e) {
-            return $this->render('AppBundle:Admin/Stats:stats-wait.html.twig', [
-                'timestamp' => $timestamp,
-            ]);
+            echo $e;
         }
 
         $response = new Response();
