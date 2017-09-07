@@ -80,7 +80,7 @@ statsPage:
   supportTitle: Statistics
   heading: Deputy's analysis
   limitedTo100: Limited to last 100 users.
-  downloadCSV: <a href="%csvFile%">Download the CSV</a> to get the full list (update to this morning 7am)
+  downloadCSV: <a href="%csvFile%">Download the CSV</a> to get the full list (updated to this morning 7am)
   pleaseWait: Please wait ...
   dataGenerated: |
     Data is being generated, Click here to <a href="%csvFile%">download</a>
