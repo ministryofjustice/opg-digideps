@@ -411,44 +411,6 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/stats", name="admin_stats")
-     * @Template
-     */
-    public function statsAction(Request $request)
-    {
-        $data = $this->getRestClient()->get('stats/users?limit=100', 'array');
-
-        return [
-            'data' => $data,
-        ];
-    }
-
-    /**
-     * @Route("/stats/csv-download/{timestamp}", name="admin_stats_csv")
-     * @Template
-     */
-    public function statsCsvAction(Request $request, $timestamp)
-    {
-        try {
-            $rawCsv = (string)$this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
-        } catch (\RuntimeException $e) {
-            return $this->render('AppBundle:Admin:stats-wait.html.twig', [
-                'timestamp' => $timestamp,
-            ]);
-        }
-
-        $response = new Response();
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'plain/text');
-        $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
-        $response->sendHeaders();
-        $response->setContent($rawCsv);
-
-        return $response;
-    }
-
-    /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
      **/
     public function passwordForgottenAction(Request $request, $email)
