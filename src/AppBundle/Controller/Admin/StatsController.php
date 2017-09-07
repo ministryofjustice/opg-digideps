@@ -17,11 +17,14 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/admin/stats")
+ */
 class StatsController extends AbstractController
 {
 
     /**
-     * @Route("/stats", name="admin_stats")
+     * @Route("", name="admin_stats")
      * @Template
      */
     public function statsAction(Request $request)
@@ -34,7 +37,7 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @Route("/stats/csv-download", name="admin_stats_csv")
+     * @Route("/csv-download", name="admin_stats_csv")
      * @Template
      */
     public function statsCsvAction(Request $request)
