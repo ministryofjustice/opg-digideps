@@ -7,6 +7,7 @@ use AppBundle\Service\StatsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/stats")
@@ -33,21 +34,14 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("/users/csv/{timestamp}")
+     * Return CSV file created by crontab
+     * @Route("/users.csv")
      * @Method({"GET"})
      */
-    public function usersCsv(Request $request, $timestamp)
+    public function usersCsv(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
-        $file = '/tmp/stats' . $timestamp . '.csv';
-
-        if (file_exists($file)) {
-            echo file_get_contents($file);
-            die;
-        }
-
-        exec("/usr/bin/php /app/app/console digideps:stats.csv $file &> /dev/null &");
-        echo 'done';
+        $response = new Response();
+        $response->setContent(readfile('/tmp/stats.csv'));
+        return $response;
     }
 }
