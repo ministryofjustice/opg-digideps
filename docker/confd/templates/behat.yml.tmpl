@@ -69,8 +69,16 @@ default:
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
-            goutte: ~
-            default_session: goutte
+              goutte:
+                  guzzle_parameters:
+                      defaults:
+                          verify: false
+              files_path: %paths.base%/fixtures/
+          {{ if exists "/frontend/nonadmin/host" }}
+              base_url: {{ getv "/frontend/nonadmin/host" }}
+          {{ else }}
+              base_url: "https://digideps-client.local/"
+          {{ end }}
 
 chrome:
     extensions:
@@ -174,14 +182,18 @@ firefoxlocal:
             default_session: selenium2
             selenium2: ~
 
+# deprecated, remove and use default profile
 headless:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
-            goutte: ~
+            goutte:
+                guzzle_parameters:
+                    defaults:
+                      verify: false
             files_path: %paths.base%/fixtures/
         {{ if exists "/frontend/nonadmin/host" }}
             base_url: {{ getv "/frontend/nonadmin/host" }}
         {{ else }}
-            base_url: "http://digideps-client.local/"
+            base_url: "https://digideps-client.local/"
         {{ end }}
 
