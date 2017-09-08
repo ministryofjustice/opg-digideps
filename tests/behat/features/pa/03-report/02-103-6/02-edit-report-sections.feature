@@ -1,23 +1,10 @@
 Feature: PA user edits report sections
 
-  # 103 Report
-  Scenario: PA 103 attaches no documents (to enable submission)
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
-    Then the report should not be submittable
-    And I click on "edit-documents, start"
-  # chose "no documents"
-    Then the URL should match "report/\d+/documents/step/1"
-    Given the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | document_wishToProvideDocumentation_1 | no |
-  # check no documents in summary page
-    Then the URL should match "report/\d+/documents/summary"
-    And I should not see the region "document-list"
-    
+  @103
   Scenario: PA 103 money in
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
+    Given I load the application status from "102-common-sections-complete"                            # DigidepsBehat\FeatureContext::iLoadtheApplicationStatusFrom()
+    And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-money_in_short, start"
     And the step with the following values CAN be submitted:
       | money_short_moneyShortCategoriesIn_0_present | 1 |
@@ -44,7 +31,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 103 money out
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
+    And I click on "pa-report-open" in the "client-1000014" region
     And I click on "edit-money_out_short, start"
     And the step with the following values CAN be submitted:
       | money_short_moneyShortCategoriesOut_0_present | 1 |

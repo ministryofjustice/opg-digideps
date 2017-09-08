@@ -1,9 +1,10 @@
 Feature: Report submit (client 1000011)
 
+    @103
     Scenario: Submit 103 report
         Given I load the application status from "pa-report-103-inprogress"
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "pa-report-open" in the "client-1000011" region
+        And I click on "pa-report-open" in the "client-1000014" region
         And I click on "edit-decisions, start"
         Then the step with the following values CAN be submitted:
             | mental_capacity_hasCapacityChanged_1 | stayedSame |

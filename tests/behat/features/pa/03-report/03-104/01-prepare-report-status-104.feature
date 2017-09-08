@@ -3,10 +3,11 @@ Feature: Report 104 start
   @deputy
   Scenario: load app status to common sections completed, change type to 104 and check not submittable
     Given I load the application status from "102-common-sections-complete"
-    And I change the report 1 type to "104"
+    And I change the report 7 type to "104"
     # assert not submittable yet
-    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    # click on 104 report
+    And I click on "pa-report-open" in the "client-100014" region
     #test tabs
     Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link
@@ -21,7 +22,6 @@ Feature: Report 104 start
     Then I should not see the "edit-money_out_short" link
     Then I should not see the "edit-assets" link
     Then I should not see the "edit-debts" link
-
     # check not submittable (as 104 lifestyle it not completed yet)
     Then the report should not be submittable
 

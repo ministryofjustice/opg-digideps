@@ -1,14 +1,15 @@
-Feature: Report 103 start
+Feature: Report 103-6 start
 
-  @deputy
+  @deputy @103
   Scenario: load app status to common sections completed, change type to 103 and check not submittable
     # Since 103 shares same section as 102, import status from 102 before money section (that is the only different section) were added
     # that checkpoint correspond to a 103 report without money added
     Given I load the application status from "102-common-sections-complete"
-    And I change the report 1 type to "103"
+    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I change the report 7 type to "103"
+
     # assert not submittable yet
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
+    And I click on "pa-report-open" in the "client-1000014" region
     #test tabs
     Then I should see the "edit-contacts" link
     Then I should see the "edit-decisions" link
