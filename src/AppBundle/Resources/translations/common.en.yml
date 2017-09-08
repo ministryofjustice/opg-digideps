@@ -8,6 +8,8 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
+startNow: Start now
+download: Download
 
 # Headings / Labels
 name: Name
@@ -15,6 +17,11 @@ role: Role
 address: Address
 phone: Phone
 email: Email
+
+# Statuses
+notFinished: Not finished
+notStarted: Not started
+
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago

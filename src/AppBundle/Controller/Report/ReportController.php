@@ -76,9 +76,21 @@ class ReportController extends AbstractController
         $reports = $client ? $client->getReports() : [];
         arsort($reports);
 
+        $reportActive = null;
+        $reportsSubmitted = [];
+        foreach ($reports as $currentReport) {
+            if ($currentReport->getSubmitted()) {
+                $reportsSubmitted[] = $currentReport;
+            } else {
+                $reportActive = $currentReport;
+            }
+        }
+
         return [
             'client' => $client,
             'reports' => $reports,
+            'reportActive' => $reportActive,
+            'reportsSubmitted' => $reportsSubmitted,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
