@@ -196,31 +196,29 @@
 {% endmacro %}
 
 {% macro answerYesNo(param) %}
-    {% if param.answer %}
-        <div class="dont-break">
-            <div class="box">
-                <h3 class="label question bold">{{ param.question }}</h3>
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ param.question }}</h3>
 
-                <table class="checkboxes labelvalue inline">
-                    <tr>
-                        <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
-                        <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
-                    </tr>
-                </table>
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
 
-                {% if param.answer == param.showMoreDetailsWith %}
-                    <div class="labelvalue push-half--top">
-                        {% if param.moreDetailsLabel | default(false) %}
-                            <h3 class="label question bold">{{ param.moreDetailsLabel }}</h3>
-                        {% endif %}
-                        <div class="value">{{ param.moreDetails | nl2br }}</div>
-                    </div>
-                {% endif %}
-            </div>
+            {% if param.answer == param.showMoreDetailsWith %}
+                <div class="labelvalue push-half--top">
+                    {% if param.moreDetailsLabel | default(false) %}
+                        <h3 class="label question bold">{{ param.moreDetailsLabel }}</h3>
+                    {% endif %}
+                    <div class="value">{{ param.moreDetails | nl2br }}</div>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 {% endmacro %}
 
 
