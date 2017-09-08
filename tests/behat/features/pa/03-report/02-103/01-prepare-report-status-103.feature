@@ -11,6 +11,7 @@ Feature: Report 103 start
     And I click on "pa-report-open" in the "client-1000011" region
     #test tabs
     Then I should see the "edit-contacts" link
+    Then I should see the "edit-decisions" link
     Then I should see the "edit-visits_care" link
     Then I should see the "edit-pa_fee_expense" link
     Then I should see the "edit-gifts" link

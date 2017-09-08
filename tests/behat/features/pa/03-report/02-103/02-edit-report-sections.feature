@@ -14,10 +14,10 @@ Feature: PA user edits report sections
   # check no documents in summary page
     Then the URL should match "report/\d+/documents/summary"
     And I should not see the region "document-list"
-
+    
   Scenario: PA 103 money in
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-1000011" region
     And I click on "edit-money_in_short, start"
     And the step with the following values CAN be submitted:
       | money_short_moneyShortCategoriesIn_0_present | 1 |
