@@ -7,12 +7,12 @@ Feature: Report 103 start
     Given I load the application status from "102-common-sections-complete"
     And I change the report 1 type to "103"
     # assert not submittable yet
-    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016"
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000011" region
     #test tabs
     Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link
-    Then I should see the "edit-deputy_expenses" link
+    Then I should see the "edit-pa_fee_expense" link
     Then I should see the "edit-gifts" link
     Then I should see the "edit-bank_accounts" link
     Then I should not see the "edit-money_transfers" link
