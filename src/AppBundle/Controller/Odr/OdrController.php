@@ -47,7 +47,7 @@ class OdrController extends AbstractController
 
         // in case the user jumps to this page directly via URL
         if (!$user->isOdrEnabled()) {
-            return $this->redirectToRoute('reports', ['type' => Report::TYPE_102]);
+            return $this->redirectToRoute('lay_home');
         }
 
         $client = $user->getClients()[0];

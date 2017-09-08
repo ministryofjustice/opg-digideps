@@ -128,7 +128,7 @@ class Redirector
             return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
         }
 
-        return $this->router->generate('reports', ['type' => EntityDir\Report\Report::TYPE_102]);
+        return $this->router->generate('lay_home');
     }
 
     /**

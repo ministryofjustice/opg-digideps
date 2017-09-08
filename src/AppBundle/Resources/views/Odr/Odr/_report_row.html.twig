@@ -18,7 +18,7 @@
                     {{ reportActive.startDate | date("j F Y") }} -
                     {{ reportActive.endDate | date("j F Y") }}
                 </p>
-                <a href="{{ path('reports', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
+                <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
             {% endif %}
         </div>
         {% set link = reportActive ?

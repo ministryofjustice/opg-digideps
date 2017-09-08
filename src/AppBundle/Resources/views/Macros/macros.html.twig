@@ -10,7 +10,7 @@
                 {% if isUserOdrEnabled %}
                     <a href="{{ path('odr_index') }}">Deputy reports</a>
                 {% else %}
-                    <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
+                    <a href="{{ path('lay_home') }}">Deputy reports</a>
                 {% endif %}
             </li>
             {% endif %}
@@ -58,7 +58,7 @@
             {% endif %}
         {% else %}
             <li>
-                <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
+                <a href="{{ path('lay_home') }}">Deputy reports</a>
             </li>
             {% if 'settings' in section and section != 'settings' %}
                 <li>

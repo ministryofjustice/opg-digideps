@@ -58,10 +58,10 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/reports/{type}", name="reports")
+     * @Route("/lay", name="lay_home")
      * @Template()
      */
-    public function indexAction(Request $request, $type)
+    public function indexAction(Request $request)
     {
         $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports']);
 
@@ -98,7 +98,7 @@ class ReportController extends AbstractController
         ]);
         $returnLink = $this->getUser()->isDeputyPa() ?
             $this->generateClientProfileLink($report->getClient())
-            : $this->generateUrl('reports', ['type' => $report->getType()]);
+            : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isValid()) {
@@ -310,7 +310,7 @@ class ReportController extends AbstractController
         if ($this->getUser()->isDeputyPa()) {
             $backLink = $this->generateClientProfileLink($report->getClient());
         } else {
-            $backLink = $this->generateUrl('reports', ['type' => $report->getType()]);
+            $backLink = $this->generateUrl('lay_home');
         }
 
         return [
