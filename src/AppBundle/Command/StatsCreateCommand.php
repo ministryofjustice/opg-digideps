@@ -9,12 +9,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @codeCoverageIgnore
  */
-class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
+class StatsCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('digideps:stats.csv')
+            ->setName('digideps:stats-create')
             ->addArgument('file')
             ->setDescription('Get CSV of stats ')
         ;
@@ -22,6 +22,8 @@ class StatsCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // avoid being executed concurrently on multiple API boxes and stress the db too much
+        sleep(rand(1, 300));
         $statsService = $this->getContainer()->get('stats_service'); /* @var $statsService StatsService */
 
         $file = $input->getArgument('file');
