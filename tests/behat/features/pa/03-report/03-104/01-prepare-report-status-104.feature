@@ -1,13 +1,17 @@
 Feature: Report 104 start
 
-  @deputy
+  @deputy @104
   Scenario: load app status to common sections completed, change type to 104 and check not submittable
     Given I load the application status from "102-common-sections-complete"
     And I change the report 7 type to "104"
+
+
+  @deputy @104
+  Scenario: test tabs for 104
     # assert not submittable yet
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # click on 104 report
-    And I click on "pa-report-open" in the "client-100014" region
+    And I click on "pa-report-open" in the "client-1000014" region
     #test tabs
     Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link

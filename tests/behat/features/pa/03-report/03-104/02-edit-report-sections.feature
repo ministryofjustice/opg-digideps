@@ -1,13 +1,10 @@
-Feature: PA user edits report sections
+Feature: PA user edits 104 report sections
 
-
-  Scenario: PA 104 lifestyle
-
-Feature: Report 104 health welfare
-
-  @deputy
+  @deputy @104
   Scenario: Complete lifestyle section
-    Given I load the application status from "102-common-sections-complete"
+
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-1000014" region
     And I change the report 7 type to "104"
     # assert not submittable yet
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"

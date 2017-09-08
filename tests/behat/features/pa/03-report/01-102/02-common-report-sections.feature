@@ -1,5 +1,6 @@
 Feature: PA user edits common report sections common to ALL report types
 
+  @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -19,6 +20,7 @@ Feature: PA user edits common report sections common to ALL report types
       | decision_exist_hasDecisions_1 | no |
       | decision_exist_reasonForNoDecisions | rfnd |
 
+  @102 @103-6 @104
   Scenario: PA 102 saves a contact
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -29,6 +31,7 @@ Feature: PA user edits common report sections common to ALL report types
       | contact_exist_hasContacts_1 | no |
       | contact_exist_reasonForNoContacts | rfnc |
 
+  @102 @103-6 @104
   Scenario: PA 102 visits and care steps
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -58,6 +61,7 @@ Feature: PA user edits common report sections common to ALL report types
       | visits_care_whenWasCarePlanLastReviewed_month | 12   |
       | visits_care_whenWasCarePlanLastReviewed_year  | 2015 |
 
+  @102 @103-6 @104
   Scenario: PA 102 report actions
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -73,6 +77,7 @@ Feature: PA user edits common report sections common to ALL report types
       | action_doYouHaveConcerns_0      | yes   |
       | action_doYouHaveConcernsDetails | dyhcd |
 
+  @102 @103-6 @104
   Scenario: PA 102 any other info
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -83,7 +88,7 @@ Feature: PA user edits common report sections common to ALL report types
       | more_info_actionMoreInfo_0      | yes  |
       | more_info_actionMoreInfoDetails | amid |
 
-
+  @102 @103-6 @104
   Scenario: PA adds documents to 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
@@ -123,6 +128,7 @@ Feature: PA user edits common report sections common to ALL report types
       | report_document_upload_file   |
 
 
+  @102 @103-6 @104
   Scenario: PA deletes document from 102
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
