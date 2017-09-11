@@ -36,7 +36,9 @@ class Report
     const PROPERTY_AND_AFFAIRS = 2;
 
     const TYPE_102 = '102';
+    const TYPE_102_4 = '102-4';
     const TYPE_103 = '103';
+    const TYPE_103_4 = '103-4';
     const TYPE_104 = '104';
 
     // feature flags, to disable 103/104 if/when needed
@@ -69,7 +71,7 @@ class Report
      *
      * @JMS\Groups({"report", "report-type"})
      * @JMS\Type("string")
-     * @ORM\Column(name="type", type="string", length=3, nullable=false)
+     * @ORM\Column(name="type", type="string", length=10, nullable=false)
      */
     private $type;
 
