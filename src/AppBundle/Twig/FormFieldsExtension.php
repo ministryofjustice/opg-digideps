@@ -19,8 +19,7 @@ class FormFieldsExtension extends \Twig_Extension
     private $environment;
 
     /**
-     * @param type $translator
-     * @param type $params
+     * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
@@ -51,9 +50,9 @@ class FormFieldsExtension extends \Twig_Extension
      * @DEPRECATED
      * Renders form input field.
      *
-     * @param type  $element
-     * @param type  $elementName
-     * @param type  $transIndex
+     * @param mixed  $element
+     * @param string  $elementName
+     * @param integer  $transIndex
      * @param array $vars
      */
     public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
@@ -68,9 +67,9 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * Renders form checkbox field.
      *
-     * @param type  $element
-     * @param type  $elementName
-     * @param type  $transIndex
+     * @param mixed  $element
+     * @param string  $elementName
+     * @param integer  $transIndex
      * @param array $vars
      */
     public function renderCheckboxInput($element, $elementName, array $vars = [], $transIndex = null)
@@ -189,9 +188,9 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * Renders form select element.
      *
-     * @param type  $element
-     * @param type  $elementName
-     * @param type  $transIndex
+     * @param mixed  $element
+     * @param string  $elementName
+     * @param integer  $transIndex
      * @param array $vars
      */
     public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
@@ -274,10 +273,10 @@ class FormFieldsExtension extends \Twig_Extension
     }
 
     /**
-     * @param type  $element
-     * @param type  $elementName
+     * @param mixed  $element
+     * @param string  $elementName
      * @param array $vars
-     * @param type  $transIndex
+     * @param integer  $transIndex
      */
     public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null)
     {

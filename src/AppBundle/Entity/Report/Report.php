@@ -545,7 +545,7 @@ class Report
     }
 
     /**
-     * @param type $decisions
+     * @param Decision[] $decisions
      *
      * @return Report
      */
@@ -790,7 +790,7 @@ class Report
     }
 
     /**
-     * @param type $submitted
+     * @param boolean $submitted
      *
      * @return Report
      */
@@ -802,7 +802,7 @@ class Report
     }
 
     /**
-     * @param type $reportSeen
+     * @param boolean $reportSeen
      *
      * @return Report
      */
@@ -812,7 +812,7 @@ class Report
     }
 
     /**
-     * @return type
+     * @return boolean
      */
     public function getReportSeen()
     {

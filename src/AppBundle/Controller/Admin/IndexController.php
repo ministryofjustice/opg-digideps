@@ -231,7 +231,7 @@ class IndexController extends AbstractController
      * @Method({"GET"})
      * @Template()
      *
-     * @param type $id
+     * @param integer $id
      */
     public function deleteConfirmAction($id)
     {
