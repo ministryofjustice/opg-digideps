@@ -21,7 +21,7 @@ report:
   due: "Due: "
   notAvailable:
     status: NOT AVAILABLE
-    instructions: You can start filling in your annual deputy report once you've completed the new deputy report.
+    instructions: You can start filling in your current deputy report once you've completed the new deputy report.
   notStarted:
     status: NOT STARTED
     buttonLabel: Start now
@@ -30,13 +30,13 @@ report:
     buttonLabel: Continue
 
 history:
-  title: History of report submission (%number%)
+  title: Submitted reports (%number%)
   header:
     reportType: Report type
     reportingPeriod: Reporting period
     submissionDate: Submission date
   reports:
-    title: Annual deputy report
+    title: Current deputy report
     download: Download
     view: View
   odr:
