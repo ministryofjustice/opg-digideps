@@ -243,7 +243,7 @@ class VisitsCare
     }
 
     /**
-     * @param type $whoIsDoingTheCaring
+     * @param string $whoIsDoingTheCaring
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
@@ -259,7 +259,7 @@ class VisitsCare
     }
 
     /**
-     * @param type $doesClientHaveACarePlan
+     * @param string $doesClientHaveACarePlan
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {

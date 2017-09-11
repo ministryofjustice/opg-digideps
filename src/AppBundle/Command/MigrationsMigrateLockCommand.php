@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -74,7 +75,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     /**
      * release lock.
      *
-     * @param type $output
+     * @param OutputInterface $output
      */
     private function releaseLock($output)
     {
