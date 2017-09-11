@@ -1,7 +1,7 @@
 Feature: PA report
 
   # Logic will evolve differently therefore better to have regression test on this
-  Scenario: PA edit report dates
+  Scenario: PA edit 102 report dates
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-1000014" region
@@ -52,7 +52,7 @@ Feature: PA report
     # restore initial values (for future tests and have this test not affecting subsequent scenarios)
     And I load the application status from "team-users-complete"
 
-  Scenario: PA admin has access to edit report dates
+  Scenario: PA admin has access to edit 102 report dates
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-1000014" region

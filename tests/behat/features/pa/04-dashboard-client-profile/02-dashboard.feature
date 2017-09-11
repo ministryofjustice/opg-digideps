@@ -6,7 +6,7 @@ Feature: PA dashboard
     # check pagination
     And I should see the "client" region exactly 15 times
     When I click on "paginator-page-2"
-    Then I should see the "client" region exactly 2 times
+    Then I should see the "client" region exactly 3 times
     # check search
     When I fill in "search" with "1000010"
     And I press "search_submit"
