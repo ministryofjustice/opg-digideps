@@ -160,9 +160,8 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $response = $this->getRestClient()->post('report', $form->getData());
-
-            return $this->redirect($this->generateUrl('report_overview', ['reportId' => $response['report']]));
+            $this->getRestClient()->post('report', $form->getData());
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         return ['form' => $form->createView()];
