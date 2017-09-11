@@ -21,70 +21,69 @@
     {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
     <div class="card soft-half">
         <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
-        <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        <h3 class="heading-medium flush--ends">
+            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
+                {{ reportActive.getPeriod() }} report
+            </a>
+        </h3>
         <div class="card-body">
-            {% if reportActive %}
-                <p class="flush--bottom">
-                    {{ reportActive.startDate | date("j F Y") }} -
-                    {{ reportActive.endDate | date("j F Y") }}
-                </p>
-                <p>
-                    <strong class="bold">Due date: </strong>
-                    {{ reportActive.dueDate | date(" d F Y") }}
-                </p>
-                <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'reportDataList.edit' | trans }}</a>
-            {% endif %}
+            <p>
+                <strong class="bold">Due date: </strong>
+                {{ reportActive.dueDate | date(" d F Y") }}
+            </p>
+            <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'reportDataList.edit' | trans }}</a>
         </div>
-        {% set link = reportActive ?
-        path('report_overview', {'reportId': reportActive.id})
-        : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
         {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
-            <a href="{{ link }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
+            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
         </div>
 
     </div>
 
-    <h2 class="heading-large">Submitted reports</h2>
+    {% if reportsSubmitted %}
 
-    <table class="behat-region-reports-history">
-        <thead>
-            <tr>
-                <th>Report type</th>
-                <th>Reporting period</th>
-                <th>Submission date</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for report in reportsSubmitted %}
-            <tr>
-                <td>
-                    <a href="{{ path('report_review', {reportId: report.id}) }}">Annual deputy report</a>
-                </td>
-                <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
-                <td>{{ report.submitDate | date("j M Y") }}</td>
-                <td>
-                    <a href="{{ path('report_pdf', {reportId: report.id}) }}">
-                        {{ 'download' | trans({}, 'common') }}
-                    </a>
-                </td>
-                <td class="text--right hard--right">
-                    <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary">
-                        {{ 'view' | trans({}, 'common') }}
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h2 class="heading-large">Submitted reports</h2>
+
+        <table class="behat-region-reports-history">
+            <thead>
+                <tr>
+                    <th>Report type</th>
+                    <th>Reporting period</th>
+                    <th>Submission date</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in reportsSubmitted %}
+                <tr>
+                    <td>
+                        <a href="{{ path('report_review', {reportId: report.id}) }}">Annual deputy report</a>
+                    </td>
+                    <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                    <td>{{ report.submitDate | date("j M Y") }}</td>
+                    <td>
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}">
+                            {{ 'download' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                    <td class="text--right hard--right">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary">
+                            {{ 'view' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% endif %}
 
     {# TODO consider remove the partial, as only used from the view after last refactor #}
-    {% if reports is not empty %}
+    {# {% if reports is not empty %}
         {% include 'AppBundle:Report:_list-reports.html.twig' with {
                 'translationDomain': translationDomain,
                 'reports': reports
                 } %}
-    {% endif %}
+    {% endif %} #}
 {% endblock %}
