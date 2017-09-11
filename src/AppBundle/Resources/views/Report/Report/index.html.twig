@@ -20,14 +20,17 @@
     {% set status = reportActive ? 'notFinished' : 'notStarted' %}
     {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
     <div class="card soft-half">
-        <span class="ome
-        status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
+        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
         <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
         <div class="card-body">
             {% if reportActive %}
-                <p>
+                <p class="flush--bottom">
                     {{ reportActive.startDate | date("j F Y") }} -
                     {{ reportActive.endDate | date("j F Y") }}
+                </p>
+                <p>
+                    <strong class="bold">Due date: </strong>
+                    {{ reportActive.dueDate | date(" d F Y") }}
                 </p>
                 <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'reportDataList.edit' | trans }}</a>
             {% endif %}
@@ -78,10 +81,10 @@
     </table>
 
     {# TODO consider remove the partial, as only used from the view after last refactor #}
-    {# {% if reports is not empty %}
+    {% if reports is not empty %}
         {% include 'AppBundle:Report:_list-reports.html.twig' with {
                 'translationDomain': translationDomain,
                 'reports': reports
                 } %}
-    {% endif %} #}
+    {% endif %}
 {% endblock %}
