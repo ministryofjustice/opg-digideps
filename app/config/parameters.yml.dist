@@ -10,8 +10,8 @@ parameters:
     env:    setme
     redis_dsn: redis://setme
     # END
-    non_admin_host: http://digideps-client.local
-    admin_host: http://digideps-admin.local
+    non_admin_host: https://digideps-client.local
+    admin_host: https://digideps-admin.local
     # for the following two settings, use a multiple of 60
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -52,7 +52,7 @@ parameters:
     email:
       base_url:
         frontend: https://digideps-client.local
-        admin: http://digideps-admin.local
+        admin: https://digideps-admin.local
         routes:
           user_activate:  /user/activate/{token}
           password_reset:  /user/password-reset/{token}

@@ -50,8 +50,11 @@ class Redirector
     ];
 
     /**
-     * @param \AppBundle\Service\SecurityContext $security
-     * @param type                               $router
+     * Redirector constructor.
+     * @param SecurityContextInterface $security
+     * @param RouterInterface $router
+     * @param Session $session
+     * @param $env
      */
     public function __construct(
         SecurityContextInterface $security,

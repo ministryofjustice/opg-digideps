@@ -53,7 +53,7 @@ contacts:
     label:
       done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
-heading.healthAndWelfare: "%client%'s welfare"
+heading.healthAndWelfare: "Health and welfare"
 visits_care:
     subSectionTitle: "Visits and care"
     subSectionDescription: "Give us an overview of who is looking after %client%"

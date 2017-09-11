@@ -264,16 +264,15 @@ class RestClient
     }
 
     /**
-     * @param type $method
-     * @param type $endpoint
-     * @param type $data
-     * @param type $expectedResponseType
-     * @param type $options
+     * @param string $method
+     * @param string $endpoint
+     * @param mixed $data
+     * @param string $expectedResponseType
+     * @param array $options
      *
      * @throws \InvalidArgumentException
      *
-     * @return type
-     *
+     * @return array
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -370,7 +369,6 @@ class RestClient
     /**
      * Return the 'data' array from the response.
      *
-     * @param type              $class
      * @param ResponseInterface $response
      *
      * @return array content of "data" key from response
@@ -460,7 +458,8 @@ class RestClient
      * @param string $url
      * @param string $method
      * @param string $start
-     * @param type   $response
+     * @param array $options
+     * @param ResponseInterface  $response
      */
     private function logRequest($url, $method, $start, $options, ResponseInterface $response = null)
     {

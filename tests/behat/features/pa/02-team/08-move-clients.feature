@@ -28,14 +28,14 @@ Feature: Clients can be moved from one PA to another
 
   Scenario: PA1 users cannot see moved clients
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then I should see the "client" region exactly 12 times
+    Then I should see the "client" region exactly 13 times
     And I should see the "client-1000010" region
     And I should not see the "client-1000014" region
     When I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then I should see the "client" region exactly 12 times
+    Then I should see the "client" region exactly 13 times
     And I should see the "client-1000010" region
     And I should not see the "client-1000014" region
     When I am logged in as "behat-pa1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then I should see the "client" region exactly 12 times
+    Then I should see the "client" region exactly 13 times
     And I should see the "client-1000010" region
     And I should not see the "client-1000014" region
