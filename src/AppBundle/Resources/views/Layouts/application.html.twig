@@ -57,9 +57,7 @@
                             Logged as {{  adName }} (Assisted Digital)</li>
                     {% endif %}
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
-                    {% if (app.user.hasDetails() and app.user.numberOfReports > 0) %}
-                        <li><a href="{{path('lay_home')}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
-                    {% endif %}
+                    <li><a href="{{path('homepage')}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
                 {% endif %}
                 {% if app.user.isDeputyPa() %}
                     <li>
