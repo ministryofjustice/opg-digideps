@@ -219,9 +219,9 @@ class BankAccount
     }
 
     /**
-     * @param type $closingBalance
+     * @param float $closingBalance
      *
-     * @return type
+     * @return self
      */
     public function setClosingBalance($closingBalance)
     {

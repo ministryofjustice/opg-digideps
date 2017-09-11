@@ -138,7 +138,7 @@
                             description: true,
                             state: reportStatus.lifestyleState
                             } %}
-                            {%  endif %}
+                            {%  else %}
 
                             {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
@@ -148,6 +148,7 @@
                                 linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
                                 description: true
                             } %}
+                            {%  endif %}
 
                             {% if is102 or is103 %}
                                 {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
@@ -252,6 +253,8 @@
                                 } %}
                             {% endif %}
 
+                            {% if not is104 %}
+
                             {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'assets',
@@ -269,6 +272,7 @@
                                 list: true,
                                 description: true
                             } %}
+                            {% endif %}
 
                             {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
                             transDomain: translationDomain,

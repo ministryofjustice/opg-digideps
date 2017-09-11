@@ -49,7 +49,7 @@ class YesNoType extends AbstractType
             ->add($this->field, 'choice', [
                 'choices' => $this->choices,
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
+                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'", 'groups'=>'yesno_type_custom'])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -57,7 +57,8 @@ class YesNoType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => $this->translationDomain
+            'translation_domain' => $this->translationDomain,
+            'validation_groups' => ['yesno_type_custom']
         ]);
     }
 

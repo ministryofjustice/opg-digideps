@@ -36,7 +36,7 @@
             'visitsCare': report.visitsCare
             } %}
         {% endif %}
-        {% if report.lifestyle is not null %}
+        {% if is104 %}
             {% include 'AppBundle:Report/Formatted:_lifestyle.html.twig' with {
                 'lifestyle': report.lifestyle
             } %}
