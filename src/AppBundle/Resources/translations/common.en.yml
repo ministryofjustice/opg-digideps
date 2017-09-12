@@ -11,12 +11,18 @@ continue: Continue
 startNow: Start now
 download: Download
 
-# Headings / Labels
+# Report headings
+annualDeputyReport: Annual deputy report
+currentDeputyReport: Current deputy report
+submittedReports: Submitted reports
+
+# Table Headings / Labels
 name: Name
 role: Role
 address: Address
 phone: Phone
 email: Email
+dueDate: Due date
 
 # Statuses
 notFinished: Not finished

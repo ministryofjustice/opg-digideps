@@ -15,7 +15,7 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-large">Current deputy report</h2>
+    <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
 
     {% set status = reportActive.status.status %}
     {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
@@ -29,10 +29,10 @@
         </h3>
         <div class="card-body">
             <p>
-                <strong class="bold">Due date: </strong>
+                <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
                 {{ reportActive.dueDate | date(" d F Y") }}
             </p>
-            <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'reportDataList.edit' | trans }}</a>
+            <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
         </div>
         {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
@@ -43,14 +43,14 @@
 
     {% if reportsSubmitted %}
 
-        <h2 class="heading-large">Submitted reports</h2>
+        <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
         <table class="behat-region-reports-history">
             <thead>
                 <tr>
-                    <th>Report type</th>
-                    <th>Reporting period</th>
-                    <th>Submission date</th>
+                    <th>{{ (page ~ '.reportType') | trans }}</th>
+                    <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th>{{ (page ~ '.submissionDate') | trans }}</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -59,7 +59,9 @@
             {% for report in reportsSubmitted %}
                 <tr>
                     <td>
-                        <a href="{{ path('report_review', {reportId: report.id}) }}">Annual deputy report</a>
+                        <a href="{{ path('report_review', {reportId: report.id}) }}">
+                            {{ 'annualDeputyReport' | trans({}, 'common') }}
+                        </a>
                     </td>
                     <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
                     <td>{{ report.submitDate | date("j M Y") }}</td>
@@ -80,11 +82,4 @@
 
     {% endif %}
 
-    {# TODO consider remove the partial, as only used from the view after last refactor #}
-    {# {% if reports is not empty %}
-        {% include 'AppBundle:Report:_list-reports.html.twig' with {
-                'translationDomain': translationDomain,
-                'reports': reports
-                } %}
-    {% endif %} #}
 {% endblock %}
