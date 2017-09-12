@@ -59,6 +59,6 @@ class AbstractFileChecker
      */
     public static function getAcceptedExtensions()
     {
-        return ['pdf', 'jpg', 'jpeg', 'png', 'tiff'];
+        return ['pdf', 'jpg', 'jpeg', 'png'];
     }
 }
