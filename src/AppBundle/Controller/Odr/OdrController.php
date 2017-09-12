@@ -43,7 +43,7 @@ class OdrController extends AbstractController
      */
     public function indexAction()
     {
-        $user = $this->getUserWithData(self::$odrGroupsForValidation);
+        $user = $this->getUserWithData(array_merge(self::$odrGroupsForValidation, ['status']));
 
         // in case the user jumps to this page directly via URL
         if (!$user->isOdrEnabled()) {

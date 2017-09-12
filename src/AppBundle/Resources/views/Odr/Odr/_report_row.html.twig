@@ -7,10 +7,11 @@
     {#
     # CLICKABLE REPORT
     #}
-    {% set status = reportActive ? 'notFinished' : 'notStarted' %}
-    {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
+
+    {% set status = reportActive.status.status %}
+    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
     <div class="card soft-half">
-        <span class="status status-corner {{ statusClass }}">{# {{ reportStatus.status }} #}{{ (status) | trans({}, 'common') }}</span>
+        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
         {% if reportActive %}
             <h3 class="heading-medium flush--ends">
                 <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">

@@ -63,7 +63,7 @@ class ReportController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports', 'status']);
 
         // NDR: redirect to ODR index
         if ($user->isOdrEnabled()) {
