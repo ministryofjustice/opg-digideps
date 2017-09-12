@@ -22,7 +22,3 @@ services:
     step_redirector:
       class: AppBundle\Service\StepRedirector
       arguments: [ "@router" ]
-
-    report_validator:
-      class: AppBundle\Service\ReportValidator
-      arguments: [ "@request_stack"]

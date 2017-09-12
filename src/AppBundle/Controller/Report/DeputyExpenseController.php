@@ -196,4 +196,12 @@ class DeputyExpenseController extends AbstractController
 
         return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'deputyExpenses';
+    }
 }

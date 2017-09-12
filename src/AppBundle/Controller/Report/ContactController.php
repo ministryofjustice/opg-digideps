@@ -201,4 +201,12 @@ class ContactController extends AbstractController
 
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'contacts';
+    }
 }

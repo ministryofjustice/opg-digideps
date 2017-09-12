@@ -47,4 +47,12 @@ class BalanceController extends AbstractController
             'backLink' => $this->generateUrl('report_overview', ['reportId'=>$report->getId()])
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'balance';
+    }
 }

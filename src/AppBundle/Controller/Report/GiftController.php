@@ -198,4 +198,12 @@ class GiftController extends AbstractController
 
         return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'gifts';
+    }
 }

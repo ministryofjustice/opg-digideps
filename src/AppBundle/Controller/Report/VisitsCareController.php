@@ -114,4 +114,12 @@ class VisitsCareController extends AbstractController
             'status'             => $report->getStatus()
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'visitsCare';
+    }
 }

@@ -220,4 +220,12 @@ class BankAccountController extends AbstractController
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'bankAccounts';
+    }
 }

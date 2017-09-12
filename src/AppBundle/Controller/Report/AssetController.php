@@ -352,4 +352,12 @@ class AssetController extends AbstractController
 
         return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'assets';
+    }
 }

@@ -19,7 +19,10 @@
         <div class="panel-heading">
             <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
             {% if report.hasSection('balance') %}
-                {% if report.isDue() and report.status.balanceState.state !='done' %}
+                <pre>
+                report.status.remainingSections: {{ dump(report.status.remainingSections) }}
+                    </pre>
+                {% if report.isDue() and report.status.balanceState.state == 'not-started' %}
                     <div class="alert alert-important">
                         <span class="icon icon-important-small"></span>
                         <div class="alert-message">

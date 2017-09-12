@@ -91,7 +91,10 @@
     {% set expenseSectionRoute = app.user.isDeputyPa ? 'pa_fee_expense': 'deputy_expenses' %}
     {% set reportOverviewTransKey = app.user.isDeputyPa ? 'clientProfile': 'reportOverview' %}
 
-    {% if report.type == '102' %}
+    {# TODO use report.getStatusConfig to check what's allowed or not #}
+    {% set config = [] %}
+
+    {% if '102' in report.type  %}
         {% set config = [
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
@@ -110,7 +113,7 @@
         {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
-    {% elseif report.type == '103' %}
+    {% elseif '103' in report.type %}
         {% set config = [
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
@@ -128,7 +131,7 @@
         {'section':'documents', 'link': path('documents', {'reportId': report.id})},
         {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
         ] %}
-    {% elseif report.type == '104' %}
+    {% elseif '104' in report.type %}
         {% set config = [
         {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
         {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
