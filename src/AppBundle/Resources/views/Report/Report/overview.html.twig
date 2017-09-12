@@ -6,9 +6,9 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{# TODO REPLACE those two using report.hasSection() #}
 {% set is102 = report.type == '102' %}
 {% set is103 = report.type == '103' %}
-{% set is104 = report.type == '104' %}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
@@ -76,7 +76,7 @@
                 description: true,
                 state: reportStatus.visitsCareState
             } %}
-            {% if is104 %}
+            {% if report.hasSection('lifestyle') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'lifestyle',

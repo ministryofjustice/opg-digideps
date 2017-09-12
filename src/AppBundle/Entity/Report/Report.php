@@ -26,9 +26,17 @@ class Report
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
 
-    const TYPE_102 = '102';
     const TYPE_103 = '103';
+    const TYPE_102 = '102';
     const TYPE_104 = '104';
+    const TYPE_103_4 = '103-4';
+    const TYPE_102_4 = '102-4';
+
+    const TYPE_103_6 = '103-6';
+    const TYPE_102_6 = '102-6';
+    const TYPE_104_6 = '104-6';
+    const TYPE_103_4_6 = '104-4-6';
+    const TYPE_102_4_6 = '102-4-6';
 
     /**
      * @JMS\Type("integer")
@@ -259,6 +267,12 @@ class Report
      * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
      */
     private $wishToProvideDocumentation;
+
+    /**
+     * @JMS\Type("array")
+     * @var array
+     */
+    private $sectionsSettings;
 
     /**
      * @return int $id
@@ -947,4 +961,44 @@ class Report
 
         return $attachmentName;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param string $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @param string $section
+     * @return bool
+     */
+    public function hasSection($section)
+    {
+        if (!isset($this->sectionsSettings[$section])) {
+            throw new \RuntimeException(__METHOD__." : $section not defined in config. Sections are :"
+                . implode(', ', array_keys($this->sectionsSettings))
+            );
+        }
+        return in_array($this->type, $this->sectionsSettings[$section]);
+    }
+
+    /**
+     * @param array $sectionsSettings
+     */
+    public function setSectionsSettings($sectionsSettings)
+    {
+        $this->sectionsSettings = $sectionsSettings;
+    }
+
 }
