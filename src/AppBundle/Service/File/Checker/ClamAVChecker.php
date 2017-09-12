@@ -64,8 +64,8 @@ class ClamAVChecker implements FileCheckerInterface
         $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
         $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
 
-            if ($file instanceof Pdf && $response['pdf_scan_result'] !== 'PASS') {
-                $this->logger->warning('PDF file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
+            if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') {
+                $this->logger->warning('file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
                     ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
                 throw new RiskyFileException('PDF file scan failed');
             }

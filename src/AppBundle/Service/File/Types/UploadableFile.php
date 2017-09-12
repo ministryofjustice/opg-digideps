@@ -121,7 +121,7 @@ class UploadableFile implements UploadableFileInterface
     {
         foreach ($this->getFileCheckers() as $fc)
         {
-            $this->getLogger()->debug('Calling File checker: ' . get_class($fc) );
+            $this->getLogger()->warning('Calling File checker: ' . get_class($fc) );
 
             // send file
             $fc->checkFile($this);
@@ -158,7 +158,7 @@ class UploadableFile implements UploadableFileInterface
         $this->logger->warning('Confirming file is safe... ' . $this->getUploadedFile()->getClientOriginalName() .
             ' - ' . $this->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
 
-        if (isset($scanResult['av_scan_result']) && strtoupper($scanResult['av_scan_result'] == 'PASS')) {
+        if (isset($scanResult['file_scanner_result']) && strtoupper($scanResult['file_scanner_result'] == 'PASS')) {
             return true;
         }
 
