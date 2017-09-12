@@ -80,6 +80,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'has106Flag'                        => false,
                 'getFeesWithValidAmount'                           => [],
                 'getReasonForNoFees'                => null,
+                'isMissingMoneyOrAccountsOrClosingBalance' => true,
                 //'getExpenses'                       => [],
                 //'getPaidForAnything'                => null,
             ]);
@@ -573,6 +574,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $ret += array_pop($this->documentsProvider())[0];
 
         if ($type == Report::TYPE_102) {
+            $ret += array_pop($this->balanceMatchesProvider())[0];
             $ret += array_pop($this->bankAccountProvider())[0];
             $ret += array_pop($this->expensesProvider())[0];
             $ret += array_pop($this->assetsProvider())[0];
@@ -602,6 +604,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return $ret;
     }
 
+    //TODO simplify
     public function testGetRemainingSections()
     {
         // all empty
@@ -609,7 +612,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals([], $object->getRemainingSections());
 
         // all complete 102
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102));
+        $object = $this->getStatusServiceWithReportMocked(['isMissingMoneyOrAccountsOrClosingBalance'=>false] + $this->mockedMethodsCompletingReport(Report::TYPE_102));
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 103
@@ -621,7 +624,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 106
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102, true));
+        $object = $this->getStatusServiceWithReportMocked(['isMissingMoneyOrAccountsOrClosingBalance'=>false] + $this->mockedMethodsCompletingReport(Report::TYPE_102, true));
         $this->assertEquals([], $object->getRemainingSections());
     }
 
@@ -654,7 +657,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public static function getSectionStatusProvider()
     {
         return [
-            [Report::TYPE_102, ['bankAccounts', 'moneyIn'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_102, ['balance', 'bankAccounts', 'moneyIn'], ['moneyInShort', 'lifestyle']],
             [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
             [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
         ];

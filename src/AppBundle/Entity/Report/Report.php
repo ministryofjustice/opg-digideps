@@ -72,8 +72,8 @@ class Report
 
     const SECTION_ACTIONS = 'actions';
     const SECTION_OTHER_INFO = 'otherInfo';
-    const SECTION_DEPUTY_EXPENSES = 'deputyExpense';
-    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpense'; //106, AKA Fee and expenses
+    const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
+    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
     const SECTION_DOCUMENTS = 'documents';
     //

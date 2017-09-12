@@ -13,7 +13,6 @@ class ReportStatusService
     const STATE_DONE = 'done';
 
 
-
     /**
      * @JMS\Exclude
      *
@@ -179,7 +178,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
-        $isCompleted = ( 'no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortIn()) > 0));
+        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortIn()) > 0));
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
@@ -203,7 +202,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
-        $isCompleted = ( 'no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortOut()) > 0));
+        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortOut()) > 0));
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
@@ -363,10 +362,10 @@ class ReportStatusService
     {
         $numRecords = count($this->report->getDocuments());
 
-        if ( $this->report->getWishToProvideDocumentation() === null || ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0)) {
-            $status =  ['state' => self::STATE_NOT_STARTED];
+        if ($this->report->getWishToProvideDocumentation() === null || ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0)) {
+            $status = ['state' => self::STATE_NOT_STARTED];
         } else {
-            $status =  ['state' => self::STATE_DONE];
+            $status = ['state' => self::STATE_DONE];
         }
 
         return array_merge($status, ['nOfRecords' => $numRecords]);
@@ -434,7 +433,56 @@ class ReportStatusService
         }) ?: [];
     }
 
+    private function getSectionState($section)
+    {
+        switch ($section) {
+            case Report::SECTION_DECISIONS:
+                return $this->getDecisionsState()['state'];
+            case Report::SECTION_CONTACTS:
+                return $this->getContactsState()['state'];
+            case Report::SECTION_VISITS_CARE:
+                return $this->getVisitsCareState()['state'];
+            case Report::SECTION_LIFESTYLE:
+                return $this->getLifestyleState()['state'];
+            // money
+            case Report::SECTION_BALANCE:
+                return $this->getBalanceState()['state'];
+            case Report::SECTION_BANK_ACCOUNTS:
+                return $this->getBankAccountsState()['state'];
+            case Report::SECTION_MONEY_TRANSFERS:
+                return $this->getMoneyTransferState()['state'];
+            case Report::SECTION_MONEY_IN:
+                return $this->getMoneyInState()['state'];
+            case Report::SECTION_MONEY_OUT:
+                return $this->getMoneyOutState()['state'];
+            case Report::SECTION_MONEY_IN_SHORT:
+                return $this->getMoneyInShortState()['state'];
+            case Report::SECTION_MONEY_OUT_SHORT:
+                return $this->getMoneyOutShortState()['state'];
+            case Report::SECTION_ASSETS:
+                return $this->getAssetsState()['state'];
+            case Report::SECTION_DEBTS:
+                return $this->getDebtsState()['state'];
+            case Report::SECTION_GIFTS:
+                return $this->getGiftsState()['state'];
+            // end money
+            case Report::SECTION_ACTIONS:
+                return $this->getActionsState()['state'];
+            case Report::SECTION_OTHER_INFO:
+                return $this->getOtherInfoState()['state'];
+            case Report::SECTION_DEPUTY_EXPENSES:
+                return $this->getExpensesState()['state'];
+            case Report::SECTION_PA_DEPUTY_EXPENSES:
+                return $this->getPaFeesExpensesState()['state'];
+            case Report::SECTION_DOCUMENTS:
+                return $this->getDocumentsState()['state'];
+            default:
+                throw new \InvalidArgumentException(__METHOD__." $section section not defined");
+        }
+    }
+
     /**
+     * Get section for the specific report type, along with the status
      * @JMS\VirtualProperty
      * @JMS\Type("array")
      * @JMS\Groups({"status"})
@@ -443,75 +491,14 @@ class ReportStatusService
      */
     public function getSectionStatus()
     {
-        $reportSections = [];
-        foreach(Report::getSectionsSettings() as $sectionId => $sectionSettings) {
+        $ret = [];
+        foreach (Report::getSectionsSettings() as $sectionId => $sectionSettings) {
             if (in_array($this->report->getType(), $sectionSettings)) {
-                $reportSections[] = $sectionId;
+                $ret[$sectionId] = $this->getSectionState($sectionId);
             }
         }
 
-//        echo "<pre>";\Doctrine\Common\Util\Debug::dump($reportSections, 4);die;
-
-        //TODO decide what method to call based on $reportSections
-
-        $states = [
-            Report::SECTION_DECISIONS => $this->getDecisionsState()['state'],
-            'contacts'                => $this->getContactsState()['state'],
-            'visitsCare'              => $this->getVisitsCareState()['state'],
-            'actions'                 => $this->getActionsState()['state'],
-            'otherInfo'               => $this->getOtherInfoState()['state'],
-            'documents'               => $this->getDocumentsState()['state'],
-        ];
-
-        $type = $this->report->getType();
-
-
-        if ($type == Report::TYPE_102) {
-            $states += [
-                'bankAccounts' => $this->getBankAccountsState()['state'],
-                'moneyIn'      => $this->getMoneyInState()['state'],
-                'moneyOut'     => $this->getMoneyOutState()['state'],
-                'assets'       => $this->getAssetsState()['state'],
-                'debts'        => $this->getDebtsState()['state'],
-                'gifts'      => $this->getGiftsState()['state'],
-                'balance'      => 'present', //TODO change
-            ];
-
-            if (count($this->report->getBankAccounts())) {
-                $states += [
-                    'moneyTransfers' => $this->getMoneyTransferState()['state'],
-                ];
-            }
-        }
-
-        if ($type == Report::TYPE_103) {
-            $states += [
-                'bankAccounts'  => $this->getBankAccountsState()['state'],
-                'deputyExpense' => $this->getExpensesState()['state'],
-                'moneyInShort'  => $this->getMoneyInShortState()['state'],
-                'moneyOutShort' => $this->getMoneyOutShortState()['state'],
-                'assets'        => $this->getAssetsState()['state'],
-                'debts'         => $this->getDebtsState()['state'],
-                'gifts'      => $this->getGiftsState()['state'],
-
-            ];
-        }
-
-        if ($type == Report::TYPE_102 || $type == Report::TYPE_103) {
-            if ($this->report->has106Flag()) {
-                $states['paDeputyExpense'] = $this->getPaFeesExpensesState()['state'];
-            } else {
-                $states['deputyExpense'] = $this->getExpensesState()['state'];
-            }
-        }
-
-        if ($type == Report::TYPE_104) {
-            $states += [
-                Report::SECTION_LIFESTYLE => $this->getLifestyleState()['state']
-            ];
-        }
-
-        return $states;
+        return $ret;
     }
 
     /**
@@ -526,7 +513,7 @@ class ReportStatusService
         $lifestyle = $this->report->getLifestyle();
         $answers = $lifestyle ? [
             $lifestyle->getCareAppointments(),
-            $lifestyle->getDoesClientUndertakeSocialActivities()
+            $lifestyle->getDoesClientUndertakeSocialActivities(),
         ] : [];
 
         switch (count(array_filter($answers))) {
@@ -576,8 +563,8 @@ class ReportStatusService
     public function getStatus()
     {
         if (count(array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_NOT_STARTED;
-        })) === 0
+                return $e != self::STATE_NOT_STARTED;
+            })) === 0
         ) {
             return 'notStarted';
         }
