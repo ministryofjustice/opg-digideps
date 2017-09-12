@@ -7,5 +7,7 @@ use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 
 class Jpg extends UploadableFile
 {
+    protected $scannerEndpoint = 'upload/jpg';
+
 }
 

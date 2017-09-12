@@ -7,6 +7,7 @@ use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 
 class Png extends UploadableFile
 {
+    protected $scannerEndpoint = 'upload/png';
 
 }
 

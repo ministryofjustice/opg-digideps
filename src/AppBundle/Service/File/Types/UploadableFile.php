@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadableFile implements UploadableFileInterface
 {
+
+    protected $scannerEndpoint = 'UNDEFINED';
+
     /**
      * @var FileCheckerInterface[]
      */
@@ -160,5 +163,9 @@ class UploadableFile implements UploadableFileInterface
         }
 
         return false;
+    }
+
+    public function getScannerEndpoint() {
+        return $this->scannerEndpoint;
     }
 }

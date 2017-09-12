@@ -146,13 +146,14 @@ class ClamAVChecker implements FileCheckerInterface
 
         $this->logger->debug('Sending file: ' . $fullFilePath . '  to scanner');
 
-        $request = $this->client->createRequest('POST', 'upload');
+        $request = $this->client->createRequest('POST', $file->getScannerEndpoint());
         $postBody = $request->getBody();
         $postBody->addFile(
             new PostFile('file', fopen($fullFilePath, 'r'))
         );
 
         $response = $this->client->send($request);
+
         if (!$response instanceof ResponseInterface ) {
             throw new \RuntimeException('ClamAV not available');
         }
