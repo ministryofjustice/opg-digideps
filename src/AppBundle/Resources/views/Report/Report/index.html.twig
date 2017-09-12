@@ -34,7 +34,7 @@
             </p>
             <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
         </div>
-        {% set buttonText = reportActive ? 'continue' : 'startNow' %}
+        {% set buttonText = reportActive.status.status != 'notStarted' ? 'continue' : 'startNow' %}
         <div class="card-actions">
             <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
         </div>
