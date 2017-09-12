@@ -87,7 +87,7 @@
         </li>
 
 
-        {% if report.hasSection('paDeputyExpense') or report.hasSection('deputyExpense') or report.hasSection('bankAccounts') %}
+        {% if report.hasSection('paDeputyExpense') or report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {% if report.isDue() and not reportStatus.balanceMatches %}
@@ -104,7 +104,7 @@
                     description: true
                     } %}
                 {% endif %}
-                {% if report.hasSection('deputyExpense') %}
+                {% if report.hasSection('deputyExpenses') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'deputy_expenses',
