@@ -239,6 +239,19 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"status"})
+     *
+     * @return bool
+     */
+    public function isReadyToSubmit()
+    {
+        return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
+    }
+
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
@@ -526,17 +539,6 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"status"})
-     *
-     * @return bool
-     */
-    public function isReadyToSubmit()
-    {
-        return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
-    }
 
     /**
      * @JMS\VirtualProperty
