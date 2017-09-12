@@ -218,4 +218,30 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $status = $this->report->getStatus();
         $this->assertInstanceOf(ReportStatusService::class, $status);
     }
+
+
+    public static function getSectionsSettingsProvider()
+    {
+        return [
+            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
+        ];
+    }
+
+    /**
+     * Some checks that the config array doesn't get messed up
+     *
+     * @dataProvider getSectionsSettingsProvider
+     */
+    public function testgetSectionsSettings($type, array $expectedSections, array $unExpectedSections)
+    {
+        foreach($expectedSections as $section) {
+            $this->assertContains($type, Report::getSectionsSettings()[$section], "$type should have $section section ");
+        }
+        foreach($unExpectedSections as $section) {
+            $this->assertNotContains($type, Report::getSectionsSettings()[$section], "$type should NOT have $section section ");
+        }
+
+    }
 }

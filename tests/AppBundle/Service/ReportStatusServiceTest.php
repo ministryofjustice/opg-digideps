@@ -649,4 +649,29 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $object->isReadyToSubmit());
     }
+
+
+    public static function getSectionStatusProvider()
+    {
+        return [
+            [Report::TYPE_102, ['bankAccounts', 'moneyIn'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
+        ];
+    }
+
+    /**
+     * @dataProvider getSectionStatusProvider
+     */
+    public function testGetSectionStatus($type, array $expectedSections, array $unExpectedSections)
+    {
+        $report = $this->getStatusServiceWithReportMocked(['getType'=>$type]);
+        foreach($expectedSections as $expectedSection) {
+            $this->assertArrayHasKey($expectedSection, $report->getSectionStatus(), "$type should have $expectedSection section ");
+        }
+        foreach($unExpectedSections as $unExpectedSection) {
+            $this->assertArrayNotHasKey($unExpectedSection, $report->getSectionStatus(), "$type should NOT have $unExpectedSection section ");
+        }
+
+    }
 }

@@ -450,6 +450,8 @@ class ReportStatusService
             }
         }
 
+//        echo "<pre>";\Doctrine\Common\Util\Debug::dump($reportSections, 4);die;
+
         //TODO decide what method to call based on $reportSections
 
         $states = [
@@ -472,6 +474,7 @@ class ReportStatusService
                 'assets'       => $this->getAssetsState()['state'],
                 'debts'        => $this->getDebtsState()['state'],
                 'gifts'      => $this->getGiftsState()['state'],
+                'balance'      => 'present', //TODO change
             ];
 
             if (count($this->report->getBankAccounts())) {

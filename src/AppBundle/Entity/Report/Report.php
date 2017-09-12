@@ -73,7 +73,7 @@ class Report
     const SECTION_ACTIONS = 'actions';
     const SECTION_OTHER_INFO = 'otherInfo';
     const SECTION_DEPUTY_EXPENSES = 'deputyExpense';
-    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpense'; //106
+    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpense'; //106, AKA Fee and expenses
 
     const SECTION_DOCUMENTS = 'documents';
     //
@@ -348,12 +348,12 @@ class Report
 
 
         // check this there only is one unsubmitted report
-        if ($client->getUnsubmittedReports()->count() > 0) {
+        if (count($client->getUnsubmittedReports()) > 0) {
             throw new \RuntimeException('Client ' . $client->getId() . ' already has unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
-        if ($client->getSubmittedReports()->count()) {
+        if (count($client->getSubmittedReports())) {
             $unsubmittedEndDates = array_map(function ($report) {
                 return $report->getEndDate();
             }, $client->getSubmittedReports()->toArray());
