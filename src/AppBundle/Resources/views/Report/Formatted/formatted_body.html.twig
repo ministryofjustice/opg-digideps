@@ -8,9 +8,6 @@
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set is102 = report.type == '102' %}
-{% set is103 = report.type == '103' %}
-{% set is104 = report.type == '104' %}
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
@@ -36,7 +33,7 @@
             'visitsCare': report.visitsCare
             } %}
         {% endif %}
-        {% if is104 %}
+        {% if report.hasSection('lifestyle') %}
             {% include 'AppBundle:Report/Formatted:_lifestyle.html.twig' with {
                 'lifestyle': report.lifestyle
             } %}
@@ -45,7 +42,7 @@
         {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
 
-        {% if is102 %}
+        {% if report.hasSection('moneyIn') %}
             <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
                     <h2 class="section-heading">Accounts</h2>
@@ -62,7 +59,7 @@
             </div>
         {% endif %}
 
-        {% if is103 %}
+        {% if report.hasSection('moneyInShort') %}
             <div class="section" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
                     <h2 class="section-heading">Accounts</h2>
@@ -96,7 +93,7 @@
 
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
 
-        {% if is102 or is103 %}
+        {% if report.hasSection('balance') %}
             {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
         {% endif %}
 
