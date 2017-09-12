@@ -21,6 +21,8 @@ email: Email
 # Statuses
 notFinished: Not finished
 notStarted: Not started
+readyToSubmit: Ready to submit
+notAvailable: Not available
 
 
 lastLoggedIn:
