@@ -249,7 +249,7 @@ class ReportStatusService
      */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0 && $this->balanceMatches();
+        return count($this->getRemainingSections()) === 0;
     }
 
     /**
@@ -384,21 +384,6 @@ class ReportStatusService
         return array_merge($status, ['nOfRecords' => $numRecords]);
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"status"})
-     *
-     * @return bool
-     */
-    public function balanceMatches()
-    {
-        if (in_array($this->report->getType(), [Report::TYPE_103, Report::TYPE_104])) {
-            return true;
-        }
-
-        return $this->report->getTotalsMatch() || $this->report->getBalanceMismatchExplanation();
-    }
 
     /**
      * @JMS\VirtualProperty
@@ -571,7 +556,7 @@ class ReportStatusService
             return 'notStarted';
         }
 
-        if ($this->isReadyToSubmit() && $this->report->isDue() && $this->balanceMatches()) {
+        if ($this->isReadyToSubmit() && $this->report->isDue()) {
             return 'readyToSubmit';
         } else {
             return 'notFinished';

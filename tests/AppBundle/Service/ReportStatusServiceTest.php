@@ -490,6 +490,27 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
+
+    public function balanceProvider()
+    {
+        return [
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_INCOMPLETE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_STARTED],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_DONE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>true], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider balanceProvider
+     */
+    public function balance($mocks, $state)
+    {
+        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $this->assertEquals($state, $object->getBalanceState()['state']);
+    }
+
     public function actionsProvider()
     {
         $empty = m::mock(Action::class, [
@@ -542,25 +563,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function balanceMatchesProvider()
-    {
-        return [
-            [['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => null], false],
-            [['getTotalsMatch' => true, 'getBalanceMismatchExplanation' => 'something'], true],
-            [['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => 'something'], true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider balanceMatchesProvider
-     */
-    public function balanceMatches($mocks, $expected)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($expected, $object->balanceMatches());
-    }
-
     public function mockedMethodsCompletingReport($type, $has106Flag = false)
     {
         $ret = ['getType' => $type];
@@ -574,7 +576,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $ret += array_pop($this->documentsProvider())[0];
 
         if ($type == Report::TYPE_102) {
-            $ret += array_pop($this->balanceMatchesProvider())[0];
+            $ret += array_pop($this->balanceProvider())[0];
             $ret += array_pop($this->bankAccountProvider())[0];
             $ret += array_pop($this->expensesProvider())[0];
             $ret += array_pop($this->assetsProvider())[0];
@@ -612,7 +614,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals([], $object->getRemainingSections());
 
         // all complete 102
-        $object = $this->getStatusServiceWithReportMocked(['isMissingMoneyOrAccountsOrClosingBalance'=>false] + $this->mockedMethodsCompletingReport(Report::TYPE_102));
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102));
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 103
@@ -624,34 +626,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $object->getRemainingSections());
 
         // all complete 106
-        $object = $this->getStatusServiceWithReportMocked(['isMissingMoneyOrAccountsOrClosingBalance'=>false] + $this->mockedMethodsCompletingReport(Report::TYPE_102, true));
+        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102, true));
         $this->assertEquals([], $object->getRemainingSections());
     }
 
-    public function isReadyToSubmitBalanceProvider()
-    {
-        return [
-            [['getRemainingSections' => ['s1'], 'balanceMatches' => false], false],
-            [['getRemainingSections' => [], 'balanceMatches' => false], false],
-            [['getRemainingSections' => [], 'balanceMatches' => true], true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider isReadyToSubmitBalanceProvider
-     */
-    public function isReadyToSubmitBalance($data, $expected)
-    {
-        $report = m::mock(Report::class);
-        $object = m::mock(ReportStatusService::class . '[getRemainingSections,balanceMatches]', [$report]);
-
-        foreach ($data as $method => $return) {
-            $object->shouldReceive($method)->andReturn($return);
-        }
-
-        $this->assertEquals($expected, $object->isReadyToSubmit());
-    }
 
 
     public static function getSectionStatusProvider()
