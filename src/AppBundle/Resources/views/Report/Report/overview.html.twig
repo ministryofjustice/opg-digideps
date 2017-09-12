@@ -7,8 +7,6 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {# TODO REPLACE those two using report.hasSection() #}
-{% set is102 = report.type == '102' %}
-{% set is103 = report.type == '103' %}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
 
@@ -89,14 +87,14 @@
         </li>
 
 
-        {% if is102 or is103 %}
+        {% if report.hasSection('paDeputyExpense') or report.hasSection('deputyExpense') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {% if report.isDue() and not reportStatus.balanceMatches %}
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
-                {% if report.has106Flag %}
+                {% if report.hasSection('paDeputyExpense') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'pa_fee_expense',
@@ -105,7 +103,8 @@
                     linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
                     description: true
                     } %}
-                {% else %}
+                {% endif %}
+                {% if report.hasSection('deputyExpense') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'deputy_expenses',
@@ -116,24 +115,28 @@
                     } %}
                 {% endif %}
 
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'gifts',
-                report: report,
-                state: reportStatus.giftsState,
-                linkToSubSection: path('gifts', {'reportId': report.id}),
-                description: true
-                } %}
-
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                {% if report.hasSection('gifts') %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
-                    subSection: 'bank_accounts',
+                    subSection: 'gifts',
                     report: report,
-                    state: reportStatus.bankAccountsState,
-                    warning: true,
+                    state: reportStatus.giftsState,
+                    linkToSubSection: path('gifts', {'reportId': report.id}),
                     description: true
-                } %}
-                {% if is102 %}
+                    } %}
+                {% endif %}
+
+                {% if report.hasSection('bankAccounts') %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                        transDomain: translationDomain,
+                        subSection: 'bank_accounts',
+                        report: report,
+                        state: reportStatus.bankAccountsState,
+                        warning: true,
+                        description: true
+                    } %}
+                {% endif %}
+                {% if report.hasSection('moneyTransfers') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'money_transfers',
@@ -143,7 +146,7 @@
                         description: true
                     } %}
                     {% endif %}
-                {% if is102 %}
+                {% if report.hasSection('moneyIn') and if report.hasSection('moneyOut') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
@@ -161,7 +164,7 @@
                     description: true
                     } %}
                 {% endif %}
-                {% if is103 %}
+                {% if report.hasSection('moneyInShort') and if report.hasSection('moneyOutShort') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in_short',
@@ -180,7 +183,7 @@
                     } %}
                 {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
-                {% if is102 and report.balanceMismatchExplanation %}
+                {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
@@ -190,56 +193,66 @@
                         description: true
                     } %}
                 {% endif %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                {% if report.hasSection('assets') %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                        transDomain: translationDomain,
+                        subSection: 'assets',
+                        report: report,
+                        state: reportStatus.assetsState,
+                        list: true,
+                        description: true
+                    } %}
+                {% endif %}
+                {% if report.hasSection('debts') %}
+                    {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
-                    subSection: 'assets',
+                    subSection: 'debts',
                     report: report,
-                    state: reportStatus.assetsState,
+                    state: reportStatus.debtsState,
                     list: true,
                     description: true
-                } %}
-                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'debts',
-                report: report,
-                state: reportStatus.debtsState,
-                list: true,
-                description: true
-                } %}
+                    } %}
+                {% endif %}
             </li>
         {% endif %}
 
 
         <li id="report-submit-section" class="overview-section">
             <h2 class="heading">{{ 'heading.other' | trans() }}</h2>
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'actions',
-                report: report,
-                description: true,
-                state: reportStatus.actionsState,
-                list: true
-            } %}
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'other_info',
-                linkToSubSection: path('other_info', {reportId: report.id}),
-                report: report,
-                info: true,
-                description: true,
-                state: reportStatus.otherInfoState,
-            } %}
+            {% if report.hasSection('actions') %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'actions',
+                    report: report,
+                    description: true,
+                    state: reportStatus.actionsState,
+                    list: true
+                } %}
+            {% endif %}
+            {% if report.hasSection('actions') %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'other_info',
+                    linkToSubSection: path('other_info', {reportId: report.id}),
+                    report: report,
+                    info: true,
+                    description: true,
+                    state: reportStatus.otherInfoState,
+                } %}
+            {% endif %}
 
         <li id="report-submit-section" class="overview-section">
             <h2 class="heading">{{ 'heading.caseDocuments' | trans() }}</h2>
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'documents',
-            report: report,
-            description: true,
-            state: reportStatus.documentsState,
-            list: true
-            } %}
+            {% if report.hasSection('actions') %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'documents',
+                    report: report,
+                    description: true,
+                    state: reportStatus.documentsState,
+                    list: true
+                } %}
+            {% endif %}
 
             {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
