@@ -35,15 +35,98 @@ class Report
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
 
-    const TYPE_102 = '102';
-    const TYPE_102_4 = '102-4';
+    // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const TYPE_103 = '103';
-    const TYPE_103_4 = '103-4';
+    const TYPE_102 = '102';
     const TYPE_104 = '104';
+    const TYPE_103_4 = '103-4';
+    const TYPE_102_4 = '102-4';
+
+    const TYPE_103_6 = '103-6';
+    const TYPE_102_6 = '102-6';
+    const TYPE_104_6 = '104-6';
+    const TYPE_103_4_6 = '104-4-6';
+    const TYPE_102_4_6 = '102-4-6';
 
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
     const ENABLE_104 = true;
+
+    const SECTION_DECISIONS = 'decisions';
+    const SECTION_CONTACTS = 'contacts';
+    const SECTION_VISITS_CARE = 'visitsCare';
+    const SECTION_LIFESTYLE = 'lifestyle';
+
+    // money
+    const SECTION_BALANCE = 'balance'; // not a real section, but needed as a flag for the view and the validation
+    const SECTION_BANK_ACCOUNTS = 'bankAccounts';
+    const SECTION_MONEY_TRANSFERS = 'moneyTransfers';
+    const SECTION_MONEY_IN = 'moneyIn';
+    const SECTION_MONEY_OUT = 'moneyOut';
+    const SECTION_MONEY_IN_SHORT = 'moneyInShort';
+    const SECTION_MONEY_OUT_SHORT = 'moneyOutShort';
+    const SECTION_ASSETS = 'assets';
+    const SECTION_DEBTS = 'debts';
+    const SECTION_GIFTS = 'gifts';
+    // end money
+
+    const SECTION_ACTIONS = 'actions';
+    const SECTION_OTHER_INFO = 'otherInfo';
+    const SECTION_DEPUTY_EXPENSES = 'deputyExpense';
+    const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpense'; //106
+
+    const SECTION_DOCUMENTS = 'documents';
+    //
+
+    /**
+     * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"report"})
+     * @JMS\Type("array")
+     *
+     * @return array
+     */
+    public static function getSectionsSettings()
+    {
+        $allReports = [
+            self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+        ];
+        $r102n103 = [
+            self::TYPE_103, self::TYPE_102, //Lay
+            self::TYPE_103_6, self::TYPE_102_6, // PA
+        ];
+        $r104 = [
+            self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
+            self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
+        ];
+
+        return [
+            self::SECTION_DECISIONS          => $allReports,
+            self::SECTION_CONTACTS           => $allReports,
+            self::SECTION_VISITS_CARE        => $allReports,
+            self::SECTION_LIFESTYLE          => $r104,
+            // money
+            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
+            self::SECTION_BANK_ACCOUNTS      => $r102n103,
+            self::SECTION_MONEY_TRANSFERS    => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
+            self::SECTION_MONEY_IN           => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
+            self::SECTION_MONEY_OUT          => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
+            self::SECTION_MONEY_IN_SHORT     => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6],
+            self::SECTION_MONEY_OUT_SHORT    => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6],
+            self::SECTION_ASSETS             => $r102n103,
+            self::SECTION_DEBTS              => $r102n103,
+            self::SECTION_GIFTS              => $r102n103,
+            // end money
+            self::SECTION_ACTIONS            => $allReports,
+            self::SECTION_OTHER_INFO         => $allReports,
+            self::SECTION_DEPUTY_EXPENSES    => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
+            self::SECTION_PA_DEPUTY_EXPENSES => [self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6], // PA except 104-6
+            self::SECTION_DOCUMENTS          => $allReports,
+        ];
+    }
+
 
     /**
      * Reports with total amount of assets
@@ -66,8 +149,7 @@ class Report
     /**
      * TODO: consider using Doctrine table inheritance on report.type
      *
-     * @var string
-     *             see TYPE_ class constants
+     * @var string TYPE_ constants
      *
      * @JMS\Groups({"report", "report-type"})
      * @JMS\Type("string")
@@ -279,7 +361,7 @@ class Report
             $endDateLastReport = $unsubmittedEndDates[0];
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
-            $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
+            $daysDiff = (int)$expectedStartDate->diff($this->startDate)->format('%a');
             if ($daysDiff !== 0) {
                 throw new \RuntimeException(sprintf(
                     'Incorrect start date. Last submitted report was on %s, '
@@ -287,7 +369,7 @@ class Report
                     $endDateLastReport->format('d/m/Y'),
                     $expectedStartDate->format('d/m/Y'),
                     $this->startDate->format('d/m/Y')
-                    ));
+                ));
             }
         }
 
@@ -472,7 +554,7 @@ class Report
     /**
      * @param mixed $submittedBy
      *
-     *  @return Report
+     * @return Report
      */
     public function setSubmittedBy($submittedBy)
     {
@@ -810,6 +892,7 @@ class Report
     public function setWishToProvideDocumentation($wishToProvideDocumentation)
     {
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+
         return $this;
     }
 }

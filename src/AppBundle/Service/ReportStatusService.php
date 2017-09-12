@@ -12,6 +12,8 @@ class ReportStatusService
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
 
+
+
     /**
      * @JMS\Exclude
      *
@@ -441,13 +443,22 @@ class ReportStatusService
      */
     public function getSectionStatus()
     {
+        $reportSections = [];
+        foreach(Report::getSectionsSettings() as $sectionId => $sectionSettings) {
+            if (in_array($this->report->getType(), $sectionSettings)) {
+                $reportSections[] = $sectionId;
+            }
+        }
+
+        //TODO decide what method to call based on $reportSections
+
         $states = [
-            'decisions'  => $this->getDecisionsState()['state'],
-            'contacts'   => $this->getContactsState()['state'],
-            'visitsCare' => $this->getVisitsCareState()['state'],
-            'actions'    => $this->getActionsState()['state'],
-            'otherInfo'  => $this->getOtherInfoState()['state'],
-            'documents'  => $this->getDocumentsState()['state'],
+            Report::SECTION_DECISIONS => $this->getDecisionsState()['state'],
+            'contacts'                => $this->getContactsState()['state'],
+            'visitsCare'              => $this->getVisitsCareState()['state'],
+            'actions'                 => $this->getActionsState()['state'],
+            'otherInfo'               => $this->getOtherInfoState()['state'],
+            'documents'               => $this->getDocumentsState()['state'],
         ];
 
         $type = $this->report->getType();
@@ -493,7 +504,7 @@ class ReportStatusService
 
         if ($type == Report::TYPE_104) {
             $states += [
-                'lifestyle' => $this->getLifestyleState()['state']
+                Report::SECTION_LIFESTYLE => $this->getLifestyleState()['state']
             ];
         }
 
