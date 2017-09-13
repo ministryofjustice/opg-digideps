@@ -1,4 +1,9 @@
 <?php
+
+/*
+* Script to mask CSV files. For both PA and Lay (use any random 3rd argument for that)
+*/
+
 if (empty($argv[3])) {
     echo "Usage: php [script name] source.csv output.csv name.surname\n" . "
     e.g. php misc/scripts/maskCsv.php ~/Desktop/file.csv ~/Desktop/file.masked.csv elvis.ciotti";
