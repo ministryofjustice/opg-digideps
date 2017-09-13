@@ -164,12 +164,12 @@ Feature: deputy / user / add client and report
       | report_endDate_month   | 12   |
       | report_endDate_year    | 2016 |
     And I press "report_save"
-    Then the URL should match "report/\d+/overview"
+    Then the URL should match "/lay"
 
   @deputy
   Scenario: report-overview
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Given I click on "reports, report-2016-open"
+    Given I click on "reports, report-start"
     Then the URL should match "report/\d+/overview"
     And I save the page as "deputy-report-overview"
 

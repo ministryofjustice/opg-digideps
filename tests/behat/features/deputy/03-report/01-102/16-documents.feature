@@ -3,7 +3,7 @@ Feature: Report documents
   @deputy
   Scenario: No documents to attach
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-documents, start"
+    And I click on "report-start, edit-documents, start"
     # chose "no documents"
     Then the URL should match "report/\d+/documents/step/1"
     Given the step cannot be submitted without making a selection
@@ -17,7 +17,7 @@ Feature: Report documents
   @deputy
   Scenario: Edit documents to attach
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-documents"
+    And I click on "report-start, edit-documents"
     Then the URL should match "report/\d+/documents/summary"
     And I should see "Edit" in the "provided-documentation" region
     When I click on "edit"
@@ -57,7 +57,7 @@ Feature: Report documents
   @deputy
   Scenario: Delete document
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-documents"
+    And I click on "report-start, edit-documents"
     # chose "yes documents"
     Then the URL should match "report/\d+/documents/summary"
     And I save the current URL as "summary-page"
@@ -78,7 +78,7 @@ Feature: Report documents
     @deputy
     Scenario: Upload file1.pdf
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I click on "reports, report-2016, edit-documents"
+      And I click on "report-start, edit-documents"
       Then the URL should match "report/\d+/documents/summary"
       When I click on "edit" in the "provided-documentation" region
     # chose "yes documents"

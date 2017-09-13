@@ -32,13 +32,12 @@
                 <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
                 {{ reportActive.dueDate | date(" d F Y") }}
             </p>
-            <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
+            <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
         </div>
         {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
             <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
         </div>
-
     </div>
 
     {% if reportsSubmitted %}
@@ -66,12 +65,12 @@
                     <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
                     <td>{{ report.submitDate | date("j M Y") }}</td>
                     <td>
-                        <a href="{{ path('report_pdf', {reportId: report.id}) }}">
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download">
                             {{ 'download' | trans({}, 'common') }}
                         </a>
                     </td>
                     <td class="text--right hard--right">
-                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
                             {{ 'view' | trans({}, 'common') }}
                         </a>
                     </td>
