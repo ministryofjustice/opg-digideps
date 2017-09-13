@@ -98,7 +98,7 @@ Feature: Report submit
         Given each text should be present in the corresponding region:
             | Peter White | report-submission-1 |
             | 12345abc | report-submission-1 |
-            | 2 documents | report-submission-1 |
+            | 4 documents | report-submission-1 |
         When I click on "download" in the "report-submission-1" region
         Then the page content should be a zip file containing files with the following files:
             | file1.pdf | exactFileName+md5sum | d3f3c05deb6a46cd9e32ea2a1829cf28 |
@@ -113,7 +113,7 @@ Feature: Report submit
         And each text should be present in the corresponding region:
             | Peter White | report-submission-1 |
             | 12345abc | report-submission-1 |
-            | 2 documents | report-submission-1 |
+            | 4 documents | report-submission-1 |
             | AU | report-submission-1 |
 
     @deputy
