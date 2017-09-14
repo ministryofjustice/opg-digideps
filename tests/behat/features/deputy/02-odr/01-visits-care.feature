@@ -1,6 +1,12 @@
 Feature: NDR visits care
 
   @odr
+  Scenario: absence of co-deputies section for a client without multiple assigned deputies
+    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then the URL should match "/odr"
+    And I should not see the "codeputies" region
+
+  @odr
   Scenario: NDR visits care
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "odr-start, edit-visits_care, start"

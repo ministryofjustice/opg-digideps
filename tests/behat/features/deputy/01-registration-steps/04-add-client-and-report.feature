@@ -167,6 +167,12 @@ Feature: deputy / user / add client and report
     Then the URL should match "/lay"
 
   @deputy
+  Scenario: absence of co-deputies section for a client without multiple assigned deputies
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then the URL should match "/lay"
+    And I should not see the "codeputies" region
+
+  @deputy
   Scenario: report-overview
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Given I click on "report-start"
