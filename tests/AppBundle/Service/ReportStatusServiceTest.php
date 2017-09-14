@@ -563,71 +563,84 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function mockedMethodsCompletingReport($type, $has106Flag = false)
+    public function testGetRemainingSections102()
     {
-        $ret = ['getType' => $type];
+        $ret = ['getType' => Report::TYPE_102]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->balanceProvider())[0]
+            + array_pop($this->bankAccountProvider())[0]
+            + array_pop($this->expensesProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->debtsProvider())[0]
+            + array_pop($this->moneyTransferProvider())[0]
+            + array_pop($this->MoneyInProvider())[0]
+            + array_pop($this->MoneyOutProvider())[0];
 
-        $ret += array_pop($this->decisionsProvider())[0];
-        $ret += array_pop($this->contactsProvider())[0];
-        $ret += array_pop($this->visitsCareProvider())[0];
-        $ret += array_pop($this->actionsProvider())[0];
-        $ret += array_pop($this->otherInfoProvider())[0];
-        $ret += array_pop($this->giftsProvider())[0];
-        $ret += array_pop($this->documentsProvider())[0];
-
-        if ($type == Report::TYPE_102) {
-            $ret += array_pop($this->balanceProvider())[0];
-            $ret += array_pop($this->bankAccountProvider())[0];
-            $ret += array_pop($this->expensesProvider())[0];
-            $ret += array_pop($this->assetsProvider())[0];
-            $ret += array_pop($this->debtsProvider())[0];
-            $ret += array_pop($this->moneyTransferProvider())[0];
-            $ret += array_pop($this->MoneyInProvider())[0];
-            $ret += array_pop($this->MoneyOutProvider())[0];
-        }
-
-        if ($type == Report::TYPE_103) {
-            $ret += array_pop($this->bankAccountProvider())[0];
-            $ret += array_pop($this->expensesProvider())[0];
-            $ret += array_pop($this->assetsProvider())[0];
-            $ret += array_pop($this->debtsProvider())[0];
-            $ret += array_pop($this->MoneyInShortProvider())[0];
-            $ret += array_pop($this->MoneyOutShortProvider())[0];
-        }
-
-        if ($type == Report::TYPE_104) {
-            $ret += array_pop($this->lifestyleProvider())[0];
-        }
-
-        if ($has106Flag && in_array($type, [Report::TYPE_102, Report::TYPE_103])) {
-            $ret += array_pop($this->paFeesExpensesProvider())[0];
-        }
-
-        return $ret;
-    }
-
-    //TODO simplify
-    public function testGetRemainingSections()
-    {
         // all empty
         $object = $this->getStatusServiceWithReportMocked([]);
         $this->assertNotEquals([], $object->getRemainingSections());
 
         // all complete 102
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102));
+        $object = $this->getStatusServiceWithReportMocked($ret);
         $this->assertEquals([], $object->getRemainingSections());
+    }
 
-        // all complete 103
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
-        $this->assertEquals([], $object->getRemainingSections());
+    public function testGetRemainingSections103()
+    {
+        $ret = ['getType' => Report::TYPE_103]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->bankAccountProvider())[0]
+            + array_pop($this->expensesProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->debtsProvider())[0]
+            + array_pop($this->MoneyInShortProvider())[0]
+            + array_pop($this->MoneyOutShortProvider())[0];
 
-        // all complete 104
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_104));
-        $this->assertEquals([], $object->getRemainingSections());
+        // all empty
+        $object = $this->getStatusServiceWithReportMocked([]);
+        $this->assertNotEquals([], $object->getRemainingSections());
 
-        // all complete 106
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102, true));
+        // all complete 102
+        $object = $this->getStatusServiceWithReportMocked($ret);
         $this->assertEquals([], $object->getRemainingSections());
+    }
+
+    public function testGetRemainingSections104()
+    {
+        $ret = ['getType' => Report::TYPE_104]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->lifestyleProvider())[0];
+
+        // all empty
+        $object = $this->getStatusServiceWithReportMocked([]);
+        $this->assertNotEquals([], $object->getRemainingSections());
+
+        // all complete 102
+        $object = $this->getStatusServiceWithReportMocked($ret);
+        $this->assertEquals([], $object->getRemainingSections());
+    }
+
+    public function testGetRemainingSectionsOthers()
+    {
+        //No need to test, as the report config already decide what sections need to be completed
     }
 
 

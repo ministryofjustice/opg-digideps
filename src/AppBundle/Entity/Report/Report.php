@@ -48,6 +48,11 @@ class Report
     const TYPE_103_4_6 = '104-4-6';
     const TYPE_102_4_6 = '102-4-6';
 
+    private static $reportTypes = [
+        self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
+        self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6
+    ];
+
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
     const ENABLE_104 = true;
@@ -333,7 +338,7 @@ class Report
      */
     public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate)
     {
-        if (!in_array($type, [self::TYPE_102, self::TYPE_103, self::TYPE_104])) {
+        if (!in_array($type, self::$reportTypes)) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
         $this->type = $type;
