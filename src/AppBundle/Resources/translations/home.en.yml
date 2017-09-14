@@ -6,7 +6,6 @@ intro:
     Office of the Public Guardian (OPG)
   para01: You can save the report and then come back to add more information as often as you like.
   para02: Once you've submitted your report, you can save it to your computer.
-  para03: For the moment, only property and financial affairs deputies can use this service.
 
 iwanttocreate: I want to register for the online deputy service
 createaccount: Create an account now
@@ -49,13 +48,6 @@ afterISubmit:
   para01: |
     We'll review the report, and may still need to contact you for more information – by
     phone, email, in writing or by arranging a visit.
-
-hwDeputies:
-  summary: I'm a health and welfare deputy
-  para01: |
-    We are currently building a digital service for health and welfare deputies. In the
-    meantime, please <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537794/OPG104-Deputy-report-form-health-and-welfare-decisions.pdf" target="_blank">
-    download and print</a> your annual report form.
 
 relatedLinks:
   heading: "Deputies: make decisions for someone who lacks capacity"
