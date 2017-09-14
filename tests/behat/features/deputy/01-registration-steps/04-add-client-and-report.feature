@@ -169,7 +169,7 @@ Feature: deputy / user / add client and report
   @deputy
   Scenario: report-overview
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Given I click on "reports, report-start"
+    Given I click on "report-start"
     Then the URL should match "report/\d+/overview"
     And I save the page as "deputy-report-overview"
 

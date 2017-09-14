@@ -25,7 +25,7 @@ Feature: Report submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I click on "report-start"
+        And I click on "reports, report-start"
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"

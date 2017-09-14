@@ -67,15 +67,13 @@ class OdrController extends AbstractController
         }
 
         $odrStatus = new OdrStatusService($odr);
-        //$reportStatus = $reportActive->getStatus();
 
         return [
             'client' => $client,
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,
-            'odrStatus' => $odrStatus,
-            //'reportStatus' => $reportStatus
+            'odrStatus' => $odrStatus
         ];
     }
 

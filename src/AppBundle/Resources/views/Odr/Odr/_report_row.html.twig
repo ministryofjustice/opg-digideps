@@ -8,7 +8,7 @@
     # CLICKABLE REPORT
     #}
 
-    {% set status = reportActive.status.status %}
+    {% set status = reportActive ? reportActive.getStatus().status : 'notStarted' %}
     {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
     <div class="card soft-half">
         <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
