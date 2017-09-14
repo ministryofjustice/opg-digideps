@@ -227,20 +227,37 @@ class CasRec
      *
      * @param string $typeOfRep e.g. opg103
      * @param string $corref    e.g. l3, l3g
+     * @param string $userRoleName    e.g. ROLE_PA
      *
      * @return string Report::TYPE_*
      */
-    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref)
+    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $userRoleName)
     {
         $typeOfRep = trim(strtolower($typeOfRep));
         $corref = trim(strtolower($corref));
 
-        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g', 'a3']) && $typeOfRep === 'opg103') {
-            return Report::TYPE_103;
-        } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
-            return Report::TYPE_104;
+        if ($userRoleName === User::ROLE_LAY_DEPUTY) {
+            if (in_array($corref, ['l3', 'l3g', 'a3']) && $typeOfRep === 'opg103') {
+                return Report::TYPE_103;
+            }
+            if (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
+                return Report::TYPE_104;
+            }
+
+            return Report::TYPE_102; //default for Lay
         }
 
-        return Report::TYPE_102;
+        if (in_array($userRoleName, [User::ROLE_PA, User::ROLE_PA_TEAM_MEMBER, User::ROLE_PA_ADMIN])) {
+            if (in_array($corref, ['l3', 'l3g', 'a3']) && $typeOfRep === 'opg103') {
+                return Report::TYPE_103_6;
+            }
+            if (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
+                return Report::TYPE_104_6;
+            }
+
+            return Report::TYPE_102_6; //default for PA
+        }
+
+        throw new \Exception(__METHOD__ . ": user role not recognise to determine report type");
     }
 }
