@@ -11,6 +11,10 @@
 
 {% block pageContent %}
 
+    <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-add-notes-button">
+        <span class="icon icon-plus"></span>
+        {{ ('page.addCoDeputy') | trans }}
+    </a>
     {% if odr.submitted %}
 
         {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {

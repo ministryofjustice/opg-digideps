@@ -1,0 +1,10 @@
+addCoDeputy:
+  supportTitle: Client
+  pageTitle: Deputies
+
+form:
+  email:
+    label: Deputy email address
+  submit:
+    label: Send invitation
+    cancel: Cancel
