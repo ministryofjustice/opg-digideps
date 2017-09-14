@@ -1,0 +1,46 @@
+<div class="grid-row">
+    <div class="column-half">
+        <h2 class="heading-large flush--top">Deputies</h2>
+    </div>
+    <div class="column-half text--right">
+        <a href="/report/70/contacts/add?from=summary" class="bold-small action-link behat-link-add">
+            <span class="icon icon-plus"></span>
+            Invite another deputy
+        </a>
+    </div>
+</div>
+<table class="check-your-answers">
+    <thead>
+    <tr>
+        <th>Name or email</th>
+        <th>Status</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ app.user.firstname }} {{ app.user.lastname }}</td>
+        <td>Registered</td>
+        <td class="change-answer"></td>
+    </tr>
+    {% for deputy in coDeputies %}
+        {% if deputy.active %}
+            <tr>
+                <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
+                <td>Registered</td>
+                <td class="change-answer"></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>{{ deputy.email }}</td>
+                <td>Awaiting registration</td>
+                <td class="change-answer">
+                    <a href="">Resend invite</a>
+                </td>
+            </tr>
+        {% endif %}
+    {%  endfor %}
+    </tbody>
+</table>

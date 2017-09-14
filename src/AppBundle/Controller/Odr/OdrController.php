@@ -50,7 +50,9 @@ class OdrController extends AbstractController
             return $this->redirectToRoute('lay_home');
         }
 
-        $client = $user->getClients()[0];
+        $clients = $user->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
+        $coDeputies = !empty($client) ? $client->getUsers() : [];
         $odr = $client->getOdr();
 
         $reports = $client ? $client->getReports() : [];
@@ -70,6 +72,7 @@ class OdrController extends AbstractController
 
         return [
             'client' => $client,
+            'coDeputies' => $coDeputies,
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,

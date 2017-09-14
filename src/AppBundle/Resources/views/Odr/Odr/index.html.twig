@@ -12,6 +12,10 @@
 
 {% block pageContent %}
 
+    {% if coDeputies %}
+        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
+
     {% if odr.submitted %}
 
         {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {
