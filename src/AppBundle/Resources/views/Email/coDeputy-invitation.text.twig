@@ -1,0 +1,38 @@
+{% set translationDomain = "email-coDeputy-invitation" %}
+
+{% trans_default_domain translationDomain %}
+
+
+<h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ ('default.heading') | trans  }}</h2>
+
+<p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.deputyHasInvited') | trans  }}</p>
+
+<p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.onceRegistered') | trans  }}</p>
+
+<p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.forTheMoment') | trans  }}</p>
+
+<p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.toCreateYourAccount') | trans  }}</p>
+
+{{ 'default.heading' | trans  }}
+---------------------
+
+{{ ('default.deputyHasInvited') | trans  }}.
+
+{{ 'default.onceRegistered' | trans  }}
+
+{{ 'default.forTheMoment' | trans  }}
+
+{{ 'default.onceRegistered' | trans  }}
+
+{{ 'default.toCreateYourAccount' | trans  }}
+
+{{link}}
+
+{{ 'default.ifLinkDoesntWork' | trans  }}
+
+{{ ('default.youMustActivate') | trans  }}
+
+{{ ('default.linkExpires') | trans  }}
+
+
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

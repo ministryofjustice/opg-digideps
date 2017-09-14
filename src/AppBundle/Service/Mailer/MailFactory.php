@@ -342,4 +342,40 @@ class MailFactory
         );
         return $attachmentName;
     }
+
+
+    /**
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return \AppBundle\Model\Email
+     */
+    public function createCoDeputyInvitationEmail(User $user)
+    {
+        $area = $this->getUserArea($user);
+
+        $viewParams = [
+            'name'             => $user->getFullName(),
+            'domain'           => $this->generateAbsoluteLink($area, 'homepage', []),
+            'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
+                'action' => 'activate',
+                'token'  => $user->getRegistrationToken(),
+            ]),
+            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
+            'recipientRole' => self::getRecipientRole($user)
+        ];
+
+        $email = new ModelDir\Email();
+
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromName($this->translate('codeputyInvitation.fromName'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFullName())
+            ->setSubject($this->translate('codeputyInvitation.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:coDeputy-invitation.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:coDeputy-invitation.text.twig', $viewParams));
+
+        return $email;
+    }
 }

@@ -27,7 +27,10 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
-                $response = $this->getRestClient()->post('codeputy/add', $form->getData());
+                $newUser = $this->getRestClient()->post('codeputy/add', $form->getData(), [], 'User');
+
+                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($newUser);
+                $this->getMailSender()->send($invitationEmail);
 
                 $url = $this->getUser()->isOdrEnabled() ?
                     $this->generateUrl('odr_index')
