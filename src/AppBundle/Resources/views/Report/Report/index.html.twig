@@ -15,6 +15,7 @@
 
 {% block pageContent %}
 
+    {% if coDeputies %}
     {# Deputies section  #}
     <div class="grid-row">
         <div class="column-half">
@@ -43,15 +44,26 @@
                 <td>Registered</td>
                 <td class="change-answer"></td>
             </tr>
-            <tr>
-                <td>sarah.drougnutinaosa@digital.justice.gov.uk</td>
-                <td>Awaiting registration</td>
-                <td class="change-answer">
-                    <a href="">Resend invite</a>
-                </td>
-            </tr>
+            {% for deputy in coDeputies %}
+                {% if deputy.active %}
+                    <tr>
+                        <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
+                        <td>Registered</td>
+                        <td class="change-answer"></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ deputy.email }}</td>
+                        <td>Awaiting registration</td>
+                        <td class="change-answer">
+                            <a href="">Resend invite</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {%  endfor %}
         </tbody>
     </table>
+    {% endif %}
 
     <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
 
