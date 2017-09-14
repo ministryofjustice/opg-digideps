@@ -28,12 +28,12 @@ class CoDeputyController extends RestController
         ]);
 
         $loggedInUser = $this->getUser();
-        $user = new EntityDir\User();
-        $newUser = clone $loggedInUser;
+        $newUser = new EntityDir\User();
 
         $newUser->setFirstname('');
         $newUser->setLastname('');
         $newUser->setEmail($data['email']);
+        $newUser->recreateRegistrationToken();
 
         $userService = $this->get('opg_digideps.user_service');
 
@@ -43,6 +43,6 @@ class CoDeputyController extends RestController
             $request->query->get('groups') : ['user'];
         $this->setJmsSerialiserGroups($groups);
 
-        return $user;
+        return $newUser;
     }
 }
