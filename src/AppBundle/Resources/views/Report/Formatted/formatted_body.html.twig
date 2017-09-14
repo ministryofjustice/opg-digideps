@@ -11,6 +11,7 @@
 {% set is102 = report.type == '102' %}
 {% set is103 = report.type == '103' %}
 {% set is104 = report.type == '104' %}
+{% set reportTypeHeading = ('104' in report.type) ? 'health and welfare' : 'property and financial' %}
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
@@ -21,7 +22,7 @@
 <div id="wrapper">
     <div id="content" class="formatted-report">
         <div id="report-header">Office of the Public Guardian</div>
-        <h1 class="push--bottom">Deputy report for property and financial decisions</h1>
+        <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
