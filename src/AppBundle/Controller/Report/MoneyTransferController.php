@@ -238,6 +238,6 @@ class MoneyTransferController extends AbstractController
      */
     protected function getSectionId()
     {
-        return 'moneyTransfer';
+        return 'moneyTransfers';
     }
 }

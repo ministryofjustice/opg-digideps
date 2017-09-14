@@ -87,14 +87,14 @@
         </li>
 
 
-        {% if report.hasSection('paDeputyExpense') or report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
+        {% if report.hasSection('paDeputyExpenses') or report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {% if report.isDue() and report.status.balanceState.state !='done' %}
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
-                {% if report.hasSection('paDeputyExpense') %}
+                {% if report.hasSection('paDeputyExpenses') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'pa_fee_expense',
@@ -146,7 +146,7 @@
                         description: true
                     } %}
                     {% endif %}
-                {% if report.hasSection('moneyIn') and if report.hasSection('moneyOut') %}
+                {% if report.hasSection('moneyIn') and report.hasSection('moneyOut') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
@@ -164,7 +164,7 @@
                     description: true
                     } %}
                 {% endif %}
-                {% if report.hasSection('moneyInShort') and if report.hasSection('moneyOutShort') %}
+                {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in_short',
