@@ -110,7 +110,7 @@ Feature: odr / report submit
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
         And I press "report_save"
-        Then the URL should match "report/\d+/overview"
+        Then the URL should match "/odr"
         # assert homepage with report created
         When I go to "/"
         And I click on "report-start"
