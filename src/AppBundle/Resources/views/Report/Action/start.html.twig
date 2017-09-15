@@ -30,7 +30,9 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
                 </ul>
-                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                {% if not '104' in report.type %}
+                    <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                {% endif %}
             </div>
         </details>
 	</div>

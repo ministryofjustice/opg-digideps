@@ -30,11 +30,12 @@ provideDetails:
   summary: What you'll need for the report
   para01: "You'll need to provide details of:"
   listItem01: how the client is cared for
-  listItem02: purchases you've made on the client's behalf
-  listItem03: financial records relating to the client (for example bank statements)
-  listItem04: the client's assets and debts
-  listItem05: any big decisions you have made or are planning to make for the client
-  listItem06: friends, family and professionals you've contacted on behalf of the client
+  listItem02: any big decisions you have made or are planning to make for the client
+  listItem03: friends, family and professionals you've contacted on behalf of the client
+  para02: "If you're a property and financial affairs deputy you'll also need to provide details of:"
+  listItem04: purchases you've made on the client's behalf
+  listItem05: financial records relating to the client (for example bank statements)
+  listItem06: the client's assets and debts
 
 moreThanOne:
   summary: What if there's more than one deputy?
