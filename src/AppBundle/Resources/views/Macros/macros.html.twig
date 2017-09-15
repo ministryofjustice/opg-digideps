@@ -88,17 +88,18 @@
 {% macro reportSectionPrevNext(report, currentSectionId) %}
 
     {% if report.type == 'ndr' %}
+        {% set routeParams = {'odrId': report.id} %}
         {% set config = [
-        {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
-        {'section':'visitsCare','link': path('odr_visits_care', {'odrId': report.id})},
-        {'section':'deputyExpenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
-        {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': report.id})},
-        {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': report.id})},
-        {'section':'assets','link': path('odr_assets', {'odrId': report.id})},
-        {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
-        {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
-        {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
+            {'section':'reportOverview', 'link': path('odr_overview', routeParams)},
+            {'section':'visitsCare','link': path('odr_visits_care', routeParams)},
+            {'section':'deputyExpenses','link': path('odr_deputy_expenses', routeParams)},
+            {'section':'incomeBenefits','link': path('odr_income_benefits', routeParams)},
+            {'section':'bankAccounts','link': path('odr_bank_accounts', routeParams)},
+            {'section':'assets','link': path('odr_assets', routeParams)},
+            {'section':'debts','link': path('odr_debts', routeParams)},
+            {'section':'actions', 'link': path('odr_actions', routeParams)},
+            {'section':'otherInfo', 'link': path('odr_other_info', routeParams)},
+            {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', routeParams)},
         ] %}
     {% else %}
 
