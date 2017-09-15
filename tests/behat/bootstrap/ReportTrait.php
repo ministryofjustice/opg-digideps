@@ -7,11 +7,23 @@ use Behat\Gherkin\Node\TableNode;
 trait ReportTrait
 {
     /**
+     * @deprecated
      * @Given I change the report :reportId type to :reportType
      */
-    public function iChangeTheReportType($reportId, $reportType)
+//    public function iChangeTheReportType($reportId, $reportType)
+//    {
+//        $this->visitBehatLink('report/' . $reportId . '/change-report-type/' . $reportType);
+//        $this->assertResponseStatus(200);
+//    }
+
+    /**
+     * @Given I change the report of the client with case number :caseNumber to :reportType
+     */
+    public function iChangeTheReportOfClientWithCNToType($caseNumber, $reportType)
     {
-        $this->visitBehatLink('report/' . $reportId . '/change-report-type/' . $reportType);
+        $this->getRestClient()->put('behat/client/' . $caseNumber, [
+            'current_report_type' => $reportType,
+        ]);
     }
 
     /**
@@ -22,7 +34,10 @@ trait ReportTrait
         $endDate = new \DateTime();
         $endDate->modify("-{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+        $this->getRestClient()->put('behat/report/' . $reportId, [
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
         $this->visit('/');
     }
 
@@ -34,7 +49,10 @@ trait ReportTrait
         $endDate = new \DateTime();
         $endDate->modify("+{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+        $this->getRestClient()->put('behat/report/' . $reportId, [
+            'end_date' => $endDate->format('Y-m-d'),
+        ]);
+
         $this->visit('/');
     }
 

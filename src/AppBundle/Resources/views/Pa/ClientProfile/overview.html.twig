@@ -97,6 +97,7 @@
 
                 <div class="grid-row">
                     <div class="column-one-half">
+                        {#{{ dump(report.sectionsSettings) }}#}
                         <ul>
                             {% if report.hasSection('decisions') %}
                                 {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {

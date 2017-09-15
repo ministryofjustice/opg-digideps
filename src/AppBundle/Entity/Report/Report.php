@@ -1001,4 +1001,12 @@ class Report
         $this->sectionsSettings = $sectionsSettings;
     }
 
+    /**
+     * @return array
+     */
+    public function getSectionsSettings()
+    {
+        return $this->sectionsSettings;
+    }
+
 }
