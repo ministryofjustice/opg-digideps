@@ -20,9 +20,9 @@
 
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-send-invitation'}) }}
 
-    <a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
