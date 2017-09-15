@@ -3,9 +3,9 @@
         <h2 class="heading-large flush--top">Deputies</h2>
     </div>
     <div class="column-half text--right">
-        <a href="/report/70/contacts/add?from=summary" class="bold-small action-link behat-link-add">
+        <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-invite-codeputy-button">
             <span class="icon icon-plus"></span>
-            Invite another deputy
+            {{ ('page.inviteAnotherDeputy') | trans({}, 'report') }}
         </a>
     </div>
 </div>
@@ -25,7 +25,10 @@
         <td>Registered</td>
         <td class="change-answer"></td>
     </tr>
+
     {% for deputy in coDeputies %}
+
+    {% if deputy != 3 %}
         {% if deputy.active %}
             <tr>
                 <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
@@ -41,6 +44,7 @@
                 </td>
             </tr>
         {% endif %}
+    {% endif %}
     {%  endfor %}
     </tbody>
 </table>

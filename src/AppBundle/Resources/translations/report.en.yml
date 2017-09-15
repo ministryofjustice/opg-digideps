@@ -5,7 +5,7 @@ page:
       pageSectionTitle: Annual deputy reports for %client%
       title: Annual deputy reports for %client%
   lastLoggedIn: "Last signed in:"
-  addCoDeputy: Add new deputy
+  inviteAnotherDeputy: Invite another deputy
 
 reportDataList:
   editReportingPeriod: "Edit report dates"
