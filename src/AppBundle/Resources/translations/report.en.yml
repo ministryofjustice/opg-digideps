@@ -1,29 +1,10 @@
-page:
- # below deprecated ? remove
-  propFinance:
-      htmlTitle: "Deputy report - annual deputy reports | GOV.UK"
-      pageSectionTitle: Annual deputy reports for %client%
-      title: Annual deputy reports for %client%
-  lastLoggedIn: "Last signed in:"
-  inviteAnotherDeputy: Invite another deputy
-
-reportDataList:
-  editReportingPeriod: "Edit report dates"
-  edit: "Edit reporting period"
-  downloadThisReportLink: View this report
-  name: "Report Name"
-  nameSuffix: " report"
-  status: "Status:"
-  isDue: "Due"
-  inProgress: "In progress"
-  submitted: "Submitted %date%"
-  submitDateNotSet: "(Date Not Set)"
-  type: "Type:"
-  hw: "Health and welfare"
-  pa: "Property and affairs"
-  dueDate: "Due date:"
-  open: "Open report"
-  not-started: "Not started"
+homepage:
+  htmlTitle: Deputy report - Your reports | GOV.UK
+  pageTitle: Your reports
+  editReportingPeriod: Edit reporting period
+  reportType: Report type
+  reportingPeriod: Reporting period
+  submissionDate: Submission date
 
 # Edit reporting period page (Lay and PA)
 editReportingDates:
