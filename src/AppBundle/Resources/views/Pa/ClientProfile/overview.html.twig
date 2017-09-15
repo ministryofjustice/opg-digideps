@@ -19,9 +19,6 @@
         <div class="panel-heading">
             <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
             {% if report.hasSection('balance') %}
-                <pre>
-                report.status.remainingSections: {{ dump(report.status.remainingSections) }}
-                    </pre>
                 {% if report.isDue() and report.status.balanceState.state == 'not-started' %}
                     <div class="alert alert-important">
                         <span class="icon icon-important-small"></span>
@@ -97,7 +94,6 @@
 
                 <div class="grid-row">
                     <div class="column-one-half">
-                        {#{{ dump(report.sectionsSettings) }}#}
                         <ul>
                             {% if report.hasSection('decisions') %}
                                 {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
