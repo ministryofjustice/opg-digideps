@@ -14,6 +14,10 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block pageContent %}
+    <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-add-notes-button">
+        <span class="icon icon-plus"></span>
+        {{ ('page.addCoDeputy') | trans }}
+    </a>
 
     {# TODO consider remove the partial, as only used from the view after last refactor #}
     {% if reports is not empty %}

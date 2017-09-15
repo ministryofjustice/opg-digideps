@@ -24,6 +24,11 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(new FormDir\CoDeputyType($client), $user);
 
+        // @to-do remove hard coded 102
+        $backLink = $this->getUser()->isOdrEnabled() ?
+            $this->generateUrl('odr_index')
+            :$this->generateUrl('reports', ['type' => '102']);
+
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
@@ -32,13 +37,9 @@ class CoDeputyController extends AbstractController
                 $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($newUser);
                 $this->getMailSender()->send($invitationEmail);
 
-                $url = $this->getUser()->isOdrEnabled() ?
-                    $this->generateUrl('odr_index')
-                    :$this->generateUrl('report_create', ['clientId' => $client->getId()]);
-
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
-                return $this->redirect($url);
+                return $this->redirect($backLink);
 
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
@@ -56,7 +57,7 @@ class CoDeputyController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl('odr_index')
+            'backLink' => $backLink
         ];
     }
 }
