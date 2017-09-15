@@ -6,7 +6,6 @@ intro:
     Office of the Public Guardian (OPG)
   para01: You can save the report and then come back to add more information as often as you like.
   para02: Once you've submitted your report, you can save it to your computer.
-  para03: For the moment, only property and financial affairs deputies can use this service.
 
 iwanttocreate: I want to register for the online deputy service
 createaccount: Create an account now
@@ -31,11 +30,12 @@ provideDetails:
   summary: What you'll need for the report
   para01: "You'll need to provide details of:"
   listItem01: how the client is cared for
-  listItem02: purchases you've made on the client's behalf
-  listItem03: financial records relating to the client (for example bank statements)
-  listItem04: the client's assets and debts
-  listItem05: any big decisions you have made or are planning to make for the client
-  listItem06: friends, family and professionals you've contacted on behalf of the client
+  listItem02: any big decisions you have made or are planning to make for the client
+  listItem03: friends, family and professionals you've contacted on behalf of the client
+  para02: "If you're a property and financial affairs deputy you'll also need to provide details of:"
+  listItem04: purchases you've made on the client's behalf
+  listItem05: financial records relating to the client (for example bank statements)
+  listItem06: the client's assets and debts
 
 moreThanOne:
   summary: What if there's more than one deputy?
@@ -49,13 +49,6 @@ afterISubmit:
   para01: |
     We'll review the report, and may still need to contact you for more information – by
     phone, email, in writing or by arranging a visit.
-
-hwDeputies:
-  summary: I'm a health and welfare deputy
-  para01: |
-    We are currently building a digital service for health and welfare deputies. In the
-    meantime, please <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537794/OPG104-Deputy-report-form-health-and-welfare-decisions.pdf" target="_blank">
-    download and print</a> your annual report form.
 
 relatedLinks:
   heading: "Deputies: make decisions for someone who lacks capacity"
