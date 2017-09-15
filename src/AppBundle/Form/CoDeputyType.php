@@ -30,7 +30,7 @@ class CoDeputyType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'co-deputy',
-            'validation_groups' => ['client_codeputy'],
+            'validation_groups' => ['codeputy'],
         ]);
     }
 
