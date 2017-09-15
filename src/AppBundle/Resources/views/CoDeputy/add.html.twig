@@ -1,0 +1,29 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "co-deputy" %}
+{% trans_default_domain translationDomain %}
+{% set page = "addCoDeputy" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-send-invitation'}) }}
+
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

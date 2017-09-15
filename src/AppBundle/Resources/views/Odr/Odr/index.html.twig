@@ -1,10 +1,9 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.title' | trans }}{% endblock %}
 
 {% block supportTitleBottom %}
     <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
@@ -12,10 +11,10 @@
 
 {% block pageContent %}
 
-    {% if coDeputies %}
-        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
-    {% endif %}
-
+    <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-invite-codeputy-button">
+        <span class="icon icon-plus"></span>
+        {{ ('page.addCoDeputy') | trans }}
+    </a>
     {% if odr.submitted %}
 
         {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {

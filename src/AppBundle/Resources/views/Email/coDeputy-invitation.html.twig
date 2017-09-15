@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Email:_template.html.twig' %}
+
+{% set translationDomain = "email-coDeputy-invitation" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+'%deputyName%': deputyName,
+} %}
+
+{% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans  }}{% endblock %}
+
+{% block content %}
+
+    <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ ('default.heading') | trans  }}</h2>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.deputyHasInvited') | trans(transOptions)  }}</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.onceRegistered') | trans  }}</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.forTheMoment') | trans  }}</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.toCreateYourAccount') | trans  }}</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.clickOnLink') | trans  }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <a style="word-wrap: break-word;" href="{{ link }}">{{ link }}</a>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.ifLinkDoesntWork') | trans  }}</p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.youMustActivate') | trans  }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.linkExpires') | trans({'%homepageUrl%': homepageUrl}) | raw  }}</p>
+
+{% endblock %}
