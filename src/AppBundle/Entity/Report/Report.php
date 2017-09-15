@@ -45,7 +45,7 @@ class Report
     const TYPE_103_6 = '103-6';
     const TYPE_102_6 = '102-6';
     const TYPE_104_6 = '104-6';
-    const TYPE_103_4_6 = '104-4-6';
+    const TYPE_103_4_6 = '103-4-6';
     const TYPE_102_4_6 = '102-4-6';
 
     private static $reportTypes = [
@@ -104,7 +104,7 @@ class Report
         ];
         $r104 = [
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
-            self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
+            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
         ];
 
         return [
