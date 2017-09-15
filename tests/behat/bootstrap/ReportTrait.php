@@ -7,16 +7,6 @@ use Behat\Gherkin\Node\TableNode;
 trait ReportTrait
 {
     /**
-     * @deprecated
-     * @Given I change the report :reportId type to :reportType
-     */
-//    public function iChangeTheReportType($reportId, $reportType)
-//    {
-//        $this->visitBehatLink('report/' . $reportId . '/change-report-type/' . $reportType);
-//        $this->assertResponseStatus(200);
-//    }
-
-    /**
      * @Given I change the report of the client with case number :caseNumber to :reportType
      */
     public function iChangeTheReportOfClientWithCNToType($caseNumber, $reportType)
@@ -55,14 +45,6 @@ trait ReportTrait
 
         $this->visit('/');
     }
-
-    /**
-     * @Given I change the report :reportId submitted to :value
-     */
-//    public function iChangeTheReportToNotSubmitted($reportId, $value)
-//    {
-//        $this->visitBehatLink('report/'.$reportId.'/set-sumbmitted/'.$value);
-//    }
 
     /**
      * @Then the :arg1 asset group should be :arg2

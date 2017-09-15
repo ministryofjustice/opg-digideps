@@ -35,10 +35,6 @@ trait LinksTrait
         $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
 
         $this->visit("/behat/{$secret}/{$link}");
-        // non-200 response -> debug content
-        //if (200 != $this->getSession()->getStatusCode()) {
-        //   $this->printLastResponse();
-        //}
     }
 
     /**
@@ -112,11 +108,11 @@ trait LinksTrait
         $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
-        if (count($linksElementsFound) === 0) {
+        if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
 
-        if (count($linksElementsFound) > 1) {
+        if ($count > 1) {
             throw new \RuntimeException('Returned multiple elements');
         }
 
@@ -136,13 +132,12 @@ trait LinksTrait
         $region = $this->findRegion($region);
 
         $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
-        $count = count($linksElementsFound);
 
-        if (count($linksElementsFound) === 0) {
+        if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
 
-        if (count($linksElementsFound) > 1) {
+        if ($count > 1) {
             throw new \RuntimeException('Returned multiple elements');
         }
 
@@ -198,11 +193,11 @@ trait LinksTrait
         $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
-        if (count($linksElementsFound) === 0) {
+        if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
 
-        if (count($linksElementsFound) > 1) {
+        if ($count > 1) {
             throw new \RuntimeException('Returned multiple elements');
         }
 
