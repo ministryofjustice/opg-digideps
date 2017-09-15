@@ -1,17 +1,19 @@
 {% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
 
+{% set append104 = ('104' in report.type) ? '-104' : '' %}
+
 <div class="section" id="action-section">
     <h2 class="section-heading">Next reporting period</h2>
 
     {{ macros.answerYesNo({
-        question: 'Do you expect to make any significant financial decisions on behalf of the client in the next 12 months?',
+        question: ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions'),
         answer: action.doYouExpectFinancialDecisions,
         moreDetails: action.doYouExpectFinancialDecisionsDetails,
         showMoreDetailsWith: 'yes'
     }) }}
 
     {{ macros.answerYesNo({
-        question: 'Do you have any concerns about your deputyship?',
+        question: 'form.doYouHaveConcerns.label' | trans({}, 'report-actions'),
         answer: action.doYouHaveConcerns,
         moreDetails: action.doYouHaveConcernsDetails,
         showMoreDetailsWith: 'yes'

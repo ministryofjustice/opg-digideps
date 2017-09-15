@@ -162,11 +162,6 @@ class FormattedTest extends WebTestCase
         return $crawler->filter($expr)->eq(0)->html();
     }
 
-    public function testLayout()
-    {
-        $this->assertEquals('Deputy report for property and financial decisions', $this->html($this->crawler, 'h1'));
-    }
-
     public function testReport()
     {
         $this->assertEquals('1234567t', $this->html($this->crawler, '#caseNumber'));

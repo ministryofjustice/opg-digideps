@@ -15,7 +15,8 @@
 {% block pageContent %}
 
     <div class="text">
-	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        {% set appendKey = ('104' in report.type) ? '-104' : '' %}
+	    <p>{{ ('startPage.pageSectionDescription1' ~ appendKey) | trans(transOptions) }}</p>
 
 	    <details class="push--bottom">
             <summary>
@@ -29,7 +30,9 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
                 </ul>
-                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                {% if '104' not in report.type %}
+                    <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+                {% endif %}
             </div>
         </details>
 	</div>
