@@ -66,14 +66,16 @@
 
         <li id="welfare-section" class="overview-section">
             <h2 class="heading">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'visits_care',
-                report: report,
-                info: true,
-                description: true,
-                state: reportStatus.visitsCareState
-            } %}
+            {% if report.hasSection('visitsCare') %}
+                            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'visits_care',
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.visitsCareState
+                            } %}
+            {% endif %}
             {% if report.hasSection('lifestyle') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -94,6 +96,7 @@
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
+                {# never appearing ?? #}
                 {% if report.hasSection('paDeputyExpenses') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -229,7 +232,7 @@
                     list: true
                 } %}
             {% endif %}
-            {% if report.hasSection('actions') %}
+            {% if report.hasSection('otherInfo') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'other_info',
