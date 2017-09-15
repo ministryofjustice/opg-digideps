@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller only used from BEHAT
+ *
  * @codeCoverageIgnore
  * @Route("/behat")
  */
@@ -74,39 +75,6 @@ class BehatController extends RestController
         return true;
     }
 
-    /**
-     * @Route("/check-app-params")
-     * @Method({"GET"})
-     */
-//    public function checkParamsAction()
-//    {
-//        $this->securityChecks();
-//
-//        $param = $this->container->getParameter('email_report_submit')['to_email'];
-//        if (!preg_match('/^behat\-/', $param)) {
-//            throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
-//        }
-//
-//        $param = $this->container->getParameter('email_feedback_send')['to_email'];
-//        if (!preg_match('/^behat\-/', $param)) {
-//            throw new DisplayableException("email_feedback_send.to_email must be a behat- email in order to test emails, $param given.");
-//        }
-//
-//        return 'valid';
-//    }
-
-    /**
-     * @Route("/audit-log")
-     * @Method({"GET"})
-     */
-    public function auditLogGetAllAction()
-    {
-        $this->securityChecks();
-
-        $this->setJmsSerialiserGroups(['audit_log']);
-
-        return $this->getRepository(AuditLogEntry::class)->findBy([], ['id' => 'DESC']);
-    }
 
     /**
      * @Route("/user/{email}")
