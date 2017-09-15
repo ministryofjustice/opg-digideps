@@ -24,7 +24,9 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(new FormDir\CoDeputyType($client), $invitedUser);
 
-        $backLink = $this->generateUrl('lay_home');
+        $backLink = $this->getUser()->isOdrEnabled() ?
+            $this->generateUrl('odr_index')
+            :$this->generateUrl('lay_home');
 
         $form->handleRequest($request);
         if ($form->isValid()) {

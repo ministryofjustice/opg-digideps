@@ -86,7 +86,6 @@ Feature: Report edit and test tabs
         And emails are sent from "deputy" area
         And I reset the email log
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports"
         And I save the current URL as "deputy-reports-index.url"
         Then I click on "invite-codeputy-button"
         Then the URL should match "codeputy/\d+/add"

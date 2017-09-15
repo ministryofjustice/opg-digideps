@@ -25,26 +25,24 @@
         <td>Registered</td>
         <td class="change-answer"></td>
     </tr>
-
     {% for deputy in coDeputies %}
-
-    {% if deputy != 3 %}
-        {% if deputy.active %}
-            <tr>
-                <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
-                <td>Registered</td>
-                <td class="change-answer"></td>
-            </tr>
-        {% else %}
-            <tr>
-                <td>{{ deputy.email }}</td>
-                <td>Awaiting registration</td>
-                <td class="change-answer">
-                    <a href="">Resend invite</a>
-                </td>
-            </tr>
+        {%  if not deputy matches '/^\\d+$/' %}
+            {% if deputy.active %}
+                <tr>
+                    <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
+                    <td>Registered</td>
+                    <td class="change-answer"></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td>{{ deputy.email }}</td>
+                    <td>Awaiting registration</td>
+                    <td class="change-answer">
+                        <a href="">Resend invite</a>
+                    </td>
+                </tr>
+            {% endif %}
         {% endif %}
-    {% endif %}
     {%  endfor %}
     </tbody>
 </table>
