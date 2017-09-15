@@ -2,7 +2,7 @@ default:
     htmlHeaderTitle: Deputy report service - Deputy report invitation
     heading: Deputy report invitation
     deputyHasInvited: |
-        has invited you to collaborate on a deputy report.
+        %deputyName% has invited you to collaborate on a deputy report.
     onceRegistered: |
         Once registered with the online deputy service you will be able to complete the report. Once you've submitted your report, you can save it to your computer.
     forTheMoment: |

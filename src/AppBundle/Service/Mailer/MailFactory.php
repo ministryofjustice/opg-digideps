@@ -349,20 +349,20 @@ class MailFactory
      *
      * @return \AppBundle\Model\Email
      */
-    public function createCoDeputyInvitationEmail(User $user)
+    public function createCoDeputyInvitationEmail(User $invitedUser, User $loggedInUser)
     {
-        $area = $this->getUserArea($user);
+        $area = $this->getUserArea($loggedInUser);
 
         $viewParams = [
-            'name'             => $user->getFullName(),
+            'deputyName'  => $loggedInUser->getFirstname() . ' ' . $loggedInUser->getLastname(),
             'domain'           => $this->generateAbsoluteLink($area, 'homepage', []),
             'link'             => $this->generateAbsoluteLink($area, 'user_activate', [
                 'action' => 'activate',
-                'token'  => $user->getRegistrationToken(),
+                'token'  => $invitedUser->getRegistrationToken(),
             ]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
             'homepageUrl'      => $this->generateAbsoluteLink($area, 'homepage'),
-            'recipientRole' => self::getRecipientRole($user)
+            'recipientRole' => self::getRecipientRole($loggedInUser)
         ];
 
         $email = new ModelDir\Email();
@@ -370,8 +370,8 @@ class MailFactory
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('codeputyInvitation.fromName'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
+            ->setToEmail($invitedUser->getEmail())
+            ->setToName($invitedUser->getFullName())
             ->setSubject($this->translate('codeputyInvitation.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:coDeputy-invitation.html.twig', $viewParams))
             ->setBodyText($this->templating->render('AppBundle:Email:coDeputy-invitation.text.twig', $viewParams));

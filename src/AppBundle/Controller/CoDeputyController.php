@@ -18,11 +18,11 @@ class CoDeputyController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-clients', 'client']);
-        $client = $user->getClients()[0];
-        $user = new EntityDir\User();
+        $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
+        $client = $loggedInUser->getClients()[0];
+        $invitedUser = new EntityDir\User();
 
-        $form = $this->createForm(new FormDir\CoDeputyType($client), $user);
+        $form = $this->createForm(new FormDir\CoDeputyType($client), $invitedUser);
 
         // @to-do remove hard coded 102
         $backLink = $this->getUser()->isOdrEnabled() ?
@@ -32,9 +32,9 @@ class CoDeputyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
-                $newUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
+                $invitedUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
 
-                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($newUser);
+                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
                 $this->getMailSender()->send($invitationEmail);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
