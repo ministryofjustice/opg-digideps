@@ -48,8 +48,6 @@ trait UserTrait
      */
     public function iChangeTheUserToken($userId, $token)
     {
-//        $this->visitBehatLink("user/{$userId}/token/{$token}/token-date/-7days");
-
         $this->getRestClient()->put('behat/user/' . $userId, [
             'token_date' => '-7days',
             'registration_token' => $token,
