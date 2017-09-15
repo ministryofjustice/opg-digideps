@@ -3,7 +3,7 @@ Feature: Report 104 start
   @deputy @104
   Scenario: load app status to common sections completed, change type to 104 and check not submittable
     Given I load the application status from "102-common-sections-complete"
-    And I change the report 7 type to "104"
+    And I change the report 8 type to "104"
 
 
   @deputy @104
