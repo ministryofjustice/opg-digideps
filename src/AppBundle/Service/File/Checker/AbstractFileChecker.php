@@ -24,7 +24,9 @@ class AbstractFileChecker
     public function checkFile(UploadableFileInterface $file)
     {
         if (!self::hasValidFileExtension($file)) {
-            throw new RiskyFileException('Invalid file extension');
+            $extension = strtolower($file->getUploadedFile()->getClientOriginalExtension());
+
+            throw new RiskyFileException('Invalid file extension: ' . $extension);
         }
 
         return $file;
@@ -39,12 +41,9 @@ class AbstractFileChecker
      */
     protected static function hasValidFileExtension(UploadableFileInterface $file)
     {
-        $uploadedFile = $file->getUploadedFile();
-        $extension = strtolower($uploadedFile->getClientOriginalExtension());
+        $extension = strtolower($file->getUploadedFile()->getClientOriginalExtension());
 
-        if (!in_array($extension, self::getAcceptedExtensions()) ||
-            $uploadedFile->guessExtension() !== $extension
-        ) {
+        if (!in_array($extension, self::getAcceptedExtensions())) {
             return false;
         }
 
@@ -60,6 +59,6 @@ class AbstractFileChecker
      */
     public static function getAcceptedExtensions()
     {
-        return ['pdf', 'jpg', 'jpeg', 'png', 'tiff'];
+        return ['pdf', 'jpg', 'jpeg', 'png'];
     }
 }
