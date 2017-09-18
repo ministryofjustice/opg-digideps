@@ -100,8 +100,8 @@ class Report
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
         ];
         $r102n103 = [
-            self::TYPE_103, self::TYPE_102, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, // PA
+            self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
         ];
         $r104 = [
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
@@ -417,6 +417,16 @@ class Report
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @param string $section
+     *
+     * @return bool
+     */
+    public function hasSection($section)
+    {
+        return in_array($this->type, self::getSectionsSettings()[$section]);
     }
 
     /**
@@ -800,7 +810,7 @@ class Report
      * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103
      *
      * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
-     *
+     * //TODO remove from mocks
      * @JMS\VirtualProperty
      * @JMS\Type("boolean")
      * @JMS\SerializedName("has106flag")
@@ -809,7 +819,7 @@ class Report
      */
     public function has106Flag()
     {
-        return $this->getClient()->getUsers()->first()->isPaDeputy();
+        return substr($this->type, -2) === '-6';
     }
 
     /**

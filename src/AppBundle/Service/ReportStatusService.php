@@ -11,6 +11,7 @@ class ReportStatusService
     const STATE_NOT_STARTED = 'not-started';
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
+    const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
 
 
     /**
@@ -224,6 +225,10 @@ class ReportStatusService
      */
     public function getBalanceState()
     {
+        if (!$this->report->hasSection(Report::SECTION_BALANCE)) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
         }
@@ -236,7 +241,8 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        //TODO assert
+        return ['state' => self::STATE_NOT_MATCHING, 'nOfRecords' => 0];
     }
 
 
