@@ -81,7 +81,7 @@ Feature: Report documents
   @deputy
   Scenario: Upload image documents
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-documents"
+    And I click on "reports, report-start, edit-documents"
     Then the URL should match "report/\d+/documents/summary"
     And I should see "Edit" in the "provided-documentation" region
     When I click on "edit"
