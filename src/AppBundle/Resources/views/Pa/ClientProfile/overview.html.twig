@@ -19,7 +19,7 @@
         <div class="panel-heading">
             <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
             {% if report.hasSection('balance') %}
-                {% if report.isDue() and report.status.balanceState.state == 'not-started' %}
+                {% if report.isDue() and report.showBalanceWarning %}
                     <div class="alert alert-important">
                         <span class="icon icon-important-small"></span>
                         <div class="alert-message">
@@ -201,7 +201,7 @@
                                     description: true
                                 } %}
 
-                                {% if report.isDue() and report.status.balanceState.state !='done' %}
+                                {% if report.isDue() and report.showBalanceWarning %}
                                     <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
                                             {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}

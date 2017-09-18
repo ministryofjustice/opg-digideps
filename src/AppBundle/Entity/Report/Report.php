@@ -985,11 +985,6 @@ class Report
      */
     public function hasSection($section)
     {
-        if (!isset($this->sectionsSettings[$section])) {
-            throw new \RuntimeException(__METHOD__." : $section not defined in config. Sections are :"
-                . implode(', ', array_keys($this->sectionsSettings))
-            );
-        }
         return in_array($this->type, $this->sectionsSettings[$section]);
     }
 
