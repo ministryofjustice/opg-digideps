@@ -4,8 +4,8 @@ Feature: Report submit
     Scenario: report declaration page
         #Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016"
-        Then I should not see the "download-2016-report" link
+        And I click on "report-start"
+        Then I should not see the "report-review" link
         # if not found, it means that the report is not submittable
         And I click on "report-submit"
         Then the URL should match "/report/\d+/review"
@@ -19,14 +19,13 @@ Feature: Report submit
         And I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
-        # assert after login I'm redirected to report page
-        Then the URL should match "/report/\d+/overview"
+        And I click on "report-start"
         # assert I cannot access the submitted page directly
         And the URL "/report/1/submitted" should not be accessible
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I click on "reports, report-2016"
+        And I click on "reports, report-start"
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
@@ -64,7 +63,7 @@ Feature: Report submit
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
         When I click on "return-to-reports-page"
-        Then the URL should match "/reports/\d+"
+        Then the URL should match "/lay"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
         #And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
@@ -119,7 +118,7 @@ Feature: Report submit
     @deputy
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-open"
+        And I click on "report-start"
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -132,15 +131,10 @@ Feature: Report submit
             | Saving account        | account-02ca |
             | 445566                | account-02ca |
 
-
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "reports"
-        Then I should not see the "report-2016-edit" link
-        And I should not see the "report-2016" link
-        And I should see the "report-2016-submitted-on" region
-        And the URL "/report/1/overview" should not be accessible
+        Then the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/decisions/summary" should not be accessible
         And the URL "/report/1/contacts/summary" should not be accessible
         And the URL "/report/1/visits-care/summary" should not be accessible
@@ -157,9 +151,8 @@ Feature: Report submit
     @deputy
     Scenario: deputy report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "reports"
-        And I save the current URL as "reports-type-list"
-        When I click on "download-2016-report"
+        When I click on "report-review"
+        Then the URL should match "report/\d+/review"
         And the response should contain "12345ABC"
         And the response should contain "Peter"
         And the response should contain "White"
@@ -169,7 +162,5 @@ Feature: Report submit
         And I should not see "DigiRep" in the "document-list" region
         # test go back link
         When I click on "back-to-reports"
-        Then I go to the URL previously saved as "reports-type-list"
-        And I should see the "download-2016-report" link
-
-
+        Then the URL should match "/lay"
+        And I should see the "report-download" link

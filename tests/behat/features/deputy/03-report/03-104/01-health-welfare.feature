@@ -8,7 +8,7 @@ Feature: Report 104 health welfare
   @deputy
   Scenario: test HW section
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-lifestyle, start"
+    And I click on "report-start, edit-lifestyle, start"
     Then the URL should match "report/\d+/lifestyle/step/1"
     Given the step with the following values CANNOT be submitted:
       | lifestyle_careAppointments |  |

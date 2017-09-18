@@ -8,7 +8,7 @@ Feature: Report 103 start
     And I change the report of the client with case number "12345abc" to "103"
     # assert not submittable yet
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016"
+    And I click on "report-start"
     #test tabs
     Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link

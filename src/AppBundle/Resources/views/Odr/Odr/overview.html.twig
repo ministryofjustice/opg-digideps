@@ -6,6 +6,8 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block pageTitle %}{{ client.fullname }}{% endblock %}
 
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
 {% endblock %}

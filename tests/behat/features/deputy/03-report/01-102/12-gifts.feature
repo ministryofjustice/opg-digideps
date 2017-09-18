@@ -3,7 +3,7 @@ Feature: Report gifts
   @deputy
   Scenario: gifts
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-gifts, start"
+    And I click on "report-start, edit-gifts, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:

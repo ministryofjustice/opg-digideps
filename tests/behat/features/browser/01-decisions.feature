@@ -23,7 +23,7 @@ Feature: Browser - manage decisions
         And I click on "edit-decisions, decisions"
         When I follow "add-decisions-button"
         Then I save the page as "decision-add"
-        And I click on "reports,report-2016-open, edit-decisions"
+        And I click on "reports, report-start, edit-decisions"
         And I add the following decisions:
             | description | clientInvolved | clientInvolvedDetails |
             | 2 beds | yes | the client was able to decide at 90% |

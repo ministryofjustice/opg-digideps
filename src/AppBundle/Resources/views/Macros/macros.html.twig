@@ -5,14 +5,7 @@
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             {% if not isPaUser %}
-            <li>
-                {# NDR users have a different homepage. Remove once NDR and non-NDR homepages are merged #}
-                {% if isUserOdrEnabled %}
-                    <a href="{{ path('odr_index') }}">Deputy reports</a>
-                {% else %}
-                    <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
-                {% endif %}
-            </li>
+                <li><a href="{{ path('homepage') }}">Your reports</a></li>
             {% endif %}
             <li>
                 {% if report.type == 'ndr' %}
@@ -30,6 +23,14 @@
                     </a>
                 {% endif %}
             </li>
+        </ol>
+    </div>
+{% endmacro %}
+
+{% macro homepage() %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('homepage') }}">Your reports</a></li>
         </ol>
     </div>
 {% endmacro %}
@@ -58,7 +59,7 @@
             {% endif %}
         {% else %}
             <li>
-                <a href="{{ path('reports', {'type': '102'}) }}">Deputy reports</a>
+                <a href="{{ path('lay_home') }}">Deputy reports</a>
             </li>
             {% if 'settings' in section and section != 'settings' %}
                 <li>

@@ -1,31 +1,41 @@
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
-<h2 class="heading-large">Annual deputy report</h2>
+<h2 class="heading-large">Current deputy report</h2>
 
 {% if odr.submitted %}
     {#
     # CLICKABLE REPORT
     #}
-    {% set status = reportActive ? 'notFinished' : 'notStarted' %}
-    {% set statusClass = reportActive ? 'incomplete' : 'not-started' %}
+
+    {% set status = reportActive ? reportActive.getStatus().status : 'notStarted' %}
+    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
     <div class="card soft-half">
-        <span class="status status-corner {{ statusClass }}">{{ ('report.' ~ status ~ '.status') | trans }}</span>
-        <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
+        {% if reportActive %}
+            <h3 class="heading-medium flush--ends">
+                <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
+                    {{ reportActive.getPeriod() }} report
+                </a>
+            </h3>
+        {% else %}
+            <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        {% endif %}
         <div class="card-body">
             {% if reportActive %}
                 <p>
-                    {{ reportActive.startDate | date("j F Y") }} -
-                    {{ reportActive.endDate | date("j F Y") }}
+                    <strong class="bold">Due date: </strong>
+                    {{ reportActive.dueDate | date(" d F Y") }}
                 </p>
-                <a href="{{ path('reports', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
+                <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
             {% endif %}
         </div>
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
         : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+        {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
-            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('report.' ~ status ~ '.buttonLabel') | trans }}</a>
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
         </div>
 
     </div>
@@ -33,12 +43,11 @@
     {#
      # REPORT NOT ACTIVE
      #}
-    {% set status = 'notAvailable' %}
     <div class="card disabled soft-half">
-        <span class="status status-corner not-available">{{ ('report.' ~ status ~ '.status') | trans }}</span>
+        <span class="status status-corner not-available">{{ 'notAvailable' | trans({}, 'common') }}</span>
         <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
         <div class="card-body soft-half--top">
-            <p class="text flush--bottom">{{ ('report.' ~ status ~ '.instructions') | trans }}</p>
+            <p class="text flush--bottom">{{ 'report.notAvailableInfo' | trans }}</p>
         </div>
     </div>
 {% endif %}

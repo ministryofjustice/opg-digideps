@@ -1,25 +1,84 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% import 'AppBundle:Macros:macros.html.twig' as macros %}
-
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'homepage' %}
 
- {% block htmlTitle %}
-     {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
- {% endblock %}
-{% block pageTitle %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
+{% endblock %}
 
 {% block breadcrumbs %}{% endblock %}
 
 {% block pageContent %}
 
-    {# TODO consider remove the partial, as only used from the view after last refactor #}
-    {% if reports is not empty %}
-        {% include 'AppBundle:Report:_list-reports.html.twig' with {
-                'translationDomain': translationDomain,
-                'reports': reports
-                } %}
+    <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+
+    {% set status = reportActive.status.status %}
+    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
+
+    <div class="card soft-half">
+        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
+        <h3 class="heading-medium flush--ends">
+            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
+                {{ reportActive.getPeriod() }} report
+            </a>
+        </h3>
+        <div class="card-body">
+            <p>
+                <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
+                {{ reportActive.dueDate | date(" d F Y") }}
+            </p>
+            <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
+        </div>
+        {% set buttonText = reportActive.status.status != 'notStarted' ? 'continue' : 'startNow' %}
+        <div class="card-actions">
+            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
+        </div>
+    </div>
+
+    {% if reportsSubmitted %}
+
+        <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
+
+        <table class="behat-region-reports-history">
+            <thead>
+                <tr>
+                    <th>{{ (page ~ '.reportType') | trans }}</th>
+                    <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th>{{ (page ~ '.submissionDate') | trans }}</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in reportsSubmitted %}
+                <tr>
+                    <td>
+                        <a href="{{ path('report_review', {reportId: report.id}) }}">
+                            {{ 'annualDeputyReport' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                    <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                    <td>{{ report.submitDate | date("j M Y") }}</td>
+                    <td>
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download">
+                            {{ 'download' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                    <td class="text--right hard--right">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
+                            {{ 'view' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     {% endif %}
+
 {% endblock %}

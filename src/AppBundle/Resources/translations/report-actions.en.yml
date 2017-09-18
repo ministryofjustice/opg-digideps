@@ -4,6 +4,9 @@ startPage:
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
+  pageSectionDescription1-104: |
+    Use this section to tell us about any significant health and welfare decisions you plan to
+    make on %client%'s behalf in the next 12 months
   hiddenText01:
     summary: Making decisions on the client's behalf
     content:
@@ -18,6 +21,8 @@ startPage:
         getting advice from relatives and professionals like doctors
       para03: |
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para03-104: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD4)</a> booklet gives detailed guidance on how to look after %client%'s health and welfare.
   startButton: Start actions
 
 stepPage:
@@ -34,37 +39,46 @@ summaryPage:
 
 form:
   save:
-      label: Save
+    label: Save
   doYouExpectFinancialDecisions:
-      label: |
-          Do you expect to make any significant financial decisions on
-          behalf of %client% in the next 12 months?
-      hint: |
-          For example, making a large gift, alterations to %client%'s home, or buying and selling property for %client%
-      hiddenText01:
-        summary: Selling property on behalf of your client
-        content:
-          para01: |
-            Unless your court order already gives you authority to sell property %client% owns or
-            has a share in, you need to apply to the Court of Protection for permission.
-          para02: |
-            It costs £400 to apply – paid from the client's funds – and there may be additional
-            costs if there's a court hearing.
-          para03: |
-            You can also apply to pay less or no fee for an application to the court if the
-            client has a small estate (low funds).
-          para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
+    label: |
+      Do you expect to make any significant financial decisions on behalf of %client% in the
+      next 12 months?
+    label-104: |
+      Do you expect %client%'s circumstances to change in the next 12 months?
+    hint: |
+      For example, making a large gift, alterations to %client%'s home, or buying and selling property
+      for %client%
+    hint-104: |
+      For example, changes to %client%'s accommodation or funding, future appointments that
+      affect %client%'s welfare, carrying out an assessment of %client%'s care needs
+    hiddenText01:
+      summary: Selling property on behalf of your client
+      content:
+        para01: |
+          Unless your court order already gives you authority to sell property %client% owns or
+          has a share in, you need to apply to the Court of Protection for permission.
+        para02: |
+          It costs £400 to apply – paid from the client's funds – and there may be additional
+          costs if there's a court hearing.
+        para03: |
+          You can also apply to pay less or no fee for an application to the court if the
+          client has a small estate (low funds).
+        para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
   doYouExpectFinancialDecisionsDetails:
       label: Please give us details about your decisions
+      label-104: Please give us details of these changes
   doYouHaveConcerns:
       label: Do you have any concerns about your deputyship?
       hint: |
-          For example, paying care home fees if %client%'s money runs low,
-          managing %client%'s property, other family members' involvement
-          with %client%'s funds
-      hintPA: |
-          For example, paying care home fees if %client%'s money runs low,
-          managing %client%'s property, family members' involvement
-          with %client%'s funds
+        For example, paying care home fees if %client%'s money runs low, managing %client%'s property,
+        other family members' involvement with %client%'s funds
+      hint-PA: |
+        For example, paying care home fees if %client%'s money runs low, managing %client%'s property,
+        family members' involvement with %client%'s funds
+      hint-104: |
+        For example, people not recognising or understanding your court order, not being involved in
+        making decisions stated on your court order on behalf of %client%, any complaints about
+        %client%'s care or treatment
   doYouHaveConcernsDetails:
       label: Please give us details about your concerns

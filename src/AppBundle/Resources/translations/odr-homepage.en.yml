@@ -1,43 +1,23 @@
 page:
-  title: Your reports
-  htmlTitle: New deputy report - Your reports | GOV.UK
-
+  htmlTitle: Deputy report - Your reports | GOV.UK
+  pageTitle: Your reports
 
 odr:
-  notStarted:
-    status: NOT STARTED
-    instructions: Your new deputy report tells us about %client%'s circumstances at the time of your court order.
-    buttonLabel: Start now
-  notFinished:
-    status: NOT FINISHED
-    instructions: Your new deputy report tells us about %client%'s circumstances at the time of your court order.
-    buttonLabel: Continue
-  readyToSubmit:
-    status: READY TO SUBMIT
-    instructions: Your new deputy report tells us about %client%'s circumstances at the time of your court order.
-    buttonLabel: Continue
+  instructions: Your new deputy report tells us about %client%'s circumstances at the time of your court order.
 
 report:
   editReportingPeriod: "Edit reporting period"
   due: "Due: "
-  notAvailable:
-    status: NOT AVAILABLE
-    instructions: You can start filling in your annual deputy report once you've completed the new deputy report.
-  notStarted:
-    status: NOT STARTED
-    buttonLabel: Start now
-  notFinished:
-    status: NOT FINISHED
-    buttonLabel: Continue
+  notAvailableInfo: You can start filling in your current deputy report once you've completed the new deputy report
 
 history:
-  title: History of report submission (%number%)
+  title: Submitted reports
   header:
     reportType: Report type
     reportingPeriod: Reporting period
     submissionDate: Submission date
   reports:
-    title: Annual deputy report
+    title: Current deputy report
     download: Download
     view: View
   odr:

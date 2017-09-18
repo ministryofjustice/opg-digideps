@@ -25,7 +25,7 @@ Feature: deputy / acl / security on pages
       | phone      | 0123456789     |             |            |         |    |
     And I set the report start date to "1/1/2016"
     And I set the report end date to "1/1/2016"
-    Then the URL should match "report/\d+/overview"
+    Then the URL should match "/lay"
 
 
   @deputy
