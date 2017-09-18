@@ -58,7 +58,14 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
 
     public function getTypeBasedOnTypeofRepAndCorrefProvider()
     {
+        // follow order in https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
         return [
+            // 103
+            ['l3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+            ['l3g', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
+            ['a3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_103],
+
+
             // 102
             [null, null, User::ROLE_LAY_DEPUTY, Report::TYPE_102],
             [null, 'opg103', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
@@ -67,16 +74,22 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             ['l3g', 'whatever', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
             ['a3', 'whatever', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
             ['l2', 'opg103', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
-            ['hw', 'opg103', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
-            ['hw', 'opg102', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
-
-            // 103
-            ['l3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-            ['l3g', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-            ['a3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_103],
 
             // 104
             ['hw', '', User::ROLE_LAY_DEPUTY, Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
+
+            // 103-4
+            ['hw', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_104_JOINT ? Report::TYPE_103_4 : Report::TYPE_102],
+
+            // 102-4
+            ['hw', 'opg102', User::ROLE_LAY_DEPUTY, Report::ENABLE_104_JOINT ? Report::TYPE_102_4 : Report::TYPE_102],
+
+            // ============ PA =============
+
+            // 103-6
+            ['l3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
+            ['l3g', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
+            ['a3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_103_6],
 
             // 102-6
             [null, null, User::ROLE_PA, Report::TYPE_102_6],
@@ -86,16 +99,15 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             ['l3g', 'whatever', User::ROLE_PA, Report::TYPE_102_6],
             ['a3', 'whatever', User::ROLE_PA, Report::TYPE_102_6],
             ['l2', 'opg103', User::ROLE_PA, Report::TYPE_102_6],
-            ['hw', 'opg103', User::ROLE_PA, Report::TYPE_102_6],
-            ['hw', 'opg102', User::ROLE_PA, Report::TYPE_102_6],
-
-            // 103-6
-            ['l3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['l3g', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['a3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_103_6],
 
             // 104-6
             ['hw', '', User::ROLE_PA, Report::ENABLE_104 ? Report::TYPE_104_6 : Report::TYPE_102_6],
+
+            // 103-4-6
+            ['hw', 'opg103', User::ROLE_PA, Report::ENABLE_104_JOINT ? Report::TYPE_103_4_6 : Report::TYPE_102_6],
+
+            // 102-4-6
+            ['hw', 'opg102', User::ROLE_PA, Report::ENABLE_104_JOINT ? Report::TYPE_102_4_6 : Report::TYPE_102_6],
         ];
     }
 
