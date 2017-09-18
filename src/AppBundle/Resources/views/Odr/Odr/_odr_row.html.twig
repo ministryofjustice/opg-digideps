@@ -7,12 +7,13 @@
 {% set statusClass = (odrStatus.status == 'notStarted') ? 'not-started' : 'incomplete' %}
 
 <div class="card soft-half push-double--bottom">
-    <span class="status status-corner {{ statusClass }}">{{ ('odr.' ~ odrStatus.status ~ '.status') | trans }}</span>
+    <span class="status status-corner {{ statusClass }}">{{ (odrStatus.status) | trans({}, 'common') }}</span>
     <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
     <div class="card-body soft-half--top">
-	    <p class="text flush--bottom">{{ ('odr.' ~ odrStatus.status ~ '.instructions') | trans(transOptions) }}</p>
+	    <p class="text flush--bottom">{{ ('odr.instructions') | trans(transOptions) }}</p>
     </div>
     <div class="card-actions">
-	    <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="button right behat-link-odr-start">{{ ('odr.' ~ odrStatus.status ~ '.buttonLabel') | trans }}</a>
+        {% set buttonText = (odrStatus.status != 'notStarted') ? 'continue' : 'startNow' %}
+	    <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="button right behat-link-odr-start">{{ buttonText | trans({}, 'common') }}</a>
     </div>
 </div>

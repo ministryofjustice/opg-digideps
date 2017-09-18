@@ -3,7 +3,7 @@ Feature: Report decisions
     @deputy
     Scenario: decisions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016, edit-decisions, start"
+        And I click on "report-start, edit-decisions, start"
         # step  mental capacity
         Then the step cannot be submitted without making a selection
         Then the step with the following values CANNOT be submitted:

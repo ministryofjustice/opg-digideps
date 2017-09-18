@@ -3,7 +3,7 @@ Feature: Report asset with variations
     @deputy
     Scenario: assets
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016, edit-assets, start"
+        And I click on "report-start, edit-assets, start"
         # chose "no records"
         Then the step cannot be submitted without making a selection
         And the step with the following values CAN be submitted:
@@ -92,7 +92,7 @@ Feature: Report asset with variations
     @deputy
     Scenario: properties
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016, edit-assets, add"
+        And I click on "report-start, edit-assets, add"
         And the step with the following values CAN be submitted:
             | asset_title_title_0 | Property   |
         And the step with the following values CANNOT be submitted:

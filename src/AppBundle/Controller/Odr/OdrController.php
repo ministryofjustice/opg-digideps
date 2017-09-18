@@ -43,11 +43,11 @@ class OdrController extends AbstractController
      */
     public function indexAction()
     {
-        $user = $this->getUserWithData(self::$odrGroupsForValidation);
+        $user = $this->getUserWithData(array_merge(self::$odrGroupsForValidation, ['status']));
 
         // in case the user jumps to this page directly via URL
         if (!$user->isOdrEnabled()) {
-            return $this->redirectToRoute('reports', ['type' => Report::TYPE_102]);
+            return $this->redirectToRoute('lay_home');
         }
 
         $client = $user->getClients()[0];
@@ -73,7 +73,7 @@ class OdrController extends AbstractController
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,
-            'odrStatus' => $odrStatus,
+            'odrStatus' => $odrStatus
         ];
     }
 

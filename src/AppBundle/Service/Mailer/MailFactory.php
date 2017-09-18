@@ -255,9 +255,6 @@ class MailFactory
             'submittedReport' => $submittedReport,
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
             'newReport'       => $newReport,
-            'link'            => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'reports', [
-                'type' => $newReport->getType(), //TODO take from $submittedReport ?
-            ]),
             'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
             'recipientRole'   => self::getRecipientRole($user)
         ];

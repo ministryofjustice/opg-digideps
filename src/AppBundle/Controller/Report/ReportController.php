@@ -58,12 +58,12 @@ class ReportController extends AbstractController
     /**
      * List of reports.
      *
-     * @Route("/reports/{type}", name="reports")
+     * @Route("/lay", name="lay_home")
      * @Template()
      */
-    public function indexAction(Request $request, $type)
+    public function indexAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports', 'status']);
 
         // NDR: redirect to ODR index
         if ($user->isOdrEnabled()) {
@@ -76,11 +76,22 @@ class ReportController extends AbstractController
         $reports = $client ? $client->getReports() : [];
         arsort($reports);
 
+        $reportActive = null;
+        $reportsSubmitted = [];
+        foreach ($reports as $currentReport) {
+            if ($currentReport->getSubmitted()) {
+                $reportsSubmitted[] = $currentReport;
+            } else {
+                $reportActive = $currentReport;
+            }
+        }
+
         return [
             'client' => $client,
             'reports' => $reports,
-            'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
-            'filter' => 'propFinance', // extend with param when required
+            'reportActive' => $reportActive,
+            'reportsSubmitted' => $reportsSubmitted,
+            'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
 
@@ -99,7 +110,7 @@ class ReportController extends AbstractController
         ]);
         $returnLink = $this->getUser()->isDeputyPa() ?
             $this->generateClientProfileLink($report->getClient())
-            : $this->generateUrl('reports', ['type' => $report->getType()]);
+            : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isValid()) {
@@ -149,9 +160,8 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $response = $this->getRestClient()->post('report', $form->getData());
-
-            return $this->redirect($this->generateUrl('report_overview', ['reportId' => $response['report']]));
+            $this->getRestClient()->post('report', $form->getData());
+            return $this->redirect($this->generateUrl('homepage'));
         }
 
         return ['form' => $form->createView()];
@@ -311,7 +321,7 @@ class ReportController extends AbstractController
         if ($this->getUser()->isDeputyPa()) {
             $backLink = $this->generateClientProfileLink($report->getClient());
         } else {
-            $backLink = $this->generateUrl('reports', ['type' => $report->getType()]);
+            $backLink = $this->generateUrl('lay_home');
         }
 
         return [

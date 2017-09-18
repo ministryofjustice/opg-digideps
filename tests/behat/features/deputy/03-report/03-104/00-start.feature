@@ -8,7 +8,7 @@ Feature: Report 104 start
   @deputy
   Scenario: test tabs for 104
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016"
+    And I click on "report-start"
     #Then the report should not be submittable
     Then I should see the "edit-decisions" link
     Then I should see the "edit-contacts" link

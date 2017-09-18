@@ -11,7 +11,7 @@ Feature: deputy / password reset
       And I save the page as "forgotten-password-login"
       When I click on "forgotten-password"
       And I save the page as "forgotten-password"
-      # empty form]
+      # empty form
       And I fill in "password_forgotten_email" with ""
       And I press "password_forgotten_submit"
       Then the form should be invalid
@@ -56,11 +56,11 @@ Feature: deputy / password reset
           | reset_password_password_second  | Abcd12345 |
       And I press "reset_password_save"
       Then the form should be valid
-      And the URL should match "report/\d+/overview"
+      And the URL should match "/lay"
       And I save the page as "forgotten-password-logged"
       # test login
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd12345"
-      Then the URL should match "report/\d+/overview"
+      Then the URL should match "/lay"
       # assert set password link is not accessible
       When I open the "/user/password-reset/" link from the email
       Then the response status code should be 500
