@@ -121,7 +121,7 @@ class UserService
     private function checkUserEmail(User $user)
     {
         if ($this->userRepository->findOneBy(['email' => $user->getEmail()])) {
-            throw new \RuntimeException("PA User with email {$user->getEmail()} already exists.", 422);
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
     }
 }
