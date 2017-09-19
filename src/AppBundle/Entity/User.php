@@ -294,6 +294,13 @@ class User implements AdvancedUserInterface
     private $isCoDeputy;
 
     /**
+     * @JMS\Type("boolean")
+     *
+     * @var bool
+     */
+    private $coDeputyConfirmed;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -541,6 +548,22 @@ class User implements AdvancedUserInterface
     public function setIsCoDeputy($isCoDeputy)
     {
         $this->isCoDeputy = $isCoDeputy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCoDeputyConfirmed()
+    {
+        return $this->coDeputyConfirmed;
+    }
+
+    /**
+     * @param bool $isCoDeputyConfirmed
+     */
+    public function setCoDeputyConfirmed($isCoDeputyConfirmed)
+    {
+        $this->coDeputyConfirmed = $isCoDeputyConfirmed;
     }
 
     public function eraseCredentials()

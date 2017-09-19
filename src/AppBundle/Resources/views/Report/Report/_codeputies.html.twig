@@ -26,7 +26,7 @@
         <td class="change-answer"></td>
     </tr>
     {% for deputy in coDeputies %}
-        {% if deputy.active %}
+        {% if deputy.co_deputy_confirmed %}
             <tr>
                 <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
                 <td>Registered</td>
