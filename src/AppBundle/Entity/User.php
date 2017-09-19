@@ -239,6 +239,23 @@ class User implements UserInterface
     private $agreeTermsUseDate;
 
     /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     * @JMS\AccessType("public_method")
+     */
+    private $isCoDeputy;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="codeputy_confirmed", type="boolean", nullable=false, options = { "default": false })
+     */
+    private $coDeputyConfirmed;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -983,6 +1000,45 @@ class User implements UserInterface
     public function getAgreeTermsUseDate()
     {
         return $this->agreeTermsUseDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCoDeputyConfirmed()
+    {
+        return $this->coDeputyConfirmed;
+    }
+
+    /**
+     * @param bool $coDeputyConfirmed
+     */
+    public function setCoDeputyConfirmed($coDeputyConfirmed)
+    {
+        $this->coDeputyConfirmed = $coDeputyConfirmed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsCoDeputy()
+    {
+        $isCoDeputy = false;
+
+        $clients = $this->getClients();
+        if (!empty($clients) && count($clients) > 0) {
+            $isCoDeputy = count($clients[0]->getUsers()) > 1;
+        }
+
+        return $isCoDeputy;
+    }
+
+    /**
+     * @param bool $isCoDeputy
+     */
+    public function setIsCoDeputy($isCoDeputy)
+    {
+        $this->isCoDeputy = $isCoDeputy;
     }
 
     /**
