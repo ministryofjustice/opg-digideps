@@ -1,23 +1,15 @@
 default:
     htmlHeaderTitle: Deputy report service - Deputy report invitation
-    heading: Deputy report invitation
-    deputyHasInvited: |
-        %deputyName% has invited you to collaborate on a deputy report.
-    onceRegistered: |
-        Once registered with the online deputy service you will be able to complete the report. Once you've submitted your report, you can save it to your computer.
-    forTheMoment: |
-        For the moment, only property and financial affairs deputies can use this service.
-    toCreateYourAccount: |
-        To create an account you'll need:
-        * your case number (look for 'OPG reference' on letters from OPG)
-        * your email address
-        * your client's last name
-    clickOnLink: Please click on the link below to activate and start using your account.
+    heading: Invitation to collaborate on a deputy report
+    beenInvited: You've been invited to collaborate on a deputy report.
+    needToSignUp: |
+        To do this, you'll need to sign up for the Office of the Public Guardian's online
+        deputy report service.
+    clickOnLink: "Please click on the following link:"
+    thenAsked: "Then you'll be asked to:"
+    firstPoint: create a password
+    secondPoint: enter your details – name, address, postcode, country and telephone number
+    thirdPoint: confirm your client's last name and case number
     ifLinkDoesntWork: |
-        If clicking on the link doesn’t work, try copying it into your browser's address bar.
-    linkExpires: |
-        The link we’ve given you expires after 48 hours, but don’t worry if you miss this
-        deadline. You can return to the deputy report service at
-        <a style="word-wrap: break-word;" href="%homepageUrl%">
-        complete-deputy-report.service.gov.uk</a> and register again.
-    youMustActivate: You must activate your account before you can create a deputy report.
+        If clicking on the link doesn't work, try copying it into your browser's address bar.
+    linkExpires: The link we've given you expires after 48 hours.

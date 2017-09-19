@@ -13,13 +13,9 @@
 
     <h2 style="Margin: 0 0 20px 0; padding: 0; font-size: 27px; line-height: 35px; font-weight: bold; color: #0B0C0C;">{{ ('default.heading') | trans  }}</h2>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.deputyHasInvited') | trans(transOptions)  }}</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.beenInvited') | trans(transOptions)  }}</p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.onceRegistered') | trans  }}</p>
-
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.forTheMoment') | trans  }}</p>
-
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.toCreateYourAccount') | trans  }}</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.needToSignUp') | trans  }}</p>
 
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
         <strong>{{ ('default.clickOnLink') | trans  }}</strong>
@@ -29,12 +25,16 @@
         <a style="word-wrap: break-word;" href="{{ link }}">{{ link }}</a>
     </p>
 
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.thenAsked') | trans  }}</p>
+
+    <ol style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <li>{{ ('default.firstPoint') | trans  }}</li>
+        <li>{{ ('default.secondPoint') | trans  }}</li>
+        <li>{{ ('default.thirdPoint') | trans  }}</li>
+    </ol>
+
     <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.ifLinkDoesntWork') | trans  }}</p>
 
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
-        <strong>{{ ('default.youMustActivate') | trans  }}</strong>
-    </p>
-
-    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.linkExpires') | trans({'%homepageUrl%': homepageUrl}) | raw  }}</p>
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">{{ ('default.linkExpires') | trans  }}</p>
 
 {% endblock %}
