@@ -132,7 +132,7 @@ trait LinksTrait
         $region = $this->findRegion($region);
 
         $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
-
+        $count = count($linksElementsFound);
         if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
