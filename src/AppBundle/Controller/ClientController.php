@@ -59,16 +59,15 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $client = $this->getFirstClient();
+        $user = $this->getUserWithData();
 
-        if ($client->isMultiDeputy()) {
+        if ($user->getIsCoDeputy()) {
             return $this->redirect($this->generateUrl('client_verify'));
         }
 
+        $client = $this->getFirstClient();
         if (!empty($client)) {
             // update existing client
-            // WHY ARE WE USING THIS ACTION FOR UPDATES
-            // ALSO WHY ANOTHER API CALL
             $method = 'put';
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
         } else {
@@ -103,7 +102,12 @@ class ClientController extends AbstractController
      */
     public function verifyAction(Request $request)
     {
-        //only for multi deputies
+        $user = $this->getUserWithData();
+
+        if (! $user->getIsCoDeputy()) {
+            return $this->redirect($this->generateUrl('client_add'));
+        }
+
         $client = $this->getFirstClient();
         $formClient = clone $client;
         $formClient->setLastName('');
@@ -124,7 +128,7 @@ class ClientController extends AbstractController
         }
 
         return [ 'form' => $form->createView()
-               , 'client' => $client
+               , 'user' => $user
                ];
     }
 }

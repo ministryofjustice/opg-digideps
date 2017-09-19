@@ -7,7 +7,7 @@
 {% block pageTitle %}{{ 'verifyClient.h1Title' | trans }}{% endblock %}
 
 {% block progressBar %}
-     {{ progress_bar_registration(app.user, 'client_details', client) }}
+     {{ progress_bar_registration(user, 'client_details') }}
 {% endblock %}
 
 {% block helpline %}{% endblock %}

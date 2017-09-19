@@ -95,9 +95,9 @@ class UserController extends AbstractController
         }
 
         return $this->render($template, [
-            'token' => $token,
-            'form'  => $form->createView(),
-            'user'  => $user,
+            'token'  => $token,
+            'form'   => $form->createView(),
+            'user'   => $user
         ]);
     }
 
@@ -167,6 +167,7 @@ class UserController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'user' => $user
         ];
     }
 

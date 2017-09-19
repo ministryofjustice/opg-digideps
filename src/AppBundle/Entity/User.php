@@ -287,6 +287,13 @@ class User implements AdvancedUserInterface
     private $teams;
 
     /**
+     * @JMS\Type("boolean")
+     *
+     * @var bool
+     */
+    private $isCoDeputy;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -518,6 +525,22 @@ class User implements AdvancedUserInterface
         $this->gaTrackingId = $gaTrackingId;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsCoDeputy()
+    {
+        return $this->isCoDeputy;
+    }
+
+    /**
+     * @param bool $isCoDeputy
+     */
+    public function setIsCoDeputy($isCoDeputy)
+    {
+        $this->isCoDeputy = $isCoDeputy;
     }
 
     public function eraseCredentials()
