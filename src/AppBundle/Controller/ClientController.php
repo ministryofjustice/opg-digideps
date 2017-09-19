@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClientController extends AbstractController
@@ -58,13 +59,17 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-clients', 'client']);
-        $clients = $user->getClients();
+        $client = $this->getFirstClient();
 
-        if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
+        if ($client->isMultiDeputy()) {
+            return $this->redirect($this->generateUrl('client_verify'));
+        }
+
+        if (!empty($client)) {
             // update existing client
+            // WHY ARE WE USING THIS ACTION FOR UPDATES
+            // ALSO WHY ANOTHER API CALL
             $method = 'put';
-            $client = $clients[0]; //existing client
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
         } else {
             // new client
@@ -89,5 +94,37 @@ class ClientController extends AbstractController
         }
 
         return ['form' => $form->createView()];
+    }
+
+
+    /**
+     * @Route("/client/verify", name="client_verify")
+     * @Template()
+     */
+    public function verifyAction(Request $request)
+    {
+        //only for multi deputies
+        $client = $this->getFirstClient();
+        $formClient = clone $client;
+        $formClient->setLastName('');
+        $formClient->setCaseNumber('');
+
+        $form = $this->createForm(new FormDir\ClientVerifyType(), $formClient);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            if ((strToLower($client->getLastname()) === strToLower($form['lastname']->getData()))
+                && $client->getCaseNumber() === $form['caseNumber']->getData())
+            {
+                return $this->redirect($this->generateUrl('homepage'));
+            } else {
+                $form->get('lastname')->addError(new FormError('We could not match the client last name'));
+                $form->get('caseNumber')->addError(new FormError('We could not match the client case number'));
+            }
+        }
+
+        return [ 'form' => $form->createView()
+               , 'client' => $client
+               ];
     }
 }

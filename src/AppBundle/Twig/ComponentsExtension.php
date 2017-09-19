@@ -179,13 +179,11 @@ class ComponentsExtension extends \Twig_Extension
      * @param string $barName
      * @param int    $activeStepNumber
      */
-    public function progressBarRegistration(User $user, $selectedStepId)
+    public function progressBarRegistration(User $user, $selectedStepId, $client = null)
     {
-        if (in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD])) {
+        if ($user->isDeputyPa() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD])) {
             $availableStepIds = ['password', 'user_details'];
-        } elseif ($user->isDeputyPa()) {
-            $availableStepIds = ['password', 'user_details'];
-        } elseif ($user->isOdrEnabled()) {
+        } elseif ($user->isOdrEnabled() || (!empty($client) && $client->isMultiDeputy())) {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details', 'create_report'];

@@ -669,4 +669,12 @@ class Client
     {
         $this->clientContacts = $clientContacts;
     }
+
+    /**
+     * @return Boolean
+     */
+    public function isMultiDeputy()
+    {
+        return (is_array($this->users) && count($this->users) > 0);
+    }
 }

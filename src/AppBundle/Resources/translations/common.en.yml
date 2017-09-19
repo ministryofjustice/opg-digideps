@@ -45,7 +45,7 @@ registrationProgressBar:
     user_details:
         label: Enter your details
     client_details:
-        label: Add your client's details
+        label: Enter your client's details
     create_report:
         label: Create a report
 
