@@ -8,14 +8,12 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
-{% endblock %}
-
-{% block breadcrumbs %}
-{% endblock %}
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
+
+    <p class="text">You can invite additional deputies to {{ client.firstname }}'s reports, all we need is their email address.</p>
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'form.email') }}
