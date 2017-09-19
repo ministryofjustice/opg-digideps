@@ -25,3 +25,6 @@ feedbackForm:
     subject: User feedback
     fromName: Deputy report service - feedback form
     toName: Deputyship Service
+codeputyInvitation:
+    subject: Deputy report - activate your account now
+    fromName: Office of the Public Guardian

@@ -1,6 +1,7 @@
 page:
   htmlTitle: Deputy report - Your reports | GOV.UK
   pageTitle: Your reports
+  addCoDeputy: Add new deputy
 
 odr:
   instructions: Your new deputy report tells us about %client%'s circumstances at the time of your court order.

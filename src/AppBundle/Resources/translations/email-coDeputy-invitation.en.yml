@@ -1,0 +1,15 @@
+default:
+    htmlHeaderTitle: Deputy report service - Deputy report invitation
+    heading: Invitation to collaborate on a deputy report
+    beenInvited: You've been invited to collaborate on a deputy report.
+    needToSignUp: |
+        To do this, you'll need to sign up for the Office of the Public Guardian's online
+        deputy report service.
+    clickOnLink: "Please click on the following link:"
+    thenAsked: "Then you'll be asked to:"
+    firstPoint: create a password
+    secondPoint: enter your details – name, address, postcode, country and telephone number
+    thirdPoint: confirm your client's last name and case number
+    ifLinkDoesntWork: |
+        If clicking on the link doesn't work, try copying it into your browser's address bar.
+    linkExpires: The link we've given you expires after 48 hours.
