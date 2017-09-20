@@ -16,7 +16,7 @@ class Version148 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('ALTER TABLE dd_user ADD codeputy_confirmed BOOLEAN DEFAULT false');
+        $this->addSql('ALTER TABLE dd_user ADD codeputy_client_confirmed BOOLEAN DEFAULT false');
     }
 
     /**
@@ -25,7 +25,6 @@ class Version148 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('ALTER TABLE dd_user DROP codeputy_confirmed');
-
+        $this->addSql('ALTER TABLE dd_user DROP codeputy_client_confirmed');
     }
 }

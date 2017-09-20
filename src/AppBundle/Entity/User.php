@@ -997,17 +997,17 @@ class User implements UserInterface
     /**
      * @return bool
      */
-    public function getCoDeputyConfirmed()
+    public function getCoDeputyClientConfirmed()
     {
-        return $this->coDeputyConfirmed;
+        return $this->coDeputyClientConfirmed;
     }
 
     /**
-     * @param bool $coDeputyConfirmed
+     * @param bool $coDeputyClientConfirmed
      */
-    public function setCoDeputyConfirmed($coDeputyConfirmed)
+    public function setCoDeputyClientConfirmed($coDeputyClientConfirmed)
     {
-        $this->coDeputyConfirmed = $coDeputyConfirmed;
+        $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
     }
 
     /**
