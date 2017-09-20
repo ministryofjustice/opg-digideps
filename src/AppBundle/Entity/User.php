@@ -242,18 +242,10 @@ class User implements UserInterface
      * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"user"})
-     * @JMS\AccessType("public_method")
-     */
-    private $isCoDeputy;
-
-    /**
-     * @var bool
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"user"})
      *
-     * @ORM\Column(name="codeputy_confirmed", type="boolean", nullable=false, options = { "default": false })
+     * @ORM\Column(name="codeputy_client_confirmed", type="boolean", nullable=false, options = { "default": false })
      */
-    private $coDeputyConfirmed;
+    private $coDeputyClientConfirmed;
 
     /**
      * Constructor.
@@ -1019,26 +1011,25 @@ class User implements UserInterface
     }
 
     /**
+     * Return true if the client has other users
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("is_co_deputy")
+     * @JMS\Groups({"user"})
+     * 
      * @return bool
      */
-    public function getIsCoDeputy()
+    public function isCoDeputy()
     {
         $isCoDeputy = false;
 
-        $clients = $this->getClients();
-        if (!empty($clients) && count($clients) > 0) {
-            $isCoDeputy = count($clients[0]->getUsers()) > 1;
+        $client = $this->getFirstClient();
+        if (!empty($client)) {
+            $isCoDeputy = count($client->getUsers()) > 1;
         }
 
         return $isCoDeputy;
-    }
-
-    /**
-     * @param bool $isCoDeputy
-     */
-    public function setIsCoDeputy($isCoDeputy)
-    {
-        $this->isCoDeputy = $isCoDeputy;
     }
 
     /**
