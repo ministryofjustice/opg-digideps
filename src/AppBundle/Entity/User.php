@@ -845,7 +845,7 @@ class User implements UserInterface
      * Return Id of the client (if it has details)
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user-login"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("integer")
      * @JMS\SerializedName("id_of_client_with_details")
      */
@@ -1017,7 +1017,7 @@ class User implements UserInterface
      * @JMS\Type("boolean")
      * @JMS\SerializedName("is_co_deputy")
      * @JMS\Groups({"user"})
-     * 
+     *
      * @return bool
      */
     public function isCoDeputy()
