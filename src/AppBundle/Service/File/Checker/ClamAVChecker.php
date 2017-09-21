@@ -6,6 +6,7 @@ use AppBundle\Service\File\Checker\Exception\InvalidFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
+use AppBundle\Service\File\Types\Pdf;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -56,45 +57,37 @@ class ClamAVChecker implements FileCheckerInterface
         // POST body to clamAV
         $response = $this->getScanResults($file);
 
-        // wee need some refactor here ?
-        // the call is done here, but the response is not available for PDF scanner
-        // maybe we can remove Types ?
-        // we need to separate logic. Filescanner should be in a different service, injected here
-        // response can be passed to separate file checkers.
-        // With this design I can't tell the PDFChecker to check PDF
-
-
         $file->setScanResult($response);
         $fileName = $file->getUploadedFile()->getClientOriginalName();
-        $fileScannerResult = array_key_exists('file_scanner_result', $response) ?
-             strtoupper(trim($response['file_scanner_result'])) : null;
-        $fileScannerCode = array_key_exists('file_scanner_code', $response) ?
-            strtoupper(trim($response['file_scanner_code'])) : null;
-        $fileScannerMessage = array_key_exists('file_scanner_message', $response) ?
-            strtoupper(trim($response['file_scanner_message']))  : null;
 
+        $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
+        $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
+        $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
+
+            if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') {
+                $this->logger->warning('file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
+                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
+                throw new RiskyFileException('PDF file scan failed');
+            }
+
+            $this->logger->info('File scan passed for ' . $file->getUploadedFile()->getClientOriginalName() .
+                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
         if ($fileScannerResult === 'PASS') {
-            $this->logger->info("Scan result of $fileName: PASS");
+            $this->logger->warning("Scan result of $fileName: PASS");
             return true;
-        } else {
-            throw new RiskyFileException('SCAN FAILED');
         }
 
         $this->logger->warning("Scan result of $fileName: $fileScannerResult, $fileScannerMessage (code $fileScannerCode)");
 
-        if (!is_null($fileScannerCode)) {
-
-            switch ($fileScannerCode) {
-                case 'AV_FAIL':
-                    throw new VirusFoundException('Found virus in file');
-
-                case 'PDF_INVALID_FILE':
-                case 'PDF_BAD_KEYWORD':
-                    throw new RiskyFileException('Invalid PDF');
-            }
-
-            throw new RiskyFileException($fileScannerMessage);
+        switch($fileScannerCode) {
+            case 'AV_FAIL':
+                throw new VirusFoundException('Found virus in file');
+            case 'PDF_INVALID_FILE':
+            case 'PDF_BAD_KEYWORD':
+                throw new RiskyFileException('Invalid PDF');
         }
+
+        throw new RuntimeException($fileScannerMessage);
     }
 
     /**
@@ -153,13 +146,14 @@ class ClamAVChecker implements FileCheckerInterface
 
         $this->logger->debug('Sending file: ' . $fullFilePath . '  to scanner');
 
-        $request = $this->client->createRequest('POST', 'upload');
+        $request = $this->client->createRequest('POST', $file->getScannerEndpoint());
         $postBody = $request->getBody();
         $postBody->addFile(
             new PostFile('file', fopen($fullFilePath, 'r'))
         );
 
         $response = $this->client->send($request);
+
         if (!$response instanceof ResponseInterface ) {
             throw new \RuntimeException('ClamAV not available');
         }

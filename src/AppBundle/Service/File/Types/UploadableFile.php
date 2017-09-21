@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadableFile implements UploadableFileInterface
 {
+
+    protected $scannerEndpoint = 'UNDEFINED';
+
     /**
      * @var FileCheckerInterface[]
      */
@@ -104,11 +107,21 @@ class UploadableFile implements UploadableFileInterface
      *
      * @throws \Exception
      */
+    public function checkFile()
+    {
+        $this->callFileCheckers();
+    }
+
+    /**
+     * Checks a file by calling configured file checkers for that file type
+     *
+     * @throws \Exception
+     */
     public function callFileCheckers()
     {
         foreach ($this->getFileCheckers() as $fc)
         {
-            $this->getLogger()->debug('Calling File checker: ' . get_class($fc) );
+            $this->getLogger()->warning('Calling File checker: ' . get_class($fc) );
 
             // send file
             $fc->checkFile($this);
@@ -132,13 +145,27 @@ class UploadableFile implements UploadableFileInterface
         $this->scanResult = $scanResult;
         return $this;
     }
-
+    
+    /**
+     * Is the file safe to upload?
+     *
+     * @return bool
+     */
     public function isSafe()
     {
         $scanResult = $this->getScanResult();
+
+        $this->logger->warning('Confirming file is safe... ' . $this->getUploadedFile()->getClientOriginalName() .
+            ' - ' . $this->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
+
         if (isset($scanResult['file_scanner_result']) && strtoupper($scanResult['file_scanner_result'] == 'PASS')) {
             return true;
         }
+
         return false;
+    }
+
+    public function getScannerEndpoint() {
+        return $this->scannerEndpoint;
     }
 }

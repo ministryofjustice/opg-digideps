@@ -14,8 +14,8 @@ startPage:
     just financial ones. We need to know about any decisions that have a big
     impact on %client%'s well-being or circumstances.
   whatisdecisionPara1-104: |
-    Significant decisions are any important decisions you make for Millie. We need to know about
-    any decisions that have a big impact on Millie's well-being or circumstances.
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%'s well-being or circumstances.
   whatisdecisionPara2: "Your significant decisions might include:"
   whatisdecisionPara2-104: "Significant decisions might include changes to:"
   whatisdecisionListItem1: buying, selling or renting property

@@ -30,8 +30,10 @@ class FileCheckerFactory
         {
             case 'application/pdf':
                 return $this->container->get('file_pdf')->setUploadedFile($uploadedFile);
-                break;
-
+            case "image/png":
+                return $this->container->get('file_png')->setUploadedFile($uploadedFile);
+            case "image/jpeg":
+                return $this->container->get('file_jpg')->setUploadedFile($uploadedFile);
             default:
                 throw new \RuntimeException("File type not supported");
 
