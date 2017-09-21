@@ -1,0 +1,11 @@
+addCoDeputy:
+  htmlTitle: Deputy report - Invite deputy | GOV.UK
+  pageTitle: Deputies
+
+form:
+  email:
+    label: Deputy email address
+    existingError: That email has already been registered with this service.
+  submit:
+    label: Send invitation
+    cancel: Cancel

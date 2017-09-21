@@ -6,6 +6,9 @@ homepage:
   reportingPeriod: Reporting period
   submissionDate: Submission date
 
+codeputy:
+  inviteAnotherDeputy: Invite another deputy
+
 # Edit reporting period page (Lay and PA)
 editReportingDates:
   htmlTitle: Annual deputy reports for %client%

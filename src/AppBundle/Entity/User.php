@@ -75,10 +75,10 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add", "user_details_full", "user_details_pa"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add"}, checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add"} )
+     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add", "user_details_full", "user_details_pa", "codeputy"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset", "codeputy"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy"}, checkMX=false, checkHost=false )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy"} )
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa"})
      *
      * @var string

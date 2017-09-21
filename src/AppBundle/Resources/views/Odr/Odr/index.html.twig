@@ -1,5 +1,4 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
@@ -12,10 +11,10 @@
 
 {% block pageContent %}
 
-    {% if coDeputies %}
-        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
-    {% endif %}
-
+    <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-invite-codeputy-button">
+        <span class="icon icon-plus"></span>
+        {{ ('page.addCoDeputy') | trans }}
+    </a>
     {% if odr.submitted %}
 
         {% include 'AppBundle:Odr/Odr:_report_row.html.twig' with {
