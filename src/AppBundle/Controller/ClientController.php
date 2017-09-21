@@ -59,10 +59,10 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
+        // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
-
-        if ($user->getIsCoDeputy()) {
-            return $this->redirect($this->generateUrl('client_verify'));
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_add')) {
+            return $this->redirectToRoute($route);
         }
 
         $client = $this->getFirstClient();
@@ -94,7 +94,6 @@ class ClientController extends AbstractController
 
         return ['form' => $form->createView()];
     }
-
 
     /**
      * @Route("/client/verify", name="client_verify")
