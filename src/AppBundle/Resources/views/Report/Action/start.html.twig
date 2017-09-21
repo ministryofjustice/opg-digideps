@@ -5,6 +5,7 @@
 {% set translationDomain = "report-actions" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = ('104' in report.type) ? '-104' : '' %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -15,8 +16,7 @@
 {% block pageContent %}
 
     <div class="text">
-        {% set appendKey = ('104' in report.type) ? '-104' : '' %}
-	    <p>{{ ('startPage.pageSectionDescription1' ~ appendKey) | trans(transOptions) }}</p>
+	    <p>{{ ('startPage.pageSectionDescription1' ~ append104) | trans(transOptions) }}</p>
 
 	    <details class="push--bottom">
             <summary>
@@ -30,9 +30,7 @@
                     <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
                 </ul>
-                {% if '104' not in report.type %}
-                    <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
-                {% endif %}
+                <p>{{ ('startPage.hiddenText01.content.para03' ~ append104) |trans(transOptions)|raw }}</p>
             </div>
         </details>
 	</div>

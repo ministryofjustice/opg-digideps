@@ -21,6 +21,8 @@ startPage:
         getting advice from relatives and professionals like doctors
       para03: |
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para03-104: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD4)</a> booklet gives detailed guidance on how to look after %client%'s health and welfare.
   startButton: Start actions
 
 stepPage:

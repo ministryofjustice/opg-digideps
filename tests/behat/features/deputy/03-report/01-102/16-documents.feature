@@ -15,7 +15,7 @@ Feature: Report documents
     And I should see "Edit" in the "provided-documentation" region
 
   @deputy
-  Scenario: Edit documents to attach
+  Scenario: Upload PDF documents
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-documents"
     Then the URL should match "report/\d+/documents/summary"
@@ -37,17 +37,19 @@ Feature: Report documents
     Then the following fields should have an error:
       | report_document_upload_file   |
 
-    # check vba-eicar file error TO ENABLE ONCE FILE SCANNER ENABLED
+    # check vba-eicar file error
     When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the following fields should have an error:
       | report_document_upload_file   |
 
+    # check good pdf gets uploaded
     When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | good.pdf        | document-list |
+
     # check duplicate file error
     When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
@@ -75,7 +77,40 @@ Feature: Report documents
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
 
-    @deputy
+
+  @deputy
+  Scenario: Upload image documents
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-start, edit-documents"
+    Then the URL should match "report/\d+/documents/summary"
+    And I should see "Edit" in the "provided-documentation" region
+    When I click on "edit"
+    # chose "yes documents"
+    Then the URL should match "report/\d+/documents/step/1"
+    And the step with the following values CAN be submitted:
+      | document_wishToProvideDocumentation_0 | yes |
+
+    # check good png gets uploaded
+    When I attach the file "good.png" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the form should be valid
+    And each text should be present in the corresponding region:
+      | good.png        | document-list |
+
+    # check good jpg gets uploaded
+    When I attach the file "good.jpg" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the form should be valid
+    And each text should be present in the corresponding region:
+      | good.jpg        | document-list |
+
+    # check duplicate file error
+    When I attach the file "good.png" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
+
+  @deputy
     Scenario: Upload file1.pdf
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I click on "report-start, edit-documents"
