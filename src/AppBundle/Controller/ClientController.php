@@ -17,6 +17,12 @@ class ClientController extends AbstractController
      */
     public function showAction(Request $request)
     {
+        // redirect if user has missing details or is on wrong page
+        $user = $this->getUserWithData();
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_show')) {
+            return $this->redirectToRoute($route);
+        }
+
         $client = $this->getFirstClient();
 
         return [
