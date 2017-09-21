@@ -119,6 +119,8 @@ class ClientController extends AbstractController
             if ((strToLower($client->getLastname()) === strToLower($form['lastname']->getData()))
                 && $client->getCaseNumber() === $form['caseNumber']->getData())
             {
+                $user->setCoDeputyClientConfirmed(true);
+                $this->getRestClient()->put('user/'.$user->getId(), $user);
                 return $this->redirect($this->generateUrl('homepage'));
             } else {
                 $form->get('lastname')->addError(new FormError('We could not match the client last name'));

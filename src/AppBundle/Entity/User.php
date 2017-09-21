@@ -298,7 +298,7 @@ class User implements AdvancedUserInterface
      *
      * @var bool
      */
-    private $coDeputyConfirmed;
+    private $coDeputyClientConfirmed;
 
     /**
      * @return int $id
@@ -553,17 +553,17 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function getCoDeputyConfirmed()
+    public function getCoDeputyClientConfirmed()
     {
-        return $this->coDeputyConfirmed;
+        return $this->coDeputyClientConfirmed;
     }
 
     /**
-     * @param bool $isCoDeputyConfirmed
+     * @param bool $isCoDeputyClientConfirmed
      */
-    public function setCoDeputyConfirmed($isCoDeputyConfirmed)
+    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed)
     {
-        $this->coDeputyConfirmed = $isCoDeputyConfirmed;
+        $this->coDeputyClientConfirmed = $isCoDeputyClientConfirmed;
     }
 
     public function eraseCredentials()
