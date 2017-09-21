@@ -195,7 +195,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, ['status']);
+        $report = $this->getReportIfNotSubmitted($reportId,  self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -216,7 +216,7 @@ class ReportController extends AbstractController
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
 
             // store PDF as a document
-            $pdfBinaryContent = $this->getPdfBinaryContent($report->getId());
+            $pdfBinaryContent = $this->getPdfBinaryContent($report);
             $fileUploader = $this->get('file_uploader');
             $fileUploader->uploadFile(
                 $report->getId(),
@@ -337,7 +337,7 @@ class ReportController extends AbstractController
     public function pdfViewAction($reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $this->getPdfBinaryContent($reportId);
+        $pdfBinary = $this->getPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
@@ -359,10 +359,12 @@ class ReportController extends AbstractController
         return $response;
     }
 
-    private function getPdfBinaryContent($reportId)
+    /**
+     * @param EntityDir\Report\Report $report
+     * @return string binary PDF content
+     */
+    private function getPdfBinaryContent(EntityDir\Report\Report $report)
     {
-        $report = $this->getReport($reportId, self::$reportGroupsAll);
-
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
             ])->getContent();
