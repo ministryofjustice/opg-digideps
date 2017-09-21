@@ -19,12 +19,11 @@ class CoDeputyController extends AbstractController
     public function addAction(Request $request)
     {
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
-        $client = $loggedInUser->getClients()[0];
         $invitedUser = new EntityDir\User();
 
-        $form = $this->createForm(new FormDir\CoDeputyType($client), $invitedUser);
+        $form = $this->createForm(new FormDir\CoDeputyType(), $invitedUser);
 
-        $backLink = $this->getUser()->isOdrEnabled() ?
+        $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')
             :$this->generateUrl('lay_home');
 
@@ -56,7 +55,54 @@ class CoDeputyController extends AbstractController
         }
 
         return [
-            'client' => $client,
+            'form' => $form->createView(),
+            'backLink' => $backLink,
+            'client' => $this->getFirstClient()
+        ];
+    }
+
+
+    /**
+     * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
+     * @Template()
+     **/
+    public function resendActivationAction(Request $request, $email)
+    {
+        $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
+        $invitedUser = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
+
+        $form = $this->createForm(new FormDir\CoDeputyType(), $invitedUser);
+
+        $backLink = $loggedInUser->isOdrEnabled() ?
+            $this->generateUrl('odr_index')
+            :$this->generateUrl('lay_home');
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            try {
+                //email was updated on the fly
+                if ($form->getData()->getEmail() != $email) {
+                    $this->getRestClient()->put('codeputy/'.$invitedUser->getId(), $form->getData(), []);
+                }
+                $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
+                $this->getMailSender()->send($invitationEmail);
+                $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
+
+                return $this->redirect($backLink);
+            } catch (\Exception $e) {
+                switch ((int) $e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'co-deputy')));
+                        break;
+                    default:
+                        $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        throw $e;
+                }
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+            }
+        }
+
+        return [
             'form' => $form->createView(),
             'backLink' => $backLink
         ];

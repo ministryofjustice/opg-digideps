@@ -37,7 +37,7 @@
                 <td>{{ deputy.email }}</td>
                 <td>Awaiting registration</td>
                 <td class="change-answer">
-                    <a href="">Resend invite</a>
+                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}">Resend invite</a>
                 </td>
             </tr>
         {% endif %}
