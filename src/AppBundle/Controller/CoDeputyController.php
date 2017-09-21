@@ -49,4 +49,32 @@ class CoDeputyController extends RestController
 
         return $newUser;
     }
+
+
+    /**
+     * @Route("{id}")
+     * @Method({"PUT"})
+     */
+    public function update(Request $request, $id)
+    {
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
+
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
+        if ( !$user->isCoDeputy()
+            || !$this->getUser()->isCoDeputy()
+            || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails()))
+        {
+            throw $this->createAccessDeniedException("User not authorised to update other user's data");
+        }
+
+        $data = $this->deserializeBodyContent($request, ['email' => 'notEmpty']);
+        if (!empty($data['email'])) {
+            $originalUser = clone $user;
+            $user->setEmail($data['email']);
+            $userService = $this->get('opg_digideps.user_service');
+            $userService->editUser($originalUser, $user);
+        }
+
+        return [];
+    }
 }
