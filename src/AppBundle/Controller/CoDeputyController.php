@@ -34,6 +34,10 @@ class CoDeputyController extends RestController
         $newUser->setLastname('');
         $newUser->setEmail($data['email']);
         $newUser->recreateRegistrationToken();
+        $newUser->setRoleName(EntityDir\User::ROLE_LAY_DEPUTY);
+        foreach ($loggedInUser->getClients() as $client) {
+            $newUser->addClient($client);
+        }
 
         $userService = $this->get('opg_digideps.user_service');
 
