@@ -97,18 +97,40 @@ class Redirector
     }
 
     /**
-     * @return array [route, options]
+     * @param EntityDir\User $user
+     * @param string $currentRoute
+     * @return bool|string
+     */
+    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
+    {
+        // Redirect to appropriate homepage
+        if (in_array($currentRoute, ['lay_home','odr_index'])){
+            $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+        }
+
+        // client is not added
+        if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
+            $route = 'client_verify';
+        } elseif (!$user->getIdOfClientWithDetails()) {
+            $route = 'client_add';
+        }
+
+        // incomplete user info
+        if (!$user->hasDetails()) {
+            $route = 'user_details';
+        }
+
+        return (!empty($route) && $route !== $currentRoute) ? $route : false;
+    }
+
+    /**
+     * @return string
      */
     private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
     {
-        if (!$user->hasDetails()) {
-            return $this->router->generate('user_details');
-        }
-
-        // redirect to add_client if client is not added
-        $clientId = $user->getIdOfClientWithDetails();
-        if (!$clientId) {
-            return $this->router->generate('client_add');
+        // checks if user has missing details or is ODR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
+            return $this->router->generate($route);
         }
 
         // last accessed url
@@ -116,14 +138,9 @@ class Redirector
             return $lastUsedUri;
         }
 
-        // ODR enabled => redirect to ODR index
-        if ($user->isOdrEnabled()) {
-            return $this->router->generate('odr_index');
-        }
-
         // redirect to create report if report is not created
         if (0 == $user->getNumberOfReports()) {
-            return $this->router->generate('report_create', ['clientId' => $clientId]);
+            return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
         return $this->router->generate('lay_home');
