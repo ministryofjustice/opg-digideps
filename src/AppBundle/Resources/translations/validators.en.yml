@@ -43,6 +43,10 @@ user:
     notBlank: Enter your address
   address3:
     notBlank: Enter your address
+  addressPostcode:
+    notBlank: Enter your postcode
+    minLength: The postcode must be at least {{ limit }} letters long
+    maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   jobTitle:
