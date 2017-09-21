@@ -15,9 +15,9 @@
 
 {% block pageContent %}
 
-    {% if coDeputies %}
+
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
-    {% endif %}
+
 
     <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
 
