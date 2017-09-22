@@ -25,14 +25,6 @@ monolog:
    handlers:
        main:
            formatter: line_formatter
-       # logs displayed from behat in case of step failure
-       behat:
-           type: stream
-           path: "%behat_log_file%"
-           level: warning
-           formatter: line_formatter
-           channels: !translation
-
 
 jms_serializer:
     metadata:

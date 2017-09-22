@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BehatController extends AbstractController
 {
-    const BEHAT_LOG_FILE = '/var/log/app/behat.log';
-
     private function securityChecks()
     {
         if (!$this->container->getParameter('behat_controller_enabled')) {
@@ -182,13 +180,19 @@ class BehatController extends AbstractController
     {
         $this->securityChecks();
 
+        $logPath = $this->getParameter('log_path');
+
         switch($action) {
             case 'reset';
-                file_put_contents(self::BEHAT_LOG_FILE, '');
+                file_put_contents($logPath, "LOG RESET FROM BEHAT\n");
                 return new Response("reset OK");
 
             case 'view';
-                return new Response(implode("\n",  file(self::BEHAT_LOG_FILE)));
+                $lines = array_filter(array_slice(file($logPath), -500), function($row){
+                    return strpos($row, 'translation.WARNING') === false;
+                });
+                $ret = implode("\n", $lines);
+                return new Response($ret);
         }
     }
 
