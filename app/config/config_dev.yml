@@ -25,6 +25,13 @@ monolog:
    handlers:
        main:
            formatter: line_formatter
+       behat:
+           type: stream
+           path: /tmp/behat/client.log
+           level: warning
+           formatter: line_formatter
+           channels: !translation
+
 
 jms_serializer:
     metadata:

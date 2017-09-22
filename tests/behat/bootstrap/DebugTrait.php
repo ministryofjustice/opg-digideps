@@ -2,6 +2,9 @@
 
 namespace DigidepsBehat;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 trait DebugTrait
 {
     /**
@@ -10,6 +13,16 @@ trait DebugTrait
     public function wtf()
     {
         $this->printLastResponse();
+    }
+
+
+    /**
+     * Empty behat log before each step
+     * @BeforeScenario
+     */
+    public function emptyBehatLogBeforeScenario(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope)
+    {
+        file_put_contents( '/tmp/behat/client.log', '');
     }
 
     /**
@@ -32,8 +45,7 @@ trait DebugTrait
         echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
-        //echo "[DEBUG-PAGE-START]  $data [DEBUG-PAGE-END]";
-        //echo "- Page content: [".$data . ']';
+        echo " - Log content (scenario only): " . file_get_contents( '/tmp/behat/client.log');
     }
 
     /**
