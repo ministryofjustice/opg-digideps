@@ -25,9 +25,10 @@ monolog:
    handlers:
        main:
            formatter: line_formatter
+       # logs displayed from behat in case of step failure
        behat:
            type: stream
-           path: /tmp/behat/client.log
+           path: "%behat_log_file%"
            level: warning
            formatter: line_formatter
            channels: !translation

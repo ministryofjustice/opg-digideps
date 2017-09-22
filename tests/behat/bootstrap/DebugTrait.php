@@ -22,7 +22,7 @@ trait DebugTrait
      */
     public function emptyBehatLogBeforeScenario(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope)
     {
-        file_put_contents( '/tmp/behat/client.log', '');
+        $this->visitBehatLink('logs/reset');
     }
 
     /**
@@ -45,7 +45,8 @@ trait DebugTrait
         echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
-        echo " - Log content (scenario only): " . file_get_contents( '/tmp/behat/client.log');
+        $this->visitBehatLink('logs/view');
+        echo " - Log content (scenario only): " . $this->getSession()->getPage()->getContent();
     }
 
     /**
