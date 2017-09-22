@@ -346,7 +346,7 @@ class RestClient
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | Api not running ? | ' . $url . ' | ' . $e->getMessage());
+            $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
 
             $this->logRequest($url, $method, $start, $options, $e->getResponse());
 
