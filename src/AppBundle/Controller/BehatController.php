@@ -4,9 +4,13 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Mailer\MailFactory;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Monolog\Handler\DebugHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 class BehatController extends AbstractController
@@ -78,4 +82,29 @@ class BehatController extends AbstractController
             'recipientRole' => MailFactory::getRecipientRole($this->getUser())
         ]);
     }
+
+    /**
+     * @Route("/behat/{secret}/logs/{action}")
+     * @Template()
+     */
+    public function behatLogsResetAction($action)
+    {
+        $this->securityChecks();
+
+        $logPath = $this->getParameter('log_path');
+
+        switch($action) {
+            case 'reset';
+                file_put_contents($logPath, "LOG RESET FROM BEHAT\n");
+                return new Response("reset OK");
+
+            case 'view';
+                $lines = array_filter(array_slice(file($logPath), -500), function($row){
+                    return strpos($row, 'translation.WARNING') === false;
+                });
+                $ret = implode("\n", $lines);
+                return new Response($ret);
+        }
+    }
+
 }
