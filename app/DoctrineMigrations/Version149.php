@@ -38,10 +38,32 @@ class Version149 extends AbstractMigration implements ContainerAwareInterface
 
         $pdo->beginTransaction();
         foreach($paReportIdToType as $reportId => $reportType) {
-            $newReportType = ['102'=>'102-6', '103'=>'103-6', '104'=>'104-6'][$reportType];
-            $pdo->query("UPDATE report SET type = '$newReportType' WHERE id=$reportId")->execute();
+            $map = [
+                '102'=>'102-6',
+                '103'=>'103-6',
+                '104'=>'104-6'
+            ];
+            if (isset($map[$reportType])) {
+                $newReportType = $map[$reportType];
+                $pdo->query("UPDATE report SET type = '$newReportType' WHERE id=$reportId")->execute();
+            } else {
+                echo "Can't change type for PA report $reportType, not found in mapping\n";
+            }
         }
         $pdo->commit();
+
+        /*
+         * to test: this should be empty
+         *
+         SELECT r.id, r.type FROM report r
+           LEFT JOIN client c on r.client_id = c.id
+           LEFT JOIN deputy_case dc on dc.client_id = c.id
+           LEFT JOIN dd_user u on u.id = dc.user_id
+           WHERE u.role_name LIKE 'ROLE_PA%' AND r.type NOT LIKE '%-6';
+         *
+         *
+         * */
+
 
     }
 
