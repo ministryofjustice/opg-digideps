@@ -353,9 +353,8 @@ class Report
 //        }
 
 
-        // check this there only is one unsubmitted report
         if (count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client ' . $client->getId() . ' already has unsubmitted report. Cannot create another one');
+            throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports

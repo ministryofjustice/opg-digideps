@@ -82,8 +82,6 @@ class ReportController extends RestController
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
-        $user = $this->getUser();
-        $client = $currentReport->getClient();
 
         $data = $this->deserializeBodyContent($request);
 
