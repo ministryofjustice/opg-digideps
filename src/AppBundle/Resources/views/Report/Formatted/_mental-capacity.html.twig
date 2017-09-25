@@ -3,8 +3,8 @@
 
     <div class="dont-break" id="mental-capacity-wrapper">
         <div class="box">
-            {% set reportType = ('104' in report.type) ? 'health and welfare' : 'financial' %}
-            <h3 class="label question bold">Has {{ client.firstName }}'s mental capacity to make {{ reportType }} decisions</h3>
+            {% set reportType = ('-4' in report.type or '104' in report.type) ? 'financial or health and welfare' : 'financial' %}
+            <h3 class="label question bold">Has {{ client.firstName }}'s mental capacity to make {{ reportType }} decisions changed?</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tr>

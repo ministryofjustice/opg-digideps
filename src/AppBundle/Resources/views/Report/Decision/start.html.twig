@@ -28,7 +28,7 @@
         </div>
     </details>
 
-    <details {% if '104' in report.type %}class="push--bottom"{% endif %}>
+    <details {% if '-4' in report.type or '104' in report.type %}class="push--bottom"{% endif %}>
         <summary>
             <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
         </summary>
