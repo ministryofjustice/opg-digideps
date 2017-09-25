@@ -29,7 +29,7 @@ class Version149 extends AbstractMigration implements ContainerAwareInterface
         /* @var $pdo \PDO */
         $pdo = $this->container->get('doctrine.orm.entity_manager')->getConnection();
 
-        $paReportIdToType = $pdo->query("SELECT r.id, r.type,u.role_name FROM report r
+        $paReportIdToType = $pdo->query("SELECT r.id, r.type FROM report r
           LEFT JOIN client c on r.client_id = c.id
           LEFT JOIN deputy_case dc on dc.client_id = c.id
           LEFT JOIN dd_user u on u.id = dc.user_id
