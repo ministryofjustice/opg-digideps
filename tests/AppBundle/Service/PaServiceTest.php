@@ -160,7 +160,7 @@ class PaServiceTest extends WebTestCase
         /* @var $client1Report1 EntityDir\Report\Report */
         $this->assertEquals('2013-12-17', $client1Report1->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2014-12-16', $client1Report1->getEndDate()->format('Y-m-d'));
-        $this->assertEquals(EntityDir\Report\Report::TYPE_102, $client1Report1->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_102_6, $client1Report1->getType());
 
         // assert 2nd client and report
         $client2 = $user1->getClientByCaseNumber('10000002');
@@ -169,7 +169,7 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client2->getReports());
         $client2Report1 = $client2->getReports()->first();
         /* @var $client2Report1 EntityDir\Report\Report */
-        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client2Report1->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client2Report1->getType());
 
         // assert 2nd deputy
         $user2 = self::$fixtures->findUserByEmail('dep2@provider.com');
@@ -182,7 +182,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Cly3', $client1->getFirstname());
         $this->assertEquals('Hent3', $client1->getLastname());
         $this->assertCount(1, $client1->getReports());
-        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client1->getReports()->first()->getType());
 
 
         // check client 3 is associated with deputy2
@@ -216,7 +216,7 @@ class PaServiceTest extends WebTestCase
         $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
         $client1 = $user1->getClientByCaseNumber('10000001');
         $this->assertCount(1, $client1->getReports());
-        $this->assertEquals(EntityDir\Report\Report::TYPE_103, $client1->getReports()->first()->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client1->getReports()->first()->getType());
     }
 
     /**

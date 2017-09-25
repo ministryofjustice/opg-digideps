@@ -17,13 +17,11 @@ use Mockery as m;
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param array $reportMethods
-     *
-     * @return ReportStatusService
+     * @return Report mock
      */
-    private function getStatusServiceWithReportMocked(array $reportMethods)
+    private function getReportMocked(array $reportMethods = [], $hasBalance = true)
     {
-        $report = m::mock(Report::class, $reportMethods + [
+        $report =  m::mock(Report::class, $reportMethods + [
                 'getBankAccounts'                   => [],
                 'getBankAccountsIncomplete'         => [],
                 'getExpenses'                       => [],
@@ -80,11 +78,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'has106Flag'                        => false,
                 'getFeesWithValidAmount'                           => [],
                 'getReasonForNoFees'                => null,
+                'isMissingMoneyOrAccountsOrClosingBalance' => true,
+//                'hasSection' => false,
                 //'getExpenses'                       => [],
                 //'getPaidForAnything'                => null,
             ]);
 
-        return new StatusService($report);
+        $report->shouldReceive('hasSection')->with('balance')->andReturn($hasBalance);
+        return $report;
     }
 
     public function decisionsProvider()
@@ -122,7 +123,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function decisions($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDecisionsState()['state']);
     }
 
@@ -144,7 +145,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function contacts($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getContactsState()['state']);
     }
 
@@ -182,7 +183,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function visitsCare($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
 
@@ -215,7 +216,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function lifestyle($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getLifestyleState()['state']);
     }
 
@@ -236,7 +237,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function bankAccount($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getBankAccountsState()['state']);
     }
 
@@ -262,7 +263,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function moneyTransfer($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyTransferState()['state']);
     }
 
@@ -280,7 +281,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function moneyIn($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInState()['state']);
     }
 
@@ -298,7 +299,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function moneyOut($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutState()['state']);
     }
 
@@ -322,7 +323,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function moneyInShort($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInShortState()['state']);
     }
 
@@ -345,7 +346,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function moneyOutShort($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutShortState()['state']);
     }
 
@@ -367,7 +368,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function expenses($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
@@ -398,7 +399,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function paFeeExpenses($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked(['has106Flag'=>true] + $mocks);
+        $object = new StatusService($this->getReportMocked(['has106Flag'=>true] + $mocks));
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }
 
@@ -420,7 +421,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function gifts($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getGiftsState()['state']);
     }
 
@@ -441,7 +442,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocumentState($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDocumentsState()['state']);
     }
 
@@ -463,7 +464,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function assets($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
@@ -485,8 +486,31 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function debts($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDebtsState()['state']);
+    }
+
+
+    public function balanceProvider()
+    {
+        return [
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_INCOMPLETE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_DONE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>true], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider balanceProvider
+     */
+    public function balance($mocks, $state)
+    {
+        $report = $this->getReportMocked($mocks);
+
+        $object = new StatusService($report);
+        $this->assertEquals($state, $object->getBalanceState()['state']);
     }
 
     public function actionsProvider()
@@ -519,7 +543,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function actions($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getActionsState()['state']);
     }
 
@@ -537,116 +561,118 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function otherinfo($mocks, $state)
     {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
+        $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function balanceMatchesProvider()
+    public function testGetRemainingSections102()
     {
-        return [
-            [['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => null], false],
-            [['getTotalsMatch' => true, 'getBalanceMismatchExplanation' => 'something'], true],
-            [['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => 'something'], true],
-        ];
-    }
+        $ret = ['getType' => Report::TYPE_102]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->balanceProvider())[0]
+            + array_pop($this->bankAccountProvider())[0]
+            + array_pop($this->expensesProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->debtsProvider())[0]
+            + array_pop($this->moneyTransferProvider())[0]
+            + array_pop($this->MoneyInProvider())[0]
+            + array_pop($this->MoneyOutProvider())[0];
 
-    /**
-     * @test
-     * @dataProvider balanceMatchesProvider
-     */
-    public function balanceMatches($mocks, $expected)
-    {
-        $object = $this->getStatusServiceWithReportMocked($mocks);
-        $this->assertEquals($expected, $object->balanceMatches());
-    }
 
-    public function mockedMethodsCompletingReport($type, $has106Flag = false)
-    {
-        $ret = ['getType' => $type];
-
-        $ret += array_pop($this->decisionsProvider())[0];
-        $ret += array_pop($this->contactsProvider())[0];
-        $ret += array_pop($this->visitsCareProvider())[0];
-        $ret += array_pop($this->actionsProvider())[0];
-        $ret += array_pop($this->otherInfoProvider())[0];
-        $ret += array_pop($this->giftsProvider())[0];
-        $ret += array_pop($this->documentsProvider())[0];
-
-        if ($type == Report::TYPE_102) {
-            $ret += array_pop($this->bankAccountProvider())[0];
-            $ret += array_pop($this->expensesProvider())[0];
-            $ret += array_pop($this->assetsProvider())[0];
-            $ret += array_pop($this->debtsProvider())[0];
-            $ret += array_pop($this->moneyTransferProvider())[0];
-            $ret += array_pop($this->MoneyInProvider())[0];
-            $ret += array_pop($this->MoneyOutProvider())[0];
-        }
-
-        if ($type == Report::TYPE_103) {
-            $ret += array_pop($this->bankAccountProvider())[0];
-            $ret += array_pop($this->expensesProvider())[0];
-            $ret += array_pop($this->assetsProvider())[0];
-            $ret += array_pop($this->debtsProvider())[0];
-            $ret += array_pop($this->MoneyInShortProvider())[0];
-            $ret += array_pop($this->MoneyOutShortProvider())[0];
-        }
-
-        if ($type == Report::TYPE_104) {
-            $ret += array_pop($this->lifestyleProvider())[0];
-        }
-
-        if ($has106Flag && in_array($type, [Report::TYPE_102, Report::TYPE_103])) {
-            $ret += array_pop($this->paFeesExpensesProvider())[0];
-        }
-
-        return $ret;
-    }
-
-    public function testGetRemainingSections()
-    {
         // all empty
-        $object = $this->getStatusServiceWithReportMocked([]);
+        $report = $this->getReportMocked();
+        $object = new StatusService($report);
         $this->assertNotEquals([], $object->getRemainingSections());
 
         // all complete 102
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102));
-        $this->assertEquals([], $object->getRemainingSections());
-
-        // all complete 103
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_103));
-        $this->assertEquals([], $object->getRemainingSections());
-
-        // all complete 104
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_104));
-        $this->assertEquals([], $object->getRemainingSections());
-
-        // all complete 106
-        $object = $this->getStatusServiceWithReportMocked($this->mockedMethodsCompletingReport(Report::TYPE_102, true));
+        $report = $this->getReportMocked($ret);
+        $object = new StatusService($report);
         $this->assertEquals([], $object->getRemainingSections());
     }
 
-    public function isReadyToSubmitBalanceProvider()
+    public function testGetRemainingSections103()
+    {
+        $ret = ['getType' => Report::TYPE_103]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->bankAccountProvider())[0]
+            + array_pop($this->expensesProvider())[0]
+            + array_pop($this->assetsProvider())[0]
+            + array_pop($this->debtsProvider())[0]
+            + array_pop($this->MoneyInShortProvider())[0]
+            + array_pop($this->MoneyOutShortProvider())[0];
+
+        // all empty
+        $report = $this->getReportMocked([], false);
+        $object = new StatusService($report);
+        $this->assertNotEquals([], $object->getRemainingSections());
+
+        // all complete
+        $report = $this->getReportMocked($ret, false);
+        $object = new StatusService($report);
+        $this->assertEquals([], $object->getRemainingSections());
+    }
+
+    public function testGetRemainingSections104()
+    {
+        $ret = ['getType' => Report::TYPE_104]
+            + array_pop($this->decisionsProvider())[0]
+            + array_pop($this->contactsProvider())[0]
+            + array_pop($this->visitsCareProvider())[0]
+            + array_pop($this->actionsProvider())[0]
+            + array_pop($this->otherInfoProvider())[0]
+            + array_pop($this->giftsProvider())[0]
+            + array_pop($this->documentsProvider())[0]
+            + array_pop($this->lifestyleProvider())[0];
+
+        // all empty
+        $object = new StatusService($this->getReportMocked([], false));
+        $this->assertNotEquals([], $object->getRemainingSections());
+
+        // all complete 102
+        $object = new StatusService($this->getReportMocked($ret, false));
+        $this->assertEquals([], $object->getRemainingSections());
+    }
+
+    public function testGetRemainingSectionsOthers()
+    {
+        //No need to test, as the report config already decide what sections need to be completed
+    }
+
+
+
+    public static function getSectionStatusProvider()
     {
         return [
-            [['getRemainingSections' => ['s1'], 'balanceMatches' => false], false],
-            [['getRemainingSections' => [], 'balanceMatches' => false], false],
-            [['getRemainingSections' => [], 'balanceMatches' => true], true],
+            [Report::TYPE_102, ['balance', 'bankAccounts', 'moneyIn'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
         ];
     }
 
     /**
-     * @test
-     * @dataProvider isReadyToSubmitBalanceProvider
+     * @dataProvider getSectionStatusProvider
      */
-    public function isReadyToSubmitBalance($data, $expected)
+    public function testGetSectionStatus($type, array $expectedSections, array $unExpectedSections)
     {
-        $report = m::mock(Report::class);
-        $object = m::mock(ReportStatusService::class . '[getRemainingSections,balanceMatches]', [$report]);
-
-        foreach ($data as $method => $return) {
-            $object->shouldReceive($method)->andReturn($return);
+        $report = new StatusService($this->getReportMocked(['getType'=>$type], true));
+        foreach($expectedSections as $expectedSection) {
+            $this->assertArrayHasKey($expectedSection, $report->getSectionStatus(), "$type should have $expectedSection section ");
+        }
+        foreach($unExpectedSections as $unExpectedSection) {
+            $this->assertArrayNotHasKey($unExpectedSection, $report->getSectionStatus(), "$type should NOT have $unExpectedSection section ");
         }
 
-        $this->assertEquals($expected, $object->isReadyToSubmit());
     }
 }
