@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use AppBundle\Service\Client\RestClient;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
@@ -54,6 +55,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     protected function getSymfonyParam($name)
     {
         return $this->getContainer()->getParameter($name);
+    }
+
+    /**
+     * @return RestClient
+     */
+    protected function getRestClient()
+    {
+        return $this->getContainer()->get('rest_client');
     }
 
     /**
@@ -131,11 +140,19 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given the application config is valid
+     * @Given the :area area works properly
      */
-    public function iChecktheAppParameterFile()
+    public function iChecktheAppParameterFile($area)
     {
-        $this->visitBehatLink('check-app-params');
-        //$this->assertResponseStatus(200);
+        if ($area === 'deputy') {
+            $baseUrl = $this->getSiteUrl();
+        } else if ($area === 'admin') {
+            $baseUrl = $this->getAdminUrl();
+        } else {
+            throw new \RuntimeException(__METHOD__ . ': area not valid');
+        }
+
+        $this->visitPath($baseUrl . '/manage/availability');
+        $this->assertResponseStatus(200);
     }
 }

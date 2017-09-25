@@ -88,72 +88,77 @@
 
 {% macro reportSectionPrevNext(report, currentSectionId) %}
 
-    {% set expenseSectionId = app.user.isDeputyPa ? 'paFeeExpense' : 'deputyExpenses' %}
-    {% set expenseSectionRoute = app.user.isDeputyPa ? 'pa_fee_expense': 'deputy_expenses' %}
-    {% set reportOverviewTransKey = app.user.isDeputyPa ? 'clientProfile': 'reportOverview' %}
+    {% if report.type == 'ndr' %}
+        {% set routeParams = {'odrId': report.id} %}
+        {% set config = [
+            {'section':'reportOverview', 'link': path('odr_overview', routeParams)},
+            {'section':'visitsCare','link': path('odr_visits_care', routeParams)},
+            {'section':'deputyExpenses','link': path('odr_deputy_expenses', routeParams)},
+            {'section':'incomeBenefits','link': path('odr_income_benefits', routeParams)},
+            {'section':'bankAccounts','link': path('odr_bank_accounts', routeParams)},
+            {'section':'assets','link': path('odr_assets', routeParams)},
+            {'section':'debts','link': path('odr_debts', routeParams)},
+            {'section':'actions', 'link': path('odr_actions', routeParams)},
+            {'section':'otherInfo', 'link': path('odr_other_info', routeParams)},
+            {'section':'reportOverview', 'link': path('odr_overview', routeParams)},
+        ] %}
+    {% else %}
 
-    {% if report.type == '102' %}
-        {% set config = [
-        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-        {'section': expenseSectionId,'link': path(expenseSectionRoute, {'reportId': report.id})},
-        {'section':'gifts','link': path('gifts', {'reportId': report.id})},
-        {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
-        {'section':'moneyTransfers', 'link': path('money_transfers', {'reportId': report.id})},
-        {'section':'moneyIn', 'link': path('money_in', {'reportId': report.id})},
-        {'section':'moneyOut', 'link': path('money_out', {'reportId': report.id})},
-        {'section':'assets', 'link': path('assets', {'reportId': report.id})},
-        {'section':'debts', 'link': path('debts', {'reportId': report.id})},
-        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
-        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
-        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
-        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
-        ] %}
-    {% elseif report.type == '103' %}
-        {% set config = [
-        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-        {'section': expenseSectionId,'link': path(expenseSectionRoute, {'reportId': report.id})},
-        {'section':'gifts','link': path('gifts', {'reportId': report.id})},
-        {'section':'bankAccounts','link': path('bank_accounts', {'reportId': report.id})},
-        {'section':'moneyInShort', 'link': path('money_in_short', {'reportId': report.id})},
-        {'section':'moneyOutShort', 'link': path('money_out_short', {'reportId': report.id})},
-        {'section':'assets', 'link': path('assets', {'reportId': report.id})},
-        {'section':'debts', 'link': path('debts', {'reportId': report.id})},
-        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
-        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
-        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
-        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
-        ] %}
-    {% elseif report.type == '104' %}
-        {% set config = [
-        {'section':'reportOverview', 'link': path('report_overview', {'reportId': report.id})},
-        {'section':'decisions', 'link': path('decisions', {'reportId': report.id})},
-        {'section':'contacts', 'link': path('contacts', {'reportId': report.id})},
-        {'section':'visitsCare','link': path('visits_care', {'reportId': report.id})},
-        {'section':'lifestyle','link': path('lifestyle', {'reportId': report.id})},
-        {'section':'actions', 'link': path('actions', {'reportId': report.id})},
-        {'section':'otherInfo', 'link': path('other_info', {'reportId': report.id})},
-        {'section':'documents', 'link': path('documents', {'reportId': report.id})},
-        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('report_overview', {'reportId': report.id})},
-        ] %}
-    {% elseif report.type == 'ndr' %}
-        {% set config = [
-        {'section':'reportOverview', 'link': path('odr_overview', {'odrId': report.id})},
-        {'section':'visitsCare','link': path('odr_visits_care', {'odrId': report.id})},
-        {'section':'deputyExpenses','link': path('odr_deputy_expenses', {'odrId': report.id})},
-        {'section':'incomeBenefits','link': path('odr_income_benefits', {'odrId': report.id})},
-        {'section':'bankAccounts','link': path('odr_bank_accounts', {'odrId': report.id})},
-        {'section':'assets','link': path('odr_assets', {'odrId': report.id})},
-        {'section':'debts','link': path('odr_debts', {'odrId': report.id})},
-        {'section':'actions', 'link': path('odr_actions', {'odrId': report.id})},
-        {'section':'otherInfo', 'link': path('odr_other_info', {'odrId': report.id})},
-        {'section':'reportOverview', 'transKey': reportOverviewTransKey, 'link': path('odr_overview', {'odrId': report.id})},
-        ] %}
+        {# when all merged and stable, remove the section option and use the key #}
+        {% set routeParams = {'reportId': report.id} %}
+
+        {# all the possible section for all the reports (A-Z order) #}
+        {% set allSectionsAvailable = {
+            'actions': {'section':'actions', 'link': path('actions', routeParams)},
+            'assets':  {'section':'assets', 'link': path('assets', routeParams)},
+            'bankAccounts': {'section':'bankAccounts','link': path('bank_accounts', routeParams)},
+            'contacts': {'section':'contacts', 'link': path('contacts', routeParams)},
+            'debts': {'section':'debts', 'link': path('debts', routeParams)},
+            'deputyExpenses': {'section': 'deputyExpenses','link': path('deputy_expenses', routeParams)},
+            'decisions': {'section':'decisions', 'link': path('decisions', routeParams)},
+            'documents': {'section':'documents', 'link': path('documents', routeParams)},
+            'gifts': {'section':'gifts','link': path('gifts', routeParams)},
+            'lifestyle': {'section':'lifestyle','link': path('lifestyle', routeParams)},
+            'moneyTransfers': {'section':'moneyTransfers', 'link': path('money_transfers', routeParams)},
+            'moneyIn': {'section':'moneyIn', 'link': path('money_in', routeParams)},
+            'moneyOut': {'section':'moneyOut', 'link': path('money_out', routeParams)},
+            'moneyInShort': {'section':'moneyInShort', 'link': path('money_in_short', routeParams)},
+            'moneyOutShort': {'section':'moneyOutShort', 'link': path('money_out_short', routeParams)},
+            'otherInfo': {'section':'otherInfo', 'link': path('other_info', routeParams)},
+            'paDeputyExpenses': {'section': 'paFeeExpense','link': path('pa_fee_expense', routeParams)},
+            'visitsCare': {'section':'visitsCare','link': path('visits_care', routeParams)},
+        } %}
+
+        {# Order for all the possible section in Lay and PA (*-6) reports #}
+        {% set sectionIdOrder = ('-6' in report.type) ?
+            [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle', 'paDeputyExpenses',
+                'gifts', 'actions', 'otherInfo',
+                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                'moneyInShort', 'moneyOutShort',
+                'assets', 'debts', 'documents']
+            : [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle', 'paDeputyExpenses', 'deputyExpenses', 'gifts',
+                'actions', 'otherInfo',
+                'bankAccounts', 'moneyTransfers',
+                'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
+                'assets', 'debts', 'documents'
+            ]
+        %}
+        {# first and last link #}
+        {% set mainPageLinkConfig = {'section':'reportOverview', 'transKey': (('-6' in report.type) ? 'clientProfile' : 'reportOverview'), 'link': path('report_overview', routeParams)} %}
+
+        {# create config object using the order from `sectionIdOrder` #}
+        {# checking if the section exists in the specific report type (API config) #}
+        {# and copying  the config param from `allSectionsAvailable` #}
+        {% set config = [mainPageLinkConfig] %}
+        {% for sectionId in sectionIdOrder %}
+            {% if report.hasSection(sectionId) %}
+                {% set config = config | merge([allSectionsAvailable[sectionId]]) %}
+            {% endif %}
+        {% endfor %}
+        {% set config = config | merge([mainPageLinkConfig]) %}
+
     {% endif %}
 
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

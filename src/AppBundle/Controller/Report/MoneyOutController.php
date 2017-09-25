@@ -194,4 +194,12 @@ class MoneyOutController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_out_summary', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'moneyOut';
+    }
 }

@@ -113,6 +113,28 @@ class FormattedTest extends WebTestCase
             ->setClientInvolvedDetails('he wanted to live here');
 
         $this->report = new Report();
+        $reports = [Report::TYPE_102]; //extend if other types need to be tested
+        $this->report->setSectionsSettings([
+            'decisions'=>$reports,
+            'contacts'=>$reports,
+            'visitsCare'=>$reports,
+            'lifestyle'=>$reports,
+            'balance'=>$reports,
+            'bankAccounts'=>$reports,
+            'moneyTransfers'=>$reports,
+            'moneyIn'=>$reports,
+            'moneyOut'=>$reports,
+            'moneyInShort'=>$reports,
+            'moneyOutShort'=>$reports,
+            'assets'=>$reports,
+            'debts'=>$reports,
+            'gifts'=>$reports,
+            'actions'=>$reports,
+            'otherInfo'=>$reports,
+            'deputyExpenses'=>$reports,
+            'paDeputyExpenses'=>$reports,
+            'documents'=>$reports
+        ]);
         $this->report
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))

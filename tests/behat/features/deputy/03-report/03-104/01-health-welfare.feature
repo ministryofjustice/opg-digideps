@@ -3,7 +3,7 @@ Feature: Report 104 health welfare
   @deputy
   Scenario: load app status taken after 102 non-financial sections are completed
     Given I load the application status from "report-decisions-contacts-visitscare-actions-info"
-    And I change the report 1 type to "104"
+    And I change the report of the client with case number "12345abc" to "104"
 
   @deputy
   Scenario: test HW section

@@ -117,4 +117,12 @@ class DebtController extends AbstractController
             'report' => $report,
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'debts';
+    }
 }
