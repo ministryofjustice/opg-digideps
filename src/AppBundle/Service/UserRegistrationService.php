@@ -106,13 +106,11 @@ class UserRegistrationService
     private function getCasRecMatchesOrThrowError($criteria)
     {
         $casRecMatches = $this->casRecRepo->findBy($criteria);
-
         if (count($casRecMatches) == 0) {
             throw new \RuntimeException('User registration: not found', 421);
         }
         return $casRecMatches;
     }
-
 
     private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
     {
