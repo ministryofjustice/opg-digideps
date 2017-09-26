@@ -303,6 +303,13 @@ class IndexController extends AbstractController
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
 
+                    foreach($ret['errors'] as $err) {
+                        $request->getSession()->getFlashBag()->add(
+                            'error',
+                            $err
+                        );
+                    }
+
                     return $this->redirect($this->generateUrl('casrec_upload'));
                 }
 

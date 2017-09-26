@@ -278,4 +278,12 @@ class DecisionController extends AbstractController
 
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'decisions';
+    }
 }

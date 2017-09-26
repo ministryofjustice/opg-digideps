@@ -92,13 +92,6 @@ class Status
     private $balanceState;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @var bool
-     */
-    private $balanceMatches;
-
-    /**
      * @JMS\Type("array")
      *
      * @var array
@@ -539,25 +532,6 @@ class Status
     public function setStatus($status)
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBalanceMatches()
-    {
-        return $this->balanceMatches;
-    }
-
-    /**
-     * @param  bool   $balanceMatches
-     * @return Status
-     */
-    public function setBalanceMatches($balanceMatches)
-    {
-        $this->balanceMatches = $balanceMatches;
-
-        return $this;
     }
 
     /**

@@ -274,4 +274,12 @@ class DocumentController extends AbstractController
             ['documents', 'status', 'document-report', 'report', 'client', 'user']
         );
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'documents';
+    }
 }

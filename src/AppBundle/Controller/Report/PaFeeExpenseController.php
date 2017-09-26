@@ -285,4 +285,12 @@ class PaFeeExpenseController extends AbstractController
             'report' => $report,
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'paDeputyExpenses';
+    }
 }
