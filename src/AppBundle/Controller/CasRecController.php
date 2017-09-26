@@ -99,7 +99,7 @@ class CasRecController extends RestController
 
             //  Before committing the CasRec entities use the report service to update any report types if necessary
             $this->get('opg_digideps.report_service')
-                 ->updateCurrentReportTypes($casRecEntities);
+                 ->updateCurrentReportTypes($casRecEntities, EntityDir\User::ROLE_LAY_DEPUTY);
 
             $em->commit();
             $em->clear();

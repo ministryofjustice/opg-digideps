@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AuditLogEntry;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -10,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Controller only used from BEHAT
+ *
  * @codeCoverageIgnore
  * @Route("/behat")
  */
@@ -20,6 +23,26 @@ class BehatController extends RestController
         if (!$this->container->getParameter('behat_controller_enabled')) {
             return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
         }
+    }
+
+    /**
+     * @Route("/client/{caseNumber}")
+     * @Method({"PUT"})
+     */
+    public function clientEditAction(Request $request, $caseNumber)
+    {
+        $this->securityChecks();
+
+        /* @var $client Client */
+        $client = $this->findEntityBy(Client::class, ['caseNumber' => $caseNumber]);
+
+        $data = $this->deserializeBodyContent($request);
+        if (array_key_exists('current_report_type', $data)) {
+            $report = $client->getCurrentReport();
+            $report->setType($data['current_report_type']);
+            $this->get('em')->flush($report);
+        }
+
     }
 
     /**
@@ -52,39 +75,6 @@ class BehatController extends RestController
         return true;
     }
 
-    /**
-     * @Route("/check-app-params")
-     * @Method({"GET"})
-     */
-    public function checkParamsAction()
-    {
-        $this->securityChecks();
-
-        $param = $this->container->getParameter('email_report_submit')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
-        }
-
-        $param = $this->container->getParameter('email_feedback_send')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_feedback_send.to_email must be a behat- email in order to test emails, $param given.");
-        }
-
-        return 'valid';
-    }
-
-    /**
-     * @Route("/audit-log")
-     * @Method({"GET"})
-     */
-    public function auditLogGetAllAction()
-    {
-        $this->securityChecks();
-
-        $this->setJmsSerialiserGroups(['audit_log']);
-
-        return $this->getRepository(AuditLogEntry::class)->findBy([], ['id' => 'DESC']);
-    }
 
     /**
      * @Route("/user/{email}")

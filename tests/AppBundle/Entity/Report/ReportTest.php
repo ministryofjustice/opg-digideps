@@ -40,7 +40,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         return [
             // start date, end date, submitted (true/false)
-            ['2017-06-23', '2018-06-22', [['2016-06-23', '2017-06-22', false]], 'already has unsubmitted report'],
+            ['2017-06-23', '2018-06-22', [['2016-06-23', '2017-06-22', false]], 'unsubmitted report'],
             //['2017-06-23', '2018-06-24', [['2016-06-23', '2017-06-22', true]], 'cannot cover more than one year'],
             ['2017-06-24', '2018-06-23', [['2016-06-23', '2017-06-22', true], ['2015-06-23', '2016-06-22', true]], 'new report is expected to start on'],
         ];
@@ -217,5 +217,31 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $status = $this->report->getStatus();
         $this->assertInstanceOf(ReportStatusService::class, $status);
+    }
+
+
+    public static function getSectionsSettingsProvider()
+    {
+        return [
+            [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance'], ['moneyInShort', 'lifestyle']],
+            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
+            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
+        ];
+    }
+
+    /**
+     * Some checks that the config array doesn't get messed up
+     *
+     * @dataProvider getSectionsSettingsProvider
+     */
+    public function testgetSectionsSettings($type, array $expectedSections, array $unExpectedSections)
+    {
+        foreach($expectedSections as $section) {
+            $this->assertContains($type, Report::getSectionsSettings()[$section], "$type should have $section section ");
+        }
+        foreach($unExpectedSections as $section) {
+            $this->assertNotContains($type, Report::getSectionsSettings()[$section], "$type should NOT have $section section ");
+        }
+
     }
 }

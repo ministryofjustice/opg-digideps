@@ -14,6 +14,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CasRec
 {
     /**
+     * Holds the mapping rules to define the report type based on the CSV file (CASREC)
+     * Used by both PA and Lay
+     *
+     * @var array
+     */
+    private static $csvToReportTypeMap = [
+        // Lay
+        [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
+        [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
+        [Report::ENABLE_104, User::ROLE_LAY_DEPUTY, ['hw'], '', Report::TYPE_104],
+        [Report::ENABLE_104_JOINT, User::ROLE_LAY_DEPUTY, ['hw'], 'opg103', Report::TYPE_103_4],
+        [Report::ENABLE_104_JOINT, User::ROLE_LAY_DEPUTY, ['hw'], 'opg102', Report::TYPE_102_4],
+        // PA
+        [true, User::ROLE_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
+        [true, User::ROLE_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
+        [Report::ENABLE_104, User::ROLE_PA, ['hw'], '', Report::TYPE_104_6],
+        [Report::ENABLE_104_JOINT, User::ROLE_PA, ['hw'], 'opg103', Report::TYPE_103_4_6],
+        [Report::ENABLE_104_JOINT, User::ROLE_PA, ['hw'], 'opg102', Report::TYPE_102_4_6],
+    ];
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -219,6 +240,7 @@ class CasRec
         return $this->corref;
     }
 
+
     /**
      * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
      * 103: when corref = l3/l3g and typeofRep = opg103
@@ -226,21 +248,33 @@ class CasRec
      * 103: all the other cases;
      *
      * @param string $typeOfRep e.g. opg103
-     * @param string $corref    e.g. l3, l3g
+     * @param string $corref e.g. l3, l3g
+     * @param string $userRoleName e.g. ROLE_PA
      *
      * @return string Report::TYPE_*
      */
-    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref)
+    public static function getTypeBasedOnTypeofRepAndCorref($typeOfRep, $corref, $userRoleName)
     {
         $typeOfRep = trim(strtolower($typeOfRep));
         $corref = trim(strtolower($corref));
 
-        if (Report::ENABLE_103 && in_array($corref, ['l3', 'l3g', 'a3']) && $typeOfRep === 'opg103') {
-            return Report::TYPE_103;
-        } elseif (Report::ENABLE_104 && $corref === 'hw' && $typeOfRep === '') {
-            return Report::TYPE_104;
+        // find report type
+        $reportType = null;
+        foreach (self::$csvToReportTypeMap as $row) {
+            list($enabled, $currentUserRole, $currentCorrefs, $currentTypeOfRep, $outputType) = $row;
+            if ($enabled && $userRoleName === $currentUserRole && in_array($corref, $currentCorrefs) && $typeOfRep === $currentTypeOfRep) {
+                return $outputType;
+            }
         }
 
-        return Report::TYPE_102;
+        // default report type if no entry mached above
+        switch ($userRoleName) {
+            case User::ROLE_LAY_DEPUTY:
+                return Report::TYPE_102;
+            case User::ROLE_PA:
+                return Report::TYPE_102_6;
+        }
+
+        throw new \Exception(__METHOD__ . ": user role not recognised to determine report type");
     }
 }

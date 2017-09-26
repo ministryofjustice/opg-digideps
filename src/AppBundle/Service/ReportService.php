@@ -53,7 +53,7 @@ class ReportService
     {
         $casRec = $this->casRecRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
         if ($casRec instanceof CasRec) {
-            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref());
+            return CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $client->getUsers()->first()->getRoleName());
         }
 
         return null;
@@ -119,10 +119,11 @@ class ReportService
      * Using an array of CasRec entities update any corresponding report type if it has been changed
      *
      * @param array $casRecEntities
+     * @param string $userRoleName
      *
      * @throws \Exception
      */
-    public function updateCurrentReportTypes(array $casRecEntities)
+    public function updateCurrentReportTypes(array $casRecEntities, $userRoleName)
     {
         //  Check the contents of the entities array and check the integrity of the components
         $casRecEntitiesWithKey = [];
@@ -153,7 +154,7 @@ class ReportService
             if (isset($casRecEntitiesWithKey[$reportClientCaseNumber])) {
                 //  Get the report type based on the CasRec record
                 $casRec = $casRecEntitiesWithKey[$reportClientCaseNumber];
-                $casRecReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref());
+                $casRecReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $userRoleName);
 
                 if ($report->getType() != $casRecReportType) {
                     $report->setType($casRecReportType);
