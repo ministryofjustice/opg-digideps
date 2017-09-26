@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Model\SelfRegisterData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -11,6 +12,78 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CoDeputyController extends AbstractController
 {
+    /**
+     * @Route("/codeputy/verification", name="codep_verification")
+     * @Template()
+     */
+    public function verificationAction(Request $request)
+    {
+        $user = $this->getUserWithData(['user', 'user-clients', 'client']);
+
+        $form = $this->createForm(new FormDir\CoDeputyVerificationType(), $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()){
+
+            // get client validation errors, if any, and add to the form
+            $client = new EntityDir\Client();
+            $client->setLastName($form['clientLastname']->getData());
+            $client->setCaseNumber($form['clientCaseNumber']->getData());
+            $errors = $this->get('validator')->validate($client, ['verify-codeputy']);
+            foreach($errors as $error) {
+                $clientProperty = $error->getPropertyPath();
+                $form->get('client'.ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
+            }
+
+            if ($form->isValid()) {
+
+                $selfRegisterData = new SelfRegisterData();
+                $selfRegisterData->setFirstname($form['firstname']->getData());
+                $selfRegisterData->setLastname($form['lastname']->getData());
+                $selfRegisterData->setEmail($form['email']->getData());
+                $selfRegisterData->setPostcode($form['addressPostcode']->getData());
+                $selfRegisterData->setClientLastname($form['clientLastname']->getData());
+                $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
+
+                // validate against casRec
+                try {
+                    $this->getRestClient()->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
+                    $user->setCoDeputyClientConfirmed(true);
+                    $this->getRestClient()->put('user/' . $user->getId(), $user);
+                    return $this->redirect($this->generateUrl('homepage'));
+                } catch (\Exception $e) {
+                    $translator = $this->get('translator');
+                    switch ((int) $e->getCode()) {
+                        case 422:
+                            $form->get('email')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
+                            break;
+
+                        case 421:
+                            $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                            break;
+
+                        case 424:
+                            $form->get('addressPostcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register')));
+                            break;
+
+                        case 425:
+                            $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
+                            break;
+
+                        default:
+                            $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
+                    }
+
+                    $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                }
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'user' => $user
+        ];
+    }
 
     /**
      * @Route("/codeputy/{clientId}/add", name="add_co_deputy")

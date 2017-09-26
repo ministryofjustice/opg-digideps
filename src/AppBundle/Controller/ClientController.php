@@ -101,41 +101,4 @@ class ClientController extends AbstractController
         return ['form' => $form->createView()];
     }
 
-    /**
-     * @Route("/client/verify", name="client_verify")
-     * @Template()
-     */
-    public function verifyAction(Request $request)
-    {
-        $user = $this->getUserWithData();
-
-        if (! $user->getIsCoDeputy()) {
-            return $this->redirect($this->generateUrl('client_add'));
-        }
-
-        $client = $this->getFirstClient();
-        $formClient = clone $client;
-        $formClient->setLastName('');
-        $formClient->setCaseNumber('');
-
-        $form = $this->createForm(new FormDir\ClientVerifyType(), $formClient);
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            if ((strToLower($client->getLastname()) === strToLower($form['lastname']->getData()))
-                && $client->getCaseNumber() === $form['caseNumber']->getData())
-            {
-                $user->setCoDeputyClientConfirmed(true);
-                $this->getRestClient()->put('user/'.$user->getId(), $user);
-                return $this->redirect($this->generateUrl('homepage'));
-            } else {
-                $form->get('lastname')->addError(new FormError('We could not match the client last name'));
-                $form->get('caseNumber')->addError(new FormError('We could not match the client case number'));
-            }
-        }
-
-        return [ 'form' => $form->createView()
-               , 'user' => $user
-               ];
-    }
 }
