@@ -199,7 +199,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "codeputy"} )
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
      */
