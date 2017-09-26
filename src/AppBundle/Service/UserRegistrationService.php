@@ -15,9 +15,6 @@ class UserRegistrationService
     private $em;
 
     /** @var \Doctrine\ORM\EntityRepository */
-    private $userRepository;
-
-    /** @var \Doctrine\ORM\EntityRepository */
     private $casRecRepo;
 
     public function __construct($em)
@@ -30,6 +27,7 @@ class UserRegistrationService
      * CASREC checks
      * - throw error 421 if user and client not found
      * - throw error 424 if user and client are found but the postcode doesn't match
+     * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
      * @return User
@@ -54,29 +52,13 @@ class UserRegistrationService
         }
 
         // Check casRec for user
-        $criteria = [
-            'caseNumber'     => CasRec::normaliseCaseNumber($client->getCaseNumber()),
-            'clientLastname' => CasRec::normaliseSurname($client->getLastname()),
-            'deputySurname'  => CasRec::normaliseSurname($user->getLastname()),
-        ];
-        $casRecUserMatches = $this->casRecRepo->findBy($criteria);
-        if (count($casRecUserMatches) == 0) {
-            throw new \RuntimeException('User registration: not found', 421);
-        }
+        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($client->getCaseNumber())
+                    , 'clientLastname' => CasRec::normaliseSurname($client->getLastname())
+                    , 'deputySurname'  => CasRec::normaliseSurname($user->getLastname())
+                    ];
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
 
-        // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
-        // (Or skip this check completely it if one of the postcodes isn't set)
-        $casRecPostcodes = [];
-        foreach ($casRecUserMatches as $casRecMatch) {
-            if (!empty($casRecMatch->getDeputyPostCode())) {
-                $casRecPostcodes[] = $casRecMatch->getDeputyPostCode();
-            }
-        }
-        if (count($casRecPostcodes) == count($casRecUserMatches)) {
-            if (!in_array($user->getAddressPostcode(), $casRecPostcodes)){
-                throw new \RuntimeException('User registration: postcode mismatch', 424);
-            }
-        }
+        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $user->getAddressPostcode());
 
         // Currently unable to determine which co-deputy is matched (eg siblings at same address), based on information given
         $deputyNumbers = [];
@@ -86,13 +68,67 @@ class UserRegistrationService
         $user->setDeputyNo(implode(',', $deputyNumbers));
 
         // For multi deputy clients
-        $casRecCaseMatches = $this->casRecRepo->findBy(['caseNumber' => CasRec::normaliseCaseNumber($client->getCaseNumber())]);
+        $casRecCaseMatches = $this->getCasRecMatchesOrThrowError(['caseNumber' => CasRec::normaliseCaseNumber($client->getCaseNumber())]);
         if (count($casRecCaseMatches) > 1) {
             $user->setCoDeputyClientConfirmed(true);
         }
 
         $this->saveUserAndClient($user, $client);
         return $user;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateCoDeputy(SelfRegisterData $selfRegisterData)
+    {
+        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        if (!($user)) {
+            throw new \RuntimeException("User registration: not found", 421);
+        }
+
+        if ($user->getCoDeputyClientConfirmed()) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        }
+
+        // Check casRec for user
+        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
+                    , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
+                    , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
+        ];
+
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
+        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $selfRegisterData->getPostcode());
+
+        return true;
+    }
+
+    private function getCasRecMatchesOrThrowError($criteria)
+    {
+        $casRecMatches = $this->casRecRepo->findBy($criteria);
+
+        if (count($casRecMatches) == 0) {
+            throw new \RuntimeException('User registration: not found', 421);
+        }
+        return $casRecMatches;
+    }
+
+
+    private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
+    {
+        // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
+        // (Or skip this check completely it if one of the postcodes isn't set)
+        $casRecPostcodes = [];
+        foreach ($casRecUsers as $casRecMatch) {
+            if (!empty($casRecMatch->getDeputyPostCode())) {
+                $casRecPostcodes[] = $casRecMatch->getDeputyPostCode();
+            }
+        }
+        if (count($casRecPostcodes) == count($casRecUsers)) {
+            if (!in_array(CasRec::normalisePostCode($postcode), $casRecPostcodes)){
+                throw new \RuntimeException('User registration: postcode mismatch', 424);
+            }
+        }
     }
 
     public function saveUserAndClient($user, $client)

@@ -6,6 +6,7 @@ use AppBundle\Model\SelfRegisterData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 /**
  * @Route("/selfregister")
@@ -29,7 +30,7 @@ class SelfRegisterController extends RestController
         $this->populateSelfReg($selfRegisterData, $data);
 
         $validator = $this->get('validator');
-        $errors = $validator->validate($selfRegisterData);
+        $errors = $validator->validate($selfRegisterData, 'self_registration');
 
         if (count($errors) > 0) {
             throw new \RuntimeException('Invalid registration data: ' . $errors);
@@ -46,6 +47,42 @@ class SelfRegisterController extends RestController
         $this->setJmsSerialiserGroups(['user', 'user-login']);
 
         return $user;
+    }
+
+
+    /**
+     * @Route("/verifycodeputy")
+     * @Method({"POST"})
+     */
+    public function verifyCoDeputy(Request $request)
+    {
+        $coDeputyVerified = false;
+
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+
+        $selfRegisterData = new SelfRegisterData();
+        $this->populateSelfReg($selfRegisterData, $this->deserializeBodyContent($request));
+
+        $validator = $this->get('validator');
+        $errors = $validator->validate($selfRegisterData, ['verify_codeputy']);
+
+        if (count($errors) > 0) {
+            throw new \RuntimeException('Invalid registration data: ' . $errors);
+        }
+
+        try {
+            $coDeputyVerified = $this->container->get('user_registration_service')->validateCoDeputy($selfRegisterData);
+            $this->get('logger')->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
+        } catch (\Exception $e) {
+            $this->get('logger')->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
+throw $e;
+        }
+
+return print_r(doctrineDebug::export($coDeputyVerified, 3),true);
+
+        return ['verified' => $coDeputyVerified];
     }
 
     /*
