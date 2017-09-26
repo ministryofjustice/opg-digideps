@@ -113,6 +113,8 @@ class FormattedTest extends WebTestCase
             ->setClientInvolvedDetails('he wanted to live here');
 
         $this->report = new Report();
+        $this->report->setType(Report::TYPE_102);
+        // hardcoded section settings (show all for all the reports)
         $reports = [Report::TYPE_102]; //extend if other types need to be tested
         $this->report->setSectionsSettings([
             'decisions'=>$reports,
@@ -133,9 +135,8 @@ class FormattedTest extends WebTestCase
             'otherInfo'=>$reports,
             'deputyExpenses'=>$reports,
             'paDeputyExpenses'=>$reports,
-            'documents'=>$reports
-        ]);
-        $this->report
+            'documents'=>$reports,
+        ])
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))
             ->setEndDate(new \Datetime('2015-12-31'))
@@ -150,6 +151,7 @@ class FormattedTest extends WebTestCase
             ->setDecisions([$this->decision1, $this->decision2])
             ->setHasDebts(true)
             ->setDebts([$this->debt1])
+            ->setGifts([$this->debt1])
             ->setAccountsClosingBalanceTotal(
                 $this->account1->getOpeningBalance()
                 + $this->account2->getOpeningBalance()
