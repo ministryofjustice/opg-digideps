@@ -1,7 +1,7 @@
 default:
     htmlHeaderTitle: Deputy report service - Deputy report invitation
-    heading: Invitation to collaborate on a deputy report
-    beenInvited: You've been invited to collaborate on a deputy report.
+    heading: Invitation to join the online deputy report service
+    beenInvited: Your co-deputy has invited you to join the online deputy report service.
     needToSignUp: |
         To do this, you'll need to sign up for the Office of the Public Guardian's online
         deputy report service.
