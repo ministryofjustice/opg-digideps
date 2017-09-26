@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set clientName = report.client.firstname %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set append104 = ('104' in report.type) ? '-104' : '' %}
+{% set append104 = ('4' in report.type) ? '-104' : '' %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -28,7 +28,7 @@
         </div>
     </details>
 
-    <details {% if '104' in report.type %}class="push--bottom"{% endif %}>
+    <details {% if '4' in report.type %}class="push--bottom"{% endif %}>
         <summary>
             <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
         </summary>
@@ -39,7 +39,7 @@
                 <li>{{ ('startPage.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
                 <li>{{ ('startPage.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
                 <li>{{ ('startPage.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
-                {% if '104' not in report.type %}
+                {% if '4' not in report.type %}
                     <li>{{ 'startPage.whatisdecisionListItem4' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.whatisdecisionListItem5' | trans(transOptions) }}</li>
                     <li>{{ 'startPage.whatisdecisionListItem6' | trans(transOptions) }}</li>
@@ -49,7 +49,7 @@
         </div>
     </details>
 
-    {% if '104' not in report.type %}
+    {% if '4' not in report.type %}
         <p class="text">{{ 'startPage.description2' | trans }}</p>
     {% endif %}
 
