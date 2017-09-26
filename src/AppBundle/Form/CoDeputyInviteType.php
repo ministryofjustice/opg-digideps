@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CoDeputyType extends AbstractType
+class CoDeputyInviteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -18,12 +18,12 @@ class CoDeputyType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'co-deputy',
-            'validation_groups' => ['codeputy'],
+            'validation_groups' => ['codeputy_invite'],
         ]);
     }
 
     public function getName()
     {
-        return 'co_deputy';
+        return 'co_deputy_invite';
     }
 }

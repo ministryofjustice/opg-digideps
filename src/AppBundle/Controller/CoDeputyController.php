@@ -21,7 +21,7 @@ class CoDeputyController extends AbstractController
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
         $invitedUser = new EntityDir\User();
 
-        $form = $this->createForm(new FormDir\CoDeputyType(), $invitedUser);
+        $form = $this->createForm(new FormDir\CoDeputyInviteType(), $invitedUser);
 
         $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')
@@ -71,7 +71,7 @@ class CoDeputyController extends AbstractController
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
         $invitedUser = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
 
-        $form = $this->createForm(new FormDir\CoDeputyType(), $invitedUser);
+        $form = $this->createForm(new FormDir\CoDeputyInviteType(), $invitedUser);
 
         $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')
