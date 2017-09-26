@@ -49,12 +49,12 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add",
      *     "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
-     *     groups={"pa_team_add", "user_details_pa", "admin_add_user", "ad_add_user", "user_details_basic",
-     *     "user_details_full"
+     *     groups={"pa_team_add", "user_details_pa", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
+     *     "user_details_full", "verify-codeputy"
      * } )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
      *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa",
-     *             "pa_team_add"} )
+     *             "pa_team_add", "verify-codeputy"} )
      *
      * @var string
      */
@@ -65,9 +65,9 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
      *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","pa_team_add",
-     *     "user_details_pa"
+     *     "user_details_pa", "verify-codeputy"
      * } )
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "verify-codeputy"} )
      *
      * @var string
      */
@@ -76,10 +76,10 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add", "user_details_full", "user_details_pa", "codeputy"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset", "codeputy"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy"}, checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy"} )
-     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset", "codeputy_invite", "verify-codeputy"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"}, checkMX=false, checkHost=false )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"} )
+     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa", "codeputy_invite", "verify-codeputy"})
      *
      * @var string
      */
@@ -161,8 +161,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full"} )
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
      */
@@ -189,8 +189,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full"} )
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa"} )
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy"} )
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa", "verify-codeputy"} )
      *
      * @var string
      */
@@ -199,7 +199,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "codeputy"} )
      *
      * @var string
      */
@@ -208,9 +208,9 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_pa", "pa_team_add"})
-     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "verify-codeputy"} )
      * @Assert\NotBlank( message="user.phoneMain.notBlankOtherUser", groups={"user_details_pa"} )
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa", "pa_team_add"} )
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa", "pa_team_add", "verify-codeputy"} )
      *
      * @var string
      */
