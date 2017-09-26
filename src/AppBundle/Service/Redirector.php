@@ -109,15 +109,17 @@ class Redirector
         }
 
         // client is not added
-        if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
-            $route = 'client_verify';
-        } elseif (!$user->getIdOfClientWithDetails()) {
+        if (!$user->getIdOfClientWithDetails()) {
             $route = 'client_add';
         }
 
         // incomplete user info
         if (!$user->hasDetails()) {
             $route = 'user_details';
+        }
+
+        if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
+            $route = 'codep_verification';
         }
 
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
