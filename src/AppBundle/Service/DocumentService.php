@@ -39,6 +39,33 @@ class DocumentService
         $this->logger = $logger;
     }
 
+    /**
+     * Clean up old report submissions (set downloadable = false and set to null the storageReference of the documents)
+     *
+     * @param bool $ignoreS3Failure
+     */
+    public function removeOld($ignoreS3Failure)
+    {
+        $reportSubmissions = $this->restClient->apiCall('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false);
+        $toDelete = count($reportSubmissions);
+        $this->log('info', "$toDelete old report submission found");
+        foreach($reportSubmissions as $reportSubmission) {
+            try {
+                $reportSubmissionId = $reportSubmission->getId();
+                // remove documents from S3
+                foreach($reportSubmission->getDocuments() as $document) {
+                    $this->deleteFromS3($document->getStorageReference(), $ignoreS3Failure);
+                }
+                // set report as undownloadable
+                $this->restClient->apiCall('PUT', 'report-submission/' .$reportSubmissionId. '/set-undownloadable', null, 'array', [], false);
+                $this->log('info', "report submission $reportSubmissionId set undownloadable, and its documents storage ref set to null");
+            } catch (\Exception $e) {
+                $message = "can't cleanup $reportSubmissionId submission. Error: " . $e->getMessage();
+                $this->log('error', $message);
+            }
+        }
+        $this->log('info', "Done");
+    }
 
     /**
      * @param bool $ignoreS3Failure
@@ -73,7 +100,7 @@ class DocumentService
             if ($s3Result) {
                 $this->log('info', "deleting $storageRef from S3: success");
             } else {
-                $this->log('warning', "deleting $storageRef from S3: " . (($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL')));
+                $this->log('error', "deleting $storageRef from S3: " . (($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL')));
             }
 
             $endpointResult = $this->restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
@@ -84,12 +111,8 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (\RuntimeException $e) {
+        } catch (\Exception $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
-            if ($e instanceof RestClientException) {
-                $message .= print_r($e->getData(), true);
-            }
-
             $this->log('error', $message);
         }
     }
@@ -105,6 +128,10 @@ class DocumentService
      */
     private function deleteFromS3($ref, $ignoreS3Failure)
     {
+        if (!$ref) {
+            return true;
+        }
+
         try {
             $this->s3Storage->delete($ref);
 
@@ -130,7 +157,7 @@ class DocumentService
         //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 
         $this->logger->log($level, $message, ['extra' => [
-            'cron' => 'digideps:documents-cleanup',
+            'service' => 'documents-service',
         ]]);
     }
 

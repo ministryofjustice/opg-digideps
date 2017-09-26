@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\RestClientException;
+use AppBundle\Service\DocumentService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -55,7 +56,11 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         }
 
         $ignoreS3Failures = $input->getOption('ignore-s3-failures');
-        $this->getContainer()->get('document_service')->removeSoftDeleted($ignoreS3Failures);
+        $documentService = $this->getContainer()->get('document_service');
+
+        /* @var $documentService DocumentService */
+        $documentService->removeSoftDeleted($ignoreS3Failures);
+        $documentService->removeOld($ignoreS3Failures);
 
         $this->releaseLock($output);
     }
