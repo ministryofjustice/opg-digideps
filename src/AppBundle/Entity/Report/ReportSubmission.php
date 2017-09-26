@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportSubmission
 {
+    const REMOVE_FILES_WHEN_OLDER_THAN = '-30 days';
+
     // createdBy is the user who submitted the report
     // createdOn = date where the report (or documents-only) get submitted
     use CreationAudit;
@@ -23,7 +25,7 @@ class ReportSubmission
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"report-submission"})
+     * @JMS\Groups({"report-submission", "report-submission-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -47,7 +49,7 @@ class ReportSubmission
      * @var ArrayCollection
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
-     * @JMS\Groups({"report-submission"})
+     * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="reportSubmission")
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
@@ -66,6 +68,13 @@ class ReportSubmission
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $archivedBy;
+
+    /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"report-submission"})
+     * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
+     */
+    private $downloadable;
 
     /**
      * ReportSubmission constructor.
@@ -119,7 +128,7 @@ class ReportSubmission
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Document[]
      */
     public function getDocuments()
     {
@@ -157,4 +166,25 @@ class ReportSubmission
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDownloadable()
+    {
+        return $this->downloadable;
+    }
+
+    /**
+     * @param mixed $downloadable
+     * @return ReportSubmission
+     */
+    public function setDownloadable($downloadable)
+    {
+        $this->downloadable = $downloadable;
+
+        return $this;
+    }
+
+
 }
