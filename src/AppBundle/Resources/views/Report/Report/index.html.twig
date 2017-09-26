@@ -52,6 +52,7 @@
                     <th>{{ (page ~ '.submissionDate') | trans }}</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,6 +73,11 @@
                     <td class="text--right hard--right">
                         <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
                             {{ 'view' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                    <td class="text--right hard--right">
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
+                            {{ 'attachMore' | trans({}, 'report-documents') }}
                         </a>
                     </td>
                 </tr>
