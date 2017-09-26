@@ -1004,4 +1004,13 @@ class Report
         return $this->sectionsSettings;
     }
 
+    /**
+     * Has this report been submitted?
+     *
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return (bool) $this->getSubmitted();
+    }
 }

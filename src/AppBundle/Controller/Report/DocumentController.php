@@ -102,14 +102,16 @@ class DocumentController extends AbstractController
      */
     public function step2Action(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->getReport($reportId, self::$jmsGroups);
 
-        if ( EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
-           && 'yes' !== $report->getWishToProvideDocumentation()
-           ) {
-            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
-        } elseif ($report->getWishToProvideDocumentation() === 'no') {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        if (!$report->isSubmitted()) {
+            if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
+                && 'yes' !== $report->getWishToProvideDocumentation()
+            ) {
+                return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
+            } elseif ($report->getWishToProvideDocumentation() === 'no') {
+                return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+            }
         }
 
         $fileUploader = $this->get('file_uploader');
