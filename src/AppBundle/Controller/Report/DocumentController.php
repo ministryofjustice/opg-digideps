@@ -21,6 +21,7 @@ class DocumentController extends AbstractController
 {
     private static $jmsGroups = [
         'report-documents',
+        'document-report-submission',
         'documents',
         'documents-state',
     ];

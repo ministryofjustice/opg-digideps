@@ -103,6 +103,14 @@ class Document
     private $isReportPdf;
 
     /**
+     * @var ReportSubmission
+     *
+     * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
+     * @JMS\Groups({"document-report-subnmission"})
+     */
+    private $reportSubmission;
+
+    /**
      * @return int
      */
     public function getId()
@@ -192,4 +200,11 @@ class Document
         $this->isReportPdf = $isReportPdf;
     }
 
+    /**
+     * @return ReportSubmission
+     */
+    public function getReportSubmission()
+    {
+        return $this->reportSubmission;
+    }
 }

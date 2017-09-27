@@ -98,7 +98,6 @@ class Report
      */
     private $submittedBy;
 
-
     /**
      * @JMS\Type("AppBundle\Entity\Client")
      *
@@ -253,6 +252,22 @@ class Report
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Groups({"report-documents"})
+     *
+     * @var Document[]
+     */
+    private $submittedDocuments;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Groups({"report-documents"})
+     *
+     * @var Document[]
+     */
+    private $unsubmittedDocuments;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
@@ -891,6 +906,22 @@ class Report
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * @return Document[]
+     */
+    public function getSubmittedDocuments()
+    {
+        return $this->submittedDocuments;
+    }
+
+    /**
+     * @return Document[]
+     */
+    public function getUnsubmittedDocuments()
+    {
+        return $this->unsubmittedDocuments;
     }
 
     /**
