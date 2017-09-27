@@ -77,10 +77,8 @@ class SelfRegisterController extends RestController
             $this->get('logger')->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Exception $e) {
             $this->get('logger')->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
-throw $e;
+            throw $e;
         }
-
-return print_r(doctrineDebug::export($coDeputyVerified, 3),true);
 
         return ['verified' => $coDeputyVerified];
     }
