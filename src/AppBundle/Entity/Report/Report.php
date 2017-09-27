@@ -56,7 +56,7 @@ class Report
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
     const ENABLE_104 = true;
-    const ENABLE_104_JOINT = true;
+    const ENABLE_104_JOINT = false;
 
     const SECTION_DECISIONS = 'decisions';
     const SECTION_CONTACTS = 'contacts';
