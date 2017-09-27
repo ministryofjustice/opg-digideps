@@ -61,8 +61,14 @@
     {#<h2 class="heading-medium">Uploading progress</h2>#}
     {#<p>Please wait while your document is being uploaded.</p>#}
     {#<progress max="100" value="24" style="width: 50%"></progress>#}
-
-    {% if report.documents | length > 0 %}
+    {% if report.isSubmitted %}
+        {% include 'AppBundle:Report/Document:_list_submitted.html.twig'  with {
+        'documents': report.submittedDocuments,
+        'translationDomain': translationDomain,
+        'page' : page,
+        } %}
+        <a href="{{ nextLink }}" class="button push--top">{{ 'continue' | trans({}, 'common' ) }}</a>
+    {% elseif report.documents | length > 0 %}
         {% include 'AppBundle:Report/Document:_list.html.twig'  with {
         'translationDomain': translationDomain,
         'page' : page

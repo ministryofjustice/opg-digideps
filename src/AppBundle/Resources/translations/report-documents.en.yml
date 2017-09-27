@@ -30,7 +30,8 @@ attachPage:
   uploadHeading: 2. Upload the file
   noDocuments: No documents
   documentList: Attached documents
-  documentList-previous: Previously attached documents
+  documentListPrevious: Previously attached documents
+  documentListNew: Newly attached documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
