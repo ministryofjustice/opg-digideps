@@ -87,6 +87,7 @@ class ReportSubmission
         $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
+        $this->downloadable = true;
     }
 
     /**
