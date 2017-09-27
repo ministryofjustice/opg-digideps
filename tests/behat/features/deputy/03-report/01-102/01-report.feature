@@ -80,38 +80,3 @@ Feature: Report edit and test tabs
         Then I should see the "edit-actions" link
         Then I should see the "edit-other_info" link
         Then I should see the "edit-documents" link
-
-    @deputy @shaun
-    Scenario: invite co deputy
-        And emails are sent from "deputy" area
-        And I reset the email log
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I save the current URL as "deputy-reports-index.url"
-        Then I click on "invite-codeputy-button"
-        Then the URL should match "codeputy/\d+/add"
-        # check validations
-        # check empty email
-        When I fill in the following:
-            | co_deputy_email |  |
-        And I click on "send-invitation"
-        Then the following fields should have an error:
-            | co_deputy_email |
-        # check invalid email
-        When I fill in the following:
-            | co_deputy_email | someInvalidEmail |
-        And I click on "send-invitation"
-        Then the following fields should have an error:
-            | co_deputy_email |
-        # email already in use
-        When I fill in the following:
-            | co_deputy_email | behat-user@publicguardian.gsi.gov.uk |
-        And I click on "send-invitation"
-        Then the following fields should have an error:
-            | co_deputy_email |
-        # valid form
-        When I fill in the following:
-            | co_deputy_email | behat-user+999@publicguardian.gsi.gov.uk |
-        And I click on "send-invitation"
-        Then the form should be valid
-        And the last email containing a link matching "/user/activate/" should have been sent to "behat-user+999@publicguardian.gsi.gov.uk"
-        Then I go to the URL previously saved as "deputy-reports-index.url"
