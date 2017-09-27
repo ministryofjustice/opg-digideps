@@ -53,6 +53,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         // exit if locked
         // $this->getContainer()->getParameter('kernel.debug')
         if (!$this->acquireLock($output)) {
+            $output->writeln('Locked. try later or launch with unlock flag.');
             return 1;
         }
 
