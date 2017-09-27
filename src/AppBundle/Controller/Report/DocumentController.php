@@ -113,6 +113,9 @@ class DocumentController extends AbstractController
             } elseif ($report->getWishToProvideDocumentation() === 'no') {
                 return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
             }
+            $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
+        } else {
+            $backLink = $this->generateUrl('homepage');
         }
 
         $fileUploader = $this->get('file_uploader');
@@ -172,7 +175,7 @@ class DocumentController extends AbstractController
         return [
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]),
+            'backLink' => $backLink,
             'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
             'form'     => $form->createView(),
         ];
