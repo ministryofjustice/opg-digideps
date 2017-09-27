@@ -108,18 +108,23 @@ class Redirector
             $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
         }
 
-        // client is not added
-        if (!$user->getIdOfClientWithDetails()) {
-            $route = 'client_add';
-        }
+        //none of these corrections apply to admin
+        if (EntityDir\User::ROLE_ADMIN != $user->getRoleName()) {
 
-        // incomplete user info
-        if (!$user->hasDetails()) {
-            $route = 'user_details';
-        }
+            // client is not added
+            if (!$user->getIdOfClientWithDetails()) {
+                $route = 'client_add';
+            }
 
-        if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
-            $route = 'codep_verification';
+            // incomplete user info
+            if (!$user->hasDetails()) {
+                $route = 'user_details';
+            }
+
+            // unverified codeputy invitation
+            if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
+                $route = 'codep_verification';
+            }
         }
 
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
