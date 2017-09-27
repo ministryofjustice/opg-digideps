@@ -37,6 +37,8 @@ class ReportSubmission
     private $archivedBy;
 
     /**
+     * @var bool
+     *
      * @JMS\Type("boolean")
      */
     private $downloadable;
@@ -118,15 +120,16 @@ class ReportSubmission
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getDownloadable()
+    public function isDownloadable()
     {
         return $this->downloadable;
     }
 
     /**
-     * @param mixed $downloadable
+     * @param bool $downloadable
+     *
      * @return ReportSubmission
      */
     public function setDownloadable($downloadable)
