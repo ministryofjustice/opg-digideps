@@ -237,6 +237,7 @@ class DocumentController extends AbstractController
     {
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
+        $report = $document->getReport();
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
         try {
@@ -251,13 +252,19 @@ class DocumentController extends AbstractController
             );
         }
 
-        $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
-        if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
-            $returnUrl = 'summaryPage' == $request->get('from')
-                ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
-                : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+        if ($report->isSubmitted()) {
+            // if report is submitted, then this remove path has come from adding additional documents so return the user
+            // to the step 2 page.
+            $returnUrl = $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
         } else {
-            $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
+            $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
+            if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
+                $returnUrl = 'summaryPage' == $request->get('from')
+                    ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
+                    : $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
+            } else {
+                $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
+            }
         }
 
         return $this->redirect($returnUrl);
