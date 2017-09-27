@@ -1023,12 +1023,12 @@ class User implements UserInterface
     public function isCoDeputy()
     {
         $isCoDeputy = false;
-
-        $client = $this->getFirstClient();
-        if (!empty($client)) {
-            $isCoDeputy = count($client->getUsers()) > 1;
+        if ($this->isLayDeputy()) {
+            $client = $this->getFirstClient();
+            if (!empty($client)) {
+                $isCoDeputy = count($client->getUsers()) > 1;
+            }
         }
-
         return $isCoDeputy;
     }
 
