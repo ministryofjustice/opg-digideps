@@ -39,7 +39,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         // skip if launched from FRONTEND container
         if ($this->getContainer()->getParameter('env') !== 'admin') {
             $output->writeln('This command can only be executed from admin container');
-            exit(1);
+            return 1;
         }
 
         // manual lock release and exit
