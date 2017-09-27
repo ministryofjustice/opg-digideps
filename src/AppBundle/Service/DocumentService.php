@@ -44,7 +44,7 @@ class DocumentService
      *
      * @param bool $ignoreS3Failure
      */
-    public function removeOld($ignoreS3Failure)
+    public function removeOldReportSubmissions($ignoreS3Failure)
     {
         $reportSubmissions = $this->restClient->apiCall('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false);
         $toDelete = count($reportSubmissions);

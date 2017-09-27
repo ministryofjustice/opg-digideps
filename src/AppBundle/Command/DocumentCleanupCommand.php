@@ -31,13 +31,14 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             ->setName('digideps:documents-cleanup')
             ->addOption('ignore-s3-failures', null, InputOption::VALUE_NONE, 'Hard-delete db entry even if the S3 deletion fails')
             ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
+            ->addOption('skip-admin-check', null, InputOption::VALUE_NONE, 'skip the check requiring env==admin')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // skip if launched from FRONTEND container
-        if ($this->getContainer()->getParameter('env') !== 'admin') {
+        if (!$input->getOption('skip-admin-check') && $this->getContainer()->getParameter('env') !== 'admin') {
             $output->writeln('This command can only be executed from admin container');
             return 1;
         }
@@ -60,7 +61,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
         /* @var $documentService DocumentService */
         $documentService->removeSoftDeleted($ignoreS3Failures);
-        $documentService->removeOld($ignoreS3Failures);
+        $documentService->removeOldReportSubmissions($ignoreS3Failures);
 
         $this->releaseLock($output);
     }

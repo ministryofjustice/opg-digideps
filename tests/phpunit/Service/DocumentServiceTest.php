@@ -49,7 +49,7 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testremoveOld()
+    public function testremoveOldReportSubmissions()
     {
         $this->s3Storage
             ->shouldReceive('delete')->once()->with('r1')
@@ -71,7 +71,7 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('apiCall')->once()->with('PUT', 'report-submission/2/set-undownloadable', null, 'array', [], false)
         ;
 
-        $this->object->removeOld(false);
+        $this->object->removeOldReportSubmissions(false);
     }
 
 
