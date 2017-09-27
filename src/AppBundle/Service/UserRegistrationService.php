@@ -26,6 +26,7 @@ class UserRegistrationService
     /**
      * CASREC checks
      * - throw error 421 if user and client not found
+     * - throw error 422 if user email is already found
      * - throw error 424 if user and client are found but the postcode doesn't match
      * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
@@ -41,14 +42,14 @@ class UserRegistrationService
         $this->populateUser($user, $selfRegisterData);
         $this->populateClient($client, $selfRegisterData);
 
-        // Check the client is unique
-        if (!$this->clientIsUnique($client)) {
-            throw new \RuntimeException('User registration: Case number already used', 425);
-        }
-
         // Check the user is unique
         if (!$this->userIsUnique($user)) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        }
+
+        // Check the client is unique
+        if (!$this->clientIsUnique($client)) {
+            throw new \RuntimeException('User registration: Case number already used', 425);
         }
 
         // Check casRec for user
