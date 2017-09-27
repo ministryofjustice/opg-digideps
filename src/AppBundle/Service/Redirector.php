@@ -117,7 +117,7 @@ class Redirector
             }
 
             // incomplete user info
-            if (!$user->hasAddressDetails()) {
+            if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
                 $route = 'user_details';
             }
 
