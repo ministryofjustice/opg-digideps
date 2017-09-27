@@ -87,11 +87,13 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-            $redirectResponse = $isActivatePage
-                ? $this->redirectToRoute($this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'user_activate'))
-                : $this->redirect($this->get('redirector_service')->getFirstPageAfterLogin());
+            if ($isActivatePage) {
+                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
+                return $this->redirectToRoute($route);
+            } else {
+                return $this->redirect($this->get('redirector_service')->getFirstPageAfterLogin());
+            }
 
-            return $redirectResponse;
         }
 
         return $this->render($template, [

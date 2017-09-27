@@ -117,7 +117,7 @@ class Redirector
             }
 
             // incomplete user info
-            if (!$user->hasDetails()) {
+            if (!$user->hasAddressDetails()) {
                 $route = 'user_details';
             }
 

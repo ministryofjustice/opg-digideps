@@ -729,7 +729,7 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function hasDetails()
+    public function hasAddressDetails()
     {
         return ( !empty($this->getAddress1())
               && !empty($this->getAddressCountry())
