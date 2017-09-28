@@ -84,6 +84,14 @@ security:
            pattern: ^/document/hard-delete/
            security: false
            methods: [DELETE]
+        reportSubmissionGetOld:
+           pattern: ^/report-submission/old
+           security: false
+           #methods: [GET]
+        reportSubmissionSetUndownloadable:
+           pattern: ^/report-submission/\d+/set-undownloadable
+           security: false
+           #methods: [PUT]
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
