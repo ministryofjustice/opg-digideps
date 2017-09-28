@@ -363,4 +363,26 @@ class ReportController extends RestController
         ];
     }
 
+    /**
+     * @Route("/{id}/submit-documents", requirements={"id":"\d+"})
+     * @Method({"PUT"})
+     */
+    public function submitDocuments(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
+
+        $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+        /* @var $currentReport Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
+
+        $data = $this->deserializeBodyContent($request);
+
+        // submit and create new year's report
+        $report = $this->get('opg_digideps.report_service')
+            ->submitAdditionalDocuments($currentReport, $this->getUser(), new \DateTime());
+
+        //response to pass back
+        return ['reportId' => $currentReport->getId()];
+    }
+
 }
