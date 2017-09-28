@@ -523,6 +523,10 @@ class Report
         return;
     }
 
+    /**
+     * @param array $transfers
+     * @return $this
+     */
     public function setMoneyTransfers(array $transfers)
     {
         $this->moneyTransfers = $transfers;
@@ -732,6 +736,11 @@ class Report
         return $this->action ?: new Action();
     }
 
+    /**
+     * @param Action $action
+     *
+     * @return Report
+     */
     public function setAction(Action $action)
     {
         $this->action = $action;
@@ -989,11 +998,14 @@ class Report
     }
 
     /**
-     * @param array $sectionsSettings
+     * @param $sectionsSettings
+     * @return $this
      */
     public function setSectionsSettings($sectionsSettings)
     {
         $this->sectionsSettings = $sectionsSettings;
+
+        return $this;
     }
 
     /**

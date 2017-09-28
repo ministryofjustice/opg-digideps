@@ -25,6 +25,7 @@ monolog:
    handlers:
        main:
            formatter: line_formatter
+           channels: [ "!translation" ]
 
 jms_serializer:
     metadata:
