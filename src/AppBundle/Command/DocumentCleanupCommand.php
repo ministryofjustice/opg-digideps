@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Exception\RestClientException;
+use AppBundle\Service\DocumentService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,10 +21,9 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     const REDIS_LOCK_KEY = 'dd_docs_cleanup';
 
     /**
-     * Expire locks after this number of seconds.
-     * this value should be bigger than the time taken to delete a single document
+     * Expire locks after this number of second, so that a abnormal script termination won't lock it forever
      */
-    const REDIS_LOCK_EXPIRE_SECONDS = 60;
+    const REDIS_LOCK_EXPIRE_SECONDS = 600;
 
     protected function configure()
     {
@@ -31,117 +31,43 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             ->setName('digideps:documents-cleanup')
             ->addOption('ignore-s3-failures', null, InputOption::VALUE_NONE, 'Hard-delete db entry even if the S3 deletion fails')
             ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
+            ->addOption('skip-admin-check', null, InputOption::VALUE_NONE, 'skip the check requiring env==admin')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // skip if launched from FRONTEND container
-        if ($this->getContainer()->getParameter('env') !== 'admin') {
+        if (!$input->getOption('skip-admin-check') && $this->getContainer()->getParameter('env') !== 'admin') {
             $output->writeln('This command can only be executed from admin container');
-            exit(1);
+            return 1;
         }
 
-        // manual lock release
+        // manual lock release and exit
         if ($input->getOption('release-lock')) {
-            $this->releaseLock($output);
+            $this->releaseLock();
+            $output->writeln('Lock released. You can now relaunch.');
             return 0;
         }
 
         // exit if locked
+        // $this->getContainer()->getParameter('kernel.debug')
         if (!$this->acquireLock($output)) {
+            $output->writeln('Locked. try later or launch with unlock flag.');
             return 1;
         }
 
-        $this->cleanUpAllDocuments($input, $output);
+        $ignoreS3Failures = $input->getOption('ignore-s3-failures');
+        $documentService = $this->getContainer()->get('document_service');
+
+        /* @var $documentService DocumentService */
+        $documentService->removeSoftDeleted($ignoreS3Failures);
+        $documentService->removeOldReportSubmissions($ignoreS3Failures);
 
         $this->releaseLock($output);
     }
 
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
-    protected function cleanUpAllDocuments(InputInterface $input, OutputInterface $output)
-    {
-        $ignoreS3Failure = $input->getOption('ignore-s3-failures');
-
-        $documents = $this->getRestClient()->apiCall('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false);
-        $toDelete = count($documents);
-        $count = 0;
-        /* @var $documents Document[] */
-        $this->log('info', count($documents) . ' documents to delete:');
-        foreach ($documents as $document) {
-            $count += $this->cleanUpSingleDocument($document, $ignoreS3Failure) ? 1 : 0;
-        }
-
-        $this->log('info', "Done. $toDelete to hard-delete, $count deleted");
-    }
-
-    /**
-     * @param Document $document
-     * @param $ignoreS3Failure
-     *
-     * @return bool true if deleted from S3 and database
-     */
-    private function cleanUpSingleDocument(Document $document, $ignoreS3Failure)
-    {
-        $documentId = $document->getId();
-        $storageRef = $document->getStorageReference();
-
-        try {
-            $this->refreshLock();
-            $s3Result = $this->deleteFromS3($storageRef, $ignoreS3Failure);
-            if ($s3Result) {
-                $this->log('info', "deleting $storageRef from S3: success");
-            } else {
-                $this->log('warning', "deleting $storageRef from S3: " . (($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL')));
-            }
-
-            $endpointResult = $this->getRestClient()->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
-            if ($endpointResult) {
-                $this->log('info', "Document $documentId deleted successfully from db");
-            } else {
-                $this->log('error', "Document $documentId delete API failure");
-            }
-
-            return $s3Result && $endpointResult;
-        } catch (\RuntimeException $e) {
-            $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
-            if ($e instanceof RestClientException) {
-                $message .= print_r($e->getData(), true);
-            }
-
-            $this->log('error', $message);
-        }
-    }
-
-    /**
-     * @param string $ref
-     * @param bool   $ignoreS3Failure
-     *
-     * @return boolean true if delete is successful
-     *
-     * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
-     */
-    private function deleteFromS3($ref, $ignoreS3Failure)
-    {
-        $s3Storage = $this->getContainer()->get('s3_storage');
-
-        try {
-            $s3Storage->delete($ref);
-
-            return true;
-        } catch (\Exception $e) {
-            if ($ignoreS3Failure) {
-                $this->log('error', $e->getMessage());
-            } else {
-                throw $e;
-            }
-        }
-    }
-
-    private function refreshLock()
+    private function updateLockTtl()
     {
         $this->getRedis()->expire(self::REDIS_LOCK_KEY, self::REDIS_LOCK_EXPIRE_SECONDS);
     }
@@ -153,11 +79,10 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
     {
         $ret = $this->getRedis()->setnx(self::REDIS_LOCK_KEY, true) == 1;
         if ($ret) {
-            $this->refreshLock();
-            $this->log('info', 'Lock acquired');
+            $this->updateLockTtl();
         } else {
-            $ttl = $this->getRedis()->ttl(self::REDIS_LOCK_KEY);
-            $this->log('info', "Cannot acquire lock, already acquired. Expiring in $ttl seconds");
+            $currentTtl = $this->getRedis()->ttl(self::REDIS_LOCK_KEY);
+            $this->log('warning', "Cannot acquire lock, already acquired. Expiring in $currentTtl seconds");
         }
 
         return $ret;
@@ -168,8 +93,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
      */
     private function releaseLock()
     {
-        $this->log('info', 'Lock released');
-
         $this->getRedis()->del(self::REDIS_LOCK_KEY);
     }
 
@@ -181,13 +104,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         return $this->getContainer()->get('snc_redis.default');
     }
 
-    /**
-     * @return \AppBundle\Service\Client\RestClient|object
-     */
-    private function getRestClient()
-    {
-        return $this->getContainer()->get('rest_client');
-    }
 
     /**
      * Log message using the internal logger
@@ -203,4 +119,5 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             'cron' => 'digideps:documents-cleanup',
         ]]);
     }
+
 }

@@ -12,6 +12,7 @@
 >
     <testsuites>
         <testsuite name="Client unit tests">
+            <directory>Command</directory>
             <directory>Controller</directory>
             <directory>Entity</directory>
             <directory>EventListener</directory>
