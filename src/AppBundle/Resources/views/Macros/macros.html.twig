@@ -104,7 +104,6 @@
         ] %}
     {% else %}
 
-        {# when all merged and stable, remove the section option and use the key #}
         {% set routeParams = {'reportId': report.id} %}
 
         {# all the possible section for all the reports (A-Z order) #}
@@ -129,20 +128,27 @@
             'visitsCare': {'section':'visitsCare','link': path('visits_care', routeParams)},
         } %}
 
-        {# Order for all the possible section in Lay and PA (*-6) reports #}
+        {# Order for all the possible section in Lay and PA (*-6) reports. Must follow the order in the overview templates #}
         {% set sectionIdOrder = ('-6' in report.type) ?
             [
-                'decisions', 'contacts', 'visitsCare', 'lifestyle', 'paDeputyExpenses',
-                'gifts', 'actions', 'otherInfo',
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'paDeputyExpenses',
+                'gifts',
+                'actions', 'otherInfo',
                 'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
-                'assets', 'debts', 'documents']
+                'assets', 'debts',
+                'documents'
+            ]
             : [
-                'decisions', 'contacts', 'visitsCare', 'lifestyle', 'paDeputyExpenses', 'deputyExpenses', 'gifts',
-                'actions', 'otherInfo',
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'deputyExpenses',
+                'gifts',
                 'bankAccounts', 'moneyTransfers',
                 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
-                'assets', 'debts', 'documents'
+                'assets', 'debts',
+                'actions', 'otherInfo',
+                'documents'
             ]
         %}
         {# first and last link #}
