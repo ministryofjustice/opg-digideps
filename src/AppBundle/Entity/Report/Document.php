@@ -46,6 +46,8 @@ class Document
     private $fileName;
 
     /**
+     * Set to null when documents belong to a reportSubmission and documentsAvailable is set to false
+     *
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"document-storage-reference"})
@@ -96,7 +98,6 @@ class Document
     {
         $this->report = $report;
 //        $report->addDocument($this);
-        $this->archived = false;
         $this->isReportPdf = true;
     }
 

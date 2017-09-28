@@ -97,4 +97,26 @@ class ReportSubmissionRepository extends EntityRepository
             'records'=>$records
         ];
     }
+
+    /**
+     * @param \DateTime $olderThan
+     * @param integer $limit
+     *
+     * @return ReportSubmission[]
+     */
+    public function findDownloadableOlderThan(\DateTime $olderThan, $limit)
+    {
+        $qb = $this->createQueryBuilder('rs');
+        $qb
+            ->leftJoin('rs.report', 'r')
+            ->leftJoin('rs.documents', 'd')
+            ->where('rs.createdOn <= :olderThan')
+            ->andWhere('rs.downloadable = true')
+            ->setParameter(':olderThan', $olderThan);
+
+        $qb->setMaxResults($limit);
+
+       return $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
+
+    }
 }
