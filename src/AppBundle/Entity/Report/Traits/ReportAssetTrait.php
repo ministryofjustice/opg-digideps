@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportAssetTrait
@@ -25,7 +26,7 @@ trait ReportAssetTrait
     /**
      * @param array $assets
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setAssets($assets)
     {

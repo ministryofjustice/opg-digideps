@@ -73,6 +73,7 @@
                 'transactionsExist': report.moneyTransactionsShortInExist,
                 'transactionsTitle': 'Items of income over £1,000',
                 'existQuestion' : 'Have there been any items of income over £1,000? ',
+                'totalText': 'Money in total'
                 } %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
                 'title': 'Money out',
@@ -81,14 +82,15 @@
                 'transactionsExist': report.moneyTransactionsShortOutExist,
                 'transactionsTitle': 'Expenses over £1,000',
                 'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
-
+                'totalText': 'Money out total'
                 } %}
             </div>
         {% endif %}
 
-        {% if report.has106Flag %}
+        {% if report.hasSection('paDeputyExpenses') %}
             {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
-        {% else %}
+        {% endif %}
+        {% if report.hasSection('deputyExpenses') %}
             {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
         {% endif %}
 
@@ -98,7 +100,7 @@
             {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
         {% endif %}
 
-        {% if report.action is not null %}
+        {% if report.hasSection('actions') %}
             {% include 'AppBundle:Report/Formatted:_action.html.twig' with {
             'action': report.action
             } %}
