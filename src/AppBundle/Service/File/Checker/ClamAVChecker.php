@@ -59,26 +59,21 @@ class ClamAVChecker implements FileCheckerInterface
         $response = $this->getScanResults($file);
 
         $file->setScanResult($response);
-        $fileName = $file->getUploadedFile()->getClientOriginalName();
 
         $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
         $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
         $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
 
-            if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') {
-                $this->log(Logger::WARNING, 'file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-                throw new RiskyFileException('PDF file scan failed');
-            }
+        $level = $response['file_scanner_result'] == 'PASS' ? Logger::INFO : Logger::ERROR;
+        $this->log($level, 'File scan result', $file->getUploadedFile(), $response);
 
-           $this->log(Logger::INFO, 'File scan passed for ' . $file->getUploadedFile()->getClientOriginalName() .
-                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-        if ($fileScannerResult === 'PASS') {
-            $this->log(Logger::WARNING, "Scan result of $fileName: PASS");
-            return true;
+        if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') { // STILL NEEDED ?
+            throw new RiskyFileException('PDF file scan failed');
         }
 
-        $this->log(Logger::WARNING, "Scan result of $fileName: $fileScannerResult, $fileScannerMessage (code $fileScannerCode)");
+        if ($fileScannerResult === 'PASS') {
+            return true;
+        }
 
         switch($fileScannerCode) {
             case 'AV_FAIL':
@@ -122,7 +117,7 @@ class ClamAVChecker implements FileCheckerInterface
             }
 
             if (!array_key_exists('file_scanner_result', $statusResponse)) {
-                $this->log(Logger::WARNING, 'Maximum attempts at contacting clamAV for status. Unable to retrieve complete scan result ' . $statusResponse);
+                $this->log(Logger::ERROR, 'Maximum attempts at contacting clamAV for status. Unable to retrieve complete scan result ' . $statusResponse);
             }
 
             return $statusResponse;
@@ -145,8 +140,6 @@ class ClamAVChecker implements FileCheckerInterface
     {
         $fullFilePath = $file->getUploadedFile()->getPathName();
 
-        $this->log(Logger::DEBUG, 'Sending file: ' . $fullFilePath . '  to scanner');
-
         $request = $this->client->createRequest('POST', $file->getScannerEndpoint());
         $postBody = $request->getBody();
         $postBody->addFile(
@@ -159,8 +152,6 @@ class ClamAVChecker implements FileCheckerInterface
             throw new \RuntimeException('ClamAV not available');
         }
         $result = json_decode($response->getBody()->getContents(), true);
-
-        $this->log(Logger::DEBUG, 'Scanner send result: ' . json_encode($result));
 
         return $result;
     }
@@ -178,17 +169,35 @@ class ClamAVChecker implements FileCheckerInterface
         $response = $this->client->get($location);
         $result = json_decode($response->getBody()->getContents(), true);
 
-        $this->log(Logger::DEBUG, 'Scan status result for location: ' . $location . ': ' . json_encode($result));
+        $this->log(Logger::DEBUG, 'Scan status result for location: ' . $location . ': ');
 
         return $result;
     }
 
+
     /**
-     * @param string $level
-     * @param string $message
+     * @param $level
+     * @param $message
+     * @param UploadedFile|null $file
+     * @param array|null $response
      */
-    private function log($level, $message)
+    private function log($level, $message, UploadedFile $file = null, array $response = null)
     {
-        $this->logger->log($level, $message);
+        $extra = ['service' => 'clam_av_checker'];
+
+        if ($file) {
+            $extra['fileName']  = $file->getClientOriginalName();
+        }
+
+        if ($response) {
+            $extra += [
+            'file_scanner_code' => $response['file_scanner_code'],
+            'file_scanner_result' => $response['file_scanner_result'], //could be omitted
+            'file_scanner_message' => $response['file_scanner_message'],
+            'file_scanner_message' => $response['file_scanner_message']
+            ];
+        }
+
+        $this->logger->log($level, $message, ['extra' => $extra]);
     }
 }
