@@ -48,7 +48,7 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @Route("/{id}")
+     * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
@@ -85,5 +85,53 @@ class ReportSubmissionController extends RestController
         $this->getEntityManager()->flush();
 
         return $reportSubmission->getId();
+    }
+
+
+    /**
+     * Get old report submissions.
+     * Called from ADMIN cron
+     *
+     * @Route("/old")
+     * @Method({"GET"})
+     */
+    public function getOld(Request $request)
+    {
+        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
+        }
+
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+
+        $ret = $repo->findDownloadableOlderThan(new \DateTime(EntityDir\Report\ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
+
+        $this->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
+
+        return $ret;
+    }
+
+    /**
+     * Set report undownloadable (and remove the storage reference for the files.
+     * Called from ADMIN cron
+     *
+     * @Route("/{id}/set-undownloadable", requirements={"id":"\d+"})
+     * @Method({"PUT"})
+     */
+    public function setUndownloadable($id, Request $request)
+    {
+        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+        }
+
+        /* @var $reportSubmission EntityDir\Report\ReportSubmission */
+        $reportSubmission = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
+        $reportSubmission->setDownloadable(false);
+        foreach($reportSubmission->getDocuments() as $document) {
+            $document->setStorageReference(null);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return true;
     }
 }
