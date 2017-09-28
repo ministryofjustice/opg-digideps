@@ -287,12 +287,28 @@ class DocumentController extends AbstractController
         $fromPage = $request->get('from');
 
         $backLink = $this->generateUrl('documents_step', ['reportId' => $reportId, 'step' => 2]);
+        $nextLink = $this->generateUrl('report_documents_submit_more_confirmed', ['reportId' => $reportId]);
 
         return [
             'report'   => $report,
             'backLink' => $backLink,
+            'nextLink' => $nextLink,
             'fromPage' => $fromPage
         ];
+    }
+
+    /**
+     * Confirmed send additional documents.
+     *
+     * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
+     * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirmed.html.twig")
+     */
+    public function submitMoreConfirmedAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId, self::$jmsGroups);
+
+        $request->getSession()->getFlashBag()->add('notice', 'Additional files have been sent');
+        return $this->redirectToRoute('report_documents', ['reportId' => $report->getId(), 'step' => 2]);
     }
 
     /**

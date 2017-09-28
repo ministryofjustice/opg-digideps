@@ -68,3 +68,14 @@ summaryPage:
   dateAttached: Date attached
   deleteDocument: Remove
   setNoAttemptWithDocuments: "Your answer could not be updated to 'No' because you have attached documents. Please remove all attached documents before changing your answer."
+
+submitMoreDocumentsConfirm:
+  supportTitle: Attach documents
+  h1Title: Confirm submission
+  question: Please confirm you would like to send us some additional documents for this report by pressing the continue button below.
+  documentListPrevious: Documents you have already sent
+  documentListNew: New documents you are about to send
+  filename: Filename
+  dateAttached: Date attached
+  deleteDocument: Remove
+  noDocuments: No documents
