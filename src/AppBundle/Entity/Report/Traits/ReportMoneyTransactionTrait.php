@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportMoneyTransactionTrait
@@ -62,6 +63,7 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param Transaction[] $moneyTransactionsIn
+     * @return Report
      */
     public function setMoneyTransactionsIn($moneyTransactionsIn)
     {
@@ -80,6 +82,7 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param Transaction[] $moneyTransactionsOut
+     * @return Report
      */
     public function setMoneyTransactionsOut($moneyTransactionsOut)
     {
@@ -129,6 +132,8 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param float $moneyInTotal
+     *
+     * @return Report
      */
     public function setMoneyInTotal($moneyInTotal)
     {
@@ -147,6 +152,8 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param float $moneyOutTotal
+     *
+     * @return Report
      */
     public function setMoneyOutTotal($moneyOutTotal)
     {

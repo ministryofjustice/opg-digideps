@@ -11,4 +11,4 @@ services:
 
     deputy_provider:
         class:  AppBundle\Service\DeputyProvider
-        arguments: [ @rest_client, @logger ]
+        arguments: [ "@rest_client", "@logger" ]
