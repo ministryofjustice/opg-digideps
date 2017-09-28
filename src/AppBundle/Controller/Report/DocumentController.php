@@ -104,7 +104,6 @@ class DocumentController extends AbstractController
     public function step2Action(Request $request, $reportId)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
-
         if (!$report->isSubmitted()) {
             if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
                 && 'yes' !== $report->getWishToProvideDocumentation()
@@ -113,8 +112,10 @@ class DocumentController extends AbstractController
             } elseif ($report->getWishToProvideDocumentation() === 'no') {
                 return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
             }
+            $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
+            $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
             $backLink = $this->generateUrl('homepage');
         }
 
@@ -176,7 +177,7 @@ class DocumentController extends AbstractController
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
             'backLink' => $backLink,
-            'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
+            'nextLink' => $nextLink,
             'form'     => $form->createView(),
         ];
     }
@@ -271,6 +272,27 @@ class DocumentController extends AbstractController
         }
 
         return $this->redirect($returnUrl);
+    }
+
+    /**
+     * Confirm additional documents form
+     *
+     * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
+     * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirm.html.twig")
+     */
+    public function submitMoreConfirmAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId, self::$jmsGroups);
+
+        $fromPage = $request->get('from');
+
+        $backLink = $this->generateUrl('documents_step', ['reportId' => $reportId, 'step' => 2]);
+
+        return [
+            'report'   => $report,
+            'backLink' => $backLink,
+            'fromPage' => $fromPage
+        ];
     }
 
     /**
