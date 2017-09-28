@@ -3,6 +3,7 @@ startPage:
   pageSectionTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
+
   whatisMentalCapacitySummary: What is mental capacity?
   whatisMentalCapacityPara1: |
     'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
@@ -37,8 +38,7 @@ mentalCapacity:
   form:
     hasCapacityChanged:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
-      label-104: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
-      hint: ""
+      label-104: "Has %client%'s mental capacity to make health and welfare decisions changed?"
     hasCapacityChangedDetails:
         label: "Please tell us more."
         hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
