@@ -318,7 +318,6 @@ class Report
     private $documents;
 
     /**
-     * @JMS\Groups({"report-submissions"})
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
      */
