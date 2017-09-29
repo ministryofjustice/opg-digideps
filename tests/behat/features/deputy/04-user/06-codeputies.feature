@@ -1,6 +1,6 @@
 Feature: Codeputy Self Registration
 
-  @deputy @jack
+  @deputy
   Scenario: Codeps setup
     Given I load the application status from "init"
     And I truncate the users from CASREC:
@@ -147,7 +147,6 @@ Feature: Codeputy Self Registration
     Then the URL should match "/lay"
     Then I go to "/logout"
 
-
   @deputy
   Scenario: The first co-deputy logs in and sees the deputy area and invites a codeputy
     Given emails are sent from "deputy" area
@@ -172,10 +171,142 @@ Feature: Codeputy Self Registration
     And I reset the email log
     When I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
     And I click on "resend-invite"
-    Then the URL should match "/codeputy/\d+/add"
     When I press "co_deputy_invite_submit"
     Then the URL should match "/lay"
     And I should see "behat-jack.goodby+mld2@digital.justice.gov.uk" in the "codeputies" region
     And I should see "Awaiting registration" in the "codeputies" region
     And I should see "Edit/Resend invite" in the "codeputies" region
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@digital.justice.gov.uk"
+
+  @deputy
+  Scenario: The first co-deputy re-invites a deputy (different email address)
+    Given emails are sent from "deputy" area
+    And I reset the email log
+    When I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
+    And I click on "resend-invite"
+    When I fill in the following:
+      | co_deputy_invite_email       | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+    And I press "co_deputy_invite_submit"
+    Then the URL should match "/lay"
+    And I should see "behat-jack.goodby+mld2a@digital.justice.gov.uk" in the "codeputies" region
+    And I should see "Awaiting registration" in the "codeputies" region
+    And I should see "Edit/Resend invite" in the "codeputies" region
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2a@digital.justice.gov.uk"
+
+  @deputy
+  Scenario: The second codeputy of a client is able to self register
+    Given emails are sent from "deputy" area
+    When I open the "/user/activate/" link from the email
+    When I fill in the following:
+      | set_password_password_first  | Abcd1234 |
+      | set_password_password_second | Abcd1234 |
+    And I press "set_password_save"
+    Then the URL should match "/codeputy/verification"
+
+    #nothing
+    When I press "co_deputy_save"
+    Then the following fields should have an error:
+      | co_deputy_firstname        |
+      | co_deputy_lastname         |
+      | co_deputy_address1         |
+      | co_deputy_addressPostcode  |
+      | co_deputy_addressCountry   |
+      | co_deputy_phoneMain        |
+      | co_deputy_clientLastname   |
+      | co_deputy_clientCaseNumber |
+
+    #Wrong Deputy surname (fails casrec check and non specific error displayed)
+    Given I fill in the following:
+      | co_deputy_firstname        | Bob                                            |
+      | co_deputy_lastname         | Moo                                            |
+      | co_deputy_address1         | Some Street                                    |
+      | co_deputy_addressPostcode  | DY8 1QR                                        |
+      | co_deputy_addressCountry   | GB                                             |
+      | co_deputy_phoneMain        | 1234567890                                     |
+      | co_deputy_email            | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+      | co_deputy_clientLastname   | Jarvis                                         |
+      | co_deputy_clientCaseNumber | 11111111                                       |
+    When I press "co_deputy_save"
+    Then I should see a "#error-summary" element
+
+    #Wrong Postcode (fails casrec check and non specific error displayed)
+    Given I fill in the following:
+      | co_deputy_firstname        | Bob                                            |
+      | co_deputy_lastname         | Hale                                           |
+      | co_deputy_address1         | Some Street                                    |
+      | co_deputy_addressPostcode  | MOO 1OO                                        |
+      | co_deputy_addressCountry   | GB                                             |
+      | co_deputy_phoneMain        | 1234567890                                     |
+      | co_deputy_email            | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+      | co_deputy_clientLastname   | Jarvis                                         |
+      | co_deputy_clientCaseNumber | 11111111                                       |
+    When I press "co_deputy_save"
+    Then I should see a "#error-summary" element
+
+    #Wrong Client last name (fails casrec check and non specific error displayed)
+    Given I fill in the following:
+      | co_deputy_firstname        | Bob                                            |
+      | co_deputy_lastname         | Hale                                           |
+      | co_deputy_address1         | Some Street                                    |
+      | co_deputy_addressPostcode  | DY8 1QR                                        |
+      | co_deputy_addressCountry   | GB                                             |
+      | co_deputy_phoneMain        | 1234567890                                     |
+      | co_deputy_email            | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+      | co_deputy_clientLastname   | Moo                                         |
+      | co_deputy_clientCaseNumber | 11111111                                       |
+    When I press "co_deputy_save"
+    Then I should see a "#error-summary" element
+
+    #Wrong Client number (fails casrec check and non specific error displayed)
+    Given I fill in the following:
+      | co_deputy_firstname        | Bob                                            |
+      | co_deputy_lastname         | Hale                                           |
+      | co_deputy_address1         | Some Street                                    |
+      | co_deputy_addressPostcode  | DY8 1QR                                        |
+      | co_deputy_addressCountry   | GB                                             |
+      | co_deputy_phoneMain        | 1234567890                                     |
+      | co_deputy_email            | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+      | co_deputy_clientLastname   | Jarvis                                         |
+      | co_deputy_clientCaseNumber | 11111MOO                                       |
+    When I press "co_deputy_save"
+    Then I should see a "#error-summary" element
+
+    #Correct
+    Given I fill in the following:
+      | co_deputy_firstname        | Bob                                            |
+      | co_deputy_lastname         | Hale                                           |
+      | co_deputy_address1         | Some Street                                    |
+      | co_deputy_addressPostcode  | DY8 1QR                                        |
+      | co_deputy_addressCountry   | GB                                             |
+      | co_deputy_phoneMain        | 1234567890                                     |
+      | co_deputy_email            | behat-jack.goodby+mld2a@digital.justice.gov.uk |
+      | co_deputy_clientLastname   | Jarvis                                         |
+      | co_deputy_clientCaseNumber | 11111111                                       |
+    When I press "co_deputy_save"
+    Then the form should be valid
+    And I should be on "/lay"
+    And I should see "Bob Hale" in the "codeputies" region
+    And I should see "Jack Goodby" in the "codeputies" region
+    And I should see "Registered" in the "codeputies" region
+    And I should not see "Awaiting registration" in the "codeputies" region
+    And I should not see "Edit/Resend invite" in the "codeputies" region
+
+  @deputy
+  Scenario: The second codeputy of a client is able to invite a third
+    Given emails are sent from "deputy" area
+    And I reset the email log
+    When I am logged in as "behat-jack.goodby+mld2a@digital.justice.gov.uk" with password "Abcd1234"
+    Then the URL should match "/lay"
+    And I should see the "codeputies" region
+    And I should not see "Awaiting registration" in the "codeputies" region
+    And I should not see "Edit/Resend invite" in the "codeputies" region
+    And I click on "invite-codeputy-button"
+    Then the URL should match "/codeputy/\d+/add"
+    When I fill in the following:
+      | co_deputy_invite_email       | behat-jack.goodby+mld3@digital.justice.gov.uk |
+    And I press "co_deputy_invite_submit"
+    Then the URL should match "/lay"
+    And I should see "behat-jack.goodby+mld3@digital.justice.gov.uk" in the "codeputies" region
+    And I should see "Awaiting registration" in the "codeputies" region
+    And I should see "Edit/Resend invite" in the "codeputies" region
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld3@digital.justice.gov.uk"
