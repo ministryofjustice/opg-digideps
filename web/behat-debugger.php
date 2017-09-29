@@ -1,9 +1,5 @@
 <?php
-// auth check
-$isLocalBox = strpos($_SERVER['SERVER_NAME'], '.local') !== false;
-$isJenkinsBox = strpos($_SERVER['SERVER_NAME'], '.dev.dd.opg.digital') !== false;
-//$enableBehatDebuggerEnvVar = isset($_SERVER['FRONTEND_ENABLE_BEHAT_DEBUGGER']) && $_SERVER['FRONTEND_ENABLE_BEHAT_DEBUGGER'] == 1;
-if (!$isLocalBox && !$isJenkinsBox) {
+if (!preg_match('(localhost|\.local)', $_SERVER['SERVER_NAME'])) {
     http_response_code(404);
     header('HTTP/1.1 404 Not Found');
     die;
