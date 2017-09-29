@@ -171,7 +171,7 @@ Feature: Codeputy Self Registration
     Given emails are sent from "deputy" area
     And I reset the email log
     When I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
-    And I click on "Edit/Resend invite"
+    And I click on "resend-invite"
     Then the URL should match "/codeputy/\d+/add"
     When I press "co_deputy_invite_submit"
     Then the URL should match "/lay"

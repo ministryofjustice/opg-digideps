@@ -37,7 +37,7 @@
                 <td>{{ deputy.email }}</td>
                 <td>Awaiting registration</td>
                 <td class="change-answer">
-                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-resend-invite-link">Edit/Resend invite</a>
+                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite">Edit/Resend invite</a>
                 </td>
             </tr>
         {% endif %}
