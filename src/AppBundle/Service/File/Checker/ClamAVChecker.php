@@ -9,6 +9,7 @@ use AppBundle\Service\File\Types\UploadableFileInterface;
 use AppBundle\Service\File\Types\Pdf;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\ResponseInterface;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -58,36 +59,30 @@ class ClamAVChecker implements FileCheckerInterface
         $response = $this->getScanResults($file);
 
         $file->setScanResult($response);
-        $fileName = $file->getUploadedFile()->getClientOriginalName();
 
-        $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
-        $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
-        $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
+        $isResultPass = strtoupper(trim($response['file_scanner_result'])) === 'PASS';
 
-            if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') {
-                $this->logger->warning('file scan result failed in ' . $file->getUploadedFile()->getClientOriginalName() .
-                    ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-                throw new RiskyFileException('PDF file scan failed');
-            }
+        // log results
+        $level = $isResultPass ? Logger::INFO : Logger::ERROR;
+        $this->log($level, 'File scan result', $file->getUploadedFile(), $response);
 
-            $this->logger->info('File scan passed for ' . $file->getUploadedFile()->getClientOriginalName() .
-                ' - ' . $file->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($response));
-        if ($fileScannerResult === 'PASS') {
-            $this->logger->warning("Scan result of $fileName: PASS");
+        if ($file instanceof Pdf && !$isResultPass) { // @shaun STILL NEEDED ? wouldn't this case go in the next "switch"
+            throw new RiskyFileException('PDF file scan failed');
+        }
+
+        if ($isResultPass) {
             return true;
         }
 
-        $this->logger->warning("Scan result of $fileName: $fileScannerResult, $fileScannerMessage (code $fileScannerCode)");
-
-        switch($fileScannerCode) {
+        switch(strtoupper(trim($response['file_scanner_code']))) {
             case 'AV_FAIL':
-                throw new VirusFoundException('Found virus in file');
+                throw new VirusFoundException();
             case 'PDF_INVALID_FILE':
             case 'PDF_BAD_KEYWORD':
-                throw new RiskyFileException('Invalid PDF');
+                throw new RiskyFileException();
         }
 
-        throw new RuntimeException($fileScannerMessage);
+        throw new RuntimeException("Files scanner FAIL. Unrecognised code. Full response: ". print_r($response));
     }
 
     /**
@@ -111,7 +106,7 @@ class ClamAVChecker implements FileCheckerInterface
                 $statusResponse = $this->makeStatusRequest($result['location']);
 
                 if ($statusResponse === false) {
-                    $this->logger->critical('Scanner response could not be decoded');
+                   $this->log(Logger::CRITICAL, 'Scanner response could not be decoded');
                     throw new \RunTimeException('Unable to contact file scanner');
                 }
 
@@ -121,13 +116,13 @@ class ClamAVChecker implements FileCheckerInterface
             }
 
             if (!array_key_exists('file_scanner_result', $statusResponse)) {
-                $this->logger->warning('Maximum attempts at contacting clamAV for status. Unable to retrieve complete scan result ' . $statusResponse);
+                $this->log(Logger::ERROR, 'Maximum attempts at contacting clamAV for status. Unable to retrieve complete scan result ' . $statusResponse);
             }
 
             return $statusResponse;
 
         } catch (\Exception $e) {
-            $this->logger->critical('Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
+           $this->log(Logger::CRITICAL, 'Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
 
             throw new \RunTimeException($e);
         }
@@ -144,8 +139,6 @@ class ClamAVChecker implements FileCheckerInterface
     {
         $fullFilePath = $file->getUploadedFile()->getPathName();
 
-        $this->logger->debug('Sending file: ' . $fullFilePath . '  to scanner');
-
         $request = $this->client->createRequest('POST', $file->getScannerEndpoint());
         $postBody = $request->getBody();
         $postBody->addFile(
@@ -159,8 +152,6 @@ class ClamAVChecker implements FileCheckerInterface
         }
         $result = json_decode($response->getBody()->getContents(), true);
 
-        $this->logger->debug('Scanner send result: ' . json_encode($result));
-
         return $result;
     }
 
@@ -172,13 +163,40 @@ class ClamAVChecker implements FileCheckerInterface
      */
     private function makeStatusRequest($location)
     {
-        $this->logger->debug('Quering scan status for location: ' . $location);
+        $this->log(Logger::DEBUG, 'Quering scan status for location: ' . $location);
 
         $response = $this->client->get($location);
         $result = json_decode($response->getBody()->getContents(), true);
 
-        $this->logger->debug('Scan status result for location: ' . $location . ': ' . json_encode($result));
+        $this->log(Logger::DEBUG, 'Scan status result for location: ' . $location . ': ');
 
         return $result;
+    }
+
+
+    /**
+     * @param $level
+     * @param $message
+     * @param UploadedFile|null $file
+     * @param array|null $response
+     */
+    private function log($level, $message, UploadedFile $file = null, array $response = null)
+    {
+        $extra = ['service' => 'clam_av_checker'];
+
+        if ($file) {
+            $extra['fileName']  = $file->getClientOriginalName();
+        }
+
+        if ($response) {
+            $extra += [
+            'file_scanner_code' => $response['file_scanner_code'],
+            'file_scanner_result' => $response['file_scanner_result'], //could be omitted
+            'file_scanner_message' => $response['file_scanner_message'],
+            'file_scanner_message' => $response['file_scanner_message']
+            ];
+        }
+
+        $this->logger->log($level, $message, ['extra' => $extra]);
     }
 }
