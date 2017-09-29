@@ -223,7 +223,7 @@ class IndexController extends AbstractController
         $client = $odr->getClient();
         $users = $client->getUsers();
 
-        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]]));
+        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]->getId()]));
     }
 
     /**

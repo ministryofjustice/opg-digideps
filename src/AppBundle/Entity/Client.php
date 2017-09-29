@@ -42,7 +42,7 @@ class Client
     private $lastname;
 
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\User>")
      *
      * @var array
      */
@@ -205,9 +205,28 @@ class Client
         $this->reports = [];
     }
 
+    /**
+     * @return User[]
+     */
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return bool
+     */
+    public function hasUser(User $user)
+    {
+        foreach($this->users?:[] as $currentUser) {
+            if ((int)$user->getId() === (int)$currentUser->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function setUsers($users)

@@ -76,7 +76,7 @@ class NoteVoter extends Voter
             case self::ADD_NOTE:
                 if ($subject instanceof Client) {
                     /** @var Client $subject */
-                    return $this->clientBelongsToUserTeam($loggedInUser, $subject);
+                    return $subject->hasUser($loggedInUser);
                 }
                 return false;
             case self::EDIT_NOTE:
@@ -85,7 +85,7 @@ class NoteVoter extends Voter
                     $client = $subject->getClient();
                     if ($client instanceof Client) {
                         /** @var Note $subject */
-                        return $this->clientBelongsToUserTeam($loggedInUser, $subject->getClient());
+                        return $subject->getClient()->hasUser($loggedInUser);
                     }
                 }
                 return false;
@@ -94,16 +94,4 @@ class NoteVoter extends Voter
         return false;
     }
 
-    /**
-     * Does the logged in user belong to the client
-     *
-     * @param User   $loggedInUser
-     * @param Client $client
-     *
-     * @return bool
-     */
-    private function clientBelongsToUserTeam(User $loggedInUser, Client $client)
-    {
-        return in_array($loggedInUser->getId(), $client->getUsers());
-    }
 }
