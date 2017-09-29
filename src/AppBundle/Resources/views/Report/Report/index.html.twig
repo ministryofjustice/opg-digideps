@@ -44,14 +44,12 @@
 
         <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
-        <table class="behat-region-reports-history">
+        <table class="check-your-answers behat-region-reports-history">
             <thead>
                 <tr>
                     <th>{{ (page ~ '.reportType') | trans }}</th>
                     <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
                     <th>{{ (page ~ '.submissionDate') | trans }}</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
@@ -64,20 +62,16 @@
                         </a>
                     </td>
                     <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
-                    <td>{{ report.submitDate | date("j M Y") }}</td>
-                    <td>
+                    <td>{{ report.submitDate | date("j F Y") }}</td>
+                    <td class="width-sixth change-answer">
                         <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download">
                             {{ 'download' | trans({}, 'common') }}
-                        </a>
-                    </td>
-                    <td class="text--right hard--right">
-                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
+                        </a><br>
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review">
                             {{ 'view' | trans({}, 'common') }}
-                        </a>
-                    </td>
-                    <td class="text--right hard--right">
-                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="button-secondary behat-link-report-review">
-                            {{ 'attachMore' | trans({}, 'report-documents') }}
+                        </a><br>
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-report-review">
+                            {{ (page ~ '.attachDocuments') | trans }}
                         </a>
                     </td>
                 </tr>
