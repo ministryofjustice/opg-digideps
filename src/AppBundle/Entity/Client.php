@@ -214,6 +214,11 @@ class Client
     }
 
     /**
+     * Return true if the user (based on `getId()` comparison is present among the users.
+     * Return false if any of the user is not an instance of the User class or the ID is not present
+     *
+     * Mainly used from voters
+     *
      * @param $id
      *
      * @return bool
@@ -221,7 +226,9 @@ class Client
     public function hasUser(User $user)
     {
         foreach($this->users?:[] as $currentUser) {
-            if ((int)$user->getId() === (int)$currentUser->getId()) {
+            if ($user->getId()
+                && $currentUser instanceof User && $currentUser->getId()
+                && $user->getId() == $currentUser->getId()) {
                 return true;
             }
         }
