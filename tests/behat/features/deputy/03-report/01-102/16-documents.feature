@@ -55,9 +55,11 @@ Feature: Report documents
     And I click on "attach-file"
     Then the following fields should have an error:
       | report_document_upload_file   |
+    And I save the application status into "documents-before-delete"
 
   @deputy
   Scenario: Delete document
+    Given I load the application status from "documents-before-delete"
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-documents"
     # chose "yes documents"
@@ -71,7 +73,7 @@ Feature: Report documents
     And I click on "delete-documents-button" in the "document-list" region
     Then the response status code should be 200
     # delete this time
-    And I click on "delete-documents"
+    And I click on "document-delete"
     Then the URL should match "/report/\d+/documents/step/1"
     # chose "no documents" to make report submittable
     And the step with the following values CAN be submitted:
