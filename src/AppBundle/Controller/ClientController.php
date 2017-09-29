@@ -80,7 +80,6 @@ class ClientController extends AbstractController
             // new client
             $method = 'post';
             $client = new EntityDir\Client();
-            $client->addUser($this->getUser()->getId());
         }
 
         $form = $this->createForm(new FormDir\ClientType(), $client);
@@ -93,7 +92,7 @@ class ClientController extends AbstractController
 
             $url = $this->getUser()->isOdrEnabled() ?
                 $this->generateUrl('odr_index')
-                 :$this->generateUrl('report_create', ['clientId' => $response['id']]);
+                : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
             return $this->redirect($url);
         }
