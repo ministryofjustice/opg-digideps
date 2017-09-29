@@ -20,6 +20,7 @@ history:
     title: Current deputy report
     download: Download
     view: View
+    attachDocuments: Attach documents
   odr:
    title: New deputy report
    reportingPeriod: Start of deputyship
