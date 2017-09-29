@@ -53,7 +53,7 @@
                     <th>&nbsp;</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="behat-region-submitted-reports">
             {% for report in reportsSubmitted %}
                 <tr>
                     <td>
@@ -70,7 +70,7 @@
                         <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review">
                             {{ 'view' | trans({}, 'common') }}
                         </a><br>
-                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-report-attach-more">
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents">
                             {{ (page ~ '.attachDocuments') | trans }}
                         </a>
                     </td>

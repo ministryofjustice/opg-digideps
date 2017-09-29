@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <table class="check-your-answers push--bottom">
+    <table class="check-your-answers push--bottom behat-region-new-document-list">
         <thead>
             <tr>
                 <th>{{ (page ~ '.filename') | trans }}</th>
@@ -41,7 +41,7 @@
     </table>
 
     {% if page == 'attachPage' %}
-        <a href="{{ nextLink }}" class="button push-double--bottom">{{ (page ~ '.continueToSubmit') | trans }}</a>
+        <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.continueToSubmit') | trans }}</a>
     {% endif %}
 
 {% endif %}
@@ -52,7 +52,7 @@
 
     <h2 class="heading-medium flush--ends">{{ (page ~ '.documentListPrevious') | trans }}</h2>
 
-    <table class="check-your-answers text">
+    <table class="check-your-answers text behat-region-previous-submitted-document-list">
         <thead>
             <tr>
                 <th>{{ (page ~ '.filename') | trans }}</th>
