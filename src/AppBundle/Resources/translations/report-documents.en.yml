@@ -1,6 +1,5 @@
 htmlTitle: Supporting documents | GOV.UK
 pageTitle: Supporting documents
-attachMore: Attach documents
 
 form:
   submitButton: Upload file and attach document
@@ -30,11 +29,11 @@ attachPage:
   uploadHeading: 2. Upload the file
   noDocuments: No documents
   documentList: Attached documents
-  documentListPrevious: Previously attached documents
-  documentListNew: Newly attached documents
+  documentListPrevious: Previously submitted documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
+  continueToSubmit: Continue to submit documents
   pleaseWait: The file is being uploaded.
   uploadHint: |
     If the file takes more than 5 minutes to upload, please refresh the page and try again.

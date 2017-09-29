@@ -5,6 +5,7 @@ homepage:
   reportType: Report type
   reportingPeriod: Reporting period
   submissionDate: Submission date
+  attachDocuments: Attach documents
 
 # Edit reporting period page (Lay and PA)
 editReportingDates:

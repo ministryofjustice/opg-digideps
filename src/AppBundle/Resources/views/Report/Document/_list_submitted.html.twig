@@ -1,72 +1,33 @@
 {% set translationDomain = translationDomain %}
 {% trans_default_domain translationDomain %}
 
+{# Newly attached document list #}
 
-<div class="grid-row">
-    <div class="column-half">
-        <h2 class="heading-medium flush--ends">{{ (page ~ '.documentListPrevious') | trans }}</h2>
-    </div>
-    <div class="column-half text--right">
-        {% if page == 'summaryPage' and report.wishToProvideDocumentation == 'yes' %}
+{% if report.unsubmittedDocuments | length > 0 %}
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+        </div>
+        <div class="column-half text--right">
+        {% if page == 'submitMoreDocumentsConfirm' and report.wishToProvideDocumentation == 'yes' %}
             <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
             </a>
         {% endif %}
+        </div>
     </div>
-</div>
-<table class="check-your-answers">
-    <thead>
-    <th>{{ (page ~ '.filename') | trans }}</th>
-    <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
-    <th></th>
-    </thead>
-    <tbody class="behat-region-document-list">
-    {% if report.submittedDocuments | length > 0 %}
-        {% for document in report.submittedDocuments %}
+
+    <table class="check-your-answers push--bottom">
+        <thead>
             <tr>
-                <td>{{ document.fileName }}</td>
-                <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
-                <td>&nbsp;</td>
+                <th>{{ (page ~ '.filename') | trans }}</th>
+                <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
+                <th><span class="visually-hidden">Actions</span></th>
             </tr>
-        {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="3">{{ (page ~ '.noDocuments') | trans }}</td>
-        </tr>
-    {% endif %}
-    </tbody>
-</table>
-
-<!-- Newly attached document list -->
-
-<div class="grid-row">
-    {% if report.unsubmittedDocuments | length > 0 %}
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentListNew') | trans }}</h2>
-        </div>
-        <div class="column-half text--right">
-            {% if page == 'summaryPage' and report.wishToProvideDocumentation == 'yes' %}
-                <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
-                </a>
-            {% endif %}
-        </div>
-    {% else %}
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
-        </div>
-    {% endif %}
-</div>
-<table class="check-your-answers">
-    <thead>
-    <th>{{ (page ~ '.filename') | trans }}</th>
-    <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
-    <th></th>
-    </thead>
-    <tbody class="behat-region-document-list">
-    {% if report.unsubmittedDocuments | length > 0 %}
+        </thead>
+        <tbody class="behat-region-document-list">
         {% for document in report.unsubmittedDocuments %}
             <tr>
                 <td>{{ document.fileName }}</td>
@@ -76,10 +37,36 @@
                 </td>
             </tr>
         {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="2">{{ (page ~ '.noDocuments') | trans }}</td>
-        </tr>
+        </tbody>
+    </table>
+
+    {% if page == 'attachPage' %}
+        <a href="{{ nextLink }}" class="button push-double--bottom">{{ (page ~ '.continueToSubmit') | trans }}</a>
     {% endif %}
-    </tbody>
-</table>
+
+{% endif %}
+
+{# Previously submitted documents #}
+
+{% if page == 'attachPage' and report.submittedDocuments | length > 0 %}
+
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.documentListPrevious') | trans }}</h2>
+
+    <table class="check-your-answers text">
+        <thead>
+            <tr>
+                <th>{{ (page ~ '.filename') | trans }}</th>
+                <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
+            </tr>
+        </thead>
+        <tbody class="behat-region-document-list">
+        {% for document in report.submittedDocuments %}
+            <tr>
+                <td>{{ document.fileName }}</td>
+                <td class="numeric-small ">{{ document.createdOn | date("j F Y H:i") }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}
