@@ -860,9 +860,7 @@ class Report
      */
     public function getDocuments()
     {
-        return $this->documents->filter(function ($d) {
-            return !$d->isIsReportPdf();
-        });
+        return $this->documents;
     }
 
     /**
@@ -877,7 +875,7 @@ class Report
     public function getUnsubmittedDocuments()
     {
         return $this->getDocuments()->filter(function ($d) {
-            return empty($d->getReportSubmission());
+            return empty($d->getReportSubmission()) && !$d->isIsReportPdf();
         });
     }
 
@@ -893,7 +891,7 @@ class Report
     public function getSubmittedDocuments()
     {
         return $this->getDocuments()->filter(function ($d) {
-            return !empty($d->getReportSubmission());
+            return !empty($d->getReportSubmission()) && !$d->isIsReportPdf();
         });
     }
 
