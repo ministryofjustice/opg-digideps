@@ -60,30 +60,29 @@ class ClamAVChecker implements FileCheckerInterface
 
         $file->setScanResult($response);
 
-        $fileScannerResult = strtoupper(trim($response['file_scanner_result']));
-        $fileScannerCode = strtoupper(trim($response['file_scanner_code']));
-        $fileScannerMessage = strtoupper(trim($response['file_scanner_message']));
+        $isResultPass = strtoupper(trim($response['file_scanner_result'])) === 'PASS';
 
-        $level = $response['file_scanner_result'] == 'PASS' ? Logger::INFO : Logger::ERROR;
+        // log results
+        $level = $isResultPass ? Logger::INFO : Logger::ERROR;
         $this->log($level, 'File scan result', $file->getUploadedFile(), $response);
 
-        if ($file instanceof Pdf && $response['file_scanner_result'] !== 'PASS') { // STILL NEEDED ?
+        if ($file instanceof Pdf && !$isResultPass) { // @shaun STILL NEEDED ? wouldn't this case go in the next "switch"
             throw new RiskyFileException('PDF file scan failed');
         }
 
-        if ($fileScannerResult === 'PASS') {
+        if ($isResultPass) {
             return true;
         }
 
-        switch($fileScannerCode) {
+        switch(strtoupper(trim($response['file_scanner_code']))) {
             case 'AV_FAIL':
-                throw new VirusFoundException('Found virus in file');
+                throw new VirusFoundException();
             case 'PDF_INVALID_FILE':
             case 'PDF_BAD_KEYWORD':
-                throw new RiskyFileException('Invalid PDF');
+                throw new RiskyFileException();
         }
 
-        throw new RuntimeException($fileScannerMessage);
+        throw new RuntimeException("Files scanner FAIL. Unrecognised code. Full response: ". print_r($response));
     }
 
     /**
