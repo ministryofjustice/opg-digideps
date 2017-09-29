@@ -119,13 +119,9 @@ class UploadableFile implements UploadableFileInterface
      */
     public function callFileCheckers()
     {
-        foreach ($this->getFileCheckers() as $fc)
-        {
-            $this->getLogger()->warning('Calling File checker: ' . get_class($fc) );
-
+        foreach ($this->getFileCheckers() as $fc) {
             // send file
             $fc->checkFile($this);
-
         }
     }
 
@@ -154,9 +150,6 @@ class UploadableFile implements UploadableFileInterface
     public function isSafe()
     {
         $scanResult = $this->getScanResult();
-
-        $this->logger->warning('Confirming file is safe... ' . $this->getUploadedFile()->getClientOriginalName() .
-            ' - ' . $this->getUploadedFile()->getPathName() . '. Scan Result: ' . json_encode($scanResult));
 
         if (isset($scanResult['file_scanner_result']) && strtoupper($scanResult['file_scanner_result'] == 'PASS')) {
             return true;
