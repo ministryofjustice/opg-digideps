@@ -214,6 +214,10 @@ class DocumentController extends AbstractController
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
 
+        if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
+            throw new \RuntimeException('Docuemnt already submitted and cannot be removed.');
+        }
+
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
 
         $report = $document->getReport();
@@ -286,7 +290,7 @@ class DocumentController extends AbstractController
 
         $fromPage = $request->get('from');
 
-        $backLink = $this->generateUrl('documents_step', ['reportId' => $reportId, 'step' => 2]);
+        $backLink = $this->generateUrl('report_documents', ['reportId' => $reportId]);
         $nextLink = $this->generateUrl('report_documents_submit_more_confirmed', ['reportId' => $reportId]);
 
         return [
@@ -330,7 +334,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'status', 'document-report', 'report', 'client', 'user']
+            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'client', 'user']
         );
     }
 
