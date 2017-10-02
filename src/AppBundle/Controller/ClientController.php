@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClientController extends AbstractController
@@ -16,6 +17,12 @@ class ClientController extends AbstractController
      */
     public function showAction(Request $request)
     {
+        // redirect if user has missing details or is on wrong page
+        $user = $this->getUserWithData();
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_show')) {
+            return $this->redirectToRoute($route);
+        }
+
         $client = $this->getFirstClient();
 
         return [
@@ -58,19 +65,21 @@ class ClientController extends AbstractController
      */
     public function addAction(Request $request)
     {
-        $user = $this->getUserWithData(['user-clients', 'client']);
-        $clients = $user->getClients();
+        // redirect if user has missing details or is on wrong page
+        $user = $this->getUserWithData();
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'client_add')) {
+            return $this->redirectToRoute($route);
+        }
 
-        if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
+        $client = $this->getFirstClient();
+        if (!empty($client)) {
             // update existing client
             $method = 'put';
-            $client = $clients[0]; //existing client
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
         } else {
             // new client
             $method = 'post';
             $client = new EntityDir\Client();
-            $client->addUser($this->getUser()->getId());
         }
 
         $form = $this->createForm(new FormDir\ClientType(), $client);
@@ -83,11 +92,12 @@ class ClientController extends AbstractController
 
             $url = $this->getUser()->isOdrEnabled() ?
                 $this->generateUrl('odr_index')
-                 :$this->generateUrl('report_create', ['clientId' => $response['id']]);
+                : $this->generateUrl('report_create', ['clientId' => $response['id']]);
 
             return $this->redirect($url);
         }
 
         return ['form' => $form->createView()];
     }
+
 }

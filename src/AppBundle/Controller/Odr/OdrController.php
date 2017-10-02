@@ -43,14 +43,15 @@ class OdrController extends AbstractController
      */
     public function indexAction()
     {
+        // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(array_merge(self::$odrGroupsForValidation, ['status']));
-
-        // in case the user jumps to this page directly via URL
-        if (!$user->isOdrEnabled()) {
-            return $this->redirectToRoute('lay_home');
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'odr_index')) {
+            return $this->redirectToRoute($route);
         }
 
-        $client = $user->getClients()[0];
+        $clients = $user->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
+        $coDeputies = !empty($client) ? $client->getUsers() : [];
         $odr = $client->getOdr();
 
         $reports = $client ? $client->getReports() : [];
@@ -70,6 +71,7 @@ class OdrController extends AbstractController
 
         return [
             'client' => $client,
+            'coDeputies' => $coDeputies,
             'odr' => $odr,
             'reportsSubmitted' => $reportsSubmitted,
             'reportActive' => $reportActive,
@@ -83,6 +85,12 @@ class OdrController extends AbstractController
      */
     public function overviewAction($odrId)
     {
+        // redirect if user has missing details or is on wrong page
+        $user = $this->getUserWithData();
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'odr_overview')) {
+            return $this->redirectToRoute($route);
+        }
+
         $client = $this->getFirstClient(self::$odrGroupsForValidation);
         $odr = $client->getOdr();
         if ($odr->getSubmitted()) {

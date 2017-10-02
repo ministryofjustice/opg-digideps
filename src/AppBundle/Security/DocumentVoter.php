@@ -70,7 +70,7 @@ class DocumentVoter extends Voter
             case self::ADD_DOCUMENT:
                 if ($subject instanceof Report) {
                     /** @var Report $subject */
-                    return $this->clientBelongsToUser($loggedInUser, $subject->getClient());
+                    return $subject->getClient()->hasUser($loggedInUser);
                 }
                 return false;
             case self::DELETE_DOCUMENT:
@@ -78,7 +78,7 @@ class DocumentVoter extends Voter
                     $report = $subject->getReport();
                     if ($report instanceof Report) {
                         /** @var Note $subject */
-                        return $this->clientBelongsToUser($loggedInUser, $report->getClient());
+                        return $report->getClient()->hasUser($loggedInUser);
                     }
                 }
                 return false;
@@ -87,16 +87,4 @@ class DocumentVoter extends Voter
         return false;
     }
 
-    /**
-     * Does the logged in user belong to the client
-     *
-     * @param User   $loggedInUser
-     * @param Client $client
-     *
-     * @return bool
-     */
-    private function clientBelongsToUser(User $loggedInUser, Client $client)
-    {
-        return in_array($loggedInUser->getId(), $client->getUsers());
-    }
 }

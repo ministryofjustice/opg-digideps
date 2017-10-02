@@ -1,5 +1,4 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
 
@@ -11,6 +10,10 @@
 {% endblock %}
 
 {% block pageContent %}
+
+    {% if app.user.getCoDeputyClientConfirmed() %}
+        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
 
     {% if odr.submitted %}
 

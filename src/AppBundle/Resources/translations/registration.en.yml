@@ -2,6 +2,10 @@ addClient:
     pageTitle: "Deputy report - add your client's details | GOV.UK"
     h1Title: Add your client's details
     formHeading: Client's details
+verifyClient:
+    pageTitle: "Deputy report - client's details | GOV.UK"
+    h1Title: Client's details
+    formHeading: Client's details
 courtDate:
     legend: Court order date
     hint: For example, 31 3 2015

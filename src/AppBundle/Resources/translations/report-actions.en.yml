@@ -23,7 +23,7 @@ startPage:
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
       para03-104: |
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a property and affairs deputy' (SD3)</a>
-        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets gives detailed guidance on how to look after %client%'s property, finance, health and welfare.
+        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
   startButton: Start actions
 
 stepPage:

@@ -1,0 +1,27 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "co-deputy" %}
+{% trans_default_domain translationDomain %}
+{% set page = "addCoDeputy" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">You can invite additional deputies to {{ client.firstname }}'s reports, all we need is their email address.</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-send-invitation'}) }}
+
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -7,6 +7,9 @@ homepage:
   submissionDate: Submission date
   attachDocuments: Attach documents
 
+codeputy:
+  inviteAnotherDeputy: Invite another deputy
+
 # Edit reporting period page (Lay and PA)
 editReportingDates:
   htmlTitle: Annual deputy reports for %client%
