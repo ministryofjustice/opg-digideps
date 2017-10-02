@@ -8,7 +8,9 @@ startPage:
   pageSectionDescription3: |
     OPG is here to support you in your deputyship. Our <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on all aspects of your role.
   pageSectionDescription3-104: |
-    OPG is here to support you in your deputyship. Our <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD4)</a> booklet gives detailed guidance on all aspects of your role.
+    OPG is here to support you in your deputyship.
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a property and affairs deputy' (SD3)</a>
+        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
   startButton: Start any other information
 
 stepPage:

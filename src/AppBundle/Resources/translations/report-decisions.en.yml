@@ -3,6 +3,7 @@ startPage:
   pageSectionTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
+
   whatisMentalCapacitySummary: What is mental capacity?
   whatisMentalCapacityPara1: |
     'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
