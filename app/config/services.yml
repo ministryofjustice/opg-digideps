@@ -22,3 +22,7 @@ services:
     step_redirector:
       class: AppBundle\Service\StepRedirector
       arguments: [ "@router" ]
+
+    document_service:
+      class: AppBundle\Service\DocumentService
+      arguments: [ "@s3_storage", "@rest_client", "@logger" ]

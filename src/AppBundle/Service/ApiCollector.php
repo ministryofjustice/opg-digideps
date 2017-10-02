@@ -4,11 +4,12 @@ namespace AppBundle\Service;
 
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 
 /**
  * @codeCoverageIgnore
  */
-class ApiCollector extends DataCollector
+class ApiCollector extends DataCollector implements DataCollectorInterface
 {
     /**
      * @var RestClient

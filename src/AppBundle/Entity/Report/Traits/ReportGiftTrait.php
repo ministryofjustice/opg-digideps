@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Gift;
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -50,11 +51,15 @@ trait ReportGiftTrait
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Gift[] $gifts
+     * @param array $gifts
+     *
+     * @return Report
      */
     public function setGifts($gifts)
     {
         $this->gifts = $gifts;
+
+        return $this;
     }
 
     /**
