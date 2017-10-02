@@ -627,14 +627,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetRemainingSections104()
     {
         $ret = ['getType' => Report::TYPE_104]
-            + array_pop($this->decisionsProvider())[0]
-            + array_pop($this->contactsProvider())[0]
-            + array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->actionsProvider())[0]
-            + array_pop($this->otherInfoProvider())[0]
-            + array_pop($this->giftsProvider())[0]
-            + array_pop($this->documentsProvider())[0]
-            + array_pop($this->lifestyleProvider())[0];
+            + @array_pop($this->decisionsProvider())[0]
+            + @array_pop($this->contactsProvider())[0]
+            + @array_pop($this->visitsCareProvider())[0]
+            + @array_pop($this->actionsProvider())[0]
+            + @array_pop($this->otherInfoProvider())[0]
+            + @array_pop($this->giftsProvider())[0]
+            + @array_pop($this->documentsProvider())[0]
+            + @array_pop($this->lifestyleProvider())[0];
 
         // all empty
         $object = new StatusService($this->getReportMocked([], false));

@@ -100,18 +100,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testupsertAcl()
-    {
-        $url = '/client/upsert';
-
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'users' => [0 => self::$deputy2->getId()],
-        ]);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, [
-            'id' => self::$client2->getId(),
-        ]);
-    }
-
     public function testupsertPostLayDeputy()
     {
         $url = '/client/upsert';
@@ -125,6 +113,7 @@ class ClientControllerTest extends AbstractTestController
 
         $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
         $this->assertEquals('Firstname', $client->getFirstname());
+        $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
         $this->assertInstanceOf('AppBundle\Entity\Odr\Odr', $client->getOdr());
     }

@@ -292,7 +292,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(false)
-            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
+            ->shouldReceive('findBy')->withAnyArgs()->andReturn($this->casRec)
             ->getMock();
 
         $mockClientRepository = m::mock('\Doctrine\ORM\EntityRepository')

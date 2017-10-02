@@ -13,56 +13,56 @@ class SelfRegisterData
     /**
      * @var string
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="user.firstname.notBlank" )
-     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength" )
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"self_registration", "verify_codeputy"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"self_registration", "verify_codeputy"} )
      */
     private $firstname;
 
     /**
      * @var string lastname
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="user.lastname.notBlank" )
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength" )
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"self_registration", "verify_codeputy"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"self_registration", "verify_codeputy"} )
      */
     private $lastname;
 
     /**
      * @var string email
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="user.email.notBlank")
-     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength" )
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"self_registration", "verify_codeputy"})
+     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false, groups={"self_registration", "verify_codeputy"} )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"self_registration", "verify_codeputy"} )
      */
     private $email;
 
     /**
      * @var string email
      * @JMS\Type("string")
-     * @Assert\Length( max=10, maxMessage="user.addressPostcode.maxLength" )
+     * @Assert\Length( max=10, maxMessage="user.addressPostcode.maxLength", groups={"self_registration", "verify_codeputy"})
      */
     private $postcode;
 
     /**
      * @var string
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="client.firstname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
+     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"self_registration"} )
+     * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"self_registration"})
      */
     private $clientFirstname;
 
     /**
      * @var string clientLastName
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="client.lastname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
+     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"self_registration", "verify_codeputy"} )
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"self_registration", "verify_codeputy"})
      */
     private $clientLastname;
 
     /**
      * @var string caseNumber
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="client.caseNumber.notBlank")
-     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage")
+     * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"self_registration", "verify_codeputy"})
+     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage", groups={"self_registration", "verify_codeputy"})
      */
     private $caseNumber;
 
