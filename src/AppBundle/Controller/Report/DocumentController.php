@@ -215,7 +215,7 @@ class DocumentController extends AbstractController
         $document = $this->getDocument($documentId);
 
         if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
-            throw new \RuntimeException('Docuemnt already submitted and cannot be removed.');
+            throw new \RuntimeException('Document already submitted and cannot be removed.');
         }
 
         $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
@@ -314,11 +314,7 @@ class DocumentController extends AbstractController
         // submit the report to generate the submission entry only
         $response = $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
-        if ($response['reportId'] !== $report->getId()) {
-            throw new \RuntimeException('Unable to submit new documents');
-        } else {
-            $request->getSession()->getFlashBag()->add('notice', 'Additional files have been sent');
-        }
+        $request->getSession()->getFlashBag()->add('notice', 'Additional files have been sent');
 
         return $this->redirectToRoute('homepage');
     }
