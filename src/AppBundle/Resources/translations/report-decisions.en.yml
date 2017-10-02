@@ -38,7 +38,8 @@ mentalCapacity:
   form:
     hasCapacityChanged:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
-      label-104: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
+      label-104: "Has %client%'s mental capacity to make health and welfare decisions changed?"
+      label-4: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
       hint: ""
     hasCapacityChangedDetails:
         label: "Please tell us more."

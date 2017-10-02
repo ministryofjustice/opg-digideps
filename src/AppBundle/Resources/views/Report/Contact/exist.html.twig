@@ -20,7 +20,7 @@
 
         <div class="form-section push--bottom">
             <div class="form-group flush--bottom {% if not form.hasContacts.vars.valid %}form-group-error{% endif %}">
-                {% set append104 = ('-4' in report.type) ? '-104' : '' %}
+                {% set append104 = ('-4' in report.type) ? '-4' : (report.type == '104') ? '-104' : ''%}
                 {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

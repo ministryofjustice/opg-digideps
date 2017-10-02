@@ -5,6 +5,9 @@ startPage:
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
   pageSectionDescription1-104: |
+    Use this section to tell us about any significant health and welfare decisions you plan to
+    make on %client%'s behalf in the next 12 months
+  pageSectionDescription1-4: |
     Use this section to tell us about any significant financial or health and welfare decisions you plan to
     make on %client%'s behalf in the next 12 months
   hiddenText01:
@@ -22,6 +25,8 @@ startPage:
       para03: |
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
       para03-104: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklet give detailed guidance on how to look after %client%'s health and welfare.
+      para03-4: |
         OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a property and affairs deputy' (SD3)</a>
         and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
   startButton: Start actions
@@ -45,13 +50,20 @@ form:
     label: |
       Do you expect to make any significant financial decisions on behalf of %client% in the
       next 12 months?
+    label-4: |
+      Do you expect to make any significant financial decisions on behalf of %client% in the
+      next 12 months?
     label-104: |
       Do you expect %client%'s circumstances to change in the next 12 months?
     hint: |
       For example, making a large gift, alterations to %client%'s home, or buying and selling property
       for %client%
     hint-104: |
-      For example, changes to %client%'s accommodation or funding, future appointments that affect %client%'s welfare, carrying out an assessment of %client%'s care needs, making a large gift, alterations to %client%'s home, or buying and selling property for %client%.
+      For example, changes to %client%'s accommodation or funding, future appointments that
+      affect %client%'s welfare, carrying out an assessment of %client%'s care needs
+    hint-4: |
+      For example, changes to %client%'s accommodation or funding, future appointments that
+      affect %client%'s welfare, carrying out an assessment of %client%'s care needs, making a large gift, alterations to %client%'s home, or buying and selling property for %client%.
     hiddenText01:
       summary: Selling property on behalf of your client
       content:
@@ -68,6 +80,7 @@ form:
   doYouExpectFinancialDecisionsDetails:
       label: Please give us details about your decisions
       label-104: Please give us details of these changes
+      label-4: Please give us details about your decisions
   doYouHaveConcerns:
       label: Do you have any concerns about your deputyship?
       hint: |
@@ -76,7 +89,15 @@ form:
       hint-PA: |
         For example, paying care home fees if %client%'s money runs low, managing %client%'s property,
         family members' involvement with %client%'s funds
+      hint-4: |
+        For example, people not recognising or understanding your court order, not being involved in
+        making decisions stated on your court order on behalf of %client%, any complaints about
+        %client%'s care or treatment
       hint-104: |
+        For example, people not recognising or understanding your court order, not being involved in
+        making decisions stated on your court order on behalf of %client%, any complaints about
+        %client%'s care or treatment
+      hint-4: |
         For example, people not recognising or understanding your court order, not being involved in
         making decisions stated on your court order on behalf of %client%, any complaints about
         %client%'s care or treatment, paying care home fees if %client%'s money runs low, managing %client%'s property, other family members' involvement with %client%'s funds.
