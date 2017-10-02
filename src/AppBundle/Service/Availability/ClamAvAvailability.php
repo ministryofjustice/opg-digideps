@@ -14,12 +14,8 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
     {
         try {
             $response = $container->get('guzzle_file_scanner_client')->get('/ping/json');
-            $data =json_decode($response->getBody(), true);
-            if (!$data) {
-                throw new \RuntimeException(json_last_error_msg());
-            }
-            if (!array_key_exists('pid', array_shift($data))) {
-                throw new \RuntimeException('worker pid not found');
+            if (200 !== $response->getStatusCode()) {
+                throw new \RuntimeException("returned HTTP code " . $response->getStatusCode());
             }
 
             $this->isHealthy = true;
