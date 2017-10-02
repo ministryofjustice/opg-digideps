@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set clientName = report.client.firstname %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set append104 = ('4' in report.type) ? '-104' : '' %}
+{% set append104 = ('-4' in report.type) ? '-104' : '' %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -28,7 +28,7 @@
         </div>
     </details>
 
-    <details {% if '4' in report.type %}class="push--bottom"{% endif %}>
+    <details {% if '-4' in report.type %}class="push--bottom"{% endif %}>
         <summary>
             <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
         </summary>

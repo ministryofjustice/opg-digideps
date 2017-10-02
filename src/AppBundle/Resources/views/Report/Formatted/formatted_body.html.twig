@@ -8,7 +8,7 @@
 {% set transfers = report.getMoneyTransfers %}
 {% set mentalCapacity = report.getMentalCapacity %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set reportTypeHeading = ('4' in report.type) ? 'property and financial, and health and welfare ' : 'property and financial' %}
+{% set reportTypeHeading = ('-4' in report.type) ? 'property and financial, and health and welfare ' : 'property and financial' %}
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
