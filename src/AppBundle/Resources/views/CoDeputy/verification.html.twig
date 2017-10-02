@@ -3,23 +3,27 @@
 {% trans_default_domain "settings" %}
 
 {% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'h1Title.registration-details' | trans }}{% endblock %}
+{% block pageTitle %}Enter your information{% endblock %}
 
 {% block progressBar %}
-    {{ progress_bar_registration(user, 'user_details') }}
+    {{ progress_bar_registration(user, 'codep_verify') }}
 {% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
 
-    <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
+    <h2 class="heading-medium flush--top">Your details</h2>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig' %}
 
-    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+    <h2 class="heading-medium flush--top">Your client's details</h2>
+
+    {{ form_input(form.clientLastname,   'clientLastname') }}
+    {{ form_input(form.clientCaseNumber, 'clientCaseNumber', { 'labelRaw': true }) }}
+    {{ form_submit(form.save, 'saveAndContinue') }}
 
     {{ form_end(form) }}
 

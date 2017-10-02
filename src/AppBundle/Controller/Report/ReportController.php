@@ -66,13 +66,14 @@ class ReportController extends AbstractController
     {
         $user = $this->getUserWithData(['user-clients', 'client', 'report', 'client-reports', 'status']);
 
-        // NDR: redirect to ODR index
-        if ($user->isOdrEnabled()) {
-            return $this->redirectToRoute('odr_index');
+        // redirect if user has missing details or is on wrong page
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'lay_home')) {
+            return $this->redirectToRoute($route);
         }
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
+        $coDeputies = !empty($client) ? $client->getUsers() : [];
 
         $reports = $client ? $client->getReports() : [];
         arsort($reports);
@@ -89,6 +90,7 @@ class ReportController extends AbstractController
 
         return [
             'client' => $client,
+            'coDeputies' => $coDeputies,
             'reports' => $reports,
             'reportActive' => $reportActive,
             'reportsSubmitted' => $reportsSubmitted,
@@ -174,6 +176,12 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
+        // redirect if user has missing details or is on wrong page
+        $user = $this->getUserWithData();
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'report_overview')) {
+            return $this->redirectToRoute($route);
+        }
+
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
         $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports', 'clientcontacts', 'balance-state']);
