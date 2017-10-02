@@ -7,6 +7,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Util\Debug as doctrineDebug;
 
 class UserRegistrationService
 {
@@ -14,84 +15,119 @@ class UserRegistrationService
     private $em;
 
     /** @var \Doctrine\ORM\EntityRepository */
-    private $userRepository;
-
-    /** @var \Doctrine\ORM\EntityRepository */
     private $casRecRepo;
 
     public function __construct($em)
     {
         $this->em = $em;
-        $this->userRepository = $this->em->getRepository('AppBundle\Entity\User');
         $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
-    }
-
-    public function selfRegisterUser(SelfRegisterData $selfRegisterData)
-    {
-        $user = new User();
-        $user->recreateRegistrationToken();
-        $client = new Client();
-
-        $this->populateUser($user, $selfRegisterData);
-        $this->populateClient($client, $selfRegisterData);
-
-        // Check the user is unique
-        if ($this->userIsUnique($user) == false) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
-        }
-
-        // Casrec checks
-        $casRec = $this->casRecChecks($user, $client);
-        $user->setDeputyNo($casRec->getDeputyNo());
-
-        $this->saveUserAndClient($user, $client);
-
-        return $user;
     }
 
     /**
      * CASREC checks
-     * - throw error 425 if case number already used
      * - throw error 421 if user and client not found
+     * - throw error 422 if user email is already found
      * - throw error 424 if user and client are found but the postcode doesn't match
+     * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
-     * @param User   $user
-     * @param Client $client
-     *
-     * @return CasRec
+     * @return User
      */
-    private function casRecChecks(User $user, Client $client)
+    public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $caseNumber = CasRec::normaliseCaseNumber($client->getCaseNumber());
+        $user = new User();
+        $client = new Client();
 
-        $criteria = [
-            'caseNumber' => $caseNumber,
-            'clientLastname' => CasRec::normaliseSurname($client->getLastname()),
-            'deputySurname' => CasRec::normaliseSurname($user->getLastname()),
-        ];
+        $user->recreateRegistrationToken();
+        $this->populateUser($user, $selfRegisterData);
+        $this->populateClient($client, $selfRegisterData);
 
-        $clientRepo = $this->em->getRepository('AppBundle\Entity\Client');
-        if ($clientRepo->findOneBy(['caseNumber' => $caseNumber])) {
+        // Check the user is unique
+        if (!$this->userIsUnique($user)) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        }
+
+        // Check the client is unique
+        if (!$this->clientIsUnique($client)) {
             throw new \RuntimeException('User registration: Case number already used', 425);
         }
 
-        $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
-        if (!$casRec) {
+        // Check casRec for user
+        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($client->getCaseNumber())
+                    , 'clientLastname' => CasRec::normaliseSurname($client->getLastname())
+                    , 'deputySurname'  => CasRec::normaliseSurname($user->getLastname())
+                    ];
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
+
+        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $user->getAddressPostcode());
+
+        // Currently unable to determine which co-deputy is matched (eg siblings at same address), based on information given
+        $deputyNumbers = [];
+        foreach ($casRecUserMatches as $casRecMatch) {
+            $deputyNumbers[] = $casRecMatch->getDeputyNo();
+        }
+        $user->setDeputyNo(implode(',', $deputyNumbers));
+
+        // For multi deputy clients
+        $casRecCaseMatches = $this->getCasRecMatchesOrThrowError(['caseNumber' => CasRec::normaliseCaseNumber($client->getCaseNumber())]);
+        if (count($casRecCaseMatches) > 1) {
+            $user->setCoDeputyClientConfirmed(true);
+        }
+
+        $this->saveUserAndClient($user, $client);
+        return $user;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateCoDeputy(SelfRegisterData $selfRegisterData)
+    {
+        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        if (!($user)) {
+            throw new \RuntimeException("User registration: not found", 421);
+        }
+
+        if ($user->getCoDeputyClientConfirmed()) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        }
+
+        // Check casRec for user
+        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
+                    , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
+                    , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
+        ];
+
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
+        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $selfRegisterData->getPostcode());
+
+        return true;
+    }
+
+    private function getCasRecMatchesOrThrowError($criteria)
+    {
+        $casRecMatches = $this->casRecRepo->findBy($criteria);
+        if (count($casRecMatches) == 0) {
             throw new \RuntimeException('User registration: not found', 421);
         }
+        return $casRecMatches;
+    }
 
-        // if the postcode is set in CASREC, it has to match to the given one
-        if ($casRec->getDeputyPostCode() &&
-            $casRec->getDeputyPostCode() != CasRec::normalisePostCode($user->getAddressPostcode())) {
-            $message = sprintf('User [%s] and client [%s, case number: %s] found in CasRec, but wrong postcode: [%s] expected, [%s] given',
-                $user->getLastname(), $client->getLastname(), $caseNumber,
-                $casRec->getDeputyPostCode(), $user->getAddressPostcode());
-
-            throw new \RuntimeException('User registration: postcode mismatch', 424);
+    private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
+    {
+        // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
+        // (Or skip this check completely it if one of the postcodes isn't set)
+        $casRecPostcodes = [];
+        foreach ($casRecUsers as $casRecMatch) {
+            if (!empty($casRecMatch->getDeputyPostCode())) {
+                $casRecPostcodes[] = $casRecMatch->getDeputyPostCode();
+            }
         }
-
-        return $casRec;
+        if (count($casRecPostcodes) == count($casRecUsers)) {
+            if (!in_array(CasRec::normalisePostCode($postcode), $casRecPostcodes)){
+                throw new \RuntimeException('User registration: postcode mismatch', 424);
+            }
+        }
     }
 
     public function saveUserAndClient($user, $client)
@@ -139,12 +175,13 @@ class UserRegistrationService
         $client->setCaseNumber($selfRegisterData->getCaseNumber());
     }
 
+    public function clientIsUnique(Client $client)
+    {
+        return !($client->getCaseNumber() && $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => $client->getCaseNumber()]));
+    }
+
     public function userIsUnique(User $user)
     {
-        if ($user->getEmail() && $this->userRepository->findOneBy(['email' => $user->getEmail()])) {
-            return false;
-        } else {
-            return true;
-        }
+        return !($user->getEmail() && $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $user->getEmail()]));
     }
 }

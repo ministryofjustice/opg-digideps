@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientController extends RestController
 {
     /**
-     * Add client.
+     * Add/Edit a client.
+     * When added, the current logged used will be added
      *
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
@@ -25,11 +26,7 @@ class ClientController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'POST') {
-            $userId = $data['users'][0];
-            if (!in_array($this->getUser()->getId(), [$userId])) {
-                throw $this->createAccessDeniedException('User not allowed');
-            }
-            $user = $this->findEntityBy(EntityDir\User::class, $userId, "User with id: {$userId}  does not exist");
+            $user = $this->getUser();
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {

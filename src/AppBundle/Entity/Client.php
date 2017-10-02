@@ -30,7 +30,6 @@ class Client
 
     /**
      * @JMS\Groups({"user"})
-     * @JMS\Accessor(getter="getUserIds")
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",

@@ -54,7 +54,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
-     * @JMS\Groups({ "team"})
+     * @JMS\Groups({"team"})
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"})
      *
      * @var ArrayCollection
@@ -237,6 +237,15 @@ class User implements UserInterface
      * @ORM\Column(name="agree_terms_use_date", type="datetime", nullable=true)
      */
     private $agreeTermsUseDate;
+
+    /**
+     * @var bool
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"user"})
+     *
+     * @ORM\Column(name="codeputy_client_confirmed", type="boolean", nullable=false, options = { "default": false })
+     */
+    private $coDeputyClientConfirmed;
 
     /**
      * Constructor.
@@ -836,7 +845,7 @@ class User implements UserInterface
      * Return Id of the client (if it has details)
      *
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user-login"})
+     * @JMS\Groups({"user"})
      * @JMS\Type("integer")
      * @JMS\SerializedName("id_of_client_with_details")
      */
@@ -983,6 +992,44 @@ class User implements UserInterface
     public function getAgreeTermsUseDate()
     {
         return $this->agreeTermsUseDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCoDeputyClientConfirmed()
+    {
+        return $this->coDeputyClientConfirmed;
+    }
+
+    /**
+     * @param bool $coDeputyClientConfirmed
+     */
+    public function setCoDeputyClientConfirmed($coDeputyClientConfirmed)
+    {
+        $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
+    }
+
+    /**
+     * Return true if the client has other users
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("is_co_deputy")
+     * @JMS\Groups({"user"})
+     *
+     * @return bool
+     */
+    public function isCoDeputy()
+    {
+        $isCoDeputy = false;
+        if ($this->isLayDeputy()) {
+            $client = $this->getFirstClient();
+            if (!empty($client)) {
+                $isCoDeputy = count($client->getUsers()) > 1;
+            }
+        }
+        return $isCoDeputy;
     }
 
     /**
