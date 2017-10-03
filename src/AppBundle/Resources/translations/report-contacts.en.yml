@@ -14,7 +14,8 @@ existPage:
     hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
       hint: For example, you may have asked an accountant to prepare accounts for the deputy report
-      hint-104: For example, you may have asked a GP, care worker, social services or family member or an accountant to prepare accounts for the deputy report
+      hint-104: For example, you may have asked a GP, care worker, social services or family member
+      hint-4: For example, you may have asked a GP, care worker, social services or family member or an accountant to prepare accounts for the deputy report
     reasonForNoContacts:
       label: Please give us an explanation
     save:

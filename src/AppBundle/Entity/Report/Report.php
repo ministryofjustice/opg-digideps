@@ -1054,6 +1054,18 @@ class Report
      */
     public function isSubmitted()
     {
-        return (bool) $this->getSubmitted();
+        return (bool)$this->getSubmitted();
+    }
+
+    /**
+     * Generates the translation suffic to use depending on report type,
+     *
+     * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
+     * 
+     * @return string
+     */
+    public function get104TransSuffix()
+    {
+        return (strpos($this->getType(), '-4') > 0) ? '-4' : ($this->getType() === '104' ? '-104' : '');
     }
 }
