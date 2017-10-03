@@ -1025,6 +1025,10 @@ class Report
      */
     public function get104TransSuffix()
     {
-        return (strpos($this->getType(), '-4') > 0) ? '-4' : ($this->getType() === '104' ? '-104' : '');
+        return (strpos($this->getType(), '-4') > 0) ?
+            '-4' :
+            ($this->getType() === '104' || $this->getType() === '104-6' ?
+                '-104' : ''
+            );
     }
 }
