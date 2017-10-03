@@ -163,4 +163,42 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $report->isOtherFeesSectionComplete());
     }
+
+    public function reportTypeTransSuffixProvider()
+    {
+        return [
+            // Lay deputies
+            ['NDR', ''],
+            ['102', ''],
+            ['103', ''],
+            ['104', '-104'],
+            ['103-4', '-4'],
+            ['102-4', '-4'],
+
+            // PA
+            ['102-6', ''],
+            ['103-6', ''],
+            ['104-6', ''-104],
+            ['102-4-6', '-4'],
+            ['103-4-6', '-4'],
+
+            // Professional
+            ['102-5', ''],
+            ['103-5', ''],
+            ['104', '-104'],
+            ['102-4-5', '-4'],
+            ['103-4-5', '-4'],
+        ];
+    }
+    /**
+     * @dataProvider reportTypeTransSuffixProvider
+     */
+    public function testGet104TransSuffix($reportType, $expectedSuffix)
+    {
+        $report = new Report();
+
+        $report->setType($reportType);
+
+        $this->assertEquals($expectedSuffix, $report->get104TransSuffix());
+    }
 }
