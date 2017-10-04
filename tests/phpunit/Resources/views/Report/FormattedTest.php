@@ -116,26 +116,15 @@ class FormattedTest extends WebTestCase
         $this->report->setType(Report::TYPE_102);
         // hardcoded section settings (show all for all the reports)
         $reports = [Report::TYPE_102]; //extend if other types need to be tested
-        $this->report->setSectionsSettings([
-            'decisions'=>$reports,
-            'contacts'=>$reports,
-            'visitsCare'=>$reports,
-            'lifestyle'=>$reports,
-            'balance'=>$reports,
-            'bankAccounts'=>$reports,
-            'moneyTransfers'=>$reports,
-            'moneyIn'=>$reports,
-            'moneyOut'=>$reports,
-            'moneyInShort'=>$reports,
-            'moneyOutShort'=>$reports,
-            'assets'=>$reports,
-            'debts'=>$reports,
-            'gifts'=>$reports,
-            'actions'=>$reports,
-            'otherInfo'=>$reports,
-            'deputyExpenses'=>$reports,
-            'paDeputyExpenses'=>$reports,
-            'documents'=>$reports,
+        $this->report->setAvailableSections([
+            'decisions', 'contacts','visitsCare',
+            'lifestyle','balance','bankAccounts',
+            'moneyTransfers',
+            'moneyIn', 'moneyOut',
+            'moneyInShort', 'moneyOutShort',
+            'assets', 'debts', 'gifts',
+            'actions', 'otherInfo', 'deputyExpenses',
+            'paDeputyExpenses', 'documents'
         ])
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))

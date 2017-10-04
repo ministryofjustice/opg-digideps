@@ -47,23 +47,27 @@
 
         <li id="planning-section" class="overview-section">
             <h2 class="heading">{{ 'heading.decisionsContacts' | trans() }}</h2>
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'decisions',
-                report: report,
-                description: true,
-                state: reportStatus.decisionsState,
-                list: true
-            } %}
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'contacts',
-                report: report,
-                description: true,
-                list: true,
-                info: true,
-                state: reportStatus.contactsState,
-            } %}
+            {% if report.hasSection('decisions') %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'decisions',
+                    report: report,
+                    description: true,
+                    state: reportStatus.decisionsState,
+                    list: true
+                } %}
+            {% endif %}
+            {% if report.hasSection('contacts') %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'contacts',
+                    report: report,
+                    description: true,
+                    list: true,
+                    info: true,
+                    state: reportStatus.contactsState,
+                } %}
+            {% endif %}
         </li>
 
         <li id="welfare-section" class="overview-section">

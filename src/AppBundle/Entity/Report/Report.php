@@ -269,10 +269,18 @@ class Report
     private $wishToProvideDocumentation;
 
     /**
+     * @deprecated  use availableSections instead, that only holds the config for the current report
+     *
      * @JMS\Type("array")
      * @var array
      */
     private $sectionsSettings;
+
+    /**
+     * @JMS\Type("array")
+     * @var array
+     */
+    private $availableSections;
 
     /**
      * @return int $id
@@ -989,31 +997,31 @@ class Report
     }
 
     /**
-     * @param string $section
-     * @return bool
+     * @return array
      */
-    public function hasSection($section)
+    public function getAvailableSections()
     {
-        return in_array($this->type, $this->sectionsSettings[$section]);
+        return $this->availableSections;
     }
 
     /**
-     * @param $sectionsSettings
-     * @return $this
+     * @param array $availableSections
+     * @return Report
      */
-    public function setSectionsSettings($sectionsSettings)
+    public function setAvailableSections($availableSections)
     {
-        $this->sectionsSettings = $sectionsSettings;
+        $this->availableSections = $availableSections;
 
         return $this;
     }
 
     /**
-     * @return array
+     * @param string $section
+     * @return bool
      */
-    public function getSectionsSettings()
+    public function hasSection($section)
     {
-        return $this->sectionsSettings;
+        return in_array($section, $this->availableSections);
     }
 
     /**
