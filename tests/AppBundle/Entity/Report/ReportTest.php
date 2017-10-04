@@ -220,7 +220,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public static function getSectionsSettingsProvider()
+    public static function sectionsSettingsProvider()
     {
         return [
             [Report::TYPE_102, ['bankAccounts', 'moneyIn', 'balance'], ['moneyInShort', 'lifestyle']],
@@ -232,15 +232,19 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /**
      * Some checks that the config array doesn't get messed up
      *
-     * @dataProvider getSectionsSettingsProvider
+     * @dataProvider sectionsSettingsProvider
      */
-    public function testgetSectionsSettings($type, array $expectedSections, array $unExpectedSections)
+    public function testAvailableSectionsAndHasSection($type, array $expectedSections, array $unExpectedSections)
     {
+        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+
         foreach($expectedSections as $section) {
-            $this->assertContains($type, Report::getSectionsSettings()[$section], "$type should have $section section ");
+            $this->assertContains($section, $this->report->getAvailableSections());
+            $this->assertTrue($this->report->hasSection($section));
         }
         foreach($unExpectedSections as $section) {
-            $this->assertNotContains($type, Report::getSectionsSettings()[$section], "$type should NOT have $section section ");
+            $this->assertNotContains($section, $this->report->getAvailableSections(), "$type should NOT have $section section ");
+            $this->assertFalse($this->report->hasSection($section));
         }
 
     }

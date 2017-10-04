@@ -547,6 +547,22 @@ class ReportStatusService
     }
 
     /**
+     * @return bool
+     */
+    private function hasStarted()
+    {
+        $sectionStatus = $this->getSectionStatus();
+        // exclude balance, and money transfers, that depend on other section therefore not required
+        // to complete and therefore considered "done"
+        unset($sectionStatus['balance']);
+        unset($sectionStatus['moneyTransfers']);
+
+        return count(array_filter($sectionStatus, function ($e) {
+                return $e != self::STATE_NOT_STARTED;
+            })) > 0;
+    }
+    
+    /**
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\Groups({"status"})
@@ -555,10 +571,7 @@ class ReportStatusService
      */
     public function getStatus()
     {
-        if (count(array_filter($this->getSectionStatus(), function ($e) {
-                return $e != self::STATE_NOT_STARTED;
-            })) === 0
-        ) {
+        if (!$this->hasStarted()) {
             return 'notStarted';
         }
 
