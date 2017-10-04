@@ -10,7 +10,7 @@
             <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
         </div>
         <div class="column-half text--right">
-        {% if page == 'submitMoreDocumentsConfirm' and report.wishToProvideDocumentation == 'yes' %}
+        {% if page == 'submitMoreDocumentsConfirm' %}
             <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 {{ 'summaryPage.addButton' | trans }}
