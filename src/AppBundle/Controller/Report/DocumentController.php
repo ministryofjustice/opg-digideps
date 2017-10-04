@@ -117,7 +117,11 @@ class DocumentController extends AbstractController
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
             $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
-            $backLink = $this->generateUrl('homepage');
+            if ($this->getUser()->isDeputyPa()) {
+                $backLink = $this->generateClientProfileLink($report->getClient());
+            } else {
+                $backLink = $this->generateUrl('homepage');
+            }
         }
 
         $fileUploader = $this->get('file_uploader');
@@ -314,11 +318,15 @@ class DocumentController extends AbstractController
         $report = $this->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
-        $response = $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
+        $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
         $request->getSession()->getFlashBag()->add('notice', 'Additional files have been sent');
 
-        return $this->redirectToRoute('homepage');
+        if ($this->getUser()->isDeputyPa()) {
+            return $this->redirect($this->generateClientProfileLink($report->getClient()));
+        } else {
+            return $this->redirectToRoute('homepage');
+        }
     }
 
     /**
