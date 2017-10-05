@@ -177,5 +177,9 @@
 
     {% block bodyEnd %}{% endblock %}
 
+    {% if report is defined %}
+      <!-- Report Type: {{ report.type }} -->
+    {% endif %}
+
   </body>
 </html>
