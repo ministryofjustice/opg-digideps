@@ -82,7 +82,9 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: We need to know the details of the significant decisions you've made for %client%. Describe the first decision here. You'll be able to add more decisions later if you need to.
+  pageSectionDescription: |
+    We need to know the details of the significant decisions you've made for %client%. You'll be
+    able to add more decisions later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"

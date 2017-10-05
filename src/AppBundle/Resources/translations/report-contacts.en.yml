@@ -16,7 +16,7 @@ existPage:
       hint-4: |
         Give details of people who helped you make significant decisions, such as a GP, care worker,
         accountant or family member. For example, you may have asked a care worker to provide
-        updates on the %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
+        updates on %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
     reasonForNoContacts:
       label: Please give us an explanation
     save:
