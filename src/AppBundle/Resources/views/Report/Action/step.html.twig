@@ -64,21 +64,12 @@
         <div class="form-section push--bottom">
 
             <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}form-group-error{% endif %}">
-                {% if '-4' in report.type %}
-                    {% set contentFork = '-104' %}
-                {% else %}
-                    {% if app.user.isDeputyPa() %}
-                        {% set contentFork = '-PA' %}
-                    {% else %}
-                        {% set contentFork = '' %}
-                    {% endif %}
-                {% endif %}
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
-                    'hintText' : ('form.doYouHaveConcerns.hint' ~ contentFork)  | trans(transOptions, translationDomain),
+                    'hintText' : ('form.doYouHaveConcerns.hint' ~ append104)  | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'actions-details-textarea' },
                         {},
