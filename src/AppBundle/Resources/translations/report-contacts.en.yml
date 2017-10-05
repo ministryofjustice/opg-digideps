@@ -3,8 +3,6 @@ startPage:
   pageSectionTitle: Contacts
   pageSectionDescription1: |
     Please give us details of people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
-
-
   startButton: Start contacts
 
 existPage:
@@ -15,7 +13,10 @@ existPage:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
       hint: For example, you may have asked an accountant to prepare accounts for the deputy report
       hint-104: For example, you may have asked a GP, care worker, social services or family member
-      hint-4: For example, you may have asked a GP, care worker, social services or family member or an accountant to prepare accounts for the deputy report
+      hint-4: |
+        Give details of people who helped you make significant decisions, such as a GP, care worker,
+        accountant or family member. For example, you may have asked a care worker to provide
+        updates on the %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
     reasonForNoContacts:
       label: Please give us an explanation
     save:
