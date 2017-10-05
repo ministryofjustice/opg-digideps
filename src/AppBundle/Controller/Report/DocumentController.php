@@ -106,13 +106,6 @@ class DocumentController extends AbstractController
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
         if (!$report->isSubmitted()) {
-            if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
-                && 'yes' !== $report->getWishToProvideDocumentation()
-            ) {
-                return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
-            } elseif ($report->getWishToProvideDocumentation() === 'no') {
-                return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
-            }
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
