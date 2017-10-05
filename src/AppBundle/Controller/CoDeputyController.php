@@ -20,6 +20,11 @@ class CoDeputyController extends AbstractController
     {
         $user = $this->getUserWithData(['user', 'user-clients', 'client']);
 
+        // redirect if user has missing details or is on wrong page
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'codep_verification')) {
+            return $this->redirectToRoute($route);
+        }
+
         $form = $this->createForm(new FormDir\CoDeputyVerificationType(), $user);
         $form->handleRequest($request);
 
@@ -92,6 +97,12 @@ class CoDeputyController extends AbstractController
     public function addAction(Request $request)
     {
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
+
+        // redirect if user has missing details or is on wrong page
+        if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($loggedInUser, 'add_co_deputy')) {
+            return $this->redirectToRoute($route);
+        }
+
         $invitedUser = new EntityDir\User();
 
         $form = $this->createForm(new FormDir\CoDeputyInviteType(), $invitedUser);

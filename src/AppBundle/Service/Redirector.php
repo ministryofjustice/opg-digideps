@@ -110,20 +110,26 @@ class Redirector
 
         //none of these corrections apply to admin
         if (EntityDir\User::ROLE_ADMIN != $user->getRoleName()) {
+            if ($user->getIsCoDeputy()){
+                // already verified - shouldn't be on verification page
+                if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
+                    $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+                }
 
-            // client is not added
-            if (!$user->getIdOfClientWithDetails()) {
-                $route = 'client_add';
-            }
+                // unverified codeputy invitation
+                if (!$user->getCoDeputyClientConfirmed()){
+                    $route = 'codep_verification';
+                }
+            } else {
+                // client is not added
+                if (!$user->getIdOfClientWithDetails()) {
+                    $route = 'client_add';
+                }
 
-            // incomplete user info
-            if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
-                $route = 'user_details';
-            }
-
-            // unverified codeputy invitation
-            if ($user->getIsCoDeputy() && !$user->getCoDeputyClientConfirmed()) {
-                $route = 'codep_verification';
+                // incomplete user info
+                if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
+                    $route = 'user_details';
+                }
             }
         }
 
