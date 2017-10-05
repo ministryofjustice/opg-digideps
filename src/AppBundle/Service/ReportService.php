@@ -12,6 +12,8 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
@@ -203,4 +205,45 @@ class ReportService
 
         return $newYearReport;
     }
+
+    public function deleteRecursive(Report $report)
+    {
+        echo "Deleting report {$report->getId()}\n";
+//        $this->_em->remove($report);
+//        $this->_em->flush($report);
+    }
+
+    /**
+     * @param Collection $reports
+     *
+     * @return Report[]
+     */
+    public function findDeleteableReports(Collection $reports)
+    {
+        $reportIdToStatus = [];
+        foreach($reports as $ur) {
+            $reportIdToStatus[$ur->getId()] = [
+                'status'=> $ur->getStatus()->getStatus(),
+                'start'=> $ur->getStartDate()->format('Y-m-d'),
+                'end' => $ur->getEndDate()->format('Y-m-d'),
+                'sections' => $ur->getStatus()->getSectionStatus()
+            ];
+        }
+
+        $ret = [];
+        foreach($reports as $report1) {
+            foreach($reports as $report2) {
+                // find report with same date that have not started
+                if ($report1->getStatus()->hasStarted()
+                    && $report1->hasSamePeriodAs($report2)
+                    && !$report2->getStatus()->hasStarted() ) {
+                    $ret[$report2->getId()] = $report2;
+                }
+            }
+        }
+
+        return $ret;
+
+    }
+
 }
