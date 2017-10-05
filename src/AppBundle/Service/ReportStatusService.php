@@ -549,7 +549,7 @@ class ReportStatusService
     /**
      * @return bool
      */
-    private function hasStarted()
+    public function hasStarted()
     {
         $sectionStatus = $this->getSectionStatus();
         // exclude balance, and money transfers, that depend on other section therefore not required

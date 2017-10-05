@@ -503,6 +503,16 @@ class Report
     }
 
     /**
+     * For check reasons
+     * @return string
+     */
+    public function hasSamePeriodAs(Report $report)
+    {
+        return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
+            && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
+    }
+
+    /**
      * Set submitDate.
      *
      * @param string $submitDate
