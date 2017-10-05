@@ -13,12 +13,16 @@ startPage:
   whatisdecisionPara1: |
     Significant decisions are any important decisions you make for %client% - not
     just financial ones. We need to know about any decisions that have a big
-    impact on %client%'s well-being or circumstances.
+    impact on %client%'s wellbeing or circumstances.
   whatisdecisionPara1-104: |
     Significant decisions are any important decisions you make for %client%. We need to know about
-    any decisions that have a big impact on %client%'s well-being or circumstances.
+    any decisions that have a big impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara1-4: |
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%’s wellbeing or circumstances.
   whatisdecisionPara2: "Your significant decisions might include:"
   whatisdecisionPara2-104: "Significant decisions might include changes to:"
+  whatisdecisionPara2-4: "Your significant decisions might include:"
   whatisdecisionListItem1: buying, selling or renting property
   whatisdecisionListItem2: buying or selling investments or shares
   whatisdecisionListItem3: holidays or frequent day trips
@@ -29,6 +33,13 @@ startPage:
   whatisdecisionListItem1-104: "%client%'s living arrangements"
   whatisdecisionListItem2-104: medical treatment
   whatisdecisionListItem3-104: diet
+  whatisdecisionListItem1-4: "changing %client%'s living arrangements or day centre"
+  whatisdecisionListItem2-4: "changing %client%'s medical treatment or diet"
+  whatisdecisionListItem3-4: "buying, selling or renting property"
+  whatisdecisionListItem4-4: "making home improvements"
+  whatisdecisionListItem5-4: "buying or selling investments or shares"
+  whatisdecisionListItem6-4: "taking holidays or frequent day trips"
+  whatisdecisionListItem7-4: "making gifts on %client%'s behalf"
   description2: |
     You don't need to include small, day-to-day decisions like buying food or toiletries.
 
