@@ -8,13 +8,18 @@
         answer: report.lifestyle.careAppointments
     }) }}
 
-    {% set saAnswerYes = report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
+    {%  if (report.lifestyle.doesClientUndertakeSocialActivities and "no" == report.lifestyle.doesClientUndertakeSocialActivities) %}
+        {% set moreDetails = report.lifestyle.activityDetailsNo %}
+        {% set moreDetailsLabel = 'form.activityDetailsNo.label' %}
+    {% else %}
+        {% set moreDetails = report.lifestyle.activityDetailsYes %}
+        {% set moreDetailsLabel = 'form.activityDetailsYes.label' %}
+    {%  endif %}
     {{ macros.answerYesNo({
         question: 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, 'report-lifestyle'),
         answer: report.lifestyle.doesClientUndertakeSocialActivities,
-        moreDetails: saAnswerYes ?
-                report.lifestyle.activityDetailsYes : report.lifestyle.activityDetailsNo,
-        moreDetailsLabel: (saAnswerYes ? 'form.activityDetailsYes.label' : 'form.activityDetailsNo.label') | trans(transOptions, 'report-lifestyle'),
+        moreDetails: moreDetails,
+        moreDetailsLabel: moreDetailsLabel | trans(transOptions, 'report-lifestyle'),
         showMoreDetailsWith: report.lifestyle.doesClientUndertakeSocialActivities
     }) }}
 </div>
