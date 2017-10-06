@@ -1,5 +1,17 @@
 .formatted-report {
 
+    // =======================================================
+    // PAGE BREAKS
+
+    // Tables
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    // =======================================================
+    // BASE ELEMENTS
+
     @extend %contain-floats;
     @include core-14();
     box-sizing: border-box;
