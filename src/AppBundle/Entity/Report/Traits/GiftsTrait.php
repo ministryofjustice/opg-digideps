@@ -23,7 +23,7 @@ trait GiftsTrait
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Gift>")
      * @JMS\Groups({"gifts"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Gift", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      *
      */
     private $gifts;
