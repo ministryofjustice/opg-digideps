@@ -32,9 +32,7 @@ class CleanDataCommand extends ContainerAwareCommand
         $rs = $this->getContainer()->get('opg_digideps.report_service');
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
 
-        // clean up duplicates reports
-        $deleted = 0;
-        $total = 0;
+        // clean up duplicates reports. Find them in chuncks
         $offset = 0;
         $limit = 250;
         do {
@@ -45,23 +43,21 @@ class CleanDataCommand extends ContainerAwareCommand
                  * delete client without users. Recursively (so reports will be deleted too)
                  */
                 if (count($c->getUsers()) === 0) {
+                    $output->writeln("deleting client ".$c->getId()." and related reports (reason: no users)");
                     $em->remove($c);
                     $em->flush($c);
-                    $output->writeln("deleted client ".$c->getId()." (reason: no users)");
                 }
 
                 /**
                  * cleanup reports
                  */
                 $unsubmittedReports = $c->getUnsubmittedReports();
-                $total += (count($unsubmittedReports) - 1);
                 if (count($unsubmittedReports) > 1) {
                     if ($deleteableReports = $rs->findDeleteableReports($unsubmittedReports)) {
                         foreach($deleteableReports as $deleteableReport) {
+                            $output->writeln("deleting report ".$deleteableReport->getId()." (reason: duplicate)");
                             $em->remove($deleteableReport);
                             $em->flush($deleteableReport);
-                            $output->writeln("deleted ".$deleteableReport->getId()." (reason: duplicate)");
-                            $deleted++;
                         }
                     }
                 }
@@ -69,7 +65,7 @@ class CleanDataCommand extends ContainerAwareCommand
             $offset += $limit;
         } while(!empty($clients));
 
-        $output->writeln("deleted $deleted / $total ");
+        $output->writeln("Done");
     }
 
 }
