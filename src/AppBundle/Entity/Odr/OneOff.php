@@ -36,7 +36,7 @@ class OneOff
      * @var Odr
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="oneOff")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $odr;
 

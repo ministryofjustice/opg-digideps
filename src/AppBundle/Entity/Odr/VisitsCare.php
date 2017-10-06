@@ -27,7 +27,7 @@ class VisitsCare
      * @var Odr
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="visitsCare")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $odr;
 

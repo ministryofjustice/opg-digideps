@@ -38,7 +38,7 @@ class Odr
      *
      * @JMS\Groups({"client"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
 
@@ -47,7 +47,7 @@ class Odr
      *
      * @JMS\Groups({"odr"})
      * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 
@@ -56,7 +56,7 @@ class Odr
      *
      * @JMS\Groups({"odr-account"})
      * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\BankAccount", mappedBy="odr", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\BankAccount", mappedBy="odr", cascade={"persist", "remove"})
      */
     private $bankAccounts;
 
@@ -64,7 +64,7 @@ class Odr
      * @var Debt[]
      *
      * @JMS\Groups({"odr-debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -86,7 +86,7 @@ class Odr
      *
      * @JMS\Groups({"odr-asset"})
      * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Asset", mappedBy="odr", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Asset", mappedBy="odr", cascade={"persist", "remove"})
      */
     private $assets;
 

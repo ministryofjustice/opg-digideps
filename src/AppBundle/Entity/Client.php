@@ -51,7 +51,7 @@ class Client
     /**
      * @JMS\Groups({"basic", "odr", "odr_id"})
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist", "remove"})
      **/
     private $odr;
 
