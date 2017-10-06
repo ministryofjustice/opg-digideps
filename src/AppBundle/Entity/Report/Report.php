@@ -201,7 +201,7 @@ class Report
      *
      * @JMS\Groups({ "mental-capacity"})
      * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
 
