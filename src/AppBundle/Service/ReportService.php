@@ -207,7 +207,9 @@ class ReportService
     }
 
     /**
-     * Find reports the are deleteable (e.g. same date and not started)
+     * If one report started, return the other nonStarted reports with the same start/end date
+     *
+     *
      * @param Collection $reports
      *
      * @return Report[] indexed by ID
