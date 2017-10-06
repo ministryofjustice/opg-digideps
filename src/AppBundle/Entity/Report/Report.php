@@ -174,7 +174,7 @@ class Report
      *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 

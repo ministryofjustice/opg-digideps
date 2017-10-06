@@ -25,7 +25,7 @@ class VisitsCare
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="visitsCare")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 
