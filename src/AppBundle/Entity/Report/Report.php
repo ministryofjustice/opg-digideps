@@ -306,7 +306,7 @@ class Report
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
