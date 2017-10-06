@@ -80,7 +80,11 @@ class ClientContact
      * @JMS\Type("string")
      * @JMS\Groups({"client", "clientcontacts"})
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
+     * The following is changed to unique=false, as the migration was missing,
+     * and prod data contains duplicate, making it impossible to add the
+     * migration now, unless the data is cleaned
+     *
+     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=false)
      */
     private $email;
 
@@ -101,6 +105,7 @@ class ClientContact
      * @JMS\Groups({"client", "clientcontact-client"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="clientContacts")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
 
