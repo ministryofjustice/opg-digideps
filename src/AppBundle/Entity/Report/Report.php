@@ -192,7 +192,7 @@ class Report
      *
      * @JMS\Groups({"action"})
      * @JMS\Type("AppBundle\Entity\Report\Action")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
 
