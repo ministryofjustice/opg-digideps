@@ -92,31 +92,6 @@
 {# =================================================================== #}
 {# Visits and care #}
 
-{% macro contactWithClient(visitsCare) %}
-<div class="dont-break">
-    <h3>Contact with client</h3>
-    <div class="box" id="safeguarding-contact">
-        <h3 class="label question bold">Do you live with the client?</h3>
-
-        <table class="checkboxes labelvalue inline">
-            <tr>
-                <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                <td class="value checkbox">{% if visitsCare.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-            </tr>
-        </table>
-
-        {% if visitsCare.doYouLiveWithClient == 'no' %}
-            <div class="labelvalue push-half--top">
-                <h3 class="label question bold">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</h3>
-                <div class="value">{{ visitsCare.howOftenDoYouContactClient | nl2br }}</div>
-            </div>
-        {% endif %}
-    </div>
-</div>
-{% endmacro %}
-
 {% macro careArrangements(visitsCare) %}
 <div class="dont-break">
     <h3>Care arrangements</h3>
@@ -171,56 +146,6 @@
 </div>
 {% endmacro %}
 
-{% macro carePlan(visitsCare) %}
-{% if visitsCare.doesClientHaveACarePlan %}
-    <div class="dont-break">
-        <h3>Care plan</h3>
-        <div class="box" id="care-plan-subsection">
-            <h3 class="label question bold">If there is a care plan, when was it last reviewed?</h3>
-            {% if visitsCare.doesClientHaveACarePlan == 'no' %}
-                <table class="checkboxes labelvalue inline">
-                    <tr>
-                        <td class="value checkbox">X</td>
-                        <td class="label">There is no care plan</td>
-                    </tr>
-                </table>
-            {% endif %}
-            {% if visitsCare.doesClientHaveACarePlan == 'yes' %}
-                <dl class="labelvalue">
-                    <dt class="label">Review date</dt>
-                    <dd class="value">{{ visitsCare.whenWasCarePlanLastReviewed | date("m / Y") }}</dd>
-                </dl>
-            {% endif %}
-        </div>
-    </div>
-{% endif %}
-{% endmacro %}
-
-{% macro newResidence(visitsCare) %}
-<div class="dont-break">
-    <div class="box">
-        <h3 class="label question bold">Are there any plans for the client to move to a new residence</h3>
-
-        <table class="checkboxes labelvalue inline">
-            <tr>
-                <td class="value checkbox">{% if visitsCare.planMoveNewResidence == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                <td class="value checkbox">{% if visitsCare.planMoveNewResidence == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
-            </tr>
-        </table>
-
-        {% if visitsCare.planMoveNewResidence == 'yes' %}
-            <dl class="labelvalue push-half--top">
-                <dt class="label">More details</dt>
-                <dd class="value">{{ visitsCare.planMoveNewResidenceDetails | nl2br }}</dd>
-            </dl>
-        {% endif %}
-    </div>
-</div>
-{% endmacro %}
-
-
 {# =================================================================== #}
 {# Deputy expenses #}
 
@@ -257,4 +182,41 @@
     </div>
 </div>
 {% endmacro %}
+
+{# generic macro for answers #}
+{% macro answerSimple(param) %}
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ param.question }}</h3>
+            <div class="value">{{ param.answer }}</div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro answerYesNo(param) %}
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">{{ param.question }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                </tr>
+            </table>
+
+            {% if param.answer == param.showMoreDetailsWith %}
+                <div class="labelvalue push-half--top">
+                    {% if param.moreDetailsLabel | default(false) %}
+                        <h3 class="label question bold">{{ param.moreDetailsLabel }}</h3>
+                    {% endif %}
+                    <div class="value">{{ param.moreDetails | nl2br }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
 

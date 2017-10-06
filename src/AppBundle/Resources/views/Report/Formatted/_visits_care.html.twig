@@ -3,8 +3,22 @@
 <div class="section" id="safeguarding-section">
     <h2 class="section-heading">Visits and care</h2>
 
-    {{ macros.contactWithClient(visitsCare) }}
+    {{ macros.answerYesNo({
+        question: 'Do you live with the client',
+        answer: visitsCare.doYouLiveWithClient,
+        moreDetails: visitsCare.howOftenDoYouContactClient,
+        moreDetailsLabel: 'How often do you contact the client and how do you make sure others are looking after the client\'s needs if you can\'t ?',
+        showMoreDetailsWith: 'no'
+    }) }}
+
     {{ macros.careArrangements(visitsCare) }}
-    {{ macros.carePlan(visitsCare) }}
+
+    {{ macros.answerYesNo({
+        question: 'If there is a care plan, when was it last reviewed?',
+        answer: visitsCare.doesClientHaveACarePlan,
+        moreDetails: visitsCare.whenWasCarePlanLastReviewed | date("m / Y"),
+        moreDetailsLabel: 'Review date',
+        showMoreDetailsWith: 'yes'
+    }) }}
 
 </div>

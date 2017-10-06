@@ -21,7 +21,7 @@
     {% if step == 1 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doYouLiveWithClient.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doYouLiveWithClient.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doYouLiveWithClient, 'form.doYouLiveWithClient', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -46,7 +46,7 @@
     {% if step == 2 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doesClientReceivePaidCare.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doesClientReceivePaidCare.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doesClientReceivePaidCare, 'form.doesClientReceivePaidCare', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -80,7 +80,7 @@
     {% if step == 4 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doesClientHaveACarePlan.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doesClientHaveACarePlan.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doesClientHaveACarePlan, 'form.doesClientHaveACarePlan', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

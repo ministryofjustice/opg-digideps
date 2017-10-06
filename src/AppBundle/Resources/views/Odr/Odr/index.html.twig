@@ -3,13 +3,17 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.title' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
 {% block supportTitleBottom %}
     <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
 {% endblock %}
 
 {% block pageContent %}
+
+    {% if app.user.getCoDeputyClientConfirmed() %}
+        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
 
     {% if odr.submitted %}
 

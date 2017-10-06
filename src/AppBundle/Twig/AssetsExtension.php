@@ -16,8 +16,7 @@ class AssetsExtension extends \Twig_Extension
     private $rootDir;
 
     /**
-     * @param type \String
-     * @param type $params
+     * @param string $rootDir
      */
     public function __construct($rootDir)
     {

@@ -33,7 +33,7 @@
     </span>
 
         {%  if description is defined and description %}
-            <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+            <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
         {%  endif %}
 
 

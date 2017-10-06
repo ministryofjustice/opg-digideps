@@ -8,13 +8,12 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\ReportValidator;
 use AppBundle\Service\StepRedirector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-class AbstractController extends Controller
+abstract class AbstractController extends Controller
 {
     /**
      * @return RestClient
@@ -43,11 +42,12 @@ class AbstractController extends Controller
      */
     protected function getFirstClient($groups = ['user', 'user-clients', 'client'])
     {
-        $user = $this->getRestClient()->get('user/' . $this->getUser()->getId(), 'User', $groups);
+        $user = $this->getUserWithData($groups);
+
         /* @var $user User */
         $clients = $user->getClients();
 
-        return !empty($clients) ? $clients[0] : null;
+        return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
     /**
@@ -100,10 +100,8 @@ class AbstractController extends Controller
     {
         $report = $this->getReport($reportId, $groups);
 
-        /** @var ReportValidator $reportValidator */
-        $reportValidator = $this->get('report_validator');
-
-        if (!$reportValidator->isAllowedSection($report)) {
+        $sectionId = $this->getSectionId();
+        if ($sectionId && !$report->hasSection($sectionId)) {
             throw new DisplayableException('Section not accessible with this report type.');
         }
 
@@ -233,5 +231,10 @@ class AbstractController extends Controller
         );
 
         throw new \Exception('Unable to generate client profile link.');
+    }
+
+    protected function getSectionId()
+    {
+        return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportBalanceTrait
@@ -41,6 +42,8 @@ trait ReportBalanceTrait
 
     /**
      * @param string $balanceMismatchExplanation
+     *
+     * @return Report
      */
     public function setBalanceMismatchExplanation($balanceMismatchExplanation)
     {
@@ -64,6 +67,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $calculatedBalance
+     *
+     * @return Report
      */
     public function setCalculatedBalance($calculatedBalance)
     {
@@ -82,6 +87,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $totalsOffset
+     *
+     * @return Report
      */
     public function setTotalsOffset($totalsOffset)
     {
@@ -104,5 +111,14 @@ trait ReportBalanceTrait
     public function setTotalsMatch($totalsMatch)
     {
         $this->totalsMatch = $totalsMatch;
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function showBalanceWarning()
+    {
+        return $this->getStatus()->getBalanceState()['state'] === 'not-matching';
     }
 }

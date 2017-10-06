@@ -103,4 +103,12 @@ class ActionController extends AbstractController
             'status'             => $report->getStatus()
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'actions';
+    }
 }

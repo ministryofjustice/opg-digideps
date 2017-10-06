@@ -3,6 +3,7 @@ startPage:
   pageSectionTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
+
   whatisMentalCapacitySummary: What is mental capacity?
   whatisMentalCapacityPara1: |
     'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
@@ -12,8 +13,16 @@ startPage:
   whatisdecisionPara1: |
     Significant decisions are any important decisions you make for %client% - not
     just financial ones. We need to know about any decisions that have a big
-    impact on %client%'s well-being or circumstances.
+    impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara1-104: |
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara1-4: |
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%’s wellbeing or circumstances.
   whatisdecisionPara2: "Your significant decisions might include:"
+  whatisdecisionPara2-104: "Significant decisions might include changes to:"
+  whatisdecisionPara2-4: "Your significant decisions might include:"
   whatisdecisionListItem1: buying, selling or renting property
   whatisdecisionListItem2: buying or selling investments or shares
   whatisdecisionListItem3: holidays or frequent day trips
@@ -21,6 +30,16 @@ startPage:
   whatisdecisionListItem5: making gifts on %client%'s behalf
   whatisdecisionListItem6: moving %client% to another nursing or care home
   whatisdecisionListItem7: changing day centres
+  whatisdecisionListItem1-104: "%client%'s living arrangements"
+  whatisdecisionListItem2-104: medical treatment
+  whatisdecisionListItem3-104: diet
+  whatisdecisionListItem1-4: "changing %client%'s living arrangements or day centre"
+  whatisdecisionListItem2-4: "changing %client%'s medical treatment or diet"
+  whatisdecisionListItem3-4: "buying, selling or renting property"
+  whatisdecisionListItem4-4: "making home improvements"
+  whatisdecisionListItem5-4: "buying or selling investments or shares"
+  whatisdecisionListItem6-4: "taking holidays or frequent day trips"
+  whatisdecisionListItem7-4: "making gifts on %client%'s behalf"
   description2: |
     You don't need to include small, day-to-day decisions like buying food or toiletries.
 
@@ -30,6 +49,8 @@ mentalCapacity:
   form:
     hasCapacityChanged:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
+      label-104: "Has %client%'s mental capacity to make health and welfare decisions changed?"
+      label-4: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
       hint: ""
     hasCapacityChangedDetails:
         label: "Please tell us more."
@@ -61,7 +82,9 @@ addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageSectionTitle: Add a decision
   supportTitle: Decisions
-  pageSectionDescription: We need to know the details of the significant decisions you've made for %client%. Describe the first decision here. You'll be able to add more decisions later if you need to.
+  pageSectionDescription: |
+    We need to know the details of the significant decisions you've made for %client%. You'll be
+    able to add more decisions later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"

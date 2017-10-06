@@ -19,12 +19,14 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.hasContacts.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.hasContacts.vars.valid %}form-group-error{% endif %}">
+                {% set append104 = report.get104TransSuffix %}
                 {{ form_checkbox_group(form.hasContacts, 'existPage.form.hasContacts', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'labelParameters': transOptions,
                     'legendClass' : 'form-label-bold text',
+                    'hintText': ('existPage.form.hasContacts.hint' ~ append104) | trans(transOptions),
                     'items': [
                         {},
                         {'dataTarget': 'reason-for-no-contact'}

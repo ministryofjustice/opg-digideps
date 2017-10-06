@@ -50,8 +50,11 @@ class Redirector
     ];
 
     /**
-     * @param \AppBundle\Service\SecurityContext $security
-     * @param type                               $router
+     * Redirector constructor.
+     * @param SecurityContextInterface $security
+     * @param RouterInterface $router
+     * @param Session $session
+     * @param $env
      */
     public function __construct(
         SecurityContextInterface $security,
@@ -94,18 +97,53 @@ class Redirector
     }
 
     /**
-     * @return array [route, options]
+     * @param EntityDir\User $user
+     * @param string $currentRoute
+     * @return bool|string
+     */
+    public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
+    {
+        // Redirect to appropriate homepage
+        if (in_array($currentRoute, ['lay_home','odr_index'])){
+            $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+        }
+
+        //none of these corrections apply to admin
+        if (EntityDir\User::ROLE_ADMIN != $user->getRoleName()) {
+            if ($user->getIsCoDeputy()){
+                // already verified - shouldn't be on verification page
+                if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
+                    $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+                }
+
+                // unverified codeputy invitation
+                if (!$user->getCoDeputyClientConfirmed()){
+                    $route = 'codep_verification';
+                }
+            } else {
+                // client is not added
+                if (!$user->getIdOfClientWithDetails()) {
+                    $route = 'client_add';
+                }
+
+                // incomplete user info
+                if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
+                    $route = 'user_details';
+                }
+            }
+        }
+
+        return (!empty($route) && $route !== $currentRoute) ? $route : false;
+    }
+
+    /**
+     * @return string
      */
     private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
     {
-        if (!$user->hasDetails()) {
-            return $this->router->generate('user_details');
-        }
-
-        // redirect to add_client if client is not added
-        $clientId = $user->getIdOfClientWithDetails();
-        if (!$clientId) {
-            return $this->router->generate('client_add');
+        // checks if user has missing details or is ODR
+        if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
+            return $this->router->generate($route);
         }
 
         // last accessed url
@@ -113,22 +151,12 @@ class Redirector
             return $lastUsedUri;
         }
 
-        // ODR enabled => redirect to ODR index
-        if ($user->isOdrEnabled()) {
-            return $this->router->generate('odr_index');
-        }
-
         // redirect to create report if report is not created
         if (0 == $user->getNumberOfReports()) {
-            return $this->router->generate('report_create', ['clientId' => $clientId]);
+            return $this->router->generate('report_create', ['clientId' => $user->getIdOfClientWithDetails()]);
         }
 
-        // if there is an active report, redirect to its overview page
-        if ($activeReportId = $user->getActiveReportId()) {
-            return $this->router->generate('report_overview', ['reportId' => $activeReportId]);
-        }
-
-        return $this->router->generate('reports', ['type' => EntityDir\Report\Report::TYPE_102]);
+        return $this->router->generate('lay_home');
     }
 
     /**

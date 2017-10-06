@@ -5,6 +5,7 @@
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'existPage.pageSectionTitle' | trans }}{% endblock %}
@@ -19,7 +20,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.hasDecisions.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.hasDecisions.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.hasDecisions, 'existPage.form.hasDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -41,7 +42,28 @@
             </div>
         </div>
 
-    {{ macros.saveAndContinueButton(form.save) }}
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
+            </summary>
+            <div class="text panel panel-border-narrow">
+                <p>{{ ('startPage.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
+                <p>{{ ('startPage.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ ('startPage.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ ('startPage.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ ('startPage.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
+                    {% if '104' not in report.type %}
+                        <li>{{ ('startPage.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ ('startPage.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ ('startPage.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ ('startPage.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </details>
+
+        {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 

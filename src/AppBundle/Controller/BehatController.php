@@ -4,9 +4,13 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Mailer\MailFactory;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Monolog\Handler\DebugHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 class BehatController extends AbstractController
@@ -54,95 +58,6 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/{secret}/report/{reportId}/change-report-type/{type}")
-     * @Method({"GET"})
-     */
-    public function reportChangeReportType($reportId, $type)
-    {
-        $this->securityChecks();
-
-        $this->getRestClient()->put('behat/report/' . $reportId, [
-            'type' => $type,
-        ]);
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/report/{reportId}/change-report-end-date/{dateYmd}")
-     * @Method({"GET"})
-     */
-    public function accountChangeReportDate($reportId, $dateYmd)
-    {
-        $this->securityChecks();
-
-        $this->getRestClient()->put('behat/report/' . $reportId, [
-            'end_date' => $dateYmd,
-        ]);
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/delete-behat-users")
-     * @Method({"GET"})
-     */
-    public function deleteBehatUser()
-    {
-        $this->securityChecks();
-
-        $this->getRestClient()->delete('behat/users/behat-users');
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/delete-behat-data")
-     * @Method({"GET"})
-     */
-    public function resetBehatData()
-    {
-        $this->securityChecks();
-
-        return new Response('done');
-    }
-
-    /**
-     * set token_date and registration_token on the user.
-     *
-     * @Route("/behat/{secret}/user/{email}/token/{token}/token-date/{date}")
-     * @Method({"GET"})
-     */
-    public function userSetToken($email, $token, $date)
-    {
-        $this->securityChecks();
-
-        $this->getRestClient()->put('behat/user/' . $email, [
-            'token_date' => $date,
-            'registration_token' => $token,
-        ]);
-
-        return new Response('done');
-    }
-
-    /**
-     * @Route("/behat/{secret}/check-app-params")
-     * @Method({"GET"})
-     */
-    public function checkParamsAction()
-    {
-        $this->securityChecks();
-
-        $data = $this->getRestClient()->get('behat/check-app-params', 'array');
-
-        if ($data != 'valid') {
-            throw new \RuntimeException('Invalid API params. Response: ' . print_r($data, 1));
-        }
-
-        return new Response($data);
-    }
-
-    /**
      * Display emails into a webpage
      * Login is required
      *
@@ -167,4 +82,29 @@ class BehatController extends AbstractController
             'recipientRole' => MailFactory::getRecipientRole($this->getUser())
         ]);
     }
+
+    /**
+     * @Route("/behat/{secret}/logs/{action}")
+     * @Template()
+     */
+    public function behatLogsResetAction($action)
+    {
+        $this->securityChecks();
+
+        $logPath = $this->getParameter('log_path');
+
+        switch($action) {
+            case 'reset';
+                file_put_contents($logPath, "LOG RESET FROM BEHAT\n");
+                return new Response("reset OK");
+
+            case 'view';
+                $lines = array_filter(array_slice(file($logPath), -500), function($row){
+                    return strpos($row, 'translation.WARNING') === false;
+                });
+                $ret = implode("\n", $lines);
+                return new Response($ret);
+        }
+    }
+
 }

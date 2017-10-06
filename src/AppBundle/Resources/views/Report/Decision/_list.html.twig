@@ -1,6 +1,7 @@
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
@@ -17,7 +18,7 @@
     <tr class="behat-region-mental-capacity">
         {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged %}
             <td>
-                {{ 'mentalCapacity.form.hasCapacityChanged.label' | trans(transOptions) }}
+                {{ ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions) }}
             </td>
             <td>
                 {% if report.mentalCapacity.hasCapacityChanged == 'stayedSame' %}

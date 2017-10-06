@@ -1,6 +1,7 @@
 {% set translationDomain = "report-actions" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 <table class="check-your-answers columns-2 push--bottom">
     <thead>
@@ -18,7 +19,7 @@
             {% if report.action.doYouExpectFinancialDecisions is null %}
                 <td>
                     <span class="error">
-                        {{ 'form.doYouExpectFinancialDecisions.label' | trans(transOptions) }}
+                        {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
                     </span>
                 </td>
                 <td>
@@ -26,7 +27,7 @@
                 </td>
             {% else %}
                 <td>
-                    {{ 'form.doYouExpectFinancialDecisions.label' | trans(transOptions) }}
+                    {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
                 </td>
                 <td>
                     {{ report.action.doYouExpectFinancialDecisions | capitalize }}
@@ -38,7 +39,7 @@
         </tr>
         {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
             <tr class="behat-region-expect-financial-decision-details">
-                <td>{{ 'form.doYouExpectFinancialDecisionsDetails.label' | trans(transOptions) }}</td>
+                <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}</td>
                 <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
                 <td class="change-answer">
                     <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>

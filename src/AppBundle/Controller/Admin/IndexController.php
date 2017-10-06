@@ -223,7 +223,7 @@ class IndexController extends AbstractController
         $client = $odr->getClient();
         $users = $client->getUsers();
 
-        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]]));
+        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]->getId()]));
     }
 
     /**
@@ -231,7 +231,7 @@ class IndexController extends AbstractController
      * @Method({"GET"})
      * @Template()
      *
-     * @param type $id
+     * @param integer $id
      */
     public function deleteConfirmAction($id)
     {
@@ -302,6 +302,13 @@ class IndexController extends AbstractController
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
+
+                    foreach($ret['errors'] as $err) {
+                        $request->getSession()->getFlashBag()->add(
+                            'error',
+                            $err
+                        );
+                    }
 
                     return $this->redirect($this->generateUrl('casrec_upload'));
                 }
@@ -408,44 +415,6 @@ class IndexController extends AbstractController
             'form'          => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
-    }
-
-    /**
-     * @Route("/stats", name="admin_stats")
-     * @Template
-     */
-    public function statsAction(Request $request)
-    {
-        $data = $this->getRestClient()->get('stats/users?limit=100', 'array');
-
-        return [
-            'data' => $data,
-        ];
-    }
-
-    /**
-     * @Route("/stats/csv-download/{timestamp}", name="admin_stats_csv")
-     * @Template
-     */
-    public function statsCsvAction(Request $request, $timestamp)
-    {
-        try {
-            $rawCsv = $this->getRestClient()->get("stats/users/csv/{$timestamp}", 'raw');
-        } catch (\RuntimeException $e) {
-            return $this->render('AppBundle:Admin:stats-wait.html.twig', [
-                'timestamp' => $timestamp,
-            ]);
-        }
-
-        $response = new Response();
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'plain/text');
-        $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
-        $response->sendHeaders();
-        $response->setContent($rawCsv);
-
-        return $response;
     }
 
     /**

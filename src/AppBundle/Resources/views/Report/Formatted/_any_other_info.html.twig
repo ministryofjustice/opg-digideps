@@ -1,7 +1,10 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 {% if report.actionMoreInfo %}
     <div class="section" id="action-section">
         <h2 class="section-heading">Any other information</h2>
 
+<<<<<<< HEAD
         <div class="dont-break">
             <div class="box">
                 <h3 class="label question bold">{{ title }}</h3>
@@ -23,6 +26,14 @@
                 {% endif %}
             </div>
         </div>
+=======
+        {{ macros.answerYesNo({
+            question: title,
+            answer: report.actionMoreInfo,
+            moreDetails: report.actionMoreInfoDetails,
+            showMoreDetailsWith: 'yes'
+        }) }}
+>>>>>>> 06458f8ff86df950b8694196f4e6b8d1fd9b73b6
 
     </div>
 {% endif %}

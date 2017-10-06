@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportBankAccountsTrait
@@ -32,7 +33,7 @@ trait ReportBankAccountsTrait
     /**
      * @param array $bankAccounts
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function setBankAccounts($bankAccounts)
     {
@@ -85,6 +86,8 @@ trait ReportBankAccountsTrait
 
     /**
      * @param float $accountsClosingBalanceTotal
+     *
+     * @return Report
      */
     public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
     {

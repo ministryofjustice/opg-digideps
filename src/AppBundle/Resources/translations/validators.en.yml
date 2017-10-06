@@ -43,6 +43,10 @@ user:
     notBlank: Enter your address
   address3:
     notBlank: Enter your address
+  addressPostcode:
+    notBlank: Enter your postcode
+    minLength: The postcode must be at least {{ limit }} letters long
+    maxLength: The postcode can't be longer than {{ limit }} letters
   addressCountry:
     notBlank: Enter your country
   jobTitle:
@@ -166,7 +170,7 @@ decision:
 document:
   file:
     errors:
-      mimeTypesMessage: "Please upload a valid PDF"
+      mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
       maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
@@ -409,6 +413,16 @@ action:
     actionMoreInfoDetails:
       notBlank: Tell us more about any questions or concerns you may have about your deputyship
 
+
+lifestyle:
+  careAppointments:
+    notBlank: Please describe client's health and provide details of any care appointments attended
+  doesClientUndertakeSocialActivities:
+    notBlank: Please select either 'Yes' or 'No'
+  activityDetailsYes:
+    notBlank: Give us more details about the different types of activities client takes part in and how often
+  activityDetailsNo:
+      notBlank: Give us more information about why the client does not take part in any activity
 
 feedbackAfterReport:
     satisfactionLevel:

@@ -227,4 +227,12 @@ class MoneyInShortController extends AbstractController
             'report' => $report,
         ];
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'moneyInShort';
+    }
 }

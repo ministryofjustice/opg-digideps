@@ -49,12 +49,12 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add",
      *     "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
-     *     groups={"pa_team_add", "user_details_pa", "admin_add_user", "ad_add_user", "user_details_basic",
-     *     "user_details_full"
+     *     groups={"pa_team_add", "user_details_pa", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
+     *     "user_details_full", "verify-codeputy"
      * } )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
      *     groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa",
-     *             "pa_team_add"} )
+     *             "pa_team_add", "verify-codeputy"} )
      *
      * @var string
      */
@@ -65,9 +65,9 @@ class User implements AdvancedUserInterface
      * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_pa", "pa_team_add", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
      *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","pa_team_add",
-     *     "user_details_pa"
+     *     "user_details_pa", "verify-codeputy"
      * } )
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_pa", "verify-codeputy"} )
      *
      * @var string
      */
@@ -75,11 +75,11 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add", "user_details_full", "user_details_pa"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add"}, checkMX=false, checkHost=false )
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add"} )
-     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa"})
+     * @JMS\Groups({"admin_add_user", "ad_add_user", "pa_team_add", "user_details_full", "user_details_pa", "codeputy"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset", "codeputy_invite", "verify-codeputy"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"}, checkMX=false, checkHost=false )
+     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"} )
+     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa", "codeputy_invite", "verify-codeputy"})
      *
      * @var string
      */
@@ -161,8 +161,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full"} )
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
      */
@@ -189,8 +189,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full"} )
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa"} )
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy"} )
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa", "verify-codeputy"} )
      *
      * @var string
      */
@@ -199,7 +199,7 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
      */
@@ -208,9 +208,9 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_pa", "pa_team_add"})
-     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "verify-codeputy"} )
      * @Assert\NotBlank( message="user.phoneMain.notBlankOtherUser", groups={"user_details_pa"} )
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa", "pa_team_add"} )
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_pa", "pa_team_add", "verify-codeputy"} )
      *
      * @var string
      */
@@ -285,6 +285,20 @@ class User implements AdvancedUserInterface
      * @var ArrayCollection
      */
     private $teams;
+
+    /**
+     * @JMS\Type("boolean")
+     *
+     * @var bool
+     */
+    private $isCoDeputy;
+
+    /**
+     * @JMS\Type("boolean")
+     *
+     * @var bool
+     */
+    private $coDeputyClientConfirmed;
 
     /**
      * @return int $id
@@ -520,6 +534,38 @@ class User implements AdvancedUserInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function getIsCoDeputy()
+    {
+        return $this->isCoDeputy;
+    }
+
+    /**
+     * @param bool $isCoDeputy
+     */
+    public function setIsCoDeputy($isCoDeputy)
+    {
+        $this->isCoDeputy = $isCoDeputy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCoDeputyClientConfirmed()
+    {
+        return $this->coDeputyClientConfirmed;
+    }
+
+    /**
+     * @param bool $isCoDeputyClientConfirmed
+     */
+    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed)
+    {
+        $this->coDeputyClientConfirmed = $isCoDeputyClientConfirmed;
+    }
+
     public function eraseCredentials()
     {
     }
@@ -683,13 +729,13 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function hasDetails()
+    public function hasAddressDetails()
     {
-        if (!empty($this->getAddress1()) && !empty($this->getAddressCountry())
-            && !empty($this->getAddressPostcode()) && !empty($this->getPhoneMain())
-        ) {
-            return true;
-        }
+        return ( !empty($this->getAddress1())
+              && !empty($this->getAddressCountry())
+              && !empty($this->getAddressPostcode())
+              && !empty($this->getPhoneMain())
+        );
     }
 
     /**

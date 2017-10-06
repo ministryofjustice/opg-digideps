@@ -6,6 +6,8 @@
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block pageTitle %}{{ client.fullname }}{% endblock %}
 
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'heading.title' | trans }}</span>
 {% endblock %}
@@ -60,7 +62,7 @@
     <ul id="overview-sections" class="overview-sections">
 
         <li id="visits-and-actions" class="overview-section">
-            <h2 class="heading">{{ client.firstname }}'s welfare</h2>
+            <h2 class="heading">Health and welfare</h2>
             {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'visits_care',

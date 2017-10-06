@@ -19,7 +19,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.noTransfersToAdd.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.noTransfersToAdd.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.noTransfersToAdd, 'existPage.form.noTransfersToAdd', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',

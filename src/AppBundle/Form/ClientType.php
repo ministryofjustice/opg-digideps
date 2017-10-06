@@ -29,14 +29,6 @@ class ClientType extends AbstractType
                       'empty_value' => 'country.defaultOption',
                 ])
                 ->add('phone', 'text')
-                ->add('users', 'collection', ['type' => 'integer',
-                                               'options' => ['required' => false,
-                                                              'attr' => ['style' => 'display: none'],
-                                                              'label' => false, ], 'label' => false, ])
-                ->add('reports', 'collection', ['type' => 'integer',
-                                               'options' => ['required' => false,
-                                                              'attr' => ['style' => 'display: none'],
-                                                              'label' => false, ], 'label' => false, ])
                 ->add('id', 'hidden')
                 ->add('save', 'submit');
 

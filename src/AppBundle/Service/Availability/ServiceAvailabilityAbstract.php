@@ -2,6 +2,11 @@
 
 namespace AppBundle\Service\Availability;
 
+/**
+ * TODO change into an interface with
+ * isHealthy
+ * getErrors
+ */
 abstract class ServiceAvailabilityAbstract
 {
     /**

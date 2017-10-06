@@ -146,7 +146,9 @@
                             </td>
                         {% endif %}
                         <td class="width-tenth change-answer">
-                            <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
+                            {% if reportSubmission.downloadable %}
+                                <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
+                            {% endif %}
                             {% if isNewPage %}
                                 <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
                             {% endif %}

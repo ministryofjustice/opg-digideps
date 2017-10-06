@@ -69,7 +69,7 @@ class Document
      * @Assert\File(
      *     maxSize = "15M",
      *     maxSizeMessage = "document.file.errors.maxSizeMessage",
-     *     mimeTypes = {"application/pdf", "application/x-pdf"},
+     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg"},
      *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
      *     groups={"document"}
      * )

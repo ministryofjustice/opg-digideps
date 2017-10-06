@@ -1,5 +1,9 @@
 <?php
-if (empty($argv[3])) {
+
+/*
+* Script to mask CSV files. For both PA and Lay (use any random 3rd argument for that)
+*/
+if (count($argv) !== 4) {
     echo "Usage: php [script name] source.csv output.csv name.surname\n" . "
     e.g. php misc/scripts/maskCsv.php ~/Desktop/file.csv ~/Desktop/file.masked.csv elvis.ciotti";
     exit(1);
@@ -60,7 +64,8 @@ class Replacer
                         break;
 
                     case 'Case':
-                        $data[$columnIndex] = '99' . str_pad($cycleCount, 6, '0', STR_PAD_LEFT);
+                        // case number becames Z9 + hash of the real case number (MLD compatible)
+                        $data[$columnIndex] = 'Z9'.strtoupper(substr(sha1($columnValue), 0, 6));
                         break;
 
                     case 'Forename':

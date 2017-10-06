@@ -6,6 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set clientName = report.client.firstname %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans }}{% endblock %}
@@ -27,26 +28,30 @@
         </div>
     </details>
 
-    <details>
+    <details {% if '104' in report.type %}class="push--bottom"{% endif %}>
         <summary>
             <span class="summary">{{ 'startPage.whatisdecisionSummary' | trans }}</span>
         </summary>
         <div class="text panel panel-border-narrow">
-            <p>{{ 'startPage.whatisdecisionPara1' | trans(transOptions) }}</p>
-            <p>{{ 'startPage.whatisdecisionPara2' | trans(transOptions) }}</p>
+            <p>{{ ('startPage.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
+            <p>{{ ('startPage.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
             <ul class="list list-bullet">
-                <li>{{ 'startPage.whatisdecisionListItem1' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem2' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem3' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem4' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem5' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem6' | trans(transOptions) }}</li>
-                <li>{{ 'startPage.whatisdecisionListItem7' | trans(transOptions) }}</li>
+                <li>{{ ('startPage.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
+                <li>{{ ('startPage.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
+                <li>{{ ('startPage.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
+                {% if '104' not in report.type %}
+                    <li>{{ ('startPage.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ ('startPage.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ ('startPage.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ ('startPage.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
+                {% endif %}
             </ul>
         </div>
     </details>
 
-    <p class="text">{{ 'startPage.description2' | trans }}</p>
+    {% if '104' not in report.type %}
+        <p class="text">{{ 'startPage.description2' | trans }}</p>
+    {% endif %}
 
     <a href="{{ path('decisions_mental_capacity', { 'reportId': report.id}) }}"
        class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>

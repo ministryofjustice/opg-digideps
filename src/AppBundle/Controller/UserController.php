@@ -87,17 +87,19 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-            $redirectUrl = $isActivatePage
-                ? $this->generateUrl('user_details')
-                : $this->get('redirector_service')->getFirstPageAfterLogin();
+            if ($isActivatePage) {
+                $route = $user->getIsCoDeputy() ? 'codep_verification' : 'user_details';
+                return $this->redirectToRoute($route);
+            } else {
+                return $this->redirect($this->get('redirector_service')->getFirstPageAfterLogin());
+            }
 
-            return $this->redirect($redirectUrl);
         }
 
         return $this->render($template, [
-            'token' => $token,
-            'form'  => $form->createView(),
-            'user'  => $user,
+            'token'  => $token,
+            'form'   => $form->createView(),
+            'user'   => $user
         ]);
     }
 
@@ -167,6 +169,7 @@ class UserController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'user' => $user
         ];
     }
 

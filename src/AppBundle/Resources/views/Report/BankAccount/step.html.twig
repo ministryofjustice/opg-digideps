@@ -62,12 +62,12 @@
         {{ form_input(form.openingBalance, '', {
             'labelText': 'form.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control--short js-format-currency'
+            'inputClass' : 'form-control-1-4 js-format-currency'
         } ) }}
         {{ form_input(form.closingBalance, 'form.closingBalance', {
             'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control--short js-format-currency'
+            'inputClass' : 'form-control-1-4 js-format-currency'
         } ) }}
     {% endif %}
 

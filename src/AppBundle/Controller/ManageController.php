@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
+use AppBundle\Service\Availability as ServiceAvailability;
 /**
  * @Route("/manage")
  */
@@ -66,13 +66,14 @@ class ManageController extends AbstractController
         $start = microtime(true);
 
         $services = [
-            new \AppBundle\Service\Availability\RedisAvailability($this->container),
-            new \AppBundle\Service\Availability\ApiAvailability($this->container),
-            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.default'),
-            new \AppBundle\Service\Availability\SmtpAvailability($this->container, 'mailer.transport.smtp.secure'),
+            new ServiceAvailability\RedisAvailability($this->container),
+            new ServiceAvailability\ApiAvailability($this->container),
+            new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.default'),
+            new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.secure'),
         ];
         if ($this->container->getParameter('env') !== 'admin') {
-            $services[] = new \AppBundle\Service\Availability\WkHtmlToPdfAvailability($this->container);
+            $services[] = new ServiceAvailability\WkHtmlToPdfAvailability($this->container);
+            $services[] = new ServiceAvailability\ClamAvAvailability($this->container);
         }
 
         $healthy = true;

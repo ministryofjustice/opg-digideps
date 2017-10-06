@@ -25,7 +25,7 @@
         {{ form_input(form.address, 'form.property.address') }}
         {{ form_input(form.address2, 'form.property.address2', {}) }}
         {{ form_input(form.county, 'form.property.county') }}
-        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control__postcode' }) }}
+        {{ form_input(form.postcode, 'form.property.postcode', {'inputClass': 'form-control-1-4' }) }}
     {% endif %}
 
     {% if step == 2 %}
@@ -34,7 +34,7 @@
 
     {% if step == 3 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.owned.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.owned.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.owned, 'form.property.owned', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -48,7 +48,7 @@
                 <div id="owned-percentage-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
                         'inputPrefix' : '%',
-                        'inputClass' : 'form-control__number',
+                        'inputClass' : 'form-control-1-4',
                         'labelParameters': transOptions,
                     }) }}
                 </div>
@@ -58,7 +58,7 @@
 
     {% if step == 4 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.hasMortgage.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.hasMortgage.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -71,7 +71,7 @@
                 <div id="mortgage-outstanding-amount-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number js-format-currency'
+                        'inputClass' : 'form-control-1-4 js-format-currency'
                     }) }}
                 </div>
             </div>
@@ -81,7 +81,7 @@
     {% if step == 5 %}
         {{ form_input(form.value, 'form.property.value', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number js-format-currency',
+            'inputClass' : 'form-control-1-4 js-format-currency',
             'labelRaw': true
         } ) }}
     {% endif %}
@@ -102,7 +102,7 @@
 
     {% if step == 8 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.isRentedOut.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.isRentedOut.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
@@ -120,7 +120,7 @@
 
                     {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number js-format-currency'
+                        'inputClass' : 'form-control-1-4 js-format-currency'
                     }) }}
                 </div>
             </div>

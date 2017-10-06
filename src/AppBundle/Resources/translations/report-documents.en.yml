@@ -25,7 +25,7 @@ attachPage:
   supportingDocuments: Supporting documents
   selectHeading: 1. Select the file
   selectHelp: Please select 'Choose file' below to find your file.
-  selectHint: Currently we only accept PDF files and they can't be larger than 15mb.
+  selectHint: Currently we only accept PDF, JPG and PNG files, and they can't be larger than 15mb.
   uploadHeading: 2. Upload the file
   noDocuments: No documents
   documentList: Attached documents

@@ -31,7 +31,7 @@
     {% if step == 2 %}
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number js-format-currency',
+            'inputClass' : 'form-control-1-4 js-format-currency',
             'labelClass' : 'text',
             'labelParameters': { '%fromAccountName%': transfer.accountFrom.accountTypeText, '%toAccountName%': transfer.accountTo.accountTypeText }
         }) }}

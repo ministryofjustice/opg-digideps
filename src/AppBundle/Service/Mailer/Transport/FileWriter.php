@@ -112,8 +112,8 @@ class FileWriter implements Swift_Transport
     /**
      * Return message if sent.
      *
-     * @param type $subject
-     * @param type $to
+     * @param string $subject
+     * @param string $to
      *
      * @return Swift_Message|null
      */

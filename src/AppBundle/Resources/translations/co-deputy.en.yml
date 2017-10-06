@@ -1,0 +1,52 @@
+addCoDeputy:
+  htmlTitle: Deputy report - Invite deputy | GOV.UK
+  pageTitle: Deputies
+
+form:
+  email:
+    label: Deputy email address
+    existingError: That email has already been registered with this service.
+  submit:
+    label: Send invitation
+    cancel: Cancel
+
+  editYourDetails:
+    subSectionTitle: "Edit your details"
+    controls:
+      cancel:
+        label: Cancel
+      save:
+        label: Save
+      firstname:
+        label: First name
+      lastname:
+        label: Last name
+      address1:
+        label: Address
+      address2:
+        label: " "
+      address3:
+        label: " "
+      addressPostcode:
+        label: Postcode
+      addressCountry:
+        label: Country
+      phoneMain:
+        label: Phone number
+      phoneAlternative:
+        label: Alternative phone number
+      email:
+        label: Email
+      jobTitle:
+        label: Job title
+      removeAdmin:
+        label: Administrator access
+        hint: You are currently an administrator on the Deputy Report Service.
+
+clientLastname:
+    label: Last name
+clientCaseNumber:
+    label: Case number
+    hint: You will find the case number on the first page of the court order (top right-hand corner)
+saveAndContinue:
+    label: Save and continue

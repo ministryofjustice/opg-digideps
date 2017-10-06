@@ -26,9 +26,17 @@ class Report
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
 
-    const TYPE_102 = '102';
     const TYPE_103 = '103';
+    const TYPE_102 = '102';
     const TYPE_104 = '104';
+    const TYPE_103_4 = '103-4';
+    const TYPE_102_4 = '102-4';
+
+    const TYPE_103_6 = '103-6';
+    const TYPE_102_6 = '102-6';
+    const TYPE_104_6 = '104-6';
+    const TYPE_103_4_6 = '104-4-6';
+    const TYPE_102_4_6 = '102-4-6';
 
     /**
      * @JMS\Type("integer")
@@ -132,6 +140,13 @@ class Report
      * @var VisitsCare
      */
     private $visitsCare;
+
+    /**
+     * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
+     *
+     * @var Lifestyle
+     */
+    private $lifestyle;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Action")
@@ -252,6 +267,12 @@ class Report
      * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
      */
     private $wishToProvideDocumentation;
+
+    /**
+     * @JMS\Type("array")
+     * @var array
+     */
+    private $sectionsSettings;
 
     /**
      * @return int $id
@@ -502,6 +523,10 @@ class Report
         return;
     }
 
+    /**
+     * @param array $transfers
+     * @return $this
+     */
     public function setMoneyTransfers(array $transfers)
     {
         $this->moneyTransfers = $transfers;
@@ -538,7 +563,7 @@ class Report
     }
 
     /**
-     * @param type $decisions
+     * @param Decision[] $decisions
      *
      * @return Report
      */
@@ -690,11 +715,32 @@ class Report
         $this->visitsCare = $visitsCare;
     }
 
+    /**
+     * @return Report\Lifestyle
+     */
+    public function getLifestyle()
+    {
+        return $this->lifestyle ?: new Lifestyle();
+    }
+
+    /**
+     * @param \AppBundle\Entity\Report\Lifestyle $lifestyle
+     */
+    public function setLifestyle($lifestyle)
+    {
+        $this->lifestyle = $lifestyle;
+    }
+
     public function getAction()
     {
         return $this->action ?: new Action();
     }
 
+    /**
+     * @param Action $action
+     *
+     * @return Report
+     */
     public function setAction(Action $action)
     {
         $this->action = $action;
@@ -767,7 +813,7 @@ class Report
     }
 
     /**
-     * @param type $submitted
+     * @param boolean $submitted
      *
      * @return Report
      */
@@ -779,7 +825,7 @@ class Report
     }
 
     /**
-     * @param type $reportSeen
+     * @param boolean $reportSeen
      *
      * @return Report
      */
@@ -789,7 +835,7 @@ class Report
     }
 
     /**
-     * @return type
+     * @return boolean
      */
     public function getReportSeen()
     {
@@ -923,5 +969,66 @@ class Report
         );
 
         return $attachmentName;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param string $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
+    /**
+     * @param string $section
+     * @return bool
+     */
+    public function hasSection($section)
+    {
+        return in_array($this->type, $this->sectionsSettings[$section]);
+    }
+
+    /**
+     * @param $sectionsSettings
+     * @return $this
+     */
+    public function setSectionsSettings($sectionsSettings)
+    {
+        $this->sectionsSettings = $sectionsSettings;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSectionsSettings()
+    {
+        return $this->sectionsSettings;
+    }
+
+    /**
+     * Generates the translation suffic to use depending on report type,
+     *
+     * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
+     * 
+     * @return string
+     */
+    public function get104TransSuffix()
+    {
+        return (strpos($this->getType(), '-4') > 0) ?
+            '-4' :
+            ($this->getType() === '104' || $this->getType() === '104-6' ?
+                '-104' : ''
+            );
     }
 }

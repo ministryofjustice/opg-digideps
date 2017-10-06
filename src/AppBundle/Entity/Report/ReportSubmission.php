@@ -36,6 +36,12 @@ class ReportSubmission
      */
     private $archivedBy;
 
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    private $downloadable;
 
     /**
      * @return int
@@ -109,6 +115,26 @@ class ReportSubmission
     public function setArchivedBy($archivedBy)
     {
         $this->archivedBy = $archivedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDownloadable()
+    {
+        return $this->downloadable;
+    }
+
+    /**
+     * @param bool $downloadable
+     *
+     * @return ReportSubmission
+     */
+    public function setDownloadable($downloadable)
+    {
+        $this->downloadable = $downloadable;
 
         return $this;
     }

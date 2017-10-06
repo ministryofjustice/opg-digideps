@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
@@ -207,7 +208,7 @@ class DocumentController extends AbstractController
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
 
-        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
+        $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         $report = $document->getReport();
         $fromPage = $request->get('from');
@@ -234,7 +235,7 @@ class DocumentController extends AbstractController
     {
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
-        $this->denyAccessUnlessGranted('delete-document', $document, 'Access denied');
+        $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
             $this->getRestClient()->delete('document/' . $documentId);
@@ -273,5 +274,13 @@ class DocumentController extends AbstractController
             'Report\Document',
             ['documents', 'status', 'document-report', 'report', 'client', 'user']
         );
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'documents';
     }
 }

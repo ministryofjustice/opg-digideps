@@ -3,7 +3,7 @@ Feature: Report any other info
   @deputy
   Scenario: any other info
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "reports, report-2016, edit-other_info, start"
+    And I click on "report-start, edit-other_info, start"
      # step 1
     And the step cannot be submitted without making a selection
     Then the step with the following values CANNOT be submitted:

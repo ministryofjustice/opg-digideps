@@ -5,6 +5,7 @@
 {% set translationDomain = "report-actions" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'stepPage.pageSectionTitle' | trans }}{% endblock %}
@@ -20,13 +21,13 @@
 
     {% if step == 1 %}
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}error{% endif %}">
+            <div class="form-group flush--bottom {% if not form.doYouExpectFinancialDecisions.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans(transOptions, translationDomain),
-                    'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans(transOptions, translationDomain),
+                    'legendText' : ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, translationDomain),
+                    'hintText' : ('form.doYouExpectFinancialDecisions.hint' ~ append104 ) | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'financial-decisions-textarea' },
                         {},
@@ -35,6 +36,7 @@
 
                 <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
+                        'labelText': ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, translationDomain),
                         'labelClass': 'required',
                         'labelParameters': transOptions
                     }) }}
@@ -42,35 +44,32 @@
             </div>
         </div>
 
-        <details class="text push--bottom">
-            <summary>
-                <span class="summary">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.summary' | trans(transOptions) }}</span>
-            </summary>
-            <div class="panel panel-border-narrow">
-                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
-                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
-                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
-                <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
-            </div>
-        </details>
+        {% if '104' not in report.type %}
+            <details class="text push--bottom">
+                <summary>
+                    <span class="summary">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.summary' | trans(transOptions) }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                    <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                    <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
+                    <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para04' |trans(transOptions)|raw }}</p>
+                </div>
+            </details>
+        {% endif %}
 
     {% endif %}
 
     {% if step == 2 %}
         <div class="form-section push--bottom">
 
-            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}error{% endif %}">
-                {% if app.user.isDeputyPa() %}
-                    {% set hintTextTrans = 'form.doYouHaveConcerns.hintPA' %}
-                {% else %}
-                    {% set hintTextTrans = 'form.doYouHaveConcerns.hint' %}
-                {% endif %}
+            <div class="form-group flush--bottom {% if not form.doYouHaveConcerns.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouHaveConcerns.label' | trans(transOptions, translationDomain),
-                    'hintText' : hintTextTrans | trans(transOptions, translationDomain),
+                    'hintText' : ('form.doYouHaveConcerns.hint' ~ append104)  | trans(transOptions, translationDomain),
                     'items': [
                         {'dataTarget': 'actions-details-textarea' },
                         {},

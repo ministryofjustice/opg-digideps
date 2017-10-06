@@ -194,4 +194,12 @@ class MoneyInController extends AbstractController
 
         return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
     }
+
+    /**
+     * @return string
+     */
+    protected function getSectionId()
+    {
+        return 'moneyIn';
+    }
 }

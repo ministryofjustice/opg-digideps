@@ -113,7 +113,30 @@ class FormattedTest extends WebTestCase
             ->setClientInvolvedDetails('he wanted to live here');
 
         $this->report = new Report();
-        $this->report
+        $this->report->setType(Report::TYPE_102);
+        // hardcoded section settings (show all for all the reports)
+        $reports = [Report::TYPE_102]; //extend if other types need to be tested
+        $this->report->setSectionsSettings([
+            'decisions'=>$reports,
+            'contacts'=>$reports,
+            'visitsCare'=>$reports,
+            'lifestyle'=>$reports,
+            'balance'=>$reports,
+            'bankAccounts'=>$reports,
+            'moneyTransfers'=>$reports,
+            'moneyIn'=>$reports,
+            'moneyOut'=>$reports,
+            'moneyInShort'=>$reports,
+            'moneyOutShort'=>$reports,
+            'assets'=>$reports,
+            'debts'=>$reports,
+            'gifts'=>$reports,
+            'actions'=>$reports,
+            'otherInfo'=>$reports,
+            'deputyExpenses'=>$reports,
+            'paDeputyExpenses'=>$reports,
+            'documents'=>$reports,
+        ])
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))
             ->setEndDate(new \Datetime('2015-12-31'))
@@ -128,6 +151,7 @@ class FormattedTest extends WebTestCase
             ->setDecisions([$this->decision1, $this->decision2])
             ->setHasDebts(true)
             ->setDebts([$this->debt1])
+            ->setGifts([$this->debt1])
             ->setAccountsClosingBalanceTotal(
                 $this->account1->getOpeningBalance()
                 + $this->account2->getOpeningBalance()
@@ -160,11 +184,6 @@ class FormattedTest extends WebTestCase
     private function html($crawler, $expr)
     {
         return $crawler->filter($expr)->eq(0)->html();
-    }
-
-    public function testLayout()
-    {
-        $this->assertEquals('Deputy report for property and financial decisions', $this->html($this->crawler, 'h1'));
     }
 
     public function testReport()

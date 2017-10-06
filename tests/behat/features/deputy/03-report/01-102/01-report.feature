@@ -3,7 +3,7 @@ Feature: Report edit and test tabs
     @deputy
     Scenario: edit report dates
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016-edit" 
+        And I click on "report-edit-period"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 03 |
@@ -38,7 +38,7 @@ Feature: Report edit and test tabs
         And I press "report_edit_save"
         Then the form should be valid
         # check values
-        And I click on "report-2016-edit"
+        And I click on "report-edit-period"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 02 |
@@ -50,6 +50,7 @@ Feature: Report edit and test tabs
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "report-start"
         Then I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
         Then I should see the "edit-debts" link
@@ -63,7 +64,7 @@ Feature: Report edit and test tabs
     @deputy
     Scenario: Check 102, 103 sections presence on overview page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "reports, report-2016"
+        And I click on "report-start"
         # assert tabs
         And I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
