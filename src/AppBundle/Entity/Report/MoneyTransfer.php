@@ -34,7 +34,7 @@ class MoneyTransfer
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountFrom")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
-     * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $from;
 
@@ -43,7 +43,7 @@ class MoneyTransfer
      * @JMS\Groups({"account"})
      * @JMS\SerializedName("accountTo")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
-     * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $to;
 
