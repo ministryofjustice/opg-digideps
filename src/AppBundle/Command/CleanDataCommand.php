@@ -32,7 +32,7 @@ class CleanDataCommand extends ContainerAwareCommand
         $rs = $this->getContainer()->get('opg_digideps.report_service');
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
 
-        // clean up duplicates
+        // clean up duplicates reports
         $deleted = 0;
         $total = 0;
         $offset = 0;
@@ -40,14 +40,27 @@ class CleanDataCommand extends ContainerAwareCommand
         do {
             $clients = $em->getRepository(Client::class)->findBy([], ['id'=>'ASC'], $limit, $offset);
             foreach($clients as $c) {
-                // cleanup reports
+
+                /**
+                 * delete client without users. Recursively (so reports will be deleted too)
+                 */
+                if (count($c->getUsers()) === 0) {
+                    $em->remove($c);
+                    $em->flush($c);
+                    $output->writeln("deleted client ".$c->getId()." (reason: no users)");
+                }
+
+                /**
+                 * cleanup reports
+                 */
                 $unsubmittedReports = $c->getUnsubmittedReports();
                 $total += (count($unsubmittedReports) - 1);
                 if (count($unsubmittedReports) > 1) {
                     if ($deleteableReports = $rs->findDeleteableReports($unsubmittedReports)) {
                         foreach($deleteableReports as $deleteableReport) {
-                            $rs->deleteRecursive($deleteableReport);
-                            $output->writeln("deleted ".$deleteableReport->getId()." (duplicate)");
+                            $em->remove($deleteableReport);
+                            $em->flush($deleteableReport);
+                            $output->writeln("deleted ".$deleteableReport->getId()." (reason: duplicate)");
                             $deleted++;
                         }
                     }
@@ -55,7 +68,6 @@ class CleanDataCommand extends ContainerAwareCommand
             }
             $offset += $limit;
         } while(!empty($clients));
-
 
         $output->writeln("deleted $deleted / $total ");
     }

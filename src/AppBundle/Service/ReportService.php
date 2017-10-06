@@ -206,17 +206,11 @@ class ReportService
         return $newYearReport;
     }
 
-    public function deleteRecursive(Report $report)
-    {
-        echo "Deleting report {$report->getId()}\n";
-//        $this->_em->remove($report);
-//        $this->_em->flush($report);
-    }
-
     /**
+     * Find reports the are deleteable (e.g. same date and not started)
      * @param Collection $reports
      *
-     * @return Report[]
+     * @return Report[] indexed by ID
      */
     public function findDeleteableReports(Collection $reports)
     {
