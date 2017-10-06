@@ -1,5 +1,27 @@
 .formatted-report {
 
+    // Page breaks
+
+    .section {
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: auto
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after:auto
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+
+    // Basic elements
+
     @extend %contain-floats;
     @include core-14();
     box-sizing: border-box;
@@ -52,7 +74,6 @@
     .section {
         @extend %contain-floats;
         margin-bottom: 40px;
-        page-break-after: always;
     }
 
     .subsection {
@@ -62,15 +83,15 @@
 
     #account-summary,
     #moneyIn-transactions {
-        page-break-after: always;
+        //page-break-after: always;
     }
 
     #declaration {
-        page-break-after: auto;
+        //page-break-after: auto;
     }
 
     .dont-break {
-        page-break-inside: avoid;
+        //page-break-inside: avoid;
     }
 
     .noborder {
@@ -110,7 +131,7 @@
         border: 0;
         background: $grey-review;
         clear: both;
-        page-break-inside: avoid;
+        //page-break-inside: avoid;
 
         > .label {
             margin-top: 0;
@@ -234,7 +255,7 @@
     .financial-categories {
 
         .category {
-            page-break-inside: avoid;
+            //page-break-inside: avoid;
         }
 
     }
