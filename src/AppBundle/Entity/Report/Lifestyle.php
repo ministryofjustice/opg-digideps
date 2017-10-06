@@ -25,7 +25,7 @@ class Lifestyle
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="lifestyle")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 

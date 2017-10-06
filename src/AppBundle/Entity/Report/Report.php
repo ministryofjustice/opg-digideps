@@ -183,7 +183,7 @@ class Report
      *
      * @JMS\Groups({"lifestyle"})
      * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
 
