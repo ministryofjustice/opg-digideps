@@ -53,8 +53,7 @@ form:
     label-104: |
       Do you expect %client%'s circumstances to change in the next 12 months?
     label-4: |
-      Do you expect to make any significant financial or health and welfare decisions on behalf of %client% in the
-      next 12 months?
+      Do you expect %client%'s circumstances to change in the next 12 months?
     hint: |
       For example, making a large gift, alterations to %client%'s home, or buying and selling property
       for %client%
@@ -81,7 +80,7 @@ form:
   doYouExpectFinancialDecisionsDetails:
       label: Please give us details about your decisions
       label-104: Please give us details of these changes
-      label-4: Please give us details about your decisions
+      label-4: Please give us details of these changes
   doYouHaveConcerns:
       label: Do you have any concerns about your deputyship?
       hint: |
