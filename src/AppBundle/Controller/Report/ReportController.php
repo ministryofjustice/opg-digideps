@@ -73,7 +73,7 @@ class ReportController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getUsers() : [];
+        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
 
         $reports = $client ? $client->getReports() : [];
         arsort($reports);

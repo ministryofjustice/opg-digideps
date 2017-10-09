@@ -51,7 +51,7 @@ class OdrController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getUsers() : [];
+        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
         $odr = $client->getOdr();
 
         $reports = $client ? $client->getReports() : [];
