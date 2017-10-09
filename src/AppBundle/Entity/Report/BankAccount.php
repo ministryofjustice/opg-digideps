@@ -130,7 +130,7 @@ class BankAccount
      * @var bool
      * @JMS\Groups({"account"})
      * @JMS\Type("boolean")
-     * @ORM\Column(name="is_closed", type="boolean")
+     * @ORM\Column(name="is_closed", type="boolean", options={ "default": false}, nullable=true)
      */
     private $isClosed;
 
