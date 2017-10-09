@@ -29,9 +29,11 @@ attachPage:
   uploadHeading: 2. Upload the file
   noDocuments: No documents
   documentList: Attached documents
+  documentListPrevious: Previously submitted documents
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
+  continueToSubmit: Continue to submit documents
   pleaseWait: The file is being uploaded.
   uploadHint: |
     If the file takes more than 5 minutes to upload, please refresh the page and try again.
@@ -65,3 +67,17 @@ summaryPage:
   dateAttached: Date attached
   deleteDocument: Remove
   setNoAttemptWithDocuments: "Your answer could not be updated to 'No' because you have attached documents. Please remove all attached documents before changing your answer."
+
+submitMoreDocumentsConfirm:
+  htmlTitle: "Deputy report - supporting documents | GOV.UK"
+  supportTitle: Attach documents
+  pageTitle: Submit your documents
+  para01: |
+    Below are the documents you have attached but not submitted to OPG. When you have
+    finished attaching all documents you would like to send to OPG, please submit.
+  documentListPrevious: Documents you have already sent
+  documentList: Attached documents
+  filename: Filename
+  dateAttached: Date attached
+  deleteDocument: Remove
+  submitButton: Submit documents

@@ -98,7 +98,6 @@ class Report
      */
     private $submittedBy;
 
-
     /**
      * @JMS\Type("AppBundle\Entity\Client")
      *
@@ -253,6 +252,22 @@ class Report
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Groups({"report-documents"})
+     *
+     * @var Document[]
+     */
+    private $submittedDocuments;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\Document>")
+     * @JMS\Groups({"report-documents"})
+     *
+     * @var Document[]
+     */
+    private $unsubmittedDocuments;
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
@@ -905,6 +920,22 @@ class Report
     /**
      * @return Document[]
      */
+    public function getSubmittedDocuments()
+    {
+        return $this->submittedDocuments;
+    }
+
+    /**
+     * @return Document[]
+     */
+    public function getUnsubmittedDocuments()
+    {
+        return $this->unsubmittedDocuments;
+    }
+
+    /**
+     * @return Document[]
+     */
     public function getDocumentsExcludingReportPdf()
     {
         return array_filter($this->documents, function ($document) { /* @var $document Document */
@@ -1014,6 +1045,16 @@ class Report
     public function getSectionsSettings()
     {
         return $this->sectionsSettings;
+    }
+
+    /**
+     * Has this report been submitted?
+     *
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return (bool)$this->getSubmitted();
     }
 
     /**

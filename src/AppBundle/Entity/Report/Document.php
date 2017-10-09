@@ -25,7 +25,7 @@ class Document
      */
     public function isValidForReport(ExecutionContextInterface $context)
     {
-        if (!$this->getFile()) {
+        if (empty($this->getFile()) || !($this->getFile() instanceof UploadedFile)) {
             return;
         }
 
@@ -101,6 +101,14 @@ class Document
      * @JMS\Groups({"document"})
      */
     private $isReportPdf;
+
+    /**
+     * @var ReportSubmission
+     *
+     * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
+     * @JMS\Groups({"document-report-subnmission"})
+     */
+    private $reportSubmission;
 
     /**
      * @return int
@@ -192,4 +200,11 @@ class Document
         $this->isReportPdf = $isReportPdf;
     }
 
+    /**
+     * @return ReportSubmission
+     */
+    public function getReportSubmission()
+    {
+        return $this->reportSubmission;
+    }
 }

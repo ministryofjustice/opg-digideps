@@ -22,6 +22,7 @@ class DocumentController extends AbstractController
 {
     private static $jmsGroups = [
         'report-documents',
+        'document-report-submission',
         'documents',
         'documents-state',
     ];
@@ -103,14 +104,17 @@ class DocumentController extends AbstractController
      */
     public function step2Action(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        if ( EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']
-           && 'yes' !== $report->getWishToProvideDocumentation()
-           ) {
-            return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
-        } elseif ($report->getWishToProvideDocumentation() === 'no') {
-            return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId]);
+        $report = $this->getReport($reportId, self::$jmsGroups);
+        if (!$report->isSubmitted()) {
+            $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
+            $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
+        } else {
+            $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
+            if ($this->getUser()->isDeputyPa()) {
+                $backLink = $this->generateClientProfileLink($report->getClient());
+            } else {
+                $backLink = $this->generateUrl('homepage');
+            }
         }
 
         $fileUploader = $this->get('file_uploader');
@@ -170,8 +174,8 @@ class DocumentController extends AbstractController
         return [
             'report'   => $report,
             'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]),
-            'nextLink' => $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']),
+            'backLink' => $backLink,
+            'nextLink' => $nextLink,
             'form'     => $form->createView(),
         ];
     }
@@ -208,6 +212,10 @@ class DocumentController extends AbstractController
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
 
+        if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
+            throw new \RuntimeException('Document already submitted and cannot be removed.');
+        }
+
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         $report = $document->getReport();
@@ -235,6 +243,8 @@ class DocumentController extends AbstractController
     {
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
+
+        $report = $document->getReport();
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
@@ -249,16 +259,67 @@ class DocumentController extends AbstractController
             );
         }
 
-        $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
-        if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
-            $returnUrl = 'summaryPage' == $request->get('from')
-                ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
-                : $this->generateUrl('report_documents'        , ['reportId' => $document->getReportId()]);
+        if ($report->isSubmitted()) {
+            // if report is submitted, then this remove path has come from adding additional documents so return the user
+            // to the step 2 page.
+            $returnUrl = $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
         } else {
-            $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
+            $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
+            if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
+                $returnUrl = 'summaryPage' == $request->get('from')
+                    ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
+                    : $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
+            } else {
+                $returnUrl = $this->generateUrl('documents_step', ['reportId' => $document->getReportId()]);
+            }
         }
 
         return $this->redirect($returnUrl);
+    }
+
+    /**
+     * Confirm additional documents form
+     *
+     * @Route("/report/{reportId}/documents/submit-more", name="report_documents_submit_more")
+     * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirm.html.twig")
+     */
+    public function submitMoreConfirmAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId, self::$jmsGroups);
+
+        $fromPage = $request->get('from');
+
+        $backLink = $this->generateUrl('report_documents', ['reportId' => $reportId]);
+        $nextLink = $this->generateUrl('report_documents_submit_more_confirmed', ['reportId' => $reportId]);
+
+        return [
+            'report'   => $report,
+            'backLink' => $backLink,
+            'nextLink' => $nextLink,
+            'fromPage' => $fromPage
+        ];
+    }
+
+    /**
+     * Confirmed send additional documents.
+     *
+     * @Route("/report/{reportId}/documents/confirm-submit-more", name="report_documents_submit_more_confirmed")
+     * @Template("AppBundle:Report/Document:submitMoreDocumentsConfirmed.html.twig")
+     */
+    public function submitMoreConfirmedAction(Request $request, $reportId)
+    {
+        $report = $this->getReport($reportId, self::$jmsGroups);
+
+        // submit the report to generate the submission entry only
+        $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
+
+        $request->getSession()->getFlashBag()->add('notice', 'Additional files have been sent');
+
+        if ($this->getUser()->isDeputyPa()) {
+            return $this->redirect($this->generateClientProfileLink($report->getClient()));
+        } else {
+            return $this->redirectToRoute('homepage');
+        }
     }
 
     /**
@@ -272,7 +333,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'status', 'document-report', 'report', 'client', 'user']
+            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'client', 'user']
         );
     }
 

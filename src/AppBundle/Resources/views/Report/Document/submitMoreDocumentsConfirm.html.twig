@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "report-documents" %}
+{% trans_default_domain translationDomain %}
+{% set page = "submitMoreDocumentsConfirm" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    <a href="{{ backLink }}" class="link-back behat-link-step-back">{{ 'editPage.backLink' | trans({},'common') }}</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">{{ (page ~ '.para01') | trans }}</p>
+    {% include 'AppBundle:Report/Document:_list_submitted.html.twig'  with {
+    'documents': report.submittedDocuments,
+    'translationDomain': translationDomain,
+    'page' : page,
+    } %}
+
+    <a href="{{ nextLink }}" class="button behat-link-confirm-submit">{{ (page ~ '.submitButton') | trans }}</a>
+
+{% endblock %}
+
