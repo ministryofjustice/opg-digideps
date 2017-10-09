@@ -29,7 +29,6 @@ class Client
      */
     private $firstname;
 
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
@@ -68,7 +67,6 @@ class Client
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
      */
     private $odr;
-
 
     /**
      * @JMS\Exclude()
@@ -697,10 +695,25 @@ class Client
     }
 
     /**
-     * @return Boolean
+     * @return array $coDeps an array of users sorted by firstname, or email if no firstname
      */
-    public function isMultiDeputy()
+    public function getCoDeputies()
     {
-        return (is_array($this->users) && count($this->users) > 0);
+        $coDeps = [];
+        if (is_array($this->users) && count($this->users) > 0) {
+            foreach ($this->users as $user) {
+                if (!$user->getFirstname()) {
+                    $matches = [];
+                    preg_match('(^\w+)', $user->getEmail(), $matches);
+                    if (!empty($matches[0])) {
+                        $coDeps[strToLower($matches[0])] = $user;
+                    }
+                } else {
+                    $coDeps[strToLower($user->getFirstname())] = $user;
+                }
+            }
+            ksort($coDeps);
+        }
+        return array_values($coDeps);
     }
 }
