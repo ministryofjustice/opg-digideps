@@ -93,10 +93,14 @@ class PaService
                 }
 
                 $user = $this->createUser($row);
-                $client = $this->createClient($row, $user);
-                $this->createReport($row, $client, $user);
+                if ($user instanceof EntityDir\User) {
+                    $client = $this->createClient($row, $user);
+                    if ($client instanceof EntityDir\Client) {
+                        $this->createReport($row, $client, $user);
+                    }
+                }
             } catch (\Exception $e) {
-                $message = 'Error for Deputy No: ' . $row['Deputy No'] . ', case ' . $row['Case'] . ': ' . $e->getMessage();
+                $message = 'Error for Case: ' . $row['Case'] . ' for PA Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
             }
         }
@@ -176,8 +180,9 @@ class PaService
             // Notify email change
             if ($user->getEmail() !== $userEmail) {
                 $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
-                    ' previously with email ' . $user->getEmail() .
-                    ' has changed email to ' . $userEmail;
+                    ' has changed their email to ' . $user->getEmail() . '. ' .
+                    'Please update the CSV to reflect the new email address.<br />';
+                return null;
             }
         }
 
