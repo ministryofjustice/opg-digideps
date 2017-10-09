@@ -706,10 +706,10 @@ class Client
                     $matches = [];
                     preg_match('(^\w+)', $user->getEmail(), $matches);
                     if (!empty($matches[0])) {
-                        $coDeps[strToLower($matches[0])] = $user;
+                        $coDeps[strToLower($matches[0]).$user->getId()] = $user;
                     }
                 } else {
-                    $coDeps[strToLower($user->getFirstname())] = $user;
+                    $coDeps[strToLower($user->getFirstname()).$user->getId()] = $user;
                 }
             }
             ksort($coDeps);
