@@ -60,7 +60,7 @@ class Note
      * @JMS\Type("string")
      * @JMS\Groups({"notes"})
      *
-     * @ORM\Column(name="category", type="string", length=100, nullable=false)
+     * @ORM\Column(name="category", type="string", length=100, nullable=true)
      */
     private $category;
 
@@ -78,7 +78,7 @@ class Note
      * @JMS\Type("string")
      * @JMS\Groups({"notes"})
      *
-     * @ORM\Column(name="content", type="text", nullable=false)
+     * @ORM\Column(name="content", type="text", nullable=true)
      */
     private $content;
 
@@ -89,6 +89,7 @@ class Note
      *
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="notes")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
 

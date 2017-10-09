@@ -84,7 +84,7 @@ class ClientContact
      * and prod data contains duplicate, making it impossible to add the
      * migration now, unless the data is cleaned
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=false)
+     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
     private $email;
 
