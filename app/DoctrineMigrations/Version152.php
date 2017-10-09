@@ -86,6 +86,9 @@ class Version152 extends AbstractMigration
         $this->addSql('ALTER TABLE client_contact DROP CONSTRAINT FK_1E5FA24519EB6921');
         $this->addSql('ALTER TABLE client_contact ADD CONSTRAINT FK_1E5FA24519EB6921 FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
 
+        $this->addSql('ALTER TABLE money_transfer DROP CONSTRAINT FK_A15E50EE4BD2A4C0');
+        $this->addSql('ALTER TABLE money_transfer ADD CONSTRAINT FK_A15E50EE4BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+
     }
 
     /**
