@@ -203,4 +203,31 @@ class ReportService
 
         return $newYearReport;
     }
+
+    /**
+     * Set report submission for additional documents
+     *
+     * @param Report $currentReport
+     * @param User $user
+     * @param \DateTime $submitDate
+     *
+     * @return Report new year's report
+     */
+    public function submitAdditionalDocuments(Report $currentReport, User $user, \DateTime $submitDate)
+    {
+        // create submission record with NEW documents (= documents not yet attached to a submission)
+        $submission = new ReportSubmission($currentReport, $user);
+        foreach($currentReport->getDocuments() as $document){
+            if (!$document->getReportSubmission()) {
+                $document->setReportSubmission($submission);
+            }
+        }
+
+        $this->_em->persist($submission);
+
+        // single transaction flush: current report, submission, new year report
+        $this->_em->flush();
+
+        return $currentReport;
+    }
 }

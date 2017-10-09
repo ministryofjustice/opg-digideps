@@ -864,6 +864,38 @@ class Report
     }
 
     /**
+     * Unsubmitted Reports
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("unsubmitted_documents")
+     * @JMS\Groups({"documents"})
+     *
+     * @return ArrayCollection|Document[]
+     */
+    public function getUnsubmittedDocuments()
+    {
+        return $this->getDocuments()->filter(function ($d) {
+            return empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        });
+    }
+
+    /**
+     * Submitted reports
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("submitted_documents")
+     * @JMS\Groups({"documents"})
+     *
+     * @return ArrayCollection|Document[]
+     */
+    public function getSubmittedDocuments()
+    {
+        return $this->getDocuments()->filter(function ($d) {
+            return !empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        });
+    }
+
+    /**
      * @param Document $document
      */
     public function addDocument(Document $document)
