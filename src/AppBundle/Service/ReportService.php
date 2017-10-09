@@ -229,6 +229,9 @@ class ReportService
         $ret = [];
         foreach($reports as $report1) {
             foreach($reports as $report2) {
+                if ($report1->getId() === $report2->getId()) {
+                    continue;
+                }
                 // find report with same date that have not started
                 if ($report1->getStatus()->hasStarted()
                     && $report1->hasSamePeriodAs($report2)
