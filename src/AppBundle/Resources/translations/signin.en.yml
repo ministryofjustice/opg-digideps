@@ -4,7 +4,7 @@ signIn:
 
 signedOut:
   pageTitle: You are now signed out
-  para01: Thank you for using the online deputy reporting service.
+  para01: Your report has been saved.
   para02: Sign in to get started again.
 
 signInAdmin:
