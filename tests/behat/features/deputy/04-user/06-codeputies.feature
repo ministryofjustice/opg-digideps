@@ -58,7 +58,7 @@ Feature: Codeputy Self Registration
     And I should not see the "codeputies" region
 
   @deputy
-  Scenario: The first codeputy of a client is able to self register
+  Scenario: The first co-deputy of a client is able to self register
     And emails are sent from "deputy" area
     And I reset the email log
 

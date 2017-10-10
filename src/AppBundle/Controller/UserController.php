@@ -247,6 +247,10 @@ class UserController extends AbstractController
                 ]);
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
+                    case 403:
+                        $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
+                        break;
+
                     case 422:
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
