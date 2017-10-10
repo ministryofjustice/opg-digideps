@@ -67,7 +67,6 @@ class AccountControllerTest extends AbstractTestController
                 'bank' => 'hsbc',
                 'sort_code' => '123456',
                 'account_number' => '1234',
-                'opening_date' => '01/01/2015',
                 'opening_balance' => '500',
             ],
         ]);
