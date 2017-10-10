@@ -25,39 +25,49 @@ class UserRegistrationService
 
     /**
      * CASREC checks
+     * - throw error 403 if user is a co-deputy attempting to self-register
      * - throw error 421 if user and client not found
      * - throw error 422 if user email is already found
      * - throw error 424 if user and client are found but the postcode doesn't match
      * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
+     * @param SelfRegisterData $selfRegisterData
      * @return User
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $user = new User();
-        $client = new Client();
+        $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())]);
 
-        $user->recreateRegistrationToken();
-        $this->populateUser($user, $selfRegisterData);
-        $this->populateClient($client, $selfRegisterData);
+        // ward off non-fee-paying codeps trying to self-register
+        if ($this->isMultiDeputyCase($selfRegisterData->getCaseNumber()) && $existingClient instanceof Client) {
+            // if client exists with case number, the first codep already registered.
+            throw new \RuntimeException("Co-deputy cannot self register.", 403);
+        }
 
-        // Check the user is unique
-        if (!$this->userIsUnique($user)) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        // Check the user doesn't already exist
+        $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        if ($existingUser) {
+            throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
         }
 
         // Check the client is unique
-        if (!$this->clientIsUnique($client)) {
+        if ($existingClient instanceof Client) {
             throw new \RuntimeException('User registration: Case number already used', 425);
         }
 
-        // Check casRec for user
-        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($client->getCaseNumber())
-                    , 'clientLastname' => CasRec::normaliseSurname($client->getLastname())
-                    , 'deputySurname'  => CasRec::normaliseSurname($user->getLastname())
-                    ];
-        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
+        $user = new User();
+        $user->recreateRegistrationToken();
+        $this->populateUser($user, $selfRegisterData);
+
+        $client = new Client();
+        $this->populateClient($client, $selfRegisterData);
+
+        $casRecCriteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
+                          , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
+                          , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
+        ];
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($casRecCriteria);
 
         $this->checkPostcodeExistsInCasRec($casRecUserMatches, $user->getAddressPostcode());
 
@@ -76,6 +86,16 @@ class UserRegistrationService
 
         $this->saveUserAndClient($user, $client);
         return $user;
+    }
+
+    /**
+     * @param string $caseNumber
+     * @return bool
+     */
+    public function isMultiDeputyCase($caseNumber)
+    {
+        $casRecCaseMatches = $this->casRecRepo->findBy(['caseNumber' => CasRec::normaliseCaseNumber($caseNumber)]);
+        return count($casRecCaseMatches) > 1;
     }
 
     /**
@@ -113,6 +133,10 @@ class UserRegistrationService
         return $casRecMatches;
     }
 
+    /**
+     * @param array $casRecUsers
+     * @param string $postcode
+     */
     private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
     {
         // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
@@ -173,15 +197,5 @@ class UserRegistrationService
         $client->setFirstname($selfRegisterData->getClientFirstname());
         $client->setLastname($selfRegisterData->getClientLastname());
         $client->setCaseNumber($selfRegisterData->getCaseNumber());
-    }
-
-    public function clientIsUnique(Client $client)
-    {
-        return !($client->getCaseNumber() && $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => $client->getCaseNumber()]));
-    }
-
-    public function userIsUnique(User $user)
-    {
-        return !($user->getEmail() && $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $user->getEmail()]));
     }
 }
