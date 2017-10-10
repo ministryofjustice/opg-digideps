@@ -8,7 +8,7 @@
     # CLICKABLE REPORT
     #}
 
-    {% set status = reportActive ? reportActive.getStatus().status : 'notStarted' %}
+    {% set status = reportActive ? reportActive.getStatus().status : 'notCreated' %}
     {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
     <div class="card soft-half">
         <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
@@ -33,9 +33,8 @@
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
         : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
-        {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
-            <a href="{{ link }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('homepage.reportRow.cta.' ~ status) | trans({}, 'common') }}</a>
         </div>
 
     </div>

@@ -13,7 +13,6 @@
 	    <p class="text flush--bottom">{{ ('odr.instructions') | trans(transOptions) }}</p>
     </div>
     <div class="card-actions">
-        {% set buttonText = (odrStatus.status != 'notStarted') ? 'continue' : 'startNow' %}
-	    <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="button right behat-link-odr-start">{{ buttonText | trans({}, 'common') }}</a>
+	    <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="button right behat-link-odr-start">{{ ('homepage.ndrRow.cta.' ~ odrStatus.status) | trans({}, 'common') }}</a>
     </div>
 </div>
