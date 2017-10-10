@@ -20,7 +20,7 @@ trait MoneyShortTrait
     /**
      * @var MoneyTransactionShort[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $moneyTransactionsShort;

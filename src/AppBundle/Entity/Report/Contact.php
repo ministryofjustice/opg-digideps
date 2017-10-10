@@ -117,7 +117,7 @@ class Contact
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="contacts")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 

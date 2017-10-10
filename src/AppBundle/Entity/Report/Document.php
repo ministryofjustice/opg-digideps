@@ -73,6 +73,7 @@ class Document
      *
      * @JMS\Type("AppBundle\Entity\Report\Report")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="documents")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 

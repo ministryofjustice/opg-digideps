@@ -11,7 +11,7 @@ trait MoneyTransactionTrait
      * @var MoneyTransaction[]
      *
      * @JMS\Groups({"transaction"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $moneyTransactions;

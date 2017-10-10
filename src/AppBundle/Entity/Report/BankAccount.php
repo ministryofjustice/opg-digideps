@@ -130,7 +130,7 @@ class BankAccount
      * @var bool
      * @JMS\Groups({"account"})
      * @JMS\Type("boolean")
-     * @ORM\Column(name="is_closed", type="boolean")
+     * @ORM\Column(name="is_closed", type="boolean", options={ "default": false}, nullable=true)
      */
     private $isClosed;
 
@@ -138,7 +138,7 @@ class BankAccount
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="bankAccounts")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 

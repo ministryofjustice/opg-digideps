@@ -13,7 +13,7 @@ trait DecisionTrait
      *
      * @JMS\Groups({"decision"})
      * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
     private $decisions;
 

@@ -32,6 +32,12 @@ class Report
     use ReportTraits\DebtTrait;
     use ReportTraits\PaFeeExpensesTrait;
 
+    /**
+     * Reports with total amount of assets
+     * Threshold under which reports should be 103, and not 102
+     */
+    const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
+
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
 
@@ -82,14 +88,9 @@ class Report
     const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
     const SECTION_DOCUMENTS = 'documents';
-    //
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"report"})
-     * @JMS\Type("array")
      *
      * @return array
      */
@@ -133,13 +134,6 @@ class Report
         ];
     }
 
-
-    /**
-     * Reports with total amount of assets
-     * Threshold under which reports should be 103, and not 102
-     */
-    const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
-
     /**
      * @var int
      *
@@ -171,7 +165,7 @@ class Report
      * @JMS\Groups({"client", "report-client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
 
@@ -180,7 +174,7 @@ class Report
      *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 
@@ -189,7 +183,7 @@ class Report
      *
      * @JMS\Groups({"lifestyle"})
      * @JMS\Type("AppBundle\Entity\Report\Lifestyle")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Lifestyle",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
 
@@ -198,7 +192,7 @@ class Report
      *
      * @JMS\Groups({"action"})
      * @JMS\Type("AppBundle\Entity\Report\Action")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Action",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
 
@@ -207,7 +201,7 @@ class Report
      *
      * @JMS\Groups({ "mental-capacity"})
      * @JMS\Type("AppBundle\Entity\Report\MentalCapacity")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\MentalCapacity",  mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
 
@@ -312,7 +306,7 @@ class Report
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
@@ -418,14 +412,36 @@ class Report
         return $this;
     }
 
+
     /**
+     * Get sections based on the report type
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"report"})
+     * @JMS\Type("array")
+     */
+    public function getAvailableSections()
+    {
+        $ret = [];
+        foreach(self::getSectionsSettings() as $sectionId => $reportTypes) {
+            if (in_array($this->type, $reportTypes)) {
+                $ret[] = $sectionId;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @todo consider removal
+     *
      * @param string $section
      *
      * @return bool
      */
     public function hasSection($section)
     {
-        return in_array($this->type, self::getSectionsSettings()[$section]);
+        return in_array($section, $this->getAvailableSections());
     }
 
     /**
@@ -484,6 +500,16 @@ class Report
     public function getEndDate()
     {
         return $this->endDate;
+    }
+
+    /**
+     * For check reasons
+     * @return string
+     */
+    public function hasSamePeriodAs(Report $report)
+    {
+        return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
+            && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
     /**

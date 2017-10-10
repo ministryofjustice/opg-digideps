@@ -619,8 +619,6 @@ class ReportControllerTest extends AbstractTestController
 
     public function testGetAll()
     {
-        $url = '/report/get-all';
-
         $reportsGetAllRequest = function (array $params) {
             $url = '/report/get-all?' . http_build_query($params);
 
@@ -650,7 +648,7 @@ class ReportControllerTest extends AbstractTestController
         $reportsNotStarted = $reportsGetAllRequest([
             'status' => 'notStarted',
         ]);
-        $this->assertCount(0, $reportsNotStarted['reports']);
+        $this->assertCount(3, $reportsNotStarted['reports']);
         $reportsFilteredReadyToSubmit = $reportsGetAllRequest([
             'status' => 'readyToSubmit',
         ]);

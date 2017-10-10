@@ -44,14 +44,14 @@ class Client
      *
      * @JMS\Groups({"client-reports"})
      * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      */
     private $reports;
 
     /**
      * @JMS\Groups({"basic", "odr", "odr_id"})
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist", "remove"})
      **/
     private $odr;
 
@@ -71,7 +71,7 @@ class Client
      *
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=true)
+     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
     private $email;
 
@@ -189,7 +189,7 @@ class Client
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
      * @JMS\Groups({"notes"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $notes;
@@ -199,7 +199,7 @@ class Client
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
      * @JMS\Groups({"clientcontacts"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"lastName"="ASC"})
      */
     private $clientContacts;
