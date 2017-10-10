@@ -49,7 +49,6 @@ class SelfRegisterController extends RestController
         return $user;
     }
 
-
     /**
      * @Route("/verifycodeputy")
      * @Method({"POST"})

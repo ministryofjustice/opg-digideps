@@ -25,6 +25,7 @@ class UserRegistrationService
 
     /**
      * CASREC checks
+     * - throw error 403 if user is a co-deputy attempting to self-register
      * - throw error 421 if user and client not found
      * - throw error 422 if user email is already found
      * - throw error 424 if user and client are found but the postcode doesn't match
@@ -35,17 +36,22 @@ class UserRegistrationService
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $user = new User();
-        $client = new Client();
+        // Check the user doesn't already exist
+        $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        if ($existingUser) {
+            if ($existingUser->isCoDeputy()) {
+                throw new \RuntimeException("Co-deputy cannot self register.", 403);
+            } else {
+                throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
+            }
+        }
 
+        $user = new User();
         $user->recreateRegistrationToken();
         $this->populateUser($user, $selfRegisterData);
-        $this->populateClient($client, $selfRegisterData);
 
-        // Check the user is unique
-        if (!$this->userIsUnique($user)) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
-        }
+        $client = new Client();
+        $this->populateClient($client, $selfRegisterData);
 
         // Check the client is unique
         if (!$this->clientIsUnique($client)) {
@@ -113,6 +119,10 @@ class UserRegistrationService
         return $casRecMatches;
     }
 
+    /**
+     * @param array $casRecUsers
+     * @param string $postcode
+     */
     private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
     {
         // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
@@ -178,10 +188,5 @@ class UserRegistrationService
     public function clientIsUnique(Client $client)
     {
         return !($client->getCaseNumber() && $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => $client->getCaseNumber()]));
-    }
-
-    public function userIsUnique(User $user)
-    {
-        return !($user->getEmail() && $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $user->getEmail()]));
     }
 }

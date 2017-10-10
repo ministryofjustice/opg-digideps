@@ -200,60 +200,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
 
-    /**
-     * @test
-     */
-    public function userIsNotUnique()
-    {
-        $user = new User();
-        $user->setFirstname('zac');
-        $user->setLastname('tolley');
-        $user->setEmail('zac@thetolleys.com');
-
-        $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn($user)
-            ->getMock();
-
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em);
-
-        $result = $this->userRegistrationService->userIsUnique($user);
-
-        $this->assertFalse($result);
-    }
-
-    /**
-     * @test
-     */
-    public function userIsUnique()
-    {
-        $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email' => 'zaz@thetolleys.com'])->andReturn(null)
-            ->getMock();
-
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em);
-
-        $user2 = new User();
-        $user2->setFirstname('zac');
-        $user2->setLastname('tolley');
-        $user2->setEmail('zaz@thetolleys.com');
-
-        $result = $this->userRegistrationService->userIsUnique($user2);
-
-        $this->assertTrue($result);
-    }
-
     /** @test */
     public function renderRegistrationHtmlEmail()
     {
