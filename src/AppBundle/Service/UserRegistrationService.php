@@ -32,18 +32,28 @@ class UserRegistrationService
      * - throw error 425 if client is already used
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
+     * @param SelfRegisterData $selfRegisterData
      * @return User
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
+        $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())]);
+
+        // ward off non-fee-paying codeps trying to self-register
+        if ($this->isMultiDeputyCase($selfRegisterData->getCaseNumber()) && $existingClient instanceof Client) {
+            // if client exists with case number, the first codep already registered.
+            throw new \RuntimeException("Co-deputy cannot self register.", 403);
+        }
+
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
         if ($existingUser) {
-            if ($existingUser->isCoDeputy()) {
-                throw new \RuntimeException("Co-deputy cannot self register.", 403);
-            } else {
-                throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
-            }
+            throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
+        }
+
+        // Check the client is unique
+        if ($existingClient instanceof Client) {
+            throw new \RuntimeException('User registration: Case number already used', 425);
         }
 
         $user = new User();
@@ -53,17 +63,11 @@ class UserRegistrationService
         $client = new Client();
         $this->populateClient($client, $selfRegisterData);
 
-        // Check the client is unique
-        if (!$this->clientIsUnique($client)) {
-            throw new \RuntimeException('User registration: Case number already used', 425);
-        }
-
-        // Check casRec for user
-        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($client->getCaseNumber())
-                    , 'clientLastname' => CasRec::normaliseSurname($client->getLastname())
-                    , 'deputySurname'  => CasRec::normaliseSurname($user->getLastname())
-                    ];
-        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
+        $casRecCriteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
+                          , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
+                          , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
+        ];
+        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($casRecCriteria);
 
         $this->checkPostcodeExistsInCasRec($casRecUserMatches, $user->getAddressPostcode());
 
@@ -82,6 +86,16 @@ class UserRegistrationService
 
         $this->saveUserAndClient($user, $client);
         return $user;
+    }
+
+    /**
+     * @param string $caseNumber
+     * @return bool
+     */
+    public function isMultiDeputyCase($caseNumber)
+    {
+        $casRecCaseMatches = $this->casRecRepo->findBy(['caseNumber' => CasRec::normaliseCaseNumber($caseNumber)]);
+        return count($casRecCaseMatches) > 1;
     }
 
     /**
@@ -183,10 +197,5 @@ class UserRegistrationService
         $client->setFirstname($selfRegisterData->getClientFirstname());
         $client->setLastname($selfRegisterData->getClientLastname());
         $client->setCaseNumber($selfRegisterData->getCaseNumber());
-    }
-
-    public function clientIsUnique(Client $client)
-    {
-        return !($client->getCaseNumber() && $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => $client->getCaseNumber()]));
     }
 }
