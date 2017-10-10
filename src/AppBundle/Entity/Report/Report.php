@@ -62,7 +62,7 @@ class Report
     // feature flags, to disable 103/104 if/when needed
     const ENABLE_103 = true;
     const ENABLE_104 = true;
-    const ENABLE_104_JOINT = false;
+    const ENABLE_104_JOINT = true;
 
     const SECTION_DECISIONS = 'decisions';
     const SECTION_CONTACTS = 'contacts';
@@ -887,6 +887,38 @@ class Report
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    /**
+     * Unsubmitted Reports
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("unsubmitted_documents")
+     * @JMS\Groups({"documents"})
+     *
+     * @return ArrayCollection|Document[]
+     */
+    public function getUnsubmittedDocuments()
+    {
+        return $this->getDocuments()->filter(function ($d) {
+            return empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        });
+    }
+
+    /**
+     * Submitted reports
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("submitted_documents")
+     * @JMS\Groups({"documents"})
+     *
+     * @return ArrayCollection|Document[]
+     */
+    public function getSubmittedDocuments()
+    {
+        return $this->getDocuments()->filter(function ($d) {
+            return !empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        });
     }
 
     /**

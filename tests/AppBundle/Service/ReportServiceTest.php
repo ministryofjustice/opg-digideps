@@ -127,6 +127,22 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testSubmitAdditionalDocuments()
+    {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+            return $report instanceof EntityDir\Report\ReportSubmission;
+        }));
+        $this->em->shouldReceive('flush')->with()->once();
+
+        $this->assertEmpty($this->report->getReportSubmissions());
+        $currentReport = $this->sut->submitAdditionalDocuments($this->report, $this->user, new \DateTime('2016-01-15'));
+        $submission = $currentReport->getReportSubmissions()->first();
+
+        $this->assertContains($submission, $this->report->getReportSubmissions());
+        $this->assertEquals($this->document1, $submission->getDocuments()->first());
+        $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
+    }
+
     public function tearDown()
     {
         m::close();

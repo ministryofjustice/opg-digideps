@@ -81,6 +81,7 @@ class Document
      * @var ReportSubmission
      *
      * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
+     * @JMS\Groups({"document-report-submission"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
