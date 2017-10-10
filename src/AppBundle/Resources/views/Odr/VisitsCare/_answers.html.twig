@@ -33,7 +33,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">Edit</a>
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if odr.visitsCare.doYouLiveWithClient == 'no' %}
@@ -41,7 +41,7 @@
                 <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</td>
                 <td>{{ odr.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -66,7 +66,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if odr.visitsCare.doesClientReceivePaidCare == 'yes' %}
@@ -78,7 +78,7 @@
                     {{ ('form.howIsCareFunded.choices.' ~ odr.visitsCare.howIsCareFunded) | trans(transOptions) }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -103,7 +103,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':3, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':3, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
 
@@ -127,7 +127,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if odr.visitsCare.doesClientHaveACarePlan == 'yes' %}
@@ -139,7 +139,7 @@
                     {{ odr.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':4, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -164,7 +164,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if odr.visitsCare.planMoveNewResidence == 'yes' %}
@@ -176,7 +176,7 @@
                     {{ odr.visitsCare.planMoveNewResidenceDetails | nl2br }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('odr_visits_care_step', {'odrId': odr.id, 'step':5, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}

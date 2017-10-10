@@ -67,17 +67,17 @@
                     </p>
                     {% if user.phoneMain != '' %}
                     <p class="flush--bottom push-half--top">
-                        <strong class="bold">Phone</strong><br>
+                        <strong class="bold">{{ 'phone' | trans({}, 'common' ) }}</strong><br>
                         {{ user.phoneMain }}
                     </p>
                     {% endif %}
                 </td>
                 <td class="change-answer">
                     {% if user.id != app.user.id and is_granted('edit-user', user) %}
-                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">Edit</a><br>
+                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if is_granted('delete-user', user) %}
-                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">Remove</a><br>
+                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if is_granted('edit-user', user) and not user.active %}
                         <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">Resend activation</a>

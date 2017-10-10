@@ -48,9 +48,9 @@
             </td>
             <td class="change-answer soft-half--left hard--right">
                 <a class="behat-link-edit action-link"
-                   href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>
+                   href="{{ path('odr_bank_accounts_step' , {'odrId': odr.id, 'step': 1, 'accountId': account.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
                 <a class="push-half--left behat-link-delete action-link"
-                   href="{{ path('odr_bank_account_delete' , {'odrId': odr.id, 'accountId': account.id}) }}">Remove</a>
+                   href="{{ path('odr_bank_account_delete' , {'odrId': odr.id, 'accountId': account.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
     {% endfor %}

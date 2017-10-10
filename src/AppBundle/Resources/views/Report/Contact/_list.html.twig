@@ -92,7 +92,7 @@
                     </td>
                     <td class="change-answer width-sixth soft-half--left hard--right">
                         <a href="{{ url('contacts_edit', { 'reportId': report.id, 'contactId': contact.id }) }}" class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
-                        <a href="{{ path('contacts_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left action-link behat-link-delete">Remove</a>
+                        <a href="{{ path('contacts_delete', { 'reportId': report.id, 'contactId': contact.id }) }}" class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                     </td>
                 </tr>
             {% endfor %}

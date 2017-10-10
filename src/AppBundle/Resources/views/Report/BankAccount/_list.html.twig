@@ -57,9 +57,9 @@
             {% endif %}
             <td class="change-answer soft-half--left hard--right">
                 <a class="behat-link-edit action-link"
-                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">Edit</a>
+                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
                 <a class="push-half--left behat-link-delete action-link"
-                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">Remove</a>
+                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
     {% endfor %}

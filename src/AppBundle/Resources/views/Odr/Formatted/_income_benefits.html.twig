@@ -41,9 +41,9 @@ or odr.getExpectCompensationDamages() %}
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if odr.receiveStatePension == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="value checkbox">{% if odr.receiveStatePension == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
             </div>
@@ -53,9 +53,9 @@ or odr.getExpectCompensationDamages() %}
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if odr.receiveOtherIncome == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="value checkbox">{% if odr.receiveOtherIncome == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
                 {% if odr.receiveOtherIncome == 'yes' %}
@@ -76,9 +76,9 @@ or odr.getExpectCompensationDamages() %}
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if odr.expectCompensationDamages == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="value checkbox">{% if odr.expectCompensationDamages == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
                 {% if odr.expectCompensationDamages == 'yes' %}

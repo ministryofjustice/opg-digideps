@@ -160,7 +160,7 @@
                     <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                        class="behat-link-edit action-link">{{ 'summaryPage.edit'| trans }}</a>
                     <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
-                       class="push-half--left action-link behat-link-delete">Remove</a>
+                       class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endfor %}

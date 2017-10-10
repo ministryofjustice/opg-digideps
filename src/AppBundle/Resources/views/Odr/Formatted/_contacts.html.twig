@@ -1,7 +1,7 @@
 {% if contacts | length > 0 or odr.reasonForNoContacts != "" %}
     <div class="section" id="contacts-section">
         <h2 class="section-heading">People you consulted</h2>
-                        
+
         {% if contacts | length == 0 %}
             <div class="box contact-item no-contact" id="no-contact">
                 <dl class="labelvalue">
@@ -18,8 +18,8 @@
                             <dl class="labelvalue half-width first">
                                 <dt class="label">Full name</dt>
                                 <dd class="value">{{ contact.contactName }}</dd>
-             
-                                <dt class="label">Address</dt>
+
+                                <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
                                 <dd class="value textarea">
                                     {% if contact.address or contact.postcode %}
                                     {{ contact.address }}<br/>
@@ -35,7 +35,7 @@
                             <dl class="labelvalue half-width">
                                 <dt class="label">Relationship to client</dt>
                                 <dd class="value">{{ contact.relationship }}</dd>
-        
+
                                 <dt class="label">Why did you consult them?</dt>
                                 <dd class="value textarea">{{ contact.explanation }}</dd>
                             </dl>

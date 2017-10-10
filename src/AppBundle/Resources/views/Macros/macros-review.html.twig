@@ -23,7 +23,7 @@
             <dt class="label">Last name</dt>
             <dd class="value">{{deputy.lastname}}</dd>
 
-            <dt class="label">Address</dt>
+            <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
             <dd class="value address-value">
                 {% if deputy.isDeputyPa %}
                     {{ paTeam.address1 }}<br/>
@@ -57,7 +57,7 @@
             <dt class="label">Last name</dt>
             <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
 
-            <dt class="label">Address</dt>
+            <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
             <dd class="value address-value">
                 {{ client.address }}<br/>
                 {{ client.address2 }}<br/>
@@ -81,7 +81,7 @@
     {% else %}
         <div class="full-width push-half--top">
             <dl class="labelvalue">
-                <dt class="label">Email</dt>
+                <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
                 <dd class="value">{{deputy.email}}</dd>
             </dl>
         </div>
@@ -92,7 +92,6 @@
 {# =================================================================== #}
 {# Visits and care #}
 
-
 {% macro careArrangements(visitsCare) %}
 <div class="dont-break">
     <h3>Care arrangements</h3>
@@ -102,9 +101,9 @@
         <table class="checkboxes labelvalue inline">
             <tr>
                 <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">Yes</td>
+                <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                 <td class="value checkbox">{% if visitsCare.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">No</td>
+                <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
             </tr>
         </table>
 
@@ -147,7 +146,6 @@
 </div>
 {% endmacro %}
 
-
 {# =================================================================== #}
 {# Deputy expenses #}
 
@@ -165,9 +163,9 @@
         <table class="checkboxes labelvalue inline">
             <tr>
                 <td class="value checkbox">{% if report.paidForAnything == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">Yes</td>
+                <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                 <td class="value checkbox">{% if report.paidForAnything == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                <td class="label">No</td>
+                <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
             </tr>
         </table>
 
@@ -203,9 +201,9 @@
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">{% if param.answer == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">Yes</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                     <td class="value checkbox">{% if param.answer == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">No</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                 </tr>
             </table>
 

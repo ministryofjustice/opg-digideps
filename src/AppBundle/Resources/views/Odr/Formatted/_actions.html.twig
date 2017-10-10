@@ -14,9 +14,9 @@ or odr.actionPropertyBuy
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if odr.actionGiveGiftsToClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">Yes</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="value checkbox">{% if odr.actionGiveGiftsToClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">No</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                     </tr>
                 </table>
 
@@ -38,9 +38,9 @@ or odr.actionPropertyBuy
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if odr.actionPropertyMaintenance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
+                            <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                             <td class="value checkbox">{% if odr.actionPropertyMaintenance == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
+                            <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -50,9 +50,9 @@ or odr.actionPropertyBuy
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if odr.actionPropertySellingRent == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
+                            <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                             <td class="value checkbox">{% if odr.actionPropertySellingRent == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
+                            <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -62,9 +62,9 @@ or odr.actionPropertyBuy
                     <table class="checkboxes labelvalue inline">
                         <tr>
                             <td class="value checkbox">{% if odr.actionPropertyBuy == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">Yes</td>
+                            <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                             <td class="value checkbox">{% if odr.actionPropertyBuy == 'no' %}X{% else %}&nbsp;{% endif %}</td>
-                            <td class="label">No</td>
+                            <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                         </tr>
                     </table>
                 </div>
