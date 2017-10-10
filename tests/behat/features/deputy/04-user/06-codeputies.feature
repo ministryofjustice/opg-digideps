@@ -179,6 +179,24 @@ Feature: Codeputy Self Registration
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@digital.justice.gov.uk"
 
   @deputy
+  Scenario: A second codeputy of a client is unable to self register (invite not yet sent)
+    # Correct details - but shouldn't allow
+    Given I am on "/register"
+    When I fill in the following:
+      | self_registration_firstname       | Bob                                           |
+      | self_registration_lastname        | Hale                                          |
+      | self_registration_email_first     | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_email_second    | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_postcode        | DY8 1QR                                       |
+      | self_registration_clientFirstname | Patricia                                      |
+      | self_registration_clientLastname  | Jarvis                                        |
+      | self_registration_caseNumber      | 11111111                                      |
+    And I press "self_registration_save"
+    Then I should see a "#error-summary" element
+    And I should see "You are attempting to register a case which already has other deputies assigned to it"
+    And I should be on "/register"
+
+  @deputy
   Scenario: The first co-deputy re-invites a deputy (different email address)
     Given emails are sent from "deputy" area
     And I reset the email log
@@ -194,7 +212,25 @@ Feature: Codeputy Self Registration
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2a@digital.justice.gov.uk"
 
   @deputy
-  Scenario: The second codeputy of a client is able to self register
+  Scenario: A second codeputy of a client is unable to self register (invite sent)
+    # Correct details - but shouldn't allow
+    Given I am on "/register"
+    When I fill in the following:
+      | self_registration_firstname       | Bob                                           |
+      | self_registration_lastname        | Hale                                          |
+      | self_registration_email_first     | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_email_second    | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_postcode        | DY8 1QR                                       |
+      | self_registration_clientFirstname | Patricia                                      |
+      | self_registration_clientLastname  | Jarvis                                        |
+      | self_registration_caseNumber      | 11111111                                      |
+    And I press "self_registration_save"
+    Then I should see a "#error-summary" element
+    And I should see "You are attempting to register a case which already has other deputies assigned to it"
+    And I should be on "/register"
+
+  @deputy
+  Scenario: A second codeputy of a client is able to follow invite link
     Given emails are sent from "deputy" area
     When I open the "/user/activate/" link from the email
     When I fill in the following:
