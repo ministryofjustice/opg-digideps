@@ -285,7 +285,7 @@ class PaService
 
             $reportStartDate = self::generateReportStartDateFromEndDate($reportEndDate);
 
-            $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate);
+            $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
             $client->addReport($report);   //double link for testing reasons
 
             $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
