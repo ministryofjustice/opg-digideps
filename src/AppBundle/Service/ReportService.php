@@ -86,7 +86,8 @@ class ReportService
             $client,
             $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType(), // report comes from casrec, or last year report, if not found
             $startDate,
-            $endDate
+            $endDate,
+            false
         );
 
         // copy assets

@@ -326,12 +326,14 @@ class Report
     private $wishToProvideDocumentation;
 
     /**
-     * Report constructor
-     * Construct reports using the report service
-     *
+     * Report constructor.
      * @param Client $client
+     * @param $type
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate)
+    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::$reportTypes)) {
             throw new \InvalidArgumentException("$type not a valid report type");
@@ -341,18 +343,13 @@ class Report
         $this->startDate = new \DateTime($startDate->format('Y-m-d'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'));
 
-        // date interval check
-//        if ((int)$startDate->diff($endDate)->format('%a') > 365) {
-//            throw new \RuntimeException('Report cannot cover more than one year');
-//        }
 
-
-        if (count($client->getUnsubmittedReports()) > 0) {
+        if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
             throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
-        if (count($client->getSubmittedReports())) {
+        if ($dateChecks && count($client->getSubmittedReports())) {
             $unsubmittedEndDates = array_map(function ($report) {
                 return $report->getEndDate();
             }, $client->getSubmittedReports()->toArray());
