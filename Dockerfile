@@ -45,7 +45,7 @@ ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
 RUN  NODE_ENV=production gulp
 
-# cleanup
+# remove parameters.yml (will be regenerated at startup time from docker)
 RUN  rm /app/app/config/parameters.yml
 USER root
 ENV  HOME /root
