@@ -339,6 +339,58 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
+     * @Template
+     */
+    public function upgradeMldAction(Request $request)
+    {
+        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+            'method' => 'POST',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $fileName = $form->get('file')->getData();
+            try {
+                $data = (new CsvToArray($fileName, true))
+                    ->setExpectedColumns([
+                        'Deputy No'
+                    ])
+                    ->getData();
+                $compressedData = CsvUploader::compressData($data);
+                $ret = $this->getRestClient()->setTimeout(600)->post('codeputy/mldupgrade', $compressedData);
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
+                );
+
+                foreach($ret['errors'] as $err) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        $err
+                    );
+                }
+                return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
+
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $message = $e->getData()['message'];
+                }
+                $form->get('file')->addError(new FormError($message));
+            }
+        }
+
+        return [
+            'currentMldUsers' => $this->getRestClient()->get('codeputy/count', 'array'),
+            'form'            => $form->createView(),
+            'maxUploadSize'   => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
+        ];
+    }
+
+
+    /**
      * @Route("/pa-upload", name="admin_pa_upload")
      * @Template
      */
