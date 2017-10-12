@@ -17,8 +17,15 @@ class ReportSubmissionRepository extends EntityRepository
      *
      * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
      */
-    public function findByFiltersWithCounts($status, $q, $createdByRole, $offset, $limit)
-    {
+    public function findByFiltersWithCounts(
+        $status,
+        $q,
+        $createdByRole,
+        $offset,
+        $limit,
+        $orderBy = 'createdOn',
+        $order = 'ASC'
+    ) {
         $qb = $this->createQueryBuilder('rs');
         $qb
             ->leftJoin('rs.report', 'r')
@@ -26,7 +33,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.documents', 'd')
-            ->orderBy('rs.id', 'DESC');
+            ->orderBy('rs.' . $orderBy, $order);
 
         // only return submission with at least one document
         // it can be removed when https://opgtransform.atlassian.net/browse/DDPB-1473 gets implemented
