@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\CsvUploader;
 use JMS\Serializer\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,6 +15,24 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CoDeputyController extends RestController
 {
+    /**
+     * @route("{count}")
+     * @Method({"GET"})
+     */
+    public function countMld(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+
+        $qb = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('count(u.id)')
+            ->from('AppBundle\Entity\User', 'u')
+            ->where('u.coDeputyClientConfirmed = ?1')
+            ->setParameter(1, true);
+
+        $count = $qb->getQuery()->getSingleScalarResult();
+
+        return $count;
+    }
 
     /**
      * @Route("add")
@@ -76,5 +95,53 @@ class CoDeputyController extends RestController
         }
 
         return [];
+    }
+
+    /**
+     * Bulk upgrade of codeputy_client_confirmed flag
+     * Max 10k otherwise failing (memory reach 128M).
+     * Borrows heavily from CasRecController:addBulk
+     *
+     * @Route("{mldupgrade}")
+     * @Method({"POST"})
+     */
+    public function upgradeToMld(Request $request)
+    {
+        $maxRecords = 10000;
+
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+
+        ini_set('memory_limit', '1024M');
+
+        $retErrors = [];
+        $data = CsvUploader::decompressData($request->getContent());
+        $count = count($data);
+
+        if (!$count) {
+            throw new \RuntimeException('No record received from the API');
+        }
+        if ($count > $maxRecords) {
+            throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
+        }
+
+        $deputyNumbers = [];
+        foreach($data as $deputy) {
+            if (array_key_exists('Deputy No', $deputy)){
+                $deputyNumbers[] = $deputy['Deputy No'];
+            }
+        }
+
+        $conn = $this->getEntityManager()->getConnection();
+        $affected = 0;
+        foreach(array_chunk($deputyNumbers, 500) as $chunk){
+            $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('" . implode("','", $chunk) . "')";
+            $affected += $conn->exec($sql);
+        }
+
+        $this->get('logger')->info('Received '.count($data).' records, of which '.$affected.' were updated');
+        return [ 'requested_mld_upgrades' => count($deputyNumbers)
+               , 'updated' => $affected
+               , 'errors' => $retErrors
+               ];
     }
 }
