@@ -107,8 +107,19 @@
                         </td>
                         <td class="width-fifth">
                             {% if reportSubmission.createdBy %}
+                                {% if reportSubmission.createdBy.isDeputyPa %}
+                                    {% set PAName = reportSubmission.createdBy.determinePublicAuthorityName %}
+                                        {% if PAName != '' and PAName != reportSubmission.createdBy.lastname %}
+                                            {{ reportSubmission.createdBy.fullname }}<br>
+                                            ({{ reportSubmission.createdBy.roleFullName }})
+                                        {% else %}
+                                            {{ reportSubmission.createdBy.firstname }}<br>
+                                            ({{ PAName }})
+                                        {% endif %}
+                                {% else %}
                                 {{ reportSubmission.createdBy.fullname }}<br>
                                 ({{ reportSubmission.createdBy.roleFullName }})
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td class="width-sixth">
