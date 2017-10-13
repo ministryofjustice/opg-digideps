@@ -86,6 +86,7 @@
                     <th>Client</th>
                     <th>Deputy</th>
                     <th>Case number</th>
+                    <th>Reporting period</th>
                     <th>Documents</th>
                     <th>Date</th>
                     {% if isArchivedPage %}
@@ -124,6 +125,9 @@
                         </td>
                         <td class="width-sixth">
                             {{ report.client.caseNumber }}
+                        </td>
+                        <td class="width-fifth">
+                            {{ report.period }}
                         </td>
                         <td>
                             <details class="push--bottom">
