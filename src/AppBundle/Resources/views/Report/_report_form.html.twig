@@ -2,14 +2,15 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-    <h2 class="heading-medium">{{ 'form.newReportForm.subSectionTitle' | trans }}</h2>
+    <h2 class="heading-medium">{{ 'form.newReportForm.subSectionTitleStartDate' | trans }}</h2>
 
-    <p class="text">{{ 'form.newReportForm.subSectionDescription' | trans }}</p>
+    <p class="text">{{ 'form.newReportForm.subSectionStartDateDescription' | trans }}</p>
 
     {{ form_known_date(form.startDate, 'startDate') }}
 
+    <h2 class="heading-medium">{{ 'form.newReportForm.subSectionTitleEndDate' | trans }}</h2>
 
-    <p class="text">{{ 'form.newReportForm.subSectionDescription-2' | trans }}</p>
+    <p class="text">{{ 'form.newReportForm.subSectionEndDateDescription' | trans }}</p>
 
     {{ form_known_date(form.endDate, 'endDate') }}
 
