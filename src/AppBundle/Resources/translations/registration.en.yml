@@ -38,10 +38,10 @@ createReport:
     h1Title: Create a report
 form:
   newReportForm:
-    subSectionTitleStartDate: "Add the report start date"
-    subSectionTitleEndDate: "Add the report end date"
-    subSectionStartDateDescription: "Your reporting period starts on the anniversary of the date your court order was made. For example, if your court order was made on 10 May 2012, your 2016 to 2017 reporting period would start on 10 May 2016."
-    subSectionEndDateDescription: "Your reporting period ends 12 months after its start date. For example, if your 2016 to 2017 reporting period started on 10 May 2016, it would end on 9 May 2017. We'll let you know if we want your reporting period to be shorter."
+    addStartDate: "Add the report start date"
+    addEndDate: "Add the report end date"
+    startDateDescription: "Your reporting period starts on the anniversary of the date your court order was made. For example, if your court order was made on 10 May 2012, your 2016 to 2017 reporting period would start on 10 May 2016."
+    endDateDescription: "Your reporting period ends 12 months after its start date. For example, if your 2016 to 2017 reporting period started on 10 May 2016, it would end on 9 May 2017. We'll let you know if we want your reporting period to be shorter."
     controls:
       createNewReportLink:
         label: "Create new report"
