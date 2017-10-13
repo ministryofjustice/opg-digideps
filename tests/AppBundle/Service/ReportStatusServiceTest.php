@@ -82,6 +82,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 //                'hasSection' => false,
                 //'getExpenses'                       => [],
                 //'getPaidForAnything'                => null,
+                'getAvailableSections' => [ //102 sections
+                    'decisions','contacts','visitsCare','balance','bankAccounts',
+                    'moneyTransfers','moneyIn','moneyOut',
+                    'assets', 'debts','gifts','actions','otherInfo', 'deputyExpenses']
             ]);
 
         $report->shouldReceive('hasSection')->with('balance')->andReturn($hasBalance);
@@ -565,7 +569,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
-    public function testGetRemainingSections102()
+    public function testGetRemainingSectionsAndStatus()
     {
         $ret = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0]
@@ -587,92 +591,31 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         // all empty
         $report = $this->getReportMocked();
+        $report->shouldReceive('isDue')->andReturn(true);
         $object = new StatusService($report);
         $this->assertNotEquals([], $object->getRemainingSections());
+        $this->assertEquals('notStarted', $object->getStatus());
 
-        // all complete 102
+        // due, half complete
+        $retPartial = ['getType' => Report::TYPE_102]
+            + array_pop($this->decisionsProvider())[0];
+        $report = $this->getReportMocked($retPartial);
+        $object = new StatusService($report);
+        $report->shouldReceive('isDue')->andReturn(true);
+        $this->assertEquals('notFinished', $object->getStatus());
+
+        // not due, complete
         $report = $this->getReportMocked($ret);
         $object = new StatusService($report);
         $this->assertEquals([], $object->getRemainingSections());
-    }
+        $report->shouldReceive('isDue')->andReturn(false);
+        $this->assertEquals('notFinished', $object->getStatus());
 
-    public function testGetRemainingSections103()
-    {
-        $ret = ['getType' => Report::TYPE_103]
-            + array_pop($this->decisionsProvider())[0]
-            + array_pop($this->contactsProvider())[0]
-            + array_pop($this->visitsCareProvider())[0]
-            + array_pop($this->actionsProvider())[0]
-            + array_pop($this->otherInfoProvider())[0]
-            + array_pop($this->giftsProvider())[0]
-            + array_pop($this->documentsProvider())[0]
-            + array_pop($this->bankAccountProvider())[0]
-            + array_pop($this->expensesProvider())[0]
-            + array_pop($this->assetsProvider())[0]
-            + array_pop($this->debtsProvider())[0]
-            + array_pop($this->MoneyInShortProvider())[0]
-            + array_pop($this->MoneyOutShortProvider())[0];
-
-        // all empty
-        $report = $this->getReportMocked([], false);
+        // due, complete
+        $report = $this->getReportMocked($ret);
         $object = new StatusService($report);
-        $this->assertNotEquals([], $object->getRemainingSections());
-
-        // all complete
-        $report = $this->getReportMocked($ret, false);
-        $object = new StatusService($report);
-        $this->assertEquals([], $object->getRemainingSections());
+        $report->shouldReceive('isDue')->andReturn(true);
+        $this->assertEquals('readyToSubmit', $object->getStatus());
     }
 
-    public function testGetRemainingSections104()
-    {
-        $ret = ['getType' => Report::TYPE_104]
-            + @array_pop($this->decisionsProvider())[0]
-            + @array_pop($this->contactsProvider())[0]
-            + @array_pop($this->visitsCareProvider())[0]
-            + @array_pop($this->actionsProvider())[0]
-            + @array_pop($this->otherInfoProvider())[0]
-            + @array_pop($this->giftsProvider())[0]
-            + @array_pop($this->documentsProvider())[0]
-            + @array_pop($this->lifestyleProvider())[0];
-
-        // all empty
-        $object = new StatusService($this->getReportMocked([], false));
-        $this->assertNotEquals([], $object->getRemainingSections());
-
-        // all complete 102
-        $object = new StatusService($this->getReportMocked($ret, false));
-        $this->assertEquals([], $object->getRemainingSections());
-    }
-
-    public function testGetRemainingSectionsOthers()
-    {
-        //No need to test, as the report config already decide what sections need to be completed
-    }
-
-
-
-    public static function getSectionStatusProvider()
-    {
-        return [
-            [Report::TYPE_102, ['balance', 'bankAccounts', 'moneyIn'], ['moneyInShort', 'lifestyle']],
-            [Report::TYPE_103, ['bankAccounts', 'moneyInShort'], ['moneyIn', 'lifestyle', 'balance']],
-            [Report::TYPE_104, ['lifestyle'], ['bankAccounts', 'moneyIn', 'moneyInShort', 'gifts', 'balance']],
-        ];
-    }
-
-    /**
-     * @dataProvider getSectionStatusProvider
-     */
-    public function testGetSectionStatus($type, array $expectedSections, array $unExpectedSections)
-    {
-        $report = new StatusService($this->getReportMocked(['getType'=>$type], true));
-        foreach($expectedSections as $expectedSection) {
-            $this->assertArrayHasKey($expectedSection, $report->getSectionStatus(), "$type should have $expectedSection section ");
-        }
-        foreach($unExpectedSections as $unExpectedSection) {
-            $this->assertArrayNotHasKey($unExpectedSection, $report->getSectionStatus(), "$type should NOT have $unExpectedSection section ");
-        }
-
-    }
 }
