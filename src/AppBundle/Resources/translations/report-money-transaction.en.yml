@@ -1,7 +1,7 @@
 startPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageSectionTitle: Money in
+    pageTitle: Money in
     pageSectionDescription1: |
       Please tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
     pageSectionDescription2: |
@@ -13,7 +13,7 @@ startPage:
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money out
+    pageTitle: Money out
     pageSectionDescription1: |
       Use this section to tell us about money you have spent between %startDate% and %endDate%
       on %client% that you have not told us about in the money transfers, deputy expenses or
@@ -30,16 +30,14 @@ startPage:
 stepPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Add an item of income
     supportTitle: Money in
-    pageSectionTitle: Add an item of income
-    pageSectionTitleWithCategory: Add an item of income: %group%
     pageSectionDescription:
        step1: You can add one or more items and come back to complete the section later.
   moneyOut:
       htmlTitle: "Deputy report - Money out | GOV.UK"
+      pageTitle: Add a payment
       supportTitle: Money out
-      pageSectionTitle: Add a payment
-      pageSectionTitleWithCategory: Add a payment: %group%
       pageSectionDescription:
          step1: You can add one or more types of payment and come back to complete the section later.
 
@@ -106,11 +104,18 @@ form:
       label: Amount
   description:
     mandatory:
-      label: Description of %category%
+      label: Description
     optional:
-      label: Description of %category% (optional)
+      label: Description (optional)
   category:
-    legend: What type of %group% is it?
+    moneyOut.legend: What type of payment was it?
+    moneyIn.legend:
+      income-and-earnings: What type of investment income was it?
+      state-benefits: What type of state benefit was it?
+      pensions: What type of pension was it?
+      damages: What type of payment was it?
+      one-off: What type of income was it?
+      moneyin-other: What type of income was it?
     entries:
       # money in and out
       dividends:
