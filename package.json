@@ -8,44 +8,36 @@
     "develop": "gulp watch"
   },
   "devDependencies": {
-    "axios": "^0.8.1",
-    "babel-eslint": "^6.0.0",
-    "babel-plugin-react-transform": "^2.0.0",
-    "babel-plugin-transform-runtime": "^6.5.2",
-    "babel-preset-es2015": "^6.5.0",
-    "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-runtime": "^6.3.19",
-    "babelify": "^7.2.0",
-    "browserify": "*",
-    "chai": "*",
     "del": "^2.0.2",
-    "eslint": "^2.4.0",
-    "eslint-plugin-react": "^4.0.0",
+    // https://github.com/sindresorhus/del/releases
     "govuk-elements-sass": "^3.1.0",
+    // https://github.com/alphagov/govuk_elements/releases
     "govuk_template_mustache": "^0.22.3",
+    // https://github.com/alphagov/govuk_template_mustache/releases
     "gulp": "^3.9.0",
+    // https://github.com/gulpjs/gulp/releases
     "gulp-concat": "*",
-    "gulp-import-css": "^0.1.2",
+    // https://github.com/contra/gulp-concat/releases
     "gulp-jshint": "^1.11.2",
+    // https://github.com/spalger/gulp-jshint/releases
     "gulp-rename": "^1.2.2",
+    // https://github.com/hparra/gulp-rename/releases
     "gulp-replace": "^0.5.4",
+    // https://github.com/lazd/gulp-replace/releases
     "gulp-sass": "^2.0.4",
+    // https://github.com/dlmanning/gulp-sass/releases
     "gulp-scss-lint": "^0.3.6",
+    // https://github.com/juanfran/gulp-scss-lint/releases
     "gulp-sourcemaps": "^1.6.0",
+    // https://github.com/gulp-sourcemaps/gulp-sourcemaps/releases
     "gulp-uglify": "^1.4.2",
+    // https://github.com/terinjokes/gulp-uglify/releases
     "gulp-uglifycss": "^1.0.6",
+    // https://github.com/terinjokes/gulp-uglify/releases
     "gulp-util": "^3.0.4",
+    // https://github.com/gulpjs/gulp-util/releases
     "gulp-watch": "^4.3.5",
-    "jquery": "^1.11.*",
-    "lodash": "^4.6.1",
-    "react": "^0.14.7",
-    "react-addons-update": "^0.14.7",
-    "react-dom": "^0.14.7",
-    "react-redux": "^4.4.1",
-    "redux": "^3.3.1",
-    "redux-thunk": "^1.0.3",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    // https://github.com/floatdrop/gulp-watch/releases
+    "jquery": "^1.11.*"
   }
 }
