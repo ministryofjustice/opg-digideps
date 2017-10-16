@@ -8,36 +8,22 @@
     "develop": "gulp watch"
   },
   "devDependencies": {
-    "del": "^2.0.2",
-    // https://github.com/sindresorhus/del/releases
+    "del": "^3.0.0",
     "govuk-elements-sass": "^3.1.0",
-    // https://github.com/alphagov/govuk_elements/releases
-    "govuk_template_mustache": "^0.22.3",
-    // https://github.com/alphagov/govuk_template_mustache/releases
+    "govuk_template_mustache": "^0.23.0",
     "gulp": "^3.9.0",
-    // https://github.com/gulpjs/gulp/releases
     "gulp-concat": "*",
-    // https://github.com/contra/gulp-concat/releases
-    "gulp-jshint": "^1.11.2",
-    // https://github.com/spalger/gulp-jshint/releases
+    "jshint": "^2.9.5",
+    "gulp-jshint": "^2.0.4",
     "gulp-rename": "^1.2.2",
-    // https://github.com/hparra/gulp-rename/releases
-    "gulp-replace": "^0.5.4",
-    // https://github.com/lazd/gulp-replace/releases
-    "gulp-sass": "^2.0.4",
-    // https://github.com/dlmanning/gulp-sass/releases
-    "gulp-scss-lint": "^0.3.6",
-    // https://github.com/juanfran/gulp-scss-lint/releases
-    "gulp-sourcemaps": "^1.6.0",
-    // https://github.com/gulp-sourcemaps/gulp-sourcemaps/releases
-    "gulp-uglify": "^1.4.2",
-    // https://github.com/terinjokes/gulp-uglify/releases
-    "gulp-uglifycss": "^1.0.6",
-    // https://github.com/terinjokes/gulp-uglify/releases
-    "gulp-util": "^3.0.4",
-    // https://github.com/gulpjs/gulp-util/releases
-    "gulp-watch": "^4.3.5",
-    // https://github.com/floatdrop/gulp-watch/releases
-    "jquery": "^1.11.*"
+    "gulp-replace": "^0.6.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-scss-lint": "^0.5.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifycss": "^1.0.8",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^4.3.11",
+    "jquery": "^1.12.*"
   }
 }
