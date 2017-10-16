@@ -9,9 +9,8 @@
     #}
 
     {% set status = reportActive ? reportActive.getStatus().status : 'notCreated' %}
-    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
     <div class="card soft-half">
-        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
+        <span class="status status-corner {{ status }}">{{ (status) | trans({}, 'common') }}</span>
         {% if reportActive %}
             <h3 class="heading-medium flush--ends">
                 <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
