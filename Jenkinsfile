@@ -60,11 +60,11 @@ pipeline {
                     --log-junit unit_results.xml || true
                 '''
             }
-            post {
-                always {
-                    junit 'unit_results.xml'
-                }
-            }
+            // post {
+            //     always {
+            //         junit 'unit_results.xml'
+            //     }
+            // }
         }
 
         stage('unit tests coverage') {
