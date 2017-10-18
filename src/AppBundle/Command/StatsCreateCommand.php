@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Service\StatsService;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -16,6 +17,7 @@ class StatsCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
         $this
             ->setName('digideps:stats-create')
             ->addArgument('file')
+            ->addOption('sleep', null, InputOption::VALUE_REQUIRED, '', 300)
             ->setDescription('Get CSV of stats ')
         ;
     }
@@ -23,7 +25,10 @@ class StatsCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // avoid being executed concurrently on multiple API boxes and stress the db too much
-        sleep(rand(1, 300));
+        if ($sleep = rand(0, $input->getOption('sleep', 0))) {
+            $output->write("Sleeping $sleep seconds to avoid multiple execution from APIs");
+        }
+
         $statsService = $this->getContainer()->get('stats_service'); /* @var $statsService StatsService */
 
         $file = $input->getArgument('file');
@@ -31,13 +36,9 @@ class StatsCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
             throw new \RuntimeException('specify a file name');
         }
 
-        $data = $statsService->getRecordsCsv();
-        $ret = file_put_contents($file, $data);
+        $output->write("Writing stats into $file ...");
+        $ret = $statsService->saveCsv($file);
 
-        if (!$ret) {
-            throw new \RuntimeException("cannot write into $file");
-        }
-
-        $output->writeln("$ret bytes written into $file");
+        $output->writeln("$ret lines written into $file");
     }
 }

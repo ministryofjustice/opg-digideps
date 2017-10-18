@@ -98,21 +98,24 @@ class StatsService
     }
 
     /**
+     * @param string $filePath
      * @param int $maxResults
      *
      * @return string
      */
-    public function getRecordsCsv($maxResults = null)
+    public function saveCsv($filePath, $maxResults = null)
     {
         $records = $this->getRecords($maxResults);
+        $linesWritten = 0;
 
-        $out = fopen('php://memory', 'w');
-        fputcsv($out, array_keys($records[0]));
+        $f = fopen($filePath, 'w');
+        fputcsv($f, array_keys($records[0]));
         foreach ($records as $row) {
-            fputcsv($out, $row);
+            fputcsv($f, $row);
+            $linesWritten++;
         }
-        rewind($out);
+        fclose($f);
 
-        return stream_get_contents($out);
+        return $linesWritten;
     }
 }
