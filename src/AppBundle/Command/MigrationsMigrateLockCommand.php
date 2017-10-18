@@ -18,6 +18,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 {
     const LOCK_KEY = 'migration_status';
     const LOCK_VALUE = 'locked';
+    const LOCK_EXPIRES_SECONDS = 120;
 
     protected function configure()
     {
@@ -67,6 +68,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     private function acquireLock($output)
     {
         $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
+        $this->getRedis()->expire(self::LOCK_KEY, self::LOCK_EXPIRES_SECONDS);
         $output->writeln($ret ? 'Lock acquired.' : 'Cannot acquire lock, already acquired.');
 
         return $ret;
