@@ -42,16 +42,23 @@
         font-size: 16px;
     }
 
-    &.not-started {
+    &.notCreated {
         color: $grey-status;
     }
 
-    &.done {
+    &.not-started,
+    &.notStarted {
+        color: $grey-status;
+    }
+
+    &.done,
+    &.readyToSubmit {
         color: $green;
         border-color: $green;
     }
 
-    &.incomplete {
+    &.incomplete,
+    &.notFinished {
         color: $orange;
         border-color: $orange;
     }

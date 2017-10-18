@@ -12,6 +12,11 @@ saveAndContinue: Save and continue
 back: Back
 startNow: Start now
 download: Download
+status:
+  notCreated: Create report
+  notStarted: Start now
+  notFinished: Continue
+  readyToSubmit: Continue
 
 # Report headings
 annualDeputyReport: Annual deputy report
@@ -27,6 +32,7 @@ email: Email
 dueDate: Due date
 
 # Statuses
+notCreated: Not created
 notFinished: Not finished
 notStarted: Not started
 readyToSubmit: Ready to submit

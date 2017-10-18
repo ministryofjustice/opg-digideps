@@ -4,14 +4,10 @@
 <h2 class="heading-large">Current deputy report</h2>
 
 {% if odr.submitted %}
-    {#
-    # CLICKABLE REPORT
-    #}
-
-    {% set status = reportActive ? reportActive.getStatus().status : 'notStarted' %}
-    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
+    {# CLICKABLE REPORT #}
+    {% set status = reportActive ? reportActive.getStatus().status : 'notCreated' %}
     <div class="card soft-half">
-        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
+        <span class="status status-corner {{ status }}">{{ (status) | trans({}, 'common') }}</span>
         {% if reportActive %}
             <h3 class="heading-medium flush--ends">
                 <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
@@ -33,16 +29,13 @@
         {% set link = reportActive ?
         path('report_overview', {'reportId': reportActive.id})
         : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
-        {% set buttonText = reportActive ? 'continue' : 'startNow' %}
         <div class="card-actions">
-            <a href="{{ link }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('status.' ~ status) | trans({}, 'common') }}</a>
         </div>
 
     </div>
 {% else %}
-    {#
-     # REPORT NOT ACTIVE
-     #}
+    {# REPORT NOT ACTIVE #}
     <div class="card disabled soft-half">
         <span class="status status-corner not-available">{{ 'notAvailable' | trans({}, 'common') }}</span>
         <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
