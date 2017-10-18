@@ -115,7 +115,6 @@ class Report
             self::SECTION_VISITS_CARE        => $allReports,
             self::SECTION_LIFESTYLE          => $r104,
             // money
-            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
             self::SECTION_BANK_ACCOUNTS      => $r102n103,
             self::SECTION_MONEY_TRANSFERS    => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
             self::SECTION_MONEY_IN           => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
@@ -125,6 +124,7 @@ class Report
             self::SECTION_ASSETS             => $r102n103,
             self::SECTION_DEBTS              => $r102n103,
             self::SECTION_GIFTS              => $r102n103,
+            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
             // end money
             self::SECTION_ACTIONS            => $allReports,
             self::SECTION_OTHER_INFO         => $allReports,
@@ -421,7 +421,7 @@ class Report
     {
         $ret = [];
         foreach(self::getSectionsSettings() as $sectionId => $reportTypes) {
-            if (in_array($this->type, $reportTypes)) {
+            if (in_array($this->getType(), $reportTypes)) {
                 $ret[] = $sectionId;
             }
         }

@@ -496,10 +496,8 @@ class ReportStatusService
     public function getSectionStatus()
     {
         $ret = [];
-        foreach (Report::getSectionsSettings() as $sectionId => $sectionSettings) {
-            if (in_array($this->report->getType(), $sectionSettings)) {
-                $ret[$sectionId] = $this->getSectionState($sectionId);
-            }
+        foreach($this->report->getAvailableSections() as $sectionId) {
+            $ret[$sectionId] = $this->getSectionState($sectionId);
         }
 
         return $ret;
@@ -575,7 +573,7 @@ class ReportStatusService
             return 'notStarted';
         }
 
-        if ($this->isReadyToSubmit() && $this->report->isDue()) {
+        if ($this->report->isDue() && $this->isReadyToSubmit()) {
             return 'readyToSubmit';
         } else {
             return 'notFinished';
