@@ -7,15 +7,24 @@
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
 {% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
+{% set category = transaction.category %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({'%group%': groupString, '%category%': categoryString}) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {% if step == 1 %}
-        {{ 'stepPage.moneyIn.pageSectionTitle' | trans(transOptions) }}
-    {% else %}
-        {{ 'stepPage.moneyIn.pageSectionTitleWithCategory' | trans(transOptions) }}
+    {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
+    {% if step == 2 %}{{ groupString | lower }}{% endif %}
+    {% if step == 3 %}
+        {% if transaction.group == 'state-benefits' %}
+            {% if categoryString == 'Other benefits' %}
+                {{ categoryString | lower }}
+            {% else %}
+                {{ categoryString }}
+            {% endif %}
+        {% else %}
+            {{ categoryString | lower }}
+        {% endif %}
     {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
@@ -25,7 +34,7 @@
 {% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans({}, 'common')) }}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
@@ -44,7 +53,7 @@
     {% if step == 2 %}
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.legend' | trans(transOptions)
+            'legendText' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans
         }) }}
     {% endif %}
 

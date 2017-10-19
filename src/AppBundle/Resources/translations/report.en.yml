@@ -5,6 +5,7 @@ homepage:
   reportType: Report type
   reportingPeriod: Reporting period
   submissionDate: Submission date
+  attachDocuments: Attach documents
 
 codeputy:
   inviteAnotherDeputy: Invite another deputy

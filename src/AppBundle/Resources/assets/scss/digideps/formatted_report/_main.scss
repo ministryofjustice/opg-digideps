@@ -1,26 +1,16 @@
 .formatted-report {
 
-    // Page breaks
+    // =======================================================
+    // PAGE BREAKS
 
-    .section {
-        page-break-inside: avoid;
-    }
-
-    table {
-        page-break-inside: auto
-    }
+    // Tables
 
     tr {
         page-break-inside: avoid;
-        page-break-after:auto
     }
 
-    thead {
-        display: table-header-group
-    }
-
-
-    // Basic elements
+    // =======================================================
+    // BASE ELEMENTS
 
     @extend %contain-floats;
     @include core-14();

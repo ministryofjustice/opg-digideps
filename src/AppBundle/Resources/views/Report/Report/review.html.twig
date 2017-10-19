@@ -10,7 +10,7 @@
         {% if app.user.isDeputyPa() %}
             <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
         {% else %}
-            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-back-to-reports">Back</a>
+            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
         {% endif %}
     {% endif %}
 {% endblock %}

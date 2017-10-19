@@ -12,10 +12,20 @@
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {% if step == 1 %}
-        {{ 'stepPage.moneyOut.pageSectionTitle' | trans(transOptions) }}
-    {% else %}
-        {{ 'stepPage.moneyOut.pageSectionTitleWithCategory' | trans(transOptions) }}
+    {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
+    {% if step == 2 %}{{ groupString | lower }}{% endif %}
+    {% if step == 3 %}
+        {% if categoryString == "TV services" or categoryString == "OPG's fees" %}
+            {{ categoryString }}
+        {% elseif categoryString == "Tax payments to HMRC" %}
+            {{ categoryString|replace({'Tax': 'tax'}) }}
+        {% elseif 'Cash' in categoryString %}
+            {{ categoryString|replace({'Cash': 'cash'}) }}
+        {% elseif 'Transfers' in categoryString %}
+            {{ categoryString|replace({'Transfers': 'transfers'}) }}
+        {% else %}
+            {{ categoryString | lower }}
+        {% endif %}
     {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
@@ -25,7 +35,7 @@
 {% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans({}, 'common')) }}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
@@ -44,14 +54,12 @@
     {% if step == 2 %}
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.legend' | trans(transOptions),
+            'legendText' : 'form.category.moneyOut.legend' | trans,
         }) }}
     {% endif %}
 
     {% if step == 3 %}
-        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
-            'labelParameters' : transOptions
-        }) }}
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {}) }}
 
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',

@@ -35,7 +35,7 @@
                 </td>
             {% endif %}
             <td class="change-answer">
-                <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+                <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
         {% if odr.actionGiveGiftsToClient == 'yes' %}
@@ -43,7 +43,7 @@
                 <td>{{ 'form.actionGiveGiftsToClientDetails.label' | trans(transOptions) }}</td>
                 <td>{{ odr.actionGiveGiftsToClientDetails | nl2br }}</td>
                 <td class="change-answer">
-                    <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                    <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             </tr>
         {% endif %}
@@ -84,7 +84,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
         </td>
     </tr>
 
@@ -108,7 +108,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
         </td>
     </tr>
 
@@ -132,7 +132,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-edit action-link">Edit</a>
+            <a href="{{ path('odr_actions_step', {'odrId': odr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
         </td>
     </tr>
 

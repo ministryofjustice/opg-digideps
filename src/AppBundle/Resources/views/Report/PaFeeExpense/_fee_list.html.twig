@@ -16,7 +16,7 @@
             <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
         </div>
         <div class="column-half text--right">
-            <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">Edit</a>
+            <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
         </div>
     </div>
 

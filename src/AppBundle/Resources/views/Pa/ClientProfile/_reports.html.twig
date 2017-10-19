@@ -27,6 +27,10 @@
                             <td>{{ report.getSubmitDate() | date(" d F Y") }}</td>
                             <td class="text--right hard--right">
                                 <a class="behat-link-view-report" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                                <br>
+                                <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents">
+                                    {{ (page ~ '.attachDocuments') | trans }}
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -18,7 +18,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'stepPage.backLink' | trans) }}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block supportTitleTop %}

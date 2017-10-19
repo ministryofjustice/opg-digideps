@@ -8,15 +8,15 @@
     <span class="icon">
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA+0lEQVQ4jb3RvyuFcRgF8M9mkEUZuH4MrmshSiSjQcpyS7rZjDLIcgeDgSSL0WK9CpkkVln8EVa7QWyK4T63vr335b6DnDr1PKdzTs/3fWnHAPZ+YE+Ovw2zOEQlwzOUihZs5+jH/1ZQxgUaeMNLzJfoLVLQwhhOcYDhIoEhzAW7QpvBSMzdmAr2pcElzTff4QOv2A9tF/WYT/AenqvQytkrtjpcOY353wxrHQoqmMyKN5pfOeU1FhLPIm5xnuGjCGSximqyV0PLovEnBfeavytlPafgCCsZPsBO8BmfyT6aFJRQwwa+8BR7rWUYxDo2MZ5zagsTEVpGP3wD3WU1Mj7+leEAAAAASUVORK5CYII="/>
     </span>
-    <span class="sf-toolbar-status">Api Collector</span>
+    <span class="sf-toolbar-status">Api Collector ({{ collector.calls | length }})</span>
     {% endset %}
 
     {% set text %}
-        <table>
+        <table width="100%">
             <tr>
                 <th></th>
-                <th>URL</th>
                 <th>Time (s)</th>
+                <th>URL</th>
                 <th>Response code</th>
                 <th>bytes sent</th>
                 <th>bytes received</th>
@@ -24,8 +24,8 @@
       {% for entry in collector.calls %}
          <tr>
              <td>{{ entry.method | upper }}</td>
-             <td>{{ entry.url }}</td>
              <td>{{ entry.time | round(3)}}</td>
+             <td>{{ entry.url }}</td>
              <td>{{ entry.responseCode }}</td>
              <td>{{ entry.options | length | number_format  }}</td>
              <td>{{ entry.responseBody | length | number_format }}</td>

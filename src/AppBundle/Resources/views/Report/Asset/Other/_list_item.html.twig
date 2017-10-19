@@ -25,8 +25,8 @@
             <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-edit action-link"
-                   href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">Edit</a>
-                <a class="behat-link-delete push-half--left action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">Remove</a>
+                   href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a class="behat-link-delete push-half--left action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
             </td>
         </tr>
     {% endfor %}

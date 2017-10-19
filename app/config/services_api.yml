@@ -10,7 +10,7 @@ services:
                 headers:
                     Content-Type: application/json
                 verify: false
-                timeout: 10
+                timeout: 20
                 allow_redirects: false
 
     rest_client:

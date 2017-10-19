@@ -15,7 +15,7 @@ clientReports:
   noReports: No submitted reports
   reportingPeriod: Reporting period
   dateSubmitted: Date submitted
-
+  attachDocuments: Attach documents
 clientNotes:
   heading: Notes
   noNotes: No notes

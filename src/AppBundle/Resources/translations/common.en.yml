@@ -8,8 +8,15 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
+saveAndContinue: Save and continue
+back: Back
 startNow: Start now
 download: Download
+status:
+  notCreated: Create report
+  notStarted: Start now
+  notFinished: Continue
+  readyToSubmit: Continue
 
 # Report headings
 annualDeputyReport: Annual deputy report
@@ -25,6 +32,7 @@ email: Email
 dueDate: Due date
 
 # Statuses
+notCreated: Not created
 notFinished: Not finished
 notStarted: Not started
 readyToSubmit: Ready to submit
@@ -51,22 +59,8 @@ registrationProgressBar:
     codep_verify:
         label: Enter your information
 
-existsPage:
-  backLink: Back
-
-addPage:
-  backLink: Back
-
-editPage:
-  backLink: Back
-
 stepPage:
-   backLink: Back
    skipLink: Skip this question for now
-   saveAndContinue: Save and continue
-
-addAnotherPage:
-  save: Continue
 
 summaryPage:
   pageContent:
