@@ -208,7 +208,7 @@ class IndexController extends AbstractController
      */
     public function editOdrAction(Request $request, $id)
     {
-        $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'user']);
+        $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'client-users', 'user']);
         $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
         if ($request->getMethod() == 'POST') {
             $odrForm->handleRequest($request);

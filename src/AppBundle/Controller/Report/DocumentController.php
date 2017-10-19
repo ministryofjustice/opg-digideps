@@ -333,7 +333,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'client', 'user']
+            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'client', 'client-users', 'user']
         );
     }
 
