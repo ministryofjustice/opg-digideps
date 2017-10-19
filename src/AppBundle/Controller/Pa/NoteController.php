@@ -27,7 +27,7 @@ class NoteController extends AbstractController
         $clientId = $request->get('clientId');
 
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'user']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report', 'client-users', 'user']);
 
         $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
 
@@ -158,7 +158,7 @@ class NoteController extends AbstractController
         return $this->getRestClient()->get(
             'note/' . $noteId,
             'Note',
-            ['notes', 'client', 'current-report', 'report-id', 'note-client', 'user']
+            ['notes', 'client', 'client-users', 'current-report', 'report-id', 'note-client', 'user']
         );
     }
 }
