@@ -20,7 +20,7 @@ class Team
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","user"})
+     * @JMS\Groups({"audit_log","team"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -30,7 +30,7 @@ class Team
     private $id;
 
     /**
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"team-users"})
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\User>")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", mappedBy="teams", cascade={"persist"})

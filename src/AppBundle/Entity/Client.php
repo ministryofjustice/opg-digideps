@@ -29,7 +29,7 @@ class Client
     private $id;
 
     /**
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"client-users"})
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",
@@ -40,8 +40,6 @@ class Client
     private $users;
 
     /**
-     * //TODO JMS "report" group is deprecated, use "client-reports" instead
-     *
      * @JMS\Groups({"client-reports"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})

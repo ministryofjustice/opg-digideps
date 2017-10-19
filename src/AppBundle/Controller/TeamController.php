@@ -20,9 +20,7 @@ class TeamController extends RestController
     {
         $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['user', 'team'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
         $team = $this->getUser()->getTeams()->first(); /* @var $team EntityDir\Team */
         if (!$team) {
@@ -45,9 +43,7 @@ class TeamController extends RestController
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['user', 'team'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
 
         return $user;
