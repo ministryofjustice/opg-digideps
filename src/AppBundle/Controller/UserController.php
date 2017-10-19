@@ -459,7 +459,7 @@ class UserController extends RestController
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
-        $this->setJmsSerialiserGroups(['user']);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
         return $user->getTeams()->first();
     }
