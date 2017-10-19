@@ -1008,6 +1008,7 @@ class User implements UserInterface
     public function setCoDeputyClientConfirmed($coDeputyClientConfirmed)
     {
         $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
+        return $this;
     }
 
     /**

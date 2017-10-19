@@ -76,7 +76,11 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setOdrEnabled(!empty($data['odrEnabled']))
-        ;
+            ->setCoDeputyClientConfirmed(
+                isset($data['codeputyClientConfirmed']) ?
+                    (bool) $data['codeputyClientConfirmed'] :
+                    false
+            );
 
         // role
         if (!empty($data['roleId'])) { //deprecated
