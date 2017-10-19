@@ -76,7 +76,6 @@ class ClientContactVoter extends Voter
             case self::ADD_CLIENT_CONTACT:
                 if ($subject instanceof ClientEntity) {
                     /** @var Client $subject */
-
                     return $subject->hasUser($loggedInUser);
                 }
                 return false;
