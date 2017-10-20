@@ -923,8 +923,8 @@ class User implements AdvancedUserInterface
      */
     public function determinePublicAuthorityName()
     {
-        if (preg_match("/[COUNCIL|BOROUGH|TRUST]/i", $this->getLastname())) {
-            return $this->getLastname();
+        if (preg_match('#\b(COUNCIL|BOROUGH|TRUST)\b#i', $this->getLastname())) {
+            return  $this->getLastname();
         }
         return '';
     }
