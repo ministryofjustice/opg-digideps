@@ -915,17 +915,4 @@ class User implements AdvancedUserInterface
     {
         return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyPa();
     }
-
-    /**
-     * Determine the Public Authority name. Used in admin area for document list. See DDPB-1628
-     *
-     * @return string
-     */
-    public function determinePublicAuthorityName()
-    {
-        if (preg_match("/[COUNCIL|BOROUGH|TRUST]/i", $this->getLastname())) {
-            return $this->getLastname();
-        }
-        return '';
-    }
 }
