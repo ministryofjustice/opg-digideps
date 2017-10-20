@@ -20,6 +20,7 @@ class Version155 extends AbstractMigration
 
         $this->addSql('ALTER TABLE account ALTER is_closed SET DEFAULT \'false\'');
         $this->addSql('ALTER TABLE account ALTER is_closed DROP NOT NULL');
+        $this->addSql('UPDATE dd_user SET codeputy_client_confirmed = FALSE WHERE codeputy_client_confirmed IS NULL');
         $this->addSql('ALTER TABLE dd_user ALTER codeputy_client_confirmed SET NOT NULL');
         $this->addSql('ALTER TABLE note ALTER category DROP NOT NULL');
         $this->addSql('ALTER TABLE note ALTER content DROP NOT NULL');
