@@ -20,7 +20,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -127,15 +126,15 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         // check pagination and limit
         $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
-        $this->assertEquals('1000003', $data[0]['report']['client']['case_number']);
-        $this->assertEquals('1000002', $data[1]['report']['client']['case_number']);
-        $this->assertEquals('1000001', $data[2]['report']['client']['case_number']);
-        $this->assertEquals('1000000', $data[3]['report']['client']['case_number']);
+        $this->assertEquals('1000000', $data[0]['report']['client']['case_number']);
+        $this->assertEquals('1000001', $data[1]['report']['client']['case_number']);
+        $this->assertEquals('1000002', $data[2]['report']['client']['case_number']);
+        $this->assertEquals('1000003', $data[3]['report']['client']['case_number']);
 
         $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'offset'=>1, 'limit'=>2])['records'];
         $this->assertCount(2, $data);
-        $this->assertEquals('1000002', $data[0]['report']['client']['case_number']);
-        $this->assertEquals('1000001', $data[1]['report']['client']['case_number']);
+        $this->assertEquals('1000001', $data[0]['report']['client']['case_number']);
+        $this->assertEquals('1000002', $data[1]['report']['client']['case_number']);
     }
 
 }

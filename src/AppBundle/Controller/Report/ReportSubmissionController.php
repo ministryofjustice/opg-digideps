@@ -39,7 +39,9 @@ class ReportSubmissionController extends RestController
                 $request->get('q'),
                 $request->get('created_by_role'),
                 $request->get('offset', 0),
-                $request->get('limit', 15)
+                $request->get('limit', 15),
+                $request->get('orderBy', 'createdOn'),
+                $request->get('order', 'ASC')
             );
 
         $this->setJmsSerialiserGroups(self::$jmsGroups);
