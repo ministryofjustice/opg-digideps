@@ -101,6 +101,8 @@ class ReportSubmissionController extends AbstractController
             'limit'             => $request->query->get('limit') ?: 15,
             'offset'            => $request->query->get('offset') ?: 0,
             'created_by_role'   => $request->get('created_by_role'),
+            'orderBy'           => $request->get('orderBy', 'createdOn'),
+            'order'             => $request->get('order', 'ASC')
         ];
     }
 }
