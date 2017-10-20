@@ -12,10 +12,6 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     replace = require('gulp-replace'),
     rename = require('gulp-rename'),
-    browserify = require('browserify'),
-    babelify = require('babelify'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
     now = new Date().getTime();
 
 var config = {
