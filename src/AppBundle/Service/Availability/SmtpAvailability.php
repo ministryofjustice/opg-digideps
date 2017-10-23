@@ -11,17 +11,17 @@ class SmtpAvailability extends ServiceAvailabilityAbstract
     public function __construct(ContainerInterface $container, $transportKey)
     {
         $this->transportKey = $transportKey;
+        $transport = $container->get($this->transportKey); /* @var $transport \Swift_SmtpTransport */
+
+        $this->isHealthy = false;
+        $this->errors = '';
 
         try {
-            $transport = $container->get($this->transportKey); /* @var $transport \Swift_SmtpTransport */
             $transport->start();
             $transport->stop();
-
             $this->isHealthy = true;
-            $this->errors = '';
         } catch (\Exception $e) {
-            $this->isHealthy = false;
-            $this->errors = $e->getMessage();
+            $this->errors = str_replace($transport->getHost(), '**********', $e->getMessage());
         }
     }
 
