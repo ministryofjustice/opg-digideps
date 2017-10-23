@@ -55,6 +55,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
     }
 
+
     public function testGetAllWithFiltersGetOneArchive()
     {
         $reportsGetAllRequest = function (array $params = []) {
@@ -72,42 +73,42 @@ class ReportSubmissionControllerTest extends AbstractTestController
         // assert submission (only one expected)
         $data = $reportsGetAllRequest(['status'=>'new']);
         $this->assertEquals(['new'=>5, 'archived'=>0], $data['counts']);
-        $submission = $data['records'][0];
-        $this->assertNotEmpty($submission['id']);
-        $this->assertNotEmpty($submission['report']['type']);
-        $this->assertNotEmpty($submission['report']['start_date']);
-        $this->assertNotEmpty($submission['report']['end_date']);
-        $this->assertNotEmpty($submission['report']['client']['case_number']);
-        $this->assertNotEmpty($submission['report']['client']['firstname']);
-        $this->assertNotEmpty($submission['report']['client']['lastname']);
-        $this->assertEquals('file1.pdf', $submission['documents'][0]['file_name']);
-        $this->assertNotEmpty($submission['created_by']['firstname']);
-        $this->assertNotEmpty($submission['created_by']['lastname']);
-        $this->assertNotEmpty($submission['created_by']['role_name']);
-        $this->assertNotEmpty($submission['created_on']);
-        $this->assertArrayHasKey('archived_by', $submission);
+
+        $submission4 = $this->getSubmissionByCaseNumber($data['records'], '1000004');
+        $this->assertNotEmpty($submission4['id']);
+        $this->assertNotEmpty($submission4['report']['type']);
+        $this->assertNotEmpty($submission4['report']['start_date']);
+        $this->assertNotEmpty($submission4['report']['end_date']);
+        $this->assertNotEmpty($submission4['report']['client']['case_number']);
+        $this->assertNotEmpty($submission4['report']['client']['firstname']);
+        $this->assertNotEmpty($submission4['report']['client']['lastname']);
+        $this->assertEquals('file1.pdf', $submission4['documents'][0]['file_name']);
+        $this->assertNotEmpty($submission4['created_by']['firstname']);
+        $this->assertNotEmpty($submission4['created_by']['lastname']);
+        $this->assertNotEmpty($submission4['created_by']['role_name']);
+        $this->assertNotEmpty($submission4['created_on']);
+        $this->assertArrayHasKey('archived_by', $submission4);
 
         // test getOne endpoint
-        $data = $this->assertJsonRequest('GET', '/report-submission/' . $submission['id'], [
+        $data = $this->assertJsonRequest('GET', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
-        $this->assertEquals($submission['id'], $data['id']);
+        $this->assertEquals($submission4['id'], $data['id']);
         $this->assertEquals('storageref1', $data['documents'][0]['storage_reference']);
 
         // archive 1st submission
-        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission['id'], [
+        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
             'data' => ['archive'=>true]
         ])['data'];
-        $this->assertEquals($submission['id'], $data);
+        $this->assertEquals($submission4['id'], $data);
 
         // check counts after submission
         $data = $reportsGetAllRequest([]);
         $this->assertEquals(['new'=>4, 'archived'=>1], $data['counts']);
         $this->assertCount(5, $data['records']);
-
 
         // check filters and counts
         $data = $reportsGetAllRequest(['q'=>'1000000']);
@@ -125,16 +126,31 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals(['new'=>3, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
 
         // check pagination and limit
-        $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
-        $this->assertEquals('1000000', $data[0]['report']['client']['case_number']);
-        $this->assertEquals('1000001', $data[1]['report']['client']['case_number']);
-        $this->assertEquals('1000002', $data[2]['report']['client']['case_number']);
-        $this->assertEquals('1000003', $data[3]['report']['client']['case_number']);
+        $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];
+        $this->assertEquals(['1000000', '1000001','1000002','1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
 
-        $data = $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'offset'=>1, 'limit'=>2])['records'];
-        $this->assertCount(2, $data);
-        $this->assertEquals('1000001', $data[0]['report']['client']['case_number']);
-        $this->assertEquals('1000002', $data[1]['report']['client']['case_number']);
+        $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test', 'offset'=>1, 'limit'=>2])['records'];
+        $this->assertEquals(['1000001', '1000002'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
     }
+
+    private function getOrderedCaseNumbersFromSubmissions($submissions)
+    {
+        $ret = array_map(function($submission) {
+            return $submission['report']['client']['case_number'];
+        }, $submissions);
+
+        sort($ret);
+        return $ret;
+    }
+
+    private function getSubmissionByCaseNumber(array $submissions, $caseNumber)
+    {
+        $ret = array_filter($submissions, function($submission) use ($caseNumber) {
+            return $submission['report']['client']['case_number'] == $caseNumber;
+        });
+
+        return array_shift($ret);
+    }
+
 
 }
