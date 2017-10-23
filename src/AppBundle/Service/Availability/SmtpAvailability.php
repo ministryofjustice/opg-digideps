@@ -19,8 +19,8 @@ class SmtpAvailability extends ServiceAvailabilityAbstract
         try {
             $transport->start();
             $transport->stop();
+            $this->isHealthy = true;
         } catch (\Exception $e) {
-            $this->isHealthy = false;
             $this->errors = str_replace($transport->getHost(), '**********', $e->getMessage());
         }
     }
