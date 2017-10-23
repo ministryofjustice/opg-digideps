@@ -15,7 +15,8 @@ lastname:
 email:
     first:
       label: "Your email"
-      existingError: That email has already been registered with this service.
+      existingError: |
+        There's a problem with your email address. Please contact us for help on 0115 934 2700.
       invalid: Enter a valid email address
     second:
       label: "Confirm your email"
