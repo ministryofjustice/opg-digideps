@@ -186,7 +186,18 @@ class ReportController extends AbstractController
 
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'notes', 'user', 'client', 'client-reports', 'clientcontacts', 'balance-state']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'user', 'client', 'client-reports', 'balance-state']);
+
+        // 1711 take client->users with a separate call to avoid recursion
+        // neede for clientContactVoter
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $report->getClient()->getId(), 'Client', [
+            'client', 'client-users', 'user',
+            'client-reports', 'report',
+            'notes',
+            'clientcontacts'
+        ]);
+        $report->setClient($client);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side

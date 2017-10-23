@@ -1,0 +1,38 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'uploadUsers' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="data">
+        <span class="data-item bold-xlarge">{{ currentMldUsers }}</span>
+        <span class="data-item bold-small">Lay deputies assigned to a Multi-deputy case</span>
+    </div>
+
+    <h2 class="heading-medium">Upgrade lay deputies to MLD</h2>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.file, '', {
+        'labelRaw': true,
+        'labelText': "Your CSV file should contain a single column of deputy numbers you wish to upgrade to MLD with a heading row of 'Deputy No'",
+        'hintText': 'Max upload size is ' ~ maxUploadSize,
+        'inputClass': 'no-border'
+    }) }}
+
+    {{ form_submit(form.upload, '', {'labelText': 'Upload users'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

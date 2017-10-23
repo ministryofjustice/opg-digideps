@@ -83,9 +83,9 @@
         <table class="check-your-answers push--bottom">
             <thead>
                 <tr>
-                    <th>Client</th>
+                    <th>Client and case no</th>
                     <th>Deputy</th>
-                    <th>Case number</th>
+                    <th>Period</th>
                     <th>Documents</th>
                     <th>Date</th>
                     {% if isArchivedPage %}
@@ -103,7 +103,8 @@
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
                         <td class="width-fifth">
-                            {{ report.client.fullname }}
+                            {{ report.client.fullname }}<br>
+                            <span class="text-secondary">{{ report.client.caseNumber }}</span>
                         </td>
                         <td class="width-fifth">
                             {% if reportSubmission.createdBy %}
@@ -111,8 +112,8 @@
                                 ({{ reportSubmission.createdBy.roleFullName }})
                             {% endif %}
                         </td>
-                        <td class="width-sixth">
-                            {{ report.client.caseNumber }}
+                        <td class="width-eighth">
+                            {{ report.period | replace({'to': '-'}) }}
                         </td>
                         <td>
                             <details class="push--bottom">
