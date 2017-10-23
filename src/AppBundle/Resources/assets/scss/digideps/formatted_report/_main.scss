@@ -1,13 +1,39 @@
 .formatted-report {
 
     // =======================================================
-    // PAGE BREAKS
+    // PRINT STYLES - PAGE BREAKS
 
     // Tables
 
     tr {
         page-break-inside: avoid;
     }
+
+    // Sections
+
+    .section-heading {
+        page-break-after: avoid;
+    }
+
+    .section,
+    .box {
+        page-break-inside: avoid;
+    }
+
+    .labelvalue {
+        page-break-inside: avoid;
+    }
+
+    // Utility
+
+    .dont-break {
+        page-break-inside: avoid;
+    }
+
+    .break-before {
+        page-break-before: always;
+    }
+
 
     // =======================================================
     // BASE ELEMENTS
@@ -69,19 +95,6 @@
     .subsection {
         @extend %contain-floats;
         margin-bottom: 20px;
-    }
-
-    #account-summary,
-    #moneyIn-transactions {
-        //page-break-after: always;
-    }
-
-    #declaration {
-        //page-break-after: auto;
-    }
-
-    .dont-break {
-        //page-break-inside: avoid;
     }
 
     .noborder {
