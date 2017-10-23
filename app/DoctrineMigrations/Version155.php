@@ -31,10 +31,6 @@ class Version155 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE account ALTER is_closed DROP DEFAULT');
         $this->addSql('ALTER TABLE account ALTER is_closed SET NOT NULL');
         $this->addSql('ALTER TABLE note ALTER category SET NOT NULL');
