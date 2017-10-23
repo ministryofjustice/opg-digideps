@@ -10,16 +10,38 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
+    private $client_validated = false;
+
+    /**
+     * ClientType constructor.
+     * Setting client_validated = true renders the firstname, lastname and case_number as read only fields
+     * 
+     * @param array $options
+     */
+    public function __construct($options = [])
+    {
+        if (isset($options['client_validated'])) {
+            $this->client_validated = (bool) $options['client_validated'];
+        }
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstname', 'text')
-                 ->add('lastname', 'text')
-                 ->add('caseNumber', 'text')
-                 ->add('courtDate', 'date', ['widget' => 'text',
-                                              'input' => 'datetime',
-                                              'format' => 'yyyy-MM-dd',
-                                              'invalid_message' => 'client.courtDate.message',
-                                            ])
+        if ($this->client_validated) {
+            $builder->add('firstname', 'text', ['attr'=> ['readonly' => 'readonly']])
+                ->add('lastname', 'text',  ['attr'=> ['readonly' => 'readonly']])
+                ->add('caseNumber', 'text',  ['attr'=> ['readonly' => 'readonly']]);
+        } else {
+            $builder->add('firstname', 'text')
+                ->add('lastname', 'text')
+                ->add('caseNumber', 'text');
+        }
+        $builder->add('courtDate', 'date', [
+            'widget' => 'text',
+            'input' => 'datetime',
+            'format' => 'yyyy-MM-dd',
+            'invalid_message' => 'client.courtDate.message',
+        ])
                 ->add('address', 'text')
                 ->add('address2', 'text')
                 ->add('postcode', 'text')

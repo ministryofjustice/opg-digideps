@@ -74,15 +74,16 @@ class ClientController extends AbstractController
         $client = $this->getFirstClient();
         if (!empty($client)) {
             // update existing client
-            $method = 'put';
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $method = 'put';
+            $form = $this->createForm(new FormDir\ClientType(['client_validated' => true]), $client);
+
         } else {
             // new client
-            $method = 'post';
             $client = new EntityDir\Client();
+            $method = 'post';
+            $form = $this->createForm(new FormDir\ClientType(), $client);
         }
-
-        $form = $this->createForm(new FormDir\ClientType(), $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -97,7 +98,10 @@ class ClientController extends AbstractController
             return $this->redirect($url);
         }
 
-        return ['form' => $form->createView()];
+        return [
+            'form' => $form->createView()
+        ];
+
     }
 
 }
