@@ -32,6 +32,8 @@ parameters:
             password: Abcd1234
             roleId: 3
             activated: true
+            codeputyClientConfirmed: false
+
 
     client_secrets:
         123abc-deputy:

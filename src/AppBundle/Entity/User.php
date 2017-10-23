@@ -250,11 +250,12 @@ class User implements UserInterface
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct($coDeputyClientConfirmed = false)
     {
         $this->clients = new ArrayCollection();
         $this->password = '';
         $this->teams = new ArrayCollection();
+        $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
 
     /**
@@ -1005,9 +1006,10 @@ class User implements UserInterface
     /**
      * @param bool $coDeputyClientConfirmed
      */
-    public function setCoDeputyClientConfirmed($coDeputyClientConfirmed)
+    public function setCoDeputyClientConfirmed($coDeputyClientConfirmed = false)
     {
         $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
+        return $this;
     }
 
     /**
