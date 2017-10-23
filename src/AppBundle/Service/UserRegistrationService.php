@@ -7,7 +7,6 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
-use Doctrine\Common\Util\Debug as doctrineDebug;
 
 class UserRegistrationService
 {

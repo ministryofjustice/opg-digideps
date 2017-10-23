@@ -110,6 +110,31 @@ class CasRecController extends RestController
         return ['added' => $added - 1, 'errors' => $retErrors];
     }
 
+
+    /**
+     * Verify Deputy & Client last names, Postcode, and Case Number
+     *
+     * @Route("/verify")
+     * @Method({"POST"})
+     */
+    public function verify(Request $request)
+    {
+        $casrecVerifyData = $this->deserializeBodyContent($request);
+
+        try {
+            $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
+                ->validate ( $casrecVerifyData['case_number']
+                           , $casrecVerifyData['client_lastname']
+                           , $casrecVerifyData['deputy_lastname']
+                           , $casrecVerifyData['deputy_postcode']
+                );
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        return ['verified' => $casrecVerified];
+    }
+
+
     /**
      * @Route("/count")
      * @Method({"GET"})
