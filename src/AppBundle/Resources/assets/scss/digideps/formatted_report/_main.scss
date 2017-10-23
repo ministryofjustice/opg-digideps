@@ -131,7 +131,6 @@
         border: 0;
         background: $grey-review;
         clear: both;
-        //page-break-inside: avoid;
 
         > .label {
             margin-top: 0;
@@ -251,15 +250,6 @@
         margin: 10px 5px 10px 0;
         border: solid 1px $black;
     }
-
-    .financial-categories {
-
-        .category {
-            //page-break-inside: avoid;
-        }
-
-    }
-
 
     // =======================================================
     // GRID
