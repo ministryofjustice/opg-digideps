@@ -15,12 +15,26 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    Client full name {{ client.fullName }}<br />
-    Client case number {{ client.caseNumber }}
+    {% if client_validated %}
+        <p class="flush--bottom">
+            <strong class="bold">Name: </strong>
+            {{ client.fullName }}
+        </p>
+
+        <p class="push--bottom">
+            <strong class="bold">Case number: </strong>
+            {{ client.caseNumber }}
+        </p>
+    {% endif %}
+
     <h2 class="heading-medium flush--top">{{ 'addClient.formHeading' | trans }}</h2>
 
-    {{ form_input(form.firstname, 'firstname') }}
-    {{ form_input(form.lastname, 'lastname') }}
+    {{ form_input(form.firstname, 'firstname', {
+        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
+    }) }}
+    {{ form_input(form.lastname, 'lastname', {
+        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
+    }) }}
 
     {{ form_input(form.address, 'address') }}
     {{ form_input(form.address2, 'address2') }}
@@ -29,7 +43,10 @@
     {{ form_select(form.country, 'country') }}
     {{ form_input(form.phone, 'phone') }}
 
-    {{ form_input(form.caseNumber, 'caseNumber', { 'labelRaw': true }) }}
+    {{ form_input(form.caseNumber, 'caseNumber', {
+        'labelRaw': true,
+        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
+    }) }}
     {{ form_known_date(form.courtDate, 'courtDate') }}
 
     {{ form_submit(form.save,'saveAndContinue') }}
