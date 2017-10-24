@@ -45,7 +45,7 @@
         {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
 
         {% if report.hasSection('moneyIn') %}
-            <div class="section" id="accounts-section">
+            <div class="section break-before" id="accounts-section">
                 {% if report.bankAccounts | length > 0 %}
                     <h2 class="section-heading">Accounts</h2>
                     {% if report.totalsMatch %}
