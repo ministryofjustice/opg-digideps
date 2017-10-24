@@ -25,7 +25,8 @@ form:
     label: Last name
   email:
     label: Email
-    existingError: That email has already been registered with this service.
+    existingError: |
+      There's a problem with your email address. Please contact us for help on 0115 934 2817.
   jobTitle:
     label: Job title
   phoneMain:
